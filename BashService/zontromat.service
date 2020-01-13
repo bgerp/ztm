@@ -1,0 +1,13 @@
+[Unit]
+Description=Zontromat Runner Monitor
+After=network-online.target
+ 
+[Service]
+ExecStart=/bin/bash /opt/Zontromat/BashService/zontromat
+WorkingDirectory=/opt/Zontromat/Zontromat
+StandardOutput=inherit
+StandardError=inherit
+Restart=always
+ 
+[Install]
+WantedBy=multi-user.target

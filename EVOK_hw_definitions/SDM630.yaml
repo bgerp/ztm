@@ -1,0 +1,686 @@
+
+---
+type: SDM630
+modbus_register_blocks:
+    - board_index : 1
+      start_reg : 0
+      count : 2
+      frequency : 300
+    - board_index : 1
+      start_reg : 2
+      count : 2
+      frequency : 300
+    - board_index : 1
+      start_reg : 4
+      count : 2
+      frequency : 300
+    - board_index : 1
+      start_reg : 6
+      count : 2
+      frequency : 300
+    - board_index : 1
+      start_reg : 8
+      count : 2
+      frequency : 300
+    - board_index : 1
+      start_reg : 10
+      count : 2
+      frequency : 300
+    - board_index : 1
+      start_reg : 12
+      count : 2
+      frequency : 300
+    - board_index : 1
+      start_reg : 14
+      count : 2
+      frequency : 300
+    - board_index : 1
+      start_reg : 16
+      count : 2
+      frequency : 300
+    - board_index : 1
+      start_reg : 18
+      count : 2
+      frequency : 300
+    - board_index : 1
+      start_reg : 20
+      count : 2
+      frequency : 300
+    - board_index : 1
+      start_reg : 22
+      count : 2
+      frequency : 300
+    - board_index : 1
+      start_reg : 24
+      count : 2
+      frequency : 300
+    - board_index : 1
+      start_reg : 26
+      count : 2
+      frequency : 300
+    - board_index : 1
+      start_reg : 28
+      count : 2
+      frequency : 300
+    - board_index : 1
+      start_reg : 30
+      count : 2
+      frequency : 300
+    - board_index : 1
+      start_reg : 32
+      count : 2
+      frequency : 300
+    - board_index : 1
+      start_reg : 34
+      count : 2
+      frequency : 300
+    - board_index : 1
+      start_reg : 36
+      count : 2
+      frequency : 300
+    - board_index : 1
+      start_reg : 38
+      count : 2
+      frequency : 300
+    - board_index : 1
+      start_reg : 40
+      count : 2
+      frequency : 300
+    - board_index : 1
+      start_reg : 42
+      count : 2
+      frequency : 300
+    - board_index : 1
+      start_reg : 46
+      count : 2
+      frequency : 300
+    - board_index : 1
+      start_reg : 48
+      count : 2
+      frequency : 300
+    - board_index : 1
+      start_reg : 52
+      count : 2
+      frequency : 300
+    - board_index : 1
+      start_reg : 56
+      count : 2
+      frequency : 300
+    - board_index : 1
+      start_reg : 60
+      count : 2
+      frequency : 300
+    - board_index : 1
+      start_reg : 62
+      count : 2
+      frequency : 300
+    - board_index : 1
+      start_reg : 66
+      count : 2
+      frequency : 300
+    - board_index : 1
+      start_reg : 70
+      count : 2
+      frequency : 300
+    - board_index : 1
+      start_reg : 72
+      count : 2
+      frequency : 300
+    - board_index : 1
+      start_reg : 74
+      count : 2
+      frequency : 300
+    - board_index : 1
+      start_reg : 76
+      count : 2
+      frequency : 300
+    - board_index : 1
+      start_reg : 78
+      count : 2
+      frequency : 300
+    - board_index : 1
+      start_reg : 80
+      count : 2
+      frequency : 300
+    - board_index : 1
+      start_reg : 82
+      count : 2
+      frequency : 300
+    - board_index : 1
+      start_reg : 84
+      count : 2
+      frequency : 300
+    - board_index : 1
+      start_reg : 86
+      count : 2
+      frequency : 300
+    - board_index : 1
+      start_reg : 100
+      count : 2
+      frequency : 300
+    - board_index : 1
+      start_reg : 102
+      count : 2
+      frequency : 300
+    - board_index : 1
+      start_reg : 104
+      count : 2
+      frequency : 300
+    - board_index : 1
+      start_reg : 106
+      count : 2
+      frequency : 300
+    - board_index : 1
+      start_reg : 200
+      count : 2
+      frequency : 300
+    - board_index : 1
+      start_reg : 202
+      count : 2
+      frequency : 300
+    - board_index : 1
+      start_reg : 204
+      count : 2
+      frequency : 300
+    - board_index : 1
+      start_reg : 206
+      count : 2
+      frequency : 300
+    - board_index : 1
+      start_reg : 224
+      count : 2
+      frequency : 300
+    - board_index : 1
+      start_reg : 234
+      count : 2
+      frequency : 300
+    - board_index : 1
+      start_reg : 236
+      count : 2
+      frequency : 300
+    - board_index : 1
+      start_reg : 238
+      count : 2
+      frequency : 300
+    - board_index : 1
+      start_reg : 240
+      count : 2
+      frequency : 300
+    - board_index : 1
+      start_reg : 242
+      count : 2
+      frequency : 300
+    - board_index : 1
+      start_reg : 244
+      count : 2
+      frequency : 300
+    - board_index : 1
+      start_reg : 248
+      count : 2
+      frequency : 300
+    - board_index : 1
+      start_reg : 250
+      count : 2
+      frequency : 300
+    - board_index : 1
+      start_reg : 257
+      count : 2
+      frequency : 300
+    - board_index : 1
+      start_reg : 259
+      count : 2
+      frequency : 300
+    - board_index : 1
+      start_reg : 261
+      count : 2
+      frequency : 300
+    - board_index : 1
+      start_reg : 263
+      count : 2
+      frequency : 300
+    - board_index : 1
+      start_reg : 265
+      count : 2
+      frequency : 300
+    - board_index : 1
+      start_reg : 267
+      count : 2
+      frequency : 300
+    - board_index : 1
+      start_reg : 333
+      count : 2
+      frequency : 300
+    - board_index : 1
+      start_reg : 335
+      count : 2
+      frequency : 300
+    - board_index : 1
+      start_reg : 337
+      count : 2
+      frequency : 300
+    - board_index : 1
+      start_reg : 339
+      count : 2
+      frequency : 300
+    - board_index : 1
+      start_reg : 341
+      count : 2
+      frequency : 300
+    - board_index : 1
+      start_reg : 343
+      count : 2
+      frequency : 300
+    - board_index : 1
+      start_reg : 345
+      count : 2
+      frequency : 300
+    - board_index : 1
+      start_reg : 347
+      count : 2
+      frequency : 300
+    - board_index : 1
+      start_reg : 349
+      count : 2
+      frequency : 300
+    - board_index : 1
+      start_reg : 351
+      count : 2
+      frequency : 300
+    - board_index : 1
+      start_reg : 353
+      count : 2
+      frequency : 300
+    - board_index : 1
+      start_reg : 355
+      count : 2
+      frequency : 300
+    - board_index : 1
+      start_reg : 357
+      count : 2
+      frequency : 300
+    - board_index : 1
+      start_reg : 359
+      count : 2
+      frequency : 300
+    - board_index : 1
+      start_reg : 361
+      count : 2
+      frequency : 300
+    - board_index : 1
+      start_reg : 363
+      count : 2
+      frequency : 300
+    - board_index : 1
+      start_reg : 365
+      count : 2
+      frequency : 300
+    - board_index : 1
+      start_reg : 367
+      count : 2
+      frequency : 300
+    - board_index : 1
+      start_reg : 369
+      count : 2
+      frequency : 300
+    - board_index : 1
+      start_reg : 371
+      count : 2
+      frequency : 300
+    - board_index : 1
+      start_reg : 373
+      count : 2
+      frequency : 300
+    - board_index : 1
+      start_reg : 375
+      count : 2
+      frequency : 300
+    - board_index : 1
+      start_reg : 377
+      count : 2
+      frequency : 300
+    - board_index : 1
+      start_reg : 379
+      count : 2
+      frequency : 300
+
+modbus_features:
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 0
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 2
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 4
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 6
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 8
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 10
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 12
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 14
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 16
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 18
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 20
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 22
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 24
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 26
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 28
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 30
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 32
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 34
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 36
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 38
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 40
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 42
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 46
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 48
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 52
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 56
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 60
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 62
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 66
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 70
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 72
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 74
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 76
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 78
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 80
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 82
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 84
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 86
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 100
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 102
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 104
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 106
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 200
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 202
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 204
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 206
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 224
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 234
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 236
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 238
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 240
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 242
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 244
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 248
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 250
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 257
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 259
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 261
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 263
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 265
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 267
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 333
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 335
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 337
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 339
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 341
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 343
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 345
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 347
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 349
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 351
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 353
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 355
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 357
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 359
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 361
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 363
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 365
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 367
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 369
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 371
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 373
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 375
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 377
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 379

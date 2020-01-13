@@ -1,0 +1,37 @@
+stages: 
+  - deploy
+
+deploy_346:
+  stage: deploy
+  only: 
+    - DEV_346
+  script:
+    - salt -C 'G@roles:dev_346' state.sls upgrade
+
+deploy_85:
+  stage: deploy
+  only: 
+    - DEV_85
+  script:
+    - salt -C 'G@roles:dev_85' state.sls upgrade
+
+deploy_all:
+  stage: deploy
+  only: 
+    - master
+  script:
+    - salt -C 'G@roles:dev_346' state.sls upgrade
+
+deploy_85:
+  stage: deploy
+  only: 
+    - DEV_85
+  script:
+    - salt -C 'G@roles:dev_85' state.sls upgrade
+
+deploy_all:
+  stage: deploy
+  only: 
+    - master
+  script:
+    - salt \* state.sls upgrade
