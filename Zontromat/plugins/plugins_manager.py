@@ -432,7 +432,6 @@ class PluginsManager:
 
 #region Power Meter
 
-
         register = Register("self_current.sub_dev.uart")
         register.scope = Scope.Global
         register.source = Source.bgERP
@@ -478,7 +477,7 @@ class PluginsManager:
         register = Register("self_current.sub_dev.register_type")
         register.scope = Scope.Global
         register.source = Source.bgERP
-        register.value = "inp"
+        register.value = ""
         self.__registers.add(register)
 
         register = Register("self_current.enabled")
@@ -497,7 +496,6 @@ class PluginsManager:
         register.scope = Scope.Global
         register.source = Source.Zontromat
         self.__registers.add(register)
-
 
 #endregion
 
@@ -828,9 +826,8 @@ class PluginsManager:
 
 #endregion
 
-#region Access Control
+#region Access Control 1
 
-        # Access Control 1
         register = Register("access_control_1.time_to_open")
         register.scope = Scope.Global
         register.source = Source.bgERP

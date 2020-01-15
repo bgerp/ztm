@@ -208,8 +208,8 @@ class Zone():
                 self.__logger.error("EVOK service should be restarted.")
 
                 # Restart service 
-                if os.name == "posix":
-                    os.system("sudo service evok restart")
+                # if os.name == "posix":
+                #     os.system("sudo service evok restart")
 
                 """
                 TODO: In case of failure:

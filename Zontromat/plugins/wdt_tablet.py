@@ -97,14 +97,6 @@ class WDTTablet(BasePlugin):
         mixed
             State of the device.
         """
-        polarity = self._config["polarity"].upper()
-
-        if polarity == "NC":
-            state = not state
-        elif polarity == "NO":
-            state = bool(state)
-
-        state = int(state)
 
         self._controller.digital_write(self.__output, state)
 
