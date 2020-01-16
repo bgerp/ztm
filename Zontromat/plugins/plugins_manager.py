@@ -477,7 +477,7 @@ class PluginsManager:
         register = Register("self_current.sub_dev.register_type")
         register.scope = Scope.Global
         register.source = Source.bgERP
-        register.value = ""
+        register.value = "inp"
         self.__registers.add(register)
 
         register = Register("self_current.enabled")
@@ -1045,10 +1045,17 @@ class PluginsManager:
         register.value = 0
         self.__registers.add(register)
 
+        register = Register("hvac.goal_building_temp")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.update_handler = self.__hvac_goal_building_temp
+        register.value = 20
+        self.__registers.add(register)
+
         register = Register("hvac.update_rate")
         register.scope = Scope.Global
         register.source = Source.bgERP
-        register.value = 5
+        register.value = 3
         self.__registers.add(register)
 
         register = Register("hvac.thermal_mode")
@@ -2099,8 +2106,8 @@ class PluginsManager:
         if Plugins.HVAC not in self.__plugins:
             return
 
-        min_temp = 20
-        max_temp = 30
+        min_temp = 2.5
+        max_temp = -2.5
 
         key = "hvac.temp.min"
         if self.__registers.exists(key):
@@ -2119,7 +2126,26 @@ class PluginsManager:
             actual_temp = max_temp
 
         self.__plugins[Plugins.HVAC].adjust_temp = actual_temp
-        print("Ventilation temperature Name: {}; Value: {}".format(register.name, register.value))
+
+    def __hvac_goal_building_temp(self, register):
+
+        if Plugins.HVAC not in self.__plugins:
+            return
+
+        # @see https://experta.bg/L/S/122745/m/Fwntindd
+        min_temp = 18
+        max_temp = 26
+
+        actual_temp = register.value
+
+        if actual_temp < min_temp:
+            actual_temp = min_temp
+
+        if actual_temp > max_temp:
+            actual_temp = max_temp
+
+        self.__plugins[Plugins.HVAC].building_temp = actual_temp
+
 
     def __light_enabled(self, register):
         if register.value == 1:
@@ -2321,7 +2347,6 @@ class PluginsManager:
 
         for key in self.__plugins:
             self.__plugins[key].shutdown()
-
 
 #endregion
 
