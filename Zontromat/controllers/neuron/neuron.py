@@ -724,9 +724,11 @@ class Neuron(BaseController):
         """
 
         circuit = Neuron.generate_device_circuit(major_index, minor_index)
-        uri = self.__host + self.__rest_di + circuit
-        response = requests.get(uri, timeout=self.__timeout)
-        return json.loads(response.text)
+        circuit_data = self._get_device("input", circuit)
+        # uri = self.__host + self.__rest_di + circuit
+        # response = requests.get(uri, timeout=self.__timeout)
+        # return json.loads(response.text)
+        return circuit_data
 
     def _get_counter(self, major_index, minor_index):
         """Read digital input counter.
@@ -747,9 +749,11 @@ class Neuron(BaseController):
         """
 
         circuit = Neuron.generate_device_circuit(major_index, minor_index)
-        uri = self.__host + self.__rest_di + circuit
-        response = requests.get(uri, timeout=self.__timeout)
-        return json.loads(response.text)
+        circuit_data = self._get_device("input", circuit)
+        # uri = self.__host + self.__rest_di + circuit
+        # response = requests.get(uri, timeout=self.__timeout)
+        # return json.loads(response.text)
+        return circuit_data
 
 #endregion
 
@@ -820,20 +824,6 @@ class Neuron(BaseController):
             key = 'UART_' + str(uart) + '_' + str(dev_id) + '_' + str(register)
 
         return key
-
-    @staticmethod
-    def get_instance(host=None, timeout=None):
-        """Singelton instance."""
-
-        instance = None
-
-        if host is not None and timeout is not None:
-            Neuron.__instance = Neuron(host=host, timeout=timeout)
-
-        if Neuron.__instance is not None:
-            instance = Neuron.__instance
-
-        return instance
 
 #endregion
 
