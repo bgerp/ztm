@@ -131,7 +131,7 @@ class HVAC(BasePlugin):
     """Каква топлинна сила трябва да приложим към системата
     (-100% означава максимално да охлаждаме, +100% - максимално да отопляваме)"""
 
-    __update_rate = 5
+    __update_rate = 6
     """Update rate."""
 
     __last_update_time = 0
@@ -468,10 +468,7 @@ class HVAC(BasePlugin):
         self.__logger.info("Starting the {}".format(self.name))
 
         # TODO: Remove after test.
-        self.__logger.warning("Setting the {} to transision season and 26 deg of temperature of the source."\
-            .format(self.name))
-        self.thermal_mode = ThermalMode.TRANSISION_SEASON
-        self.building_temp = 26
+        self.delta_time = 6
 
     def update(self):
         """ Update cycle. """
@@ -524,8 +521,8 @@ class HVAC(BasePlugin):
         # Recalculate delta time.
         diff = time.time() - self.__timestamp_delta_time
         if diff > self.__delta_time:
-            #self.__delta_temp = self.__room_temp - self.__delta_temp
-            #self.__logger.debug("DT: {:3.3f}".format(self.__delta_temp))
+            # self.__delta_temp = self.__room_temp - self.__delta_temp
+            # self.__logger.debug("DT: {:3.3f}".format(self.__delta_temp))
 
             # Update current time.
             self.__timestamp_delta_time = time.time()
@@ -557,24 +554,5 @@ class HVAC(BasePlugin):
         # }
 
         return None
-
-    def set_state(self, state):
-
-        parameters = state["parameters"]
-
-        if "thermal_mode" in parameters:
-            self.thermal_mode = ThermalMode(parameters["thermal_mode"])
-
-        if "adjust_temp" in parameters:
-            self.adjust_temp = parameters["adjust_temp"]
-
-        if "building_temp" in parameters:
-            self.building_temp = parameters["building_temp"]
-
-        if "thermal_force_limit" in parameters:
-            self.thermal_force_limit = parameters["thermal_force_limit"]
-
-        if "delta_time" in parameters:
-            self.delta_time = parameters["delta_time"]
 
 #endregion
