@@ -290,122 +290,122 @@ class SDM630(Device):
 
         self._parameters.append(\
             Parameter('Phase1CurrentDemand', 'A',\
-            ParameterType.FLOAT, [2, 3], RegisterType.INPUT_REGISTER))
+            ParameterType.FLOAT, [258, 259], RegisterType.INPUT_REGISTER))
 
         self._parameters.append(\
             Parameter('Phase2CurrentDemand', 'A',\
-            ParameterType.FLOAT, [4, 5], RegisterType.INPUT_REGISTER))
+            ParameterType.FLOAT, [260, 261], RegisterType.INPUT_REGISTER))
 
         self._parameters.append(\
             Parameter('Phase3CurrentDemand', 'A',\
-            ParameterType.FLOAT, [6, 7], RegisterType.INPUT_REGISTER))
+            ParameterType.FLOAT, [262, 263], RegisterType.INPUT_REGISTER))
 
         self._parameters.append(\
             Parameter('MaximumPhase1CurrentDemand', 'A',\
-            ParameterType.FLOAT, [8, 9], RegisterType.INPUT_REGISTER))
+            ParameterType.FLOAT, [264, 265], RegisterType.INPUT_REGISTER))
 
         self._parameters.append(\
             Parameter('MaximumPhase2CurrentDemand', 'A',\
-            ParameterType.FLOAT, [10, 11], RegisterType.INPUT_REGISTER))
+            ParameterType.FLOAT, [266, 267], RegisterType.INPUT_REGISTER))
 
         self._parameters.append(\
             Parameter('MaximumPhase3CurrentDemand', 'A',\
-            ParameterType.FLOAT, [12, 13], RegisterType.INPUT_REGISTER))
+            ParameterType.FLOAT, [268, 269], RegisterType.INPUT_REGISTER))
 
         self._parameters.append(\
             Parameter('Line1ToLine2VoltsTHD', '%',\
-            ParameterType.FLOAT, [78, 79], RegisterType.INPUT_REGISTER))
+            ParameterType.FLOAT, [334, 335], RegisterType.INPUT_REGISTER))
 
         self._parameters.append(\
             Parameter('Line2ToLine3VoltsTHD', '%',\
-            ParameterType.FLOAT, [80, 81], RegisterType.INPUT_REGISTER))
+            ParameterType.FLOAT, [336, 337], RegisterType.INPUT_REGISTER))
 
         self._parameters.append(\
             Parameter('Line3ToLine1VoltsTHD', '%',\
-            ParameterType.FLOAT, [82, 83], RegisterType.INPUT_REGISTER))
+            ParameterType.FLOAT, [338, 339], RegisterType.INPUT_REGISTER))
 
         self._parameters.append(\
             Parameter('AverageLineToLineVoltsTHD', '%',\
-            ParameterType.FLOAT, [84, 85], RegisterType.INPUT_REGISTER))
+            ParameterType.FLOAT, [340, 341], RegisterType.INPUT_REGISTER))
 
         self._parameters.append(\
             Parameter('TotalkWh', 'kWh',\
-            ParameterType.FLOAT, [86, 87], RegisterType.INPUT_REGISTER))
+            ParameterType.FLOAT, [342, 343], RegisterType.INPUT_REGISTER))
 
         self._parameters.append(\
             Parameter('TotalkVArh', 'kVArh',\
-            ParameterType.FLOAT, [88, 89], RegisterType.INPUT_REGISTER))
+            ParameterType.FLOAT, [344, 345], RegisterType.INPUT_REGISTER))
 
         self._parameters.append(\
             Parameter('L1ImportkWh', 'kWh',\
-            ParameterType.FLOAT, [90, 91], RegisterType.INPUT_REGISTER))
+            ParameterType.FLOAT, [346, 347], RegisterType.INPUT_REGISTER))
 
         self._parameters.append(\
             Parameter('L2ImportkWh', 'kWh',\
-            ParameterType.FLOAT, [92, 93], RegisterType.INPUT_REGISTER))
+            ParameterType.FLOAT, [348, 349], RegisterType.INPUT_REGISTER))
 
         self._parameters.append(\
             Parameter('L3ImportkWh', 'kWh',\
-            ParameterType.FLOAT, [94, 95], RegisterType.INPUT_REGISTER))
+            ParameterType.FLOAT, [350, 351], RegisterType.INPUT_REGISTER))
 
         self._parameters.append(\
             Parameter('L1ExportkWh', 'kWh',\
-            ParameterType.FLOAT, [96, 97], RegisterType.INPUT_REGISTER))
+            ParameterType.FLOAT, [352, 353], RegisterType.INPUT_REGISTER))
 
         self._parameters.append(\
             Parameter('L2ExportkWh', 'kWh',\
-            ParameterType.FLOAT, [98, 99], RegisterType.INPUT_REGISTER))
+            ParameterType.FLOAT, [354, 355], RegisterType.INPUT_REGISTER))
 
         self._parameters.append(\
             Parameter('L3ExportkWh', 'kWh',\
-            ParameterType.FLOAT, [100, 101], RegisterType.INPUT_REGISTER))
+            ParameterType.FLOAT, [356, 357], RegisterType.INPUT_REGISTER))
 
         self._parameters.append(\
             Parameter('L1TotalkWh', 'kWh',\
-            ParameterType.FLOAT, [102, 103], RegisterType.INPUT_REGISTER))
+            ParameterType.FLOAT, [358, 359], RegisterType.INPUT_REGISTER))
 
         self._parameters.append(\
             Parameter('L2TotalkWh', 'kWh',\
-            ParameterType.FLOAT, [104, 105], RegisterType.INPUT_REGISTER))
+            ParameterType.FLOAT, [360, 361], RegisterType.INPUT_REGISTER))
 
         self._parameters.append(\
             Parameter('L3TotalkWh', 'kWh',\
-            ParameterType.FLOAT, [106, 107], RegisterType.INPUT_REGISTER))
+            ParameterType.FLOAT, [362, 363], RegisterType.INPUT_REGISTER))
 
         self._parameters.append(\
             Parameter('L1ImportkVArh', 'kVArh',\
-            ParameterType.FLOAT, [108, 109], RegisterType.INPUT_REGISTER))
+            ParameterType.FLOAT, [364, 365], RegisterType.INPUT_REGISTER))
 
         self._parameters.append(\
             Parameter('L2ImportkVArh', 'kVArh',\
-            ParameterType.FLOAT, [110, 111], RegisterType.INPUT_REGISTER))
+            ParameterType.FLOAT, [366, 367], RegisterType.INPUT_REGISTER))
 
         self._parameters.append(\
             Parameter('L3ImportkVArh', 'kVArh',\
-            ParameterType.FLOAT, [112, 113], RegisterType.INPUT_REGISTER))
+            ParameterType.FLOAT, [368, 369], RegisterType.INPUT_REGISTER))
 
         self._parameters.append(\
             Parameter('L1ExportkVArh', 'kVArh',\
-            ParameterType.FLOAT, [114, 115], RegisterType.INPUT_REGISTER))
+            ParameterType.FLOAT, [370, 371], RegisterType.INPUT_REGISTER))
 
         self._parameters.append(\
             Parameter('L2ExportkVArh', 'kVArh',\
-            ParameterType.FLOAT, [116, 117], RegisterType.INPUT_REGISTER))
+            ParameterType.FLOAT, [372, 373], RegisterType.INPUT_REGISTER))
 
         self._parameters.append(\
             Parameter('L3ExportkVArh', 'kVArh',\
-            ParameterType.FLOAT, [118, 119], RegisterType.INPUT_REGISTER))
+            ParameterType.FLOAT, [374, 375], RegisterType.INPUT_REGISTER))
 
         self._parameters.append(\
             Parameter('L1TotalkVArh', 'kVArh',\
-            ParameterType.FLOAT, [120, 121], RegisterType.INPUT_REGISTER))
+            ParameterType.FLOAT, [376, 377], RegisterType.INPUT_REGISTER))
 
         self._parameters.append(\
             Parameter('L2TotalkVArh', 'kVArh',\
-            ParameterType.FLOAT, [122, 123], RegisterType.INPUT_REGISTER))
+            ParameterType.FLOAT, [378, 379], RegisterType.INPUT_REGISTER))
 
         self._parameters.append(\
             Parameter('L3TotalkVArh', 'kVArh',\
-            ParameterType.FLOAT, [124, 125], RegisterType.INPUT_REGISTER))
+            ParameterType.FLOAT, [380, 381], RegisterType.INPUT_REGISTER))
 
     #endregion
