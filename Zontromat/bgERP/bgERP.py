@@ -61,7 +61,6 @@ __status__ = "Debug"
 
 #endregion
 
-
 class bgERP():
     """bgERP service communicator"""
 
@@ -70,17 +69,11 @@ class bgERP():
     __host = ""
     """Base URI."""
 
-    __api_login = "/api/v1/zone/login"
+    __api_login = "/api/v1/zone/login" # /bcvt.eu/ztm/Ztm/login
     """Login API call."""
 
-    __api_sync = "/api/v1/zone/sync"
+    __api_sync = "/api/v1/zone/sync" # /bcvt.eu/ztm/Ztm/sync
     """Notify bgERP about the zone state API call."""
-
-    __api_add_event = "/api/v1/zone/add_event"
-    """add event bgERP API call."""
-
-    __api_notify = "/api/v1/zone/notify"
-    """Notify bgERP API call."""
 
     __timeout = 5
     """Communication timeout."""
@@ -211,43 +204,6 @@ class bgERP():
 
         return login_state
 
-    def get_config_registers(self):
-        """Returns the device configuration.
-
-        Returns
-        -------
-        mixed
-            Configuration object.
-        """
-
-        config = None
-
-        uri = self.host + self.__api_config
-        payload = {"session_id": self.__session.session}
-        response = requests.post(uri, data=payload, timeout=self.timeout)
-
-        if response is not None:
-
-            if response.status_code == 200:
-
-                if response.text is None:
-                    raise ValueError("Configuration is None.")
-
-                if response.text is "":
-                    raise ValueError("Configuration is empty.")
-
-                data = response.text
-                config = json.loads(data)
-
-            elif response.status_code == 403:
-                config = None
-
-            else:
-                config = None
-
-        #self.__logger.debug(config)
-        return config
-
     def sync(self, regs):
         """Update zone regs.
 
@@ -291,48 +247,6 @@ class bgERP():
             registers = None
 
         return registers
-
-    def send_event(self, event):
-        """Add event to the bgERP.
-
-        Parameters
-        ----------
-        event : mixed
-            Event state.
-
-        Returns
-        -------
-        bool
-            Success
-        """
-
-        uri = self.host + self.__api_add_event
-
-        payload = event
-        response = None
-        sucess = False
-
-        try:
-            response = requests.post(uri, data=payload, timeout=self.timeout)
-
-            if response is not None:
-
-                if response.status_code == 200:
-                    sucess = True
-
-                elif response.status_code == 201:
-                    sucess = True
-
-                else:
-                    sucess = False
-            else:
-                sucess = False
-
-        except Exception as e:
-            self.__logger.warning(str(e))
-            sucess = False
-
-        return sucess
 
 #endregion
 
