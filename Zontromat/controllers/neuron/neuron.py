@@ -749,11 +749,13 @@ class Neuron(BaseController):
         """
 
         circuit = Neuron.generate_device_circuit(major_index, minor_index)
-        circuit_data = self._get_device("input", circuit)
-        # uri = self.__host + self.__rest_di + circuit
-        # response = requests.get(uri, timeout=self.__timeout)
-        # return json.loads(response.text)
-        return circuit_data
+        
+        # circuit_data = self._get_device("input", circuit)
+        # return circuit_data
+
+        uri = self.__host + self.__rest_di + circuit
+        response = requests.get(uri, timeout=self.__timeout)
+        return json.loads(response.text)
 
 #endregion
 
