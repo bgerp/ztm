@@ -84,6 +84,11 @@ class BaseDevice(Configuarable):
 
 #region Public Methods
 
+    def init(self):
+        """Init the device."""
+
+        pass
+
     def get_state(self):
         """Return device state."""
 
