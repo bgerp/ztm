@@ -28,6 +28,8 @@ import queue
 from enum import Enum
 
 from utils.logger import get_logger
+from utils.state_machine import StateMachine
+from utils.timer import Timer
 
 from plugins.base_plugin import BasePlugin
 
@@ -77,9 +79,7 @@ class AccessControll(BasePlugin):
 #region Attributes
 
     __free_to_lock = 0
-
-    __last_timestamp = 0
-    """Update timestamp."""
+    """Free to lock flag."""
 
     __logger = None
     """Logger"""
@@ -92,9 +92,6 @@ class AccessControll(BasePlugin):
 
     __allowed_card_ids = None
     """Card reader 1."""
-
-    __time_to_open = 10
-    """Time to open."""
 
     __cards_queue = None
     """Register queue."""
@@ -130,9 +127,6 @@ class AccessControll(BasePlugin):
     def __set_latch(self, value=0):
         if self.__lock_mechanism_enabled:
             self._controller.digital_write(self._config["lock_mechanism_output"], value)
-
-    def __set_registrator_state(self, state):
-        self.__registrator_state = state
 
     def __create_record(self, card_id):
 
@@ -247,11 +241,14 @@ class AccessControll(BasePlugin):
         self.__logger = get_logger(__name__)
 
         # Set registrator state.
-        self.__registrator_state = RegistratorState.GetFromQue
+        self.__registrator_state = StateMachine(RegistratorState.GetFromQue)
+
+        # Open timer.
+        self.__open_timer = Timer(10)
 
         # Get time to open the latch.
         if "time_to_open" in self._config:
-            self.__time_to_open = self._config["time_to_open"]
+            self.__open_timer.expiration_time = self._config["time_to_open"]
 
         # Create exit button.
         if "exit_button_enabled" in self._config:
@@ -298,6 +295,8 @@ class AccessControll(BasePlugin):
         else:
             self.__cards_queue = queue.Queue(self.__cards_queue_size)
 
+
+
     def update(self):
 
         # Update crad reader.
@@ -326,34 +325,36 @@ class AccessControll(BasePlugin):
         # Check if the flag is raiced.
         if self.__open_door_flag == 1:
             self.__set_latch(1)
-            self.__last_timestamp = time.time()
+            self.__open_timer.update_last_time()
             self.__open_door_flag = 0
             self.__free_to_lock = 1
 
         # Check is it time to close the latch.
         if self.__open_door_flag == 0:
-            diff = time.time() - self.__last_timestamp
-            if diff > self.__time_to_open:
+            self.__open_timer.update()
+            if self.__open_timer.expired:
+                self.__open_timer.clear()
+
                 if self.__free_to_lock == 1:
                     self.__set_latch(0)
                     self.__free_to_lock = 0
 
         if self.__cards_queue.empty() is not True:
 
-            if self.__registrator_state == RegistratorState.GetFromQue:
+            if self.__registrator_state.is_state(RegistratorState.GetFromQue):
 
                 self.__first_queue_record = self.__cards_queue.get()
-                self.__set_registrator_state(RegistratorState.Send)
+                self.__registrator_state.set_state(RegistratorState.Send)
 
-            if self.__registrator_state == RegistratorState.Send:
+            if self.__registrator_state.is_state(RegistratorState.Send):
 
                 # Send event to the ERP service.
                 rec = [self.__first_queue_record]
-                sucessfull = self._erp_service.send_event(rec)
+                sucessfull = self._erp_service.sync(rec)
 
                 if sucessfull is not None:
                     self.__logger.debug("Send ID: {}".format(self.__first_queue_record))
-                    self.__set_registrator_state(RegistratorState.GetFromQue)
+                    self.__registrator_state.set_state(RegistratorState.GetFromQue)
 
     def shutdown(self):
         """Shutdown the reader."""
