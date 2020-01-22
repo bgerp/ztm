@@ -37,7 +37,6 @@ from plugins.status_led import StatusLed
 from plugins.tamper import Tamper
 from plugins.flowmeter import Flowmeter
 from plugins.thermometer import Thermometer
-from plugins.light_sensor import LightSensor
 from plugins.power_meter import PowerMeter
 from plugins.access_controll import AccessControll
 from plugins.blinds import Blinds
@@ -86,21 +85,13 @@ class Plugins(Enum):
     AntiTampering = 5
     FireDetect = 6
     WaterCounter = 7
-    Loop1Counter = 8
-    Loop2Counter = 9
-    AirTempUpper = 10
-    AirTempLower = 11
-    AirTempCentral = 12
-    RoomLight = 13
-    Loop1Temperature = 14
-    Loop2Temperature = 15
-    PowerMeter = 16
-    Blinds = 17
-    AccessControll1 = 18
-    AccessControll2 = 19
-    HVAC = 20
-    MainLight = 21
-    WDTTablet = 22
+    PowerMeter = 8
+    Blinds = 9
+    AccessControll1 = 10
+    AccessControll2 = 11
+    HVAC = 22
+    MainLight = 23
+    WDTTablet = 24
 
 class PluginsManager:
     """Template class doc."""
@@ -302,62 +293,6 @@ class PluginsManager:
 
 #endregion
 
-#region Loop 1 Counter
-
-        register = Register("loop1_cnt.tpl")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.value = 10
-        self.__registers.add(register)
-
-        register = Register("loop1_cnt.input")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.value = "DI5"
-        self.__registers.add(register)
-
-        register = Register("loop1_cnt.enabled")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.update_handler = self.__loop1_cnt_enabled
-        register.value = 0
-        self.__registers.add(register)
-
-        register = Register("loop1_cnt.state")
-        register.scope = Scope.Global
-        register.source = Source.Zontromat
-        self.__registers.add(register)
-
-#endregion
-
-#region Loop 2 Counter
-
-        register = Register("loop2_cnt.tpl")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.value = 10
-        self.__registers.add(register)
-
-        register = Register("loop2_cnt.input")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.value = "DI6"
-        self.__registers.add(register)
-
-        register = Register("loop2_cnt.enabled")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.update_handler = self.__loop2_cnt_enabled
-        register.value = 0
-        self.__registers.add(register)
-
-        register = Register("loop2_cnt.state")
-        register.scope = Scope.Global
-        register.source = Source.Zontromat
-        self.__registers.add(register)
-
-#endregion
-
 #region Blinds
 
         register = Register("blinds.sun.azimuth.value")
@@ -496,247 +431,6 @@ class PluginsManager:
         register.scope = Scope.Global
         register.source = Source.Zontromat
         self.__registers.add(register)
-
-#endregion
-
-#region Upper termometer
-
-        register = Register("air_temp_upper.dev")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.value = "temp"
-        self.__registers.add(register)
-
-        register = Register("air_temp_upper.mou")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.value = "degc"
-        self.__registers.add(register)
-
-        register = Register("air_temp_upper.type")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.value = "DS18B20"
-        self.__registers.add(register)
-
-        register = Register("air_temp_upper.circuit")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.value = "28FF2B70C11604B7"
-        self.__registers.add(register)
-
-        register = Register("air_temp_upper.enabled")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.update_handler = self.__air_temp_upper_enabled
-        register.value = 0
-        self.__registers.add(register)
-
-        register = Register("air_temp_upper.state")
-        register.scope = Scope.Global
-        register.source = Source.Zontromat
-        self.__registers.add(register)
-
-#endregion
-
-#region Lower termometer
-
-        register = Register("air_temp_lower.dev")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.value = "temp"
-        self.__registers.add(register)
-
-        register = Register("air_temp_lower.mou")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.value = "degc"
-        self.__registers.add(register)
-
-        register = Register("air_temp_lower.type")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.value = "DS18B20"
-        self.__registers.add(register)
-
-        register = Register("air_temp_lower.circuit")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.value = "28FFC4EE00170349"
-        self.__registers.add(register)
-
-        register = Register("air_temp_lower.enabled")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.update_handler = self.__air_temp_lower_enabled
-        register.value = 0
-        self.__registers.add(register)
-
-        register = Register("air_temp_lower.state")
-        register.scope = Scope.Global
-        register.source = Source.Zontromat
-        self.__registers.add(register)
-
-#endregion
-
-#region Center termometer
-
-        register = Register("air_temp_cent.dev")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.value = "temp"
-        self.__registers.add(register)
-
-        register = Register("air_temp_cent.mou")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.value = "degc"
-        self.__registers.add(register)
-
-        register = Register("air_temp_cent.type")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.value = "DS18B20"
-        self.__registers.add(register)
-
-        register = Register("air_temp_cent.circuit")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.value = "28FFFCD0001703AE"
-        self.__registers.add(register)
-
-        register = Register("air_temp_cent.enabled")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.update_handler = self.__air_temp_cent_enabled
-        register.value = 0
-        self.__registers.add(register)
-
-        register = Register("air_temp_cent.state")
-        register.scope = Scope.Global
-        register.source = Source.Zontromat
-        self.__registers.add(register)
-
-#endregion
-
-#region Loop 1 Temperature
-
-        register = Register("loop_1_temp.dev")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.value = "temp"
-        self.__registers.add(register)
-
-        register = Register("loop_1_temp.mou")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.value = "degc"
-        self.__registers.add(register)
-
-        register = Register("loop_1_temp.type")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.value = "DS18B20"
-        self.__registers.add(register)
-
-        register = Register("loop_1_temp.circuit")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.value = "28FF2B70C11604B7"
-        self.__registers.add(register)
-
-        register = Register("loop_1_temp.enabled")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.update_handler = self.__loop_1_temp_enablede
-        register.value = 0
-        self.__registers.add(register)
-
-        register = Register("loop_1_temp.state")
-        register.scope = Scope.Global
-        register.source = Source.Zontromat
-        self.__registers.add(register)
-
-#endregion
-
-#region Loop 2 Temperature
-
-        register = Register("loop_2_temp.dev")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.value = "temp"
-        self.__registers.add(register)
-
-        register = Register("loop_2_temp.mou")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.value = "degc"
-        self.__registers.add(register)
-
-        register = Register("loop_2_temp.type")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.value = "DS18B20"
-        self.__registers.add(register)
-
-        register = Register("loop_2_temp.circuit")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.value = "28FFC4EE00170349"
-        self.__registers.add(register)
-
-        register = Register("loop_2_temp.enabled")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.update_handler = self.__loop_2_temp_enablede
-        register.value = 0
-        self.__registers.add(register)
-
-        register = Register("loop_2_temp.state")
-        register.scope = Scope.Global
-        register.source = Source.Zontromat
-        self.__registers.add(register)
-
-#endregion
-
-#region Light sensor
-
-        register = Register("room_light.dev")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.value = "1wdevice"
-        self.__registers.add(register)
-
-        register = Register("room_light.mou")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.value = "lux"
-        self.__registers.add(register)
-
-        register = Register("room_light.type")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.value = "light"
-        self.__registers.add(register)
-
-        register = Register("room_light.circuit")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.value = "26607314020000F8"
-        self.__registers.add(register)
-
-        register = Register("room_light.enabled")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.update_handler = self.__room_light_enabled
-        register.value = 0
-        self.__registers.add(register)
-
-        register = Register("room_light.state")
-        register.scope = Scope.Global
-        register.source = Source.Zontromat
-        self.__registers.add(register)
-
 
 #endregion
 
@@ -1032,174 +726,118 @@ class PluginsManager:
 
 #region HVAC
 
-        register = Register("hvac.delta_time")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.value = 5
-        self.__registers.add(register)
-
         register = Register("hvac.adjust_temp")
         register.scope = Scope.Global
         register.source = Source.bgERP
         register.update_handler = self.__hvac_adjust_temp
         register.value = 0
         self.__registers.add(register)
-
-        register = Register("hvac.goal_building_temp")
+        
+        # Air temp central.
+        register = Register("hvac.air_temp_cent.dev")
         register.scope = Scope.Global
         register.source = Source.bgERP
-        register.update_handler = self.__hvac_goal_building_temp
-        register.value = 20
+        register.value = "temp"
         self.__registers.add(register)
 
-        register = Register("hvac.update_rate")
+        register = Register("hvac.air_temp_cent.type")
         register.scope = Scope.Global
         register.source = Source.bgERP
-        register.value = 3
+        register.value = "DS18B20"
         self.__registers.add(register)
 
-        register = Register("hvac.thermal_mode")
+        register = Register("hvac.air_temp_cent.circuit")
         register.scope = Scope.Global
         register.source = Source.bgERP
-        register.value = 2
+        register.value = "28FFFCD0001703AE"
         self.__registers.add(register)
 
-        register = Register("hvac.convector.model")
+        register = Register("hvac.air_temp_cent.enabled")
         register.scope = Scope.Global
         register.source = Source.bgERP
-        register.value = "klimafan"
+        register.value = 1
         self.__registers.add(register)
-
-        register = Register("hvac.lower_fan.model")
+        
+        # Air temp lower
+        register = Register("hvac.air_temp_lower.dev")
         register.scope = Scope.Global
         register.source = Source.bgERP
-        register.value = "f3p146ec072600"
+        register.value = "temp"
         self.__registers.add(register)
 
-        register = Register("hvac.upper_fan.model")
+        register = Register("hvac.air_temp_lower.type")
         register.scope = Scope.Global
         register.source = Source.bgERP
-        register.value = "f3p146ec072600"
+        register.value = "DS18B20"
         self.__registers.add(register)
 
-        register = Register("hvac.convector.vendor")
+        register = Register("hvac.air_temp_lower.circuit")
         register.scope = Scope.Global
         register.source = Source.bgERP
-        register.value = "silpa"
+        register.value = "28FFC4EE00170349"
         self.__registers.add(register)
 
-        register = Register("hvac.lower_fan.output")
+        register = Register("hvac.air_temp_lower.enabled")
         register.scope = Scope.Global
         register.source = Source.bgERP
-        register.value = "AO3"
+        register.value = 1
         self.__registers.add(register)
-
-        register = Register("hvac.lower_fan.vendor")
+        
+        # Air temp upper.
+        register = Register("hvac.air_temp_upper.dev")
         register.scope = Scope.Global
         register.source = Source.bgERP
-        register.value = "HangzhouAirflowElectricApplications"
+        register.value = "temp"
         self.__registers.add(register)
 
-        register = Register("hvac.upper_fan.output")
+        register = Register("hvac.air_temp_upper.type")
         register.scope = Scope.Global
         register.source = Source.bgERP
-        register.value = "AO4"
+        register.value = "DS18B20"
         self.__registers.add(register)
 
-        register = Register("hvac.upper_fan.vendor")
+        register = Register("hvac.air_temp_upper.circuit")
         register.scope = Scope.Global
         register.source = Source.bgERP
-        register.value = "HangzhouAirflowElectricApplications"
+        register.value = "28FF2B70C11604B7"
         self.__registers.add(register)
 
+        register = Register("hvac.air_temp_upper.enabled")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.value = 1
+        self.__registers.add(register)
+
+        # Circulation
+        register = Register("hvac.cirulation.actual")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.value = 25
+        self.__registers.add(register)
+
+        register = Register("hvac.cirulation.min")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.value = 0
+        self.__registers.add(register)
+
+        register = Register("hvac.cirulation.max")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.value = 100
+        self.__registers.add(register)
+
+        # Convector
         register = Register("hvac.convector.enabled")
         register.scope = Scope.Global
         register.source = Source.bgERP
         register.value = 1
         self.__registers.add(register)
 
-        register = Register("hvac.lower_fan.enabled")
+        register = Register("hvac.convector.model")
         register.scope = Scope.Global
         register.source = Source.bgERP
-        register.value = 1
-        self.__registers.add(register)
-
-        register = Register("hvac.lower_valve.model")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.value = "a20m15b2c"
-        self.__registers.add(register)
-
-        register = Register("hvac.upper_fan.enabled")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.value = 1
-        self.__registers.add(register)
-
-        register = Register("hvac.upper_valve.model")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.value = "a20m15b2c"
-        self.__registers.add(register)
-
-        register = Register("hvac.lower_valve.output")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.value = "RO4"
-        self.__registers.add(register)
-
-        register = Register("hvac.lower_valve.vendor")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.value = "TONHE"
-        self.__registers.add(register)
-
-        register = Register("hvac.upper_valve.output")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.value = "RO3"
-        self.__registers.add(register)
-
-        register = Register("hvac.upper_valve.vendor")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.value = "TONHE"
-        self.__registers.add(register)
-
-        register = Register("hvac.lower_valve.enabled")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.value = 1
-        self.__registers.add(register)
-
-        register = Register("hvac.thermal_force_limit")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.value = 100
-        self.__registers.add(register)
-
-        register = Register("hvac.upper_valve.enabled")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.value = 1
-        self.__registers.add(register)
-
-        register = Register("hvac.room_theromometer.dev")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.value = "temp"
-        self.__registers.add(register)
-
-        register = Register("hvac.room_theromometer.mou")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.value = "degc"
-        self.__registers.add(register)
-
-        register = Register("hvac.room_theromometer.type")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.value = "DS18B20"
+        register.value = "klimafan"
         self.__registers.add(register)
 
         register = Register("hvac.convector.stage_1.output")
@@ -1220,18 +858,20 @@ class PluginsManager:
         register.value = "RO2"
         self.__registers.add(register)
 
-        register = Register("hvac.room_theromometer.circuit")
+        register = Register("hvac.convector.vendor")
         register.scope = Scope.Global
         register.source = Source.bgERP
-        register.value = "28FFC4EE00170349"
+        register.value = "silpa"
         self.__registers.add(register)
         
-        register = Register("hvac.room_theromometer.enabled")
+        # Delta time.
+        register = Register("hvac.delta_time")
         register.scope = Scope.Global
         register.source = Source.bgERP
-        register.value = 1
+        register.value = 5
         self.__registers.add(register)
 
+        # HVAC Enabled.
         register = Register("hvac.enabled")
         register.scope = Scope.Global
         register.source = Source.bgERP
@@ -1239,39 +879,212 @@ class PluginsManager:
         register.value = 0
         self.__registers.add(register)
 
+        # Goal building temp.
+        register = Register("hvac.goal_building_temp")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.update_handler = self.__hvac_goal_building_temp
+        register.value = 20
+        self.__registers.add(register)
+
+        # Loop 1 flowmeter.
+        register = Register("hvac.loop1.cnt.tpl")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.value = 1
+        self.__registers.add(register)
+
+        register = Register("hvac.loop1.cnt.input")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.value = "DI5"
+        self.__registers.add(register)
+
+        register = Register("hvac.loop1.cnt.enabled")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.value = 1
+        self.__registers.add(register)
+
+        # Loop 1 fan
+        register = Register("hvac.loop1.fan.enabled")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.value = 1
+        self.__registers.add(register)
+        
+        register = Register("hvac.loop1.fan.model")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.value = "f3p146ec072600"
+        self.__registers.add(register)
+        
+        register = Register("hvac.loop1.fan.output")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.value = "AO3"
+        self.__registers.add(register)
+
+        register = Register("hvac.loop1.fan.vendor")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.value = "HangzhouAirflowElectricApplications"
+        self.__registers.add(register)
+
+        # Loop 1 Temperature
+        register = Register("hvac.loop1.temp.dev")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.value = "temp"
+        self.__registers.add(register)
+
+        register = Register("hvac.loop1.temp.type")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.value = "DS18B20"
+        self.__registers.add(register)
+
+        register = Register("hvac.loop1.temp.circuit")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.value = "28FF2B70C11604B7"
+        self.__registers.add(register)
+
+        register = Register("hvac.loop1.temp.enabled")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.value = 1
+        self.__registers.add(register)
+
+        # Loop 1 valve.
+        register = Register("hvac.loop1.valve.enabled")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.value = 1
+        self.__registers.add(register)
+
+        register = Register("hvac.loop1.valve.model")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.value = "a20m15b2c"
+        self.__registers.add(register)
+
+        register = Register("hvac.loop1.valve.output")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.value = "RO4"
+        self.__registers.add(register)
+
+        register = Register("hvac.loop1.valve.vendor")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.value = "TONHE"
+        self.__registers.add(register)
+        
+        # Loop 2 flowmeter
+        register = Register("hvac.loop2.cnt.tpl")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.value = 1
+        self.__registers.add(register)
+
+        register = Register("hvac.loop2.cnt.input")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.value = "DI6"
+        self.__registers.add(register)
+
+        register = Register("hvac.loop2.cnt.enabled")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.value = 1
+        self.__registers.add(register)
+
+        # Loop 2 fan
+        register = Register("hvac.loop2.fan.enabled")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.value = 1
+        self.__registers.add(register)
+        
+        register = Register("hvac.loop2.fan.model")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.value = "f3p146ec072600"
+        self.__registers.add(register)
+        
+        register = Register("hvac.loop2.fan.output")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.value = "AO4"
+        self.__registers.add(register)
+
+        register = Register("hvac.loop2.fan.vendor")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.value = "HangzhouAirflowElectricApplications"
+        self.__registers.add(register)
+
+        # Loop 2 Temperature
+        register = Register("hvac.loop2.temp.dev")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.value = "temp"
+        self.__registers.add(register)
+
+        register = Register("hvac.loop2.temp.type")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.value = "DS18B20"
+        self.__registers.add(register)
+
+        register = Register("hvac.loop2.temp.circuit")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.value = "28FFC4EE00170349"
+        self.__registers.add(register)
+
+        register = Register("hvac.loop2.temp.enabled")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.value = 1
+        self.__registers.add(register)
+
+        # Loop 2 valve.
+        register = Register("hvac.loop2.valve.enabled")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.value = 1
+        self.__registers.add(register)
+
+        register = Register("hvac.loop2.valve.model")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.value = "a20m15b2c"
+        self.__registers.add(register)
+
+        register = Register("hvac.loop2.valve.output")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.value = "RO3"
+        self.__registers.add(register)
+
+        register = Register("hvac.loop2.valve.vendor")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.value = "TONHE"
+        self.__registers.add(register)
+        
+        # Temperature actual
         register = Register("hvac.temp.actual")
         register.scope = Scope.Global
         register.source = Source.bgERP
         self.__registers.add(register)
-
-        register = Register("hvac.circ.actual")
+        
+        register = Register("hvac.temp.max")
         register.scope = Scope.Global
         register.source = Source.bgERP
-        register.value = 25
-        self.__registers.add(register)
-
-        register = Register("hvac.ventilation.min")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.value = 0
-        self.__registers.add(register)
-
-        register = Register("hvac.ventilation.max")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.value = 100
-        self.__registers.add(register)
-
-        register = Register("hvac.cirulation.min")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.value = 0
-        self.__registers.add(register)
-
-        register = Register("hvac.cirulation.max")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.value = 100
+        register.value = 30
         self.__registers.add(register)
 
         register = Register("hvac.temp.min")
@@ -1280,12 +1093,39 @@ class PluginsManager:
         register.value = 20
         self.__registers.add(register)
 
-        register = Register("hvac.temp.max")
+        # Thermal force limit
+        register = Register("hvac.thermal_force_limit")
         register.scope = Scope.Global
         register.source = Source.bgERP
-        register.value = 30
+        register.value = 100
+        self.__registers.add(register)
+        
+        # Thermal mode
+        register = Register("hvac.thermal_mode")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.value = 2
         self.__registers.add(register)
 
+        # Update rate.
+        register = Register("hvac.update_rate")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.value = 3
+        self.__registers.add(register)
+
+        # Ventilation
+        register = Register("hvac.ventilation.max")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.value = 100
+        self.__registers.add(register)
+
+        register = Register("hvac.ventilation.min")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.value = 0
+        self.__registers.add(register)
 #endregion
 
 #region Lights
@@ -1314,16 +1154,16 @@ class PluginsManager:
         register.value = "AO2"
         self.__registers.add(register)
 
+        register = Register("light.sensor.enabled")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.value = 1
+        self.__registers.add(register)
+
         register = Register("light.sensor.dev")
         register.scope = Scope.Global
         register.source = Source.bgERP
         register.value = "1wdevice"
-        self.__registers.add(register)
-
-        register = Register("light.sensor.mou")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.value = "lux"
         self.__registers.add(register)
 
         register = Register("light.sensor.model")
@@ -1556,62 +1396,6 @@ class PluginsManager:
                 self.__plugins[Plugins.WaterCounter].shutdown()
                 del self.__plugins[Plugins.WaterCounter]
 
-    def __loop1_cnt_enabled(self, register):
-        if register.value == 1:
-            if Plugins.Loop1Counter not in self.__plugins:
-                key = register.base_name
-                tpl = self.__registers.by_name(key + ".tpl").value
-                input_pin = self.__registers.by_name(key + ".input").value
-
-                config = {
-                    "name": "Loop 1 Flow Metter",
-                    "tpl": tpl,
-                    "input": input_pin,
-                    "controller": self.__controller,
-                    "erp_service": self.__erp_service
-                }
-
-                # Create device.
-                self.__plugins[Plugins.Loop1Counter] = Flowmeter(config)
-
-                # Add Handlers.
-
-                # Init
-                self.__plugins[Plugins.Loop1Counter].init()
-
-        elif register.value == 0:
-            if Plugins.Loop1Counter in self.__plugins:
-                self.__plugins[Plugins.Loop1Counter].shutdown()
-                del self.__plugins[Plugins.Loop1Counter]
-
-    def __loop2_cnt_enabled(self, register):
-        if register.value == 1:
-            if Plugins.Loop2Counter not in self.__plugins:
-                key = register.base_name
-                tpl = self.__registers.by_name(key + ".tpl").value
-                input_pin = self.__registers.by_name(key + ".input").value
-
-                config = {
-                    "name": "Loop 2 Flow Metter",
-                    "tpl": tpl,
-                    "input": input_pin,
-                    "controller": self.__controller,
-                    "erp_service": self.__erp_service
-                }
-
-                # Create device.
-                self.__plugins[Plugins.Loop2Counter] = Flowmeter(config)
-
-                # Add Handlers.
-
-                # Init
-                self.__plugins[Plugins.Loop2Counter].init()
-
-        elif register.value == 0:
-            if Plugins.Loop2Counter in self.__plugins:
-                self.__plugins[Plugins.Loop2Counter].shutdown()
-                del self.__plugins[Plugins.Loop2Counter]
-
     def __blinds_enabled(self, register):
         if register.value == 1:
             if Plugins.Blinds not in self.__plugins:
@@ -1683,196 +1467,6 @@ class PluginsManager:
             if Plugins.PowerMeter in self.__plugins:
                 self.__plugins[Plugins.PowerMeter].shutdown()
                 del self.__plugins[Plugins.PowerMeter]
-
-    def __air_temp_upper_enabled(self, register):
-        if register.value == 1:
-            if Plugins.AirTempUpper not in self.__plugins:
-                key = register.base_name
-                mou = self.__registers.by_name(key + ".mou").value
-                dev = self.__registers.by_name(key + ".dev").value
-                dev_type = self.__registers.by_name(key + ".dev").value
-                circuit = self.__registers.by_name(key + ".circuit").value
-
-                config = {
-                    "name": "Air Temperature Upper",
-                    "mou": mou,
-                    "dev": dev,
-                    "type": dev_type,
-                    "circuit": circuit,
-                    "controller": self.__controller,
-                    "erp_service": self.__erp_service
-                }
-
-                # Create device.
-                self.__plugins[Plugins.AirTempUpper] = Thermometer(config)
-
-                # Add Handlers.
-
-                # Init
-                self.__plugins[Plugins.AirTempUpper].init()
-
-        elif register.value == 0:
-            if Plugins.AirTempUpper in self.__plugins:
-                self.__plugins[Plugins.AirTempUpper].shutdown()
-                del self.__plugins[Plugins.AirTempUpper]
-
-    def __air_temp_lower_enabled(self, register):
-        if register.value == 1:
-            if Plugins.AirTempLower not in self.__plugins:
-                key = register.base_name
-                mou = self.__registers.by_name(key + ".mou").value
-                dev = self.__registers.by_name(key + ".dev").value
-                dev_type = self.__registers.by_name(key + ".dev").value
-                circuit = self.__registers.by_name(key + ".circuit").value
-
-                config = {
-                    "name": "Air Temperature Lower",
-                    "mou": mou,
-                    "dev": dev,
-                    "type": dev_type,
-                    "circuit": circuit,
-                    "controller": self.__controller,
-                    "erp_service": self.__erp_service
-                }
-
-                # Create device.
-                self.__plugins[Plugins.AirTempLower] = Thermometer(config)
-
-                # Add Handlers.
-
-                # Init
-                self.__plugins[Plugins.AirTempLower].init()
-
-        elif register.value == 0:
-            if Plugins.AirTempLower in self.__plugins:
-                self.__plugins[Plugins.AirTempLower].shutdown()
-                del self.__plugins[Plugins.AirTempLower]
-
-    def __air_temp_cent_enabled(self, register):
-        if register.value == 1:
-            if Plugins.AirTempCentral not in self.__plugins:
-                key = register.base_name
-                mou = self.__registers.by_name(key + ".mou").value
-                dev = self.__registers.by_name(key + ".dev").value
-                dev_type = self.__registers.by_name(key + ".dev").value
-                circuit = self.__registers.by_name(key + ".circuit").value
-
-                config = {
-                    "name": "Air Temperature Central",
-                    "mou": mou,
-                    "dev": dev,
-                    "type": dev_type,
-                    "circuit": circuit,
-                    "controller": self.__controller,
-                    "erp_service": self.__erp_service
-                }
-
-                # Create device.
-                self.__plugins[Plugins.AirTempCentral] = Thermometer(config)
-
-                # Add Handlers.
-
-                # Init
-                self.__plugins[Plugins.AirTempCentral].init()
-
-        elif register.value == 0:
-            if Plugins.AirTempCentral in self.__plugins:
-                self.__plugins[Plugins.AirTempCentral].shutdown()
-                del self.__plugins[Plugins.AirTempCentral]
-
-    def __loop_1_temp_enablede(self, register):
-        if register.value == 1:
-            if Plugins.Loop1Temperature not in self.__plugins:
-                key = register.base_name
-                mou = self.__registers.by_name(key + ".mou").value
-                dev = self.__registers.by_name(key + ".dev").value
-                dev_type = self.__registers.by_name(key + ".type").value
-                circuit = self.__registers.by_name(key + ".circuit").value
-
-                config = {
-                    "name": "Loop 1 Temperature",
-                    "mou": mou,
-                    "dev": dev,
-                    "type": dev_type,
-                    "circuit": circuit,
-                    "controller": self.__controller,
-                    "erp_service": self.__erp_service
-                }
-
-                # Create device.
-                self.__plugins[Plugins.Loop1Temperature] = Thermometer(config)
-
-                # Add Handlers.
-
-                # Init
-                self.__plugins[Plugins.Loop1Temperature].init()
-
-        elif register.value == 0:
-            if Plugins.Loop1Temperature in self.__plugins:
-                self.__plugins[Plugins.Loop1Temperature].shutdown()
-                del self.__plugins[Plugins.Loop1Temperature]
-
-    def __loop_2_temp_enablede(self, register):
-        if register.value == 1:
-            if Plugins.Loop2Temperature not in self.__plugins:
-                key = register.base_name
-                mou = self.__registers.by_name(key + ".mou").value
-                dev = self.__registers.by_name(key + ".dev").value
-                dev_type = self.__registers.by_name(key + ".type").value
-                circuit = self.__registers.by_name(key + ".circuit").value
-
-                config = {
-                    "name": "Loop 2 Temperature",
-                    "mou": mou,
-                    "dev": dev,
-                    "type": dev_type,
-                    "circuit": circuit,
-                    "controller": self.__controller,
-                    "erp_service": self.__erp_service
-                }
-
-                # Create device.
-                self.__plugins[Plugins.Loop2Temperature] = Thermometer(config)
-
-                # Add Handlers.
-
-                # Init
-                self.__plugins[Plugins.Loop2Temperature].init()
-
-        elif register.value == 0:
-            if Plugins.Loop2Temperature in self.__plugins:
-                self.__plugins[Plugins.Loop2Temperature].shutdown()
-                del self.__plugins[Plugins.Loop2Temperature]
-
-    def __room_light_enabled(self, register):
-        if register.value == 1:
-            if Plugins.RoomLight not in self.__plugins:
-                key = register.base_name
-                mou = self.__registers.by_name(key + ".mou").value
-                dev = self.__registers.by_name(key + ".dev").value
-                circuit = self.__registers.by_name(key + ".circuit").value
-
-                config = {
-                    "name": "Room Light Sensor",
-                    "mou": mou,
-                    "dev": dev,
-                    "circuit": circuit,
-                    "controller": self.__controller,
-                    "erp_service": self.__erp_service
-                }
-
-                # Create device.
-                self.__plugins[Plugins.RoomLight] = LightSensor(config)
-
-                # Add Handlers.
-
-                # Init
-                self.__plugins[Plugins.RoomLight].init()
-
-        elif register.value == 0:
-            if Plugins.RoomLight in self.__plugins:
-                self.__plugins[Plugins.RoomLight].shutdown()
-                del self.__plugins[Plugins.RoomLight]
 
     def __mode_energy(self, register):
         pass
@@ -2007,87 +1601,156 @@ class PluginsManager:
             if Plugins.HVAC not in self.__plugins:
                 key = register.base_name
 
+                # Params
                 delta_time = self.__registers.by_name(key + ".delta_time").value
                 update_rate = self.__registers.by_name(key + ".update_rate").value
                 thermal_mode = self.__registers.by_name(key + ".thermal_mode").value
                 thermal_force_limit = self.__registers.by_name(key + ".thermal_force_limit").value
                 adjust_temp = self.__registers.by_name(key + ".adjust_temp").value
+                temp_actual = self.__registers.by_name(key + ".temp.actual").value
+                temp_max = self.__registers.by_name(key + ".temp.max").value
+                temp_min = self.__registers.by_name(key + ".temp.min").value
+                ventilation_max = self.__registers.by_name(key + ".ventilation.max").value
+                ventilation_min = self.__registers.by_name(key + ".ventilation.min").value
 
-                room_theromometer_enable = self.__registers.by_name(key + ".room_theromometer.enabled").value
-                room_theromometer_mou = self.__registers.by_name(key + ".room_theromometer.mou").value
-                room_theromometer_dev = self.__registers.by_name(key + ".room_theromometer.dev").value
-                room_theromometer_dev_type = self.__registers.by_name(key + ".room_theromometer.type").value
-                room_theromometer_circuit = self.__registers.by_name(key + ".room_theromometer.circuit").value
+                # Air temperature central.
+                air_temp_cent_circuit = self.__registers.by_name(key + ".air_temp_cent.circuit").value
+                air_temp_cent_dev = self.__registers.by_name(key + ".air_temp_cent.dev").value
+                air_temp_cent_enabled = self.__registers.by_name(key + ".air_temp_cent.enabled").value
+                air_temp_cent_type = self.__registers.by_name(key + ".air_temp_cent.type").value
 
-                upper_fan_enable = self.__registers.by_name(key + ".upper_fan.enabled").value
-                upper_fan_vendor = self.__registers.by_name(key + ".upper_fan.vendor").value
-                upper_fan_model = self.__registers.by_name(key + ".upper_fan.model").value
-                upper_fan_output = self.__registers.by_name(key + ".upper_fan.output").value
+                # Air temperature lower.
+                air_temp_lower_circuit = self.__registers.by_name(key + ".air_temp_lower.circuit").value
+                air_temp_lower_dev = self.__registers.by_name(key + ".air_temp_lower.dev").value
+                air_temp_lower_enabled = self.__registers.by_name(key + ".air_temp_lower.enabled").value
+                air_temp_lower_type = self.__registers.by_name(key + ".air_temp_lower.type").value
 
-                lower_fan_enable = self.__registers.by_name(key + ".lower_fan.enabled").value
-                lower_fan_vendor = self.__registers.by_name(key + ".lower_fan.vendor").value
-                lower_fan_model = self.__registers.by_name(key + ".lower_fan.model").value
-                lower_fan_output = self.__registers.by_name(key + ".lower_fan.output").value
+                # Air temperature upper.
+                air_temp_upper_circuit = self.__registers.by_name(key + ".air_temp_upper.circuit").value
+                air_temp_upper_dev = self.__registers.by_name(key + ".air_temp_upper.dev").value
+                air_temp_upper_enabled = self.__registers.by_name(key + ".air_temp_upper.enabled").value
+                air_temp_upper_type = self.__registers.by_name(key + ".air_temp_upper.type").value
 
-                upper_valve_enable = self.__registers.by_name(key + ".upper_valve.enabled").value
-                upper_valve_vendor = self.__registers.by_name(key + ".upper_valve.vendor").value
-                upper_valve_model = self.__registers.by_name(key + ".upper_valve.model").value
-                upper_valve_output = self.__registers.by_name(key + ".upper_valve.output").value
+                # Circulation
+                cirulation_actual = self.__registers.by_name(key + ".cirulation.actual").value
+                cirulation_max = self.__registers.by_name(key + ".cirulation.max").value
+                cirulation_min = self.__registers.by_name(key + ".cirulation.min").value
 
-                lower_valve_enable = self.__registers.by_name(key + ".lower_valve.enabled").value
-                lower_valve_vendor = self.__registers.by_name(key + ".lower_valve.vendor").value
-                lower_valve_model = self.__registers.by_name(key + ".lower_valve.model").value
-                lower_valve_output = self.__registers.by_name(key + ".lower_valve.output").value
-
+                # Convector
                 convector_enable = self.__registers.by_name(key + ".convector.enabled").value
-                convector_vendor = self.__registers.by_name(key + ".convector.vendor").value
                 convector_model = self.__registers.by_name(key + ".convector.model").value
                 convector_stage_1 = self.__registers.by_name(key + ".convector.stage_1.output").value
                 convector_stage_2 = self.__registers.by_name(key + ".convector.stage_2.output").value
                 convector_stage_3 = self.__registers.by_name(key + ".convector.stage_3.output").value
+                convector_vendor = self.__registers.by_name(key + ".convector.vendor").value
+
+                # Loop 1
+                loop1_cnt_enabled = self.__registers.by_name(key + ".loop1.cnt.enabled").value
+                loop1_cnt_input = self.__registers.by_name(key + ".loop1.cnt.input").value
+                loop1_cnt_tpl = self.__registers.by_name(key + ".loop1.cnt.tpl").value
+                loop1_fan_enabled = self.__registers.by_name(key + ".loop1.fan.enabled").value
+                loop1_fan_model = self.__registers.by_name(key + ".loop1.fan.model").value
+                loop1_fan_output = self.__registers.by_name(key + ".loop1.fan.output").value
+                loop1_fan_vendor = self.__registers.by_name(key + ".loop1.fan.vendor").value
+                loop1_temp_circuit = self.__registers.by_name(key + ".loop1.temp.circuit").value
+                loop1_temp_dev = self.__registers.by_name(key + ".loop1.temp.dev").value
+                loop1_temp_enabled = self.__registers.by_name(key + ".loop1.temp.enabled").value
+                loop1_temp_type = self.__registers.by_name(key + ".loop1.temp.type").value
+                loop1_valve_enabled = self.__registers.by_name(key + ".loop1.valve.enabled").value
+                loop1_valve_model = self.__registers.by_name(key + ".loop1.valve.model").value
+                loop1_valve_output = self.__registers.by_name(key + ".loop1.valve.output").value
+                loop1_valve_vendor = self.__registers.by_name(key + ".loop1.valve.vendor").value
+
+                # Loop 2
+                loop2_cnt_enabled = self.__registers.by_name(key + ".loop2.cnt.enabled").value
+                loop2_cnt_input = self.__registers.by_name(key + ".loop2.cnt.input").value
+                loop2_cnt_tpl = self.__registers.by_name(key + ".loop2.cnt.tpl").value
+                loop2_fan_enabled = self.__registers.by_name(key + ".loop2.fan.enabled").value
+                loop2_fan_model = self.__registers.by_name(key + ".loop2.fan.model").value
+                loop2_fan_output = self.__registers.by_name(key + ".loop2.fan.output").value
+                loop2_fan_vendor = self.__registers.by_name(key + ".loop2.fan.vendor").value
+                loop2_temp_circuit = self.__registers.by_name(key + ".loop2.temp.circuit").value
+                loop2_temp_dev = self.__registers.by_name(key + ".loop2.temp.dev").value
+                loop2_temp_enabled = self.__registers.by_name(key + ".loop2.temp.enabled").value
+                loop2_temp_type = self.__registers.by_name(key + ".loop2.temp.type").value
+                loop2_valve_enabled = self.__registers.by_name(key + ".loop2.valve.enabled").value
+                loop2_valve_model = self.__registers.by_name(key + ".loop2.valve.model").value
+                loop2_valve_output = self.__registers.by_name(key + ".loop2.valve.output").value
+                loop2_valve_vendor = self.__registers.by_name(key + ".loop2.valve.vendor").value
 
 
                 config = {
                     "name": "HVAC",
 
-                    "delta_time":delta_time,
+                    "delta_time": delta_time,
                     "update_rate": update_rate,
-                    "thermal_mode":thermal_mode,
-                    "thermal_force_limit":thermal_force_limit,
-                    "adjust_temp":adjust_temp,
+                    "thermal_mode": thermal_mode,
+                    "thermal_force_limit": thermal_force_limit,
+                    "adjust_temp": adjust_temp,
+                    "temp_actual": temp_actual,
+                    "temp_max": temp_max,
+                    "temp_min": temp_min,
+                    "ventilation_max": ventilation_max,
+                    "ventilation_min": ventilation_min,
 
-                    "room_theromometer_enable": room_theromometer_enable,
-                    "room_theromometer_mou": room_theromometer_mou,
-                    "room_theromometer_dev": room_theromometer_dev,
-                    "room_theromometer_dev_type": room_theromometer_dev_type,
-                    "room_theromometer_circuit": room_theromometer_circuit,
+                    "air_temp_cent_circuit": air_temp_cent_circuit,
+                    "air_temp_cent_dev": air_temp_cent_dev,
+                    "air_temp_cent_enabled": air_temp_cent_enabled,
+                    "air_temp_cent_type": air_temp_cent_type,
 
-                    "upper_fan_enable": upper_fan_enable,
-                    "upper_fan_vendor": upper_fan_vendor,
-                    "upper_fan_model": upper_fan_model,
-                    "upper_fan_output": upper_fan_output,
+                    "air_temp_lower_circuit": air_temp_lower_circuit,
+                    "air_temp_lower_dev": air_temp_lower_dev,
+                    "air_temp_lower_enabled": air_temp_lower_enabled,
+                    "air_temp_lower_type": air_temp_lower_type,
 
-                    "lower_fan_enable": lower_fan_enable,
-                    "lower_fan_vendor": lower_fan_vendor,
-                    "lower_fan_model": lower_fan_model,
-                    "lower_fan_output": lower_fan_output,
+                    "air_temp_upper_circuit": air_temp_upper_circuit,
+                    "air_temp_upper_dev": air_temp_upper_dev,
+                    "air_temp_upper_enabled": air_temp_upper_enabled,
+                    "air_temp_upper_type": air_temp_upper_type,
 
-                    "upper_valve_enable": upper_valve_enable,
-                    "upper_valve_vendor": upper_valve_vendor,
-                    "upper_valve_model": upper_valve_model,
-                    "upper_valve_output": upper_valve_output,
-
-                    "lower_valve_enable": lower_valve_enable,
-                    "lower_valve_vendor": lower_valve_vendor,
-                    "lower_valve_model": lower_valve_model,
-                    "lower_valve_output": lower_valve_output,
+                    "cirulation_actual": cirulation_actual,
+                    "cirulation_max": cirulation_max,
+                    "cirulation_min": cirulation_min,
 
                     "convector_enable": convector_enable,
-                    "convector_vendor": convector_vendor,
                     "convector_model": convector_model,
                     "convector_stage_1": convector_stage_1,
                     "convector_stage_2": convector_stage_2,
                     "convector_stage_3": convector_stage_3,
+                    "convector_vendor": convector_vendor,
+
+                    "loop1_cnt_enabled": loop1_cnt_enabled,
+                    "loop1_cnt_input": loop1_cnt_input,
+                    "loop1_cnt_tpl": loop1_cnt_tpl,
+                    "loop1_fan_enabled": loop1_fan_enabled,
+                    "loop1_fan_model": loop1_fan_model,
+                    "loop1_fan_output": loop1_fan_output,
+                    "loop1_fan_vendor": loop1_fan_vendor,
+                    "loop1_temp_circuit": loop1_temp_circuit,
+                    "loop1_temp_dev": loop1_temp_dev,
+                    "loop1_temp_enabled": loop1_temp_enabled,
+                    "loop1_temp_type": loop1_temp_type,
+                    "loop1_valve_enabled": loop1_valve_enabled,
+                    "loop1_valve_model": loop1_valve_model,
+                    "loop1_valve_output": loop1_valve_output,
+                    "loop1_valve_vendor": loop1_valve_vendor,
+
+                    "loop2_cnt_enabled": loop2_cnt_enabled,
+                    "loop2_cnt_input": loop2_cnt_input,
+                    "loop2_cnt_tpl": loop2_cnt_tpl,
+                    "loop2_fan_enabled": loop2_fan_enabled,
+                    "loop2_fan_model": loop2_fan_model,
+                    "loop2_fan_output": loop2_fan_output,
+                    "loop2_fan_vendor": loop2_fan_vendor,
+                    "loop2_temp_circuit": loop2_temp_circuit,
+                    "loop2_temp_dev": loop2_temp_dev,
+                    "loop2_temp_enabled": loop2_temp_enabled,
+                    "loop2_temp_type": loop2_temp_type,
+                    "loop2_valve_enabled": loop2_valve_enabled,
+                    "loop2_valve_model": loop2_valve_model,
+                    "loop2_valve_output": loop2_valve_output,
+                    "loop2_valve_vendor": loop2_valve_vendor,
+
                     "controller": self.__controller,
                     "erp_service": self.__erp_service
                 }
@@ -2149,20 +1812,24 @@ class PluginsManager:
 
     def __light_enabled(self, register):
         if register.value == 1:
-            if Plugins.HVAC not in self.__plugins:
+            if Plugins.MainLight not in self.__plugins:
                 key = register.base_name
 
-                sensor_mou = self.__registers.by_name(key + ".sensor.mou").value
+                sensor_enabled = self.__registers.by_name(key + ".sensor.enabled").value
                 sensor_dev = self.__registers.by_name(key + ".sensor.dev").value
                 sensor_circuit = self.__registers.by_name(key + ".sensor.circuit").value
+                sensor_vendor = self.__registers.by_name(key + ".sensor.vendor").value
+                sensor_model = self.__registers.by_name(key + ".sensor.model").value
                 v1_output = self.__registers.by_name(key + ".v1.output").value
                 v2_output = self.__registers.by_name(key + ".v2.output").value
 
                 config = {
                     "name": "Lamps",
-                    "sensor_mou":sensor_mou,
-                    "sensor_dev":sensor_dev,
+                    "sensor_enabled": sensor_enabled,
+                    "sensor_dev": sensor_dev,
                     "sensor_circuit": sensor_circuit,
+                    "sensor_vendor": sensor_vendor,
+                    "sensor_model": sensor_model,
                     "v1_output": v1_output,
                     "v2_output": v2_output,
                     "controller": self.__controller,
@@ -2199,7 +1866,7 @@ class PluginsManager:
                 self.__plugins[Plugins.WDTTablet].init()
 
         if register.value == 0:
-            if Plugins.MainLight in self.__plugins:
+            if Plugins.WDTTablet in self.__plugins:
                 self.__plugins[Plugins.WDTTablet].shutdown()
                 del self.__plugins[Plugins.WDTTablet]
 
@@ -2269,46 +1936,6 @@ class PluginsManager:
         if Plugins.WaterCounter in self.__plugins:
             register = self.__registers.by_name("water_cnt.state")
             register.value = self.__plugins[Plugins.WaterCounter].get_state()
-            register.ts = ts
-
-        if Plugins.Loop1Counter in self.__plugins:
-            register = self.__registers.by_name("loop1_cnt.state")
-            register.value = self.__plugins[Plugins.Loop1Counter].get_state()
-            register.ts = ts
-
-        if Plugins.Loop2Counter in self.__plugins:
-            register = self.__registers.by_name("loop2_cnt.state")
-            register.value = self.__plugins[Plugins.Loop2Counter].get_state()
-            register.ts = ts
-
-        if Plugins.AirTempUpper in self.__plugins:
-            register = self.__registers.by_name("air_temp_upper.state")
-            register.value = self.__plugins[Plugins.AirTempUpper].get_state()
-            register.ts = ts
-
-        if Plugins.AirTempLower in self.__plugins:
-            register = self.__registers.by_name("air_temp_lower.state")
-            register.value = self.__plugins[Plugins.AirTempLower].get_state()
-            register.ts = ts
-
-        if Plugins.AirTempCentral in self.__plugins:
-            register = self.__registers.by_name("air_temp_lower.state")
-            register.value = self.__plugins[Plugins.AirTempCentral].get_state()
-            register.ts = ts
-
-        if Plugins.RoomLight in self.__plugins:
-            register = self.__registers.by_name("room_light.state")
-            register.value = self.__plugins[Plugins.RoomLight].get_state()
-            register.ts = ts
-
-        if Plugins.Loop1Temperature in self.__plugins:
-            register = self.__registers.by_name("loop_1_temp.state")
-            register.value = self.__plugins[Plugins.Loop1Temperature].get_state()
-            register.ts = ts
-
-        if Plugins.Loop2Temperature in self.__plugins:
-            register = self.__registers.by_name("loop_2_temp.state")
-            register.value = self.__plugins[Plugins.Loop2Temperature].get_state()
             register.ts = ts
 
         if Plugins.PowerMeter in self.__plugins:

@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 
-import time
+from utils.timer import Timer
 
 from plugins.base_plugin import BasePlugin
 
@@ -65,7 +65,7 @@ class StatusLed(BasePlugin):
     __led_state = 0
     """LED State."""
 
-    __timestamp = 0
+    __blink_timer = None
     """Update timestamp."""
 
     __blink_time = 1
@@ -77,21 +77,23 @@ class StatusLed(BasePlugin):
 
     def init(self):
 
+        self.__blink_timer = Timer(1)
+
         if "blink_time" in self._config:
-            self.__blink_time = self._config["blink_time"]
+            self.__blink_timer.expiration_time = self._config["blink_time"]
 
     def update(self):
 
-        diff = time.time() - self.__timestamp
-        if diff > self.__blink_time:
+        self.__blink_timer.update()
+        if self.__blink_timer.expired:
+            self.__blink_timer.clear()
+
             if self.__led_state:
                 self.__led_state = 0
             else:
                 self.__led_state = 1
 
             self._controller.set_led(self._config["output"], self.__led_state)
-
-            self.__timestamp = time.time()
 
     def shutdown(self):
         self._controller.set_led(self._config["output"], 0)
