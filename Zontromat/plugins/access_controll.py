@@ -240,6 +240,8 @@ class AccessControll(BasePlugin):
         # Create logger.
         self.__logger = get_logger(__name__)
 
+        self.__logger.info("Starting the {}".format(self.name))
+
         # Set registrator state.
         self.__registrator_state = StateMachine(RegistratorState.GetFromQue)
 
@@ -294,8 +296,6 @@ class AccessControll(BasePlugin):
             self.__cards_queue = queue.Queue(self.__cards_queue_size)
         else:
             self.__cards_queue = queue.Queue(self.__cards_queue_size)
-
-
 
     def update(self):
 
@@ -358,6 +358,8 @@ class AccessControll(BasePlugin):
 
     def shutdown(self):
         """Shutdown the reader."""
+
+        self.__logger.info("Shutdown the {}".format(self.name))
 
         self.__set_latch(0)
         self.__card_reader.stop()
