@@ -183,10 +183,10 @@ class HVAC(BasePlugin):
     (-100% означава максимално да охлаждаме, +100% - максимално да отопляваме)"""
 
     __update_rate = 5
-    """Update rate."""
+    """Update rate in seconds."""
 
     __test_rate = 120 # 3600
-    """Test rate."""
+    """Test rate in seconds."""
 
     __fm_loop1 = 0
     """First measuremtn of loop 1 flow meter."""
