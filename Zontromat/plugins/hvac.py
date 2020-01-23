@@ -354,6 +354,12 @@ class HVAC(BasePlugin):
 
 #region Private Methods
 
+    def __op_mode_on_change(self, machine):
+        self.__logger.info("Operation mode: {}".format(machine.get_state()))
+
+    def __thermal_mode_on_change(self, machine):
+        self.__logger.info("Thermal mode: {}".format(machine.get_state()))
+
     def __apply_thermal_force(self, thermal_force):
         """ Apply thermal force to the devices. """
 
@@ -547,7 +553,9 @@ class HVAC(BasePlugin):
 
         self.__test_state = StateMachine(TestState.TekeFirstMeasurement)
         self.__operation_mode = StateMachine(OperationMode.NONE)
+        self.__operation_mode.on_change(self.__op_mode_on_change)
         self.__thermal_mode = StateMachine(ThermalMode.NONE)
+        self.__thermal_mode.on_change(self.__thermal_mode_on_change)
         self.__update_timer = Timer(self.__update_rate)
         self.__test_time_timer = Timer(self.__test_rate)
         self.__leak_test_timer = Timer(20)
