@@ -24,22 +24,22 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 import os
-import time
 import traceback
 
 from enum import Enum
 
 from utils.settings import ApplicationSettings
 from utils.logger import get_logger
+from utils.state_machine import StateMachine
+from utils.timer import Timer
 
 from controllers.controller_factory import ControllerFactory
 from controllers.update_state import UpdateState
 
 from bgERP.bgERP import bgERP
 
-from register import Source
-from registers import Registers
-
+from data.register import Source
+from data.registers import Registers
 
 from plugins.plugins_manager import PluginsManager
 
@@ -99,7 +99,7 @@ class EmergencyMode:
 class ZoneState(Enum):
     """Zone state machine flags."""
 
-    Idele = 0
+    Idle = 0
     Init = 1
     Login = 2
     Run = 3
@@ -111,7 +111,7 @@ class Zone():
 
 #region Attributes
 
-    __zone_state = ZoneState.Idele
+    __zone_state = ZoneState.Idle
     """Zone state."""
 
     __logger = None
@@ -129,14 +129,20 @@ class Zone():
     __plugin_manager = None
     """Plugin manager."""
 
-    __controlling_update_rate = 0.5
-    """Controlling update rate."""
+    __update_rate = 0.5
+    """Controlling update rate in seconds."""
 
-    __bgerp_update_rate = 5
-    """bgERP update rate."""
+    __update_timer = None
+    """Update timer."""
 
-    __bgerp_last_update = 0
-    """bgERP last updated timestamp."""
+    __erp_service_update_rate = 5
+    """ERP service update rate in seconds."""
+
+    __erp_service_update_timer = None
+    """ERP update timer."""
+
+    __zone_state = None
+    """Zone state."""
 
     __stop_flag = False
     """Time to Stop flag."""
@@ -144,7 +150,9 @@ class Zone():
     __bussy_flag = False
     """Bussy flag."""
 
-    __evok_failures = 0
+    __controller_comm_failures = 0
+    """Controller communication failures."""
+
 #endregion
 
 #region Constructor
@@ -175,16 +183,21 @@ class Zone():
 
         self.__plugin_manager = PluginsManager(self.__registers, self.__controller, self.__bgerp)
 
+        self.__update_timer = Timer(self.__update_rate)
+
+        self.__erp_service_update_timer = Timer(self.__erp_service_update_rate)
+
+        self.__zone_state = StateMachine(ZoneState.Idle)
+        self.__zone_state.on_change(self.__cb_zone_state)
+
 #endregion
 
 #region Private Methods
 
-    def __set_zone_state(self, state):
+    def __cb_zone_state(self, machine):
         """Set zone state."""
 
-        if self.__zone_state != state:
-            self.__zone_state = state
-            self.__logger.info("Zone state: {}".format(self.__zone_state))
+        self.__logger.info("Zone state: {}".format(machine.get_state()))
 
     def __init(self):
         """Init the zone."""
@@ -195,17 +208,13 @@ class Zone():
         if state == UpdateState.Success:
 
             # Clear all resources.
-            self.__set_zone_state(ZoneState.Login)
+            self.__zone_state.set_state(ZoneState.Login)
 
         elif state == UpdateState.Failure:
 
-
-            self.__evok_failures += 1
-
-            if self.__evok_failures >= 10:
-
-                self.__evok_failures = 0
-                self.__logger.error("EVOK service should be restarted.")
+            self.__controller_comm_failures += 1
+            if self.__controller_comm_failures >= 10:
+                self.__controller_comm_failures = 0
 
                 # Restart service 
                 # if os.name == "posix":
@@ -218,31 +227,31 @@ class Zone():
                 - Continue main cycle. 
                 """
 
-            # message = "Communication lost with EVOK."
-            # self.__logger.error(message)
-            self.__set_zone_state(ZoneState.Init)
+                message = "Communication lost with controller."
+                self.__logger.error(message)
+
+            self.__zone_state.set_state(ZoneState.Init)
 
     def __login(self):
         """Login to bgERP."""
 
         # one_wire = self.__controller.get_1w_devices()
-
         # modbus = self.__controller.get_modbus_devices()
-
-        credentials = { \
+        credentials = \
+        { \
             "serial_number": self.__controller.serial_number, \
             "model": self.__controller.model, \
             "version": self.__controller.version, \
             # "one_wire": one_wire, \
             # "modbus": modbus, \
-            }
+        }
 
         login_state = self.__bgerp.login(credentials)
 
         if login_state:
-            self.__set_zone_state(ZoneState.Run)
+            self.__zone_state.set_state(ZoneState.Run)
         else:
-            self.__set_zone_state(ZoneState.Init)
+            self.__zone_state.set_state(ZoneState.Init)
 
     def __run(self):
 
@@ -251,18 +260,15 @@ class Zone():
 
         if state == UpdateState.Success:
             self.__plugin_manager.update()
-            self.__evok_failures = 0
+            self.__controller_comm_failures = 0
 
         elif state == UpdateState.Failure:
 
-            self.__evok_failures += 1
-
-            if self.__evok_failures >= 10:
-                self.__evok_failures = 0
+            self.__controller_comm_failures += 1
+            if self.__controller_comm_failures >= 10:
+                self.__controller_comm_failures = 0
 
                 self.__logger.error("EVOK service should be restarted.")
-
-
                 """
                 TODO: In case of failure:
                 - Try several times if result is still unsucessfull reestart the EVOK.
@@ -274,7 +280,9 @@ class Zone():
             self.__logger.error(message)
 
         # Update periodicaly bgERP.
-        if time.time() >= self.__bgerp_last_update:
+        self.__erp_service_update_timer.update()
+        if self.__erp_service_update_timer.expired:
+            self.__erp_service_update_timer.clear()
 
             ztm_regs = self.__registers.by_source(Source.Zontromat)
             ztm_regs_dict = ztm_regs.to_dict()
@@ -284,9 +292,7 @@ class Zone():
                 self.__registers.update(update_state)
 
             else:
-                self.__set_zone_state(ZoneState.Init)
-
-            self.__bgerp_last_update = time.time() + self.__bgerp_update_rate
+                self.__zone_state.set_state(ZoneState.Init)
 
     def __shutdown(self):
         """Shutdown procedure."""
@@ -300,41 +306,34 @@ class Zone():
         success = True
 
         if success:
-            self.__set_zone_state(ZoneState.Run)
+            self.__zone_state.set_state(ZoneState.Run)
 
         else:
-            self.__set_zone_state(ZoneState.Test)
-
+            self.__zone_state.set_state(ZoneState.Test)
 
     def __update(self):
 
-        if self.__zone_state == ZoneState.Idele:
-
+        if self.__zone_state.is_state(ZoneState.Idle):
             # Do nothing for now.
-            self.__set_zone_state(ZoneState.Init)
+            self.__zone_state.set_state(ZoneState.Init)
 
-        elif self.__zone_state == ZoneState.Init:
-
+        elif self.__zone_state.is_state(ZoneState.Init):
             # Initializde
             self.__init()
 
-        elif self.__zone_state == ZoneState.Login:
-
+        elif self.__zone_state.is_state(ZoneState.Login):
             # Login room.
             self.__login()
 
-        elif self.__zone_state == ZoneState.Run:
-
+        elif self.__zone_state.is_state(ZoneState.Run):
             # Run the proces of the room.
             self.__run()
 
-        elif self.__zone_state == ZoneState.Shutdown:
-
+        elif self.__zone_state.is_state(ZoneState.Shutdown):
             # Shutdown the devices.
             self.__shutdown()
 
-        elif self.__zone_state == ZoneState.Test:
-
+        elif self.__zone_state.is_state(ZoneState.Test):
             self.__test()
 
 #endregion
@@ -344,11 +343,11 @@ class Zone():
     def run(self):
         """Run the process."""
 
-        controlling_last_update = 0
-
         while not self.__stop_flag:
 
-            if time.time() > controlling_last_update + self.__controlling_update_rate:
+            self.__update_timer.update()
+            if self.__update_timer.expired:
+                self.__update_timer.clear()
 
                 if self.__bussy_flag:
                     pass
@@ -360,16 +359,14 @@ class Zone():
                 except Exception:
                     trace_back = traceback.format_exc()
                     self.__logger.error(trace_back)
-                    self.__set_zone_state(ZoneState.Init)
+                    self.__zone_state.set_state(ZoneState.Init)
 
                 self.__bussy_flag = False
-
-                controlling_last_update = time.time()
 
     def shutdown(self):
         """Shutdown the process."""
 
-        self.__set_zone_state(ZoneState.Shutdown)
+        self.__zone_state.set_state(ZoneState.Shutdown)
         self.__plugin_manager.shutdown()
         self.__stop_flag = True
 
