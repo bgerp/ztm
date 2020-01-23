@@ -29,9 +29,9 @@ from enum import Enum
 
 from utils.logger import get_logger
 
-from register import Scope
-from register import Source
-from register import Register
+from data.register import Scope
+from data.register import Source
+from data.register import Register
 
 from plugins.status_led import StatusLed
 from plugins.tamper import Tamper
@@ -307,40 +307,10 @@ class PluginsManager:
         register.value = "deg"
         self.__registers.add(register)
 
-        register = Register("blinds.sub_dev.uart")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.value = 1
-        self.__registers.add(register)
-
-        register = Register("blinds.sub_dev.model")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.value = "M1"
-        self.__registers.add(register)
-
-        register = Register("blinds.sun.elevation")
+        register = Register("blinds.sun.elevation.value")
         register.scope = Scope.Global
         register.source = Source.bgERP
         register.value = 0
-        self.__registers.add(register)
-
-        register = Register("blinds.sub_dev.dev_id")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.value = 3
-        self.__registers.add(register)
-
-        register = Register("blinds.sub_dev.vendor")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.value = "PT"
-        self.__registers.add(register)
-
-        register = Register("blinds.sun.azimuth.mou")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.value = "deg"
         self.__registers.add(register)
 
         register = Register("blinds.sun.elevation.mou")
@@ -349,10 +319,34 @@ class PluginsManager:
         register.value = "deg"
         self.__registers.add(register)
 
+        register = Register("blinds.sub_dev.uart")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.value = 1
+        self.__registers.add(register)
+
+        register = Register("blinds.sub_dev.dev_id")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.value = 3
+        self.__registers.add(register)
+
         register = Register("blinds.sub_dev.register_type")
         register.scope = Scope.Global
         register.source = Source.bgERP
         register.value = "inp"
+        self.__registers.add(register)
+
+        register = Register("blinds.sub_dev.model")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.value = "M1"
+        self.__registers.add(register)
+
+        register = Register("blinds.sub_dev.vendor")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.value = "PT"
         self.__registers.add(register)
 
         register = Register("blinds.enabled")
@@ -494,26 +488,6 @@ class PluginsManager:
         self.__registers.add(register)
 
         register = Register("outside.light")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        self.__registers.add(register)
-
-        register = Register("sun.elevation.value")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        self.__registers.add(register)
-
-        register = Register("sun.elevation.mou")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        self.__registers.add(register)
-
-        register = Register("sun.azimuth.value")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        self.__registers.add(register)
-
-        register = Register("sun.azimuth.mou")
         register.scope = Scope.Global
         register.source = Source.bgERP
         self.__registers.add(register)
@@ -1126,6 +1100,7 @@ class PluginsManager:
         register.source = Source.bgERP
         register.value = 0
         self.__registers.add(register)
+
 #endregion
 
 #region Lights
@@ -1223,7 +1198,7 @@ class PluginsManager:
 
         register = Register("wdt_tablet.state")
         register.scope = Scope.Global
-        register.source = Source.bgERP
+        register.source = Source.Zontromat
         self.__registers.add(register)
 
 #endregion
@@ -1427,7 +1402,7 @@ class PluginsManager:
                 self.__plugins[Plugins.Blinds] = Blinds(config)
                 self.__plugins[Plugins.Blinds].init()
 
-        if register.value == 1:
+        if register.value == 0:
             if Plugins.Blinds in self.__plugins:
                 self.__plugins[Plugins.Blinds].shutdown()
                 del self.__plugins[Plugins.Blinds]
@@ -1890,15 +1865,22 @@ class PluginsManager:
         # # JSON output
         # import json
         # bgerp_regs = self.__registers.by_source(Source.bgERP)
-        # print(json.dumps(bgerp_regs.to_dict(), indent=4, sort_keys=True))
+        # dict_regs = bgerp_regs.to_dict()
+        # text = json.dumps(dict_regs, indent=4, sort_keys=True)
+        # with open("bgerp_registers.json", "w") as f:
+        #     f.write(text)
 
         # ztm_regs = self.__registers.by_source(Source.Zontromat)
-        # print(json.dumps(ztm_regs.to_dict(), indent=4, sort_keys=True))
+        # dict_regs = ztm_regs.to_dict()
+        # text = json.dumps(dict_regs, indent=4, sort_keys=True)
+        # with open("ztm_registers.json", "w") as f:
+        #     f.write(text)
 
         # # CSV output
         # bgerp_regs = self.__registers.by_source(Source.bgERP)
         # with open("bgerp_registers.csv", "w") as f:
         #     for register in bgerp_regs:
+        #         print(register)
         #         f.write("{}\t{}\n".format(register.name, register.value))
 
         # ztm_regs = self.__registers.by_source(Source.Zontromat)
