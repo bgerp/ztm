@@ -62,6 +62,8 @@ class StateMachine():
     __state = None
     """State of the machine."""
 
+    __cb_on_change = None
+
 #endregion
 
 #region Constructor
@@ -88,8 +90,14 @@ class StateMachine():
     def set_state(self, state):
         if state is not self.__state:
             self.__state = state
+            if self.__cb_on_change is not None:
+                self.__cb_on_change(self)
 
     def is_state(self, state):
         return self.__state == state
+
+    def on_change(self, cb):
+        if cb is not None:
+            self.__cb_on_change = cb
 
 #endregion
