@@ -78,11 +78,11 @@ class AccessControll(BasePlugin):
 
 #region Attributes
 
-    __free_to_lock = 0
-    """Free to lock flag."""
-
     __logger = None
     """Logger"""
+
+    __free_to_lock = 0
+    """Free to lock flag."""
 
     __open_door_flag = 0
     """Open door flag."""
@@ -110,6 +110,9 @@ class AccessControll(BasePlugin):
 
     __exit_button_enabled = False
     """Exit button enabled."""
+
+    __open_timer = None
+    """Open timer."""
 
 #endregion
 

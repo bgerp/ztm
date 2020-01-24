@@ -72,6 +72,9 @@ class Lighting(BaseDevice):
     __v2_value = 0
     """V2 value."""
 
+    __light_sensor = None
+    """Light sensor."""
+
     __animation_bit = True
     """Animation purpose only."""
 
@@ -242,14 +245,14 @@ class Lighting(BaseDevice):
 
                         config = \
                         {\
-                            "name": "Air temperature central",
+                            "name": "Room light sensor.",
                             "dev": self._config["sensor_dev"],
                             "circuit": self._config["sensor_circuit"],
                             "controller": self._controller
                         }
 
-                        self.__air_temp_cent = U1WTVS(config)
-                        self.__air_temp_cent.init()
+                        self.__light_sensor = U1WTVS(config)
+                        self.__light_sensor.init()
 
         self.__logger = get_logger(__name__)
         self.__set_voltages(0, 0)

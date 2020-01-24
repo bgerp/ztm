@@ -68,6 +68,9 @@ class F3P146EC072600(BaseDevice):
     __speed_limit_value = 100
     """Speed limit."""
 
+    __speed = -1
+    """Speed"""
+
 #endregion
 
 #region Properties
@@ -112,20 +115,28 @@ class F3P146EC072600(BaseDevice):
 
 #region Public Methods
 
-    def set_state(self, value):
-        """Set value of the output.
+    def set_state(self, speed):
+        """Set speed of the fan.
 
         Args:
-            value (int): Output value.
+            speed (int): Output speed of the fan.
         """
 
-        if value >= 100:
-            value = 100
+        if speed >= 10:
+            speed = 10
 
-        if value >= self.speed_limit:
-            value = self.speed_limit
+        if speed < 0:
+            speed = 0
 
-        self._controller.analog_write(self._config["output"], value)
-        self.__logger.debug("Name: {}; Value {:3.3f}".format(self.name, value))
+        if speed >= self.speed_limit:
+            speed = self.speed_limit
+
+        if self.__speed == speed:
+            return
+
+        self.__speed = speed
+
+        self._controller.analog_write(self._config["output"], self.__speed)
+        self.__logger.debug("Name: {}; Value {:3.3f}".format(self.name, self.__speed))
 
 #endregion

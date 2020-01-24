@@ -79,22 +79,14 @@ class BasePlugin(Configuarable):
     def init(self):
         """Initialize the device."""
 
-        pass
-
     def update(self):
         """Update the device."""
-
-        pass
 
     def shutdown(self):
         """Shutdown the device."""
 
-        pass
-
     def get_state(self):
         """Return device state."""
-
-        return None
 
     def set_state(self, state):
         """Set device state."""
@@ -103,7 +95,5 @@ class BasePlugin(Configuarable):
 
     def test(self):
         """Test the device."""
-
-        pass
 
 #endregion

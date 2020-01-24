@@ -57,7 +57,7 @@ __status__ = "Debug"
 
 class Scope(Enum):
     """Registers scope."""
-    
+
     Global = 1
     Local = 2
 
@@ -67,7 +67,7 @@ class Source(Enum):
     Zontromat = 0
     bgERP = 1
 
-class Register(object):
+class Register:
     """Register"""
 
 #region Attributes
@@ -106,6 +106,14 @@ class Register(object):
         self.__name = name
 
     def __str__(self):
+        """As string
+
+        Returns
+        -------
+        str
+            String representation of the instance.
+
+        """
         return "Name: {}; TS: {}; Value: {}; Scope: {}; Source: {}"\
             .format(self.name, self.ts, self.value, self.scope, self.source)
 
@@ -136,7 +144,7 @@ class Register(object):
         value = ""
 
         split = self.name.split('.')
-        if len(split) > 0:
+        if split:
             value = split[0]
 
         return value

@@ -23,7 +23,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 
-import os
 import traceback
 
 from enum import Enum
@@ -179,7 +178,8 @@ class Zone():
         self.__controller = ControllerFactory.create(config)
 
         # Create bgERP and login.
-        self.__bgerp = bgERP(app_settings.get_erp_service["host"], app_settings.get_erp_service["timeout"])
+        self.__bgerp = bgERP(app_settings.get_erp_service["host"],\
+            app_settings.get_erp_service["timeout"])
 
         self.__plugin_manager = PluginsManager(self.__registers, self.__controller, self.__bgerp)
 
@@ -216,7 +216,7 @@ class Zone():
             if self.__controller_comm_failures >= 10:
                 self.__controller_comm_failures = 0
 
-                # Restart service 
+                # Restart service
                 # if os.name == "posix":
                 #     os.system("sudo service evok restart")
 
@@ -224,7 +224,7 @@ class Zone():
                 TODO: In case of failure:
                 - Try several times if result is still unsucessfull reestart the EVOK.
                 - Wait EVOK service to start.
-                - Continue main cycle. 
+                - Continue main cycle.
                 """
 
                 message = "Communication lost with controller."
@@ -273,7 +273,7 @@ class Zone():
                 TODO: In case of failure:
                 - Try several times if result is still unsucessfull reestart the EVOK.
                 - Wait EVOK service to start.
-                - Continue main cycle. 
+                - Continue main cycle.
                 """
 
             message = "Communication lost with EVOK."

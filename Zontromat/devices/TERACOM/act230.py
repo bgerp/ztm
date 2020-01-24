@@ -129,6 +129,9 @@ class ACT230(BaseDevice):
             Returns the card reader port name.
         """
 
+        if self.__port is None:
+            return ""
+
         return self.__port.name
 
 #endregion

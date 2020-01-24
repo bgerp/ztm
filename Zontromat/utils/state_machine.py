@@ -85,19 +85,51 @@ class StateMachine():
 #region Public Methods
 
     def get_state(self):
+        """Get state machine.
+
+        Returns
+        -------
+        enum
+            State of the machine.
+        """
+
         return self.__state
 
     def set_state(self, state):
-        if state is not self.__state:
+        """Set state machine.
+
+        Parameters
+        ----------
+        state : enum
+            State of the machine.
+        """
+
+        if state != self.__state:
             self.__state = state
             if self.__cb_on_change is not None:
                 self.__cb_on_change(self)
 
     def is_state(self, state):
+        """Is eqals of the state of the machine.
+
+        Returns
+        -------
+        bool
+            Is eqals of the state of the machine.
+        """
+
         return self.__state == state
 
     def on_change(self, cb):
-        if cb is not None:
+        """Set on change callback.
+
+        Parameters
+        ----------
+        cb : function pointer
+            Pointer of the function callback.
+        """
+
+        if cb != None:
             self.__cb_on_change = cb
 
 #endregion

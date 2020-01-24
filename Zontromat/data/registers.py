@@ -300,12 +300,20 @@ class Registers:
         return result
 
     def to_dict(self):
+        """Converts array in to dictionary.
+        Consisted of name and value as (key and value).
+
+        Returns
+        -------
+        array
+            Array of names.
+        """
+
         result = {}
 
         for register in self.__container:
-            #print("Name: {}; Value: {}".format(reg.name, reg.value))
             result[register.name] = register.value
-        
+
         return result
 
 #endregion

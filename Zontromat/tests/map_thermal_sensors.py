@@ -23,21 +23,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 import os
-import time
 import sys
-from time import gmtime, strftime
 import argparse
 
 from prettytable import PrettyTable
 
 sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 
-from utils.logger import crate_log_file
-from utils.logger import get_logger
-
-from utils.utils import time_measure
-
-from neuron.neuron import Neuron
+from controllers.neuron.neuron import Neuron
 
 #region File Attributes
 
@@ -106,7 +99,7 @@ def get_value(device):
     return value
 
 def get_temp_by_circuit(devices, circuit):
-    
+
     device = None
 
     for dev in devices:
@@ -181,10 +174,9 @@ def main():
 def kb_interupt():
     """Keyboard interupt handler."""
 
-    global logger, time_to_stop
+    global time_to_stop
 
     time_to_stop = True
-    logger.info("Manual stop.")
 
 if __name__ == "__main__":
     try:

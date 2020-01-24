@@ -23,10 +23,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 import argparse
-import time
 import sys
 
-from neuron import Neuron
+from controllers.neuron.neuron import Neuron
 from utils.utils import time_measure
 
 #region File Attributes

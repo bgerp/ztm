@@ -74,12 +74,8 @@ class BaseController(Configuarable):
     def init(self):
         """Init the controller."""
 
-        pass
-
     def update(self):
         """Update controller state."""
-
-        pass
 
     def pin_mode(self, pin, mode):
         """Set the pin mode.
@@ -98,8 +94,6 @@ class BaseController(Configuarable):
             State of the device.
         """
 
-        pass
-
     def digital_read(self, pin):
         """Read the digital input pin.
 
@@ -107,14 +101,12 @@ class BaseController(Configuarable):
         ----------
         pin : str
             Pin index.
-        
+
         Returns
         -------
         int
             State of the pin.
         """
-
-        pass
 
     def digital_write(self, pin, value):
         """Write the digital output pin.
@@ -126,14 +118,12 @@ class BaseController(Configuarable):
 
         value : int
             Value for the output pin.
-        
+
         Returns
         -------
         mixed
             State of the pin.
         """
-
-        pass
 
     def analog_read(self, pin):
         """Read the analog input pin.
@@ -142,14 +132,12 @@ class BaseController(Configuarable):
         ----------
         pin : str
             Pin index.
-        
+
         Returns
         -------
         int
             State of the pin.
         """
-
-        pass
 
     def analog_write(self, pin, value):
         """Write the analog input pin.
@@ -168,8 +156,6 @@ class BaseController(Configuarable):
             State of the pin.
         """
 
-        pass
-
     def read_counter(self, pin):
         """Read the digital counter input.
 
@@ -183,8 +169,6 @@ class BaseController(Configuarable):
         int
             State of the pin.
         """
-
-        pass
 
     def write_counter(self, pin, value):
         """Write the digital counter value.
@@ -203,8 +187,6 @@ class BaseController(Configuarable):
             State of the pin.
         """
 
-        pass
-
     def set_led(self, pin, value):
         """Write the LED.
 
@@ -221,8 +203,6 @@ class BaseController(Configuarable):
         int
             State of the pin.
         """
-
-        pass
 
     def read_temperature(self, dev, circuit):
         """Read the thermometer.
@@ -241,8 +221,6 @@ class BaseController(Configuarable):
             State of the device.
         """
 
-        pass
-
     def read_light(self, dev, circuit):
         """Read the light sensor.
 
@@ -259,8 +237,6 @@ class BaseController(Configuarable):
         int
             State of the device.
         """
-
-        pass
 
     def read_mb_registers(self, uart, dev_id, registers, register_type=None):
         """Read MODBUS register.
@@ -284,5 +260,3 @@ class BaseController(Configuarable):
         mixed
             State of the device.
         """
-
-        pass

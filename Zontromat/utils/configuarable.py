@@ -67,6 +67,13 @@ class Configuarable():
 
     @property
     def name(self):
+        """Name
+
+        Returns
+        -------
+        str
+            Name
+        """
         return self.__name
 
 #endregion

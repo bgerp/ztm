@@ -77,7 +77,6 @@ class U1WTVS(BaseDevice):
     def get_value(self):
         """Get value."""
 
-        #TODO: Add math.
         return float(self.__device["vis"])
 
 #endregion

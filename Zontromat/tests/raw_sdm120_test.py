@@ -74,7 +74,7 @@ __registers_ids = [ \
 """Target device registers."""
 
 __log_format = ('%(asctime)-15s %(threadName)-15s '
-          '%(levelname)-8s %(module)-15s:%(lineno)-8s %(message)s')
+                '%(levelname)-8s %(module)-15s:%(lineno)-8s %(message)s')
 """Logging format."""
 
 __logger = None

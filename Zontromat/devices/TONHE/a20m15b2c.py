@@ -66,6 +66,9 @@ class A20M15B2C(BaseDevice):
     __logger = None
     """Logger"""
 
+    __position = -1
+    """Position of the valve."""
+
 #endregion
 
 #region Constructor
@@ -79,17 +82,33 @@ class A20M15B2C(BaseDevice):
 
 #region Public Methods
 
-    def set_state(self, value):
-        """Set value of the output.
+    def set_state(self, position):
+        """Set position of the output.
 
         Args:
-            value (int): Output value.
+            position (int): Output position.
         """
 
-        if value > 0:
-            value = 1
+        if position > 10:
+            position = 10
 
-        self._controller.digital_write(self._config["output"], value)
-        self.__logger.debug("Name: {}; Value: {}".format(self.name, value))
+        if position < 0:
+            position = 0
+
+        if self.__position == position:
+            return
+
+        self.__position = position
+
+        output = self._config["output"]
+
+        # Determin is it analog or digital output.
+        if "D" in output:
+            self._controller.digital_write(output, self.__position)
+
+        elif "А" in output:
+            self._controller.analog_write(output, self.__position)
+
+        self.__logger.debug("Name: {}; Value: {}".format(self.name, self.__position))
 
 #endregion

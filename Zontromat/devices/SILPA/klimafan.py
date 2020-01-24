@@ -70,16 +70,12 @@ class Klimafan(BaseDevice):
 
 #endregion
 
-#region Constructor
+#region Public Methods
 
     def init(self):
         """Init the convector."""
 
         self.__logger = get_logger(__name__)
-
-#endregion
-
-#region Public Methods
 
     def get_state(self):
         """Return value of the output.
@@ -98,6 +94,9 @@ class Klimafan(BaseDevice):
         Args:
             value (int): Output value.
         """
+
+        if self.__state == state:
+            return
 
         self.__state = state
 

@@ -332,7 +332,6 @@ class HVAC(BasePlugin):
 
     @property
     def room_temperature(self):
-
         """Measure temperature from the sensors.
 
         Returns
@@ -341,9 +340,9 @@ class HVAC(BasePlugin):
             Actual temperatre in the room.
         """
 
-        upper = self.__air_temp_upper_dev.temp()
-        cent = self.__air_temp_cent_dev.temp()
-        lower = self.__air_temp_lower_dev.temp()
+        upper = self.__air_temp_upper_dev.value()
+        cent = self.__air_temp_cent_dev.value()
+        lower = self.__air_temp_lower_dev.value()
 
         # Troom = t1 * 20% + t2 * 60% + t3 * 20%
         value = upper * 0.2 + cent * 0.6 + lower * 0.2

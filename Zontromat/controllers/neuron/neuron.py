@@ -268,7 +268,7 @@ class Neuron(BaseController):
 
 #endregion
 
-#region Public Methods
+#region Protected Methods
 
     def _update(self):
         """Make request to the device to update the data.
@@ -279,26 +279,21 @@ class Neuron(BaseController):
 
         state = UpdateState.Failure
 
-        try:
-            # Call the Neuron.
-            uri = self.__host + self.__rest_all
-            response = requests.get(uri, timeout=self.__timeout)
+        # Call the Neuron.
+        uri = self.__host + self.__rest_all
+        response = requests.get(uri, timeout=self.__timeout)
 
-            if response.status_code == 200:
-                self.__json_data = json.loads(response.text)
-                # Mark  as succesfull.
-                state = UpdateState.Success
+        if response.status_code == 200:
+            self.__json_data = json.loads(response.text)
+            # Mark  as succesfull.
+            state = UpdateState.Success
 
-            else:
-                state = UpdateState.Failure
-
-        except Exception as e:
+        else:
             state = UpdateState.Failure
-            self.__logger.error(str(e))
 
         return state
 
-    def _get_device(self, dev, circuit):
+    def get_device(self, dev, circuit):
         """Get device from the list of all.
 
         Parameters
@@ -381,7 +376,7 @@ class Neuron(BaseController):
         device = None
         value = None
         circuit = Neuron.generate_uart_circuit(uart, dev_id, register, register_type)
-        device = self._get_device("register", circuit)
+        device = self.get_device("register", circuit)
 
         if device is not None:
             if "value" in device:
@@ -724,7 +719,7 @@ class Neuron(BaseController):
         """
 
         circuit = Neuron.generate_device_circuit(major_index, minor_index)
-        circuit_data = self._get_device("input", circuit)
+        circuit_data = self.get_device("input", circuit)
         # uri = self.__host + self.__rest_di + circuit
         # response = requests.get(uri, timeout=self.__timeout)
         # return json.loads(response.text)
@@ -749,8 +744,8 @@ class Neuron(BaseController):
         """
 
         circuit = Neuron.generate_device_circuit(major_index, minor_index)
-        
-        # circuit_data = self._get_device("input", circuit)
+
+        # circuit_data = self.get_device("input", circuit)
         # return circuit_data
 
         uri = self.__host + self.__rest_di + circuit
@@ -843,7 +838,7 @@ class Neuron(BaseController):
         ----------
         pin : str
             Pin index.
-        
+
         Returns
         -------
         int
@@ -885,7 +880,7 @@ class Neuron(BaseController):
 
         value : int
             Value for the output pin.
-        
+
         Returns
         -------
         mixed
@@ -912,6 +907,9 @@ class Neuron(BaseController):
             state = bool(value)
 
         state = int(state)
+
+        if state > 1:
+            state = 1
 
         if gpio_map["dev"] == "do":
             response = self._set_digital_output(gpio_map["major_index"],\
@@ -1064,7 +1062,7 @@ class Neuron(BaseController):
             State of the device.
         """
 
-        device = self._get_device(dev, circuit)
+        device = self.get_device(dev, circuit)
 
         value = 0
 
@@ -1095,7 +1093,7 @@ class Neuron(BaseController):
             State of the device.
         """
 
-        response = self._get_device(dev, circuit)
+        response = self.get_device(dev, circuit)
         value = 0
 
         if response is not None:

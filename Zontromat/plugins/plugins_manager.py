@@ -36,7 +36,6 @@ from data.register import Register
 from plugins.status_led import StatusLed
 from plugins.tamper import Tamper
 from plugins.flowmeter import Flowmeter
-from plugins.thermometer import Thermometer
 from plugins.power_meter import PowerMeter
 from plugins.access_controll import AccessControll
 from plugins.blinds import Blinds
@@ -706,7 +705,7 @@ class PluginsManager:
         register.update_handler = self.__hvac_adjust_temp
         register.value = 0
         self.__registers.add(register)
-        
+
         # Air temp central.
         register = Register("hvac.air_temp_cent.dev")
         register.scope = Scope.Global
@@ -731,7 +730,7 @@ class PluginsManager:
         register.source = Source.bgERP
         register.value = 1
         self.__registers.add(register)
-        
+
         # Air temp lower
         register = Register("hvac.air_temp_lower.dev")
         register.scope = Scope.Global
@@ -756,7 +755,7 @@ class PluginsManager:
         register.source = Source.bgERP
         register.value = 1
         self.__registers.add(register)
-        
+
         # Air temp upper.
         register = Register("hvac.air_temp_upper.dev")
         register.scope = Scope.Global
@@ -837,7 +836,7 @@ class PluginsManager:
         register.source = Source.bgERP
         register.value = "silpa"
         self.__registers.add(register)
-        
+
         # Delta time.
         register = Register("hvac.delta_time")
         register.scope = Scope.Global
@@ -886,13 +885,13 @@ class PluginsManager:
         register.source = Source.bgERP
         register.value = 1
         self.__registers.add(register)
-        
+
         register = Register("hvac.loop1.fan.model")
         register.scope = Scope.Global
         register.source = Source.bgERP
         register.value = "f3p146ec072600"
         self.__registers.add(register)
-        
+
         register = Register("hvac.loop1.fan.output")
         register.scope = Scope.Global
         register.source = Source.bgERP
@@ -954,7 +953,7 @@ class PluginsManager:
         register.source = Source.bgERP
         register.value = "TONHE"
         self.__registers.add(register)
-        
+
         # Loop 2 flowmeter
         register = Register("hvac.loop2.cnt.tpl")
         register.scope = Scope.Global
@@ -980,13 +979,13 @@ class PluginsManager:
         register.source = Source.bgERP
         register.value = 1
         self.__registers.add(register)
-        
+
         register = Register("hvac.loop2.fan.model")
         register.scope = Scope.Global
         register.source = Source.bgERP
         register.value = "f3p146ec072600"
         self.__registers.add(register)
-        
+
         register = Register("hvac.loop2.fan.output")
         register.scope = Scope.Global
         register.source = Source.bgERP
@@ -1048,13 +1047,13 @@ class PluginsManager:
         register.source = Source.bgERP
         register.value = "TONHE"
         self.__registers.add(register)
-        
+
         # Temperature actual
         register = Register("hvac.temp.actual")
         register.scope = Scope.Global
         register.source = Source.bgERP
         self.__registers.add(register)
-        
+
         register = Register("hvac.temp.max")
         register.scope = Scope.Global
         register.source = Source.bgERP
@@ -1073,7 +1072,7 @@ class PluginsManager:
         register.source = Source.bgERP
         register.value = 100
         self.__registers.add(register)
-        
+
         # Thermal mode
         register = Register("hvac.thermal_mode")
         register.scope = Scope.Global

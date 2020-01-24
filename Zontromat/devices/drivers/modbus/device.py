@@ -156,7 +156,7 @@ class Device():
         if parameter is None:
             raise Exception('Invalid parameter name.')
 
-        if (self._parameters is None) or (len(self._parameters) <= 0):
+        if not self._parameters:
             raise Exception('Missing parameter.')
 
         reg_count = len(self._parameters)
@@ -246,7 +246,7 @@ class Device():
         if ParameterType.is_valid_type(parameter_type) is not True:
             raise Exception('Modbus data type missmatch.')
 
-        if len(registers) <= 0:
+        if not registers:
             raise Exception('Invalid registers length.')
 
         #/** @var object Unpacked float value. value */

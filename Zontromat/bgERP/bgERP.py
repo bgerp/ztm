@@ -23,7 +23,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 import json
-import urllib.parse
 
 import requests
 
@@ -232,7 +231,7 @@ class bgERP():
         if response is not None:
 
             if response.status_code == 200:
-                if response.text is not "":
+                if response.text != "":
                     registers = json.loads(response.text)
 
             elif response.status_code == 403:

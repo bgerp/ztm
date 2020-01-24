@@ -23,7 +23,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 
-from utils.logger import get_logger
 from devices.base_device import BaseDevice
 
 #region File Attributes
@@ -62,8 +61,8 @@ class DS18B20(BaseDevice):
 
 #region Public Methods
 
-    def temp(self):
-        """New method doc."""
+    def value(self):
+        """Value of the thermometer."""
 
         return self._controller.read_temperature(self._config["dev"], self._config["circuit"])
 
