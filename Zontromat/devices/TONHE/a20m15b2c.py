@@ -106,6 +106,9 @@ class A20M15B2C(BaseDevice):
         if "D" in output:
             self._controller.digital_write(output, self.__position)
 
+        if "R" in output:
+            self._controller.digital_write(output, self.__position)
+
         elif "А" in output:
             self._controller.analog_write(output, self.__position)
 

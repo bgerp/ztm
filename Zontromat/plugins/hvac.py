@@ -80,8 +80,11 @@ class OperationMode(Enum):
     """Operation modes description."""
 
     NONE = 0
-    NORMAL = 1
-    LEAK_TEST = 2
+    Operational = 1
+    LeakTest = 2
+    LeakInLoop1 = 3
+    LeakInLoop2 = 4
+    LeaInBothLoops = 6
 
 class ThermalMode(Enum):
     """Thermal modes description."""
@@ -340,13 +343,41 @@ class HVAC(BasePlugin):
             Actual temperatre in the room.
         """
 
-        upper = self.__air_temp_upper_dev.value()
-        cent = self.__air_temp_cent_dev.value()
-        lower = self.__air_temp_lower_dev.value()
+        # Create array.
+        temperaures = []
 
-        # Troom = t1 * 20% + t2 * 60% + t3 * 20%
-        value = upper * 0.2 + cent * 0.6 + lower * 0.2
+        # Add temperatures.
+        temperaures.append(self.__air_temp_upper_dev.value())
+        temperaures.append(self.__air_temp_cent_dev.value())
+        temperaures.append(self.__air_temp_lower_dev.value())        
 
+        # Find min and max.
+        minimum = min(temperaures)
+        maximum = max(temperaures)
+ 
+        # Take mediane.
+        median = minimum + ((maximum - minimum) / 2)
+ 
+        # Divide data by two arrays.
+        upper_values = []
+        lower_values = []
+        for item in temperaures:
+            if item >= median:
+                upper_values.append(item)
+            else:
+                lower_values.append(item)        
+
+        # Use the bigger one, to create average.
+        value = 0
+        if len(upper_values) >= len(lower_values):
+            value = sum(upper_values) / len(upper_values)
+        else:
+            value = sum(lower_values) / len(lower_values)
+
+        # # Troom = t1 * 20% + t2 * 60% + t3 * 20%
+        # value = upper * 0.2 + cent * 0.6 + lower * 0.2
+
+        # return the temperature.
         return value
 
 #endregion
@@ -356,10 +387,23 @@ class HVAC(BasePlugin):
     def __op_mode_on_change(self, machine):
         self.__logger.info("Operation mode: {}".format(machine.get_state()))
 
+        if machine.is_state(OperationMode.LeakTest):
+            self._controller.set_led("LED1", 1)
+
+        if machine.is_state(OperationMode.LeakInLoop1)\
+             or machine.is_state(OperationMode.LeakInLoop2)\
+             or machine.is_state(OperationMode.LeaInBothLoops):
+            self._controller.set_led("LED2", 1)
+            self._controller.set_led("LED1", 0)
+
+        if machine.is_state(OperationMode.Operational):
+            self._controller.set_led("LED1", 0)
+            self._controller.set_led("LED2", 0)
+
     def __thermal_mode_on_change(self, machine):
         self.__logger.info("Thermal mode: {}".format(machine.get_state()))
 
-    def __apply_thermal_force(self, thermal_force):
+    def __set_thermal_force(self, thermal_force):
         """ Apply thermal force to the devices. """
 
         # 7. Лимитираме Термалната сила в интервала -100 : + 100:
@@ -473,7 +517,7 @@ class HVAC(BasePlugin):
             elif self.__thermal_force < -abs(self.__thermal_force_limit):
                 self.__thermal_force = -abs(self.__thermal_force_limit)
 
-            self.__apply_thermal_force(self.__thermal_force)
+            self.__set_thermal_force(self.__thermal_force)
 
         # Recalculate delta time.
         # pass_time = time.time() - self.__lastupdate_delta_time
@@ -485,6 +529,7 @@ class HVAC(BasePlugin):
         #     self.__lastupdate_delta_time = time.time()
 
     def __opmode_leak_test(self):
+
         # Take measurements of the flow meters.
         if self.__test_state.is_state(TestState.TekeFirstMeasurement):
 
@@ -498,13 +543,13 @@ class HVAC(BasePlugin):
 
         # Turn off the convector, fans and valves.
         if self.__test_state.is_state(TestState.TurnOffPeripheral):
-            self.__apply_thermal_force(0)
+            self.__thermal_force = 0
+            self.__set_thermal_force(self.__thermal_force)
             self.__leak_test_timer.update_last_time()
             self.__test_state.set_state(TestState.WaitForLeak)
 
         # Wait 20 seconds.
         if self.__test_state.is_state(TestState.WaitForLeak):
-
             # Recalculate passed time.
             self.__leak_test_timer.update()
             if self.__leak_test_timer.expired:
@@ -525,17 +570,22 @@ class HVAC(BasePlugin):
 
             # If there is something else then 0.
             # Then raice the alarm flag of the leak.
+            if leakage_loop1 > 0 and leakage_loop2 > 0:
+                self.__set_thermal_force(0)
+                self.__operation_mode.set_state(OperationMode.LeaInBothLoops)
+
             if leakage_loop1 > 0:
-                self.__apply_thermal_force(0)
-                self.__operation_mode.set_state(OperationMode.NONE)
+                self.__set_thermal_force(0)
+                self.__operation_mode.set_state(OperationMode.LeakInLoop1)
 
             if leakage_loop2 > 0:
-                self.__apply_thermal_force(0)
-                self.__operation_mode.set_state(OperationMode.NONE)
+                self.__set_thermal_force(0)
+                self.__operation_mode.set_state(OperationMode.LeakInLoop2)
+
 
             # Else return to the normal operation mode.
             if leakage_loop1 == 0 and leakage_loop2 == 0:
-                self.__operation_mode.set_state(OperationMode.NORMAL)
+                self.__operation_mode.set_state(OperationMode.Operational)
 
             self.__test_state.set_state(TestState.TekeFirstMeasurement)
 
@@ -741,10 +791,10 @@ class HVAC(BasePlugin):
                         self.__loop2_valve_dev.init()
 
         # Shutdown all the devices.
-        self.__apply_thermal_force(0)
+        self.__set_thermal_force(0)
 
         # Set the operation mode.
-        self.__operation_mode.set_state(OperationMode.NORMAL)
+        self.__operation_mode.set_state(OperationMode.Operational)
 
     def update(self):
         """ Update cycle. """
@@ -753,19 +803,25 @@ class HVAC(BasePlugin):
         self.__test_time_timer.update()
         if self.__test_time_timer.expired:
             self.__test_time_timer.clear()
-            self.__operation_mode.set_state(OperationMode.LEAK_TEST)
+            self.__operation_mode.set_state(OperationMode.LeakTest)
 
-        if self.__operation_mode.is_state(OperationMode.NORMAL):
+        if self.__operation_mode.is_state(OperationMode.Operational):
             self.__opmode_normal()
 
-        elif self.__operation_mode.is_state(OperationMode.LEAK_TEST):
+        elif self.__operation_mode.is_state(OperationMode.LeakTest):
             self.__opmode_leak_test()
+
+        elif self.__operation_mode.is_state(OperationMode.LeakInLoop1):
+            pass
+
+        elif self.__operation_mode.is_state(OperationMode.LeakInLoop2):
+            pass
 
     def shutdown(self):
         """ Shutdown the HVAC. """
 
         self.__logger.info("Shutdown the {}".format(self.name))
-        self.__apply_thermal_force(0)
+        self.__set_thermal_force(0)
 
     def get_state(self):
         """Returns the state of the device.
@@ -788,10 +844,5 @@ class HVAC(BasePlugin):
         # }
 
         return None
-
-    def return_to_operation(self):
-        """Set the HVAC affter problem to operational mode."""
-
-        self.__operation_mode.set_state(OperationMode.NORMAL)
 
 #endregion
