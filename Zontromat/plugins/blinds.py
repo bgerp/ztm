@@ -22,11 +22,28 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 
+from enum import Enum
+
 from utils.logger import get_logger
+from utils.state_machine import StateMachine
+from utils.timer import Timer
 
 from plugins.base_plugin import BasePlugin
 
-from devices.PT.blnd import BLND
+class Directions(Enum):
+    """Motor directions."""
+
+    NONE = 0
+    CW = 1
+    CCW = 2
+
+class BlindsState(Enum):
+    """Blinds functional states."""
+
+    NONE = 0,
+    Wait = 1,
+    Prepare = 2,
+    Execute = 3,
 
 #region File Attributes
 
@@ -67,16 +84,29 @@ class Blinds(BasePlugin):
     __logger = None
     """Logger"""
 
-    __blinds = None
-    """"""
+    __blinds_state = None
+    """Blinds state."""
 
-    __parameters_values = []
-    """Parameters values."""
+    __deg_per_sec = 18
+    """Degreeses per sec."""
 
-    __registers_ids = None
-    """Registers IDs."""
+    __curretnt_position = 0
+    """Current position of the blinds."""
+
+    __new_position = 0
+    """New position."""
+
+    __move_timer = None
+    """Move timer."""
 
 #endregion
+
+#region Private Methods
+    def __to_time(self, degrees):
+        return (degrees / self.__deg_per_sec)
+
+#endregion
+
 
 #region Public Methods
 
@@ -84,38 +114,73 @@ class Blinds(BasePlugin):
 
         self.__logger = get_logger(__name__)
 
-        if self._config["vendor"] == "PT":
+        self.__blinds_state = StateMachine(BlindsState.NONE)
 
-            if self._config["model"] == "M1":
-                self.__blinds = BLND()
-
-        self.__registers_ids = self.__blinds.get_registers_ids()
+        self.__move_timer = Timer()
 
     def update(self):
+
+        if self.__blinds_state.is_state(BlindsState.Prepare):
+
+            delta_pos = self.__new_position - self.__curretnt_position
+
+            if delta_pos > 0:
+                self.__direction = Directions.CW
+
+            elif delta_pos < 0:
+                self.__direction = Directions.CCW
+
+            else:
+                self.__direction = Directions.NONE
+                self.__blinds_state.set_state(BlindsState.Wait)
+                return
+
+            time_to_move = self.__to_time(abs(delta_pos))
+
+            self.__move_timer.expiration_time = time_to_move
+            self.__move_timer.update_last_time()
+
+            if self.__direction == Directions.CW:
+                self._controller.digital_write(self._config["output_ccw"], 0)
+                self._controller.digital_write(self._config["output_cw"], 1)
+
+            elif self.__direction == Directions.CCW:
+                self._controller.digital_write(self._config["output_cw"], 0)
+                self._controller.digital_write(self._config["output_ccw"], 1)
+
+            else:
+                self._controller.digital_write(self._config["output_cw"], 0)
+                self._controller.digital_write(self._config["output_ccw"], 0)
+
+            self.__blinds_state.set_state(BlindsState.Execute)
+
+        if self.__blinds_state.is_state(BlindsState.Execute):
+
+            self.__move_timer.update()
+            if self.__move_timer.expired:
+                self.__move_timer.clear()
+                self._controller.digital_write(self._config["output_cw"], 0)
+                self._controller.digital_write(self._config["output_ccw"], 0)
+                self.__curretnt_position = self.__new_position
+                self.__blinds_state.set_state(BlindsState.Wait)
+
+            # input_active = self._controller.digital_read(self._config["input_active"])
+            # if not input_active:
+            #     self._controller.digital_write(self._config["output_cw"], 0)
+            #     self._controller.digital_write(self._config["output_ccw"], 0)
+            #     self.__curretnt_position = self.__new_position
+            #     self.__blinds_state.set_state(BlindsState.Wait)
 
         # "blinds.sun.elevation.value": 0,
         # "blinds.sun.elevation.mou": "deg",
         # "blinds.sun.azimuth.value": 0,
         # "blinds.sun.azimuth.mou": "deg",
 
-        # "blinds.sub_dev.register_type": "inp"
+    def shutdown(self):
+        """Shutdown the blinds."""
 
-        # Get parameters
-        uart = self._config["uart"] # 2
-        device_id = self._config["dev_id"] # 3
-
-        registers_values = self._controller.read_mb_registers(uart, device_id, self.__registers_ids)
-
-        # Validate
-        is_valid = True
-        for index in registers_values:
-            if registers_values[index] is None:
-                is_valid = False
-                break
-
-        if is_valid:
-            # Convert values to human readable.
-            __parameters_values = self.__blinds.get_parameters_values(registers_values)
+        self._controller.digital_write(self._config["output_cw"], 0)
+        self._controller.digital_write(self._config["output_ccw"], 0)
 
     def get_state(self):
         """Returns the state of the device.
@@ -127,5 +192,16 @@ class Blinds(BasePlugin):
         """
 
         return None
+
+    def set_position(self, position):
+
+        if position > 180:
+            position = 180
+
+        elif position < 0:
+            position = 0
+
+        self.__new_position = position
+        self.__blinds_state.set_state(BlindsState.Prepare)
 
 #endregion
