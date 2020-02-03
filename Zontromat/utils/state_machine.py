@@ -80,6 +80,17 @@ class StateMachine():
         if state != None:
             self.set_state(state)
 
+    def __str__(self):
+        """String reprezentation of the state.
+
+        Returns
+        -------
+        mixed
+            State of the machine.
+        """
+
+        return str(self.get_state())
+
 #endregion
 
 #region Public Methods
