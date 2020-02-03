@@ -318,34 +318,29 @@ class PluginsManager:
         register.value = "deg"
         self.__registers.add(register)
 
-        register = Register("blinds.sub_dev.uart")
+        register = Register("blinds.input_active")
         register.scope = Scope.Global
         register.source = Source.bgERP
-        register.value = 1
+        register.value = "DI8"
         self.__registers.add(register)
 
-        register = Register("blinds.sub_dev.dev_id")
+        register = Register("blinds.output_ccw")
         register.scope = Scope.Global
         register.source = Source.bgERP
-        register.value = 3
+        register.value = "DO0"
         self.__registers.add(register)
 
-        register = Register("blinds.sub_dev.register_type")
+        register = Register("blinds.output_cw")
         register.scope = Scope.Global
         register.source = Source.bgERP
-        register.value = "inp"
+        register.value = "DO1"
         self.__registers.add(register)
 
-        register = Register("blinds.sub_dev.model")
+        register = Register("blinds.position")
         register.scope = Scope.Global
         register.source = Source.bgERP
-        register.value = "M1"
-        self.__registers.add(register)
-
-        register = Register("blinds.sub_dev.vendor")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.value = "PT"
+        register.update_handler = self.__blinds_pos
+        register.value = 0
         self.__registers.add(register)
 
         register = Register("blinds.enabled")
@@ -354,7 +349,6 @@ class PluginsManager:
         register.update_handler = self.__blinds_enabled
         register.value = 0
         self.__registers.add(register)
-
 
 #endregion
 
@@ -1374,11 +1368,11 @@ class PluginsManager:
         if register.value == 1:
             if Plugins.Blinds not in self.__plugins:
                 key = register.base_name
-                vendor = self.__registers.by_name(key + ".sub_dev.vendor").value
-                model = self.__registers.by_name(key + ".sub_dev.model").value
-                uart = self.__registers.by_name(key + ".sub_dev.uart").value
-                dev_id = self.__registers.by_name(key + ".sub_dev.dev_id").value
-                register_type = self.__registers.by_name(key + ".sub_dev.register_type").value
+
+                input_active = self.__registers.by_name(key + ".input_active").value
+                output_ccw = self.__registers.by_name(key + ".output_ccw").value
+                output_cw = self.__registers.by_name(key + ".output_cw").value
+
                 elevation_value = self.__registers.by_name(key + ".sun.elevation.value").value
                 elevation_mou = self.__registers.by_name(key + ".sun.elevation.mou").value
                 azimuth_value = self.__registers.by_name(key + ".sun.azimuth.value").value
@@ -1386,15 +1380,15 @@ class PluginsManager:
 
                 config = {
                     "name": "Blinds",
-                    "vendor": vendor,
-                    "model": model,
-                    "uart": uart,
-                    "dev_id": dev_id,
-                    "register_type": register_type,
+                    "input_active": input_active,
+                    "output_ccw": output_ccw,
+                    "output_cw": output_cw,
                     "elevation_value": elevation_value,
                     "elevation_mou": elevation_mou,
                     "azimuth_value": azimuth_value,
                     "azimuth_mou": azimuth_mou,
+                    "controller": self.__controller,
+                    "erp_service": self.__erp_service
                 }
 
                 # Create device.
@@ -1405,6 +1399,13 @@ class PluginsManager:
             if Plugins.Blinds in self.__plugins:
                 self.__plugins[Plugins.Blinds].shutdown()
                 del self.__plugins[Plugins.Blinds]
+
+    def __blinds_pos(self, register):
+        if Plugins.Blinds not in self.__plugins:
+            return
+
+        self.__plugins[Plugins.Blinds].set_position(register.value)
+
 
     def __power_meter_enabled(self, register):
         if register.value == 1:
