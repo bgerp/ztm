@@ -1,4 +1,3 @@
-
 ---
 type: SDM630
 modbus_register_blocks:
@@ -278,6 +277,11 @@ modbus_register_blocks:
       frequency : 1
       type: input
     - board_index : 1
+      start_reg : 258
+      count : 2
+      frequency : 1
+      type: input
+    - board_index : 1
       start_reg : 260
       count : 2
       frequency : 1
@@ -288,7 +292,7 @@ modbus_register_blocks:
       frequency : 1
       type: input
     - board_index : 1
-      start_reg : 264
+      start_reg : 263
       count : 2
       frequency : 1
       type: input
@@ -299,11 +303,6 @@ modbus_register_blocks:
       type: input
     - board_index : 1
       start_reg : 268
-      count : 2
-      frequency : 1
-      type: input
-    - board_index : 1
-      start_reg : 267
       count : 2
       frequency : 1
       type: input
@@ -428,7 +427,6 @@ modbus_register_blocks:
       frequency : 1
       type: input
 modbus_features:
-      reg_type: input
     - type : REGISTER
       major_group : 1
       count : 2

@@ -582,7 +582,6 @@ class HVAC(BasePlugin):
                 self.__set_thermal_force(0)
                 self.__operation_mode.set_state(OperationMode.LeakInLoop2)
 
-
             # Else return to the normal operation mode.
             if leakage_loop1 == 0 and leakage_loop2 == 0:
                 self.__operation_mode.set_state(OperationMode.Operational)
