@@ -263,7 +263,6 @@ class Zone():
             self.__controller_comm_failures = 0
 
         elif state == UpdateState.Failure:
-
             self.__controller_comm_failures += 1
             if self.__controller_comm_failures >= 10:
                 self.__controller_comm_failures = 0
