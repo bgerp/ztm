@@ -63,6 +63,10 @@ class StateMachine():
     """State of the machine."""
 
     __cb_on_change = None
+    """On change callback."""
+
+    __last_state = None
+    """Last state."""
 
 #endregion
 
@@ -77,7 +81,7 @@ class StateMachine():
             Current class instance.
         """
 
-        if state != None:
+        if state is not None:
             self.set_state(state)
 
     def __str__(self):
@@ -116,6 +120,11 @@ class StateMachine():
         """
 
         if state != self.__state:
+
+            # Set previous state.
+            self.__last_state = self.__state
+
+            # Set current state.
             self.__state = state
             if self.__cb_on_change is not None:
                 self.__cb_on_change(self)
@@ -140,7 +149,22 @@ class StateMachine():
             Pointer of the function callback.
         """
 
-        if cb != None:
+        if cb is not None:
             self.__cb_on_change = cb
+
+    def was(self, state):
+        """Check previous state.
+
+        Parameters
+        ----------
+        state : enum
+            Previous state of the machine.
+
+        Returns
+        -------
+        bool
+            Match to the given state.
+        """
+        return self.__last_state == state
 
 #endregion
