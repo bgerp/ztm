@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 
+import time
 from enum import Enum
 
 #region File Attributes
@@ -117,6 +118,8 @@ class Register:
         return "Name: {}; TS: {}; Value: {}; Scope: {}; Source: {}"\
             .format(self.name, self.ts, self.value, self.scope, self.source)
 
+    __repr__ = __str__
+
 #endregion
 
 #region Properties
@@ -171,17 +174,6 @@ class Register:
         """
         return self.__ts
 
-    @ts.setter
-    def ts(self, ts):
-        """Set the timestamp of the register.
-
-        Parameters
-        ----------
-        host : int
-            Timestamp of the register.
-        """
-        self.__ts = ts
-
     @property
     def value(self):
         """Returns the value of the register.
@@ -202,7 +194,14 @@ class Register:
         value : mixed
             Value of the register.
         """
+
+        # Update time.
+        self.__ts = int(time.time())
+
+        # Update value.
         self.__value = value
+
+        # Execute CB.
         if self.__update_handler is not None:
             self.__update_handler(self)
 

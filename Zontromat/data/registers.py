@@ -108,12 +108,6 @@ class Registers:
         if registers is None:
             raise ValueError("Registers can not be None.")
 
-        # Update timestamp.
-        timestamp = 0
-        if "ts" in registers:
-            timestamp = registers["ts"]
-
-
         bad_regs = Registers()
         # Go throught registers.
         for name in registers:
@@ -123,13 +117,11 @@ class Registers:
             # Update registers.
             if name in self.names():
                 register = self.by_name(name)
-                register.ts = timestamp
                 register.value = registers[name]
 
             # Add missing register.
             else:
                 register = Register(name)
-                register.ts = timestamp
                 register.value = registers[name]
                 bad_regs.add(register)
 
