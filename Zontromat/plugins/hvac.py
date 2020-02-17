@@ -34,6 +34,7 @@ from plugins.base_plugin import BasePlugin
 from devices.HangzhouAirflowElectricApplications.f3p146ec072600 import F3P146EC072600
 from devices.TONHE.a20m15b2c import A20M15B2C
 from devices.SILPA.klimafan import Klimafan
+from devices.no_vendor.flowmeter import Flowmeter
 from devices.Dallas.ds18b20 import DS18B20
 
 #region File Attributes
@@ -123,6 +124,8 @@ class HVAC(BasePlugin):
     __loop1_valve_dev = None
     """Loop 1 valve device."""
 
+    __loop1_cnt_dev = None
+    """Loop 1 flow metter."""
 
     __loop2_fan_dev = None
     """Loop 1 fan device."""
@@ -133,6 +136,8 @@ class HVAC(BasePlugin):
     __loop2_valve_dev = None
     """Loop 2 valve device."""
 
+    __loop2_cnt_dev = None
+    """Loop 2 flow metter."""
 
     __test_state = None
     """Test state machine."""
@@ -143,7 +148,6 @@ class HVAC(BasePlugin):
     __thermal_mode = None
     """Thermal mode of the HVAC."""
 
-
     __update_timer = None
     """Main process update timer."""
 
@@ -153,6 +157,7 @@ class HVAC(BasePlugin):
     __leak_test_timer = None
     """Leak test timer."""
 
+    __temp_actual = None
 
     __thermal_force_limit = 0
     """Limit thermal force."""
@@ -203,135 +208,10 @@ class HVAC(BasePlugin):
     __sm_loop2 = 0
     """Second measuremtn of loop 2 flow meter."""
 
+
 #endregion
 
 #region Properties
-
-    @property
-    def thermal_mode(self):
-        """Thermal mode.
-
-        Returns
-        -------
-        float
-            Thermal mode.
-        """
-
-        return self.__thermal_mode.get_state()
-
-    @thermal_mode.setter
-    def thermal_mode(self, value):
-        """This method is setting the HVAC system send by the central system.
-
-        Parameters
-        ----------
-        value : ThermalMode
-            Thermal mode
-        """
-
-        self.__thermal_mode.set_state(value)
-
-    @property
-    def adjust_temp(self):
-        """Adjustment temperature.
-
-        Returns
-        -------
-        float
-            Adjust temperature.
-        """
-
-        return self.__adjust_temp
-
-    @adjust_temp.setter
-    def adjust_temp(self, value):
-        """This method is setting the adjustment temperature from the user panel.
-
-        Parameters
-        ----------
-        value : float
-            Adjust temperature.
-        """
-
-        self.__adjust_temp = value
-
-    @property
-    def building_temp(self):
-        """Building temperature.
-
-        Returns
-        -------
-        float
-            Building temperature.
-        """
-
-        return self.__goal_building_temp
-
-    @building_temp.setter
-    def building_temp(self, value):
-        """This method is setting the building temperature send by the central system.
-
-        Parameters
-        ----------
-        value : float
-            Building temperature.
-        """
-
-        self.__goal_building_temp = value
-
-    @property
-    def thermal_force_limit(self):
-        """Thermal force limit.
-
-        Returns
-        -------
-        float
-            Thermal force limit.
-        """
-
-        return self.__thermal_force_limit
-
-    @thermal_force_limit.setter
-    def thermal_force_limit(self, value):
-        """This method is setting the thermal force limit.
-
-        Parameters
-        ----------
-        value : float
-            Thermal force limit.
-        """
-
-        self.__thermal_force_limit = value
-
-    @property
-    def delta_time(self):
-        """Delta time.
-
-        Returns
-        -------
-        float
-            Delta time.
-        """
-
-        return self.__delta_time
-
-    @delta_time.setter
-    def delta_time(self, value):
-        """This method is setting the delta time.
-
-        Parameters
-        ----------
-        delta_time : float
-            Delta time.
-        """
-
-        if value > 3:
-            value = 3
-
-        if value < 1:
-            value = 1
-
-        self.__delta_time = value
 
     @property
     def room_temperature(self):
@@ -347,31 +227,39 @@ class HVAC(BasePlugin):
         temperaures = []
 
         # Add temperatures.
-        temperaures.append(self.__air_temp_upper_dev.value())
-        temperaures.append(self.__air_temp_cent_dev.value())
-        temperaures.append(self.__air_temp_lower_dev.value())        
+        if self.__air_temp_upper_dev is not None:
+            temperaures.append(self.__air_temp_upper_dev.value())
+
+        if self.__air_temp_cent_dev is not None:
+            temperaures.append(self.__air_temp_cent_dev.value())
+
+        if self.__air_temp_lower_dev is not None:
+            temperaures.append(self.__air_temp_lower_dev.value())
 
         # Find min and max.
         minimum = min(temperaures)
         maximum = max(temperaures)
- 
+
         # Take mediane.
         median = minimum + ((maximum - minimum) / 2)
- 
+
         # Divide data by two arrays.
         upper_values = []
         lower_values = []
+
         for item in temperaures:
             if item >= median:
                 upper_values.append(item)
             else:
-                lower_values.append(item)        
+                lower_values.append(item)
 
         # Use the bigger one, to create average.
         value = 0
+
         if len(upper_values) >= len(lower_values):
             value = sum(upper_values) / len(upper_values)
-        else:
+
+        elif len(upper_values) <= len(lower_values):
             value = sum(lower_values) / len(lower_values)
 
         # # Troom = t1 * 20% + t2 * 60% + t3 * 20%
@@ -383,6 +271,373 @@ class HVAC(BasePlugin):
 #endregion
 
 #region Private Methods
+
+    def __update_rate_cb(self, register):
+        self.__update_rate = register.value
+
+    def __delta_time_cb(self, register):
+        self.__delta_time = register.value
+
+    def __thermal_mode_cb(self, register):
+        self.__thermal_mode.set_state(register.value)
+
+    def __thermal_force_limit_cb(self, register):
+        self.__thermal_force_limit = register.value
+
+    def __update_handler_cb(self, register):
+        self.__adjust_temp = register.value
+
+    def __temp_actual_cb(self, register):
+
+        min_temp = 2.5
+        max_temp = -2.5
+
+        key = "hvac.temp.min"
+        if self._registers.exists(key):
+            min_temp = self._registers.by_name(key).value
+
+        key = "hvac.temp.max"
+        if self._registers.exists(key):
+            max_temp = self._registers.by_name(key).value
+
+        actual_temp = register.value
+
+        if actual_temp < min_temp:
+            actual_temp = min_temp
+
+        if actual_temp > max_temp:
+            actual_temp = max_temp
+
+        self.__temp_actual = actual_temp
+
+    def __goal_building_temp_cb(self, register):
+
+        # @see https://experta.bg/L/S/122745/m/Fwntindd
+        min_temp = 18
+        max_temp = 26
+
+        actual_temp = register.value
+
+        if actual_temp < min_temp:
+            actual_temp = min_temp
+
+        if actual_temp > max_temp:
+            actual_temp = max_temp
+
+        self.__goal_building_temp = actual_temp
+
+    def __ventilation_max_cb(self, register):
+
+        if self.__loop1_fan_dev is not None:
+            self.__loop1_fan_dev.max_speed = register.value
+
+        if self.__loop2_fan_dev is not None:
+            self.__loop2_fan_dev.max_speed = register.value
+
+    def __cirulation_max_cb(self, register):
+
+        if self.__loop1_valve_dev is not None:
+            self.__loop1_valve_dev.max_pos = register.value
+
+        if self.__loop2_valve_dev is not None:
+            self.__loop2_valve_dev.max_pos = register.value
+
+    def __air_temp_cent_enabled_cb(self, register):
+
+        if register.value == 1:
+            air_temp_cent_circuit = self._registers.by_name(self._key + ".air_temp_cent.circuit")
+            air_temp_cent_dev = self._registers.by_name(self._key + ".air_temp_cent.dev")
+            air_temp_cent_type = self._registers.by_name(self._key + ".air_temp_cent.type")
+
+            if air_temp_cent_circuit is not None and\
+                air_temp_cent_dev is not None and\
+                air_temp_cent_type is not None:
+
+                config = \
+                {\
+                    "name": "Air temperature central",
+                    "dev": air_temp_cent_dev.value,
+                    "circuit": air_temp_cent_circuit.value,
+                    "typ": air_temp_cent_type.value,
+                    "controller": self._controller
+                }
+
+                self.__air_temp_cent_dev = DS18B20(config)
+                self.__air_temp_cent_dev.init()
+
+        elif register.value == 0:
+            self.__air_temp_cent_dev.shutdown()
+            del self.__air_temp_cent_dev
+
+    def __air_temp_lower_enabled_cb(self, register):
+
+        if register.value == 1:
+            air_temp_lower_circuit = self._registers.by_name(self._key + ".air_temp_lower.circuit")
+            air_temp_lower_dev = self._registers.by_name(self._key + ".air_temp_lower.dev")
+            air_temp_lower_type = self._registers.by_name(self._key + ".air_temp_lower.type")
+
+            if air_temp_lower_circuit is not None and\
+                air_temp_lower_dev is not None and\
+                air_temp_lower_type is not None:
+
+                config = \
+                {\
+                    "name": "Air temperature lower",
+                    "dev": air_temp_lower_dev.value,
+                    "circuit": air_temp_lower_circuit.value,
+                    "typ": air_temp_lower_type.value,
+                    "controller": self._controller
+                }
+
+                self.__air_temp_lower_dev = DS18B20(config)
+                self.__air_temp_lower_dev.init()
+
+        elif register.value == 0:
+            self.__air_temp_lower_dev.shutdown()
+            del self.__air_temp_lower_dev
+
+    def __air_temp_upper_enabled_cb(self, register):
+
+        if register.value == 1:
+            air_temp_upper_circuit = self._registers.by_name(self._key + ".air_temp_upper.circuit")
+            air_temp_upper_dev = self._registers.by_name(self._key + ".air_temp_upper.dev")
+            air_temp_upper_type = self._registers.by_name(self._key + ".air_temp_upper.type")
+
+            if air_temp_upper_circuit is not None and\
+                air_temp_upper_dev is not None and\
+                air_temp_upper_type is not None:
+
+                config = \
+                {\
+                    "name": "Air temperature upper",
+                    "dev": air_temp_upper_dev.value,
+                    "circuit": air_temp_upper_circuit.value,
+                    "typ": air_temp_upper_type.value,
+                    "controller": self._controller
+                }
+
+                self.__air_temp_upper_dev = DS18B20(config)
+                self.__air_temp_upper_dev.init()
+
+        elif register.value == 0:
+            self.__air_temp_upper_dev.shutdown()
+            del self.__air_temp_upper_dev
+
+    def __convector_enable_cb(self, register):
+
+        if register.value == 1:
+            convector_stage_1 = self._registers.by_name(self._key + ".convector.stage_1.output")
+            convector_stage_2 = self._registers.by_name(self._key + ".convector.stage_2.output")
+            convector_stage_3 = self._registers.by_name(self._key + ".convector.stage_3.output")
+
+            if convector_stage_1 is not None and\
+                convector_stage_2 is not None and\
+                convector_stage_3 is not None:
+
+                config = \
+                {\
+                    "name": "Convector 1",\
+                    "stage_1": convector_stage_1.value,\
+                    "stage_2": convector_stage_2.value,\
+                    "stage_3": convector_stage_3.value,\
+                    "controller": self._controller\
+                }
+
+                self.__convector_dev = Klimafan(config)
+                self.__convector_dev.init()
+
+        elif register.value == 0:
+            if self.__convector_dev is not None:
+                self.__convector_dev.shutdown()
+                del self.__convector_dev
+
+    def __loop1_cnt_enabled_cb(self, register):
+
+        if register.value == 1:
+            loop1_cnt_input = self._registers.by_name(self._key + ".loop1.cnt.input")
+            loop1_cnt_tpl = self._registers.by_name(self._key + ".loop1.cnt.tpl")
+
+            if loop1_cnt_input is not None and\
+                loop1_cnt_tpl is not None:
+
+                config = \
+                {\
+                    "name": "Convector 1",
+                    "input": loop1_cnt_input.value,
+                    "tpl": loop1_cnt_tpl.value,
+                    "controller": self._controller
+                }
+
+                self.__loop1_cnt_dev = Flowmeter(config)
+                self.__loop1_cnt_dev.init()
+
+        elif register.value == 0:
+            if self.__loop1_cnt_dev is not None:
+                self.__loop1_cnt_dev.shutdown()
+                del self.__loop1_cnt_dev
+
+    def __loop1_fan_enabled_cb(self, register):
+
+        if register.value == 1:
+
+            loop1_fan_output = self._registers.by_name(self._key + ".loop1.fan.output").value
+
+            config = \
+            {\
+                "name": "Upper FAN",
+                "output": loop1_fan_output,
+                "controller": self._controller
+            }
+
+            self.__loop1_fan_dev = F3P146EC072600(config)
+            self.__loop1_fan_dev.init()
+
+        elif register.value == 0:
+            if self.__loop1_fan_dev is not None:
+                self.__loop1_fan_dev.shutdown()
+                del self.__loop1_fan_dev
+
+    def __loop1_temp_enabled_cb(self, register):
+
+        if register.value == 1:
+            loop1_temp_circuit = self._registers.by_name(self._key + ".loop1.temp.circuit")
+            loop1_temp_dev = self._registers.by_name(self._key + ".loop1.temp.dev")
+            loop1_temp_type = self._registers.by_name(self._key + ".loop1.tempr.type")
+
+            if loop1_temp_circuit is not None and\
+                loop1_temp_dev is not None and\
+                loop1_temp_type is not None:
+
+                config = \
+                {\
+                    "name": "Loop 1 temperature",
+                    "dev": loop1_temp_dev,
+                    "circuit": loop1_temp_circuit,
+                    "typ": loop1_temp_type,
+                    "controller": self._controller
+                }
+
+                self.__loop1_temp_dev = DS18B20(config)
+                self.__loop1_temp_dev.init()
+
+        elif register.value == 0:
+            if self.__loop1_temp_dev is not None:
+                self.__loop1_temp_dev.shutdown()
+                del self.__loop1_temp_dev
+
+    def __loop1_valve_enabled_cb(self, register):
+
+        if register.value == 1:
+
+            loop1_valve_output = self._registers.by_name(self._key + ".loop1.valve.output").value
+
+            config = \
+            {\
+                "name": "Upper Valve",
+                "output": loop1_valve_output,
+                "controller": self._controller
+            }
+
+            self.__loop1_valve_dev = A20M15B2C(config)
+            self.__loop1_valve_dev.init()
+
+        if register.value == 0:
+            if self.__loop1_valve_dev is not None:
+                self.__loop1_valve_dev.shutdown()
+                del self.__loop1_valve_dev
+
+    def __loop2_cnt_enabled_cb(self, register):
+
+        if register.value == 1:
+            loop2_cnt_input = self._registers.by_name(self._key + ".loop2.cnt.input")
+            loop2_cnt_tpl = self._registers.by_name(self._key + ".loop2.cnt.tpl")
+
+            if loop2_cnt_input is not None and\
+                loop2_cnt_tpl is not None:
+
+                config = \
+                {\
+                    "name": "Convector 1",
+                    "input": loop2_cnt_input.value,
+                    "tpl": loop2_cnt_tpl.value,
+                    "controller": self._controller
+                }
+
+                self.__loop2_cnt_dev = Flowmeter(config)
+                self.__loop2_cnt_dev.init()
+
+        elif register.value == 0:
+            if self.__loop2_cnt_dev is not None:
+                self.__loop2_cnt_dev.shutdown()
+                del self.__loop2_cnt_dev
+
+    def __loop2_fan_enabled_cb(self, register):
+
+        if register.value == 1:
+            loop2_fan_output = self._registers.by_name(self._key + ".loop2.fan.output")
+
+            config = \
+            {\
+                "name": "Upper FAN",
+                "output": loop2_fan_output.value,
+                "controller": self._controller,
+            }
+
+            self.__loop2_fan_dev = F3P146EC072600(config)
+            self.__loop2_fan_dev.init()
+
+        elif register.value == 0:
+            if self.__loop2_fan_dev is not None:
+                self.__loop2_fan_dev.shutdown()
+                del self.__loop2_fan_dev
+
+    def __loop2_temp_enabled_cb(self, register):
+
+        if register.value == 1:
+            loop2_temp_circuit = self._registers.by_name(self._key + ".loop2.temp.circuit")
+            loop2_temp_dev = self._registers.by_name(self._key + ".loop2.temp.dev")
+            loop2_temp_type = self._registers.by_name(self._key + ".loop2.temp.type")
+
+            if loop2_temp_circuit is not None and\
+                loop2_temp_dev is not None and\
+                loop2_temp_type is not None:
+
+                config = \
+                {\
+                    "name": "Loop 2 temperature",
+                    "dev": loop2_temp_dev,
+                    "circuit": loop2_temp_circuit,
+                    "typ": loop2_temp_type,
+                    "controller": self._controller
+                }
+
+                self.__loop2_temp_dev = DS18B20(config)
+                self.__loop2_temp_dev.init()
+
+        elif register.value == 0:
+            if self.__loop2_temp_dev is not None:
+                self.__loop2_temp_dev.shutdown()
+                del self.__loop2_temp_dev
+
+    def __loop2_valve_enabled_cb(self, register):
+
+        if register.value == 1:
+            loop2_valve_output = self._registers.by_name(self._key + ".loop2.valve.output").value
+
+            config = \
+            {\
+                "name": "Upper Valve",
+                "output": loop2_valve_output,
+                "controller": self._controller
+            }
+
+            self.__loop2_valve_dev = A20M15B2C(config)
+            self.__loop2_valve_dev.init()
+
+        elif register.value == 0:
+            if self.__loop2_valve_dev is not None:
+                self.__loop2_valve_dev.shutdown()
+                del self.__loop2_valve_dev
 
     def __op_mode_on_change(self, machine):
         self.__logger.info("Operation mode: {}".format(machine.get_state()))
@@ -416,63 +671,52 @@ class HVAC(BasePlugin):
             .format(self.__thermal_mode.get_state(), thermal_force))
 
         if self.__thermal_mode.is_state(ThermalMode.COLD_SESON):
-
             if thermal_force > 0:
-                self.__loop1_valve_dev.set_state(0)
-                self.__loop2_valve_dev.set_state(0)
-
+                self.__loop1_valve_dev.set_pos(0)
+                self.__loop2_valve_dev.set_pos(0)
             elif thermal_force <= 0:
-                self.__loop1_valve_dev.set_state(100)
-                self.__loop2_valve_dev.set_state(100)
+                self.__loop1_valve_dev.set_pos(100)
+                self.__loop2_valve_dev.set_pos(100)
 
         elif self.__thermal_mode.is_state(ThermalMode.TRANSISION_SEASON):
-
             if thermal_force < 0:
-                self.__loop1_valve_dev.set_state(100)
-                self.__loop2_valve_dev.set_state(0)
-
+                self.__loop1_valve_dev.set_pos(100)
+                self.__loop2_valve_dev.set_pos(0)
             elif thermal_force > 0:
-                self.__loop1_valve_dev.set_state(0)
-                self.__loop2_valve_dev.set_state(100)
-
+                self.__loop1_valve_dev.set_pos(0)
+                self.__loop2_valve_dev.set_pos(100)
             else:
-                self.__loop1_valve_dev.set_state(0)
-                self.__loop2_valve_dev.set_state(0)
+                self.__loop1_valve_dev.set_pos(0)
+                self.__loop2_valve_dev.set_pos(0)
 
         elif self.__thermal_mode.is_state(ThermalMode.WARM_SEASON):
-
             if thermal_force < 0:
-                self.__loop1_valve_dev.set_state(100)
-                self.__loop2_valve_dev.set_state(100)
-
+                self.__loop1_valve_dev.set_pos(100)
+                self.__loop2_valve_dev.set_pos(100)
             elif thermal_force > 0:
-                self.__loop1_valve_dev.set_state(0)
-                self.__loop2_valve_dev.set_state(0)
+                self.__loop1_valve_dev.set_pos(0)
+                self.__loop2_valve_dev.set_pos(0)
 
         # If thermal mode set properly apply thermal force
         if not self.__thermal_mode.is_state(ThermalMode.NONE):
-
             # Set upper fan.
             if thermal_force < 0:
                 u_fan = l_scale(thermal_force, [0, 100], [0, 10])
-                self.__loop1_fan_dev.set_state(abs(u_fan))
+                self.__loop1_fan_dev.set_speed(abs(u_fan))
             else:
-                self.__loop1_fan_dev.set_state(0)
+                self.__loop1_fan_dev.set_speed(0)
 
             # Set lowe fan.
             if thermal_force > 0:
                 l_fan = l_scale(thermal_force, [0, 100], [0, 10])
-                self.__loop2_fan_dev.set_state(abs(l_fan))
+                self.__loop2_fan_dev.set_speed(abs(l_fan))
             else:
-                self.__loop2_fan_dev.set_state(0)
+                self.__loop2_fan_dev.set_speed(0)
 
             # Set convector fan.
             conv_tf = l_scale(thermal_force, [0, 100], [0, 3])
             conv_tf = int(conv_tf)
             self.__convector_dev.set_state(abs(conv_tf))
-
-        else:
-            pass
 
     def __opmode_normal(self):
 
@@ -609,185 +853,113 @@ class HVAC(BasePlugin):
         self.__leak_test_timer = Timer(20)
 
         # Region parameters
-        if "update_rate" in self._config:
-            self.__update_rate = self._config["update_rate"]
+        update_rate = self._registers.by_name(self._key + ".update_rate")
+        if update_rate is not None:
+            update_rate.update_handler = self.__update_rate_cb
 
-        if "delta_time" in self._config:
-            self.delta_time = self._config["delta_time"]
+        delta_time = self._registers.by_name(self._key + ".delta_time")
+        if delta_time is not None:
+            delta_time.update_handler = self.__delta_time_cb
 
-        if "thermal_mode" in self._config:
-            self.thermal_mode = ThermalMode(self._config["thermal_mode"])
+        thermal_mode = self._registers.by_name(self._key + ".thermal_mode")
+        if thermal_mode is not None:
+            thermal_mode.update_handler = self.__thermal_mode_cb
 
-        if "thermal_force_limit" in self._config:
-            self.thermal_force_limit = self._config["thermal_force_limit"]
+        thermal_force_limit = self._registers.by_name(self._key + ".thermal_force_limit")
+        if thermal_force_limit is not None:
+            thermal_force_limit.update_handler = self.__thermal_force_limit_cb
 
-        if "adjust_temp" in self._config:
-            self.adjust_temp = self._config["adjust_temp"]
+        adjust_temp = self._registers.by_name(self._key + ".adjust_temp")
+        if adjust_temp is not None:
+            adjust_temp.update_handler = self.__update_handler_cb
 
-        # Air thermometers
-        if "air_temp_cent_enabled" in self._config:
-            if self._config["air_temp_cent_enabled"] == 1:
-                if self._config["air_temp_cent_type"] == "DS18B20":
+        goal_building_temp = self._registers.by_name(self._key + ".goal_building_temp")
+        if goal_building_temp is not None:
+            goal_building_temp.update_handler = self.__goal_building_temp_cb
 
-                    config = \
-                    {\
-                        "name": "Air temperature central",
-                        "dev": self._config["air_temp_cent_dev"],
-                        "circuit": self._config["air_temp_cent_circuit"],
-                        "controller": self._controller
-                    }
+        # temp_actual = self._registers.by_name(self._key + ".temp.actual")
+        # if temp_actual is not None:
+        #     temp_actual.update_handler = self.__temp_actual_cb
 
-                    self.__air_temp_cent_dev = DS18B20(config)
-                    self.__air_temp_cent_dev.init()
+        # temp_max = self._registers.by_name(self._key + ".temp.max")
+        # if temp_max is not None:
+        #     temp_max.update_handler = self.__temp_max_cb
 
-        if "air_temp_lower_enabled" in self._config:
-            if self._config["air_temp_lower_enabled"] == 1:
-                if self._config["air_temp_lower_type"] == "DS18B20":
+        # temp_min = self._registers.by_name(self._key + ".temp.min")
+        # if temp_min is not None:
+        #     temp_min.update_handler = self.__temp_min_cb
 
-                    config = \
-                    {\
-                        "name": "Air temperature lower",
-                        "dev": self._config["air_temp_lower_dev"],
-                        "circuit": self._config["air_temp_lower_circuit"],
-                        "controller": self._controller
-                    }
+        # ventilation_min = self._registers.by_name(self._key + ".ventilation.min")
+        # if ventilation_min is not None:
+        #     ventilation_min.update_handler = self.__ventilation_min_cb
 
-                    self.__air_temp_lower_dev = DS18B20(config)
-                    self.__air_temp_lower_dev.init()
+        ventilation_max = self._registers.by_name(self._key + ".ventilation.max")
+        if ventilation_max is not None:
+            ventilation_max.update_handler = self.__ventilation_max_cb
 
-        if "air_temp_upper_enabled" in self._config:
-            if self._config["air_temp_upper_enabled"] == 1:
-                if self._config["air_temp_upper_type"] == "DS18B20":
+        # cirulation_actual = self._registers.by_name(self._key + ".cirulation.actual")
+        # if cirulation_actual is not None:
+        #     cirulation_actual.update_handler = self.__cirulation_actual_cb
 
-                    config = \
-                    {\
-                        "name": "Air temperature upper",
-                        "dev": self._config["air_temp_upper_dev"],
-                        "circuit": self._config["air_temp_upper_circuit"],
-                        "controller": self._controller
-                    }
+        cirulation_max = self._registers.by_name(self._key + ".cirulation.max")
+        if cirulation_max is not None:
+            cirulation_max.update_handler = self.__cirulation_max_cb
 
-                    self.__air_temp_upper_dev = DS18B20(config)
-                    self.__air_temp_upper_dev.init()
+        # cirulation_min = self._registers.by_name(self._key + ".cirulation.min")
+        # if cirulation_min is not None:
+        #     cirulation_min.update_handler = self.__cirulation_min_cb
+
+        # Air temperatures.
+        air_temp_cent_enabled = self._registers.by_name(self._key + ".air_temp_cent.enabled")
+        if air_temp_cent_enabled is not None:
+            air_temp_cent_enabled.update_handler = self.__air_temp_cent_enabled_cb
+
+        air_temp_lower_enabled = self._registers.by_name(self._key + ".air_temp_lower.enabled")
+        if air_temp_lower_enabled is not None:
+            air_temp_lower_enabled.update_handler = self.__air_temp_lower_enabled_cb
+
+        air_temp_upper_enabled = self._registers.by_name(self._key + ".air_temp_upper.enabled")
+        if air_temp_upper_enabled is not None:
+            air_temp_upper_enabled.update_handler = self.__air_temp_upper_enabled_cb
 
         # Convector
-        if "convector_enable" in self._config:
-            if self._config["convector_enable"] == 1:
-                if self._config["convector_vendor"] == "silpa":
-                    if  self._config["convector_model"] == "klimafan":
-
-                        config = \
-                        {\
-                            "name": "Convector 1",
-                            "stage_1": self._config["convector_stage_1"],
-                            "stage_2": self._config["convector_stage_2"],
-                            "stage_3": self._config["convector_stage_3"],
-                            "controller": self._controller\
-                        }
-
-                        self.__convector_dev = Klimafan(config)
-                        self.__convector_dev.init()
+        convector_enable = self._registers.by_name(self._key + ".convector.enabled")
+        if convector_enable is not None:
+            convector_enable.update_handler = self.__convector_enable_cb
 
         # Loop 1
-        if "loop1_cnt_enabled" in self._config:
-            if self._config["loop1_cnt_enabled"] == 1:
-                self.__logger.debug("Enabled loop 1.")
+        loop1_cnt_enabled = self._registers.by_name(self._key + ".loop1.cnt.enabled")
+        if loop1_cnt_enabled is not None:
+            loop1_cnt_enabled.update_handler = self.__loop1_cnt_enabled_cb
 
-        if "loop1_fan_enabled" in self._config:
-            if self._config["loop1_fan_enabled"] == 1:
-                if self._config["loop1_fan_vendor"] == "HangzhouAirflowElectricApplications":
-                    if  self._config["loop1_fan_model"] == "f3p146ec072600":
+        loop1_fan_enabled = self._registers.by_name(self._key + ".loop1.fan.enabled")
+        if loop1_fan_enabled is not None:
+            loop1_fan_enabled.update_handler = self.__loop1_fan_enabled_cb
 
-                        config = \
-                        {\
-                            "name": "Upper FAN",
-                            "output": self._config["loop1_fan_output"],
-                            "controller": self._controller,
-                            "speed_limit": 100\
-                        }
+        loop1_temp_enabled = self._registers.by_name(self._key + ".loop1.temp.enabled")
+        if loop1_temp_enabled is not None:
+            loop1_temp_enabled.update_handler = self.__loop1_temp_enabled_cb
 
-                        self.__loop1_fan_dev = F3P146EC072600(config)
-                        self.__loop1_fan_dev.init()
-
-        if "loop1_temp_enabled" in self._config:
-            if self._config["loop1_temp_enabled"] == 1:
-                if self._config["loop1_temp_type"] == "DS18B20":
-
-                    config = \
-                    {\
-                        "name": "Loop 1 temperature",
-                        "dev": self._config["loop1_temp_dev"],
-                        "circuit": self._config["loop1_temp_circuit"],
-                        "controller": self._controller
-                    }
-
-                    self.__loop1_temp_dev = DS18B20(config)
-                    self.__loop1_temp_dev.init()
-
-        if "loop1_valve_enabled" in self._config:
-            if self._config["loop1_valve_enabled"] == 1:
-                if self._config["loop1_valve_vendor"] == "TONHE":
-                    if  self._config["loop1_valve_model"] == "a20m15b2c":
-
-                        config = \
-                        {\
-                            "name": "Upper Valve",
-                            "output": self._config["loop1_valve_output"],
-                            "controller": self._controller\
-                        }
-
-                        self.__loop1_valve_dev = A20M15B2C(config)
-                        self.__loop1_valve_dev.init()
+        loop1_valve_enabled = self._registers.by_name(self._key + ".loop1.valve.enabled")
+        if loop1_valve_enabled is not None:
+            loop1_valve_enabled.update_handler = self.__loop1_valve_enabled_cb
 
         # Loop 2
-        if "loop2_cnt_enabled" in self._config:
-            if self._config["loop1_cnt_enabled"] == 1:
-                self.__logger.debug("Enabled loop 2.")
+        loop2_cnt_enabled = self._registers.by_name(self._key + ".loop2.cnt.enabled")
+        if loop2_cnt_enabled is not None:
+            loop2_cnt_enabled.update_handler = self.__loop2_cnt_enabled_cb
 
-        if "loop2_fan_enabled" in self._config:
-            if self._config["loop2_fan_enabled"] == 1:
-                if self._config["loop2_fan_vendor"] == "HangzhouAirflowElectricApplications":
-                    if  self._config["loop2_fan_model"] == "f3p146ec072600":
+        loop2_fan_enabled = self._registers.by_name(self._key + ".loop2.fan.enabled")
+        if loop2_fan_enabled is not None:
+            loop2_fan_enabled.update_handler = self.__loop2_fan_enabled_cb
 
-                        config = \
-                        {\
-                            "name": "Upper FAN",
-                            "output": self._config["loop2_fan_output"],
-                            "controller": self._controller,
-                            "speed_limit": 100\
-                        }
+        loop2_temp_enabled = self._registers.by_name(self._key + ".loop2.temp.enabled")
+        if loop2_temp_enabled is not None:
+            loop2_temp_enabled.update_handler = self.__loop2_temp_enabled_cb
 
-                        self.__loop2_fan_dev = F3P146EC072600(config)
-                        self.__loop2_fan_dev.init()
-
-        if "loop2_temp_enabled" in self._config:
-            if self._config["loop2_temp_enabled"] == 1:
-                if self._config["loop2_temp_type"] == "DS18B20":
-
-                    config = \
-                    {\
-                        "name": "Loop 2 temperature",
-                        "dev": self._config["loop2_temp_dev"],
-                        "circuit": self._config["loop2_temp_circuit"],
-                        "controller": self._controller
-                    }
-
-                    self.__loop2_temp_dev = DS18B20(config)
-                    self.__loop2_temp_dev.init()
-
-        if "loop2_valve_enabled" in self._config:
-            if self._config["loop2_valve_enabled"] == 1:
-                if self._config["loop2_valve_vendor"] == "TONHE":
-                    if  self._config["loop2_valve_model"] == "a20m15b2c":
-                        config = \
-                        {\
-                            "name": "Upper Valve",
-                            "output": self._config["loop2_valve_output"],
-                            "controller": self._controller\
-                        }
-
-                        self.__loop2_valve_dev = A20M15B2C(config)
-                        self.__loop2_valve_dev.init()
+        loop2_valve_enabled = self._registers.by_name(self._key + ".loop2.valve.enabled")
+        if loop2_valve_enabled is not None:
+            loop2_valve_enabled.update_handler = self.__loop2_valve_enabled_cb
 
         # Shutdown all the devices.
         self.__set_thermal_force(0)
@@ -799,10 +971,10 @@ class HVAC(BasePlugin):
         """ Update cycle. """
 
         # Recalculate passed time.
-        self.__test_time_timer.update()
-        if self.__test_time_timer.expired:
-            self.__test_time_timer.clear()
-            self.__operation_mode.set_state(OperationMode.LeakTest)
+        # self.__test_time_timer.update()
+        # if self.__test_time_timer.expired:
+        #     self.__test_time_timer.clear()
+        #     self.__operation_mode.set_state(OperationMode.LeakTest)
 
         if self.__operation_mode.is_state(OperationMode.Operational):
             self.__opmode_normal()
@@ -821,27 +993,5 @@ class HVAC(BasePlugin):
 
         self.__logger.info("Shutdown the {}".format(self.name))
         self.__set_thermal_force(0)
-
-    def get_state(self):
-        """Returns the state of the device.
-
-        Returns
-        -------
-        mixed
-            State of the device.
-        """
-
-        # state = { \
-        #     "time": time.time(), \
-        #     "parameters" :{ \
-        #         "thermal_mode": self.thermal_mode.value, \
-        #         "adjust_temp": self.adjust_temp, \
-        #         "building_temp": self.building_temp, \
-        #         "thermal_force_limit": self.thermal_force_limit, \
-        #         "delta_time": self.delta_time, \
-        #     } \
-        # }
-
-        return None
 
 #endregion

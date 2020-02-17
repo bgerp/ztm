@@ -100,6 +100,11 @@ class WDTTablet(BasePlugin):
 
         self._controller.digital_write(self.__output, state)
 
+    def __wdt_tablet_reset(self, register):
+        if register.value == 1:
+            register.value = 0
+            self.reset_device()
+
 #endregion
 
 #region Public Methods

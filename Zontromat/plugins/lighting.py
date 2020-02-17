@@ -78,7 +78,7 @@ class Lighting(BaseDevice):
     __animation_bit = True
     """Animation purpose only."""
 
-    __animation_step = 0.5
+    __animation_step = 0.1
     """Animation purpose only."""
 
     __animation_max = 2

@@ -22,7 +22,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 
-import time
 import os
 
 from enum import Enum
@@ -103,14 +102,14 @@ class PluginsManager:
     __registers = None
     """Registers"""
 
-    __instance = None
-    """Instance of the singelton."""
+    __controller = None
+    """Controller"""
 
-    __controller_model = None
-    """Controller model."""
+    __erp_service = None
+    """ERP system service."""
 
-    __gpio_map = None
-    """GPIO map."""
+    __plugins = None
+    """Plugins"""
 
 #endregion
 
@@ -121,8 +120,12 @@ class PluginsManager:
 
         Parameters
         ----------
-        self : Template
-            Current class instance.
+        registers : Registers
+            Registers class instance.
+        controller : mixed
+            Hardware controller.
+        erp_service : mixed
+            ERP service class instance.
         """
 
         self.__logger = get_logger(__name__)
@@ -130,6 +133,27 @@ class PluginsManager:
         self.__registers = registers
         self.__controller = controller
         self.__erp_service = erp_service
+
+#region General
+
+        register = Register("general.is_empty")
+        register.scope = Scope.Global
+        register.source = Source.Zontromat
+        register.value = 1
+        self.__registers.add(register)
+
+        register = Register("general.is_empty_timeout")
+        register.scope = Scope.Global
+        register.source = Source.Zontromat
+        self.__registers.add(register)
+
+        register = Register("general.drink_water_leak")
+        register.scope = Scope.Global
+        register.source = Source.Zontromat
+        register.value = 0
+        self.__registers.add(register)
+
+#endregion
 
 #region Status Led
 
@@ -339,7 +363,6 @@ class PluginsManager:
         register = Register("blinds.position")
         register.scope = Scope.Global
         register.source = Source.bgERP
-        register.update_handler = self.__blinds_pos
         register.value = 0
         self.__registers.add(register)
 
@@ -426,7 +449,6 @@ class PluginsManager:
         register = Register("mode.energy")
         register.scope = Scope.Global
         register.source = Source.bgERP
-        register.update_handler = self.__mode_energy
         register.value = 0
         self.__registers.add(register)
 
@@ -437,7 +459,6 @@ class PluginsManager:
         register = Register("mode.emergency")
         register.scope = Scope.Global
         register.source = Source.bgERP
-        register.update_handler = self.__mode_emergency
         register.value = 0
         self.__registers.add(register)
 
@@ -549,7 +570,6 @@ class PluginsManager:
         register = Register("access_control_1.allowed_attendees")
         register.scope = Scope.Global
         register.source = Source.bgERP
-        register.update_handler = self.__access_control_allowed_attenders_1
         register.value = ["445E6046010080FF"]
         self.__registers.add(register)
 
@@ -566,16 +586,6 @@ class PluginsManager:
         self.__registers.add(register)
 
         register = Register("access_control_1.next_attendance")
-        register.scope = Scope.Global
-        register.source = Source.Zontromat
-        self.__registers.add(register)
-
-        register = Register("access_control_1.is_empty")
-        register.scope = Scope.Global
-        register.source = Source.Zontromat
-        self.__registers.add(register)
-
-        register = Register("access_control_1.is_empty_timeout")
         register.scope = Scope.Global
         register.source = Source.Zontromat
         self.__registers.add(register)
@@ -651,7 +661,6 @@ class PluginsManager:
         register = Register("access_control_2.allowed_attendees")
         register.scope = Scope.Global
         register.source = Source.bgERP
-        register.update_handler = self.__access_control_allowed_attenders_2
         register.value = ["445E6046010080FF"]
         self.__registers.add(register)
 
@@ -672,16 +681,6 @@ class PluginsManager:
         register.source = Source.Zontromat
         self.__registers.add(register)
 
-        register = Register("access_control_2.is_empty")
-        register.scope = Scope.Global
-        register.source = Source.Zontromat
-        self.__registers.add(register)
-
-        register = Register("access_control_2.is_empty_timeout")
-        register.scope = Scope.Global
-        register.source = Source.Zontromat
-        self.__registers.add(register)
-
         register = Register("access_control_2.enabled")
         register.scope = Scope.Global
         register.source = Source.bgERP
@@ -696,7 +695,6 @@ class PluginsManager:
         register = Register("hvac.adjust_temp")
         register.scope = Scope.Global
         register.source = Source.bgERP
-        register.update_handler = self.__hvac_adjust_temp
         register.value = 0
         self.__registers.add(register)
 
@@ -801,11 +799,11 @@ class PluginsManager:
         register.value = 1
         self.__registers.add(register)
 
-        register = Register("hvac.convector.model")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.value = "klimafan"
-        self.__registers.add(register)
+        # register = Register("hvac.convector.model")
+        # register.scope = Scope.Global
+        # register.source = Source.bgERP
+        # register.value = "klimafan"
+        # self.__registers.add(register)
 
         register = Register("hvac.convector.stage_1.output")
         register.scope = Scope.Global
@@ -850,7 +848,6 @@ class PluginsManager:
         register = Register("hvac.goal_building_temp")
         register.scope = Scope.Global
         register.source = Source.bgERP
-        register.update_handler = self.__hvac_goal_building_temp
         register.value = 20
         self.__registers.add(register)
 
@@ -880,11 +877,11 @@ class PluginsManager:
         register.value = 1
         self.__registers.add(register)
 
-        register = Register("hvac.loop1.fan.model")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.value = "f3p146ec072600"
-        self.__registers.add(register)
+        # register = Register("hvac.loop1.fan.model")
+        # register.scope = Scope.Global
+        # register.source = Source.bgERP
+        # register.value = "f3p146ec072600"
+        # self.__registers.add(register)
 
         register = Register("hvac.loop1.fan.output")
         register.scope = Scope.Global
@@ -930,11 +927,11 @@ class PluginsManager:
         register.value = 1
         self.__registers.add(register)
 
-        register = Register("hvac.loop1.valve.model")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.value = "a20m15b2c"
-        self.__registers.add(register)
+        # register = Register("hvac.loop1.valve.model")
+        # register.scope = Scope.Global
+        # register.source = Source.bgERP
+        # register.value = "a20m15b2c"
+        # self.__registers.add(register)
 
         register = Register("hvac.loop1.valve.output")
         register.scope = Scope.Global
@@ -974,11 +971,11 @@ class PluginsManager:
         register.value = 1
         self.__registers.add(register)
 
-        register = Register("hvac.loop2.fan.model")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.value = "f3p146ec072600"
-        self.__registers.add(register)
+        # register = Register("hvac.loop2.fan.model")
+        # register.scope = Scope.Global
+        # register.source = Source.bgERP
+        # register.value = "f3p146ec072600"
+        # self.__registers.add(register)
 
         register = Register("hvac.loop2.fan.output")
         register.scope = Scope.Global
@@ -1024,11 +1021,11 @@ class PluginsManager:
         register.value = 1
         self.__registers.add(register)
 
-        register = Register("hvac.loop2.valve.model")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.value = "a20m15b2c"
-        self.__registers.add(register)
+        # register = Register("hvac.loop2.valve.model")
+        # register.scope = Scope.Global
+        # register.source = Source.bgERP
+        # register.value = "a20m15b2c"
+        # self.__registers.add(register)
 
         register = Register("hvac.loop2.valve.output")
         register.scope = Scope.Global
@@ -1185,7 +1182,6 @@ class PluginsManager:
         register = Register("wdt_tablet.reset")
         register.scope = Scope.Global
         register.source = Source.bgERP
-        register.update_handler = self.__wdt_tablet_reset
         register.value = 0
         self.__registers.add(register)
 
@@ -1198,23 +1194,28 @@ class PluginsManager:
 
 #region Private Methods
 
+    def __prepare_config(self, name, key):
+        config = {
+            "name": name,
+            "key": key,
+            "registers": self.__registers,
+            "controller": self.__controller,
+            "erp_service": self.__erp_service
+        }
+
+        return config
+
     def __status_led_enabled(self, register):
         if register.value == 1:
             if Plugins.StatusLed not in self.__plugins:
-                key = register.base_name
-                blink_time = self.__registers.by_name(key + ".blink_time").value
-                output = self.__registers.by_name(key + ".output").value
-
-                config = {
-                    "name": "Status LED",
-                    "blink_time": blink_time,
-                    "output": output,
-                    "controller": self.__controller,
-                    "erp_service": self.__erp_service
-                }
 
                 # Create device.
+                config = self.__prepare_config("Status LED", register.base_name)
                 self.__plugins[Plugins.StatusLed] = StatusLed(config)
+
+                # Add Handlers.
+
+                # Init
                 self.__plugins[Plugins.StatusLed].init()
 
             # Add Handlers.
@@ -1227,18 +1228,14 @@ class PluginsManager:
     def __window_closed_enabled(self, register):
         if register.value == 1:
             if Plugins.WindowClosed not in self.__plugins:
-                key = register.base_name
-                input_pin = self.__registers.by_name(key + ".input").value
-
-                config = {
-                    "name": "Windows Closed Sensor",
-                    "input": input_pin,
-                    "controller": self.__controller,
-                    "erp_service": self.__erp_service
-                }
 
                 # Create device.
+                config = self.__prepare_config("Windows Closed Sensor", register.base_name)
                 self.__plugins[Plugins.WindowClosed] = Tamper(config)
+
+                # Add Handlers.
+
+                # Init
                 self.__plugins[Plugins.WindowClosed].init()
 
         elif register.value == 0:
@@ -1249,18 +1246,14 @@ class PluginsManager:
     def __door_closed_enabled(self, register):
         if register.value == 1:
             if Plugins.DoorClosed not in self.__plugins:
-                key = register.base_name
-                input_pin = self.__registers.by_name(key + ".input").value
-
-                config = {
-                    "name": "Door Closed Sensor",
-                    "input": input_pin,
-                    "controller": self.__controller,
-                    "erp_service": self.__erp_service
-                }
 
                 # Create device.
+                config = self.__prepare_config("Door Closed Sensor", register.base_name)
                 self.__plugins[Plugins.DoorClosed] = Tamper(config)
+
+                # Add Handlers.
+
+                # Init
                 self.__plugins[Plugins.DoorClosed].init()
 
         elif register.value == 0:
@@ -1271,18 +1264,14 @@ class PluginsManager:
     def __pir_detector_enabled(self, register):
         if register.value == 1:
             if Plugins.PIRDetector not in self.__plugins:
-                key = register.base_name
-                input_pin = self.__registers.by_name(key + ".input").value
-
-                config = {
-                    "name": "PIR Detector",
-                    "input": input_pin,
-                    "controller": self.__controller,
-                    "erp_service": self.__erp_service
-                }
 
                 # Create device.
+                config = self.__prepare_config("PIR Detector", register.base_name)
                 self.__plugins[Plugins.PIRDetector] = Tamper(config)
+
+                # Add Handlers.
+
+                # Init
                 self.__plugins[Plugins.PIRDetector].init()
 
         elif register.value == 0:
@@ -1293,18 +1282,14 @@ class PluginsManager:
     def __anti_tampering_enabled(self, register):
         if register.value == 1:
             if Plugins.AntiTampering not in self.__plugins:
-                key = register.base_name
-                input_pin = self.__registers.by_name(key + ".input").value
-
-                config = {
-                    "name": "Anti Tampering",
-                    "input": input_pin,
-                    "controller": self.__controller,
-                    "erp_service": self.__erp_service
-                }
 
                 # Create device.
+                config = self.__prepare_config("Anti Tampering", register.base_name)
                 self.__plugins[Plugins.AntiTampering] = Tamper(config)
+
+                # Add Handlers.
+
+                # Init
                 self.__plugins[Plugins.AntiTampering].init()
 
         elif register.value == 0:
@@ -1315,21 +1300,15 @@ class PluginsManager:
     def __fire_detect_enabled(self, register):
         if register.value == 1:
             if Plugins.FireDetect not in self.__plugins:
-                key = register.base_name
-                input_pin = self.__registers.by_name(key + ".input").value
-
-                config = {
-                    "name": "Fire detect",
-                    "input": input_pin,
-                    "controller": self.__controller,
-                    "erp_service": self.__erp_service
-                }
 
                 # Create device.
+                config = self.__prepare_config("Fire detect", register.base_name)
                 self.__plugins[Plugins.FireDetect] = Tamper(config)
-                self.__plugins[Plugins.FireDetect].init()
 
                 # Add Handlers.
+
+                # Init
+                self.__plugins[Plugins.FireDetect].init()
 
         elif register.value == 0:
             if Plugins.FireDetect in self.__plugins:
@@ -1339,19 +1318,9 @@ class PluginsManager:
     def __water_cnt_enabled(self, register):
         if register.value == 1:
             if Plugins.WaterCounter not in self.__plugins:
-                key = register.base_name
-                tpl = self.__registers.by_name(key + ".tpl").value
-                input_pin = self.__registers.by_name(key + ".input").value
-
-                config = {
-                    "name": "Water Flow Metter",
-                    "tpl": tpl,
-                    "input": input_pin,
-                    "controller": self.__controller,
-                    "erp_service": self.__erp_service
-                }
 
                 # Create device.
+                config = self.__prepare_config("Water Flow Metter", register.base_name)
                 self.__plugins[Plugins.WaterCounter] = Flowmeter(config)
 
                 # Add Handlers.
@@ -1367,31 +1336,9 @@ class PluginsManager:
     def __blinds_enabled(self, register):
         if register.value == 1:
             if Plugins.Blinds not in self.__plugins:
-                key = register.base_name
-
-                input_active = self.__registers.by_name(key + ".input_active").value
-                output_ccw = self.__registers.by_name(key + ".output_ccw").value
-                output_cw = self.__registers.by_name(key + ".output_cw").value
-
-                elevation_value = self.__registers.by_name(key + ".sun.elevation.value").value
-                elevation_mou = self.__registers.by_name(key + ".sun.elevation.mou").value
-                azimuth_value = self.__registers.by_name(key + ".sun.azimuth.value").value
-                azimuth_mou = self.__registers.by_name(key + ".sun.azimuth.mou").value
-
-                config = {
-                    "name": "Blinds",
-                    "input_active": input_active,
-                    "output_ccw": output_ccw,
-                    "output_cw": output_cw,
-                    "elevation_value": elevation_value,
-                    "elevation_mou": elevation_mou,
-                    "azimuth_value": azimuth_value,
-                    "azimuth_mou": azimuth_mou,
-                    "controller": self.__controller,
-                    "erp_service": self.__erp_service
-                }
 
                 # Create device.
+                config = self.__prepare_config("Blinds", register.base_name)
                 self.__plugins[Plugins.Blinds] = Blinds(config)
                 self.__plugins[Plugins.Blinds].init()
 
@@ -1400,42 +1347,17 @@ class PluginsManager:
                 self.__plugins[Plugins.Blinds].shutdown()
                 del self.__plugins[Plugins.Blinds]
 
-    def __blinds_pos(self, register):
-        if Plugins.Blinds not in self.__plugins:
-            return
-
-        self.__plugins[Plugins.Blinds].set_position(register.value)
-
-
     def __power_meter_enabled(self, register):
         if register.value == 1:
             if Plugins.PowerMeter not in self.__plugins:
-                key = register.base_name
-                vendor = self.__registers.by_name(key + ".sub_dev.vendor").value
-                model = self.__registers.by_name(key + ".sub_dev.model").value
-                uart = self.__registers.by_name(key + ".sub_dev.uart").value
-                dev_id = self.__registers.by_name(key + ".sub_dev.dev_id").value
-                register_type = self.__registers.by_name(key + ".sub_dev.register_type").value
-                total_energy = self.__registers.by_name(key + ".sub_dev.total_energy").value
-                current_power = self.__registers.by_name(key + ".sub_dev.current_power").value
-                current = self.__registers.by_name(key + ".sub_dev.current").value
-
-                config = {
-                    "name": "Self current",
-                    "vendor": vendor,
-                    "model": model,
-                    "uart": uart,
-                    "dev_id": dev_id,
-                    "register_type": register_type,
-                    "total_energy": total_energy,
-                    "current_power": current_power,
-                    "current": current,
-                    "controller": self.__controller,
-                    "erp_service": self.__erp_service
-                }
 
                 # Create device.
+                config = self.__prepare_config("Power Meter", register.base_name)
                 self.__plugins[Plugins.PowerMeter] = PowerMeter(config)
+
+                # Add Handlers.
+
+                # Init
                 self.__plugins[Plugins.PowerMeter].init()
 
         if register.value == 0:
@@ -1443,56 +1365,12 @@ class PluginsManager:
                 self.__plugins[Plugins.PowerMeter].shutdown()
                 del self.__plugins[Plugins.PowerMeter]
 
-    def __mode_energy(self, register):
-        pass
-        #self.__logger.info("Energy mode: {} {}".format(register.name, register.value))
-
-    def __mode_emergency(self, register):
-        pass
-        #self.__logger.info("Emergency mode: {} {}".format(register.name, register.value))
-
     def __access_control_1_enabled(self, register):
         if register.value == 1:
             if Plugins.AccessControll1 not in self.__plugins:
-                key = register.base_name
-                time_to_open = self.__registers.by_name(key + ".time_to_open").value
-
-                exit_button_enabled = self.__registers.by_name(key + ".exit_button.enabled").value
-                exit_button_input = self.__registers.by_name(key + ".exit_button.input").value
-
-                lock_mechanism_enabled = self.__registers.by_name(key + ".lock_mechanism.enabled").value
-                lock_mechanism_output = self.__registers.by_name(key + ".lock_mechanism.output").value
-
-                card_reader_enabled = self.__registers.by_name(key + ".card_reader.enabled").value
-                card_reader_vendor = self.__registers.by_name(key + ".card_reader.vendor").value
-                card_reader_model = self.__registers.by_name(key + ".card_reader.model").value
-                card_reader_serial_number = self.__registers.by_name(key + ".card_reader.serial_number").value
-                card_reader_port_name = self.__registers.by_name(key + ".card_reader.port.name").value
-                card_reader_port_baudrate = self.__registers.by_name(key + ".card_reader.port.baudrate").value
-                card_reader_allowed_ids = self.__registers.by_name(key + ".allowed_attendees").value
-
-                config = {
-                    "name": "Access control 1",
-                    "time_to_open":time_to_open,
-
-                    "exit_button_enabled": exit_button_enabled,
-                    "exit_button_input": exit_button_input,
-
-                    "lock_mechanism_enabled": lock_mechanism_enabled,
-                    "lock_mechanism_output": lock_mechanism_output,
-
-                    "card_reader_enabled": card_reader_enabled,
-                    "card_reader_vendor": card_reader_vendor,
-                    "card_reader_model": card_reader_model,
-                    "card_reader_serial_number": card_reader_serial_number,
-                    "card_reader_port_name": card_reader_port_name,
-                    "card_reader_port_baudrate": card_reader_port_baudrate,
-                    "card_reader_allowed_ids": card_reader_allowed_ids,
-                    "controller": self.__controller,
-                    "erp_service": self.__erp_service
-                }
 
                 # Create device.
+                config = self.__prepare_config("Access control 1", register.base_name)
                 self.__plugins[Plugins.AccessControll1] = AccessControll(config)
 
                 # Add Handlers.
@@ -1505,54 +1383,12 @@ class PluginsManager:
                 self.__plugins[Plugins.AccessControll1].shutdown()
                 del self.__plugins[Plugins.AccessControll1]
 
-    def __access_control_allowed_attenders_1(self, register):
-        if Plugins.AccessControll1 not in self.__plugins:
-            return
-
-        self.__plugins[Plugins.AccessControll1].update_allowed_card_ids(register.value)
-
     def __access_control_2_enabled(self, register):
         if register.value == 1:
             if Plugins.AccessControll2 not in self.__plugins:
-                key = register.base_name
-                time_to_open = self.__registers.by_name(key + ".time_to_open").value
-
-                exit_button_enabled = self.__registers.by_name(key + ".exit_button.enabled").value
-                exit_button_input = self.__registers.by_name(key + ".exit_button.input").value
-
-                lock_mechanism_enabled = self.__registers.by_name(key + ".lock_mechanism.enabled").value
-                lock_mechanism_output = self.__registers.by_name(key + ".lock_mechanism.output").value
-
-                card_reader_enabled = self.__registers.by_name(key + ".card_reader.enabled").value
-                card_reader_vendor = self.__registers.by_name(key + ".card_reader.vendor").value
-                card_reader_model = self.__registers.by_name(key + ".card_reader.model").value
-                card_reader_serial_number = self.__registers.by_name(key + ".card_reader.serial_number").value
-                card_reader_port_name = self.__registers.by_name(key + ".card_reader.port.name").value
-                card_reader_port_baudrate = self.__registers.by_name(key + ".card_reader.port.baudrate").value
-                card_reader_allowed_ids = self.__registers.by_name(key + ".allowed_attendees").value
-
-                config = {
-                    "name": "Access control 2",
-                    "time_to_open":time_to_open,
-
-                    "exit_button_enabled": exit_button_enabled,
-                    "exit_button_input": exit_button_input,
-
-                    "lock_mechanism_enabled": lock_mechanism_enabled,
-                    "lock_mechanism_output": lock_mechanism_output,
-
-                    "card_reader_enabled": card_reader_enabled,
-                    "card_reader_vendor": card_reader_vendor,
-                    "card_reader_model": card_reader_model,
-                    "card_reader_serial_number": card_reader_serial_number,
-                    "card_reader_port_name": card_reader_port_name,
-                    "card_reader_port_baudrate": card_reader_port_baudrate,
-                    "card_reader_allowed_ids": card_reader_allowed_ids,
-                    "controller": self.__controller,
-                    "erp_service": self.__erp_service
-                }
 
                 # Create device.
+                config = self.__prepare_config("Access control 2", register.base_name)
                 self.__plugins[Plugins.AccessControll2] = AccessControll(config)
 
                 # Add Handlers.
@@ -1565,225 +1401,23 @@ class PluginsManager:
                 self.__plugins[Plugins.AccessControll2].shutdown()
                 del self.__plugins[Plugins.AccessControll2]
 
-    def __access_control_allowed_attenders_2(self, register):
-        if Plugins.AccessControll2 not in self.__plugins:
-            return
-
-        self.__plugins[Plugins.AccessControll2].update_allowed_card_ids(register.value)
-
     def __hvac_enabled(self, register):
         if register.value == 1:
             if Plugins.HVAC not in self.__plugins:
-                key = register.base_name
-
-                # Params
-                delta_time = self.__registers.by_name(key + ".delta_time").value
-                update_rate = self.__registers.by_name(key + ".update_rate").value
-                thermal_mode = self.__registers.by_name(key + ".thermal_mode").value
-                thermal_force_limit = self.__registers.by_name(key + ".thermal_force_limit").value
-                adjust_temp = self.__registers.by_name(key + ".adjust_temp").value
-                temp_actual = self.__registers.by_name(key + ".temp.actual").value
-                temp_max = self.__registers.by_name(key + ".temp.max").value
-                temp_min = self.__registers.by_name(key + ".temp.min").value
-                ventilation_max = self.__registers.by_name(key + ".ventilation.max").value
-                ventilation_min = self.__registers.by_name(key + ".ventilation.min").value
-
-                # Air temperature central.
-                air_temp_cent_circuit = self.__registers.by_name(key + ".air_temp_cent.circuit").value
-                air_temp_cent_dev = self.__registers.by_name(key + ".air_temp_cent.dev").value
-                air_temp_cent_enabled = self.__registers.by_name(key + ".air_temp_cent.enabled").value
-                air_temp_cent_type = self.__registers.by_name(key + ".air_temp_cent.type").value
-
-                # Air temperature lower.
-                air_temp_lower_circuit = self.__registers.by_name(key + ".air_temp_lower.circuit").value
-                air_temp_lower_dev = self.__registers.by_name(key + ".air_temp_lower.dev").value
-                air_temp_lower_enabled = self.__registers.by_name(key + ".air_temp_lower.enabled").value
-                air_temp_lower_type = self.__registers.by_name(key + ".air_temp_lower.type").value
-
-                # Air temperature upper.
-                air_temp_upper_circuit = self.__registers.by_name(key + ".air_temp_upper.circuit").value
-                air_temp_upper_dev = self.__registers.by_name(key + ".air_temp_upper.dev").value
-                air_temp_upper_enabled = self.__registers.by_name(key + ".air_temp_upper.enabled").value
-                air_temp_upper_type = self.__registers.by_name(key + ".air_temp_upper.type").value
-
-                # Circulation
-                cirulation_actual = self.__registers.by_name(key + ".cirulation.actual").value
-                cirulation_max = self.__registers.by_name(key + ".cirulation.max").value
-                cirulation_min = self.__registers.by_name(key + ".cirulation.min").value
-
-                # Convector
-                convector_enable = self.__registers.by_name(key + ".convector.enabled").value
-                convector_model = self.__registers.by_name(key + ".convector.model").value
-                convector_stage_1 = self.__registers.by_name(key + ".convector.stage_1.output").value
-                convector_stage_2 = self.__registers.by_name(key + ".convector.stage_2.output").value
-                convector_stage_3 = self.__registers.by_name(key + ".convector.stage_3.output").value
-                convector_vendor = self.__registers.by_name(key + ".convector.vendor").value
-
-                # Loop 1
-                loop1_cnt_enabled = self.__registers.by_name(key + ".loop1.cnt.enabled").value
-                loop1_cnt_input = self.__registers.by_name(key + ".loop1.cnt.input").value
-                loop1_cnt_tpl = self.__registers.by_name(key + ".loop1.cnt.tpl").value
-                loop1_fan_enabled = self.__registers.by_name(key + ".loop1.fan.enabled").value
-                loop1_fan_model = self.__registers.by_name(key + ".loop1.fan.model").value
-                loop1_fan_output = self.__registers.by_name(key + ".loop1.fan.output").value
-                loop1_fan_vendor = self.__registers.by_name(key + ".loop1.fan.vendor").value
-                loop1_temp_circuit = self.__registers.by_name(key + ".loop1.temp.circuit").value
-                loop1_temp_dev = self.__registers.by_name(key + ".loop1.temp.dev").value
-                loop1_temp_enabled = self.__registers.by_name(key + ".loop1.temp.enabled").value
-                loop1_temp_type = self.__registers.by_name(key + ".loop1.temp.type").value
-                loop1_valve_enabled = self.__registers.by_name(key + ".loop1.valve.enabled").value
-                loop1_valve_model = self.__registers.by_name(key + ".loop1.valve.model").value
-                loop1_valve_output = self.__registers.by_name(key + ".loop1.valve.output").value
-                loop1_valve_vendor = self.__registers.by_name(key + ".loop1.valve.vendor").value
-
-                # Loop 2
-                loop2_cnt_enabled = self.__registers.by_name(key + ".loop2.cnt.enabled").value
-                loop2_cnt_input = self.__registers.by_name(key + ".loop2.cnt.input").value
-                loop2_cnt_tpl = self.__registers.by_name(key + ".loop2.cnt.tpl").value
-                loop2_fan_enabled = self.__registers.by_name(key + ".loop2.fan.enabled").value
-                loop2_fan_model = self.__registers.by_name(key + ".loop2.fan.model").value
-                loop2_fan_output = self.__registers.by_name(key + ".loop2.fan.output").value
-                loop2_fan_vendor = self.__registers.by_name(key + ".loop2.fan.vendor").value
-                loop2_temp_circuit = self.__registers.by_name(key + ".loop2.temp.circuit").value
-                loop2_temp_dev = self.__registers.by_name(key + ".loop2.temp.dev").value
-                loop2_temp_enabled = self.__registers.by_name(key + ".loop2.temp.enabled").value
-                loop2_temp_type = self.__registers.by_name(key + ".loop2.temp.type").value
-                loop2_valve_enabled = self.__registers.by_name(key + ".loop2.valve.enabled").value
-                loop2_valve_model = self.__registers.by_name(key + ".loop2.valve.model").value
-                loop2_valve_output = self.__registers.by_name(key + ".loop2.valve.output").value
-                loop2_valve_vendor = self.__registers.by_name(key + ".loop2.valve.vendor").value
-
-
-                config = {
-                    "name": "HVAC",
-
-                    "delta_time": delta_time,
-                    "update_rate": update_rate,
-                    "thermal_mode": thermal_mode,
-                    "thermal_force_limit": thermal_force_limit,
-                    "adjust_temp": adjust_temp,
-                    "temp_actual": temp_actual,
-                    "temp_max": temp_max,
-                    "temp_min": temp_min,
-                    "ventilation_max": ventilation_max,
-                    "ventilation_min": ventilation_min,
-
-                    "air_temp_cent_circuit": air_temp_cent_circuit,
-                    "air_temp_cent_dev": air_temp_cent_dev,
-                    "air_temp_cent_enabled": air_temp_cent_enabled,
-                    "air_temp_cent_type": air_temp_cent_type,
-
-                    "air_temp_lower_circuit": air_temp_lower_circuit,
-                    "air_temp_lower_dev": air_temp_lower_dev,
-                    "air_temp_lower_enabled": air_temp_lower_enabled,
-                    "air_temp_lower_type": air_temp_lower_type,
-
-                    "air_temp_upper_circuit": air_temp_upper_circuit,
-                    "air_temp_upper_dev": air_temp_upper_dev,
-                    "air_temp_upper_enabled": air_temp_upper_enabled,
-                    "air_temp_upper_type": air_temp_upper_type,
-
-                    "cirulation_actual": cirulation_actual,
-                    "cirulation_max": cirulation_max,
-                    "cirulation_min": cirulation_min,
-
-                    "convector_enable": convector_enable,
-                    "convector_model": convector_model,
-                    "convector_stage_1": convector_stage_1,
-                    "convector_stage_2": convector_stage_2,
-                    "convector_stage_3": convector_stage_3,
-                    "convector_vendor": convector_vendor,
-
-                    "loop1_cnt_enabled": loop1_cnt_enabled,
-                    "loop1_cnt_input": loop1_cnt_input,
-                    "loop1_cnt_tpl": loop1_cnt_tpl,
-                    "loop1_fan_enabled": loop1_fan_enabled,
-                    "loop1_fan_model": loop1_fan_model,
-                    "loop1_fan_output": loop1_fan_output,
-                    "loop1_fan_vendor": loop1_fan_vendor,
-                    "loop1_temp_circuit": loop1_temp_circuit,
-                    "loop1_temp_dev": loop1_temp_dev,
-                    "loop1_temp_enabled": loop1_temp_enabled,
-                    "loop1_temp_type": loop1_temp_type,
-                    "loop1_valve_enabled": loop1_valve_enabled,
-                    "loop1_valve_model": loop1_valve_model,
-                    "loop1_valve_output": loop1_valve_output,
-                    "loop1_valve_vendor": loop1_valve_vendor,
-
-                    "loop2_cnt_enabled": loop2_cnt_enabled,
-                    "loop2_cnt_input": loop2_cnt_input,
-                    "loop2_cnt_tpl": loop2_cnt_tpl,
-                    "loop2_fan_enabled": loop2_fan_enabled,
-                    "loop2_fan_model": loop2_fan_model,
-                    "loop2_fan_output": loop2_fan_output,
-                    "loop2_fan_vendor": loop2_fan_vendor,
-                    "loop2_temp_circuit": loop2_temp_circuit,
-                    "loop2_temp_dev": loop2_temp_dev,
-                    "loop2_temp_enabled": loop2_temp_enabled,
-                    "loop2_temp_type": loop2_temp_type,
-                    "loop2_valve_enabled": loop2_valve_enabled,
-                    "loop2_valve_model": loop2_valve_model,
-                    "loop2_valve_output": loop2_valve_output,
-                    "loop2_valve_vendor": loop2_valve_vendor,
-
-                    "controller": self.__controller,
-                    "erp_service": self.__erp_service
-                }
 
                 # Create device.
+                config = self.__prepare_config("HVAC", register.base_name)
                 self.__plugins[Plugins.HVAC] = HVAC(config)
+
+                # Add Handlers.
+
+                # Init
                 self.__plugins[Plugins.HVAC].init()
 
         if register.value == 0:
             if Plugins.HVAC in self.__plugins:
                 self.__plugins[Plugins.HVAC].shutdown()
                 del self.__plugins[Plugins.HVAC]
-
-    def __hvac_adjust_temp(self, register):
-
-        if Plugins.HVAC not in self.__plugins:
-            return
-
-        min_temp = 2.5
-        max_temp = -2.5
-
-        key = "hvac.temp.min"
-        if self.__registers.exists(key):
-            min_temp = self.__registers.by_name(key).value
-
-        key = "hvac.temp.max"
-        if self.__registers.exists(key):
-            max_temp = self.__registers.by_name(key).value
-
-        actual_temp = register.value
-
-        if actual_temp < min_temp:
-            actual_temp = min_temp
-
-        if actual_temp > max_temp:
-            actual_temp = max_temp
-
-        self.__plugins[Plugins.HVAC].adjust_temp = actual_temp
-
-    def __hvac_goal_building_temp(self, register):
-
-        if Plugins.HVAC not in self.__plugins:
-            return
-
-        # @see https://experta.bg/L/S/122745/m/Fwntindd
-        min_temp = 18
-        max_temp = 26
-
-        actual_temp = register.value
-
-        if actual_temp < min_temp:
-            actual_temp = min_temp
-
-        if actual_temp > max_temp:
-            actual_temp = max_temp
-
-        self.__plugins[Plugins.HVAC].building_temp = actual_temp
-
 
     def __light_enabled(self, register):
         if register.value == 1:
@@ -1845,19 +1479,12 @@ class PluginsManager:
                 self.__plugins[Plugins.WDTTablet].shutdown()
                 del self.__plugins[Plugins.WDTTablet]
 
-    def __wdt_tablet_reset(self, register):
-        if register.value == 1:
-            if Plugins.WDTTablet in self.__plugins:
-                self.__plugins[Plugins.WDTTablet].reset_device()
-
 #endregion
 
 #region Public Methods
 
     def update(self):
         """Update plugins."""
-
-        self.__controller.update()
 
         for key in self.__plugins:
             self.__plugins[key].update()
@@ -1888,86 +1515,10 @@ class PluginsManager:
         #     for register in ztm_regs:
         #         f.write("{}\t{}\n".format(register.name, register.value))
 
-        ts = int(time.time())
-
-        if Plugins.WindowClosed in self.__plugins:
-            register = self.__registers.by_name("window_closed.state")
-            register.value = self.__plugins[Plugins.WindowClosed].get_state()
-            register.ts = ts
-
-        if Plugins.DoorClosed in self.__plugins:
-            register = self.__registers.by_name("door_closed.state")
-            register.value = self.__plugins[Plugins.DoorClosed].get_state()
-            register.ts = ts
-
-        if Plugins.PIRDetector in self.__plugins:
-            register = self.__registers.by_name("pir_detector.state")
-            register.value = self.__plugins[Plugins.PIRDetector].get_state()
-            register.ts = ts
-
-        if Plugins.AntiTampering in self.__plugins:
-            register = self.__registers.by_name("anti_tampering.state")
-            register.value = self.__plugins[Plugins.AntiTampering].get_state()
-            register.ts = ts
-
-        if Plugins.FireDetect in self.__plugins:
-            register = self.__registers.by_name("fire_detect.state")
-            register.value = self.__plugins[Plugins.FireDetect].get_state()
-            register.ts = ts
-
-        if Plugins.WaterCounter in self.__plugins:
-            register = self.__registers.by_name("water_cnt.state")
-            register.value = self.__plugins[Plugins.WaterCounter].get_state()
-            register.ts = ts
-
-        if Plugins.PowerMeter in self.__plugins:
-            power_state = self.__plugins[Plugins.PowerMeter].get_state()
-
-            register = self.__registers.by_name("current_power.state")
-            register.value = power_state["current_power"]
-            register.ts = ts
-
-            register = self.__registers.by_name("total_energy.state")
-            register.value = power_state["total_energy"]
-            register.ts = ts
-
-        if Plugins.Blinds in self.__plugins:
-            stste = self.__plugins[Plugins.Blinds].get_state()
-
-        if Plugins.AccessControll1 in self.__plugins:
-            stste = self.__plugins[Plugins.AccessControll1].get_state()
-
-        if Plugins.AccessControll2 in self.__plugins:
-            stste = self.__plugins[Plugins.AccessControll2].get_state()
-
-        if Plugins.HVAC in self.__plugins:
-            stste = self.__plugins[Plugins.HVAC].get_state()
-
-        if Plugins.MainLight in self.__plugins:
-            stste = self.__plugins[Plugins.MainLight].get_state()
-
-        if Plugins.WDTTablet in self.__plugins:
-            register = self.__registers.by_name("wdt_tablet.state")
-            register.value = self.__plugins[Plugins.WDTTablet].get_state()
-            register.ts = ts
-
     def shutdown(self):
         """Shutdown plugins."""
 
         for key in self.__plugins:
             self.__plugins[key].shutdown()
-
-#endregion
-
-#region Static Methods
-
-    @staticmethod
-    def get_instance(registers, controller, erp_service):
-        """Singelton instance."""
-
-        if PluginsManager.__instance is None:
-            PluginsManager.__instance = PluginsManager(registers, controller, erp_service)
-
-        return PluginsManager.__instance
 
 #endregion

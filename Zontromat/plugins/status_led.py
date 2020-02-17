@@ -68,8 +68,11 @@ class StatusLed(BasePlugin):
     __blink_timer = None
     """Update timestamp."""
 
-    __blink_time = 1
-    """Blink time."""
+    __output = None
+    """Output"""
+
+    __key = None
+    """Key name."""
 
 #endregion
 
@@ -79,8 +82,15 @@ class StatusLed(BasePlugin):
 
         self.__blink_timer = Timer(1)
 
-        if "blink_time" in self._config:
-            self.__blink_timer.expiration_time = self._config["blink_time"]
+        self.__key = self._config["key"]
+
+        blink_time = self._registers.by_name(self.__key + ".blink_time")
+        if blink_time is not None:
+            self.__blink_timer.expiration_time = blink_time.value
+
+        output = self._registers.by_name(self.__key + ".output")
+        if output is not None:
+            self.__output = output.value
 
     def update(self):
 
@@ -93,9 +103,9 @@ class StatusLed(BasePlugin):
             else:
                 self.__led_state = 1
 
-            self._controller.set_led(self._config["output"], self.__led_state)
+            self._controller.set_led(self.__output, self.__led_state)
 
     def shutdown(self):
-        self._controller.set_led(self._config["output"], 0)
+        self._controller.set_led(self.__output, 0)
 
 #endregion

@@ -105,14 +105,24 @@ class AccessControll(BasePlugin):
     __first_queue_record = None
     """Firs record."""
 
+    __open_timer_time = 10
+    """Open timer time."""
+
+    __open_timer = None
+    """Open timer."""
+
+
     __lock_mechanism_enabled = False
     """Lock mechanism enabled."""
+
+    __lock_mechanism_output = "DO0"
+    """Locking mechanism output."""
 
     __exit_button_enabled = False
     """Exit button enabled."""
 
-    __open_timer = None
-    """Open timer."""
+    __exit_button_input = "DI0"
+    """Exit button input."""
 
 #endregion
 
@@ -123,13 +133,13 @@ class AccessControll(BasePlugin):
         state = 0
 
         if self.__exit_button_enabled:
-            state = self._controller.digital_read(self._config["exit_button_input"])
+            state = self._controller.digital_read(self.__exit_button_input)
 
         return state
 
     def __set_latch(self, value=0):
         if self.__lock_mechanism_enabled:
-            self._controller.digital_write(self._config["lock_mechanism_output"], value)
+            self._controller.digital_write(self.__lock_mechanism_output, value)
 
     def __create_record(self, card_id):
 
@@ -155,21 +165,65 @@ class AccessControll(BasePlugin):
             self.__logger.debug("Received ID: {}".format(record))
             self.__cards_queue.put(record)
 
+    def __time_to_open_cb(self, register):
+        self.__open_timer.expiration_time = register.value
+
+    def __exit_button_enabled_cb(self, register):
+        self.__exit_button_enabled = register.value
+
+    def __exit_button_input_cb(self, register):
+        self.__exit_button_enabled = register.value
+
+    def __card_reader_enabled_cb(self, register):
+
+        if register.value == 1:
+            if self.__card_reader is None:
+
+                key = register.base_name
+                card_reader_vendor = self._registers.by_name(key + ".card_reader.vendor").value
+                card_reader_model = self._registers.by_name(key + ".card_reader.model").value
+                card_reader_serial_number = self._registers.by_name(key + ".card_reader.serial_number").value
+                card_reader_port_name = self._registers.by_name(key + ".card_reader.port.name").value
+                card_reader_port_baudrate = self._registers.by_name(key + ".card_reader.port.baudrate").value
+
+                # Filter by vendor and model.
+                if card_reader_vendor == "TERACOM":
+                    if card_reader_model == "act230":
+
+                        # Get card reader parameters.
+                        reader_config = {
+                            "port_name": card_reader_port_name,
+                            "baudrate": card_reader_port_baudrate,
+                            "serial_number": card_reader_serial_number,
+                            "controller": self._controller,
+                            "erp_service": self._erp_service
+                        }
+
+                        # Create card reader.
+                        self.__card_reader = ACT230(reader_config)
+                        if self.__card_reader.reader_state is ReaderState.NONE:
+                            self.__card_reader.cb_readed_card(self.__create_record)
+                            self.__card_reader.start()
+
+        elif register.value == 0:
+            if self.__card_reader is not None:
+                self.__card_reader.stop()
+
+                while self.__card_reader.reader_state == ReaderState.RUN:
+                    pass
+
+    def __lock_mechanism_enabled_cb(self, register):
+        self.__lock_mechanism_enabled = register.value
+
+    def __lock_mechanism_output_cb(self, register):
+        self.__lock_mechanism_output = register.value
+
+    def __allowed_attendees_cb(self, register):
+        self.add_allowed_card_ids(register.value)
+
 #endregion
 
 #region Public Methods
-
-    def update_allowed_card_ids(self, ids):
-        """Updated allowed card IDs.
-
-        Parameters
-        ----------
-        ids : array
-            Cards ids.
-
-        """
-
-        self.__allowed_card_ids = ids
 
     def add_allowed_card_id(self, card_id):
         """Add allowed card ID.
@@ -206,37 +260,10 @@ class AccessControll(BasePlugin):
         if ids is None:
             return
 
+        self.__allowed_card_ids.clear()
+
         for card_id in ids:
             self.add_allowed_card_id(card_id)
-
-    def remove_allowed_card_id(self, card_id):
-        """Remove allowed card ID.
-
-        Parameters
-        ----------
-        ids : str
-            Cards card_id.
-
-        """
-
-        if id in self.__allowed_card_ids:
-            self.__allowed_card_ids(card_id)
-
-    def remove_allowed_card_ids(self, ids):
-        """Remove allowed card ID.
-
-        Parameters
-        ----------
-        ids : array
-            Cards id.
-
-        """
-
-        if ids is None:
-            return
-
-        if id in ids:
-            self.remove_allowed_card_id(id)
 
     def init(self):
 
@@ -245,62 +272,53 @@ class AccessControll(BasePlugin):
 
         self.__logger.info("Starting the {}".format(self.name))
 
+        # Create queue for the card.
+        self.__cards_queue = queue.Queue(self.__cards_queue_size)
+
         # Set registrator state.
         self.__registrator_state = StateMachine(RegistratorState.GetFromQue)
 
         # Open timer.
-        self.__open_timer = Timer(10)
+        self.__open_timer = Timer(self.__open_timer_time)
+
+        self.__allowed_card_ids = []
 
         # Get time to open the latch.
-        if "time_to_open" in self._config:
-            self.__open_timer.expiration_time = self._config["time_to_open"]
+        time_to_open = self._registers.by_name(self._key + ".time_to_open")
+        if time_to_open is not None:
+            time_to_open.update_handler = self.__time_to_open_cb
 
         # Create exit button.
-        if "exit_button_enabled" in self._config:
-            self.__exit_button_enabled = self._config["exit_button_enabled"]
+        exit_button_enabled = self._registers.by_name(self._key + ".exit_button.enabled")
+        if exit_button_enabled is not None:
+            exit_button_enabled.update_handler = self.__exit_button_enabled_cb
+
+        exit_button_input = self._registers.by_name(self._key + ".exit_button.input")
+        if exit_button_input is not None:
+            exit_button_input.update_handler = self.__exit_button_input_cb
 
         # Create locking mechanism.
-        if "lock_mechanism_enabled" in self._config:
-            self.__lock_mechanism_enabled = self._config["lock_mechanism_enabled"]
+        lock_mechanism_enabled = self._registers.by_name(self._key + ".lock_mechanism.enabled")
+        if lock_mechanism_enabled is not None:
+            lock_mechanism_enabled.update_handler = self.__lock_mechanism_enabled_cb
 
-        # Create Cart reader.
-        if "card_reader_enabled" in self._config:
-            card_reader_enabled = self._config["card_reader_enabled"]
-            if card_reader_enabled:
+        lock_mechanism_output = self._registers.by_name(self._key + ".lock_mechanism.output")
+        if lock_mechanism_output is not None:
+            lock_mechanism_output.update_handler = self.__lock_mechanism_output_cb
 
-                # Filter by vendor and model.
-                card_reader_vendor = self._config["card_reader_vendor"]
-                if card_reader_vendor == "TERACOM":
-                    card_reader_model = self._config["card_reader_model"]
-                    if card_reader_model == "act230":
-
-                        # Get card reader parameters.
-                        reader_config = {
-                            "port_name": self._config["card_reader_port_name"],
-                            "baudrate": self._config["card_reader_port_baudrate"],
-                            "serial_number": self._config["card_reader_serial_number"],
-                            "controller": self._config["controller"],
-                            "erp_service": self._config["erp_service"]
-                        }
-
-                        # Create card reader.
-                        self.__card_reader = ACT230(reader_config)
-                        if self.__card_reader.reader_state is ReaderState.NONE:
-                            self.__card_reader.cb_readed_card(self.__create_record)
-                            self.__card_reader.start()
+        card_reader_enabled = self._registers.by_name(self._key + ".card_reader.enabled")
+        if card_reader_enabled is not None:
+            card_reader_enabled.update_handler = self.__card_reader_enabled_cb
 
         # Card reader allowed IDs.
-        if "card_reader_allowed_ids" in self._config:
-            self.__allowed_card_ids = self._config["card_reader_allowed_ids"]
-
-        # Create queue for the card.
-        if "carts_queue_size" in self._config:
-            self.__cards_queue_size = self._config["carts_queue_size"]
-            self.__cards_queue = queue.Queue(self.__cards_queue_size)
-        else:
-            self.__cards_queue = queue.Queue(self.__cards_queue_size)
+        allowed_attendees = self._registers.by_name(self._key + ".allowed_attendees")
+        if allowed_attendees is not None:
+            allowed_attendees.update_handler = self.__allowed_attendees_cb
 
     def update(self):
+
+        if self.__card_reader is None:
+            return
 
         # Update crad reader.
         self.__card_reader.update()
@@ -322,6 +340,7 @@ class AccessControll(BasePlugin):
         # Check if the button is pressed.
         btn_value = self.__get_button()
         if btn_value == 1:
+
             if self.__open_door_flag == 0:
                 self.__open_door_flag = 1
 
@@ -335,6 +354,7 @@ class AccessControll(BasePlugin):
         # Check is it time to close the latch.
         if self.__open_door_flag == 0:
             self.__open_timer.update()
+
             if self.__open_timer.expired:
                 self.__open_timer.clear()
 
@@ -345,12 +365,10 @@ class AccessControll(BasePlugin):
         if self.__cards_queue.empty() is not True:
 
             if self.__registrator_state.is_state(RegistratorState.GetFromQue):
-
                 self.__first_queue_record = self.__cards_queue.get()
                 self.__registrator_state.set_state(RegistratorState.Send)
 
             if self.__registrator_state.is_state(RegistratorState.Send):
-
                 # Send event to the ERP service.
                 rec = [self.__first_queue_record]
                 sucessfull = self._erp_service.sync(rec)
@@ -365,9 +383,11 @@ class AccessControll(BasePlugin):
         self.__logger.info("Shutdown the {}".format(self.name))
 
         self.__set_latch(0)
-        self.__card_reader.stop()
 
-        while self.__card_reader.reader_state == ReaderState.RUN:
-            pass
+        if self.__card_reader is not None:
+            self.__card_reader.stop()
+
+            while self.__card_reader.reader_state == ReaderState.RUN:
+                pass
 
 #endregion

@@ -22,7 +22,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 
+from enum import Enum
+
 from plugins.base_plugin import BasePlugin
+from devices.no_vendor.flowmeter import Flowmeter as FlowmeterDevice
+from utils.timer import Timer
+from utils.state_machine import StateMachine
 
 #region File Attributes
 
@@ -55,20 +60,111 @@ __status__ = "Debug"
 
 #endregion
 
+class TestState(Enum):
+    """Test state"""
+
+    NONE = 0
+    TekeFirstMeasurement = 1
+    WaitForLeak = 2
+    TekeSecondMeasurement = 3
+
 class Flowmeter(BasePlugin):
     """Flowmeter measuring device."""
 
+#region Variables
+
+    __flowmetter_dev = None
+    """Flow meter device."""
+
+    __check_timer = None
+    """Check timer."""
+
+    __test_state = None
+    """Test state machine."""
+
+    __fm_value = 0
+    """First measurement value."""
+
+    __sm_value = 0
+    """Second measurement value."""
+
+#endregion
+
+#region Private Methods
+
+    def __test_for_leaks(self):
+
+        self.__check_timer.update()
+        if self.__check_timer.expired:
+            self.__check_timer.clear()
+
+            if self.__test_state.is_state(TestState.WaitForLeak):
+                if self.__test_state.was(TestState.TekeFirstMeasurement):
+                    self.__test_state.set_state(TestState.TekeSecondMeasurement)
+
+                elif self.__test_state.was(TestState.TekeSecondMeasurement):
+                    self.__test_state.set_state(TestState.TekeFirstMeasurement)
+
+            elif self.__test_state.is_state(TestState.TekeFirstMeasurement):
+                self.__fm_value = self.__flowmetter_dev.get_liters()
+                self.__test_state.set_state(TestState.WaitForLeak)
+
+            elif self.__test_state.is_state(TestState.TekeSecondMeasurement):
+                self.__sm_value = self.__flowmetter_dev.get_liters()
+                self.__test_state.set_state(TestState.WaitForLeak)
+
+            leak_liters = abs(self.__sm_value - self.__fm_value)
+
+            if leak_liters > 0:
+                name = "general.drink_water_leak"
+                register = self._registers.by_name(name)
+                if register is not None:
+                    register.value = leak_liters
+
+#endregion
+
 #region Public Methods
 
-    def get_state(self):
-        """Returns the state of the device.
+    def init(self):
 
-        Returns
-        -------
-        mixed
-            State of the device.
-        """
+        # Check timer. Every hour test.
+        self.__check_timer = Timer(5) # 3600
 
-        return self._controller.read_counter(self._config["input"]) * self._config["tpl"]
+        # Test state machine.
+        self.__test_state = StateMachine(TestState.TekeFirstMeasurement)
+
+        tpl = self._registers.by_name(self._key + ".tpl")
+        input_pin = self._registers.by_name(self._key + ".input")
+
+        if input_pin is not None and\
+            tpl is not None:
+
+            config = \
+            {\
+                "name": self.name,
+                "input": input_pin.value,
+                "tpl": tpl.value,
+                "controller": self._controller
+            }
+
+            self.__flowmetter_dev = FlowmeterDevice(config)
+            self.__flowmetter_dev.init()
+
+    def update(self):
+        """Update the flowmeter value."""
+
+        fm_state = self._registers.by_name(self._key + ".state")
+
+        if self.__flowmetter_dev is not None and\
+            fm_state is not None:
+            fm_state.value = self.__flowmetter_dev.get_liters()
+
+        key = "general.is_empty"
+        is_empty = self._registers.by_name(key)
+
+        if self.__flowmetter_dev is not None and\
+            is_empty is not None and\
+            is_empty.value == 1:
+            self.__test_for_leaks()
 
 #endregion

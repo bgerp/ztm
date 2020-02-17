@@ -66,11 +66,16 @@ class BasePlugin(Configuarable):
     __name = ""
     """Name of configuration."""
 
+    __key = ""
+    """Key of the plugin."""
+
 #endregion
 
     def __init__(self, config):
         super().__init__(config)
 
+        self._key = config["key"]
+        self._registers = config["registers"]
         self._controller = config["controller"]
         self._erp_service = config["erp_service"]
 

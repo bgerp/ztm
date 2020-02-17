@@ -58,16 +58,23 @@ __status__ = "Debug"
 class Tamper(BasePlugin):
     """Status LED indicator device."""
 
+#region Variables
+
+    __input = "DI0"
+
+#endregion
+
 #region Public Methods
-    def get_state(self):
-        """Returns the state of the device.
 
-        Returns
-        -------
-        mixed
-            State of the device.
-        """
+    def init(self):
+        input_pin = self._registers.by_name(self._key + ".input")
+        if input_pin is not None:
+            self.__input = input_pin.value
 
-        return self._controller.digital_read(self._config["input"])
+    def update(self):
+        """Update the flowmeter value."""
+
+        self._registers.by_name(self._key + ".state").value\
+             = self._controller.digital_read(self.__input)
 
 #endregion

@@ -72,19 +72,40 @@ class PowerMeter(BasePlugin):
     __parameters_values = {}
     """Parametters values."""
 
+    __uart = None
+    """UART"""
+
+    __dev_id = None
+    """Device ID"""
+
+    __register_type = None
+    """Register Type"""
+
 #endregion
 
 #region Public Methods
 
     def init(self):
 
-        if self._config["vendor"] == "Eastron":
+        uart = self._registers.by_name(self._key + ".sub_dev.uart")
+        if uart is not None:
+            self.__uart = uart.value
 
-            if self._config["model"] == "SDM120":
+        dev_id = self._registers.by_name(self._key + ".sub_dev.dev_id")
+        if dev_id is not None:
+            self.__dev_id = dev_id.value
+
+        vendor = self._registers.by_name(self._key + ".sub_dev.vendor").value
+        if vendor == "Eastron":
+
+            model = self._registers.by_name(self._key + ".sub_dev.model").value
+            if model == "SDM120":
                 self.__power_meter = SDM120()
+                self.__register_type = "inp"
 
-            elif self._config["model"] == "SDM630":
+            elif model == "SDM630":
                 self.__power_meter = SDM630()
+                self.__register_type = "inp"
 
     def update(self):
 
@@ -93,10 +114,10 @@ class PowerMeter(BasePlugin):
 
         # Get values by the structure.
         registers_values = self._controller.read_mb_registers(\
-            self._config["uart"], \
-            self._config["dev_id"], \
+            self.__uart, \
+            self.__dev_id, \
             registers_ids, \
-            self._config["register_type"])
+            self.__register_type)
 
         # Convert values to human readable.
         parameters_values = self.__power_meter.get_parameters_values(registers_values)
@@ -112,20 +133,13 @@ class PowerMeter(BasePlugin):
 
         self.__parameters_values = parameters_values
 
-    def get_state(self):
-        """Returns the state of the device.
+        self._registers.by_name("self_current.sub_dev.current").value\
+             = self.__parameters_values["Current"]
 
-        Returns
-        -------
-        mixed
-            State of the device.
-        """
+        self._registers.by_name("self_current.sub_dev.total_energy").value\
+             = self.__parameters_values["ExportActiveEnergy"]
 
-        state = {\
-            "current_power": self.__parameters_values[self._config["current_power"]],\
-            "total_energy": self.__parameters_values[self._config["total_energy"]]\
-        }
-
-        return state
+        self._registers.by_name("self_current.sub_dev.current_power").value\
+             = self.__parameters_values["ApparentPower"]
 
 #endregion
