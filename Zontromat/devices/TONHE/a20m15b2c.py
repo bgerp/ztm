@@ -69,6 +69,31 @@ class A20M15B2C(BaseDevice):
     __position = -1
     """Position of the valve."""
 
+    __max_pos = 10
+
+#endregion
+
+#region Properties
+
+    @property
+    def max_pos(self):
+        """Speed limit.
+
+        Returns:
+            float: Speed limit.
+        """
+        return self.__max_pos
+
+    @max_pos.setter
+    def max_pos(self, value):
+        """Speed limit.
+
+        Args:
+            value (float): Speed limit.
+        """
+
+        self.__max_pos = value
+
 #endregion
 
 #region Constructor
@@ -82,7 +107,7 @@ class A20M15B2C(BaseDevice):
 
 #region Public Methods
 
-    def set_state(self, position):
+    def set_pos(self, position):
         """Set position of the output.
 
         Args:
@@ -91,6 +116,9 @@ class A20M15B2C(BaseDevice):
 
         if position > 10:
             position = 10
+
+        if position > self.__max_pos:
+            position = self.__max_pos
 
         if position < 0:
             position = 0

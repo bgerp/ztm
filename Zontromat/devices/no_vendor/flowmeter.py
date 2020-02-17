@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 
-from utils.configuarable import Configuarable
+from devices.base_device import BaseDevice
 
 #region File Attributes
 
@@ -55,48 +55,37 @@ __status__ = "Debug"
 
 #endregion
 
-class BaseDevice(Configuarable):
-    """Base device class doc."""
+class Flowmeter(BaseDevice):
+    """Flowmeter input device."""
 
 #region Attributes
 
-    _controller = None
-    """Controller"""
+    __tpl = 1
+    """Ticks per liter."""
 
-#endregion
-
-#region Constructor
-
-    def __init__(self, config):
-        """Constructor
-
-        Parameters
-        ----------
-        self : Template
-            Current class instance.
-        """
-
-        super().__init__(config)
-
-        self._controller = self._config["controller"]
+    __input = "DI0"
+    """Input pin of the controller."""
 
 #endregion
 
 #region Public Methods
 
     def init(self):
-        """Init the device."""
 
-        pass
+        if "tpl" in  self._config:
+            self.__tpl = self._config["tpl"]
 
-    def get_state(self):
-        """Return device state."""
+        if "input" in  self._config:
+            self.__input = self._config["input"]
 
-        return None
+    def get_counter(self):
+        """Get flowmeter counter."""
 
-    def shutdown(self):
-        """Shutdown procedure of the device."""
+        return self._controller.read_counter(self.__input)
 
-        pass
+    def get_liters(self):
+        """Get value."""
+
+        return self._controller.read_counter(self.__input) * self.__tpl
 
 #endregion

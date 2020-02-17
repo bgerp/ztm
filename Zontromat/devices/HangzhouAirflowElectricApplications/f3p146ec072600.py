@@ -65,34 +65,37 @@ class F3P146EC072600(BaseDevice):
     __logger = None
     """Logger"""
 
-    __speed_limit_value = 100
+    __max_speed = 10
     """Speed limit."""
 
     __speed = -1
     """Speed"""
+
+    __output = "AO0"
+    """Output phizical signal."""
 
 #endregion
 
 #region Properties
 
     @property
-    def speed_limit(self):
+    def max_speed(self):
         """Speed limit.
 
         Returns:
             float: Speed limit.
         """
-        return self.__speed_limit_value
+        return self.__max_speed
 
-    @speed_limit.setter
-    def speed_limit(self, value):
+    @max_speed.setter
+    def max_speed(self, value):
         """Speed limit.
 
         Args:
             value (float): Speed limit.
         """
 
-        self.__speed_limit_value = value
+        self.__max_speed = value
 
 #endregion
 
@@ -108,14 +111,18 @@ class F3P146EC072600(BaseDevice):
 
         self.__logger = get_logger(__name__)
 
-        if "speed_limit" in self._config:
-            self.speed_limit = self._config["speed_limit"]
+        if "max_speed" in self._config:
+            self.max_speed = self._config["max_speed"]
+
+        if "output" in self._config:
+            self.__output = self._config["output"]
+
 
 #endregion
 
 #region Public Methods
 
-    def set_state(self, speed):
+    def set_speed(self, speed):
         """Set speed of the fan.
 
         Args:
@@ -128,15 +135,15 @@ class F3P146EC072600(BaseDevice):
         if speed < 0:
             speed = 0
 
-        if speed >= self.speed_limit:
-            speed = self.speed_limit
+        if speed >= self.max_speed:
+            speed = self.max_speed
 
         if self.__speed == speed:
             return
 
         self.__speed = speed
 
-        self._controller.analog_write(self._config["output"], self.__speed)
+        self._controller.analog_write(self.__output, self.__speed)
         self.__logger.debug("Name: {}; Value {:3.3f}".format(self.name, self.__speed))
 
 #endregion

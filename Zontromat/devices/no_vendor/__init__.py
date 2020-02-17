@@ -22,8 +22,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 
-from utils.configuarable import Configuarable
-
 #region File Attributes
 
 __author__ = "Orlin Dimitrov"
@@ -52,51 +50,5 @@ __email__ = "or.dimitrov@polygonteam.com"
 
 __status__ = "Debug"
 """File status."""
-
-#endregion
-
-class BaseDevice(Configuarable):
-    """Base device class doc."""
-
-#region Attributes
-
-    _controller = None
-    """Controller"""
-
-#endregion
-
-#region Constructor
-
-    def __init__(self, config):
-        """Constructor
-
-        Parameters
-        ----------
-        self : Template
-            Current class instance.
-        """
-
-        super().__init__(config)
-
-        self._controller = self._config["controller"]
-
-#endregion
-
-#region Public Methods
-
-    def init(self):
-        """Init the device."""
-
-        pass
-
-    def get_state(self):
-        """Return device state."""
-
-        return None
-
-    def shutdown(self):
-        """Shutdown procedure of the device."""
-
-        pass
 
 #endregion
