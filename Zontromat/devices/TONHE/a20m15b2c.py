@@ -66,7 +66,7 @@ class A20M15B2C(BaseDevice):
     __logger = None
     """Logger"""
 
-    __position = -1
+    __position = 0
     """Position of the valve."""
 
     __max_pos = 10
@@ -93,6 +93,10 @@ class A20M15B2C(BaseDevice):
         """
 
         self.__max_pos = value
+
+    @property
+    def position(self):
+        return self.__position
 
 #endregion
 

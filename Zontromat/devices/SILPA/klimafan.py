@@ -120,6 +120,6 @@ class Klimafan(BaseDevice):
             self._controller.digital_write(self._config["stage_2"], 0)
             self._controller.digital_write(self._config["stage_3"], 0)
 
-        self.__logger.debug("Convector vent: {}".format(self.__state))
+        self.__logger.debug("Name: {}; State: {}".format(self.name, self.__state))
 
 #endregion

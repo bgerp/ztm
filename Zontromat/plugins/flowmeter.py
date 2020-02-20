@@ -25,7 +25,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from enum import Enum
 
 from plugins.base_plugin import BasePlugin
+
 from devices.no_vendor.flowmeter import Flowmeter as FlowmeterDevice
+from devices.tests.leak_test import LeakTest
+
 from utils.timer import Timer
 from utils.state_machine import StateMachine
 
@@ -76,48 +79,19 @@ class Flowmeter(BasePlugin):
     __flowmetter_dev = None
     """Flow meter device."""
 
-    __check_timer = None
-    """Check timer."""
-
-    __test_state = None
-    """Test state machine."""
-
-    __fm_value = 0
-    """First measurement value."""
-
-    __sm_value = 0
-    """Second measurement value."""
+    __leak_test = None
+    """Leak tester."""
 
 #endregion
 
 #region Private Methods
 
-    def __test_for_leaks(self):
-
-        self.__check_timer.update()
-        if self.__check_timer.expired:
-            self.__check_timer.clear()
-
-            if self.__test_state.is_state(TestState.WaitForLeak):
-                if self.__test_state.was(TestState.TekeFirstMeasurement):
-                    self.__test_state.set_state(TestState.TekeSecondMeasurement)
-
-                elif self.__test_state.was(TestState.TekeSecondMeasurement):
-                    self.__test_state.set_state(TestState.TekeFirstMeasurement)
-
-            elif self.__test_state.is_state(TestState.TekeFirstMeasurement):
-                self.__fm_value = self.__flowmetter_dev.get_liters()
-                self.__test_state.set_state(TestState.WaitForLeak)
-
-            elif self.__test_state.is_state(TestState.TekeSecondMeasurement):
-                self.__sm_value = self.__flowmetter_dev.get_liters()
-                self.__test_state.set_state(TestState.WaitForLeak)
-
-            leak_liters = abs(self.__sm_value - self.__fm_value)
+    def __leaktest_result(self, leak_liters):
 
             if leak_liters > 0:
                 name = "general.drink_water_leak"
                 register = self._registers.by_name(name)
+
                 if register is not None:
                     register.value = leak_liters
 
@@ -150,6 +124,9 @@ class Flowmeter(BasePlugin):
             self.__flowmetter_dev = FlowmeterDevice(config)
             self.__flowmetter_dev.init()
 
+            self.__leak_test = LeakTest(self.__flowmetter_dev)
+            self.__leak_test.on_result(self.__leaktest_result)
+
     def update(self):
         """Update the flowmeter value."""
 
@@ -165,6 +142,6 @@ class Flowmeter(BasePlugin):
         if self.__flowmetter_dev is not None and\
             is_empty is not None and\
             is_empty.value == 1:
-            self.__test_for_leaks()
+            self.__leak_test.run()
 
 #endregion
