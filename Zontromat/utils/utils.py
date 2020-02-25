@@ -23,6 +23,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 import time
+from functools import wraps
+import tracemalloc
 
 #region File Attributes
 
@@ -55,7 +57,51 @@ __status__ = "Debug"
 
 #endregion
 
-def time_measure(function):
+def mem_time_usage(function):
+    """Mesure consumed RAM for execution.
+
+    Parameters
+    ----------
+    function : object
+        Pointer to function.
+
+    """
+
+    @wraps(function)
+    def function_timer(*args, **kwargs):
+        tracemalloc.start()
+        t0 = time.time()
+        result = function(*args, **kwargs)
+        t1 = time.time()
+        passed_time = t1-t0
+        current, peak = tracemalloc.get_traced_memory()
+        print(f"Current memory usage is {current / 10**6}MB; Peak was {peak / 10**6}MB")
+        print("Total time: {0:.3f} sec".format(passed_time))
+        tracemalloc.stop()
+        return result
+    return function_timer
+
+def mem_usage(function):
+    """Mesure consumed RAM for execution.
+
+    Parameters
+    ----------
+    function : object
+        Pointer to function.
+
+    """
+
+    @wraps(function)
+    def function_timer(*args, **kwargs):
+        tracemalloc.start()
+        result = function(*args, **kwargs)
+        current, peak = tracemalloc.get_traced_memory()
+        print(f"Current memory usage is {current / 10**6}MB; Peak was {peak / 10**6}MB")
+        tracemalloc.stop()
+        return result
+    return function_timer
+
+def time_usage(function):
     """Mesure consumed time for execution.
 
     Parameters
@@ -63,16 +109,17 @@ def time_measure(function):
     function : object
         Pointer to function.
 
-    Returns
-    -------
-    int
-        Consumed time.
     """
-
-    start_time = time.time()
-    function()
-    end_time = time.time()
-    return end_time - start_time
+    
+    @wraps(function)
+    def function_timer(*args, **kwargs):
+        t0 = time.time()
+        result = function(*args, **kwargs)
+        t1 = time.time()
+        passed_time = t1-t0
+        print("Total time: {0:.3f} sec".format(passed_time))
+        return result
+    return function_timer
 
 def l_scale(target, in_limit, out_limit):
     """Linear scaling function.
