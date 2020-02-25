@@ -94,6 +94,13 @@ class ACT230(BaseDevice):
 
 #endregion
 
+#region Destructir
+
+    def __del__(self):
+        self.stop()
+
+#endregion
+
 #region Properties
 
     @property
@@ -184,6 +191,8 @@ class ACT230(BaseDevice):
 
                     while self.__port is not None:
                         pass
+
+                    del self.__port
 
             except Exception:
                 self.__set_state(ReaderState.NONE)

@@ -68,7 +68,7 @@ class F3P146EC072600(BaseDevice):
     __max_speed = 10
     """Speed limit."""
 
-    __speed = -1
+    __speed = 0
     """Speed"""
 
     __output = "AO0"
