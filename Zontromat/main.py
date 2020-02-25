@@ -81,6 +81,7 @@ __time_to_stop = False
 
 def main():
     """Main"""
+
     global __zone, __logger, __time_to_stop
 
     # Create process name.

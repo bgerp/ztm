@@ -277,7 +277,3 @@ class Register:
 
 
 #endregion
-
-#region Public Methods
-
-#endregion
