@@ -1131,17 +1131,17 @@ class PluginsManager:
         register.value = "1wdevice"
         self.__registers.add(register)
 
-        register = Register("light.sensor.model")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.value = "u1wtvs"
-        self.__registers.add(register)
+        # register = Register("light.sensor.model")
+        # register.scope = Scope.Global
+        # register.source = Source.bgERP
+        # register.value = "u1wtvs"
+        # self.__registers.add(register)
 
-        register = Register("light.sensor.vendor")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.value = "SEDtronic"
-        self.__registers.add(register)
+        # register = Register("light.sensor.vendor")
+        # register.scope = Scope.Global
+        # register.source = Source.bgERP
+        # register.value = "SEDtronic"
+        # self.__registers.add(register)
 
         register = Register("light.sensor.circuit")
         register.scope = Scope.Global
@@ -1206,253 +1206,134 @@ class PluginsManager:
         return config
 
     def __status_led_enabled(self, register):
-        if register.value == 1:
-            if Plugins.StatusLed not in self.__plugins:
+        if register.value == 1 and Plugins.StatusLed not in self.__plugins:
+            config = self.__prepare_config("Status LED", register.base_name)
+            self.__plugins[Plugins.StatusLed] = StatusLed(config)
+            self.__plugins[Plugins.StatusLed].init()
 
-                # Create device.
-                config = self.__prepare_config("Status LED", register.base_name)
-                self.__plugins[Plugins.StatusLed] = StatusLed(config)
-
-                # Add Handlers.
-
-                # Init
-                self.__plugins[Plugins.StatusLed].init()
-
-            # Add Handlers.
-
-        elif register.value == 0:
-            if Plugins.StatusLed in self.__plugins:
-                self.__plugins[Plugins.StatusLed].shutdown()
-                del self.__plugins[Plugins.StatusLed]
+        elif register.value == 0 and Plugins.StatusLed in self.__plugins:
+            self.__plugins[Plugins.StatusLed].shutdown()
+            del self.__plugins[Plugins.StatusLed]
 
     def __window_closed_enabled(self, register):
-        if register.value == 1:
-            if Plugins.WindowClosed not in self.__plugins:
+        if register.value == 1 and Plugins.WindowClosed not in self.__plugins:
+            config = self.__prepare_config("Windows Closed Sensor", register.base_name)
+            self.__plugins[Plugins.WindowClosed] = Tamper(config)
+            self.__plugins[Plugins.WindowClosed].init()
 
-                # Create device.
-                config = self.__prepare_config("Windows Closed Sensor", register.base_name)
-                self.__plugins[Plugins.WindowClosed] = Tamper(config)
-
-                # Add Handlers.
-
-                # Init
-                self.__plugins[Plugins.WindowClosed].init()
-
-        elif register.value == 0:
-            if Plugins.WindowClosed in self.__plugins:
-                self.__plugins[Plugins.WindowClosed].shutdown()
-                del self.__plugins[Plugins.WindowClosed]
+        elif register.value == 0 and Plugins.WindowClosed in self.__plugins:
+            self.__plugins[Plugins.WindowClosed].shutdown()
+            del self.__plugins[Plugins.WindowClosed]
 
     def __door_closed_enabled(self, register):
-        if register.value == 1:
-            if Plugins.DoorClosed not in self.__plugins:
+        if register.value == 1 and Plugins.DoorClosed not in self.__plugins:
+            config = self.__prepare_config("Door Closed Sensor", register.base_name)
+            self.__plugins[Plugins.DoorClosed] = Tamper(config)
+            self.__plugins[Plugins.DoorClosed].init()
 
-                # Create device.
-                config = self.__prepare_config("Door Closed Sensor", register.base_name)
-                self.__plugins[Plugins.DoorClosed] = Tamper(config)
-
-                # Add Handlers.
-
-                # Init
-                self.__plugins[Plugins.DoorClosed].init()
-
-        elif register.value == 0:
-            if Plugins.DoorClosed in self.__plugins:
-                self.__plugins[Plugins.DoorClosed].shutdown()
-                del self.__plugins[Plugins.DoorClosed]
+        elif register.value == 0 and Plugins.DoorClosed in self.__plugins:
+            self.__plugins[Plugins.DoorClosed].shutdown()
+            del self.__plugins[Plugins.DoorClosed]
 
     def __pir_detector_enabled(self, register):
-        if register.value == 1:
-            if Plugins.PIRDetector not in self.__plugins:
+        if register.value == 1 and Plugins.PIRDetector not in self.__plugins:
+            config = self.__prepare_config("PIR Detector", register.base_name)
+            self.__plugins[Plugins.PIRDetector] = Tamper(config)
+            self.__plugins[Plugins.PIRDetector].init()
 
-                # Create device.
-                config = self.__prepare_config("PIR Detector", register.base_name)
-                self.__plugins[Plugins.PIRDetector] = Tamper(config)
-
-                # Add Handlers.
-
-                # Init
-                self.__plugins[Plugins.PIRDetector].init()
-
-        elif register.value == 0:
-            if Plugins.PIRDetector in self.__plugins:
-                self.__plugins[Plugins.PIRDetector].shutdown()
-                del self.__plugins[Plugins.PIRDetector]
+        elif register.value == 0 and Plugins.PIRDetector in self.__plugins:
+            self.__plugins[Plugins.PIRDetector].shutdown()
+            del self.__plugins[Plugins.PIRDetector]
 
     def __anti_tampering_enabled(self, register):
-        if register.value == 1:
-            if Plugins.AntiTampering not in self.__plugins:
+        if register.value == 1 and Plugins.AntiTampering not in self.__plugins:
+            config = self.__prepare_config("Anti Tampering", register.base_name)
+            self.__plugins[Plugins.AntiTampering] = Tamper(config)
+            self.__plugins[Plugins.AntiTampering].init()
 
-                # Create device.
-                config = self.__prepare_config("Anti Tampering", register.base_name)
-                self.__plugins[Plugins.AntiTampering] = Tamper(config)
-
-                # Add Handlers.
-
-                # Init
-                self.__plugins[Plugins.AntiTampering].init()
-
-        elif register.value == 0:
-            if Plugins.AntiTampering in self.__plugins:
-                self.__plugins[Plugins.AntiTampering].shutdown()
-                del self.__plugins[Plugins.AntiTampering]
+        elif register.value == 0 and Plugins.AntiTampering in self.__plugins:
+            self.__plugins[Plugins.AntiTampering].shutdown()
+            del self.__plugins[Plugins.AntiTampering]
 
     def __fire_detect_enabled(self, register):
-        if register.value == 1:
-            if Plugins.FireDetect not in self.__plugins:
+        if register.value == 1 and Plugins.FireDetect not in self.__plugins:
+            config = self.__prepare_config("Fire detect", register.base_name)
+            self.__plugins[Plugins.FireDetect] = Tamper(config)
+            self.__plugins[Plugins.FireDetect].init()
 
-                # Create device.
-                config = self.__prepare_config("Fire detect", register.base_name)
-                self.__plugins[Plugins.FireDetect] = Tamper(config)
-
-                # Add Handlers.
-
-                # Init
-                self.__plugins[Plugins.FireDetect].init()
-
-        elif register.value == 0:
-            if Plugins.FireDetect in self.__plugins:
-                self.__plugins[Plugins.FireDetect].shutdown()
-                del self.__plugins[Plugins.FireDetect]
+        elif register.value == 0 and Plugins.FireDetect in self.__plugins:
+            self.__plugins[Plugins.FireDetect].shutdown()
+            del self.__plugins[Plugins.FireDetect]
 
     def __water_cnt_enabled(self, register):
-        if register.value == 1:
-            if Plugins.WaterCounter not in self.__plugins:
+        if register.value == 1 and Plugins.WaterCounter not in self.__plugins:
+            config = self.__prepare_config("Water Flow Metter", register.base_name)
+            self.__plugins[Plugins.WaterCounter] = Flowmeter(config)
+            self.__plugins[Plugins.WaterCounter].init()
 
-                # Create device.
-                config = self.__prepare_config("Water Flow Metter", register.base_name)
-                self.__plugins[Plugins.WaterCounter] = Flowmeter(config)
-
-                # Add Handlers.
-
-                # Init
-                self.__plugins[Plugins.WaterCounter].init()
-
-        elif register.value == 0:
-            if Plugins.WaterCounter in self.__plugins:
-                self.__plugins[Plugins.WaterCounter].shutdown()
-                del self.__plugins[Plugins.WaterCounter]
+        elif register.value == 0 and Plugins.WaterCounter in self.__plugins:
+            self.__plugins[Plugins.WaterCounter].shutdown()
+            del self.__plugins[Plugins.WaterCounter]
 
     def __blinds_enabled(self, register):
-        if register.value == 1:
-            if Plugins.Blinds not in self.__plugins:
+        if register.value == 1 and Plugins.Blinds not in self.__plugins:
+            config = self.__prepare_config("Blinds", register.base_name)
+            self.__plugins[Plugins.Blinds] = Blinds(config)
+            self.__plugins[Plugins.Blinds].init()
 
-                # Create device.
-                config = self.__prepare_config("Blinds", register.base_name)
-                self.__plugins[Plugins.Blinds] = Blinds(config)
-                self.__plugins[Plugins.Blinds].init()
-
-        if register.value == 0:
-            if Plugins.Blinds in self.__plugins:
-                self.__plugins[Plugins.Blinds].shutdown()
-                del self.__plugins[Plugins.Blinds]
+        if register.value == 0 and Plugins.Blinds in self.__plugins:
+            self.__plugins[Plugins.Blinds].shutdown()
+            del self.__plugins[Plugins.Blinds]
 
     def __power_meter_enabled(self, register):
-        if register.value == 1:
-            if Plugins.PowerMeter not in self.__plugins:
+        if register.value == 1 and Plugins.PowerMeter not in self.__plugins:
+            config = self.__prepare_config("Power Meter", register.base_name)
+            self.__plugins[Plugins.PowerMeter] = PowerMeter(config)
+            self.__plugins[Plugins.PowerMeter].init()
 
-                # Create device.
-                config = self.__prepare_config("Power Meter", register.base_name)
-                self.__plugins[Plugins.PowerMeter] = PowerMeter(config)
-
-                # Add Handlers.
-
-                # Init
-                self.__plugins[Plugins.PowerMeter].init()
-
-        if register.value == 0:
-            if Plugins.PowerMeter in self.__plugins:
-                self.__plugins[Plugins.PowerMeter].shutdown()
-                del self.__plugins[Plugins.PowerMeter]
+        if register.value == 0 and Plugins.PowerMeter in self.__plugins:
+            self.__plugins[Plugins.PowerMeter].shutdown()
+            del self.__plugins[Plugins.PowerMeter]
 
     def __access_control_1_enabled(self, register):
-        if register.value == 1:
-            if Plugins.AccessControll1 not in self.__plugins:
+        if register.value == 1 and Plugins.AccessControll1 not in self.__plugins:
+            config = self.__prepare_config("Access control 1", register.base_name)
+            self.__plugins[Plugins.AccessControll1] = AccessControll(config)
+            self.__plugins[Plugins.AccessControll1].init()
 
-                # Create device.
-                config = self.__prepare_config("Access control 1", register.base_name)
-                self.__plugins[Plugins.AccessControll1] = AccessControll(config)
-
-                # Add Handlers.
-
-                # Init
-                self.__plugins[Plugins.AccessControll1].init()
-
-        elif register.value == 0:
-            if Plugins.AccessControll1 in self.__plugins:
-                self.__plugins[Plugins.AccessControll1].shutdown()
-                del self.__plugins[Plugins.AccessControll1]
+        elif register.value == 0 and Plugins.AccessControll1 in self.__plugins:
+            self.__plugins[Plugins.AccessControll1].shutdown()
+            del self.__plugins[Plugins.AccessControll1]
 
     def __access_control_2_enabled(self, register):
-        if register.value == 1:
-            if Plugins.AccessControll2 not in self.__plugins:
+        if register.value == 1 and Plugins.AccessControll2 not in self.__plugins:
+            config = self.__prepare_config("Access control 2", register.base_name)
+            self.__plugins[Plugins.AccessControll2] = AccessControll(config)
+            self.__plugins[Plugins.AccessControll2].init()
 
-                # Create device.
-                config = self.__prepare_config("Access control 2", register.base_name)
-                self.__plugins[Plugins.AccessControll2] = AccessControll(config)
-
-                # Add Handlers.
-
-                # Init
-                self.__plugins[Plugins.AccessControll2].init()
-
-        elif register.value == 0:
-            if Plugins.AccessControll2 in self.__plugins:
-                self.__plugins[Plugins.AccessControll2].shutdown()
-                del self.__plugins[Plugins.AccessControll2]
+        elif register.value == 0 and Plugins.AccessControll2 in self.__plugins:
+            self.__plugins[Plugins.AccessControll2].shutdown()
+            del self.__plugins[Plugins.AccessControll2]
 
     def __hvac_enabled(self, register):
-        if register.value == 1:
-            if Plugins.HVAC not in self.__plugins:
+        if register.value == 1 and Plugins.HVAC not in self.__plugins:
+            config = self.__prepare_config("HVAC", register.base_name)
+            self.__plugins[Plugins.HVAC] = HVAC(config)
+            self.__plugins[Plugins.HVAC].init()
 
-                # Create device.
-                config = self.__prepare_config("HVAC", register.base_name)
-                self.__plugins[Plugins.HVAC] = HVAC(config)
-
-                # Add Handlers.
-
-                # Init
-                self.__plugins[Plugins.HVAC].init()
-
-        if register.value == 0:
-            if Plugins.HVAC in self.__plugins:
-                self.__plugins[Plugins.HVAC].shutdown()
-                del self.__plugins[Plugins.HVAC]
+        if register.value == 0 and Plugins.HVAC in self.__plugins:
+            self.__plugins[Plugins.HVAC].shutdown()
+            del self.__plugins[Plugins.HVAC]
 
     def __light_enabled(self, register):
-        if register.value == 1:
-            if Plugins.MainLight not in self.__plugins:
-                key = register.base_name
+        if register.value == 1 and Plugins.MainLight not in self.__plugins:
+            config = self.__prepare_config("Lamps", register.base_name)
+            self.__plugins[Plugins.MainLight] = Lighting(config)
+            self.__plugins[Plugins.MainLight].init()
 
-                sensor_enabled = self.__registers.by_name(key + ".sensor.enabled").value
-                sensor_dev = self.__registers.by_name(key + ".sensor.dev").value
-                sensor_circuit = self.__registers.by_name(key + ".sensor.circuit").value
-                sensor_vendor = self.__registers.by_name(key + ".sensor.vendor").value
-                sensor_model = self.__registers.by_name(key + ".sensor.model").value
-                v1_output = self.__registers.by_name(key + ".v1.output").value
-                v2_output = self.__registers.by_name(key + ".v2.output").value
-
-                config = {
-                    "name": "Lamps",
-                    "sensor_enabled": sensor_enabled,
-                    "sensor_dev": sensor_dev,
-                    "sensor_circuit": sensor_circuit,
-                    "sensor_vendor": sensor_vendor,
-                    "sensor_model": sensor_model,
-                    "v1_output": v1_output,
-                    "v2_output": v2_output,
-                    "controller": self.__controller,
-                    "erp_service": self.__erp_service
-                }
-
-                # Create device.
-                self.__plugins[Plugins.MainLight] = Lighting(config)
-                self.__plugins[Plugins.MainLight].init()
-
-        if register.value == 0:
-            if Plugins.MainLight in self.__plugins:
-                self.__plugins[Plugins.MainLight].shutdown()
-                del self.__plugins[Plugins.MainLight]
+        if register.value == 0 and Plugins.MainLight in self.__plugins:
+            self.__plugins[Plugins.MainLight].shutdown()
+            del self.__plugins[Plugins.MainLight]
 
     def __wdt_tablet_enabled(self, register):
         if register.value == 1:

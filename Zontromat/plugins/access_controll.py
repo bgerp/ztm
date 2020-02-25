@@ -126,6 +126,17 @@ class AccessControll(BasePlugin):
 
 #endregion
 
+#region Destructor
+
+    def __del__(self):
+        del self.__logger
+        del self.__card_reader
+        del self.__allowed_card_ids
+        del self.__cards_queue
+        del self.__open_timer
+
+#endregion
+
 #region Private Methods
 
     def __get_button(self):
@@ -176,41 +187,40 @@ class AccessControll(BasePlugin):
 
     def __card_reader_enabled_cb(self, register):
 
-        if register.value == 1:
-            if self.__card_reader is None:
+        if register.value == 1 and self.__card_reader is None:
+            key = register.base_name
+            card_reader_vendor = self._registers.by_name(key + ".card_reader.vendor").value
+            card_reader_model = self._registers.by_name(key + ".card_reader.model").value
+            card_reader_serial_number = self._registers.by_name(key + ".card_reader.serial_number").value
+            card_reader_port_name = self._registers.by_name(key + ".card_reader.port.name").value
+            card_reader_port_baudrate = self._registers.by_name(key + ".card_reader.port.baudrate").value
 
-                key = register.base_name
-                card_reader_vendor = self._registers.by_name(key + ".card_reader.vendor").value
-                card_reader_model = self._registers.by_name(key + ".card_reader.model").value
-                card_reader_serial_number = self._registers.by_name(key + ".card_reader.serial_number").value
-                card_reader_port_name = self._registers.by_name(key + ".card_reader.port.name").value
-                card_reader_port_baudrate = self._registers.by_name(key + ".card_reader.port.baudrate").value
+            # Filter by vendor and model.
+            if card_reader_vendor == "TERACOM":
+                if card_reader_model == "act230":
 
-                # Filter by vendor and model.
-                if card_reader_vendor == "TERACOM":
-                    if card_reader_model == "act230":
+                    # Get card reader parameters.
+                    reader_config = {
+                        "port_name": card_reader_port_name,
+                        "baudrate": card_reader_port_baudrate,
+                        "serial_number": card_reader_serial_number,
+                        "controller": self._controller,
+                        "erp_service": self._erp_service
+                    }
 
-                        # Get card reader parameters.
-                        reader_config = {
-                            "port_name": card_reader_port_name,
-                            "baudrate": card_reader_port_baudrate,
-                            "serial_number": card_reader_serial_number,
-                            "controller": self._controller,
-                            "erp_service": self._erp_service
-                        }
+                    # Create card reader.
+                    self.__card_reader = ACT230(reader_config)
+                    if self.__card_reader.reader_state is ReaderState.NONE:
+                        self.__card_reader.cb_readed_card(self.__create_record)
+                        self.__card_reader.start()
 
-                        # Create card reader.
-                        self.__card_reader = ACT230(reader_config)
-                        if self.__card_reader.reader_state is ReaderState.NONE:
-                            self.__card_reader.cb_readed_card(self.__create_record)
-                            self.__card_reader.start()
+        elif register.value == 0 and self.__card_reader is not None:
+            self.__card_reader.stop()
 
-        elif register.value == 0:
-            if self.__card_reader is not None:
-                self.__card_reader.stop()
+            while self.__card_reader.reader_state == ReaderState.RUN:
+                pass
 
-                while self.__card_reader.reader_state == ReaderState.RUN:
-                    pass
+            del self.__card_reader
 
     def __lock_mechanism_enabled_cb(self, register):
         self.__lock_mechanism_enabled = register.value

@@ -88,12 +88,12 @@ class Flowmeter(BasePlugin):
 
     def __leaktest_result(self, leak_liters):
 
-            if leak_liters > 0:
-                name = "general.drink_water_leak"
-                register = self._registers.by_name(name)
+        if leak_liters > 0:
+            name = "general.drink_water_leak"
 
-                if register is not None:
-                    register.value = leak_liters
+            register = self._registers.by_name(name)
+            if register is not None:
+                register.value = leak_liters
 
 #endregion
 

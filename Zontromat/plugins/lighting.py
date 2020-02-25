@@ -24,7 +24,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from utils.logger import get_logger
 
-from devices.base_device import BaseDevice
+from plugins.base_plugin import BasePlugin
+
 from devices.SEDtronic.u1wtvs import U1WTVS
 
 #region File Attributes
@@ -58,13 +59,17 @@ __status__ = "Debug"
 
 #endregion
 
-class Lighting(BaseDevice):
+class Lighting(BasePlugin):
     """Lamp controller"""
 
 #region Attributes
 
     __logger = None
     """Logger"""
+
+    __v1_output = "AO0"
+
+    __v2_output = "AO1"
 
     __v1_value = 0
     """V1 value."""
@@ -166,8 +171,37 @@ class Lighting(BaseDevice):
             Voltage 2.
         """
 
-        self._controller.analog_write(self._config["v1_output"], v1)
-        self._controller.analog_write(self._config["v2_output"], v2)
+        self._controller.analog_write(self.__v1_output, v1)
+        self._controller.analog_write(self.__v2_output, v2)
+
+    def __sensor_enabled_cb(self, register):
+
+        if register.value == 1 and self.__light_sensor is None:
+            sensor_dev = self._config["registers"].by_name(self._key + ".sensor.dev").value
+            sensor_circuit = self._config["registers"].by_name(self._key + ".sensor.circuit").value
+
+            config = \
+            {\
+                "name": "Room light sensor.",
+                "dev": sensor_dev,
+                "circuit": sensor_circuit,
+                "controller": self._controller
+            }
+
+            self.__light_sensor = U1WTVS(config)
+            self.__light_sensor.init()
+
+        elif register.value == 0 and self.__light_sensor is not None:
+            self.__light_sensor.shutdown()
+            del self.__light_sensor
+
+    def __v1_output_cb(self, register):
+        if self.__v1_output != register.value:
+            self.__v1_output = register.value
+
+    def __v2_output_cb(self, register):
+        if self.__v2_output != register.value:
+            self.__v2_output = register.value
 
 #endregion
 
@@ -176,24 +210,21 @@ class Lighting(BaseDevice):
     def init(self):
         """Init the Lighting."""
 
-        if "sensor_enabled" in self._config:
-            if self._config["sensor_enabled"] == 1:
-                if self._config["sensor_vendor"] == "SEDtronic":
-                    if self._config["sensor_model"] == "u1wtvs":
-
-                        config = \
-                        {\
-                            "name": "Room light sensor.",
-                            "dev": self._config["sensor_dev"],
-                            "circuit": self._config["sensor_circuit"],
-                            "controller": self._controller
-                        }
-
-                        self.__light_sensor = U1WTVS(config)
-                        self.__light_sensor.init()
-
         self.__logger = get_logger(__name__)
         self.__set_voltages(0, 0)
+
+        sensor_enabled = self._config["registers"].by_name(self._key + ".sensor.enabled")
+        if sensor_enabled is not None:
+            sensor_enabled.update_handler = self.__sensor_enabled_cb
+
+        v1_output = self._config["registers"].by_name(self._key + ".v1.output")
+        if v1_output is not None:
+            v1_output.update_handler = self.__v1_output_cb
+
+        v2_output = self._config["registers"].by_name(self._key + ".v2.output")
+        if v2_output is not None:
+            v2_output.update_handler = self.__v2_output_cb
+
         self.__logger.info("Starting the {}".format(self.name))
 
     def shutdown(self):

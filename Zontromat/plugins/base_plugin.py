@@ -63,10 +63,7 @@ class BasePlugin(Configuarable):
     _controller = None
     """Controller"""
 
-    __name = ""
-    """Name of configuration."""
-
-    __key = ""
+    _key = ""
     """Key of the plugin."""
 
 #endregion

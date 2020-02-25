@@ -133,6 +133,7 @@ class PowerMeter(BasePlugin):
 
         self.__parameters_values = parameters_values
 
+        # Update parameters in the registers.
         self._registers.by_name("self_current.sub_dev.current").value\
              = self.__parameters_values["Current"]
 

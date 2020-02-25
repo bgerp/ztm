@@ -195,6 +195,10 @@ class HVAC(BasePlugin):
         if self.__air_temp_lower_dev is not None:
             temperaures.append(self.__air_temp_lower_dev.value())
 
+        temps = len(temperaures)
+        if temps <= 0:
+            temperaures.append(0.0)
+
         # Find min and max.
         minimum = min(temperaures)
         maximum = max(temperaures)
@@ -228,6 +232,29 @@ class HVAC(BasePlugin):
         return value
 
 #endregion
+
+#region Destructor
+
+    def __del__(self):
+        """Destructor"""
+
+        del self.__air_temp_upper_dev
+        del self.__air_temp_cent_dev
+        del self.__air_temp_lower_dev
+        del self.__convector_dev
+        del self.__loop1_fan_dev
+        del self.__loop1_temp_dev
+        del self.__loop1_valve_dev
+        del self.__loop1_cnt_dev
+        del self.__loop2_fan_dev
+        del self.__loop2_temp_dev
+        del self.__loop2_valve_dev
+        del self.__loop2_cnt_dev
+        del self.__thermal_mode
+        del self.__update_timer
+        del self.__loop1_leak_test
+        del self.__loop2_leak_teat
+        del self.__logger
 
 #region Private Methods
 
@@ -301,7 +328,7 @@ class HVAC(BasePlugin):
 
     def __air_temp_cent_enabled_cb(self, register):
 
-        if register.value == 1:
+        if register.value == 1 and self.__air_temp_cent_dev is None:
             air_temp_cent_circuit = self._registers.by_name(self._key + ".air_temp_cent.circuit")
             air_temp_cent_dev = self._registers.by_name(self._key + ".air_temp_cent.dev")
             air_temp_cent_type = self._registers.by_name(self._key + ".air_temp_cent.type")
@@ -322,13 +349,13 @@ class HVAC(BasePlugin):
                 self.__air_temp_cent_dev = DS18B20(config)
                 self.__air_temp_cent_dev.init()
 
-        elif register.value == 0:
+        elif register.value == 0 and self.__air_temp_cent_dev is not None:
             self.__air_temp_cent_dev.shutdown()
             del self.__air_temp_cent_dev
 
     def __air_temp_lower_enabled_cb(self, register):
 
-        if register.value == 1:
+        if register.value == 1 and self.__air_temp_lower_dev is None:
             air_temp_lower_circuit = self._registers.by_name(self._key + ".air_temp_lower.circuit")
             air_temp_lower_dev = self._registers.by_name(self._key + ".air_temp_lower.dev")
             air_temp_lower_type = self._registers.by_name(self._key + ".air_temp_lower.type")
@@ -349,13 +376,13 @@ class HVAC(BasePlugin):
                 self.__air_temp_lower_dev = DS18B20(config)
                 self.__air_temp_lower_dev.init()
 
-        elif register.value == 0:
+        elif register.value == 0 and self.__air_temp_lower_dev is not None:
             self.__air_temp_lower_dev.shutdown()
             del self.__air_temp_lower_dev
 
     def __air_temp_upper_enabled_cb(self, register):
 
-        if register.value == 1:
+        if register.value == 1 and self.__air_temp_upper_dev is None:
             air_temp_upper_circuit = self._registers.by_name(self._key + ".air_temp_upper.circuit")
             air_temp_upper_dev = self._registers.by_name(self._key + ".air_temp_upper.dev")
             air_temp_upper_type = self._registers.by_name(self._key + ".air_temp_upper.type")
@@ -376,13 +403,13 @@ class HVAC(BasePlugin):
                 self.__air_temp_upper_dev = DS18B20(config)
                 self.__air_temp_upper_dev.init()
 
-        elif register.value == 0:
+        elif register.value == 0 and self.__air_temp_upper_dev is not None:
             self.__air_temp_upper_dev.shutdown()
             del self.__air_temp_upper_dev
 
     def __convector_enable_cb(self, register):
 
-        if register.value == 1:
+        if register.value == 1 and self.__convector_dev is None:
             convector_stage_1 = self._registers.by_name(self._key + ".convector.stage_1.output")
             convector_stage_2 = self._registers.by_name(self._key + ".convector.stage_2.output")
             convector_stage_3 = self._registers.by_name(self._key + ".convector.stage_3.output")
@@ -403,14 +430,13 @@ class HVAC(BasePlugin):
                 self.__convector_dev = Klimafan(config)
                 self.__convector_dev.init()
 
-        elif register.value == 0:
-            if self.__convector_dev is not None:
-                self.__convector_dev.shutdown()
-                del self.__convector_dev
+        elif register.value == 0 and self.__convector_dev is not None:
+            self.__convector_dev.shutdown()
+            del self.__convector_dev
 
     def __loop1_cnt_enabled_cb(self, register):
 
-        if register.value == 1:
+        if register.value == 1 and self.__loop1_cnt_dev is None:
             loop1_cnt_input = self._registers.by_name(self._key + ".loop1.cnt.input")
             loop1_cnt_tpl = self._registers.by_name(self._key + ".loop1.cnt.tpl")
 
@@ -431,15 +457,14 @@ class HVAC(BasePlugin):
                 self.__loop1_leak_test = LeakTest(self.__loop1_cnt_dev)
                 self.__loop1_leak_test.on_result(self.__loop1_leaktest_result)
 
-        elif register.value == 0:
-            if self.__loop1_cnt_dev is not None:
-                self.__loop1_cnt_dev.shutdown()
-                del self.__loop1_cnt_dev
-                del self.__loop1_leak_test
+        elif register.value == 0 and self.__loop1_cnt_dev is not None:
+            self.__loop1_cnt_dev.shutdown()
+            del self.__loop1_cnt_dev
+            del self.__loop1_leak_test
 
     def __loop1_fan_enabled_cb(self, register):
 
-        if register.value == 1:
+        if register.value == 1 and self.__loop1_fan_dev is None:
 
             loop1_fan_output = self._registers.by_name(self._key + ".loop1.fan.output").value
 
@@ -453,17 +478,16 @@ class HVAC(BasePlugin):
             self.__loop1_fan_dev = F3P146EC072600(config)
             self.__loop1_fan_dev.init()
 
-        elif register.value == 0:
-            if self.__loop1_fan_dev is not None:
-                self.__loop1_fan_dev.shutdown()
-                del self.__loop1_fan_dev
+        elif register.value == 0 and self.__loop1_fan_dev is not None:
+            self.__loop1_fan_dev.shutdown()
+            del self.__loop1_fan_dev
 
     def __loop1_temp_enabled_cb(self, register):
 
-        if register.value == 1:
+        if register.value == 1 and self.__loop1_temp_dev is None:
             loop1_temp_circuit = self._registers.by_name(self._key + ".loop1.temp.circuit")
             loop1_temp_dev = self._registers.by_name(self._key + ".loop1.temp.dev")
-            loop1_temp_type = self._registers.by_name(self._key + ".loop1.tempr.type")
+            loop1_temp_type = self._registers.by_name(self._key + ".loop1.temp.type")
 
             if loop1_temp_circuit is not None and\
                 loop1_temp_dev is not None and\
@@ -481,14 +505,13 @@ class HVAC(BasePlugin):
                 self.__loop1_temp_dev = DS18B20(config)
                 self.__loop1_temp_dev.init()
 
-        elif register.value == 0:
-            if self.__loop1_temp_dev is not None:
-                self.__loop1_temp_dev.shutdown()
-                del self.__loop1_temp_dev
+        elif register.value == 0 and self.__loop1_temp_dev is not None:
+            self.__loop1_temp_dev.shutdown()
+            del self.__loop1_temp_dev
 
     def __loop1_valve_enabled_cb(self, register):
 
-        if register.value == 1:
+        if register.value == 1 and self.__loop1_valve_dev is None:
 
             loop1_valve_output = self._registers.by_name(self._key + ".loop1.valve.output").value
 
@@ -502,14 +525,13 @@ class HVAC(BasePlugin):
             self.__loop1_valve_dev = A20M15B2C(config)
             self.__loop1_valve_dev.init()
 
-        if register.value == 0:
-            if self.__loop1_valve_dev is not None:
-                self.__loop1_valve_dev.shutdown()
-                del self.__loop1_valve_dev
+        if register.value == 0 and self.__loop1_valve_dev is not None:
+            self.__loop1_valve_dev.shutdown()
+            del self.__loop1_valve_dev
 
     def __loop2_cnt_enabled_cb(self, register):
 
-        if register.value == 1:
+        if register.value == 1 and self.__loop2_cnt_dev is None:
             loop2_cnt_input = self._registers.by_name(self._key + ".loop2.cnt.input")
             loop2_cnt_tpl = self._registers.by_name(self._key + ".loop2.cnt.tpl")
 
@@ -530,15 +552,14 @@ class HVAC(BasePlugin):
                 self.__loop2_leak_teat = LeakTest(self.__loop2_cnt_dev)
                 self.__loop2_leak_teat.on_result(self.__loop2_leaktest_result)
 
-        elif register.value == 0:
-            if self.__loop2_cnt_dev is not None:
-                self.__loop2_cnt_dev.shutdown()
-                del self.__loop2_cnt_dev
-                del self.__loop2_leak_teat
+        elif register.value == 0 and self.__loop2_cnt_dev is not None:
+            self.__loop2_cnt_dev.shutdown()
+            del self.__loop2_cnt_dev
+            del self.__loop2_leak_teat
 
     def __loop2_fan_enabled_cb(self, register):
 
-        if register.value == 1:
+        if register.value == 1 and self.__loop2_fan_dev is None:
             loop2_fan_output = self._registers.by_name(self._key + ".loop2.fan.output")
 
             config = \
@@ -551,14 +572,13 @@ class HVAC(BasePlugin):
             self.__loop2_fan_dev = F3P146EC072600(config)
             self.__loop2_fan_dev.init()
 
-        elif register.value == 0:
-            if self.__loop2_fan_dev is not None:
-                self.__loop2_fan_dev.shutdown()
-                del self.__loop2_fan_dev
+        elif register.value == 0 and self.__loop2_fan_dev is not None:
+            self.__loop2_fan_dev.shutdown()
+            del self.__loop2_fan_dev
 
     def __loop2_temp_enabled_cb(self, register):
 
-        if register.value == 1:
+        if register.value == 1 and self.__loop2_temp_dev is None:
             loop2_temp_circuit = self._registers.by_name(self._key + ".loop2.temp.circuit")
             loop2_temp_dev = self._registers.by_name(self._key + ".loop2.temp.dev")
             loop2_temp_type = self._registers.by_name(self._key + ".loop2.temp.type")
@@ -579,14 +599,13 @@ class HVAC(BasePlugin):
                 self.__loop2_temp_dev = DS18B20(config)
                 self.__loop2_temp_dev.init()
 
-        elif register.value == 0:
-            if self.__loop2_temp_dev is not None:
-                self.__loop2_temp_dev.shutdown()
-                del self.__loop2_temp_dev
+        elif register.value == 0 and self.__loop2_temp_dev is not None:
+            self.__loop2_temp_dev.shutdown()
+            del self.__loop2_temp_dev
 
     def __loop2_valve_enabled_cb(self, register):
 
-        if register.value == 1:
+        if register.value == 1 and self.__loop2_valve_dev is None:
             loop2_valve_output = self._registers.by_name(self._key + ".loop2.valve.output").value
 
             config = \
@@ -599,10 +618,9 @@ class HVAC(BasePlugin):
             self.__loop2_valve_dev = A20M15B2C(config)
             self.__loop2_valve_dev.init()
 
-        elif register.value == 0:
-            if self.__loop2_valve_dev is not None:
-                self.__loop2_valve_dev.shutdown()
-                del self.__loop2_valve_dev
+        elif register.value == 0 and self.__loop2_valve_dev is not None:
+            self.__loop2_valve_dev.shutdown()
+            del self.__loop2_valve_dev
 
 
     def __thermal_mode_on_change(self, machine):
@@ -846,11 +864,13 @@ class HVAC(BasePlugin):
 
             self.__set_thermal_force(self.__thermal_force)
 
-            if self.__loop1_valve_dev.position <= 0:
-                self.__loop1_leak_test.run()
+            if self.__loop1_valve_dev is not None:
+                if self.__loop1_valve_dev.position <= 0:
+                    self.__loop1_leak_test.run()
 
-            if self.__loop2_valve_dev.position <= 0:
-                self.__loop2_leak_teat.run()
+            if self.__loop2_valve_dev is not None:
+                if self.__loop2_valve_dev.position <= 0:
+                    self.__loop2_leak_teat.run()
 
             temp_actual = self._registers.by_name(self._key + ".temp.actual")
             if temp_actual is not None:
@@ -865,11 +885,11 @@ class HVAC(BasePlugin):
         #     # Update current time.
         #     self.__lastupdate_delta_time = time.time()
 
-
     def shutdown(self):
         """ Shutdown the HVAC. """
 
         self.__logger.info("Shutdown the {}".format(self.name))
-        self.__set_thermal_force(0)
+        self.__thermal_force = 0
+        self.__set_thermal_force(self.__thermal_force)
 
 #endregion
