@@ -31,6 +31,8 @@ from utils.settings import ApplicationSettings
 from utils.logger import get_logger
 from utils.state_machine import StateMachine
 from utils.timer import Timer
+from utils.utils import time_usage, mem_usage, mem_time_usage
+from utils.performance_profiler import PerformanceProfiler
 
 from controllers.controller_factory import ControllerFactory
 from controllers.update_state import UpdateState
@@ -41,6 +43,8 @@ from data.register import Source
 from data.registers import Registers
 
 from plugins.plugins_manager import PluginsManager
+
+
 
 #region File Attributes
 
@@ -152,6 +156,8 @@ class Zone():
     __controller_comm_failures = 0
     """Controller communication failures."""
 
+    __performance_profiler = PerformanceProfiler()
+
 #endregion
 
 #region Constructor
@@ -168,6 +174,13 @@ class Zone():
         # Create registers.
         self.__registers = Registers.get_instance()
 
+        # Update timer.
+        self.__update_timer = Timer(self.__update_rate)
+
+        # Set zone state machine.
+        self.__zone_state = StateMachine(ZoneState.Idle)
+        self.__zone_state.on_change(self.__cb_zone_state)
+
         # Create Neuron.
         config = {
             "vendor": app_settings.get_controller["vendor"],
@@ -180,15 +193,15 @@ class Zone():
         # Create bgERP and login.
         self.__bgerp = bgERP(app_settings.get_erp_service["host"],\
             app_settings.get_erp_service["timeout"])
-
-        self.__plugin_manager = PluginsManager(self.__registers, self.__controller, self.__bgerp)
-
-        self.__update_timer = Timer(self.__update_rate)
-
         self.__erp_service_update_timer = Timer(self.__erp_service_update_rate)
 
-        self.__zone_state = StateMachine(ZoneState.Idle)
-        self.__zone_state.on_change(self.__cb_zone_state)
+        # Set the plugin manager.
+        self.__plugin_manager = PluginsManager(self.__registers, self.__controller, self.__bgerp)
+
+        # Set the performance profiler.
+        self.__performance_profiler.enable_mem_profile = app_settings.ram_usage
+        self.__performance_profiler.enable_time_profile = app_settings.run_time_usage
+        self.__performance_profiler.on_change(self.__on_change)
 
 #endregion
 
@@ -310,6 +323,12 @@ class Zone():
         else:
             self.__zone_state.set_state(ZoneState.Test)
 
+    def __on_change(self, current, peak, passed_time):
+
+        print(f"Current memory usage is {current / 10**3}kB; Peak was {peak / 10**3}kB")
+        print(f"Total time: {passed_time:.3f} sec")
+
+    @__performance_profiler.profile
     def __update(self):
 
         if self.__zone_state.is_state(ZoneState.Idle):
@@ -356,8 +375,7 @@ class Zone():
                 try:
                     self.__update()
                 except Exception:
-                    trace_back = traceback.format_exc()
-                    self.__logger.error(trace_back)
+                    self.__logger.error(traceback.format_exc())
                     self.__zone_state.set_state(ZoneState.Init)
 
                 self.__bussy_flag = False
