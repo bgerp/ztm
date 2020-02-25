@@ -148,7 +148,7 @@ def time_to_measure():
     global logger
 
     # API-endpoint.
-    URL = "http://176.33.1.72:8080/json/temp/26607314020000F8"
+    URL = "http://176.33.1.249:8080/json/temp/26607314020000F8"
 
     # Defining a params dict for the parameters to be sent to the API.
     PARAMS = {}

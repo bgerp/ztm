@@ -122,7 +122,7 @@ def main():
     __table_data = PrettyTable()
 
     parser = argparse.ArgumentParser()
-    parser.add_argument("--ip", type=str, default="http://176.33.1.72", help="IP Address")
+    parser.add_argument("--ip", type=str, default="http://176.33.1.249", help="IP Address")
     parser.add_argument("--port", type=int, default=8080, help="Port")
 
     args = parser.parse_args()

@@ -26,7 +26,7 @@ import argparse
 import sys
 
 from controllers.neuron.neuron import Neuron
-from utils.utils import time_measure
+from utils.perfformance_profiler import PerformanceProfiler
 
 #region File Attributes
 
@@ -61,14 +61,25 @@ __status__ = "Debug"
 
 __neuron = None
 
-@time_measure
-def test_function():
-    """Test function"""
+__performance_profiler = PerformanceProfiler()
+__performance_profiler.enable_mem_profile = True
+__performance_profiler.enable_time_profile = True
+__performance_profiler.max_mem = 0.03
+__performance_profiler.on_change(__on_change)
+
+def __on_change(current, peak, passed_time):
+
+    print(f"Current memory usage is {current / 10**6}MB; Peak was {peak / 10**6}MB")
+    print(f"Total time: {passed_time:.3f} sec")
+
+@__performance_profiler.profile
+def main():
+    """Main"""
 
     global __neuron
 
     parser = argparse.ArgumentParser()
-    parser.add_argument("--ip", type=str, default="176.33.1.72", help="IP Address")
+    parser.add_argument("--ip", type=str, default="176.33.1.249", help="IP Address")
     parser.add_argument("--port", type=int, default=8080, help="Port")
     parser.add_argument("--dev", type=str, default="temp", help="Device")
     parser.add_argument("--circuit", type=str, default="28FFC4EE00170349", help="Circuit")
@@ -80,11 +91,6 @@ def test_function():
     device = __neuron.get_device(args.dev, args.circuit)
 
     print(device)
-
-def main():
-    """Main"""
-
-    print('1W get device test; Time: %.3f' % round(test_function, 3))
 
 def kb_interupt():
     """Keyboard interupt handler."""
