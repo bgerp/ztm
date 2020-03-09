@@ -31,7 +31,7 @@ from utils.settings import ApplicationSettings
 from utils.logger import get_logger
 from utils.state_machine import StateMachine
 from utils.timer import Timer
-from utils.utils import time_usage, mem_usage, mem_time_usage
+#from utils.utils import time_usage, mem_usage, mem_time_usage
 from utils.performance_profiler import PerformanceProfiler
 
 from controllers.controller_factory import ControllerFactory
@@ -39,12 +39,10 @@ from controllers.update_state import UpdateState
 
 from bgERP.bgERP import bgERP
 
-from data.register import Source
+from data.register import Register, Source, Scope
 from data.registers import Registers
 
 from plugins.plugins_manager import PluginsManager
-
-
 
 #region File Attributes
 
@@ -157,6 +155,10 @@ class Zone():
     """Controller communication failures."""
 
     __performance_profiler = PerformanceProfiler()
+    """Performance profiler."""
+
+    __performance_profiler_timer = None
+    """Performance profiler timer."""
 
 #endregion
 
@@ -201,7 +203,29 @@ class Zone():
         # Set the performance profiler.
         self.__performance_profiler.enable_mem_profile = app_settings.ram_usage
         self.__performance_profiler.enable_time_profile = app_settings.run_time_usage
-        self.__performance_profiler.on_change(self.__on_change)
+        self.__performance_profiler.on_time_change(self.__on_time_change)
+        self.__performance_profiler.on_memory_change(self.__on_memory_change)
+
+        register = Register("self.ram.current")
+        register.scope = Scope.Global
+        register.source = Source.Zontromat
+        register.value = 0
+        self.__registers.add(register)
+
+        register = Register("self.ram.peak")
+        register.scope = Scope.Global
+        register.source = Source.Zontromat
+        register.value = 0
+        self.__registers.add(register)
+
+        register = Register("self.time.usage")
+        register.scope = Scope.Global
+        register.source = Source.Zontromat
+        register.value = 0
+        self.__registers.add(register)
+
+        # Setup the performance profiler timer.
+        self.__performance_profiler_timer = Timer(60000)
 
 #endregion
 
@@ -323,10 +347,17 @@ class Zone():
         else:
             self.__zone_state.set_state(ZoneState.Test)
 
-    def __on_change(self, current, peak, passed_time):
-
-        print(f"Current memory usage is {current / 10**3}kB; Peak was {peak / 10**3}kB")
+    def __on_time_change(self, passed_time):
+        register = self.__registers.by_name("self.time.usage")
+        register.value = passed_time
         print(f"Total time: {passed_time:.3f} sec")
+
+    def __on_memory_change(self, current, peak):
+        register = self.__registers.by_name("self.ram.current")
+        register.value = current
+        register = self.__registers.by_name("self.ram.peak")
+        register.value = peak
+        print(f"Current memory usage is {current / 10**3}kB; Peak was {peak / 10**3}kB")
 
     @__performance_profiler.profile
     def __update(self):
@@ -363,17 +394,36 @@ class Zone():
 
         while not self.__stop_flag:
 
+            # Update process timers.
             self.__update_timer.update()
+            self.__performance_profiler_timer.update()
+
+            # If time has come for execution then run it once and clear the timer.
             if self.__update_timer.expired:
                 self.__update_timer.clear()
 
+
+                # If the bussy flag is raices pass the update cycle.
                 if self.__bussy_flag:
                     pass
 
                 self.__bussy_flag = True
 
                 try:
+                    # If the time has come for profiling.
+                    # Enable the flag and tke profile.
+                    if self.__performance_profiler_timer.expired:
+                        self.__performance_profiler_timer.clear()
+                        self.__performance_profiler.enable = True
+
+                    # Update the application.
                     self.__update()
+
+                    # If the performance profile is runing stop it affter the cycle.
+                    if self.__performance_profiler.enable:
+                        self.__performance_profiler.enable = False
+
+                # Log the exception without to close the application.
                 except Exception:
                     self.__logger.error(traceback.format_exc())
                     self.__zone_state.set_state(ZoneState.Init)
