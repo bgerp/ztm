@@ -73,9 +73,14 @@ class PerformanceProfiler:
 
 #region Attributes
 
+    __enable = False
+    """General enable."""
+
     __enable_mem_profile = False
+    """Enable memory profiler."""
 
     __enable_time_profile = False
+    """Enable time consumption prifiler."""
 
     __on_memory_change_callback = None
     """On memory change callback."""
@@ -89,6 +94,26 @@ class PerformanceProfiler:
 #endregion
 
 #region Properties
+
+    @property
+    def enable(self):
+        """Enable time profile.
+
+        Returns:
+            float: Time profile flag.
+        """
+
+        return self.__enable
+
+    @enable.setter
+    def enable(self, value):
+        """Enable time profile.
+
+        Args:
+            value (float): Time profile flag.
+        """
+
+        self.__enable = value
 
     @property
     def enable_mem_profile(self):
@@ -174,19 +199,19 @@ class PerformanceProfiler:
             peak = 0
             passed_time = 0
 
-            if self.__enable_mem_profile:
+            if self.__enable_mem_profile and self.__enable:
                 tracemalloc.start()
 
-            if self.__enable_time_profile:
+            if self.__enable_time_profile and self.__enable:
                 t0 = time.time()
 
             result = function(*args, **kwargs)
 
-            if self.__enable_time_profile:
+            if self.__enable_time_profile and self.__enable:
                 t1 = time.time()
                 passed_time = t1-t0
 
-            if self.__enable_mem_profile:
+            if self.__enable_mem_profile and self.__enable:
                 current, peak = tracemalloc.get_traced_memory()
                 tracemalloc.stop()
 
@@ -195,14 +220,14 @@ class PerformanceProfiler:
                 if self.__on_memory_change_callback is not None:
                     self.__on_memory_change_callback(current, peak)
 
-            if self.__enable_time_profile:
+            if self.__enable_time_profile and self.__enable:
 
                 # print("Total time: {0:.3f} sec".format(passed_time))
 
                 if self.__on_time_change_callback is not None:
-                    self.__on_time_change_callback(time)
+                    self.__on_time_change_callback(passed_time)
 
-            if self.__enable_mem_profile or self.__enable_time_profile:
+            if (self.__enable_mem_profile or self.__enable_time_profile) and self.__enable:
 
                 if self.__on_change_callback is not None:
                     self.__on_change_callback(current, peak, passed_time)
