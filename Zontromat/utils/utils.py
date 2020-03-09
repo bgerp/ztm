@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import time
 from functools import wraps
 import tracemalloc
+import math
 
 #region File Attributes
 
@@ -141,3 +142,28 @@ def l_scale(target, in_limit, out_limit):
 
     return (target - in_limit[0]) * (out_limit[1] - out_limit[0]) / \
         (in_limit[1] - in_limit[0]) + out_limit[0]
+
+def to_deg(rad):
+    return rad * (180.0 / math.pi)
+
+def to_rad(deg):
+    return deg * (math.pi / 180.0)
+
+def shadow_length(height, alpha):
+    """Length of the shadow.
+        This simple online calculator gives a vertical object
+        shadow length for specified day and geographic coordinate.
+        The calculator uses Sun position algorithm to calculate sun altitude.
+
+        Then it uses this formula to calculate shadow length:
+
+        L = h/tan(alpha),
+
+        where
+        h - object height,
+        a - angle between Sun and horizon.
+
+        @see https://planetcalc.com/1875/
+    """
+
+    return height / math.tan(alpha)
