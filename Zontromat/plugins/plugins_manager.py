@@ -32,15 +32,17 @@ from data.register import Scope
 from data.register import Source
 from data.register import Register
 
-from plugins.status_led import StatusLed
-from plugins.tamper import Tamper
-from plugins.flowmeter import Flowmeter
-from plugins.power_meter import PowerMeter
-from plugins.access_controll import AccessControll
-from plugins.blinds import Blinds
-from plugins.hvac import HVAC
-from plugins.lighting import Lighting
-from plugins.wdt_tablet import WDTTablet
+from plugins.status_led.status_led import StatusLed
+from plugins.tamper.tamper import Tamper
+from plugins.flowmeter.flowmeter import Flowmeter
+from plugins.power_meter.power_meter import PowerMeter
+from plugins.access_controll.access_controll import AccessControll
+from plugins.blinds.blinds import Blinds
+from plugins.hvac.hvac import HVAC
+from plugins.lighting.lighting import Lighting
+from plugins.wdt_tablet.wdt_tablet import WDTTablet
+# Test plugins
+from plugins.sun_position.sun_position import SunPos
 
 #region File Attributes
 
@@ -87,9 +89,10 @@ class Plugins(Enum):
     Blinds = 9
     AccessControll1 = 10
     AccessControll2 = 11
-    HVAC = 22
-    MainLight = 23
-    WDTTablet = 24
+    HVAC = 12
+    MainLight = 13
+    WDTTablet = 14
+    SunPos = 20
 
 class PluginsManager:
     """Template class doc."""
@@ -133,6 +136,11 @@ class PluginsManager:
         self.__registers = registers
         self.__controller = controller
         self.__erp_service = erp_service
+        self.__add_registers()
+
+        self.__sun_pos_enable()
+
+    def __add_registers(self):
 
 #region General
 
@@ -342,7 +350,7 @@ class PluginsManager:
         register.value = "deg"
         self.__registers.add(register)
 
-        register = Register("blinds.input_active")
+        register = Register("blinds.input_stop")
         register.scope = Scope.Global
         register.source = Source.bgERP
         register.value = "DI8"
@@ -1359,6 +1367,13 @@ class PluginsManager:
             if Plugins.WDTTablet in self.__plugins:
                 self.__plugins[Plugins.WDTTablet].shutdown()
                 del self.__plugins[Plugins.WDTTablet]
+
+    def __sun_pos_enable(self):
+
+        # Create device.
+        config = self.__prepare_config("Sun Position", "sun_pos")
+        self.__plugins[Plugins.SunPos] = SunPos(config)
+        self.__plugins[Plugins.SunPos].init()
 
 #endregion
 

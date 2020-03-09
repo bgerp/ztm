@@ -22,21 +22,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 
+import math
+
 from enum import Enum
 
 from utils.logger import get_logger
 from utils.state_machine import StateMachine
 from utils.timer import Timer
+from utils.utils import to_rad, shadow_length
 
 from plugins.base_plugin import BasePlugin
-
-class BlindsState(Enum):
-    """Blinds functional states."""
-
-    NONE = 0
-    Wait = 1
-    Prepare = 2
-    Execute = 3
 
 #region File Attributes
 
@@ -69,6 +64,14 @@ __status__ = "Debug"
 
 #endregion
 
+class BlindsState(Enum):
+    """Blinds functional states."""
+
+    NONE = 0
+    Wait = 1
+    Prepare = 2
+    Execute = 3
+
 class Blinds(BasePlugin):
     """Blinds controller device."""
 
@@ -80,19 +83,10 @@ class Blinds(BasePlugin):
     __blinds_state = None
     """Blinds state."""
 
-    __deg_per_sec = 18
-    """Degreeses per sec."""
-
-    __curretnt_position = 0
-    """Current position of the blinds."""
-
-    __new_position = 0
-    """New position."""
-
     __move_timer = None
     """Move timer."""
 
-    __input_active = None
+    __input_stop = None
     """Input active."""
 
     __output_ccw = None
@@ -101,20 +95,39 @@ class Blinds(BasePlugin):
     __output_cw = None
     """Output CW"""
 
-    __elevation_value = 0
-    """Sun elevation value."""
+    __curretnt_position = 0
+    """Current position of the blinds."""
 
-    __azimuth_value = 0
-    """Sun azimuth value."""
+    __new_position = 0
+    """New position."""
+
+    __deg_per_sec = 18
+    """Degreeses per sec."""
+
+    __limit = 1
+
+    __delay_timer = Timer(2)
+    __sun_azm = 0
+    __sun_elev = 0
 
 #endregion
 
 #region Private Methods
 
-    def __to_time(self, degrees):
-        return (degrees / self.__deg_per_sec)
+    def __stop(self):
+        """Stop the engine."""
+
+        self._controller.digital_write(self.__output_cw, 0)
+        self._controller.digital_write(self.__output_ccw, 0)
+
+    def __on_new_pos(self, register):
+        """Callback function that sets new position."""
+        self.__set_position(register.value)
 
     def __set_position(self, position):
+
+        if position == self.__new_position:
+            return
 
         if position > 180:
             position = 180
@@ -125,14 +138,39 @@ class Blinds(BasePlugin):
         self.__new_position = position
         self.__blinds_state.set_state(BlindsState.Prepare)
 
+    def __to_time(self, degrees):
+        return degrees / self.__deg_per_sec
+
     def __calculate_position(self):
 
-        self.__elevation_value = self._registers.by_name(self._key + ".sun.elevation.value").value
-        self.__azimuth_value = self._registers.by_name(self._key + ".sun.azimuth.value").value
+        sun_elev_reg = self._registers.by_name(self._key + ".sun.elevation.value")
+        if sun_elev_reg:
+            self.__sun_elev = sun_elev_reg.value
 
-        # TODO: Put sun clock calculations.
+        sun_azm_reg = self._registers.by_name(self._key + ".sun.azimuth.value")
+        if sun_azm_reg:
+            self.__sun_azm = sun_azm_reg.value
 
-        self.__set_position(0)
+        if (self.__sun_azm > 0) and (self.__sun_elev > 0):
+            print(f"Blinds -> Azm: {self.__sun_azm:.2f}; Elev: {self.__sun_elev:.2f}")
+
+            # Calculate the shadow length.
+            shadow_l = shadow_length(1, to_rad(self.__sun_elev))
+            print(f"Blinds -> Shadow: {shadow_l:.2f}")
+
+            thita = 360 - (self.__sun_azm + 180)
+            print(f"Blinds -> Thita: {thita:.2f}")
+
+            # Calculate cartesian
+            x = shadow_l * math.cos(to_rad(thita))
+            y = shadow_l * math.sin(to_rad(thita))
+            print(f"Blinds -> X: {x:.2f}; Y: {y:.2f}")
+
+            is_cloudy = False
+            if (x > self.__limit or y > self.__limit) and not is_cloudy:
+                if self.__blinds_state.is_state(BlindsState.Wait):
+                    print("Signal to close")
+                    self.__set_position(180)
 
 #endregion
 
@@ -142,13 +180,13 @@ class Blinds(BasePlugin):
 
         self.__logger = get_logger(__name__)
 
-        self.__blinds_state = StateMachine(BlindsState.NONE)
+        self.__blinds_state = StateMachine(BlindsState.Wait)
 
         self.__move_timer = Timer()
 
-        input_active = self._registers.by_name(self._key + ".input_active")
-        if input_active is not None:
-            self.__input_active = input_active.value
+        input_stop = self._registers.by_name(self._key + ".input_stop")
+        if input_stop is not None:
+            self.__input_stop = input_stop.value
 
         output_ccw = self._registers.by_name(self._key + ".output_ccw")
         if output_ccw is not None:
@@ -158,9 +196,16 @@ class Blinds(BasePlugin):
         if output_cw is not None:
             self.__output_cw = output_cw.value
 
+        # position = self._registers.by_name(self._key + ".position")
+        # if position is not None:
+        #     position.update_handler = self.__on_new_pos
+
     def update(self):
 
-        self.__calculate_position()
+        self.__delay_timer.update()
+        if self.__delay_timer.expired:
+            self.__delay_timer.clear()
+            self.__calculate_position()
 
         if self.__blinds_state.is_state(BlindsState.Prepare):
 
@@ -187,27 +232,26 @@ class Blinds(BasePlugin):
 
             self.__blinds_state.set_state(BlindsState.Execute)
 
-        if self.__blinds_state.is_state(BlindsState.Execute):
+        elif self.__blinds_state.is_state(BlindsState.Execute):
 
             self.__move_timer.update()
             if self.__move_timer.expired:
                 self.__move_timer.clear()
-                self._controller.digital_write(self.__output_cw, 0)
-                self._controller.digital_write(self.__output_ccw, 0)
+                self.__stop()
                 self.__curretnt_position = self.__new_position
                 self.__blinds_state.set_state(BlindsState.Wait)
 
-            input_active = self._controller.digital_read(self.__input_active)
-            if not input_active:
-                self._controller.digital_write(self.__output_cw, 0)
-                self._controller.digital_write(self.__output_ccw, 0)
+            input_stop = self._controller.digital_read(self.__input_stop)
+            if not input_stop:
+                self.__stop()
+                self.__logger.warning("{} has raised end position.".format(self.name, ))
                 self.__curretnt_position = self.__new_position
                 self.__blinds_state.set_state(BlindsState.Wait)
 
     def shutdown(self):
         """Shutdown the blinds."""
 
-        self._controller.digital_write(self.__output_cw, 0)
-        self._controller.digital_write(self.__output_ccw, 0)
+        self.__logger.info("Shutdown the {}".format(self.name))
+        self.__stop()
 
 #endregion
