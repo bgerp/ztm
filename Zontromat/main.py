@@ -92,10 +92,11 @@ def main():
     signal.signal(signal.SIGINT, interupt_handler)
     signal.signal(signal.SIGTERM, interupt_handler)
 
+    settings = ApplicationSettings.get_instance()
+
     # Create log.
     crate_log_file()
     __logger = get_logger(__name__)
-    settings = ApplicationSettings.get_instance()
 
     # Wait for settings.
     while not settings.exists:
@@ -124,10 +125,10 @@ def interupt_handler(signum, frame):
     __time_to_stop = True
 
     if signum == 2:
-        __logger.warning("Stoped by interupt.")
+        __logger.warning("Stopped by interupt.")
 
     elif signum == 15:
-        __logger.warning("Stoped by termination.")
+        __logger.warning("Stopped by termination.")
 
     else:
         __logger.warning("Signal handler called. Signal: {}; Frame: {}".format(signum, frame))

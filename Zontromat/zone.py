@@ -148,8 +148,8 @@ class Zone():
     __stop_flag = False
     """Time to Stop flag."""
 
-    __bussy_flag = False
-    """Bussy flag."""
+    __busy_flag = False
+    """Busy flag."""
 
     __controller_comm_failures = 0
     """Controller communication failures."""
@@ -170,7 +170,7 @@ class Zone():
         # Application settings.
         app_settings = ApplicationSettings.get_instance()
 
-        # Create loggger.
+        # Create logger.
         self.__logger = get_logger(__name__)
 
         # Create registers.
@@ -367,7 +367,7 @@ class Zone():
             self.__zone_state.set_state(ZoneState.Init)
 
         elif self.__zone_state.is_state(ZoneState.Init):
-            # Initializde
+            # Initialize
             self.__init()
 
         elif self.__zone_state.is_state(ZoneState.Login):
@@ -403,11 +403,11 @@ class Zone():
                 self.__update_timer.clear()
 
 
-                # If the bussy flag is raices pass the update cycle.
-                if self.__bussy_flag:
+                # If the busy flag is raices pass the update cycle.
+                if self.__busy_flag:
                     pass
 
-                self.__bussy_flag = True
+                self.__busy_flag = True
 
                 try:
                     # If the time has come for profiling.
@@ -428,7 +428,7 @@ class Zone():
                     self.__logger.error(traceback.format_exc())
                     self.__zone_state.set_state(ZoneState.Init)
 
-                self.__bussy_flag = False
+                self.__busy_flag = False
 
     def shutdown(self):
         """Shutdown the process."""
