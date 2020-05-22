@@ -109,7 +109,7 @@ class Registers:
             raise ValueError("Registers can not be None.")
 
         bad_regs = Registers()
-        # Go throught registers.
+        # Go through registers.
         for name in registers:
 
             register = None
@@ -307,6 +307,29 @@ class Registers:
             result[register.name] = register.value
 
         return result
+
+    def get_group(self, name):
+        """Get registerr with specified group name.
+
+        Parameters
+        ----------
+        name : string
+            Name of the registers.
+
+        Returns
+        -------
+        Register
+            Registers with name.
+        """
+
+        result = []
+
+        for register in self.__container:
+            if register.name.startswith("{}.".format(name)):
+                result.append(register)
+
+        return result
+
 
 #endregion
 
