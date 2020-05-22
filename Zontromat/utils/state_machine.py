@@ -95,6 +95,9 @@ class StateMachine():
 
         return str(self.get_state())
 
+    __repr__ = __str__
+    """Repr is Str"""
+
 #endregion
 
 #region Public Methods
