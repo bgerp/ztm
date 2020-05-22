@@ -82,6 +82,9 @@ class RegisterType(Enum):
         elif RegisterType.ANALOG_INPUTS == data_type:
             state = True
 
+        elif RegisterType.INPUT_REGISTER == data_type:
+            state = True
+
         else:
             state = False
 

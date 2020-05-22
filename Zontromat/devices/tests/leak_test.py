@@ -62,10 +62,10 @@ class TestState(Enum):
     """Test state"""
 
     NONE = 0
-    TekeFirstMeasurement = 1
+    TakeFirstMeasurement = 1
     TurnOffPeripheral = 2
     WaitForLeak = 3
-    TekeSecondMeasurement = 1
+    TakeSecondMeasurement = 1
 
 class LeakTest:
     """Leak test class."""
@@ -83,18 +83,22 @@ class LeakTest:
     """Callback result device."""
 
     __first_measurement = 0
-    """First measuremtn of loop 1 flow meter."""
+    """First measurement of loop flow meter."""
 
     __second_measurement = 0
-    """Second measuremtn of loop 1 flow meter."""
+    """Second measurement of loop flow meter."""
 
     def __init__(self, flowmetter):
         self.__flowmetter_dev = flowmetter
-        self.__test_state = StateMachine(TestState.TekeFirstMeasurement)
+        self.__test_state = StateMachine(TestState.TakeFirstMeasurement)
         self.__check_timer = Timer(20)
 
+    def __del__(self):
+        del self.__check_timer
+        del self.__test_state
+
     def on_result(self, callback):
-        """On result registrator."""
+        """On result registration."""
 
         if callback is None:
             return
@@ -109,17 +113,17 @@ class LeakTest:
             self.__check_timer.clear()
 
             if self.__test_state.is_state(TestState.WaitForLeak):
-                if self.__test_state.was(TestState.TekeFirstMeasurement):
-                    self.__test_state.set_state(TestState.TekeSecondMeasurement)
+                if self.__test_state.was(TestState.TakeFirstMeasurement):
+                    self.__test_state.set_state(TestState.TakeSecondMeasurement)
 
-                elif self.__test_state.was(TestState.TekeSecondMeasurement):
-                    self.__test_state.set_state(TestState.TekeFirstMeasurement)
+                elif self.__test_state.was(TestState.TakeSecondMeasurement):
+                    self.__test_state.set_state(TestState.TakeFirstMeasurement)
 
-            elif self.__test_state.is_state(TestState.TekeFirstMeasurement):
+            elif self.__test_state.is_state(TestState.TakeFirstMeasurement):
                 self.__first_measurement = self.__flowmetter_dev.get_liters()
                 self.__test_state.set_state(TestState.WaitForLeak)
 
-            elif self.__test_state.is_state(TestState.TekeSecondMeasurement):
+            elif self.__test_state.is_state(TestState.TakeSecondMeasurement):
                 self.__second_measurement = self.__flowmetter_dev.get_liters()
                 self.__test_state.set_state(TestState.WaitForLeak)
 

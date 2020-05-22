@@ -147,3 +147,26 @@ class F3P146EC072600(BaseDevice):
         self.__logger.debug("Name: {}; Value {:3.3f}".format(self.name, self.__speed))
 
 #endregion
+
+#region Public Static Methods
+
+    @classmethod
+    def create(self, name, key, registers, controller):
+        """Value of the thermometer."""
+
+        instance = None
+
+        output = registers.by_name(key + ".output").value
+
+        config = \
+        {\
+            "name": name,
+            "output": output,
+            "controller": controller
+        }
+
+        instance = F3P146EC072600(config)
+
+        return instance
+
+#endregion

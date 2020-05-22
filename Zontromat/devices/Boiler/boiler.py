@@ -20,6 +20,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+
 """
 
 from devices.base_device import BaseDevice
@@ -55,38 +56,26 @@ __status__ = "Debug"
 
 #endregion
 
-class Flowmeter(BaseDevice):
-    """Flowmeter input device."""
-
-#region Attributes
-
-    __tpl = 1
-    """Ticks per liter."""
-
-    __input = "DI0"
-    """Input pin of the controller."""
-
-#endregion
+class Boiler(BaseDevice):
+    """Digital thermometer by Dalas."""
 
 #region Public Methods
 
     def init(self):
+        """Initialize"""
 
-        if "tpl" in  self._config:
-            self.__tpl = self._config["tpl"]
+        print("Starting up: {}".format(self.name))
 
-        if "input" in  self._config:
-            self.__input = self._config["input"]
+    def power(self, power):
+        """Set the power."""
 
-    def get_counter(self):
-        """Get flowmeter counter."""
+        print("Power: {}".format(power))
 
-        return self._controller.read_counter(self.__input)
 
-    def get_liters(self):
-        """Get value."""
+    def shutdown(self):
+        """Shutdown"""
 
-        return self._controller.read_counter(self.__input) * self.__tpl
+        print("Shuting down: {}".format(self.name))
 
 #endregion
 
@@ -98,21 +87,13 @@ class Flowmeter(BaseDevice):
 
         instance = None
 
-        cnt_input = registers.by_name(key + ".input").value
-        cnt_tpl = registers.by_name(key + ".tpl").value
+        config =\
+        {\
+            "name": name,
+            "controller": controller
+        }
 
-        if cnt_input is not None and\
-            cnt_tpl is not None:
-
-            config = \
-            {\
-                "name": name,
-                "input": cnt_input,
-                "tpl": cnt_tpl,
-                "controller": controller
-            }
-
-            instance = Flowmeter(config)
+        instance = Boiler(config)
 
         return instance
 

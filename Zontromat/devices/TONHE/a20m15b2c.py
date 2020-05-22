@@ -147,3 +147,26 @@ class A20M15B2C(BaseDevice):
         self.__logger.debug("Name: {}; Value: {}".format(self.name, self.__position))
 
 #endregion
+
+#region Public Static Methods
+
+    @classmethod
+    def create(self, name, key, registers, controller):
+        """Value of the thermometer."""
+
+        instance = None
+
+        valve_output = registers.by_name(key + ".output").value
+
+        config = \
+        {\
+            "name": name,
+            "output": valve_output,
+            "controller":controller
+        }
+
+        instance = A20M15B2C(config)
+
+        return instance
+
+#endregion

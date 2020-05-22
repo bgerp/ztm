@@ -123,3 +123,34 @@ class Klimafan(BaseDevice):
         self.__logger.debug("Name: {}; State: {}".format(self.name, self.__state))
 
 #endregion
+
+#region Public Static Methods
+
+    @classmethod
+    def create(self, name, key, registers, controller):
+        """Value of the thermometer."""
+
+        instance = None
+
+        stage_1 = registers.by_name(key + ".stage_1.output").value
+        stage_2 = registers.by_name(key + ".stage_2.output").value
+        stage_3 = registers.by_name(key + ".stage_3.output").value
+
+        if stage_1 is not None and\
+            stage_2 is not None and\
+            stage_3 is not None:
+
+            config = \
+            {\
+                "name": name,\
+                "stage_1": stage_1,\
+                "stage_2": stage_2,\
+                "stage_3": stage_3,\
+                "controller": controller\
+            }
+
+            instance = Klimafan(config)
+
+        return instance
+
+#endregion
