@@ -1,0 +1,142 @@
+[
+  {
+      "count": 1,
+      "level": 3,
+      "name": "LED0"
+  },
+  {
+      "count": 1,
+      "level": 3,
+      "name": "DO0"
+  },
+  {
+      "count": 1,
+      "level": 3,
+      "name": "DO1"
+  },
+  {
+      "count": 1,
+      "level": 3,
+      "name": "DO2"
+  },
+  {
+      "count": 1,
+      "level": 3,
+      "name": "AO1"
+  },
+  {
+      "count": 1,
+      "level": 3,
+      "name": "AO2"
+  },
+  {
+      "count": 1,
+      "level": 3,
+      "name": "AO3"
+  },
+  {
+      "count": 1,
+      "level": 3,
+      "name": "AO4"
+  },
+  {
+      "count": 1,
+      "level": 3,
+      "name": "RO0"
+  },
+  {
+      "count": 1,
+      "level": 3,
+      "name": "RO1"
+  },
+  {
+      "count": 1,
+      "level": 3,
+      "name": "RO2"
+  },
+  {
+      "count": 1,
+      "level": 3,
+      "name": "RO4"
+  },
+  {
+      "count": 1,
+      "level": 3,
+      "name": "RO3"
+  },
+  {
+      "count": 1,
+      "level": 2,
+      "name": "DI0"
+  },
+  {
+      "count": 1,
+      "level": 2,
+      "name": "DI1"
+  },
+  {
+      "count": 1,
+      "level": 2,
+      "name": "DI2"
+  },
+  {
+      "count": 1,
+      "level": 2,
+      "name": "DI3"
+  },
+  {
+      "count": 1,
+      "level": 2,
+      "name": "DI4"
+  },
+  {
+      "count": 1,
+      "level": 2,
+      "name": "DI5"
+  },
+  {
+      "count": 1,
+      "level": 2,
+      "name": "DI6"
+  },
+  {
+      "count": 1,
+      "level": 2,
+      "name": "DI7"
+  },
+  {
+      "count": 1,
+      "level": 2,
+      "name": "DI8"
+  },
+  {
+      "count": 1,
+      "level": 1,
+      "name": "26607314020000F8"
+  },
+  {
+      "count": 1,
+      "level": 1,
+      "name": "28FFFCD0001703AE"
+  },
+  {
+      "count": 1,
+      "level": 1,
+      "name": "28FFC4EE00170349"
+  },
+  {
+      "count": 1,
+      "level": 1,
+      "name": "28FF2B70C11604B7"
+  },
+  {
+      "count": 1,
+      "level": 3,
+      "name": "COM4"
+  },
+  {
+      "count": 1,
+      "level": 3,
+      "name": "COM5"
+  }
+]
