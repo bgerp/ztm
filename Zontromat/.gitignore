@@ -148,8 +148,10 @@ logs/
 ### Session key
 ### Session key for authorization.
 session.txt
-Zontromat/
 
+### Settings
+### Settings for the application
+settings.yaml
 
 ### Template file
 ### Template file class.
