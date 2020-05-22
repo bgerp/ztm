@@ -122,6 +122,7 @@ class SunPos(BasePlugin):
     def init(self):
 
         self.__logger = get_logger(__name__)
+        self.__logger.info("Startings the {} with name {}".format(__name__, self.name))
 
         self.__update_timer = Timer(2)
 
@@ -133,8 +134,8 @@ class SunPos(BasePlugin):
             self.__calculate_position()
 
     def shutdown(self):
-        """Shutdown the blinds."""
+        """Shutting down the blinds."""
 
-        self.__logger.info("Shutdown the {}".format(self.name))
+        self.__logger.info("Shutting down the {} with name {}".format(__name__, self.name))
 
 #endregion

@@ -22,6 +22,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 
+from utils.logger import get_logger
+
 from plugins.base_plugin import BasePlugin
 
 from devices.Eastron.sdm120 import SDM120
@@ -63,14 +65,14 @@ class PowerMeter(BasePlugin):
 
 #region Attributes
 
-    __neuron = None
-    """Neuron"""
+    __logger = None
+    """Logger"""
 
     __power_meter = None
     """Power metter."""
 
     __parameters_values = {}
-    """Parametters values."""
+    """Parameters values."""
 
     __uart = None
     """UART"""
@@ -83,9 +85,19 @@ class PowerMeter(BasePlugin):
 
 #endregion
 
+#region Destructor
+
+    def __del__(self):
+        del self.__logger
+
+#endregion
+
 #region Public Methods
 
     def init(self):
+
+        self.__logger = get_logger(__name__)
+        self.__logger.info("Starting up the {} with name {}".format(__name__, self.name))
 
         uart = self._registers.by_name(self._key + ".sub_dev.uart")
         if uart is not None:
@@ -142,5 +154,9 @@ class PowerMeter(BasePlugin):
 
         self._registers.by_name("self_current.sub_dev.current_power").value\
              = self.__parameters_values["ApparentPower"]
+
+    def shutdown(self):
+
+        self.__logger.info("Shutting down the {} with name {}".format(__name__, self.name))
 
 #endregion

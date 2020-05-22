@@ -68,8 +68,10 @@ class Lighting(BasePlugin):
     """Logger"""
 
     __v1_output = "AO0"
+    """Analog voltage output 0"""
 
     __v2_output = "AO1"
+    """Analog voltage output 1"""
 
     __v1_value = 0
     """V1 value."""
@@ -83,10 +85,10 @@ class Lighting(BasePlugin):
     __animation_bit = True
     """Animation purpose only."""
 
-    __animation_step = 0.1
+    __animation_step = 0.01
     """Animation purpose only."""
 
-    __animation_max = 2
+    __animation_max = 5
     """Animation purpose only."""
 
     __animation_min = 0
@@ -211,6 +213,8 @@ class Lighting(BasePlugin):
         """Init the Lighting."""
 
         self.__logger = get_logger(__name__)
+        self.__logger.info("Starting up the {} with name {}".format(__name__, self.name))
+
         self.__set_voltages(0, 0)
 
         sensor_enabled = self._config["registers"].by_name(self._key + ".sensor.enabled")
@@ -225,13 +229,7 @@ class Lighting(BasePlugin):
         if v2_output is not None:
             v2_output.update_handler = self.__v2_output_cb
 
-        self.__logger.info("Starting the {}".format(self.name))
-
-    def shutdown(self):
-        """Shutdown the lights."""
-
-        self.__logger.info("Shutdown the {}".format(self.name))
-        self.__set_voltages(0, 0)
+        self.v1 = 1.0 #TODO: Only test purpose.
 
     def update(self):
         """Update the lights state."""
@@ -239,7 +237,7 @@ class Lighting(BasePlugin):
         # Update sensor data.
         self.__light_sensor.update()
 
-        self.__animation_max = self.__light_sensor.get_value() / 10
+        #self.__animation_max = self.__light_sensor.get_value() / 10
 
         # TODO: Affter repairing sensor create negative proportional feedback controll.
         if self.__animation_bit:
@@ -252,7 +250,18 @@ class Lighting(BasePlugin):
             if self.v1 <= self.__animation_min:
                 self.__animation_bit = True
 
+        # This is for test purpose of lamp lightup ramp.
+        if self.v1 >= 1.18:
+            self.__animation_step = 0.0
+        print("Analog output 1: {:03}".format(self.v1))
+
         self.__set_voltages(self.v1, self.v2)
+
+    def shutdown(self):
+        """Shutting down the lights."""
+
+        self.__logger.info("Shutting down the {} with name {}".format(__name__, self.name))
+        self.__set_voltages(0, 0)
 
     def get_state(self):
         return self.__light_sensor.get_value()

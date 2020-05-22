@@ -67,9 +67,9 @@ class TestState(Enum):
     """Test state"""
 
     NONE = 0
-    TekeFirstMeasurement = 1
+    TakeFirstMeasurement = 1
     WaitForLeak = 2
-    TekeSecondMeasurement = 3
+    TakeSecondMeasurement = 3
 
 class Flowmeter(BasePlugin):
     """Flowmeter measuring device."""
@@ -105,7 +105,7 @@ class Flowmeter(BasePlugin):
         self.__check_timer = Timer(5) # 3600
 
         # Test state machine.
-        self.__test_state = StateMachine(TestState.TekeFirstMeasurement)
+        self.__test_state = StateMachine(TestState.TakeFirstMeasurement)
 
         tpl = self._registers.by_name(self._key + ".tpl")
         input_pin = self._registers.by_name(self._key + ".input")

@@ -28,6 +28,7 @@ from utils.logger import get_logger
 from utils.utils import l_scale
 from utils.state_machine import StateMachine
 from utils.timer import Timer
+from utils.temp_processor import TemperatureProcessor
 
 from plugins.base_plugin import BasePlugin
 
@@ -73,7 +74,7 @@ class ThermalMode(Enum):
     """Thermal modes description."""
 
     NONE = 0
-    COLD_SESON = 1
+    COLD_SEASON = 1
     TRANSISION_SEASON = 2
     WARM_SEASON = 3
 
@@ -84,6 +85,9 @@ class HVAC(BasePlugin):
 
     __logger = None
     """Logger"""
+
+    __temp_proc = None
+    """Temperature processor."""
 
     __air_temp_upper_dev = None
     """Air thermometer upper."""
@@ -137,6 +141,8 @@ class HVAC(BasePlugin):
     __thermal_force_limit = 0
     """Limit thermal force."""
 
+    
+
     __delta_time = 1
     """Конфигурационен параметър, показващ за какво време
     назад се отчита изменението на температурата.
@@ -169,7 +175,7 @@ class HVAC(BasePlugin):
 #region Properties
 
     @property
-    def room_temperature(self):
+    def temperature(self):
         """Measure temperature from the sensors.
 
             Средна температура на стаята.
@@ -179,57 +185,11 @@ class HVAC(BasePlugin):
         Returns
         -------
         float
-            Actual temperatre in the room.
+            Actual temperature in the room.
         """
 
-        # Create array.
-        temperaures = []
-
-        # Add temperatures.
-        if self.__air_temp_upper_dev is not None:
-            temperaures.append(self.__air_temp_upper_dev.value())
-
-        if self.__air_temp_cent_dev is not None:
-            temperaures.append(self.__air_temp_cent_dev.value())
-
-        if self.__air_temp_lower_dev is not None:
-            temperaures.append(self.__air_temp_lower_dev.value())
-
-        temps = len(temperaures)
-        if temps <= 0:
-            temperaures.append(0.0)
-
-        # Find min and max.
-        minimum = min(temperaures)
-        maximum = max(temperaures)
-
-        # Take mediane.
-        median = minimum + ((maximum - minimum) / 2)
-
-        # Divide data by two arrays.
-        upper_values = []
-        lower_values = []
-
-        for item in temperaures:
-            if item >= median:
-                upper_values.append(item)
-            else:
-                lower_values.append(item)
-
-        # Use the bigger one, to create average.
-        value = 0
-
-        if len(upper_values) >= len(lower_values):
-            value = sum(upper_values) / len(upper_values)
-
-        elif len(upper_values) <= len(lower_values):
-            value = sum(lower_values) / len(lower_values)
-
-        # # Troom = t1 * 20% + t2 * 60% + t3 * 20%
-        # value = upper * 0.2 + cent * 0.6 + lower * 0.2
-
         # return the temperature.
-        return value
+        return self.__temp_proc.value
 
 #endregion
 
@@ -241,6 +201,7 @@ class HVAC(BasePlugin):
         del self.__air_temp_upper_dev
         del self.__air_temp_cent_dev
         del self.__air_temp_lower_dev
+        del self.__temp_proc
         del self.__convector_dev
         del self.__loop1_fan_dev
         del self.__loop1_temp_dev
@@ -317,7 +278,7 @@ class HVAC(BasePlugin):
         if self.__loop2_fan_dev is not None:
             self.__loop2_fan_dev.max_speed = register.value
 
-    def __cirulation_max_cb(self, register):
+    def __circulation_max_cb(self, register):
 
         if self.__loop1_valve_dev is not None:
             self.__loop1_valve_dev.max_pos = register.value
@@ -329,105 +290,70 @@ class HVAC(BasePlugin):
     def __air_temp_cent_enabled_cb(self, register):
 
         if register.value == 1 and self.__air_temp_cent_dev is None:
-            air_temp_cent_circuit = self._registers.by_name(self._key + ".air_temp_cent.circuit")
-            air_temp_cent_dev = self._registers.by_name(self._key + ".air_temp_cent.dev")
-            air_temp_cent_type = self._registers.by_name(self._key + ".air_temp_cent.type")
+            self.__air_temp_cent_dev = DS18B20.create(\
+                "Air temperature lower",\
+                self._key + ".air_temp_cent",\
+                self._registers,\
+                self._controller)
 
-            if air_temp_cent_circuit is not None and\
-                air_temp_cent_dev is not None and\
-                air_temp_cent_type is not None:
-
-                config = \
-                {\
-                    "name": "Air temperature central",
-                    "dev": air_temp_cent_dev.value,
-                    "circuit": air_temp_cent_circuit.value,
-                    "typ": air_temp_cent_type.value,
-                    "controller": self._controller
-                }
-
-                self.__air_temp_cent_dev = DS18B20(config)
+            if self.__air_temp_cent_dev is not None:
                 self.__air_temp_cent_dev.init()
+                self.__temp_proc.add(self.__air_temp_cent_dev)
 
         elif register.value == 0 and self.__air_temp_cent_dev is not None:
+
+            self.__temp_proc.add(self.__air_temp_cent_dev)
             self.__air_temp_cent_dev.shutdown()
             del self.__air_temp_cent_dev
 
     def __air_temp_lower_enabled_cb(self, register):
 
         if register.value == 1 and self.__air_temp_lower_dev is None:
-            air_temp_lower_circuit = self._registers.by_name(self._key + ".air_temp_lower.circuit")
-            air_temp_lower_dev = self._registers.by_name(self._key + ".air_temp_lower.dev")
-            air_temp_lower_type = self._registers.by_name(self._key + ".air_temp_lower.type")
+            self.__air_temp_lower_dev = DS18B20.create(\
+                "Air temperature lower",\
+                self._key + ".air_temp_lower",\
+                self._registers,\
+                self._controller)
 
-            if air_temp_lower_circuit is not None and\
-                air_temp_lower_dev is not None and\
-                air_temp_lower_type is not None:
-
-                config = \
-                {\
-                    "name": "Air temperature lower",
-                    "dev": air_temp_lower_dev.value,
-                    "circuit": air_temp_lower_circuit.value,
-                    "typ": air_temp_lower_type.value,
-                    "controller": self._controller
-                }
-
-                self.__air_temp_lower_dev = DS18B20(config)
+            if self.__air_temp_lower_dev is not None:
                 self.__air_temp_lower_dev.init()
+                self.__temp_proc.add(self.__air_temp_lower_dev)
 
         elif register.value == 0 and self.__air_temp_lower_dev is not None:
+
+            self.__temp_proc.remove(self.__air_temp_lower_dev)
             self.__air_temp_lower_dev.shutdown()
             del self.__air_temp_lower_dev
 
     def __air_temp_upper_enabled_cb(self, register):
 
         if register.value == 1 and self.__air_temp_upper_dev is None:
-            air_temp_upper_circuit = self._registers.by_name(self._key + ".air_temp_upper.circuit")
-            air_temp_upper_dev = self._registers.by_name(self._key + ".air_temp_upper.dev")
-            air_temp_upper_type = self._registers.by_name(self._key + ".air_temp_upper.type")
+            self.__air_temp_upper_dev = DS18B20.create(\
+                "Air temperature upper",\
+                self._key + ".air_temp_upper",\
+                self._registers,\
+                self._controller)
 
-            if air_temp_upper_circuit is not None and\
-                air_temp_upper_dev is not None and\
-                air_temp_upper_type is not None:
-
-                config = \
-                {\
-                    "name": "Air temperature upper",
-                    "dev": air_temp_upper_dev.value,
-                    "circuit": air_temp_upper_circuit.value,
-                    "typ": air_temp_upper_type.value,
-                    "controller": self._controller
-                }
-
-                self.__air_temp_upper_dev = DS18B20(config)
+            if self.__air_temp_upper_dev is not None:
                 self.__air_temp_upper_dev.init()
+                self.__temp_proc.add(self.__air_temp_upper_dev)
 
         elif register.value == 0 and self.__air_temp_upper_dev is not None:
+
+            self.__temp_proc.remove(self.__air_temp_upper_dev)
             self.__air_temp_upper_dev.shutdown()
             del self.__air_temp_upper_dev
 
     def __convector_enable_cb(self, register):
 
         if register.value == 1 and self.__convector_dev is None:
-            convector_stage_1 = self._registers.by_name(self._key + ".convector.stage_1.output")
-            convector_stage_2 = self._registers.by_name(self._key + ".convector.stage_2.output")
-            convector_stage_3 = self._registers.by_name(self._key + ".convector.stage_3.output")
+            self.__convector_dev = Klimafan.create(\
+                "Convector 1",\
+                self._key + ".convector",\
+                self._registers,\
+                self._controller)
 
-            if convector_stage_1 is not None and\
-                convector_stage_2 is not None and\
-                convector_stage_3 is not None:
-
-                config = \
-                {\
-                    "name": "Convector 1",\
-                    "stage_1": convector_stage_1.value,\
-                    "stage_2": convector_stage_2.value,\
-                    "stage_3": convector_stage_3.value,\
-                    "controller": self._controller\
-                }
-
-                self.__convector_dev = Klimafan(config)
+            if self.__convector_dev is not None:
                 self.__convector_dev.init()
 
         elif register.value == 0 and self.__convector_dev is not None:
@@ -437,21 +363,13 @@ class HVAC(BasePlugin):
     def __loop1_cnt_enabled_cb(self, register):
 
         if register.value == 1 and self.__loop1_cnt_dev is None:
-            loop1_cnt_input = self._registers.by_name(self._key + ".loop1.cnt.input")
-            loop1_cnt_tpl = self._registers.by_name(self._key + ".loop1.cnt.tpl")
+            self.__loop1_cnt_dev = Flowmeter.create(\
+                "Loop 2 flowmeter",\
+                self._key + ".loop2.cnt",\
+                self._registers,\
+                self._controller)
 
-            if loop1_cnt_input is not None and\
-                loop1_cnt_tpl is not None:
-
-                config = \
-                {\
-                    "name": "Loop 1 flowmeter",
-                    "input": loop1_cnt_input.value,
-                    "tpl": loop1_cnt_tpl.value,
-                    "controller": self._controller
-                }
-
-                self.__loop1_cnt_dev = Flowmeter(config)
+            if self.__loop1_cnt_dev is not None:
                 self.__loop1_cnt_dev.init()
 
                 self.__loop1_leak_test = LeakTest(self.__loop1_cnt_dev)
@@ -465,18 +383,14 @@ class HVAC(BasePlugin):
     def __loop1_fan_enabled_cb(self, register):
 
         if register.value == 1 and self.__loop1_fan_dev is None:
+            self.__loop1_fan_dev = F3P146EC072600.create(\
+                "Loop 1 fan",\
+                self._key + ".loop1.fan",\
+                self._registers,\
+                self._controller)
 
-            loop1_fan_output = self._registers.by_name(self._key + ".loop1.fan.output").value
-
-            config = \
-            {\
-                "name": "Loop 1 fan",
-                "output": loop1_fan_output,
-                "controller": self._controller
-            }
-
-            self.__loop1_fan_dev = F3P146EC072600(config)
-            self.__loop1_fan_dev.init()
+            if self.__loop1_fan_dev is not None:
+                self.__loop1_fan_dev.init()
 
         elif register.value == 0 and self.__loop1_fan_dev is not None:
             self.__loop1_fan_dev.shutdown()
@@ -485,24 +399,13 @@ class HVAC(BasePlugin):
     def __loop1_temp_enabled_cb(self, register):
 
         if register.value == 1 and self.__loop1_temp_dev is None:
-            loop1_temp_circuit = self._registers.by_name(self._key + ".loop1.temp.circuit")
-            loop1_temp_dev = self._registers.by_name(self._key + ".loop1.temp.dev")
-            loop1_temp_type = self._registers.by_name(self._key + ".loop1.temp.type")
+            self.__loop1_temp_dev = DS18B20.create(\
+                "Loop 1 temperature",\
+                self._key + ".loop1.temp",\
+                self._registers,\
+                self._controller)
 
-            if loop1_temp_circuit is not None and\
-                loop1_temp_dev is not None and\
-                loop1_temp_type is not None:
-
-                config = \
-                {\
-                    "name": "Loop 1 temperature",
-                    "dev": loop1_temp_dev,
-                    "circuit": loop1_temp_circuit,
-                    "typ": loop1_temp_type,
-                    "controller": self._controller
-                }
-
-                self.__loop1_temp_dev = DS18B20(config)
+            if self.__loop1_temp_dev is not None:
                 self.__loop1_temp_dev.init()
 
         elif register.value == 0 and self.__loop1_temp_dev is not None:
@@ -512,41 +415,29 @@ class HVAC(BasePlugin):
     def __loop1_valve_enabled_cb(self, register):
 
         if register.value == 1 and self.__loop1_valve_dev is None:
+            self.__loop1_valve_dev = A20M15B2C.create(\
+                "Loop 1 Valve",\
+                self._key + ".loop1.valve",\
+                self._registers,\
+                self._controller)
 
-            loop1_valve_output = self._registers.by_name(self._key + ".loop1.valve.output").value
+            if self.__loop1_valve_dev is not None:
+                self.__loop1_valve_dev.init()
 
-            config = \
-            {\
-                "name": "Loop 1 Valve",
-                "output": loop1_valve_output,
-                "controller": self._controller
-            }
-
-            self.__loop1_valve_dev = A20M15B2C(config)
-            self.__loop1_valve_dev.init()
-
-        if register.value == 0 and self.__loop1_valve_dev is not None:
+        elif register.value == 0 and self.__loop1_valve_dev is not None:
             self.__loop1_valve_dev.shutdown()
             del self.__loop1_valve_dev
 
     def __loop2_cnt_enabled_cb(self, register):
 
         if register.value == 1 and self.__loop2_cnt_dev is None:
-            loop2_cnt_input = self._registers.by_name(self._key + ".loop2.cnt.input")
-            loop2_cnt_tpl = self._registers.by_name(self._key + ".loop2.cnt.tpl")
+            self.__loop2_cnt_dev = Flowmeter.create(\
+                "Loop 2 flowmeter",\
+                self._key + ".loop2.cnt",\
+                self._registers,\
+                self._controller)
 
-            if loop2_cnt_input is not None and\
-                loop2_cnt_tpl is not None:
-
-                config = \
-                {\
-                    "name": "Loop 2 flowmeter",
-                    "input": loop2_cnt_input.value,
-                    "tpl": loop2_cnt_tpl.value,
-                    "controller": self._controller
-                }
-
-                self.__loop2_cnt_dev = Flowmeter(config)
+            if self.__loop2_cnt_dev is not None:
                 self.__loop2_cnt_dev.init()
 
                 self.__loop2_leak_teat = LeakTest(self.__loop2_cnt_dev)
@@ -560,17 +451,14 @@ class HVAC(BasePlugin):
     def __loop2_fan_enabled_cb(self, register):
 
         if register.value == 1 and self.__loop2_fan_dev is None:
-            loop2_fan_output = self._registers.by_name(self._key + ".loop2.fan.output")
+            self.__loop2_fan_dev = F3P146EC072600.create(\
+                "Loop 2 fan",\
+                self._key + ".loop2.fan",\
+                self._registers,\
+                self._controller)
 
-            config = \
-            {\
-                "name": "Loop 2 fan",
-                "output": loop2_fan_output.value,
-                "controller": self._controller,
-            }
-
-            self.__loop2_fan_dev = F3P146EC072600(config)
-            self.__loop2_fan_dev.init()
+            if self.__loop2_fan_dev is not None:
+                self.__loop2_fan_dev.init()
 
         elif register.value == 0 and self.__loop2_fan_dev is not None:
             self.__loop2_fan_dev.shutdown()
@@ -579,24 +467,13 @@ class HVAC(BasePlugin):
     def __loop2_temp_enabled_cb(self, register):
 
         if register.value == 1 and self.__loop2_temp_dev is None:
-            loop2_temp_circuit = self._registers.by_name(self._key + ".loop2.temp.circuit")
-            loop2_temp_dev = self._registers.by_name(self._key + ".loop2.temp.dev")
-            loop2_temp_type = self._registers.by_name(self._key + ".loop2.temp.type")
+            self.__loop2_temp_dev = DS18B20.create(\
+                "Loop 2 temperature",\
+                self._key + ".loop2.temp",\
+                self._registers,\
+                self._controller)
 
-            if loop2_temp_circuit is not None and\
-                loop2_temp_dev is not None and\
-                loop2_temp_type is not None:
-
-                config = \
-                {\
-                    "name": "Loop 2 temperature",
-                    "dev": loop2_temp_dev,
-                    "circuit": loop2_temp_circuit,
-                    "typ": loop2_temp_type,
-                    "controller": self._controller
-                }
-
-                self.__loop2_temp_dev = DS18B20(config)
+            if self.__loop2_temp_dev is not None:
                 self.__loop2_temp_dev.init()
 
         elif register.value == 0 and self.__loop2_temp_dev is not None:
@@ -606,17 +483,14 @@ class HVAC(BasePlugin):
     def __loop2_valve_enabled_cb(self, register):
 
         if register.value == 1 and self.__loop2_valve_dev is None:
-            loop2_valve_output = self._registers.by_name(self._key + ".loop2.valve.output").value
+            self.__loop2_valve_dev = A20M15B2C.create(\
+                "Loop 1 Valve",\
+                self._key + ".loop1.valve",\
+                self._registers,\
+                self._controller)
 
-            config = \
-            {\
-                "name": "Loop 2 valve",
-                "output": loop2_valve_output,
-                "controller": self._controller
-            }
-
-            self.__loop2_valve_dev = A20M15B2C(config)
-            self.__loop2_valve_dev.init()
+            if self.__loop2_valve_dev is not None:
+                self.__loop2_valve_dev.init()
 
         elif register.value == 0 and self.__loop2_valve_dev is not None:
             self.__loop2_valve_dev.shutdown()
@@ -638,7 +512,7 @@ class HVAC(BasePlugin):
         self.__logger.debug("Mode: {}; TForce: {:3.3f}"\
             .format(self.__thermal_mode.get_state(), thermal_force))
 
-        if self.__thermal_mode.is_state(ThermalMode.COLD_SESON):
+        if self.__thermal_mode.is_state(ThermalMode.COLD_SEASON):
             if thermal_force > 0:
                 self.__loop1_valve_dev.set_pos(0)
                 self.__loop2_valve_dev.set_pos(0)
@@ -703,8 +577,7 @@ class HVAC(BasePlugin):
         """Init the HVAC."""
 
         self.__logger = get_logger(__name__)
-
-        self.__logger.info("Starting the {}".format(self.name))
+        self.__logger.info("Starting up the {} with name {}".format(__name__, self.name))
 
         self.__thermal_mode = StateMachine(ThermalMode.NONE)
         self.__thermal_mode.on_change(self.__thermal_mode_on_change)
@@ -751,17 +624,17 @@ class HVAC(BasePlugin):
         if ventilation_max is not None:
             ventilation_max.update_handler = self.__ventilation_max_cb
 
-        # cirulation_actual = self._registers.by_name(self._key + ".cirulation.actual")
-        # if cirulation_actual is not None:
-        #     cirulation_actual.update_handler = self.__cirulation_actual_cb
+        # circulation_actual = self._registers.by_name(self._key + ".circulation.actual")
+        # if circulation_actual is not None:
+        #     circulation_actual.update_handler = self.__circulation_actual_cb
 
-        cirulation_max = self._registers.by_name(self._key + ".cirulation.max")
-        if cirulation_max is not None:
-            cirulation_max.update_handler = self.__cirulation_max_cb
+        circulation_max = self._registers.by_name(self._key + ".circulation.max")
+        if circulation_max is not None:
+            circulation_max.update_handler = self.__circulation_max_cb
 
-        # cirulation_min = self._registers.by_name(self._key + ".cirulation.min")
-        # if cirulation_min is not None:
-        #     cirulation_min.update_handler = self.__cirulation_min_cb
+        # circulation_min = self._registers.by_name(self._key + ".circulation.min")
+        # if circulation_min is not None:
+        #     circulation_min.update_handler = self.__circulation_min_cb
 
         # Air temperatures.
         air_temp_cent_enabled = self._registers.by_name(self._key + ".air_temp_cent.enabled")
@@ -815,7 +688,10 @@ class HVAC(BasePlugin):
         if loop2_valve_enabled is not None:
             loop2_valve_enabled.update_handler = self.__loop2_valve_enabled_cb
 
-        # Shutdown all the devices.
+        # Create temperature processor.
+        self.__temp_proc = TemperatureProcessor()
+
+        # Shutting down all the devices.
         self.__set_thermal_force(0)
 
     def update(self):
@@ -827,18 +703,21 @@ class HVAC(BasePlugin):
         if self.__update_timer.expired:
             self.__update_timer.clear()
 
+            # Recalculate the temperatures.
+            self.__temp_proc.update()
+
             crg_temp = 0
             expected_room_temp = 0
 
             # Update current room temperature.
-            room_temperature = self.room_temperature
-            self.__logger.debug("ROOM: {:3.3f}".format(room_temperature))
+            temperature = self.temperature
+            self.__logger.debug("ROOM: {:3.3f}".format(temperature))
 
             # 1. Изчислява се целевата температура на стаята:
             goal_room_temp = self.__goal_building_temp + self.__adjust_temp
 
             # 2. Изчислява се очакваната температура на стаята:
-            expected_room_temp = room_temperature + self.__delta_temp
+            expected_room_temp = temperature + self.__delta_temp
             self.__logger.debug("GRT {:3.3f}; ERT {:3.3f}"\
                 .format(goal_room_temp, expected_room_temp))
 
@@ -874,21 +753,21 @@ class HVAC(BasePlugin):
 
             temp_actual = self._registers.by_name(self._key + ".temp.actual")
             if temp_actual is not None:
-                temp_actual.value = room_temperature
+                temp_actual.value = temperature
 
         # Recalculate delta time.
         # pass_time = time.time() - self.__lastupdate_delta_time
         # if pass_time > self.__delta_time:
-        #     self.__delta_temp = room_temperature - self.__delta_temp
+        #     self.__delta_temp = temperature - self.__delta_temp
         #     self.__logger.debug("DT: {:3.3f}".format(self.__delta_temp))
 
         #     # Update current time.
         #     self.__lastupdate_delta_time = time.time()
 
     def shutdown(self):
-        """ Shutdown the HVAC. """
+        """ Shutting down the HVAC. """
 
-        self.__logger.info("Shutdown the {}".format(self.name))
+        self.__logger.info("Shutting down the {} with name {}".format(__name__, self.name))
         self.__thermal_force = 0
         self.__set_thermal_force(self.__thermal_force)
 

@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 
+from utils.logger import get_logger
 from utils.timer import Timer
 
 from plugins.base_plugin import BasePlugin
@@ -62,6 +63,9 @@ class StatusLed(BasePlugin):
 
 #region Attributes
 
+    __logger = None
+    """Logger"""
+
     __led_state = 0
     """LED State."""
 
@@ -76,9 +80,20 @@ class StatusLed(BasePlugin):
 
 #endregion
 
+#region Destructor
+
+    def __del__(self):
+        del self.__logger
+        del self.__blink_timer
+
+#endregion
+
 #region Public Methods
 
     def init(self):
+
+        self.__logger = get_logger(__name__)
+        self.__logger.info("Starting up the {} with name {}".format(__name__, self.name))
 
         self.__blink_timer = Timer(1)
 
@@ -106,6 +121,8 @@ class StatusLed(BasePlugin):
             self._controller.set_led(self.__output, self.__led_state)
 
     def shutdown(self):
+
         self._controller.set_led(self.__output, 0)
+        self.__logger.info("Shutting down the {} with name {}".format(__name__, self.name))
 
 #endregion
