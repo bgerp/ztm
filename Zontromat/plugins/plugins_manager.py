@@ -32,6 +32,7 @@ from data.register import Scope
 from data.register import Source
 from data.register import Register
 
+# Room
 from plugins.status_led.status_led import StatusLed
 from plugins.tamper.tamper import Tamper
 from plugins.flowmeter.flowmeter import Flowmeter
@@ -41,8 +42,14 @@ from plugins.blinds.blinds import Blinds
 from plugins.hvac.hvac import HVAC
 from plugins.lighting.lighting import Lighting
 from plugins.wdt_tablet.wdt_tablet import WDTTablet
+
 # Test plugins
 from plugins.sun_position.sun_position import SunPos
+from plugins.monitoring.monitoring import Monitoring
+
+# Energy center
+from plugins.ec.cold_circle.cold_circle import ColdCircle
+from plugins.ec.hot_circle.hot_circle import HotCircle
 
 #region File Attributes
 
@@ -78,21 +85,31 @@ __status__ = "Debug"
 class Plugins(Enum):
     """Zone device enumerator."""
 
+    # General
     StatusLed = 1
-    WindowClosed = 2
-    DoorClosed = 3
-    PIRDetector = 4
-    AntiTampering = 5
-    FireDetect = 6
-    WaterCounter = 7
-    PowerMeter = 8
-    Blinds = 9
-    AccessControll1 = 10
-    AccessControll2 = 11
-    HVAC = 12
-    MainLight = 13
-    WDTTablet = 14
-    SunPos = 20
+    Monitoring = 2
+
+    # Software
+    SunPos = 10
+
+    # Room
+    WindowClosed = 20
+    DoorClosed = 21
+    PIRDetector = 22
+    AntiTampering = 23
+    FireDetect = 24
+    WaterCounter = 25
+    PowerMeter = 26
+    Blinds = 27
+    AccessControll1 = 28
+    AccessControll2 = 29
+    HVAC = 30
+    MainLight = 31
+    WDTTablet = 32
+
+    # Energy center
+    HotCircle = 50
+    ColdCircle = 51
 
 class PluginsManager:
     """Template class doc."""
@@ -138,10 +155,14 @@ class PluginsManager:
         self.__erp_service = erp_service
         self.__add_registers()
 
+        # Comment line below to stop the self feed of sun positions.
         self.__sun_pos_enable()
+
+#region Private Methods
 
     def __add_registers(self):
 
+# -=== General ===-
 #region General
 
         register = Register("general.is_empty")
@@ -186,6 +207,30 @@ class PluginsManager:
 
 #endregion
 
+#region Monitoring
+
+        register = Register("monitoring.is_colision")
+        register.scope = Scope.Global
+        register.source = Source.Zontromat
+        register.value = 0
+        self.__registers.add(register)
+
+        register = Register("monitoring.colision_message")
+        register.scope = Scope.Global
+        register.source = Source.Zontromat
+        register.value = ""
+        self.__registers.add(register)
+
+        register = Register("monitoring.enabled")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.update_handler = self.__monitoring_enabled
+        register.value = 0
+        self.__registers.add(register)
+
+#endregion
+
+# -=== Room ===-
 #region Windows Closed
 
         register = Register("window_closed.input")
@@ -782,19 +827,19 @@ class PluginsManager:
         self.__registers.add(register)
 
         # Circulation
-        register = Register("hvac.cirulation.actual")
+        register = Register("hvac.circulation.actual")
         register.scope = Scope.Global
         register.source = Source.bgERP
         register.value = 25
         self.__registers.add(register)
 
-        register = Register("hvac.cirulation.min")
+        register = Register("hvac.circulation.min")
         register.scope = Scope.Global
         register.source = Source.bgERP
         register.value = 0
         self.__registers.add(register)
 
-        register = Register("hvac.cirulation.max")
+        register = Register("hvac.circulation.max")
         register.scope = Scope.Global
         register.source = Source.bgERP
         register.value = 100
@@ -1200,7 +1245,89 @@ class PluginsManager:
 
 #endregion
 
-#region Private Methods
+# -=== Energy center ===-
+#region Hot Circle
+
+        register = Register("hot_circle.tank_temp.circuit")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.value = "28FF2B70C11604B7"
+        self.__registers.add(register)
+
+        register = Register("hot_circle.tank_temp.dev")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.value = "temp"
+        self.__registers.add(register)
+
+        register = Register("hot_circle.tank_temp.type")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.value = "DS18B20"
+        self.__registers.add(register)
+
+        register = Register("hot_circle.tank_temp.enabled")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.value = 1
+        self.__registers.add(register)
+
+        register = Register("hot_circle.goal_temp")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.value = 20
+        self.__registers.add(register)
+
+        register = Register("hot_circle.enabled")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.update_handler = self.__hot_circle_enabled
+        register.value = 0
+        self.__registers.add(register)
+
+#endregion
+
+#region Cold Circle
+
+        register = Register("cold_circle.tank_temp.circuit")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.value = "28FFFCD0001703AE"
+        self.__registers.add(register)
+
+        register = Register("cold_circle.tank_temp.dev")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.value = "temp"
+        self.__registers.add(register)
+
+        register = Register("cold_circle.tank_temp.type")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.value = "DS18B20"
+        self.__registers.add(register)
+
+        register = Register("cold_circle.tank_temp.enabled")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.value = 1
+        self.__registers.add(register)
+
+        register = Register("cold_circle.goal_temp")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.value = 8
+        self.__registers.add(register)
+
+        register = Register("cold_circle.enabled")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.update_handler = self.__cold_circle_enabled
+        register.value = 0
+        self.__registers.add(register)
+
+#endregion
+
 
     def __prepare_config(self, name, key):
         config = {
@@ -1213,6 +1340,7 @@ class PluginsManager:
 
         return config
 
+
     def __status_led_enabled(self, register):
         if register.value == 1 and Plugins.StatusLed not in self.__plugins:
             config = self.__prepare_config("Status LED", register.base_name)
@@ -1222,6 +1350,26 @@ class PluginsManager:
         elif register.value == 0 and Plugins.StatusLed in self.__plugins:
             self.__plugins[Plugins.StatusLed].shutdown()
             del self.__plugins[Plugins.StatusLed]
+
+    def __monitoring_enabled(self, register):
+        # Create monitoring.
+
+        if register.value == 1 and Plugins.Monitoring not in self.__plugins:
+            config = self.__prepare_config("Monitoring", register.base_name)
+            self.__plugins[Plugins.Monitoring] = Monitoring(config)
+            self.__plugins[Plugins.Monitoring].init()
+
+        if register.value == 0 and Plugins.Monitoring in self.__plugins:
+            self.__plugins[Plugins.Monitoring].shutdown()
+            del self.__plugins[Plugins.Monitoring]
+
+
+    def __sun_pos_enable(self):
+        # Create device.
+        config = self.__prepare_config("Sun Position", "sun_pos")
+        self.__plugins[Plugins.SunPos] = SunPos(config)
+        self.__plugins[Plugins.SunPos].init()
+
 
     def __window_closed_enabled(self, register):
         if register.value == 1 and Plugins.WindowClosed not in self.__plugins:
@@ -1368,12 +1516,26 @@ class PluginsManager:
                 self.__plugins[Plugins.WDTTablet].shutdown()
                 del self.__plugins[Plugins.WDTTablet]
 
-    def __sun_pos_enable(self):
 
-        # Create device.
-        config = self.__prepare_config("Sun Position", "sun_pos")
-        self.__plugins[Plugins.SunPos] = SunPos(config)
-        self.__plugins[Plugins.SunPos].init()
+    def __hot_circle_enabled(self, register):
+        if register.value == 1 and Plugins.HotCircle not in self.__plugins:
+            config = self.__prepare_config("HotCircle", register.base_name)
+            self.__plugins[Plugins.HotCircle] = HotCircle(config)
+            self.__plugins[Plugins.HotCircle].init()
+
+        if register.value == 0 and Plugins.HotCircle in self.__plugins:
+            self.__plugins[Plugins.HotCircle].shutdown()
+            del self.__plugins[Plugins.HotCircle]
+
+    def __cold_circle_enabled(self, register):
+        if register.value == 1 and Plugins.ColdCircle not in self.__plugins:
+            config = self.__prepare_config("ColdCircle", register.base_name)
+            self.__plugins[Plugins.ColdCircle] = ColdCircle(config)
+            self.__plugins[Plugins.ColdCircle].init()
+
+        if register.value == 0 and Plugins.ColdCircle in self.__plugins:
+            self.__plugins[Plugins.ColdCircle].shutdown()
+            del self.__plugins[Plugins.ColdCircle]
 
 #endregion
 
