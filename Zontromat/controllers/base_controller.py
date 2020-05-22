@@ -260,3 +260,12 @@ class BaseController(Configuarable):
         mixed
             State of the device.
         """
+
+    def get_1w_devices(self):
+        """Gets all possible 1W devices connected to the controller.
+
+        Returns
+        -------
+        tuple
+            All 1W devices connected to the controller.
+        """

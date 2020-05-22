@@ -207,7 +207,7 @@ class Neuron(BaseController):
         Returns
         -------
         str
-            Neuron seril number.
+            Neuron serial number.
         """
 
         return self.__get_device_parameter('sn')
@@ -285,7 +285,7 @@ class Neuron(BaseController):
 
         if response.status_code == 200:
             self.__json_data = json.loads(response.text)
-            # Mark  as succesfull.
+            # Mark as successfull.
             state = UpdateState.Success
 
         else:
@@ -325,6 +325,7 @@ class Neuron(BaseController):
         tuple
             1W devices.
         """
+
         circuits = []
 
         for field in self.__json_data:
@@ -676,7 +677,7 @@ class Neuron(BaseController):
         return json.loads(response.text)
 
     def _save_current_state(self, major_index, minor_index):
-        """Saves the curent state fo the IOs of the Neuron.
+        """Saves the current state fo the IOs of the Neuron.
 
         See https://evok-14.api-docs.io/1.11/rest/change-watchdog-state
 
@@ -812,11 +813,14 @@ class Neuron(BaseController):
         key = ""
 
         if register_type is not None:
+
             if 'inp' in register_type:
                 key = 'UART_' + str(uart) + '_' + str(dev_id) + '_' + \
                     str(register) + '_' + register_type
+
             elif register_type == "":
                 key = 'UART_' + str(uart) + '_' + str(dev_id) + '_' + str(register)
+
         else:
             key = 'UART_' + str(uart) + '_' + str(dev_id) + '_' + str(register)
 
@@ -824,7 +828,7 @@ class Neuron(BaseController):
 
 #endregion
 
-#region Base Controler Implementation
+#region Base Controller Implementation
 
     def update(self):
         """Update controller state."""
@@ -1125,5 +1129,16 @@ class Neuron(BaseController):
         """
 
         return self._get_uart_registers(uart, dev_id, registers, register_type)
+
+    def get_1w_devices(self):
+        """Get 1W device from the list of all.
+
+        Returns
+        -------
+        tuple
+            1W devices.
+        """
+
+        return self._get_1w_devices()
 
 #endregion
