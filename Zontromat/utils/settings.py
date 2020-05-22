@@ -85,8 +85,8 @@ class ApplicationSettings():
             Enable flag.
         """
 
-        if self.__settings is not None:
-            return self.__settings["application"]["ram_usage"]
+        # if self.__settings is not None:
+        #     return self.__settings["application"]["ram_usage"]
 
         return 0
 
@@ -100,8 +100,8 @@ class ApplicationSettings():
             Enable flag.
         """
 
-        if self.__settings is not None:
-            return self.__settings["application"]["run_time_usage"]
+        # if self.__settings is not None:
+        #    return self.__settings["application"]["run_time_usage"]
 
         return 0
 
