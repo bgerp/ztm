@@ -292,7 +292,7 @@ modbus_register_blocks:
       frequency : 1
       type: input
     - board_index : 1
-      start_reg : 263
+      start_reg : 264
       count : 2
       frequency : 1
       type: input
