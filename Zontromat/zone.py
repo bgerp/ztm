@@ -255,11 +255,11 @@ class Zone():
 
                 # Restart service
                 # if os.name == "posix":
-                #     os.system("sudo service evok restart")
+                #     os.system("sudo service EVOK restart")
 
                 """
                 TODO: In case of failure:
-                - Try several times if result is still unsucessfull reestart the EVOK.
+                - Try several times if result is still unsuccessful reestart the EVOK.
                 - Wait EVOK service to start.
                 - Continue main cycle.
                 """
@@ -307,7 +307,7 @@ class Zone():
                 self.__logger.error("EVOK service should be restarted.")
                 """
                 TODO: In case of failure:
-                - Try several times if result is still unsucessfull reestart the EVOK.
+                - Try several times if result is still unsuccessful reestart the EVOK.
                 - Wait EVOK service to start.
                 - Continue main cycle.
                 """
@@ -315,7 +315,7 @@ class Zone():
             message = "Communication lost with EVOK."
             self.__logger.error(message)
 
-        # Update periodicaly bgERP.
+        # Update periodically bgERP.
         self.__erp_service_update_timer.update()
         if self.__erp_service_update_timer.expired:
             self.__erp_service_update_timer.clear()
@@ -350,14 +350,14 @@ class Zone():
     def __on_time_change(self, passed_time):
         register = self.__registers.by_name("self.time.usage")
         register.value = passed_time
-        print(f"Total time: {passed_time:.3f} sec")
+        # print(f"Total time: {passed_time:06.3f} sec")
 
     def __on_memory_change(self, current, peak):
         register = self.__registers.by_name("self.ram.current")
         register.value = current
         register = self.__registers.by_name("self.ram.peak")
         register.value = peak
-        print(f"Current memory usage is {current / 10**3}kB; Peak was {peak / 10**3}kB")
+        # print(f"Current memory usage is {current / 10**3}kB; Peak was {peak / 10**3}kB")
 
     @__performance_profiler.profile
     def __update(self):
@@ -375,7 +375,7 @@ class Zone():
             self.__login()
 
         elif self.__zone_state.is_state(ZoneState.Run):
-            # Run the proces of the room.
+            # Run the process of the room.
             self.__run()
 
         elif self.__zone_state.is_state(ZoneState.Shutdown):
@@ -403,7 +403,7 @@ class Zone():
                 self.__update_timer.clear()
 
 
-                # If the busy flag is raices pass the update cycle.
+                # If the busy flag is raise pass the update cycle.
                 if self.__busy_flag:
                     pass
 
