@@ -209,16 +209,28 @@ class PluginsManager:
 
 #region Monitoring
 
-        register = Register("monitoring.is_colision")
-        register.scope = Scope.Global
-        register.source = Source.Zontromat
-        register.value = 0
-        self.__registers.add(register)
-
-        register = Register("monitoring.colision_message")
+        register = Register("monitoring.info_message")
         register.scope = Scope.Global
         register.source = Source.Zontromat
         register.value = ""
+        self.__registers.add(register)
+
+        register = Register("monitoring.warning_message")
+        register.scope = Scope.Global
+        register.source = Source.Zontromat
+        register.value = ""
+        self.__registers.add(register)
+
+        register = Register("monitoring.error_message")
+        register.scope = Scope.Global
+        register.source = Source.Zontromat
+        register.value = ""
+        self.__registers.add(register)
+
+        register = Register("monitoring.clear_errors")
+        register.scope = Scope.Global
+        register.source = Source.Zontromat
+        register.value = 0
         self.__registers.add(register)
 
         register = Register("monitoring.enabled")
@@ -395,10 +407,10 @@ class PluginsManager:
         register.value = "deg"
         self.__registers.add(register)
 
-        register = Register("blinds.input_stop")
+        register = Register("blinds.input_fb")
         register.scope = Scope.Global
         register.source = Source.bgERP
-        register.value = "DI8"
+        register.value = "AI1" # "DI8"
         self.__registers.add(register)
 
         register = Register("blinds.output_ccw")
