@@ -239,7 +239,7 @@ class Lighting(BasePlugin):
 
         #self.__animation_max = self.__light_sensor.get_value() / 10
 
-        # TODO: Affter repairing sensor create negative proportional feedback controll.
+        # TODO: After repairing sensor create negative proportional feedback controll.
         if self.__animation_bit:
             self.v1 += self.__animation_step
             if self.v1 >= self.__animation_max:
@@ -250,10 +250,10 @@ class Lighting(BasePlugin):
             if self.v1 <= self.__animation_min:
                 self.__animation_bit = True
 
-        # This is for test purpose of lamp lightup ramp.
+        # This is for test purpose of lamp lightsup ramp.
         if self.v1 >= 1.18:
             self.__animation_step = 0.0
-        print("Analog output 1: {:03}".format(self.v1))
+        # print("Analog output 1: {:03}".format(self.v1))
 
         self.__set_voltages(self.v1, self.v2)
 
