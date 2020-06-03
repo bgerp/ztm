@@ -201,7 +201,7 @@ class ColdCircle(BasePlugin):
             # Get the output.
             output = self.__pid_controller.output
 
-            print("UPDATE: I:{:.2f} O:{:.2f}".format(tank_temp, output))
+            # print("UPDATE: I:{:.2f} O:{:.2f}".format(tank_temp, output))
 
     def shutdown(self):
         """ Shutting down the HVAC. """
