@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 import math
+import time
 
 from enum import Enum
 
@@ -64,6 +65,28 @@ __status__ = "Debug"
 
 #endregion
 
+class FeedbackType(Enum):
+    """Blinds feedback type."""
+
+    NONE = 0
+    Analog = 1
+    Digital = 2
+
+class CalibrationState(Enum):
+    """Calibration process states."""
+
+    NONE = 0
+    Stop = 1
+    TurnCW = 2
+    WaitCurStabCW = 3
+    WaitLimitCW = 4
+    TurnCCW = 5
+    WaitCurStabCCW = 6
+    WaitLimitCCW = 7
+    ExitTightness = 8
+    WaitCurrentStab = 9
+    GoTo90 = 10
+
 class BlindsState(Enum):
     """Blinds functional states."""
 
@@ -71,6 +94,7 @@ class BlindsState(Enum):
     Wait = 1
     Prepare = 2
     Execute = 3
+    Calibrate = 4
 
 class Blinds(BasePlugin):
     """Blinds controller device."""
@@ -86,29 +110,53 @@ class Blinds(BasePlugin):
     __move_timer = None
     """Move timer."""
 
-    __input_stop = None
-    """Input active."""
+    __input_fb = None
+    """Input feedback."""
 
     __output_ccw = None
-    """Ouput CCW"""
+    """Output CCW"""
 
     __output_cw = None
     """Output CW"""
 
-    __curretnt_position = 0
+    __current_position = 0
     """Current position of the blinds."""
 
     __new_position = 0
-    """New position."""
+    """New position of the blinds."""
 
-    __deg_per_sec = 18
-    """Degreeses per sec."""
+    __deg_per_sec = 1
+    """Degreases per sec."""
 
-    __limit = 1
+    __sun_spot_update_timer = Timer(2)
+    """Sun spot update timer."""
 
-    __delay_timer = Timer(2)
     __sun_azm = 0
+    """Sun azimuth."""
+
     __sun_elev = 0
+    """Sun elevation."""
+
+    __sun_spot_limit = 1
+    """Sun spot limit."""
+
+    __calibration_state = None
+    """"Calibration state."""
+
+    __feedback_type = FeedbackType.NONE
+    """Feedback type."""
+
+    __feedback_treshold = 0.093
+    """Feedback threshold."""
+
+    __timout_counter = 0
+    """Timeout counter."""
+
+    __t1 = 0
+    """T1 moment of first limit."""
+
+    __t2 = 0
+    """T2 moment of second limit."""
 
 #endregion
 
@@ -120,8 +168,41 @@ class Blinds(BasePlugin):
         self._controller.digital_write(self.__output_cw, 0)
         self._controller.digital_write(self.__output_ccw, 0)
 
+    def __turn_cw(self):
+        """Turn the motor CW."""
+
+        self._controller.digital_write(self.__output_ccw, 0)
+        self._controller.digital_write(self.__output_cw, 1)
+
+    def __turn_ccw(self):
+        """Turn the motor CCW."""
+
+        self._controller.digital_write(self.__output_cw, 0)
+        self._controller.digital_write(self.__output_ccw, 1)
+
+    def __reed_fb(self):
+        """Read feedback."""
+
+        fb_value = None
+
+        if self.__feedback_type == FeedbackType.Digital:
+            fb_value = self._controller.digital_read(self.__input_fb)
+
+        if self.__feedback_type == FeedbackType.Analog:
+            ai = self._controller.analog_read(self.__input_fb)
+            value = ai["value"]
+
+            if value < 0:
+                value = 0
+
+            fb_value = value >= self.__feedback_treshold
+            # self.__logger.debug(f"Voltage: {value:02.4f}")
+
+        return fb_value
+
     def __on_new_pos(self, register):
         """Callback function that sets new position."""
+
         self.__set_position(register.value)
 
     def __set_position(self, position):
@@ -141,7 +222,7 @@ class Blinds(BasePlugin):
     def __to_time(self, degrees):
         return degrees / self.__deg_per_sec
 
-    def __calculate_position(self):
+    def __calc_sun_spot(self):
 
         sun_elev_reg = self._registers.by_name(self._key + ".sun.elevation.value")
         if sun_elev_reg:
@@ -152,24 +233,24 @@ class Blinds(BasePlugin):
             self.__sun_azm = sun_azm_reg.value
 
         if (self.__sun_azm > 0) and (self.__sun_elev > 0):
-            print(f"Blinds -> Azm: {self.__sun_azm:.2f}; Elev: {self.__sun_elev:.2f}")
+            # print(f"Blinds -> Azm: {self.__sun_azm:03.2f}; Elev: {self.__sun_elev:03.2f}")
 
             # Calculate the shadow length.
             shadow_l = shadow_length(1, to_rad(self.__sun_elev))
-            print(f"Blinds -> Shadow: {shadow_l:.2f}")
+            # print(f"Blinds -> Shadow: {shadow_l:03.2f}")
 
-            thita = 360 - (self.__sun_azm + 180)
-            print(f"Blinds -> Thita: {thita:.2f}")
+            theta = 360 - (self.__sun_azm + 180)
+            # print(f"Blinds -> Theta: {theta:03.2f}")
 
             # Calculate cartesian
-            x = shadow_l * math.cos(to_rad(thita))
-            y = shadow_l * math.sin(to_rad(thita))
-            print(f"Blinds -> X: {x:.2f}; Y: {y:.2f}")
+            x = shadow_l * math.cos(to_rad(theta))
+            y = shadow_l * math.sin(to_rad(theta))
+            # print(f"Blinds -> X: {x:03.2f}; Y: {y:03.2f}")
 
             is_cloudy = False
-            if (x > self.__limit or y > self.__limit) and not is_cloudy:
+            if (x > self.__sun_spot_limit or y > self.__sun_spot_limit) and not is_cloudy:
                 if self.__blinds_state.is_state(BlindsState.Wait):
-                    print("Signal to close")
+                    # print("Signal to close")
                     self.__set_position(180)
 
 #endregion
@@ -185,9 +266,11 @@ class Blinds(BasePlugin):
 
         self.__move_timer = Timer()
 
-        input_stop = self._registers.by_name(self._key + ".input_stop")
-        if input_stop is not None:
-            self.__input_stop = input_stop.value
+        self.__calibration_state = StateMachine(CalibrationState.NONE)
+
+        input_fb = self._registers.by_name(self._key + ".input_fb")
+        if input_fb is not None:
+            self.__input_fb = input_fb.value
 
         output_ccw = self._registers.by_name(self._key + ".output_ccw")
         if output_ccw is not None:
@@ -201,35 +284,48 @@ class Blinds(BasePlugin):
         # if position is not None:
         #     position.update_handler = self.__on_new_pos
 
+        if "D" in self.__input_fb.upper():
+            self.__feedback_type = FeedbackType.Digital
+
+        elif "A" in self.__input_fb.upper():
+            self.__feedback_type = FeedbackType.Analog
+
+        self.__stop()
+
     def update(self):
 
-        self.__delay_timer.update()
-        if self.__delay_timer.expired:
-            self.__delay_timer.clear()
-            self.__calculate_position()
+        # TODO: Remove, DEMO purpose only.
+        if self._controller.digital_read("DI4"):
+            self.__blinds_state.set_state(BlindsState.Calibrate)
+            self.__calibration_state.set_state(CalibrationState.Stop)
+
+        self.__sun_spot_update_timer.update()
+        if self.__sun_spot_update_timer.expired:
+            self.__sun_spot_update_timer.clear()
+
+            # TODO: Uncomment before release.
+            # self.__calc_sun_spot()
 
         if self.__blinds_state.is_state(BlindsState.Prepare):
 
-            delta_pos = self.__new_position - self.__curretnt_position
+            delta_pos = self.__new_position - self.__current_position
 
             if delta_pos == 0:
-                self._controller.digital_write(self.__output_cw, 0)
-                self._controller.digital_write(self.__output_ccw, 0)
+                self.__stop()
                 self.__blinds_state.set_state(BlindsState.Wait)
                 return
 
             time_to_move = self.__to_time(abs(delta_pos))
+            self.__logger.info("Time: {}".format(time_to_move))
 
             self.__move_timer.expiration_time = time_to_move
             self.__move_timer.update_last_time()
 
             if delta_pos > 0:
-                self._controller.digital_write(self.__output_ccw, 0)
-                self._controller.digital_write(self.__output_cw, 1)
+                self.__turn_cw()
 
             elif delta_pos < 0:
-                self._controller.digital_write(self.__output_cw, 0)
-                self._controller.digital_write(self.__output_ccw, 1)
+                self.__turn_ccw()
 
             self.__blinds_state.set_state(BlindsState.Execute)
 
@@ -239,15 +335,107 @@ class Blinds(BasePlugin):
             if self.__move_timer.expired:
                 self.__move_timer.clear()
                 self.__stop()
-                self.__curretnt_position = self.__new_position
+                self.__current_position = self.__new_position
                 self.__blinds_state.set_state(BlindsState.Wait)
 
-            input_stop = self._controller.digital_read(self.__input_stop)
-            if not input_stop:
+            input_fb = self.__reed_fb()
+            if input_fb:
                 self.__stop()
                 self.__logger.warning("{} has raised end position.".format(self.name, ))
-                self.__curretnt_position = self.__new_position
+                self.__current_position = self.__new_position
                 self.__blinds_state.set_state(BlindsState.Wait)
+
+        elif self.__blinds_state.is_state(BlindsState.Calibrate):
+
+            if self.__calibration_state.is_state(CalibrationState.Stop):
+
+                self.__stop()
+
+                self.__current_position = 0
+                self.__new_position = 0
+
+                self.__calibration_state.set_state(CalibrationState.TurnCW)
+
+            elif self.__calibration_state.is_state(CalibrationState.TurnCW):
+
+                self.__turn_cw()
+
+                self.__calibration_state.set_state(CalibrationState.WaitCurStabCW)
+
+            elif self.__calibration_state.is_state(CalibrationState.WaitCurStabCW):
+
+                if self.__timout_counter >= 5:
+                    self.__timout_counter = 0
+                    self.__calibration_state.set_state(CalibrationState.WaitLimitCW)
+                else:
+                    self.__timout_counter += 1
+
+            elif self.__calibration_state.is_state(CalibrationState.WaitLimitCW):
+
+                fb_value = self.__reed_fb()
+                if fb_value:
+
+                    self.__stop()
+
+                    self.__t1 = time.time()
+
+                    self.__calibration_state.set_state(CalibrationState.TurnCCW)
+
+            elif self.__calibration_state.is_state(CalibrationState.TurnCCW):
+
+                self.__turn_ccw()
+
+                self.__calibration_state.set_state(CalibrationState.WaitCurStabCCW)
+
+            elif self.__calibration_state.is_state(CalibrationState.WaitCurStabCCW):
+
+                if self.__timout_counter >= 5:
+                    self.__timout_counter = 0
+                    self.__calibration_state.set_state(CalibrationState.WaitLimitCCW)
+                else:
+                    self.__timout_counter += 1
+
+            elif self.__calibration_state.is_state(CalibrationState.WaitLimitCCW):
+
+                fb_value = self.__reed_fb()
+                if fb_value:
+
+                    self.__stop()
+
+                    self.__t2 = time.time()
+
+                    time_delta = self.__t2 - self.__t1
+                    time_delta -= 4
+                    self.__deg_per_sec = 180 / time_delta
+                    self.__logger.info("DPS: {}".format(self.__deg_per_sec))
+
+                    self.__turn_cw()
+
+                    self.__calibration_state.set_state(CalibrationState.ExitTightness)
+
+            elif self.__calibration_state.is_state(CalibrationState.ExitTightness):
+
+                if self.__timout_counter >= 12:
+                    self.__timout_counter = 0
+                    self.__stop()
+                    self.__calibration_state.set_state(CalibrationState.WaitCurrentStab)
+                else:
+                    self.__timout_counter += 1
+
+            elif self.__calibration_state.is_state(CalibrationState.WaitCurrentStab):
+
+                if self.__timout_counter >= 4:
+                    self.__timout_counter = 0
+                    self.__calibration_state.set_state(CalibrationState.GoTo90)
+                else:
+                    self.__timout_counter += 1
+
+            elif self.__calibration_state.is_state(CalibrationState.GoTo90):
+
+                self.__calibration_state.set_state(CalibrationState.NONE)
+                self.__set_position(90)
+
+                return
 
     def shutdown(self):
         """Shutting down the blinds."""
