@@ -753,6 +753,17 @@ class Neuron(BaseController):
         response = requests.get(uri, timeout=self.__timeout)
         return json.loads(response.text)
 
+    def _get_analog_in(self, major_index, minor_index):
+
+        circuit = Neuron.generate_device_circuit(major_index, minor_index)
+
+        # circuit_data = self.get_device("input", circuit)
+        # return circuit_data
+
+        uri = self.__host + self.__rest_ai + circuit
+        response = requests.get(uri, timeout=self.__timeout)
+        return json.loads(response.text)
+
 #endregion
 
 #region Static Methods
@@ -985,6 +996,38 @@ class Neuron(BaseController):
             counter = response["counter"]
 
         return counter
+
+    def analog_read(self, pin):
+        """Write the analog input pin.
+
+        Parameters
+        ----------
+        pin : str
+            Pin index.
+
+        value : int
+            Value for the output pin.
+
+        Returns
+        -------
+        int
+            State of the pin.
+        """
+
+        if pin is None or pin == "":
+            raise ValueError("Pin can not be None or empty string.")
+
+        if not pin in self.__gpio_map:
+            raise ValueError("Pin does not exists in pin map.")
+
+        response = None
+        gpio_map = self.__gpio_map[pin]
+
+        if gpio_map["dev"] == "ai":
+            response = self._get_analog_in(gpio_map["major_index"],\
+                gpio_map["minor_index"])
+
+        return response
 
     def write_counter(self, pin, value):
         """Write the digital counter value.
