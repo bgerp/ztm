@@ -59,7 +59,7 @@ __status__ = "Debug"
 #endregion
 
 def mem_time_usage(function):
-    """Mesure consumed RAM for execution.
+    """Measure consumed RAM for execution.
 
     Parameters
     ----------
@@ -76,8 +76,8 @@ def mem_time_usage(function):
         t1 = time.time()
         passed_time = t1-t0
         current, peak = tracemalloc.get_traced_memory()
-        print(f"Current memory usage is {current / 10**6}MB; Peak was {peak / 10**6}MB")
-        print("Total time: {0:.3f} sec".format(passed_time))
+        # print("Current memory usage is {}MB; Peak was {}MB".format(current / 10**6, peak / 10**6))
+        # print("Total time: {0:.3f} sec".format(passed_time))
         tracemalloc.stop()
         return result
     return function_timer
@@ -97,13 +97,13 @@ def mem_usage(function):
         tracemalloc.start()
         result = function(*args, **kwargs)
         current, peak = tracemalloc.get_traced_memory()
-        print(f"Current memory usage is {current / 10**6}MB; Peak was {peak / 10**6}MB")
+        # print("Current memory usage is {}MB; Peak was {}MB".format(current / 10**6, peak / 10**6))
         tracemalloc.stop()
         return result
     return function_timer
 
 def time_usage(function):
-    """Mesure consumed time for execution.
+    """Measure consumed time for execution.
 
     Parameters
     ----------
@@ -118,7 +118,7 @@ def time_usage(function):
         result = function(*args, **kwargs)
         t1 = time.time()
         passed_time = t1-t0
-        print("Total time: {0:.3f} sec".format(passed_time))
+        # print("Total time: {0:.3f} sec".format(passed_time))
         return result
     return function_timer
 
@@ -130,9 +130,9 @@ def l_scale(target, in_limit, out_limit):
     target : float
         Logger instance.
     in_limit : Array
-        Array of two elemnts with minimum and maximum.
+        Array of two elements with minimum and maximum.
     out_limit : Array
-        Array of two elemnts with minimum and maximum.
+        Array of two elements with minimum and maximum.
 
     Returns
     -------
