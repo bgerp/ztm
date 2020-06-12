@@ -145,15 +145,18 @@ class PowerMeter(BasePlugin):
 
         self.__parameters_values = parameters_values
 
-        # Update parameters in the registers.
-        self._registers.by_name("self_current.sub_dev.current").value\
-             = self.__parameters_values["Current"]
 
-        self._registers.by_name("self_current.sub_dev.total_energy").value\
-             = self.__parameters_values["ExportActiveEnergy"]
+        if  isinstance(self.__power_meter, SDM120):
 
-        self._registers.by_name("self_current.sub_dev.current_power").value\
-             = self.__parameters_values["ApparentPower"]
+            # Update parameters in the registers.
+            self._registers.by_name("self_current.sub_dev.current").value\
+                = self.__parameters_values["Current"]
+
+            self._registers.by_name("self_current.sub_dev.total_energy").value\
+                = self.__parameters_values["ExportActiveEnergy"]
+
+            self._registers.by_name("self_current.sub_dev.current_power").value\
+                = self.__parameters_values["ApparentPower"]
 
     def shutdown(self):
 
