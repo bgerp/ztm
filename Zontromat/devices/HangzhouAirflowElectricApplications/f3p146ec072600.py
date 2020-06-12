@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 from utils.logger import get_logger
+
 from devices.base_device import BaseDevice
 
 #region File Attributes
@@ -65,31 +66,53 @@ class F3P146EC072600(BaseDevice):
     __logger = None
     """Logger"""
 
+    __min_speed = 10
+    """Minimum speed limit."""
+
     __max_speed = 10
-    """Speed limit."""
+    """Minimum speed limit."""
 
     __speed = 0
     """Speed"""
 
     __output = "AO0"
-    """Output phizical signal."""
+    """Output physical signal."""
 
 #endregion
 
 #region Properties
 
     @property
-    def max_speed(self):
-        """Speed limit.
+    def min_speed(self):
+        """Minimum speed limit.
 
         Returns:
-            float: Speed limit.
+            float: Minimum speed limit.
+        """
+        return self.__max_speed
+
+    @min_speed.setter
+    def min_speed(self, value):
+        """Minimum speed limit.
+
+        Args:
+            value (float): Minimum speed limit.
+        """
+
+        self.__max_speed = value
+
+    @property
+    def max_speed(self):
+        """Maximum speed limit.
+
+        Returns:
+            float: Maximum speed limit.
         """
         return self.__max_speed
 
     @max_speed.setter
     def max_speed(self, value):
-        """Speed limit.
+        """Maximum speed limit.
 
         Args:
             value (float): Speed limit.
@@ -114,6 +137,9 @@ class F3P146EC072600(BaseDevice):
         if "max_speed" in self._config:
             self.max_speed = self._config["max_speed"]
 
+        if "min_speed" in self._config:
+            self.min_speed = self._config["min_speed"]
+
         if "output" in self._config:
             self.__output = self._config["output"]
 
@@ -129,22 +155,31 @@ class F3P146EC072600(BaseDevice):
             speed (int): Output speed of the fan.
         """
 
-        if speed >= 10:
+        # if self.__speed == speed:
+        #     return
+
+        if speed > 10:
             speed = 10
+
+        if speed > self.max_speed:
+            speed = self.max_speed
 
         if speed < 0:
             speed = 0
 
-        if speed >= self.max_speed:
-            speed = self.max_speed
-
-        if self.__speed == speed:
-            return
+        if speed < self.min_speed:
+            speed = self.min_speed
 
         self.__speed = speed
 
         self._controller.analog_write(self.__output, self.__speed)
         self.__logger.debug("Name: {}; Value {:3.3f}".format(self.name, self.__speed))
+
+    def shutdown(self):
+        """Shutdown"""
+
+        self.min_speed = 0
+        self.set_speed(0)
 
 #endregion
 

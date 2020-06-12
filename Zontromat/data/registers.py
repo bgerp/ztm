@@ -330,7 +330,6 @@ class Registers:
 
         return result
 
-
 #endregion
 
 #region Static Methods

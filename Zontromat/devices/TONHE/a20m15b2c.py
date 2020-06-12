@@ -69,28 +69,60 @@ class A20M15B2C(BaseDevice):
     __position = 0
     """Position of the valve."""
 
+    __min_pos = 10
+    """Minimum allowed position."""
+
     __max_pos = 10
+    """Maximum allowed position."""
+
+    __output = None
+    """Output physical signal."""
 
 #endregion
 
 #region Properties
 
     @property
-    def max_pos(self):
-        """Speed limit.
+    def min_pos(self):
+        """Minimum position.
 
         Returns:
-            float: Speed limit.
+            float: Minimum position.
+        """
+        return self.__min_pos
+
+    @min_pos.setter
+    def min_pos(self, value):
+        """Minimum position.
+
+        Args:
+            value (float): Minimum position.
+        """
+
+        if value < 0:
+            value = 0
+
+        self.__min_pos = value
+
+    @property
+    def max_pos(self):
+        """Maximum position.
+
+        Returns:
+            float: Maximum position.
         """
         return self.__max_pos
 
     @max_pos.setter
     def max_pos(self, value):
-        """Speed limit.
+        """Maximum position.
 
         Args:
-            value (float): Speed limit.
+            value (float): Maximum position.
         """
+
+        if value > 10:
+            value = 10
 
         self.__max_pos = value
 
@@ -100,16 +132,21 @@ class A20M15B2C(BaseDevice):
 
 #endregion
 
-#region Constructor
+#region Public Methods
 
     def init(self):
         """Init the module."""
 
         self.__logger = get_logger(__name__)
 
-#endregion
+        if "max_pos" in self._config:
+            self.max_pos = self._config["max_pos"]
 
-#region Public Methods
+        if "min_pos" in self._config:
+            self.min_pos = self._config["min_pos"]
+
+        if "output" in self._config:
+            self.__output = self._config["output"]
 
     def set_pos(self, position):
         """Set position of the output.
@@ -117,6 +154,9 @@ class A20M15B2C(BaseDevice):
         Args:
             position (int): Output position.
         """
+
+        # if self.__position == position:
+        #     return
 
         if position > 10:
             position = 10
@@ -127,24 +167,28 @@ class A20M15B2C(BaseDevice):
         if position < 0:
             position = 0
 
-        if self.__position == position:
-            return
+        if position < self.__min_pos:
+            position = self.__min_pos
 
         self.__position = position
 
-        output = self._config["output"]
-
         # Determin is it analog or digital output.
-        if "D" in output:
-            self._controller.digital_write(output, self.__position)
+        if "D" in self.__output:
+            self._controller.digital_write(self.__output, self.__position)
 
-        if "R" in output:
-            self._controller.digital_write(output, self.__position)
+        if "R" in self.__output:
+            self._controller.digital_write(self.__output, self.__position)
 
-        elif "А" in output:
-            self._controller.analog_write(output, self.__position)
+        elif "A" in self.__output:
+            self._controller.analog_write(self.__output, self.__position)
 
         self.__logger.debug("Name: {}; Value: {}".format(self.name, self.__position))
+
+    def shutdown(self):
+        """Shutdown"""
+
+        self.min_pos = 0
+        self.set_pos(0)
 
 #endregion
 
