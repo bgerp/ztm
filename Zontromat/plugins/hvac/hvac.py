@@ -37,8 +37,8 @@ from devices.TONHE.a20m15b2c import A20M15B2C
 from devices.SILPA.klimafan import Klimafan
 from devices.no_vendor.flowmeter import Flowmeter
 from devices.Dallas.ds18b20 import DS18B20
-from devices.tests.leak_test import LeakTest
-
+from devices.tests.leak_test.leak_test import LeakTest
+from devices.tests.electrical_performance.electrical_performance import ElectricalPerformance
 #region File Attributes
 
 __author__ = "Orlin Dimitrov"
@@ -270,6 +270,14 @@ class HVAC(BasePlugin):
 
         self.__goal_building_temp = actual_temp
 
+    def __ventilation_min_cb(self, register):
+
+        if self.__loop1_fan_dev is not None:
+            self.__loop1_fan_dev.min_speed = register.value
+
+        if self.__loop2_fan_dev is not None:
+            self.__loop2_fan_dev.min_speed = register.value
+
     def __ventilation_max_cb(self, register):
 
         if self.__loop1_fan_dev is not None:
@@ -277,6 +285,14 @@ class HVAC(BasePlugin):
 
         if self.__loop2_fan_dev is not None:
             self.__loop2_fan_dev.max_speed = register.value
+
+    def __circulation_min_cb(self, register):
+
+        if self.__loop1_valve_dev is not None:
+            self.__loop1_valve_dev.min_pos = register.value
+
+        if self.__loop2_valve_dev is not None:
+            self.__loop2_valve_dev.min_pos = register.value
 
     def __circulation_max_cb(self, register):
 
@@ -372,7 +388,7 @@ class HVAC(BasePlugin):
             if self.__loop1_cnt_dev is not None:
                 self.__loop1_cnt_dev.init()
 
-                self.__loop1_leak_test = LeakTest(self.__loop1_cnt_dev)
+                self.__loop1_leak_test = LeakTest(self.__loop1_cnt_dev, 20)
                 self.__loop1_leak_test.on_result(self.__loop1_leaktest_result)
 
         elif register.value == 0 and self.__loop1_cnt_dev is not None:
@@ -440,7 +456,7 @@ class HVAC(BasePlugin):
             if self.__loop2_cnt_dev is not None:
                 self.__loop2_cnt_dev.init()
 
-                self.__loop2_leak_teat = LeakTest(self.__loop2_cnt_dev)
+                self.__loop2_leak_teat = LeakTest(self.__loop2_cnt_dev, 20)
                 self.__loop2_leak_teat.on_result(self.__loop2_leaktest_result)
 
         elif register.value == 0 and self.__loop2_cnt_dev is not None:
@@ -484,8 +500,8 @@ class HVAC(BasePlugin):
 
         if register.value == 1 and self.__loop2_valve_dev is None:
             self.__loop2_valve_dev = A20M15B2C.create(\
-                "Loop 1 Valve",\
-                self._key + ".loop1.valve",\
+                "Loop 2 Valve",\
+                self._key + ".loop2.valve",\
                 self._registers,\
                 self._controller)
 
@@ -616,9 +632,9 @@ class HVAC(BasePlugin):
         # if temp_min is not None:
         #     temp_min.update_handler = self.__temp_min_cb
 
-        # ventilation_min = self._registers.by_name(self._key + ".ventilation.min")
-        # if ventilation_min is not None:
-        #     ventilation_min.update_handler = self.__ventilation_min_cb
+        ventilation_min = self._registers.by_name(self._key + ".ventilation.min")
+        if ventilation_min is not None:
+            ventilation_min.update_handler = self.__ventilation_min_cb
 
         ventilation_max = self._registers.by_name(self._key + ".ventilation.max")
         if ventilation_max is not None:
@@ -632,9 +648,9 @@ class HVAC(BasePlugin):
         if circulation_max is not None:
             circulation_max.update_handler = self.__circulation_max_cb
 
-        # circulation_min = self._registers.by_name(self._key + ".circulation.min")
-        # if circulation_min is not None:
-        #     circulation_min.update_handler = self.__circulation_min_cb
+        circulation_min = self._registers.by_name(self._key + ".circulation.min")
+        if circulation_min is not None:
+            circulation_min.update_handler = self.__circulation_min_cb
 
         # Air temperatures.
         air_temp_cent_enabled = self._registers.by_name(self._key + ".air_temp_cent.enabled")
