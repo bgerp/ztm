@@ -27,10 +27,7 @@ from enum import Enum
 from plugins.base_plugin import BasePlugin
 
 from devices.no_vendor.flowmeter import Flowmeter as FlowmeterDevice
-from devices.tests.leak_test import LeakTest
-
-from utils.timer import Timer
-from utils.state_machine import StateMachine
+from devices.tests.leak_test.leak_test import LeakTest
 
 #region File Attributes
 
@@ -63,14 +60,6 @@ __status__ = "Debug"
 
 #endregion
 
-class TestState(Enum):
-    """Test state"""
-
-    NONE = 0
-    TakeFirstMeasurement = 1
-    WaitForLeak = 2
-    TakeSecondMeasurement = 3
-
 class Flowmeter(BasePlugin):
     """Flowmeter measuring device."""
 
@@ -101,12 +90,6 @@ class Flowmeter(BasePlugin):
 
     def init(self):
 
-        # Check timer. Every hour test.
-        self.__check_timer = Timer(5) # 3600
-
-        # Test state machine.
-        self.__test_state = StateMachine(TestState.TakeFirstMeasurement)
-
         tpl = self._registers.by_name(self._key + ".tpl")
         input_pin = self._registers.by_name(self._key + ".input")
 
@@ -124,7 +107,7 @@ class Flowmeter(BasePlugin):
             self.__flowmetter_dev = FlowmeterDevice(config)
             self.__flowmetter_dev.init()
 
-            self.__leak_test = LeakTest(self.__flowmetter_dev)
+            self.__leak_test = LeakTest(self.__flowmetter_dev, 20)
             self.__leak_test.on_result(self.__leaktest_result)
 
     def update(self):
