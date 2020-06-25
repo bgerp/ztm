@@ -24,6 +24,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from plugins.base_plugin import BasePlugin
 
+from utils.logger import get_logger
+
 #region File Attributes
 
 __author__ = "Orlin Dimitrov"
@@ -60,7 +62,20 @@ class Tamper(BasePlugin):
 
 #region Variables
 
-    __input = "DI0"
+    __logger = None
+    """Logger"""
+
+    __input = None
+    """Input name."""
+
+#endregion
+
+#region Destructor
+
+    def __del__(self):
+        """Destructor"""
+
+        del self.__logger
 
 #endregion
 
@@ -71,10 +86,19 @@ class Tamper(BasePlugin):
         if input_pin is not None:
             self.__input = input_pin.value
 
+        self.__logger = get_logger(__name__)
+        self.__logger.info("Starting up the {} with name {}".format(__name__, self.name))
+
     def update(self):
         """Update the flowmeter value."""
 
         self._registers.by_name(self._key + ".state").value\
              = self._controller.digital_read(self.__input)
+
+    def shutdown(self):
+        """Shutdown the tamper."""
+
+        self.__logger.info("Shutting down the {} with name {}".format(__name__, self.name))
+
 
 #endregion

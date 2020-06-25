@@ -220,6 +220,7 @@ class Lighting(BasePlugin):
         sensor_enabled = self._config["registers"].by_name(self._key + ".sensor.enabled")
         if sensor_enabled is not None:
             sensor_enabled.update_handler = self.__sensor_enabled_cb
+            sensor_enabled.value = 1
 
         v1_output = self._config["registers"].by_name(self._key + ".v1.output")
         if v1_output is not None:

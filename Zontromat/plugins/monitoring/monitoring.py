@@ -151,9 +151,7 @@ class Monitoring(BasePlugin):
 
         if register.value == 1:
             # Clear the flag.
-            clear_errors = self._registers.by_name(self._key + ".clear_errors")
-            if clear_errors is not None:
-                clear_errors.value = 0
+            register.value = 0
 
             # Clear info messages.
             info_message = self._registers.by_name(self._key + ".info_message")
@@ -178,7 +176,7 @@ class Monitoring(BasePlugin):
         """Initialize the plugin."""
 
         self.__logger = get_logger(__name__)
-        self.__logger.info("Starting the {} with name {}".format(__name__, self.name))
+        self.__logger.info("Starting up the {} with name {}".format(__name__, self.name))
 
         self.__update_timer = Timer(1)
 
@@ -187,6 +185,7 @@ class Monitoring(BasePlugin):
         clear_errors = self._registers.by_name(self._key + ".clear_errors")
         if clear_errors is not None:
             clear_errors.update_handler = self.__clear_errors_cb
+            clear_errors.value = 1
 
     def update(self):
         """Runtime of the plugin."""
