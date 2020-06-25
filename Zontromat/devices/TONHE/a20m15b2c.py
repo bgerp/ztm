@@ -59,7 +59,7 @@ __status__ = "Debug"
 #endregion
 
 class A20M15B2C(BaseDevice):
-    """Hydro Valve"""
+    """Hydro Valve. Model: A20-M15-B2-C"""
 
 #region Attributes
 
@@ -69,11 +69,14 @@ class A20M15B2C(BaseDevice):
     __position = 0
     """Position of the valve."""
 
-    __min_pos = 10
+    __min_pos = 0
     """Minimum allowed position."""
 
-    __max_pos = 10
+    __max_pos = 100
     """Maximum allowed position."""
+
+    __feedback = None
+    """Feedback of the valve position."""
 
     __output = None
     """Output physical signal."""
@@ -99,8 +102,16 @@ class A20M15B2C(BaseDevice):
             value (float): Minimum position.
         """
 
+        in_value = value
+
+        if value > 100:
+            in_value = 100
+
         if value < 0:
-            value = 0
+            in_value = 0
+
+        if in_value > self.max_pos:
+            in_value = self.max_pos
 
         self.__min_pos = value
 
@@ -121,13 +132,21 @@ class A20M15B2C(BaseDevice):
             value (float): Maximum position.
         """
 
-        if value > 10:
-            value = 10
+        in_value = value
 
-        self.__max_pos = value
+        if value > 100:
+            in_value = 100
+
+        if value < 0:
+            in_value = 0
+
+        if value < self.min_pos:
+            in_value = self.min_pos
+
+        self.__max_pos = in_value
 
     @property
-    def position(self):
+    def set_point(self):
         return self.__position
 
 #endregion
@@ -139,14 +158,38 @@ class A20M15B2C(BaseDevice):
 
         self.__logger = get_logger(__name__)
 
-        if "max_pos" in self._config:
-            self.max_pos = self._config["max_pos"]
-
         if "min_pos" in self._config:
             self.min_pos = self._config["min_pos"]
 
+        if "max_pos" in self._config:
+            self.max_pos = self._config["max_pos"]
+
+        if "feedback" in self._config:
+            self.__feedback = self._config["feedback"]
+
         if "output" in self._config:
             self.__output = self._config["output"]
+
+    def get_pos(self):
+        """Set position of the output.
+
+        Args:
+            position (int): Output position.
+        """
+
+        position = 0
+
+        # Determin is it analog or digital output.
+        if "D" in self.__feedback:
+            position = self._controller.digital_read(self.__feedback)
+
+        elif "A" in self.__feedback:
+            position = self._controller.analog_read(self.__feedback)
+
+        self.__logger.debug("Name: {}; Value: {}".format(self.name, position))
+
+        # TODO: Do some processing of the possition.
+        return 0.0
 
     def set_pos(self, position):
         """Set position of the output.
@@ -155,34 +198,59 @@ class A20M15B2C(BaseDevice):
             position (int): Output position.
         """
 
-        # if self.__position == position:
-        #     return
+        in_position = position
 
-        if position > 10:
-            position = 10
+        if position > 100:
+            in_position = 100
 
         if position > self.__max_pos:
-            position = self.__max_pos
+            in_position = self.__max_pos
 
         if position < 0:
-            position = 0
+            in_position = 0
 
         if position < self.__min_pos:
-            position = self.__min_pos
+            in_position = self.__min_pos
 
-        self.__position = position
+        self.__position = in_position
 
         # Determin is it analog or digital output.
         if "D" in self.__output:
-            self._controller.digital_write(self.__output, self.__position)
+
+            if self.__position > 50:
+                self._controller.digital_write(self.__output, 1)
+
+            else:
+                self._controller.digital_write(self.__output, 0)
 
         if "R" in self.__output:
-            self._controller.digital_write(self.__output, self.__position)
+
+            if self.__position > 50:
+                self._controller.digital_write(self.__output, 1)
+
+            else:
+                self._controller.digital_write(self.__output, 0)
 
         elif "A" in self.__output:
-            self._controller.analog_write(self.__output, self.__position)
+            value_pos = self.__position / 10
+            self._controller.analog_write(self.__output, value_pos)
 
         self.__logger.debug("Name: {}; Value: {}".format(self.name, self.__position))
+
+    def in_place(self):
+        """Returns if the valve is in place."""
+
+        in_place = False
+
+        actual_pos = self.get_pos()
+        target_pos = self.set_point
+
+        delta = abs(actual_pos - target_pos)
+
+        if delta < 0.1:
+            in_place = True
+
+        return in_place
 
     def shutdown(self):
         """Shutdown"""
@@ -194,19 +262,25 @@ class A20M15B2C(BaseDevice):
 
 #region Public Static Methods
 
-    @classmethod
-    def create(self, name, key, registers, controller):
-        """Value of the thermometer."""
+    @staticmethod
+    def create(name, key, registers, controller):
+        """Create instance of the class."""
 
         instance = None
 
         valve_output = registers.by_name(key + ".output").value
+        valve_fb = registers.by_name(key + ".feedback").value
+        max_pos = registers.by_name(key + ".max_pos").value
+        min_pos = registers.by_name(key + ".min_pos").value
 
         config = \
         {\
             "name": name,
             "output": valve_output,
-            "controller":controller
+            "feedback": valve_fb,
+            "min_pos": min_pos,
+            "max_pos": max_pos,
+            "controller": controller
         }
 
         instance = A20M15B2C(config)
