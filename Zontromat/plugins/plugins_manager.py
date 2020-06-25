@@ -155,9 +155,6 @@ class PluginsManager:
         self.__erp_service = erp_service
         self.__add_registers()
 
-        # Comment line below to stop the self feed of sun positions.
-        self.__sun_pos_enable()
-
 #region Private Methods
 
     def __add_registers(self):
@@ -176,7 +173,13 @@ class PluginsManager:
         register.source = Source.Zontromat
         self.__registers.add(register)
 
-        register = Register("general.drink_water_leak")
+        register = Register("general.cold_water_fm.leak")
+        register.scope = Scope.Global
+        register.source = Source.Zontromat
+        register.value = 0
+        self.__registers.add(register)
+
+        register = Register("general.hot_water_fm.leak")
         register.scope = Scope.Global
         register.source = Source.Zontromat
         register.value = 0
@@ -292,7 +295,7 @@ class PluginsManager:
         register = Register("pir_detector.input")
         register.scope = Scope.Global
         register.source = Source.bgERP
-        register.value = "DI7"
+        register.value = "DI0"
         self.__registers.add(register)
 
         register = Register("pir_detector.enabled")
@@ -314,7 +317,7 @@ class PluginsManager:
         register = Register("anti_tampering.input")
         register.scope = Scope.Global
         register.source = Source.bgERP
-        register.value = None
+        register.value = "DI1"
         self.__registers.add(register)
 
         register = Register("anti_tampering.enabled")
@@ -353,28 +356,56 @@ class PluginsManager:
 
 #endregion
 
-#region Water Counter
+#region Cold Water Counter
 
-        register = Register("water_cnt.tpl")
+        register = Register("cold_water_fm.tpl")
         register.scope = Scope.Global
         register.source = Source.bgERP
         register.value = 10
         self.__registers.add(register)
 
-        register = Register("water_cnt.input")
+        register = Register("cold_water_fm.input")
         register.scope = Scope.Global
         register.source = Source.bgERP
-        register.value = "DI4"
+        register.value = "DI6"
         self.__registers.add(register)
 
-        register = Register("water_cnt.enabled")
+        register = Register("cold_water_fm.enabled")
         register.scope = Scope.Global
         register.source = Source.bgERP
-        register.update_handler = self.__water_cnt_enabled
+        register.update_handler = self.__cold_water_fm_enabled
         register.value = 0
         self.__registers.add(register)
 
-        register = Register("water_cnt.state")
+        register = Register("cold_water_fm.value")
+        register.scope = Scope.Global
+        register.source = Source.Zontromat
+        self.__registers.add(register)
+
+#endregion
+
+#region Hot Water Counter
+
+        register = Register("hot_water_fm.tpl")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.value = 10
+        self.__registers.add(register)
+
+        register = Register("hot_water_fm.input")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.value = "DI7"
+        self.__registers.add(register)
+
+        register = Register("hot_water_fm.enabled")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.update_handler = self.__hot_water_fm_enabled
+        register.value = 0
+        self.__registers.add(register)
+
+        register = Register("hot_water_fm.value")
         register.scope = Scope.Global
         register.source = Source.Zontromat
         self.__registers.add(register)
@@ -410,7 +441,7 @@ class PluginsManager:
         register = Register("blinds.input_fb")
         register.scope = Scope.Global
         register.source = Source.bgERP
-        register.value = "AI1" # "DI8"
+        register.value = "AI0" # "DI8"
         self.__registers.add(register)
 
         register = Register("blinds.output_ccw")
@@ -466,30 +497,6 @@ class PluginsManager:
         register.value = "Eastron"
         self.__registers.add(register)
 
-        register = Register("self_current.sub_dev.current")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.value = "Current"
-        self.__registers.add(register)
-
-        register = Register("self_current.sub_dev.total_energy")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.value = "ExportActiveEnergy"
-        self.__registers.add(register)
-
-        register = Register("self_current.sub_dev.current_power")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.value = "ApparentPower"
-        self.__registers.add(register)
-
-        register = Register("self_current.sub_dev.register_type")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.value = "inp"
-        self.__registers.add(register)
-
         register = Register("self_current.enabled")
         register.scope = Scope.Global
         register.source = Source.bgERP
@@ -497,16 +504,23 @@ class PluginsManager:
         register.value = 0
         self.__registers.add(register)
 
-        register = Register("current_power.state")
+        register = Register("self_current.sub_dev.current.value")
         register.scope = Scope.Global
         register.source = Source.Zontromat
+        register.value = 0
         self.__registers.add(register)
 
-        register = Register("total_energy.state")
+        register = Register("self_current.sub_dev.total_energy.value")
         register.scope = Scope.Global
         register.source = Source.Zontromat
+        register.value = 0
         self.__registers.add(register)
 
+        register = Register("self_current.sub_dev.current_power.value")
+        register.scope = Scope.Global
+        register.source = Source.Zontromat
+        register.value = 0
+        self.__registers.add(register)
 #endregion
 
 #region Mode Energy
@@ -623,7 +637,7 @@ class PluginsManager:
         register = Register("access_control_1.lock_mechanism.output")
         register.scope = Scope.Global
         register.source = Source.bgERP
-        register.value = "DO0"
+        register.value = "DO2"
         self.__registers.add(register)
 
         register = Register("access_control_1.lock_mechanism.enabled")
@@ -714,7 +728,7 @@ class PluginsManager:
         register = Register("access_control_2.lock_mechanism.output")
         register.scope = Scope.Global
         register.source = Source.bgERP
-        register.value = "DO0"
+        register.value = "DO2"
         self.__registers.add(register)
 
         register = Register("access_control_2.lock_mechanism.enabled")
@@ -838,24 +852,24 @@ class PluginsManager:
         register.value = 1
         self.__registers.add(register)
 
-        # Circulation
-        register = Register("hvac.circulation.actual")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.value = 25
-        self.__registers.add(register)
+        # # Circulation
+        # register = Register("hvac.circulation.actual")
+        # register.scope = Scope.Global
+        # register.source = Source.bgERP
+        # register.value = 25
+        # self.__registers.add(register)
 
-        register = Register("hvac.circulation.min")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.value = 0
-        self.__registers.add(register)
+        # register = Register("hvac.circulation.min")
+        # register.scope = Scope.Global
+        # register.source = Source.bgERP
+        # register.value = 0
+        # self.__registers.add(register)
 
-        register = Register("hvac.circulation.max")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.value = 100
-        self.__registers.add(register)
+        # register = Register("hvac.circulation.max")
+        # register.scope = Scope.Global
+        # register.source = Source.bgERP
+        # register.value = 100
+        # self.__registers.add(register)
 
         # Convector
         register = Register("hvac.convector.enabled")
@@ -926,7 +940,7 @@ class PluginsManager:
         register = Register("hvac.loop1.cnt.input")
         register.scope = Scope.Global
         register.source = Source.bgERP
-        register.value = "DI5"
+        register.value = "DI4"
         self.__registers.add(register)
 
         register = Register("hvac.loop1.cnt.enabled")
@@ -958,6 +972,18 @@ class PluginsManager:
         register.scope = Scope.Global
         register.source = Source.bgERP
         register.value = "HangzhouAirflowElectricApplications"
+        self.__registers.add(register)
+
+        register = Register("hvac.loop1.fan.min_speed")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.value = 0
+        self.__registers.add(register)
+
+        register = Register("hvac.loop1.fan.max_speed")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.value = 30
         self.__registers.add(register)
 
         # Loop 1 Temperature
@@ -1010,6 +1036,24 @@ class PluginsManager:
         register.value = "TONHE"
         self.__registers.add(register)
 
+        register = Register("hvac.loop1.valve.feedback")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.value = "AI1"
+        self.__registers.add(register)
+
+        register = Register("hvac.loop1.valve.max_pos")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.value = 100
+        self.__registers.add(register)
+
+        register = Register("hvac.loop1.valve.min_pos")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.value = 0
+        self.__registers.add(register)
+
         # Loop 2 flowmeter
         register = Register("hvac.loop2.cnt.tpl")
         register.scope = Scope.Global
@@ -1020,7 +1064,7 @@ class PluginsManager:
         register = Register("hvac.loop2.cnt.input")
         register.scope = Scope.Global
         register.source = Source.bgERP
-        register.value = "DI6"
+        register.value = "DI5"
         self.__registers.add(register)
 
         register = Register("hvac.loop2.cnt.enabled")
@@ -1052,6 +1096,18 @@ class PluginsManager:
         register.scope = Scope.Global
         register.source = Source.bgERP
         register.value = "HangzhouAirflowElectricApplications"
+        self.__registers.add(register)
+
+        register = Register("hvac.loop2.fan.min_speed")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.value = 0
+        self.__registers.add(register)
+
+        register = Register("hvac.loop2.fan.max_speed")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.value = 30
         self.__registers.add(register)
 
         # Loop 2 Temperature
@@ -1104,6 +1160,24 @@ class PluginsManager:
         register.value = "TONHE"
         self.__registers.add(register)
 
+        register = Register("hvac.loop2.valve.feedback")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.value = "AI2"
+        self.__registers.add(register)
+
+        register = Register("hvac.loop2.valve.max_pos")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.value = 100
+        self.__registers.add(register)
+
+        register = Register("hvac.loop2.valve.min_pos")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.value = 0
+        self.__registers.add(register)
+
         # Temperature actual
         register = Register("hvac.temp.actual")
         register.scope = Scope.Global
@@ -1141,19 +1215,6 @@ class PluginsManager:
         register.scope = Scope.Global
         register.source = Source.bgERP
         register.value = 3
-        self.__registers.add(register)
-
-        # Ventilation
-        register = Register("hvac.ventilation.max")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.value = 100
-        self.__registers.add(register)
-
-        register = Register("hvac.ventilation.min")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.value = 0
         self.__registers.add(register)
 
 #endregion
@@ -1234,7 +1295,7 @@ class PluginsManager:
         register = Register("wdt_tablet.output")
         register.scope = Scope.Global
         register.source = Source.bgERP
-        register.value = "DO2"
+        register.value = "DO3"
         self.__registers.add(register)
 
         register = Register("wdt_tablet.enabled")
@@ -1253,6 +1314,19 @@ class PluginsManager:
         register = Register("wdt_tablet.state")
         register.scope = Scope.Global
         register.source = Source.Zontromat
+        self.__registers.add(register)
+
+#endregion
+
+# -=== Sun Position ===-
+
+#region Sun Position
+
+        register = Register("sun_pos.enabled")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.update_handler = self.__sun_pos_enabled
+        register.value = 0
         self.__registers.add(register)
 
 #endregion
@@ -1352,7 +1426,7 @@ class PluginsManager:
 
         return config
 
-
+    # -=== General ===-
     def __status_led_enabled(self, register):
         if register.value == 1 and Plugins.StatusLed not in self.__plugins:
             config = self.__prepare_config("Status LED", register.base_name)
@@ -1375,14 +1449,7 @@ class PluginsManager:
             self.__plugins[Plugins.Monitoring].shutdown()
             del self.__plugins[Plugins.Monitoring]
 
-
-    def __sun_pos_enable(self):
-        # Create device.
-        config = self.__prepare_config("Sun Position", "sun_pos")
-        self.__plugins[Plugins.SunPos] = SunPos(config)
-        self.__plugins[Plugins.SunPos].init()
-
-
+    # -=== Room ===-
     def __window_closed_enabled(self, register):
         if register.value == 1 and Plugins.WindowClosed not in self.__plugins:
             config = self.__prepare_config("Windows Closed Sensor", register.base_name)
@@ -1433,9 +1500,19 @@ class PluginsManager:
             self.__plugins[Plugins.FireDetect].shutdown()
             del self.__plugins[Plugins.FireDetect]
 
-    def __water_cnt_enabled(self, register):
+    def __cold_water_fm_enabled(self, register):
         if register.value == 1 and Plugins.WaterCounter not in self.__plugins:
-            config = self.__prepare_config("Water Flow Metter", register.base_name)
+            config = self.__prepare_config("Cold Water Flow Metter", register.base_name)
+            self.__plugins[Plugins.WaterCounter] = Flowmeter(config)
+            self.__plugins[Plugins.WaterCounter].init()
+
+        elif register.value == 0 and Plugins.WaterCounter in self.__plugins:
+            self.__plugins[Plugins.WaterCounter].shutdown()
+            del self.__plugins[Plugins.WaterCounter]
+
+    def __hot_water_fm_enabled(self, register):
+        if register.value == 1 and Plugins.WaterCounter not in self.__plugins:
+            config = self.__prepare_config("Hot Water Flow Metter", register.base_name)
             self.__plugins[Plugins.WaterCounter] = Flowmeter(config)
             self.__plugins[Plugins.WaterCounter].init()
 
@@ -1549,6 +1626,17 @@ class PluginsManager:
             self.__plugins[Plugins.ColdCircle].shutdown()
             del self.__plugins[Plugins.ColdCircle]
 
+
+    def __sun_pos_enabled(self, register):
+        if register.value == 1 and Plugins.SunPos not in self.__plugins:
+            config = self.__prepare_config("Sun Position", register.base_name)
+            self.__plugins[Plugins.SunPos] = SunPos(config)
+            self.__plugins[Plugins.SunPos].init()
+
+        if register.value == 0 and Plugins.ColdCircle in self.__plugins:
+            self.__plugins[Plugins.SunPos].shutdown()
+            del self.__plugins[Plugins.SunPos]
+
 #endregion
 
 #region Public Methods
@@ -1567,6 +1655,7 @@ class PluginsManager:
         # with open("bgerp_registers.json", "w") as f:
         #     f.write(text)
 
+        # import json
         # ztm_regs = self.__registers.by_source(Source.Zontromat)
         # dict_regs = ztm_regs.to_dict()
         # text = json.dumps(dict_regs, indent=4, sort_keys=True)
