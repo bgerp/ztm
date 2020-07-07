@@ -68,10 +68,10 @@ class bgERP():
     __host = ""
     """Base URI."""
 
-    __api_login = "/api/v1/zone/login" # /bcvt.eu/ztm/Ztm/login
+    __api_login = "/ztm/login" # /bcvt.eu/ztm/Ztm/login
     """Login API call."""
 
-    __api_sync = "/api/v1/zone/sync" # /bcvt.eu/ztm/Ztm/sync
+    __api_sync = "/ztm/sync" # /bcvt.eu/ztm/Ztm/sync
     """Notify bgERP about the zone state API call."""
 
     __timeout = 5
