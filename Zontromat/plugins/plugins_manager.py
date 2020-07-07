@@ -205,6 +205,7 @@ class PluginsManager:
         register.scope = Scope.Global
         register.source = Source.bgERP
         register.update_handler = self.__status_led_enabled
+        # Run the plugin before others.
         register.value = 1
         self.__registers.add(register)
 

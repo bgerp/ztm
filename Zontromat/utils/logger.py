@@ -109,7 +109,7 @@ def get_logger(module_name):
     Returns
     -------
     logger
-        Loggr instance.
+        Logger instance.
     """
 
     global __modules_names

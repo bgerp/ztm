@@ -44,6 +44,8 @@ from data.registers import Registers
 
 from plugins.plugins_manager import PluginsManager
 
+# from controllers.neuron.neuron.read_eeprom
+
 #region File Attributes
 
 __author__ = "Orlin Dimitrov"
@@ -419,7 +421,7 @@ class Zone():
                     # Update the application.
                     self.__update()
 
-                    # If the performance profile is runing stop it affter the cycle.
+                    # If the performance profile is runing stop it after the cycle.
                     if self.__performance_profiler.enable:
                         self.__performance_profiler.enable = False
 

@@ -69,7 +69,7 @@ In this hedging we will describe all the register related to the work of the Zon
 | Exit button, enabled | access_control_1.exit_button.enabled | int | 1 |
 | Exit button, input | access_control_1.exit_button.input | str | "DI0" |
 | Lock mechanism, enabled | access_control_1.lock_mechanism.enabled | str | 1 |
-| Lock mechanism, output | access_control_1.lock_mechanism.output | str | "DO0" |
+| Lock mechanism, output | access_control_1.lock_mechanism.output | str | "DO2" |
 | Lock mechanism, time to open | access_control_1.time_to_open | int | 10 |
 
  - From **Zontromat** to **bgERP**
@@ -98,7 +98,7 @@ In this hedging we will describe all the register related to the work of the Zon
 | Exit button, enabled | access_control_2.exit_button.enabled | int | 1 |
 | Exit button, input | access_control_2.exit_button.input | str | "DI0" |
 | Lock mechanism, enabled | access_control_2.lock_mechanism.enabled | str | 1 |
-| Lock mechanism, output | access_control_2.lock_mechanism.output | str | "DO0" |
+| Lock mechanism, output | access_control_2.lock_mechanism.output | str | "DO2" |
 | Lock mechanism, time to open | access_control_2.time_to_open | Int | 10 |
 
  - From **Zontromat** to **bgERP**
