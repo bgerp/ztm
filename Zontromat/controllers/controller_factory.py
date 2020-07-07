@@ -75,6 +75,10 @@ class ControllerFactory():
                 controller = Neuron(config)
 
         if config["vendor"] == "unipi":
+            if config["model"] == "M523":
+                controller = Neuron(config)
+
+        if config["vendor"] == "unipi":
             if config["model"] == "L503":
                 controller = Neuron(config)
 

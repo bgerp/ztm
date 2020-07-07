@@ -167,6 +167,47 @@ __M503 = \
     "AO4": {"dev": "ao", "major_index": 2, "minor_index": 4},\
 }
 
+__M523 = \
+{\
+    "LED0": {"dev": "led", "major_index": 1, "minor_index": 1},\
+    "LED1": {"dev": "led", "major_index": 1, "minor_index": 2},\
+    "LED2": {"dev": "led", "major_index": 1, "minor_index": 3},\
+    "LED3": {"dev": "led", "major_index": 1, "minor_index": 4},\
+
+    "DI0": {"dev": "di", "major_index": 1, "minor_index": 1},\
+    "DI1": {"dev": "di", "major_index": 1, "minor_index": 2},\
+    "DI2": {"dev": "di", "major_index": 1, "minor_index": 3},\
+    "DI3": {"dev": "di", "major_index": 1, "minor_index": 4},\
+
+    "DI4": {"dev": "di", "major_index": 2, "minor_index": 1},\
+    "DI5": {"dev": "di", "major_index": 2, "minor_index": 2},\
+    "DI6": {"dev": "di", "major_index": 2, "minor_index": 3},\
+    "DI7": {"dev": "di", "major_index": 2, "minor_index": 4},\
+
+    "DO0": {"dev": "do", "major_index": 1, "minor_index": 1},\
+    "DO1": {"dev": "do", "major_index": 1, "minor_index": 2},\
+    "DO2": {"dev": "do", "major_index": 1, "minor_index": 3},\
+    "DO3": {"dev": "do", "major_index": 1, "minor_index": 4},\
+
+    "RO0": {"dev": "relay", "major_index": 2, "minor_index": 1},\
+    "RO1": {"dev": "relay", "major_index": 2, "minor_index": 2},\
+    "RO2": {"dev": "relay", "major_index": 2, "minor_index": 3},\
+    "RO3": {"dev": "relay", "major_index": 2, "minor_index": 4},\
+    "RO4": {"dev": "relay", "major_index": 2, "minor_index": 5},\
+
+    "AI0": {"dev": "ai", "major_index": 1, "minor_index": 1},\
+    "AI1": {"dev": "ai", "major_index": 2, "minor_index": 1},\
+    "AI2": {"dev": "ai", "major_index": 2, "minor_index": 2},\
+    "AI3": {"dev": "ai", "major_index": 2, "minor_index": 3},\
+    "AI4": {"dev": "ai", "major_index": 2, "minor_index": 4},\
+
+    "AO0": {"dev": "ao", "major_index": 1, "minor_index": 1},\
+    "AO1": {"dev": "ao", "major_index": 2, "minor_index": 1},\
+    "AO2": {"dev": "ao", "major_index": 2, "minor_index": 2},\
+    "AO3": {"dev": "ao", "major_index": 2, "minor_index": 3},\
+    "AO4": {"dev": "ao", "major_index": 2, "minor_index": 4},\
+}
+
 __S103 = \
 {\
     "LED0": {"dev": "led", "major_index": 1, "minor_index": 1},\
@@ -213,6 +254,9 @@ def get_map(model):
 
     elif model == "M503":
         io_map = __M503
+
+    elif model == "M523":
+        io_map = __M523
 
     elif model == "S103":
         io_map = __S103
