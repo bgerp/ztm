@@ -114,6 +114,9 @@ class Zone():
 
 #region Attributes
 
+    __app_settings = None
+    """Application settings."""
+
     __zone_state = ZoneState.Idle
     """Zone state."""
 
@@ -170,7 +173,7 @@ class Zone():
         """Init the process."""
 
         # Application settings.
-        app_settings = ApplicationSettings.get_instance()
+        self.__app_settings = ApplicationSettings.get_instance()
 
         # Create logger.
         self.__logger = get_logger(__name__)
@@ -187,24 +190,24 @@ class Zone():
 
         # Create Neuron.
         config = {
-            "vendor": app_settings.get_controller["vendor"],
-            "model":  app_settings.get_controller["model"],
-            "host": app_settings.get_controller["host"],
-            "timeout": app_settings.get_controller["timeout"]
+            "vendor": self.__app_settings.get_controller["vendor"],
+            "model":  self.__app_settings.get_controller["model"],
+            "host": self.__app_settings.get_controller["host"],
+            "timeout": self.__app_settings.get_controller["timeout"]
         }
         self.__controller = ControllerFactory.create(config)
 
         # Create bgERP and login.
-        self.__bgerp = bgERP(app_settings.get_erp_service["host"],\
-            app_settings.get_erp_service["timeout"])
+        self.__bgerp = bgERP(self.__app_settings.get_erp_service["host"],\
+            self.__app_settings.get_erp_service["timeout"])
         self.__erp_service_update_timer = Timer(self.__erp_service_update_rate)
 
         # Set the plugin manager.
         self.__plugin_manager = PluginsManager(self.__registers, self.__controller, self.__bgerp)
 
         # Set the performance profiler.
-        self.__performance_profiler.enable_mem_profile = app_settings.ram_usage
-        self.__performance_profiler.enable_time_profile = app_settings.run_time_usage
+        self.__performance_profiler.enable_mem_profile = self.__app_settings.ram_usage
+        self.__performance_profiler.enable_time_profile = self.__app_settings.run_time_usage
         self.__performance_profiler.on_time_change(self.__on_time_change)
         self.__performance_profiler.on_memory_change(self.__on_memory_change)
 
@@ -281,6 +284,7 @@ class Zone():
             "serial_number": self.__controller.serial_number, \
             "model": self.__controller.model, \
             "version": self.__controller.version, \
+            "config_time": self.__app_settings.get_erp_service["config_time"], \
             # "one_wire": one_wire, \
             # "modbus": modbus, \
         }
@@ -312,6 +316,7 @@ class Zone():
                 - Try several times if result is still unsuccessful reestart the EVOK.
                 - Wait EVOK service to start.
                 - Continue main cycle.
+                - Tell bgERP that the EVOK is not runing.
                 """
 
             message = "Communication lost with EVOK."
@@ -322,15 +327,22 @@ class Zone():
         if self.__erp_service_update_timer.expired:
             self.__erp_service_update_timer.clear()
 
-            ztm_regs = self.__registers.by_source(Source.Zontromat)
-            ztm_regs_dict = ztm_regs.to_dict()
-            update_state = self.__bgerp.sync(ztm_regs_dict)
+            try:
+                ztm_regs = self.__registers.by_source(Source.Zontromat)
+                ztm_regs_dict = ztm_regs.to_dict()
+                update_state = self.__bgerp.sync(ztm_regs_dict)
 
-            if update_state is not None:
-                self.__registers.update(update_state)
+                if update_state is not None:
+                    self.__registers.update(update_state)
 
-            else:
-                self.__zone_state.set_state(ZoneState.Init)
+                else:
+                    pass
+                    # Pass it is not necessary to restart everything.
+                    # self.__zone_state.set_state(ZoneState.Init)
+
+            except Exception as e:
+                self.__logger.error("No connection to the ERP service.")
+                pass
 
     def __shutdown(self):
         """Shutdown procedure."""
