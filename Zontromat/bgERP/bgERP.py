@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 import json
+import time
 
 import requests
 
@@ -68,7 +69,7 @@ class bgERP():
     __host = ""
     """Base URI."""
 
-    __api_login = "/ztm/login" # /bcvt.eu/ztm/Ztm/login
+    __api_login = "/ztm/register" # /bcvt.eu/ztm/Ztm/login
     """Login API call."""
 
     __api_sync = "/ztm/sync" # /bcvt.eu/ztm/Ztm/sync
@@ -85,6 +86,9 @@ class bgERP():
 
     __instance = None
     """Singelton instance."""
+
+    __last_sync = 0
+    """Last sync time."""
 
 #endregion
 
@@ -183,33 +187,39 @@ class bgERP():
 
         if response is not None:
 
+            # Take new login session key.
             if response.status_code == 200:
                 data = response.json()
                 if data is not None:
-                    if "session_id" in data:
-                        self.__session.save(data["session_id"])
+                    if "token" in data:
+                        self.__session.save(data["token"])
                         self.__session.load()
                         login_state = self.__session.session != ""
 
+            # Not authorized.
             elif response.status_code == 403:
                 login_state = False
 
+            # Use saved session key.
             elif response.status_code == 423:
                 self.__session.load()
                 login_state = self.__session.session != ""
+
+            elif response.status_code == 404:
+                login_state = False
 
             else:
                 login_state = False
 
         return login_state
 
-    def sync(self, regs):
-        """Update zone regs.
+    def sync(self, registers):
+        """Update zone registers.
 
         Parameters
         ----------
-        regs : mixed
-            Room regs.
+        registers : mixed
+            Room registers.
 
         Returns
         -------
@@ -218,30 +228,56 @@ class bgERP():
         """
 
         # global STATE
-        # # self.__logger.debug(regs)
+        # # self.__logger.debug(registers)
         # json_state_data = json.loads(STATE)
         # return json_state_data
 
         registers = None
 
+        # URI
         uri = self.host + self.__api_sync
-        payload = {"session_id": self.__session.session, "regs": regs}
-        response = requests.post(uri, data=payload, timeout=self.timeout)
+
+        # Payload
+        payload = {"token": self.__session.session, "registers": registers, "last_sync": self.__last_sync } 
+
+        # Headers
+        headers = {"Content-Type": "application/x-www-form-urlencoded"}
+
+        # The request.
+        response = requests.post(uri, headers=headers, data=payload, timeout=self.timeout)
 
         if response is not None:
 
+            # OK
             if response.status_code == 200:
                 if response.text != "":
+ 
+                    # TODO: Test is ti JSON.
                     registers = json.loads(response.text)
 
+                    # Update last successful time.
+                    self.__last_sync = time.time()
+
+            # Forbidden
             elif response.status_code == 403:
                 registers = None
 
+            # Not found
+            elif response.status_code == 404:
+                registers = None
+
+            # Too Many Requests
             elif response.status_code == 429:
                 registers = None
 
+            # Internal server ERROR
+            elif response.status_code == 500:
+                registers = None
+
+            # Other bad reason
             else:
                 registers = None
+
         else:
             registers = None
 
