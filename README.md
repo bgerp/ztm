@@ -53,3 +53,68 @@ The file is in following format:
 - Affter the configuration is done, place the SD card in to the controller.
 - Power up the cabinet.
 - Power up the controller.
+
+## Redirect bgERP service
+
+### Manual
+
+ - All nacisery settings are placed ni settings.yaml the file is located: **/opt/Zontromat/Zontromat/settings.yaml**.
+
+ - The structure of the file is following:
+
+```yaml
+# Application
+application:
+
+  # CRITICAL 50
+  # ERROR 40
+  # WARNING 30
+  # INFO 20
+  # DEBUG 10
+  # NOTSET 0
+  debug_level: 10
+
+# Hardware
+controller:
+
+  # IP address of the hardware. It will be replaced with 127.0.0.1
+  host: http://localhost:8080
+  timeout: 5
+  vendor: unipi
+  model: M503
+  
+# Remote server.
+erp_service:
+
+  # Remote server host address.
+  host: http://bcvt.eu
+  timeout: 5
+  config_time: 1594203916
+
+```
+This file is auto generated and it is not dependant of version control.
+This means that in moment of generation it will be with its default settings. And if you want to change something, you will be able by simply edit the file with your favorite text editor.
+
+Some of the field are auto generated like "config_time". This field is used for automatic detection when was last time of generating configuration. The field is used mostly of automated methods. In case you want to change it manually we recommend to use:
+
+```sh
+ date +%s
+```
+
+The result of this command will give you a unix time stamp that is made from current local time of the device. The result looks like this: **1594203916**
+
+Sfter finisihngup replacment of the settings, please restart the service, to apply the new settings. This is done by typing in terminal
+
+```sh
+sudo systemctl restart zontromat.service
+```
+
+### With flash disc drive
+
+This procedure alow maintainer to change the domains and settings of the Zontromat software by inserting flash disc drive in to the USB port of the controller.
+
+ - After powering up the controller insert properly set flash disc in to the USB of the controller.
+ - The controller software will take settings from the flash disc drive and replace the old one with this on in the USB drive.
+ - After replacing the settings Zontromat service will be automatically restarted. This means that after restart new settings will take in mind.
+ - Remove the USB disc drive.
+
