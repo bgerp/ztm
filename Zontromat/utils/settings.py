@@ -140,6 +140,7 @@ class ApplicationSettings():
         str
             Host name of the Neuron.
         """
+
         return self.__settings["erp_service"]
 
     @property

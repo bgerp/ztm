@@ -23,7 +23,7 @@ echo "  master: 176.33.1.15" >> /etc/salt/minion
 echo "  id: $UNIQUE_ID" >> /etc/salt/minion
 
 systemctl enable salt-minion
-
+sh generate_settings.sh
 #Set timezone
 timedatectl set-timezone Europe/Sofia
 
