@@ -114,7 +114,13 @@ class bgERP():
         host : str
             Host URL of the servie.
         """
-        self.__host = host
+
+        host_no_slash = host
+
+        if host_no_slash.endswith("/"):
+            host_no_slash = host_no_slash.replace('.*/','')
+
+        self.__host = host_no_slash
 
     @property
     def timeout(self):
@@ -154,6 +160,8 @@ class bgERP():
         timeout : int
             Connection timeout.
         """
+
+
 
         self.host = host
         self.timeout = timeout
