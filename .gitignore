@@ -152,6 +152,6 @@ session.txt
 ### Settings
 ### Settings for the application
 Zontromat/settings.yaml
-
+settings.yaml
 
 # End of https://www.gitignore.io/api/python,visualstudiocode
