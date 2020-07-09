@@ -118,3 +118,49 @@ This procedure alow maintainer to change the domains and settings of the Zontrom
  - After replacing the settings Zontromat service will be automatically restarted. This means that after restart new settings will take in mind.
  - Remove the USB disc drive.
 
+## Logs
+
+1. Log content
+
+In this head we will describe where to find logs of the Zontromat software.
+Log files are automatically generate files by the Zontromat software.
+The files has the following format:
+
+```log
+2020-07-09 09:33:42,646	INFO	__main__	Starting
+2020-07-09 09:33:42,649	INFO	plugins.status_led.status_led	Starting up the plugins.status_led.status_led with name Status LED
+2020-07-09 09:33:42,654	INFO	zone	Zone state: ZoneState.Init
+```
+
+ - The first segment is date and time of the event: **2020-07-09 09:33:42,646**
+ - The Second segment is level of the log of the event: **INFO**
+ - The Third segment is the message source: **__main__**
+(In this case name of the module.)
+ - And the fourth segment is the actual message: **Starting**
+
+2. Log location
+
+The log files are located at: **/opt/Zontromat/Zontromat/logs**
+
+3. Log name
+
+The name of the file is formatted by the following way: **YYYYMMDD.log**
+Example: **20200709.log**
+
+4. Log level
+
+The level of logging is placed in the setting.yaml described in the previous head. In segment "application->debug_level" it can be changed.
+
+Example:
+
+```yaml
+application:
+
+  # CRITICAL 50
+  # ERROR 40
+  # WARNING 30
+  # INFO 20
+  # DEBUG 10
+  # NOTSET 0
+  debug_level: 10
+```
