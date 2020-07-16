@@ -24,6 +24,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from data.register import Register
 
+from utils.logger import get_logger
+
 #region File Attributes
 
 __author__ = "Orlin Dimitrov"
@@ -63,6 +65,9 @@ class Registers:
     __instance = None
     """Singelton instance."""
 
+    __logger = None
+    """Logger"""
+
 #endregion
 
 #region Constructor
@@ -77,6 +82,9 @@ class Registers:
         """
 
         self.__container = []
+
+        # Create logger.
+        self.__logger = get_logger(__name__)
 
 #endregion
 
@@ -108,7 +116,6 @@ class Registers:
         if registers is None:
             raise ValueError("Registers can not be None.")
 
-        bad_regs = Registers()
         # Go through registers.
         for name in registers:
 
@@ -123,7 +130,8 @@ class Registers:
             else:
                 register = Register(name)
                 register.value = registers[name]
-                bad_regs.add(register)
+                self.add(register)
+                self.__logger.warning("Add automatically new register \"{}\"".format(name))
 
     def add(self, register):
         """Add register.
