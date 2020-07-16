@@ -113,6 +113,7 @@ class WDTTablet(BasePlugin):
 
         # Create logger.
         self.__logger = get_logger(__name__)
+        self.__logger.info("Starting up the {}".format(self.name))
 
         # Get time to open the latch.
         if "pulse_time" in self._config:
@@ -157,6 +158,7 @@ class WDTTablet(BasePlugin):
 
     def shutdown(self):
 
+        self.__logger.info("Shutting down the {}".format(self.name))
         self.__set_output(0)
 
     def get_state(self):

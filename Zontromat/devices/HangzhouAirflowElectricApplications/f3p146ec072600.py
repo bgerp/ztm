@@ -59,7 +59,7 @@ __status__ = "Debug"
 #endregion
 
 class F3P146EC072600(BaseDevice):
-    """FAN"""
+    """Model: F3P146-EC072-600"""
 
 #region Attributes
 

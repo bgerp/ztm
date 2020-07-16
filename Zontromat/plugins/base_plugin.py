@@ -68,6 +68,8 @@ class BasePlugin(Configuarable):
 
 #endregion
 
+#region Constructor
+
     def __init__(self, config):
         super().__init__(config)
 
@@ -75,6 +77,8 @@ class BasePlugin(Configuarable):
         self._registers = config["registers"]
         self._controller = config["controller"]
         self._erp_service = config["erp_service"]
+
+#endregion
 
 #region Public Methods
 

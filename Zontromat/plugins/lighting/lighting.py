@@ -213,7 +213,7 @@ class Lighting(BasePlugin):
         """Init the Lighting."""
 
         self.__logger = get_logger(__name__)
-        self.__logger.info("Starting up the {} with name {}".format(__name__, self.name))
+        self.__logger.info("Starting up the {}".format(self.name))
 
         self.__set_voltages(0, 0)
 
@@ -261,7 +261,7 @@ class Lighting(BasePlugin):
     def shutdown(self):
         """Shutting down the lights."""
 
-        self.__logger.info("Shutting down the {} with name {}".format(__name__, self.name))
+        self.__logger.info("Shutting down the {}".format(self.name))
         self.__set_voltages(0, 0)
 
     def get_state(self):

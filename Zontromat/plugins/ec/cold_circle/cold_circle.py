@@ -153,7 +153,7 @@ class ColdCircle(BasePlugin):
         """Init the HVAC."""
 
         self.__logger = get_logger(__name__)
-        self.__logger.info("Starting up the {} with name {}".format(__name__, self.name))
+        self.__logger.info("Starting up the {}".format(self.name))
 
         self.__temp_proc = TemperatureProcessor()
 
@@ -206,6 +206,6 @@ class ColdCircle(BasePlugin):
     def shutdown(self):
         """ Shutting down the HVAC. """
 
-        self.__logger.info("Shutting down the {} with name {}".format(__name__, self.name))
+        self.__logger.info("Shutting down the {}".format(self.name))
 
 #endregion

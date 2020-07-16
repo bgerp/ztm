@@ -93,7 +93,7 @@ class StatusLed(BasePlugin):
     def init(self):
 
         self.__logger = get_logger(__name__)
-        self.__logger.info("Starting up the {} with name {}".format(__name__, self.name))
+        self.__logger.info("Starting up the {}".format(self.name))
 
         self.__blink_timer = Timer(1)
 
@@ -123,6 +123,6 @@ class StatusLed(BasePlugin):
     def shutdown(self):
 
         self._controller.set_led(self.__output, 0)
-        self.__logger.info("Shutting down the {} with name {}".format(__name__, self.name))
+        self.__logger.info("Shutting down the {}".format(self.name))
 
 #endregion

@@ -177,7 +177,7 @@ class HotCircle(BasePlugin):
         """Init the Hot circle."""
 
         self.__logger = get_logger(__name__)
-        self.__logger.info("Starting up the {} with name {}".format(__name__, self.name))
+        self.__logger.info("Starting up the {}".format(self.name))
 
         self.__update_timer = Timer(self.__update_rate)
 
@@ -233,6 +233,6 @@ class HotCircle(BasePlugin):
     def shutdown(self):
         """ Shutting down the HVAC. """
 
-        self.__logger.info("Shutting down the {} with name {}".format(__name__, self.name))
+        self.__logger.info("Shutting down the {}".format(self.name))
 
 #endregion

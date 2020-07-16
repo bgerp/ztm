@@ -58,25 +58,25 @@ In this hedging we will describe all the register related to the work of the Zon
 
 | Purpose | Register | Type | Value |
 |----------|:-------------|:------|:------|
-| Allowed attendees cards IDs. | access_control_1.allowed_attendees | Array | ["445E6046010080FF"] |
-| Card reader, enabled | "access_control_1.card_reader.enabled" | int | 1 |
-| Card reader model | access_control_1.card_reader.model | str | "act230" |
-| Card reader, port, baud rate | access_control_1.card_reader.port.baudrate | int | 9600 |
-| Card reader, port, name | access_control_1.card_reader.port.name | str | COM4 |
-| Card reader, serial number | access_control_1.card_reader.serial_number | str | "2897" |
-| Card reader, vendor | access_control_1.card_reader.vendor | int | "TERACOM" |
-| Card reader, enabled | access_control_1.enabled | int | 1 |
-| Exit button, enabled | access_control_1.exit_button.enabled | int | 1 |
-| Exit button, input | access_control_1.exit_button.input | str | "DI0" |
-| Lock mechanism, enabled | access_control_1.lock_mechanism.enabled | str | 1 |
-| Lock mechanism, output | access_control_1.lock_mechanism.output | str | "DO2" |
-| Lock mechanism, time to open | access_control_1.time_to_open | int | 10 |
+| Allowed attendees cards IDs. | ac1.allowed_attendees | Array | ["445E6046010080FF"] |
+| Card reader, enabled | ac1.card_reader.enabled | int | 1 |
+| Card reader model | ac1.card_reader.model | str | "act230" |
+| Card reader, port, baud rate | ac1.card_reader.port.baudrate | int | 9600 |
+| Card reader, port, name | ac1.card_reader.port.name | str | COM4 |
+| Card reader, serial number | ac1.card_reader.serial_number | str | "2897" |
+| Card reader, vendor | ac1.card_reader.vendor | int | "TERACOM" |
+| Card reader, enabled | ac1.enabled | int | 1 |
+| Exit button, enabled | ac1.exit_button.enabled | int | 1 |
+| Exit button, input | ac1.exit_button.input | str | "DI0" |
+| Lock mechanism, enabled | ac1.lock_mechanism.enabled | str | 1 |
+| Lock mechanism, output | ac1.lock_mechanism.output | str | "DO2" |
+| Lock mechanism, time to open | ac1.time_to_open | int | 10 |
 
  - From **Zontromat** to **bgERP**
 
 | Purpose | Register | Type | Value |
 |----------|:-------------|:------|:------|
-| Next attendance | access_control_1.next_attendance | --- | null |
+| Next attendance | ac1.next_attendance | --- | null |
 
 
 ## Access Control 2
@@ -87,25 +87,25 @@ In this hedging we will describe all the register related to the work of the Zon
 
 | Purpose | Register | Type | Value |
 |----------|:-------------|:------|:------|
-| Allowed attendees cards IDs. | access_control_2.allowed_attendees | Array | ["445E6046010080FF"] |
-| Card reader, enabled | "access_control_2.card_reader.enabled" | int | 1 |
-| Card reader model | access_control_2.card_reader.model | str | "act230" |
-| Card reader, port, baud rate | access_control_2.card_reader.port.baudrate | int | 9600 |
-| Card reader, port, name | access_control_2.card_reader.port.name | str | COM5 |
-| Card reader, serial number | access_control_2.card_reader.serial_number | str | "2911" |
-| Card reader, vendor | access_control_2.card_reader.vendor | int | "TERACOM" |
-| Card reader, enabled | access_control_2.enabled | int | 1 |
-| Exit button, enabled | access_control_2.exit_button.enabled | int | 1 |
-| Exit button, input | access_control_2.exit_button.input | str | "DI0" |
-| Lock mechanism, enabled | access_control_2.lock_mechanism.enabled | str | 1 |
-| Lock mechanism, output | access_control_2.lock_mechanism.output | str | "DO2" |
-| Lock mechanism, time to open | access_control_2.time_to_open | Int | 10 |
+| Allowed attendees cards IDs. | ac2.allowed_attendees | Array | ["445E6046010080FF"] |
+| Card reader, enabled | ac2.card_reader.enabled | int | 1 |
+| Card reader model | ac2.card_reader.model | str | "act230" |
+| Card reader, port, baud rate | ac2.card_reader.port.baudrate | int | 9600 |
+| Card reader, port, name | ac2.card_reader.port.name | str | COM5 |
+| Card reader, serial number | ac2.card_reader.serial_number | str | "2911" |
+| Card reader, vendor | ac2.card_reader.vendor | int | "TERACOM" |
+| Card reader, enabled | ac2.enabled | int | 1 |
+| Exit button, enabled | ac2.exit_button.enabled | int | 1 |
+| Exit button, input | ac2.exit_button.input | str | "DI0" |
+| Lock mechanism, enabled | ac2.lock_mechanism.enabled | str | 1 |
+| Lock mechanism, output | ac2.lock_mechanism.output | str | "DO2" |
+| Lock mechanism, time to open | ac2.time_to_open | Int | 10 |
 
  - From **Zontromat** to **bgERP**
 
 | Purpose | Register | Type | Value |
 |----------|:-------------|:------|:------|
-| Next attendance | access_control_2.next_attendance | --- | null |
+| Next attendance | ac2.next_attendance | --- | null |
 
 
 ## Anti Tampering
@@ -116,14 +116,14 @@ In this hedging we will describe all the register related to the work of the Zon
 
 | Purpose | Register | Type | Value |
 |----------|:-------------|:------|:------|
-| Enabled | anti_tampering.enabled | Int | 0 |
-| Signal input | anti_tampering.input | str | "DI1" |
+| Enabled | at.enabled | Int | 0 |
+| Signal input | at.input | str | "DI1" |
 
  - From **Zontromat** to **bgERP**
 
 | Purpose | Register | Type | Value |
 |----------|:-------------|:------|:------|
-| State | anti_tampering.state | Int | 0 |
+| State | at.state | Int | 0 |
 
 
 ## Blinds
@@ -157,15 +157,15 @@ None
 
 | Purpose | Register | Type | Value |
 |----------|:-------------|:------|:------|
-|  | cold_circle.enabled | int | 0 |
-|  | cold_water_fm.input | str | "DI6" |
-|  | cold_water_fm.tpl | int | 10 |
+|  | cwf.enabled | int | 0 |
+|  | cwf.input | str | "DI6" |
+|  | cwf.tpl | int | 10 |
 
  - From **Zontromat** to **bgERP**
 
 | Purpose | Register | Type | Value |
 |----------|:-------------|:------|:------|
-| Cold water liters | cold_water_fm.value | int | 0 |
+| Cold water liters | cwf.value | int | 0 |
 
 ## Hot drink water
 
@@ -175,15 +175,15 @@ None
 
 | Purpose | Register | Type | Value |
 |----------|:-------------|:------|:------|
-|  | hot_circle.enabled | int | 0 |
-|  | hot_water_fm.input | str | "DI7" |
-|  | hot_water_fm.tpl | int | 10 |
+|  | hwf.enabled | int | 0 |
+|  | hwf.input | str | "DI7" |
+|  | hwf.tpl | int | 10 |
 
  - From **Zontromat** to **bgERP**
 
 | Purpose | Register | Type | Value |
 |----------|:-------------|:------|:------|
-| Hot water liters | hot_water_fm.value | int | 0 |
+| Hot water liters | hwf.value | int | 0 |
 
 
 ## Door closed
@@ -194,14 +194,14 @@ None
 
 | Purpose | Register | Type | Value |
 |----------|:-------------|:------|:------|
-| Enabled | door_closed.enabled | int | 0 |
-| Door tamper signal | door_closed.input | str | "DI2" |
+| Enabled | dc.enabled | int | 0 |
+| Door tamper signal | dc.input | str | "DI2" |
 
  - From **Zontromat** to **bgERP**
 
 | Purpose | Register | Type | Value |
 |----------|:-------------|:------|:------|
-| State | door_closed.state | Int | 0 |
+| State | dc.state | Int | 0 |
 
 ## General
 
@@ -215,8 +215,8 @@ None
 
 | Purpose | Register | Type | Value |
 |----------|:-------------|:------|:------|
-| Reported liters for the last reporting period. | general.cold_water_fm.leak | float | 0 |
-| Reported liters for the last reporting period. | general.hot_water_fm.leak | float | | 0 |
+| Reported liters for the last reporting period. | general.cwf.leak | float | 0 |
+| Reported liters for the last reporting period. | general.hwf.leak | float | | 0 |
 | Is the zone empty. | general.is_empty | int | 0 |
 | Time since empty. | general.is_empty_timeout | int | 0 |
 
@@ -385,17 +385,17 @@ None
 
 | Purpose | Register | Type | Value |
 |----------|:-------------|:------|:------|
-| Enabled | pir_detector.enabled | int |0 |
-| Signal input | pir_detector.input | str | "DI0" |
+| Enabled | pd.enabled | int |0 |
+| Signal input | pd.input | str | "DI0" |
 
  - From **Zontromat** to **bgERP**
 
 | Purpose | Register | Type | Value |
 |----------|:-------------|:------|:------|
-| State | pir_detector.state | Int | 0 |
+| State | pd.state | Int | 0 |
 
 
-## Self current
+## Self consumption
 
 ### Registers
 
@@ -403,19 +403,19 @@ None
 
 | Purpose | Register | Type | Value |
 |----------|:-------------|:------|:------|
-| Enabled | self_current.enabled | int | 0 |
-| Power analyser MODBUS ID | self_current.sub_dev.dev_id | int | 2 |
-| Power analyser model name | self_current.sub_dev.model | str | "SDM120" |
-| Power analyser UART name | self_current.sub_dev.uart | int | 1 |
-| Power analyser vendor name | self_current.sub_dev.vendor | str | "Eastron" |
+| Enabled | sc.enabled | int | 0 |
+| Power analyser MODBUS ID | sc.sub_dev.dev_id | int | 2 |
+| Power analyser model name | sc.sub_dev.model | str | "SDM120" |
+| Power analyser UART name | sc.sub_dev.uart | int | 1 |
+| Power analyser vendor name | sc.sub_dev.vendor | str | "Eastron" |
 
  - From **Zontromat** to **bgERP**
 
 | Purpose | Register | Type | Value |
 |----------|:-------------|:------|:------|
-| Drained current of the room | self_current.sub_dev.current.value | float | 0.098 |
-| Drained power of the room | self_current.sub_dev.current_power.value | float | 17.029 |
-| Total consumed energy | self_current.sub_dev.total_energy.value | float | 0.18 |
+| Drained current of the room | sc.sub_dev.current.value | float | 0.098 |
+| Drained power of the room | sc.sub_dev.current_power.value | float | 17.029 |
+| Total consumed energy | sc.sub_dev.total_energy.value | float | 0.18 |
 
 ## Self
 
@@ -442,9 +442,9 @@ None
 
 | Purpose | Register | Type | Value |
 |----------|:-------------|:------|:------|
-| Blink time | status_led.blink_time | int | 1 |
-| Enabled | status_led.enabled | int |1 |
-| Signal output | status_led.output | str | "LED0" |
+| Blink time | sl.blink_time | int | 1 |
+| Enabled | sl.enabled | int |1 |
+| Signal output | sl.output | str | "LED0" |
 
  - From **Zontromat** to **bgERP**
 
@@ -459,7 +459,7 @@ None
 
 | Purpose | Register | Type | Value |
 |----------|:-------------|:------|:------|
-| Enabled | sun_pos.enabled | int | 1 |
+| Enabled | sp.enabled | int | 1 |
 
  - From **Zontromat** to **bgERP**
 
@@ -474,16 +474,16 @@ None
 
 | Purpose | Register | Type | Value |
 |----------|:-------------|:------|:------|
-| DEPRECATED | wdt_tablet.enabled | int | 0 |
-| DEPRECATED | wdt_tablet.output | str | "DO3" |
-| DEPRECATED | wdt_tablet.pulse_time | int | 10 |
-| DEPRECATED | wdt_tablet.reset | int | 0 |
+| DEPRECATED | wt.enabled | int | 0 |
+| DEPRECATED | wt.output | str | "DO3" |
+| DEPRECATED | wt.pulse_time | int | 10 |
+| DEPRECATED | wt.reset | int | 0 |
 
  - From **Zontromat** to **bgERP**
 
 | Purpose | Register | Type | Value |
 |----------|:-------------|:------|:------|
-| DEPRECATED | wdt_tablet.state | int | 0 |
+| DEPRECATED | wt.state | int | 0 |
 
 WILL BE DEPRECATED
 
@@ -495,11 +495,11 @@ WILL BE DEPRECATED
 
 | Purpose | Register | Type | Value |
 |----------|:-------------|:------|:------|
-| Enabled | window_closed.enabled | int | 0 |
-| Signal input | window_closed.input | str | "!DI3" |
+| Enabled | wc.enabled | int | 0 |
+| Signal input | wc.input | str | "!DI3" |
 
  - From **Zontromat** to **bgERP**
 
 | Purpose | Register | Type | Value |
 |----------|:-------------|:------|:------|
-| State | window_closed.state | Int | 0 |
+| State | wc.state | Int | 0 |

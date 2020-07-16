@@ -135,7 +135,7 @@ class ElectricalPerformance:
 
         current_power = 0
 
-        register = self.__registers.by_name("self_current.sub_dev.current_power")
+        register = self.__registers.by_name("sc.sub_dev.current_power")
         if register is not None:
             current_power = register.value
 

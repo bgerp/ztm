@@ -111,7 +111,6 @@ class AccessControll(BasePlugin):
     __open_timer = None
     """Open timer."""
 
-
     __lock_mechanism_enabled = False
     """Lock mechanism enabled."""
 
@@ -139,19 +138,6 @@ class AccessControll(BasePlugin):
 
 #region Private Methods
 
-    def __get_button(self):
-
-        state = 0
-
-        if self.__exit_button_enabled:
-            state = self._controller.digital_read(self.__exit_button_input)
-
-        return state
-
-    def __set_latch(self, value=0):
-        if self.__lock_mechanism_enabled:
-            self._controller.digital_write(self.__lock_mechanism_output, value)
-
     def __create_record(self, card_id):
 
         # Set flag to open the door.
@@ -162,8 +148,8 @@ class AccessControll(BasePlugin):
 
         # Create a record.
         record = { \
-            "time": time.time(), \
-            "parameters": { \
+            "ts": time.time(), \
+            "params": { \
                 "card_id": card_id, \
                 "reader_id": self.__card_reader.reader_id, \
             } \
@@ -175,15 +161,6 @@ class AccessControll(BasePlugin):
         else:
             self.__logger.debug("Received ID: {}".format(record))
             self.__cards_queue.put(record)
-
-    def __time_to_open_cb(self, register):
-        self.__open_timer.expiration_time = register.value
-
-    def __exit_button_enabled_cb(self, register):
-        self.__exit_button_enabled = register.value
-
-    def __exit_button_input_cb(self, register):
-        self.__exit_button_enabled = register.value
 
     def __card_reader_enabled_cb(self, register):
 
@@ -211,7 +188,7 @@ class AccessControll(BasePlugin):
                     # Create card reader.
                     self.__card_reader = ACT230(reader_config)
                     if self.__card_reader.reader_state is ReaderState.NONE:
-                        self.__card_reader.cb_readed_card(self.__create_record)
+                        self.__card_reader.cb_read_card(self.__create_record)
                         self.__card_reader.start()
 
         elif register.value == 0 and self.__card_reader is not None:
@@ -222,20 +199,38 @@ class AccessControll(BasePlugin):
 
             del self.__card_reader
 
+
+    def __exit_button_enabled_cb(self, register):
+        self.__exit_button_enabled = register.value
+
+    def __exit_button_input_cb(self, register):
+        self.__exit_button_input = register.value
+
+    def __exit_btn_state(self):
+
+        state = 0
+
+        if self.__exit_button_enabled:
+            state = self._controller.digital_read(self.__exit_button_input)
+
+        return state
+
+
     def __lock_mechanism_enabled_cb(self, register):
         self.__lock_mechanism_enabled = register.value
 
     def __lock_mechanism_output_cb(self, register):
         self.__lock_mechanism_output = register.value
 
-    def __allowed_attendees_cb(self, register):
-        self.add_allowed_card_ids(register.value)
+    def __set_lock_mechanism(self, value=0):
+        if self.__lock_mechanism_enabled:
+            self._controller.digital_write(self.__lock_mechanism_output, value)
 
-#endregion
+    def __time_to_open_cb(self, register):
+        self.__open_timer.expiration_time = register.value
 
-#region Public Methods
 
-    def add_allowed_card_id(self, card_id):
+    def __add_allowed_card_id(self, card_id):
         """Add allowed card ID.
 
         Parameters
@@ -257,7 +252,7 @@ class AccessControll(BasePlugin):
         else:
             self.__allowed_card_ids.append(card_id)
 
-    def add_allowed_card_ids(self, ids):
+    def __add_allowed_card_ids(self, ids):
         """Add allowed cards IDs.
 
         Parameters
@@ -273,13 +268,20 @@ class AccessControll(BasePlugin):
         self.__allowed_card_ids.clear()
 
         for card_id in ids:
-            self.add_allowed_card_id(card_id)
+            self.__add_allowed_card_id(card_id)
+
+    def __allowed_attendees_cb(self, register):
+        self.__add_allowed_card_ids(register.value)
+
+#endregion
+
+#region Public Methods
 
     def init(self):
 
         # Create logger.
         self.__logger = get_logger(__name__)
-        self.__logger.info("Starting up the {} with name {}".format(__name__, self.name))
+        self.__logger.info("Starting up the {}".format(self.name))
 
         # Create queue for the card.
         self.__cards_queue = queue.Queue(self.__cards_queue_size)
@@ -326,36 +328,35 @@ class AccessControll(BasePlugin):
 
     def update(self):
 
-        if self.__card_reader is None:
-            return
+        # Check the card reader.
+        if self.__card_reader is not None:
 
-        # Update crad reader.
-        self.__card_reader.update()
+            # Update crad reader.
+            self.__card_reader.update()
 
-        if self.__card_reader.reader_state == ReaderState.STOP:
-            self.__logger.warning("Card reader {}; State {}; Port {}."\
-                .format(self.__card_reader.reader_id, \
-                        self.__card_reader.reader_state, \
-                        self.__card_reader.port_name))
+            if self.__card_reader.reader_state == ReaderState.STOP:
+                self.__logger.warning("Card reader {}; State {}; Port {}."\
+                    .format(self.__card_reader.reader_id, \
+                            self.__card_reader.reader_state, \
+                            self.__card_reader.port_name))
 
-            self.__card_reader.start()
+                self.__card_reader.start()
 
-        if self.__card_reader.reader_state == ReaderState.NONE:
-            self.__logger.warning("Card reader {}; State {}."\
-                .format(self.__card_reader.reader_id, self.__card_reader.reader_state))
+            if self.__card_reader.reader_state == ReaderState.NONE:
+                self.__logger.warning("Card reader {}; State {}."\
+                    .format(self.__card_reader.reader_id, self.__card_reader.reader_state))
 
-            self.__card_reader.start()
+                self.__card_reader.start()
 
         # Check if the button is pressed.
-        btn_value = self.__get_button()
+        btn_value = self.__exit_btn_state()
         if btn_value == 1:
-
             if self.__open_door_flag == 0:
                 self.__open_door_flag = 1
 
-        # Check if the flag is raiced.
+        # Check if the flag is raise.
         if self.__open_door_flag == 1:
-            self.__set_latch(1)
+            self.__set_lock_mechanism(1)
             self.__open_timer.update_last_time()
             self.__open_door_flag = 0
             self.__free_to_lock = 1
@@ -368,9 +369,11 @@ class AccessControll(BasePlugin):
                 self.__open_timer.clear()
 
                 if self.__free_to_lock == 1:
-                    self.__set_latch(0)
+                    self.__set_lock_mechanism(0)
                     self.__free_to_lock = 0
 
+        # If the queue is not empty,
+        # take first and send it to the ERP service.
         if self.__cards_queue.empty() is not True:
 
             if self.__registrator_state.is_state(RegistratorState.GetFromQue):
@@ -380,19 +383,20 @@ class AccessControll(BasePlugin):
             if self.__registrator_state.is_state(RegistratorState.Send):
                 # Send event to the ERP service.
                 rec = [self.__first_queue_record]
-                sucessfull = self._erp_service.sync(rec)
+                successful = self._erp_service.sync(rec)
 
-                if sucessfull is not None:
+                if successful is not None:
                     self.__logger.debug("Send ID: {}".format(self.__first_queue_record))
                     self.__registrator_state.set_state(RegistratorState.GetFromQue)
 
     def shutdown(self):
         """Shutting down the reader."""
 
-        self.__logger.info("Shutting down the {} with name {}".format(__name__, self.name))
+        self.__logger.info("Shutting down the {}".format(self.name))
 
-        self.__set_latch(0)
+        self.__set_lock_mechanism(0)
 
+        # Destroy the cardreader.
         if self.__card_reader is not None:
             self.__card_reader.stop()
 

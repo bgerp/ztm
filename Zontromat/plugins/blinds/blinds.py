@@ -260,7 +260,7 @@ class Blinds(BasePlugin):
     def init(self):
 
         self.__logger = get_logger(__name__)
-        self.__logger.info("Starting up the {} with name {}".format(__name__, self.name))
+        self.__logger.info("Starting up the {}".format(self.name))
 
         self.__blinds_state = StateMachine(BlindsState.Wait)
 
@@ -440,7 +440,7 @@ class Blinds(BasePlugin):
     def shutdown(self):
         """Shutting down the blinds."""
 
-        self.__logger.info("Shutting down the {} with name {}".format(__name__, self.name))
+        self.__logger.info("Shutting down the {}".format(self.name))
         self.__stop()
 
 #endregion

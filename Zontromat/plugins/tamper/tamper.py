@@ -87,7 +87,7 @@ class Tamper(BasePlugin):
             self.__input = input_pin.value
 
         self.__logger = get_logger(__name__)
-        self.__logger.info("Starting up the {} with name {}".format(__name__, self.name))
+        self.__logger.info("Starting up the {}".format(self.name))
 
     def update(self):
         """Update the flowmeter value."""
@@ -98,7 +98,7 @@ class Tamper(BasePlugin):
     def shutdown(self):
         """Shutdown the tamper."""
 
-        self.__logger.info("Shutting down the {} with name {}".format(__name__, self.name))
+        self.__logger.info("Shutting down the {}".format(self.name))
 
 
 #endregion

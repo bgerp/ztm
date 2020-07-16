@@ -80,8 +80,8 @@ class ACT230(BaseDevice):
     __port = None
     """Actual serial port."""
 
-    __cb_readed_card = None
-    """Readed card callback."""
+    __cb_read_card = None
+    """Read card callback."""
 
     __card_number_len = 16
     """RFID number length."""
@@ -154,7 +154,7 @@ class ACT230(BaseDevice):
 
 #region Public Methods
 
-    def cb_readed_card(self, callback):
+    def cb_read_card(self, callback):
         """Add the card reader callback when card is inserted.
 
         Parameters
@@ -166,7 +166,7 @@ class ACT230(BaseDevice):
         if callback is None:
             raise ValueError("Callback can not be None.")
 
-        self.__cb_readed_card = callback
+        self.__cb_read_card = callback
 
     def stop(self):
         """Stop the reader."""
@@ -222,7 +222,7 @@ class ACT230(BaseDevice):
         # Run
         elif self.__reader_state == ReaderState.RUN:
             try:
-                if self.__cb_readed_card is not None:
+                if self.__cb_read_card is not None:
                     frame = None
 
                     size = self.__port.inWaiting()
@@ -232,7 +232,7 @@ class ACT230(BaseDevice):
                         frame = frame.decode("utf-8")
                         frame = frame.replace('\r', '').replace('\n', '').replace('?', '')
                         if len(frame) == self.__card_number_len:
-                            self.__cb_readed_card(frame)
+                            self.__cb_read_card(frame)
 
             except Exception:
                 self.stop()

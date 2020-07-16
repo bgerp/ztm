@@ -8,11 +8,11 @@ This zones are aka Rooms/Offices/Spaces.
 
 The application is provoking communication with specified server of bgERP.
 Server is responsible to give configuration and parameters to this app,
-immediately the application starts to control the choosen zones.
+immediately the application starts to control the chosen zones.
 
 The main hardware controller behind this app is [UniPi Neuron M503](https://www.unipi.technology/unipi-neuron-m503-p104).
 
-Software that is runnig on the controller is [Evok](https://www.unipi.technology/products/evok-47)
+Software that is running on the controller is [Evok](https://www.unipi.technology/products/evok-47)
 
 ## Limitations
 
@@ -21,9 +21,9 @@ Software that is runnig on the controller is [Evok](https://www.unipi.technology
 
 ## Compatible Hardware
 
-- Neuron S/M/L serias.
+- Neuron S/M/L series.
 
-Note: Any other hardware will be suported on demand. If any other hardware is needed to be suported there is a speciffic HAL that enables that.
+Note: Any other hardware will be supported on demand. If any other hardware is needed to be supported there is a specific HAL that enables that.
 
 ## License
 
@@ -39,18 +39,18 @@ This code is released under the [GPL3](https://www.gnu.org/licenses/gpl-3.0.html
 2. Configuring automatic update.
 
     Before put the SD card in the controller.
-Open the FAT parttion and change the **/boot/zontromat.conf**.
+Open the FAT partition and change the **/boot/zontromat.conf**.
 The file is in following format:
 
         master_ip=your.salt.domain
         minion_id=random
 
  - master_ip is the IP address or domain of the SALT server.
- - minion_id is the ID of the controller. If it is left at random it takes a random string for ID. If you specifie something else, the ID is set ot specified string by the admin.
+ - minion_id is the ID of the controller. If it is left at random it takes a random string for ID. If you specifies something else, the ID is set ot specified string by the admin.
 
- 3. Runing the application:
+ 3. Running the application:
 
-- Affter the configuration is done, place the SD card in to the controller.
+- After the configuration is done, place the SD card in to the controller.
 - Power up the cabinet.
 - Power up the controller.
 
@@ -58,7 +58,7 @@ The file is in following format:
 
 ### Manual
 
- - All nacisery settings are placed ni settings.yaml the file is located: **/opt/Zontromat/Zontromat/settings.yaml**.
+ - All necessary settings are placed ni settings.yaml the file is located: **/opt/Zontromat/Zontromat/settings.yaml**.
 
  - The structure of the file is following:
 
@@ -103,7 +103,7 @@ Some of the field are auto generated like "config_time". This field is used for 
 
 The result of this command will give you a unix time stamp that is made from current local time of the device. The result looks like this: **1594203916**
 
-Sfter finisihngup replacment of the settings, please restart the service, to apply the new settings. This is done by typing in terminal
+After finishing up replacement of the settings, please restart the service, to apply the new settings. This is done by typing in terminal
 
 ```sh
 sudo systemctl restart zontromat.service
@@ -128,7 +128,7 @@ The files has the following format:
 
 ```log
 2020-07-09 09:33:42,646	INFO	__main__	Starting
-2020-07-09 09:33:42,649	INFO	plugins.status_led.status_led	Starting up the plugins.status_led.status_led with name Status LED
+2020-07-09 09:33:42,649	INFO	plugins.status_led.status_led	Starting up the Status LED
 2020-07-09 09:33:42,654	INFO	zone	Zone state: ZoneState.Init
 ```
 

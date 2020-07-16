@@ -97,7 +97,7 @@ class PowerMeter(BasePlugin):
     def init(self):
 
         self.__logger = get_logger(__name__)
-        self.__logger.info("Starting up the {} with name {}".format(__name__, self.name))
+        self.__logger.info("Starting up the {}".format(self.name))
 
         uart = self._registers.by_name(self._key + ".sub_dev.uart")
         if uart is not None:
@@ -149,17 +149,18 @@ class PowerMeter(BasePlugin):
         if  isinstance(self.__power_meter, SDM120):
 
             # Update parameters in the registers.
-            self._registers.by_name("self_current.sub_dev.current.value").value\
+            self._registers.by_name("sc.sub_dev.current.value").value\
                 = self.__parameters_values["Current"]
 
-            self._registers.by_name("self_current.sub_dev.total_energy.value").value\
+            self._registers.by_name("sc.sub_dev.total_energy.value").value\
                 = self.__parameters_values["ExportActiveEnergy"]
 
-            self._registers.by_name("self_current.sub_dev.current_power.value").value\
+            self._registers.by_name("sc.sub_dev.current_power.value").value\
                 = self.__parameters_values["ApparentPower"]
 
     def shutdown(self):
+        """Shutdown the tamper."""
 
-        self.__logger.info("Shutting down the {} with name {}".format(__name__, self.name))
+        self.__logger.info("Shutting down the {}".format(self.name))
 
 #endregion
