@@ -235,12 +235,7 @@ class bgERP():
             Success
         """
 
-        # global STATE
-        # # self.__logger.debug(registers)
-        # json_state_data = json.loads(STATE)
-        # return json_state_data
-
-        registers = None
+        response_registers = None
 
         # URI
         uri = self.host + self.__api_sync
@@ -261,35 +256,35 @@ class bgERP():
                 if response.text != "":
  
                     # TODO: Test is ti JSON.
-                    registers = json.loads(response.text)
+                    response_registers = json.loads(response.text)
 
                     # Update last successful time.
                     self.__last_sync = time.time()
 
             # Forbidden
             elif response.status_code == 403:
-                registers = None
+                response_registers = None
 
             # Not found
             elif response.status_code == 404:
-                registers = None
+                response_registers = None
 
             # Too Many Requests
             elif response.status_code == 429:
-                registers = None
+                response_registers = None
 
             # Internal server ERROR
             elif response.status_code == 500:
-                registers = None
+                response_registers = None
 
             # Other bad reason
             else:
-                registers = None
+                response_registers = None
 
         else:
-            registers = None
+            response_registers = None
 
-        return registers
+        return response_registers
 
 #endregion
 
