@@ -319,8 +319,7 @@ class Zone():
                 - Tell bgERP that the EVOK is not runing.
                 """
 
-            message = "Communication lost with EVOK."
-            self.__logger.error(message)
+            self.__logger.error("Module {} Communication lost with EVOK.".format(__name__))
 
         # Update periodically bgERP.
         self.__erp_service_update_timer.update()
@@ -337,12 +336,12 @@ class Zone():
 
                 else:
                     pass
+                    # self.__logger.error("Unsuccessful update to ERP service.")
                     # Pass it is not necessary to restart everything.
                     # self.__zone_state.set_state(ZoneState.Init)
 
             except Exception as e:
                 self.__logger.error("No connection to the ERP service.")
-                pass
 
     def __shutdown(self):
         """Shutdown procedure."""
