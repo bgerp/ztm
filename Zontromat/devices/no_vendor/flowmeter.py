@@ -24,6 +24,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from devices.base_device import BaseDevice
 
+from data import verbal_const
+
 #region File Attributes
 
 __author__ = "Orlin Dimitrov"
@@ -63,8 +65,62 @@ class Flowmeter(BaseDevice):
     __tpl = 1
     """Ticks per liter."""
 
-    __input = "DI0"
+    __input = verbal_const.OFF # "DI0"
     """Input pin of the controller."""
+
+#endregion
+
+#region Properties
+
+    @property
+    def input(self):
+        """Input pin of the controller.
+
+        Returns
+        -------
+        string
+        """
+
+        return self.__input
+
+    @input.setter
+    def input(self, value):
+        """Input pin of the controller.
+
+        Parameters
+        ----------
+        value : string
+        """
+
+        self.__input = value
+
+    @property
+    def tpl(self):
+        """Tics per liter.
+
+        Returns
+        -------
+        float
+        """
+
+        return self.__tpl
+
+    @tpl.setter
+    def tpl(self, value):
+        """Tics per liter.
+
+        Parameters
+        ----------
+        value : float
+            Value.
+        """
+
+        if value < 0:
+            value = 0
+
+        self.__tpl = value
+
+
 
 #endregion
 
@@ -81,12 +137,17 @@ class Flowmeter(BaseDevice):
     def get_counter(self):
         """Get flowmeter counter."""
 
-        return self._controller.read_counter(self.__input)
+        value = 0
+        
+        if self.input != verbal_const.OFF and self.input != "":
+            value = self._controller.read_counter(self.__input)
+
+        return value
 
     def get_liters(self):
         """Get value."""
 
-        return self._controller.read_counter(self.__input) * self.__tpl
+        return self.get_counter() * self.__tpl
 
 #endregion
 

@@ -31,20 +31,20 @@ from utils.logger import get_logger
 from data.register import Scope
 from data.register import Source
 from data.register import Register
+from data import verbal_const 
+from data import doc_generator
 
 # Room
-from plugins.status_led.status_led import StatusLed
+from plugins.sys.sys import Sys
 from plugins.tamper.tamper import Tamper
-from plugins.flowmeter.flowmeter import Flowmeter
-from plugins.power_meter.power_meter import PowerMeter
-from plugins.access_controll.access_controll import AccessControll
+from plugins.access_control.access_control import AccessControl
 from plugins.blinds.blinds import Blinds
 from plugins.hvac.hvac import HVAC
 from plugins.lighting.lighting import Lighting
 from plugins.wdt_tablet.wdt_tablet import WDTTablet
 
 # Test plugins
-from plugins.sun_position.sun_position import SunPos
+from plugins.environment.environment import Environment
 from plugins.monitoring.monitoring import Monitoring
 
 # Energy center
@@ -85,25 +85,26 @@ __status__ = "Debug"
 class Plugins(Enum):
     """Zone device enumerator."""
 
-    # General
-    StatusLed = 1
+    # (ac)
+    AccessControl = 28
+
+    # (monitoring)
     Monitoring = 2
 
-    # Software
-    SunPos = 10
+
+    # (env)
+    Environment = 10
+
+    # (hvac)
+    HVAC = 30
+
+    # General
+    Sys = 1
 
     # Room
-    WindowClosed = 20
-    DoorClosed = 21
-    PIRDetector = 22
     AntiTampering = 23
     FireDetect = 24
-    WaterCounter = 25
-    PowerMeter = 26
     Blinds = 27
-    AccessControll1 = 28
-    AccessControll2 = 29
-    HVAC = 30
     MainLight = 31
     WDTTablet = 32
 
@@ -157,163 +158,328 @@ class PluginsManager:
 
 #region Private Methods
 
+    def __prepare_config(self, name, key):
+        config = {
+            "name": name,
+            "key": key,
+            "registers": self.__registers,
+            "controller": self.__controller,
+            "erp_service": self.__erp_service
+        }
+
+        return config
+
     def __add_registers(self):
 
-# -=== General ===-
-#region General
+#region Access Control (ac)
 
-        register = Register("general.is_empty")
+        register = Register("ac.enabled")
         register.scope = Scope.Global
-        register.source = Source.Zontromat
-        register.value = 1
+        register.source = Source.bgERP
+        register.update_handler = self.__access_control_enabled
+        register.value = verbal_const.NO
         self.__registers.add(register)
 
-        register = Register("general.is_empty_timeout")
+        register = Register("ac.allowed_attendees")
         register.scope = Scope.Global
-        register.source = Source.Zontromat
+        register.source = Source.bgERP
+        register.value = [] # {"card_id": "445E6046010080FF", "pin":"159753", "valid_until":"1595322860"}
         self.__registers.add(register)
 
-        register = Register("general.cwf.leak")
+        register = Register("ac.nearby_attendees")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.value = [] # {"card_id": "445E6046010080FF", "ts":"1595322860"}
+        self.__registers.add(register)
+
+        register = Register("ac.last30_attendees")
+        register.scope = Scope.Global
+        register.source = Source.Zontromat
+        register.value = [] # {"card_id": "445E6046010080FF", "ts":"1595322860", "reader_id":"2911"}
+        self.__registers.add(register)
+
+        register = Register("ac.next_attendance")
+        register.scope = Scope.Global
+        register.source = Source.Zontromat
+        register.value = 0 # 1595322860
+        self.__registers.add(register)
+
+        register = Register("ac.zone_occupied")
+        register.scope = Scope.Global
+        register.source = Source.Zontromat
+        register.value = verbal_const.NO # 1595322860
+        self.__registers.add(register)
+
+        # Entry card reader.
+        register = Register("ac.entry_reader.enabled")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.value = verbal_const.NO
+        self.__registers.add(register)
+
+        register = Register("ac.entry_reader.vendor")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.value = "TERACOM"
+        self.__registers.add(register)
+
+        register = Register("ac.entry_reader.model")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.value = "act230"
+        self.__registers.add(register)
+
+        register = Register("ac.entry_reader.port.baudrate")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.value = 9600
+        self.__registers.add(register)
+
+        register = Register("ac.entry_reader.port.name")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        if os.name == "posix":
+            register.value = "/dev/ttyUSB0"
+        if os.name == "nt":
+            register.value = "COM5"
+        self.__registers.add(register)
+
+        register = Register("ac.entry_reader.serial_number")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.value = "2897"
+        self.__registers.add(register)
+
+        # Exit card reader.
+        register = Register("ac.exit_reader.enabled")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.value = verbal_const.NO
+        self.__registers.add(register)
+
+        register = Register("ac.exit_reader.vendor")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.value = "TERACOM"
+        self.__registers.add(register)
+
+        register = Register("ac.exit_reader.model")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.value = "act230"
+        self.__registers.add(register)
+
+        register = Register("ac.exit_reader.port.baudrate")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.value = 9600
+        self.__registers.add(register)
+
+        register = Register("ac.exit_reader.port.name")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        if os.name == "posix":
+            register.value = "/dev/ttyUSB0"
+        if os.name == "nt":
+            register.value = "COM11"
+        self.__registers.add(register)
+
+        register = Register("ac.exit_reader.serial_number")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.value = "2911"
+        self.__registers.add(register)
+
+        # 
+        register = Register("ac.exit_button.input")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.value = verbal_const.OFF # "DI0"
+        self.__registers.add(register)
+
+        register = Register("ac.lock_mechanism.output")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.value = verbal_const.OFF # "DO2"
+        self.__registers.add(register)
+
+        register = Register("ac.time_to_open")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.value = 10
+        self.__registers.add(register)
+
+        register = Register("ac.door_closed.input")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.value = verbal_const.OFF # "DI2"
+        self.__registers.add(register)
+
+        register = Register("ac.door_closed.state")
         register.scope = Scope.Global
         register.source = Source.Zontromat
         register.value = 0
         self.__registers.add(register)
+        
+        # Entry card reader 2.
+        register = Register("ac.entry_reader2.enabled")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.value = verbal_const.NO
+        self.__registers.add(register)
 
-        register = Register("general.hwf.leak")
+        register = Register("ac.entry_reader2.vendor")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.value = "TERACOM"
+        self.__registers.add(register)
+
+        register = Register("ac.entry_reader2.model")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.value = "act230"
+        self.__registers.add(register)
+
+        register = Register("ac.entry_reader2.port.baudrate")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.value = 9600
+        self.__registers.add(register)
+
+        register = Register("ac.entry_reader2.port.name")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        if os.name == "posix":
+            register.value = "/dev/ttyUSB0"
+        if os.name == "nt":
+            register.value = "COM5"
+        self.__registers.add(register)
+
+        register = Register("ac.entry_reader2.serial_number")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.value = "2897"
+        self.__registers.add(register)
+
+        # Exit card reader.
+        register = Register("ac.exit_reader2.enabled")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.value = verbal_const.NO
+        self.__registers.add(register)
+
+        register = Register("ac.exit_reader2.vendor")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.value = "TERACOM"
+        self.__registers.add(register)
+
+        register = Register("ac.exit_reader2.model")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.value = "act230"
+        self.__registers.add(register)
+
+        register = Register("ac.exit_reader2.port.baudrate")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.value = 9600
+        self.__registers.add(register)
+
+        register = Register("ac.exit_reader2.port.name")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        if os.name == "posix":
+            register.value = "/dev/ttyUSB0"
+        if os.name == "nt":
+            register.value = "COM11"
+        self.__registers.add(register)
+
+        register = Register("ac.exit_reader2.serial_number")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.value = "2911"
+        self.__registers.add(register)
+
+        # 
+        register = Register("ac.exit_button2.input")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.value = verbal_const.OFF # "DI0"
+        self.__registers.add(register)
+
+        register = Register("ac.lock_mechanism2.output")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.value = verbal_const.OFF # "DO2"
+        self.__registers.add(register)
+
+        register = Register("ac.time_to_open2")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.value = 10
+        self.__registers.add(register)
+
+        register = Register("ac.door_closed2.input")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.value = verbal_const.OFF # "DI2"
+        self.__registers.add(register)
+
+        register = Register("ac.door_closed2.state")
         register.scope = Scope.Global
         register.source = Source.Zontromat
-        register.value = 0
+        self.__registers.add(register)
+
+        #
+        register = Register("ac.pir.input")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.value = verbal_const.OFF # "DI0"
+        self.__registers.add(register)
+
+        register = Register("ac.pir.state")
+        register.scope = Scope.Global
+        register.source = Source.Zontromat
+        self.__registers.add(register)
+
+        register = Register("ac.pir2.input")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.value = verbal_const.OFF # "DI0"
+        self.__registers.add(register)
+
+        register = Register("ac.pir2.state")
+        register.scope = Scope.Global
+        register.source = Source.Zontromat
+        self.__registers.add(register)
+
+        #
+        register = Register("ac.window_closed.input")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.value = verbal_const.OFF # "!DI3"
+        self.__registers.add(register)
+
+        register = Register("ac.window_closed.state")
+        register.scope = Scope.Global
+        register.source = Source.Zontromat
+        self.__registers.add(register)
+
+        register = Register("ac.window_closed2.input")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.value = verbal_const.OFF # "!DI3"
+        self.__registers.add(register)
+
+        register = Register("ac.window_closed2.state")
+        register.scope = Scope.Global
+        register.source = Source.Zontromat
         self.__registers.add(register)
 
 #endregion
 
-#region Status Led
-
-        register = Register("sl.output")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.value = "LED0"
-        self.__registers.add(register)
-
-        register = Register("sl.blink_time")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.value = 1
-        self.__registers.add(register)
-
-        register = Register("sl.enabled")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.update_handler = self.__status_led_enabled
-        # Run the plugin before others.
-        register.value = 1
-        self.__registers.add(register)
-
-#endregion
-
-#region Monitoring
-
-        register = Register("monitoring.info_message")
-        register.scope = Scope.Global
-        register.source = Source.Zontromat
-        register.value = ""
-        self.__registers.add(register)
-
-        register = Register("monitoring.warning_message")
-        register.scope = Scope.Global
-        register.source = Source.Zontromat
-        register.value = ""
-        self.__registers.add(register)
-
-        register = Register("monitoring.error_message")
-        register.scope = Scope.Global
-        register.source = Source.Zontromat
-        register.value = ""
-        self.__registers.add(register)
-
-        register = Register("monitoring.clear_errors")
-        register.scope = Scope.Global
-        register.source = Source.Zontromat
-        register.value = 0
-        self.__registers.add(register)
-
-        register = Register("monitoring.enabled")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.update_handler = self.__monitoring_enabled
-        register.value = 0
-        self.__registers.add(register)
-
-#endregion
-
-# -=== Room ===-
-#region Windows Closed
-
-        register = Register("wc.input")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.value = "!DI3"
-        self.__registers.add(register)
-
-        register = Register("wc.enabled")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.update_handler = self.__window_closed_enabled
-        register.value = 0
-        self.__registers.add(register)
-
-        register = Register("wc.state")
-        register.scope = Scope.Global
-        register.source = Source.Zontromat
-        self.__registers.add(register)
-
-#endregion
-
-#region Door Closed
-
-        register = Register("dc.input")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.value = "DI2"
-        self.__registers.add(register)
-
-        register = Register("dc.enabled")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.update_handler = self.__door_closed_enabled
-        register.value = 0
-        self.__registers.add(register)
-
-        register = Register("dc.state")
-        register.scope = Scope.Global
-        register.source = Source.Zontromat
-        self.__registers.add(register)
-
-#endregion
-
-#region PIR Detector
-
-        register = Register("pd.input")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.value = "DI0"
-        self.__registers.add(register)
-
-        register = Register("pd.enabled")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.update_handler = self.__pir_detector_enabled
-        register.value = 0
-        self.__registers.add(register)
-
-        register = Register("pd.state")
-        register.scope = Scope.Global
-        register.source = Source.Zontromat
-        self.__registers.add(register)
-
-#endregion
-
-#region Anti Tampering
+#region Anti Tampering (atamp)
 
         register = Register("at.input")
         register.scope = Scope.Global
@@ -325,7 +491,7 @@ class PluginsManager:
         register.scope = Scope.Global
         register.source = Source.bgERP
         register.update_handler = self.__anti_tampering_enabled
-        register.value = 0
+        register.value = verbal_const.NO
         self.__registers.add(register)
 
         register = Register("at.state")
@@ -335,85 +501,7 @@ class PluginsManager:
 
 #endregion
 
-#region Fire Detect
-
-        register = Register("fire_detect.input")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.value = None
-        self.__registers.add(register)
-
-        register = Register("fire_detect.enabled")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.update_handler = self.__fire_detect_enabled
-        register.value = 0
-        self.__registers.add(register)
-
-        register = Register("fire_detect.state")
-        register.scope = Scope.Global
-        register.source = Source.Zontromat
-        self.__registers.add(register)
-
-#endregion
-
-#region Cold Water Flowmeter
-
-        register = Register("cwf.tpl")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.value = 10
-        self.__registers.add(register)
-
-        register = Register("cwf.input")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.value = "DI6"
-        self.__registers.add(register)
-
-        register = Register("cwf.enabled")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.update_handler = self.__cold_water_fm_enabled
-        register.value = 0
-        self.__registers.add(register)
-
-        register = Register("cwf.value")
-        register.scope = Scope.Global
-        register.source = Source.Zontromat
-        self.__registers.add(register)
-
-#endregion
-
-#region Hot Water Flowmeter
-
-        register = Register("hwf.tpl")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.value = 10
-        self.__registers.add(register)
-
-        register = Register("hwf.input")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.value = "DI7"
-        self.__registers.add(register)
-
-        register = Register("hwf.enabled")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.update_handler = self.__hot_water_fm_enabled
-        register.value = 0
-        self.__registers.add(register)
-
-        register = Register("hwf.value")
-        register.scope = Scope.Global
-        register.source = Source.Zontromat
-        self.__registers.add(register)
-
-#endregion
-
-#region Blinds
+#region Blinds (blinds)
 
         register = Register("blinds.sun.azimuth.value")
         register.scope = Scope.Global
@@ -467,310 +555,223 @@ class PluginsManager:
         register.scope = Scope.Global
         register.source = Source.bgERP
         register.update_handler = self.__blinds_enabled
-        register.value = 0
+        register.value = verbal_const.NO
         self.__registers.add(register)
 
 #endregion
 
-#region Power Meter
+#region Monitoring (mon)
 
-        register = Register("sc.sub_dev.uart")
+        # colision detector.
+        register = Register("monitoring.info_message")
+        register.scope = Scope.Global
+        register.source = Source.Zontromat
+        register.value = ""
+        self.__registers.add(register)
+
+        register = Register("monitoring.warning_message")
+        register.scope = Scope.Global
+        register.source = Source.Zontromat
+        register.value = ""
+        self.__registers.add(register)
+
+        register = Register("monitoring.error_message")
+        register.scope = Scope.Global
+        register.source = Source.Zontromat
+        register.value = ""
+        self.__registers.add(register)
+
+        register = Register("monitoring.clear_errors")
+        register.scope = Scope.Global
+        register.source = Source.Zontromat
+        register.value = 0
+        self.__registers.add(register)
+
+        # Cold water flow meter.
+        register = Register("monitoring.cw.input")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.value = verbal_const.OFF # "DI6"
+        self.__registers.add(register)
+
+        register = Register("monitoring.cw.tpl")
         register.scope = Scope.Global
         register.source = Source.bgERP
         register.value = 1
         self.__registers.add(register)
 
-        register = Register("sc.sub_dev.model")
+        register = Register("monitoring.cw.value")
         register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.value = "SDM120"
+        register.source = Source.Zontromat
+        register.value = 0
         self.__registers.add(register)
 
-        register = Register("sc.sub_dev.dev_id")
+        register = Register("monitoring.cw.leak")
+        register.scope = Scope.Global
+        register.source = Source.Zontromat
+        register.value = 1
+        self.__registers.add(register) 
+
+        # Hot water flow meter.
+        register = Register("monitoring.hw.input")
         register.scope = Scope.Global
         register.source = Source.bgERP
-        register.value = 2
+        register.value = verbal_const.OFF # "DI7"
         self.__registers.add(register)
 
-        register = Register("sc.sub_dev.vendor")
+        register = Register("monitoring.hw.tpl")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.value = 1
+        self.__registers.add(register)
+
+        register = Register("monitoring.hw.value")
+        register.scope = Scope.Global
+        register.source = Source.Zontromat
+        register.value = 0
+        self.__registers.add(register)
+
+        register = Register("monitoring.hw.leak")
+        register.scope = Scope.Global
+        register.source = Source.Zontromat
+        register.value = 1
+        self.__registers.add(register) 
+
+        # Power analyser.
+        register = Register("monitoring.pa.uart")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.value = 1
+        self.__registers.add(register)
+
+        register = Register("monitoring.pa.model")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.value = "SDM630"
+        self.__registers.add(register)
+
+        register = Register("monitoring.pa.vendor")
         register.scope = Scope.Global
         register.source = Source.bgERP
         register.value = "Eastron"
         self.__registers.add(register)
 
-        register = Register("sc.enabled")
+        register = Register("monitoring.pa.dev_id")
         register.scope = Scope.Global
         register.source = Source.bgERP
-        register.update_handler = self.__power_meter_enabled
-        register.value = 0
+        register.value = 2
         self.__registers.add(register)
 
-        register = Register("sc.sub_dev.current.value")
+        register = Register("monitoring.pa.l1")
         register.scope = Scope.Global
         register.source = Source.Zontromat
         register.value = 0
         self.__registers.add(register)
 
-        register = Register("sc.sub_dev.total_energy.value")
+        register = Register("monitoring.pa.l2")
         register.scope = Scope.Global
         register.source = Source.Zontromat
         register.value = 0
         self.__registers.add(register)
 
-        register = Register("sc.sub_dev.current_power.value")
+        register = Register("monitoring.pa.l3")
         register.scope = Scope.Global
         register.source = Source.Zontromat
         register.value = 0
         self.__registers.add(register)
-#endregion
 
-#region Mode Energy
-
-        register = Register("mode.energy")
+        # Enable flag.
+        register = Register("monitoring.enabled")
         register.scope = Scope.Global
         register.source = Source.bgERP
-        register.value = 0
+        register.update_handler = self.__monitoring_enabled
+        register.value = verbal_const.NO
         self.__registers.add(register)
 
 #endregion
 
-#region Mode Emergency
+#region Environment (env)
 
-        register = Register("mode.emergency")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.value = 0
-        self.__registers.add(register)
-
-#endregion
-
-#region Meteo
-
-        register = Register("outside.temp.actual")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        self.__registers.add(register)
-
-        register = Register("outside.temp.a6")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        self.__registers.add(register)
-
-        register = Register("outside.temp.min24")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        self.__registers.add(register)
-
-        register = Register("outside.temp.max24")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        self.__registers.add(register)
-
-        register = Register("outside.rh")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        self.__registers.add(register)
-
-        register = Register("outside.wind.actual")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        self.__registers.add(register)
-
-        register = Register("outside.wind.max12")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        self.__registers.add(register)
-
-        register = Register("outside.light")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        self.__registers.add(register)
-
-#endregion
-
-#region Access Control 1
-
-        register = Register("ac1.time_to_open")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.value = 10
-        self.__registers.add(register)
-
-        register = Register("ac1.card_reader.model")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.value = "act230"
-        self.__registers.add(register)
-
-        register = Register("ac1.exit_button.input")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.value = "DI0"
-        self.__registers.add(register)
-
-        register = Register("ac1.card_reader.vendor")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.value = "TERACOM"
-        self.__registers.add(register)
-
-        register = Register("ac1.card_reader.enabled")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.value = 1
-        self.__registers.add(register)
-
-        register = Register("ac1.exit_button.enabled")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.value = 1
-        self.__registers.add(register)
-
-        register = Register("ac1.card_reader.port.name")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        if os.name == "posix":
-            register.value = "/dev/ttyUSB0"
-        if os.name == "nt":
-            register.value = "COM4"
-        self.__registers.add(register)
-
-        register = Register("ac1.lock_mechanism.output")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.value = "DO2"
-        self.__registers.add(register)
-
-        register = Register("ac1.lock_mechanism.enabled")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.value = 1
-        self.__registers.add(register)
-
-        register = Register("ac1.allowed_attendees")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.value = ["445E6046010080FF"]
-        self.__registers.add(register)
-
-        register = Register("ac1.card_reader.port.baudrate")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.value = 9600
-        self.__registers.add(register)
-
-        register = Register("ac1.card_reader.serial_number")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.value = "2897"
-        self.__registers.add(register)
-
-        register = Register("ac1.next_attendance")
+        register = Register("env.is_empty")
         register.scope = Scope.Global
         register.source = Source.Zontromat
+        register.value = 1
         self.__registers.add(register)
 
-        register = Register("ac1.enabled")
+        register = Register("env.is_empty_timeout")
         register.scope = Scope.Global
         register.source = Source.bgERP
-        register.update_handler = self.__access_control_1_enabled
+        register.value = 3600
+        self.__registers.add(register)
+
+        register = Register("env.temp.actual")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        self.__registers.add(register)
+
+        register = Register("env.temp.a6")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        self.__registers.add(register)
+
+        register = Register("env.temp.min24")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        self.__registers.add(register)
+
+        register = Register("env.temp.max24")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        self.__registers.add(register)
+
+        register = Register("env.rh")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        self.__registers.add(register)
+
+        register = Register("env.wind.actual")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        self.__registers.add(register)
+
+        register = Register("env.wind.max12")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        self.__registers.add(register)
+
+        register = Register("env.light")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        self.__registers.add(register)
+
+        register = Register("env.enabled")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.update_handler = self.__env_enabled
+        register.value = verbal_const.NO
+        self.__registers.add(register)
+
+        register = Register("env.energy") # Energy mode of the building.
+        register.scope = Scope.Global
+        register.source = Source.bgERP
         register.value = 0
+        self.__registers.add(register)
+
+        register = Register("env.emergency") # Emergency bit coded flags of the building.
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.value = 0
+        self.__registers.add(register)
+
+        register = Register("env.sunpos.enabled")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.value = verbal_const.NO
         self.__registers.add(register)
 
 #endregion
 
-#region Access Control 2
-
-        register = Register("ac2.time_to_open")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.value = 10
-        self.__registers.add(register)
-
-        register = Register("ac2.card_reader.model")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.value = "act230"
-        self.__registers.add(register)
-
-        register = Register("ac2.exit_button.input")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.value = "DI0"
-        self.__registers.add(register)
-
-        register = Register("ac2.card_reader.vendor")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.value = "TERACOM"
-        self.__registers.add(register)
-
-        register = Register("ac2.card_reader.enabled")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.value = 1
-        self.__registers.add(register)
-
-        register = Register("ac2.exit_button.enabled")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.value = 1
-        self.__registers.add(register)
-
-        register = Register("ac2.card_reader.port.name")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        if os.name == "posix":
-            register.value = "/dev/ttyUSB1"
-        if os.name == "nt":
-            register.value = "COM5"
-        self.__registers.add(register)
-
-        register = Register("ac2.lock_mechanism.output")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.value = "DO2"
-        self.__registers.add(register)
-
-        register = Register("ac2.lock_mechanism.enabled")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.value = 1
-        self.__registers.add(register)
-
-        register = Register("ac2.allowed_attendees")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.value = ["445E6046010080FF"]
-        self.__registers.add(register)
-
-        register = Register("ac2.card_reader.port.baudrate")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.value = 9600
-        self.__registers.add(register)
-
-        register = Register("ac2.card_reader.serial_number")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.value = "2911"
-        self.__registers.add(register)
-
-        register = Register("ac2.next_attendance")
-        register.scope = Scope.Global
-        register.source = Source.Zontromat
-        self.__registers.add(register)
-
-        register = Register("ac2.enabled")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.update_handler = self.__access_control_2_enabled
-        register.value = 0
-        self.__registers.add(register)
-
-#endregion
-
-#region HVAC
+#region HVAC (hvac)
 
         register = Register("hvac.adjust_temp")
         register.scope = Scope.Global
@@ -921,7 +922,7 @@ class PluginsManager:
         register.scope = Scope.Global
         register.source = Source.bgERP
         register.update_handler = self.__hvac_enabled
-        register.value = 0
+        register.value = verbal_const.NO
         self.__registers.add(register)
 
         # Goal building temp.
@@ -1220,7 +1221,7 @@ class PluginsManager:
 
 #endregion
 
-#region Lights
+#region Light (light)
 
         register = Register("light.min")
         register.scope = Scope.Global
@@ -1280,10 +1281,53 @@ class PluginsManager:
         register.scope = Scope.Global
         register.source = Source.bgERP
         register.update_handler = self.__light_enabled
-        register.value = 0
+        register.value = verbal_const.NO
         self.__registers.add(register)
 
 #endregion
+
+#region System (sys)
+
+        register = Register("sys.ram.current")
+        register.scope = Scope.Global
+        register.source = Source.Zontromat
+        register.value = 0
+        self.__registers.add(register)
+
+        register = Register("sys.ram.peak")
+        register.scope = Scope.Global
+        register.source = Source.Zontromat
+        register.value = 0
+        self.__registers.add(register)
+
+        register = Register("sys.time.usage")
+        register.scope = Scope.Global
+        register.source = Source.Zontromat
+        register.value = 0
+        self.__registers.add(register)
+
+        register = Register("sys.sl.output")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.value = "LED0"
+        self.__registers.add(register)
+
+        register = Register("sys.sl.blink_time")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.value = 1
+        self.__registers.add(register)
+
+        register = Register("sys.enabled")
+        register.scope = Scope.Global
+        register.source = Source.bgERP
+        register.update_handler = self.__sys_enabled
+        # Run the plugin before others.
+        register.value = verbal_const.YES
+        self.__registers.add(register)
+
+#endregion
+
 
 #region WDT Tablet
 
@@ -1303,7 +1347,7 @@ class PluginsManager:
         register.scope = Scope.Global
         register.source = Source.bgERP
         register.update_handler = self.__wdt_tablet_enabled
-        register.value = 0
+        register.value = verbal_const.NO
         self.__registers.add(register)
 
         register = Register("wt.reset")
@@ -1319,20 +1363,6 @@ class PluginsManager:
 
 #endregion
 
-# -=== Sun Position ===-
-
-#region Sun Position
-
-        register = Register("sp.enabled")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.update_handler = self.__sun_pos_enabled
-        register.value = 0
-        self.__registers.add(register)
-
-#endregion
-
-# -=== Energy center ===-
 #region Hot Circle
 
         register = Register("hc.tank_temp.circuit")
@@ -1369,7 +1399,7 @@ class PluginsManager:
         register.scope = Scope.Global
         register.source = Source.bgERP
         register.update_handler = self.__hot_circle_enabled
-        register.value = 0
+        register.value = verbal_const.NO
         self.__registers.add(register)
 
 #endregion
@@ -1410,176 +1440,127 @@ class PluginsManager:
         register.scope = Scope.Global
         register.source = Source.bgERP
         register.update_handler = self.__cold_circle_enabled
-        register.value = 0
+        register.value = verbal_const.NO
         self.__registers.add(register)
 
 #endregion
 
+#endregion
 
-    def __prepare_config(self, name, key):
-        config = {
-            "name": name,
-            "key": key,
-            "registers": self.__registers,
-            "controller": self.__controller,
-            "erp_service": self.__erp_service
-        }
+#region Private Methods (ac)
 
-        return config
+    def __access_control_enabled(self, register):
+        if register.value == verbal_const.YES and Plugins.AccessControl not in self.__plugins:
+            config = self.__prepare_config("Access control", register.base_name)
+            self.__plugins[Plugins.AccessControl] = AccessControl(config)
+            self.__plugins[Plugins.AccessControl].init()
 
-    # -=== General ===-
-    def __status_led_enabled(self, register):
-        if register.value == 1 and Plugins.StatusLed not in self.__plugins:
-            config = self.__prepare_config("Status LED", register.base_name)
-            self.__plugins[Plugins.StatusLed] = StatusLed(config)
-            self.__plugins[Plugins.StatusLed].init()
+        elif register.value == verbal_const.NO and Plugins.AccessControl in self.__plugins:
+            self.__plugins[Plugins.AccessControl].shutdown()
+            del self.__plugins[Plugins.AccessControl]
 
-        elif register.value == 0 and Plugins.StatusLed in self.__plugins:
-            self.__plugins[Plugins.StatusLed].shutdown()
-            del self.__plugins[Plugins.StatusLed]
+#endregion
 
-    def __monitoring_enabled(self, register):
-        # Create monitoring.
-
-        if register.value == 1 and Plugins.Monitoring not in self.__plugins:
-            config = self.__prepare_config("Monitoring", register.base_name)
-            self.__plugins[Plugins.Monitoring] = Monitoring(config)
-            self.__plugins[Plugins.Monitoring].init()
-
-        if register.value == 0 and Plugins.Monitoring in self.__plugins:
-            self.__plugins[Plugins.Monitoring].shutdown()
-            del self.__plugins[Plugins.Monitoring]
-
-    # -=== Room ===-
-    def __window_closed_enabled(self, register):
-        if register.value == 1 and Plugins.WindowClosed not in self.__plugins:
-            config = self.__prepare_config("Windows Closed Sensor", register.base_name)
-            self.__plugins[Plugins.WindowClosed] = Tamper(config)
-            self.__plugins[Plugins.WindowClosed].init()
-
-        elif register.value == 0 and Plugins.WindowClosed in self.__plugins:
-            self.__plugins[Plugins.WindowClosed].shutdown()
-            del self.__plugins[Plugins.WindowClosed]
-
-    def __door_closed_enabled(self, register):
-        if register.value == 1 and Plugins.DoorClosed not in self.__plugins:
-            config = self.__prepare_config("Door Closed Sensor", register.base_name)
-            self.__plugins[Plugins.DoorClosed] = Tamper(config)
-            self.__plugins[Plugins.DoorClosed].init()
-
-        elif register.value == 0 and Plugins.DoorClosed in self.__plugins:
-            self.__plugins[Plugins.DoorClosed].shutdown()
-            del self.__plugins[Plugins.DoorClosed]
-
-    def __pir_detector_enabled(self, register):
-        if register.value == 1 and Plugins.PIRDetector not in self.__plugins:
-            config = self.__prepare_config("PIR Detector", register.base_name)
-            self.__plugins[Plugins.PIRDetector] = Tamper(config)
-            self.__plugins[Plugins.PIRDetector].init()
-
-        elif register.value == 0 and Plugins.PIRDetector in self.__plugins:
-            self.__plugins[Plugins.PIRDetector].shutdown()
-            del self.__plugins[Plugins.PIRDetector]
+#region Anti tampering (atamp)
 
     def __anti_tampering_enabled(self, register):
-        if register.value == 1 and Plugins.AntiTampering not in self.__plugins:
+        if register.value == verbal_const.YES and Plugins.AntiTampering not in self.__plugins:
             config = self.__prepare_config("Anti Tampering", register.base_name)
             self.__plugins[Plugins.AntiTampering] = Tamper(config)
             self.__plugins[Plugins.AntiTampering].init()
 
-        elif register.value == 0 and Plugins.AntiTampering in self.__plugins:
+        elif register.value == verbal_const.NO and Plugins.AntiTampering in self.__plugins:
             self.__plugins[Plugins.AntiTampering].shutdown()
             del self.__plugins[Plugins.AntiTampering]
 
-    def __fire_detect_enabled(self, register):
-        if register.value == 1 and Plugins.FireDetect not in self.__plugins:
-            config = self.__prepare_config("Fire detect", register.base_name)
-            self.__plugins[Plugins.FireDetect] = Tamper(config)
-            self.__plugins[Plugins.FireDetect].init()
+#endregion
 
-        elif register.value == 0 and Plugins.FireDetect in self.__plugins:
-            self.__plugins[Plugins.FireDetect].shutdown()
-            del self.__plugins[Plugins.FireDetect]
-
-    def __cold_water_fm_enabled(self, register):
-        if register.value == 1 and Plugins.WaterCounter not in self.__plugins:
-            config = self.__prepare_config("Cold Water Flow Metter", register.base_name)
-            self.__plugins[Plugins.WaterCounter] = Flowmeter(config)
-            self.__plugins[Plugins.WaterCounter].init()
-
-        elif register.value == 0 and Plugins.WaterCounter in self.__plugins:
-            self.__plugins[Plugins.WaterCounter].shutdown()
-            del self.__plugins[Plugins.WaterCounter]
-
-    def __hot_water_fm_enabled(self, register):
-        if register.value == 1 and Plugins.WaterCounter not in self.__plugins:
-            config = self.__prepare_config("Hot Water Flow Metter", register.base_name)
-            self.__plugins[Plugins.WaterCounter] = Flowmeter(config)
-            self.__plugins[Plugins.WaterCounter].init()
-
-        elif register.value == 0 and Plugins.WaterCounter in self.__plugins:
-            self.__plugins[Plugins.WaterCounter].shutdown()
-            del self.__plugins[Plugins.WaterCounter]
+#region Private Methods (blinds)
 
     def __blinds_enabled(self, register):
-        if register.value == 1 and Plugins.Blinds not in self.__plugins:
+        if register.value == verbal_const.YES and Plugins.Blinds not in self.__plugins:
             config = self.__prepare_config("Blinds", register.base_name)
             self.__plugins[Plugins.Blinds] = Blinds(config)
             self.__plugins[Plugins.Blinds].init()
 
-        if register.value == 0 and Plugins.Blinds in self.__plugins:
+        if register.value == verbal_const.NO and Plugins.Blinds in self.__plugins:
             self.__plugins[Plugins.Blinds].shutdown()
             del self.__plugins[Plugins.Blinds]
 
-    def __power_meter_enabled(self, register):
-        if register.value == 1 and Plugins.PowerMeter not in self.__plugins:
-            config = self.__prepare_config("Power Meter", register.base_name)
-            self.__plugins[Plugins.PowerMeter] = PowerMeter(config)
-            self.__plugins[Plugins.PowerMeter].init()
+#endregion
 
-        if register.value == 0 and Plugins.PowerMeter in self.__plugins:
-            self.__plugins[Plugins.PowerMeter].shutdown()
-            del self.__plugins[Plugins.PowerMeter]
+#region Private Methods (mon)
 
-    def __access_control_1_enabled(self, register):
-        if register.value == 1 and Plugins.AccessControll1 not in self.__plugins:
-            config = self.__prepare_config("Access control 1", register.base_name)
-            self.__plugins[Plugins.AccessControll1] = AccessControll(config)
-            self.__plugins[Plugins.AccessControll1].init()
+    def __monitoring_enabled(self, register):
+        # Create monitoring.
 
-        elif register.value == 0 and Plugins.AccessControll1 in self.__plugins:
-            self.__plugins[Plugins.AccessControll1].shutdown()
-            del self.__plugins[Plugins.AccessControll1]
+        if register.value == verbal_const.YES and Plugins.Monitoring not in self.__plugins:
+            config = self.__prepare_config("Monitoring", register.base_name)
+            self.__plugins[Plugins.Monitoring] = Monitoring(config)
+            self.__plugins[Plugins.Monitoring].init()
 
-    def __access_control_2_enabled(self, register):
-        if register.value == 1 and Plugins.AccessControll2 not in self.__plugins:
-            config = self.__prepare_config("Access control 2", register.base_name)
-            self.__plugins[Plugins.AccessControll2] = AccessControll(config)
-            self.__plugins[Plugins.AccessControll2].init()
+        if register.value == verbal_const.NO and Plugins.Monitoring in self.__plugins:
+            self.__plugins[Plugins.Monitoring].shutdown()
+            del self.__plugins[Plugins.Monitoring]
 
-        elif register.value == 0 and Plugins.AccessControll2 in self.__plugins:
-            self.__plugins[Plugins.AccessControll2].shutdown()
-            del self.__plugins[Plugins.AccessControll2]
+#endregion
+
+#region Private Methods (env)
+
+    def __env_enabled(self, register):
+        if register.value == verbal_const.YES and Plugins.Environment not in self.__plugins:
+            config = self.__prepare_config("Environment", register.base_name)
+            self.__plugins[Plugins.Environment] = Environment(config)
+            self.__plugins[Plugins.Environment].init()
+
+        if register.value == verbal_const.NO and Plugins.Environment in self.__plugins:
+            self.__plugins[Plugins.Environment].shutdown()
+            del self.__plugins[Plugins.Environment]
+
+#endregion
+
+#region Private Methods (hvac)
 
     def __hvac_enabled(self, register):
-        if register.value == 1 and Plugins.HVAC not in self.__plugins:
+        if register.value == verbal_const.YES and Plugins.HVAC not in self.__plugins:
             config = self.__prepare_config("HVAC", register.base_name)
             self.__plugins[Plugins.HVAC] = HVAC(config)
             self.__plugins[Plugins.HVAC].init()
 
-        if register.value == 0 and Plugins.HVAC in self.__plugins:
+        if register.value == verbal_const.NO and Plugins.HVAC in self.__plugins:
             self.__plugins[Plugins.HVAC].shutdown()
             del self.__plugins[Plugins.HVAC]
 
+#endregion
+
+#region Private Methods (lights)
+
     def __light_enabled(self, register):
-        if register.value == 1 and Plugins.MainLight not in self.__plugins:
+        if register.value == verbal_const.YES and Plugins.MainLight not in self.__plugins:
             config = self.__prepare_config("Lamps", register.base_name)
             self.__plugins[Plugins.MainLight] = Lighting(config)
             self.__plugins[Plugins.MainLight].init()
 
-        if register.value == 0 and Plugins.MainLight in self.__plugins:
+        if register.value == verbal_const.NO and Plugins.MainLight in self.__plugins:
             self.__plugins[Plugins.MainLight].shutdown()
             del self.__plugins[Plugins.MainLight]
+
+#endregion
+
+#region Private Methods (sys)
+
+    def __sys_enabled(self, register):
+        if register.value == verbal_const.YES and Plugins.Sys not in self.__plugins:
+            config = self.__prepare_config("System", register.base_name)
+            self.__plugins[Plugins.Sys] = Sys(config)
+            self.__plugins[Plugins.Sys].init()
+
+        elif register.value == verbal_const.NO and Plugins.Sys in self.__plugins:
+            self.__plugins[Plugins.Sys].shutdown()
+            del self.__plugins[Plugins.Sys]
+
+#endregion
+
 
     def __wdt_tablet_enabled(self, register):
         if register.value == 1:
@@ -1606,39 +1587,26 @@ class PluginsManager:
                 self.__plugins[Plugins.WDTTablet].shutdown()
                 del self.__plugins[Plugins.WDTTablet]
 
-
     def __hot_circle_enabled(self, register):
-        if register.value == 1 and Plugins.HotCircle not in self.__plugins:
+        if register.value == verbal_const.YES and Plugins.HotCircle not in self.__plugins:
             config = self.__prepare_config("HotCircle", register.base_name)
             self.__plugins[Plugins.HotCircle] = HotCircle(config)
             self.__plugins[Plugins.HotCircle].init()
 
-        if register.value == 0 and Plugins.HotCircle in self.__plugins:
+        if register.value == verbal_const.NO and Plugins.HotCircle in self.__plugins:
             self.__plugins[Plugins.HotCircle].shutdown()
             del self.__plugins[Plugins.HotCircle]
 
     def __cold_circle_enabled(self, register):
-        if register.value == 1 and Plugins.ColdCircle not in self.__plugins:
+        if register.value == verbal_const.YES and Plugins.ColdCircle not in self.__plugins:
             config = self.__prepare_config("ColdCircle", register.base_name)
             self.__plugins[Plugins.ColdCircle] = ColdCircle(config)
             self.__plugins[Plugins.ColdCircle].init()
 
-        if register.value == 0 and Plugins.ColdCircle in self.__plugins:
+        if register.value == verbal_const.NO and Plugins.ColdCircle in self.__plugins:
             self.__plugins[Plugins.ColdCircle].shutdown()
             del self.__plugins[Plugins.ColdCircle]
 
-
-    def __sun_pos_enabled(self, register):
-        if register.value == 1 and Plugins.SunPos not in self.__plugins:
-            config = self.__prepare_config("Sun Position", register.base_name)
-            self.__plugins[Plugins.SunPos] = SunPos(config)
-            self.__plugins[Plugins.SunPos].init()
-
-        if register.value == 0 and Plugins.ColdCircle in self.__plugins:
-            self.__plugins[Plugins.SunPos].shutdown()
-            del self.__plugins[Plugins.SunPos]
-
-#endregion
 
 #region Public Methods
 
@@ -1648,32 +1616,8 @@ class PluginsManager:
         for key in self.__plugins:
             self.__plugins[key].update()
 
-        # # JSON output
-        # import json
-        # bgerp_regs = self.__registers.by_source(Source.bgERP)
-        # dict_regs = bgerp_regs.to_dict()
-        # text = json.dumps(dict_regs, indent=4, sort_keys=True)
-        # with open("bgerp_registers.json", "w") as f:
-        #     f.write(text)
-
-        # import json
-        # ztm_regs = self.__registers.by_source(Source.Zontromat)
-        # dict_regs = ztm_regs.to_dict()
-        # text = json.dumps(dict_regs, indent=4, sort_keys=True)
-        # with open("ztm_registers.json", "w") as f:
-        #     f.write(text)
-
-        # # CSV output
-        # bgerp_regs = self.__registers.by_source(Source.bgERP)
-        # with open("bgerp_registers.csv", "w") as f:
-        #     for register in bgerp_regs:
-        #         print(register)
-        #         f.write("{}\t{}\n".format(register.name, register.value))
-
-        # ztm_regs = self.__registers.by_source(Source.Zontromat)
-        # with open("ztm_registers.csv", "w") as f:
-        #     for register in ztm_regs:
-        #         f.write("{}\t{}\n".format(register.name, register.value))
+        # doc_generator.reg_to_json(self.__registers)
+        # doc_generator.reg_to_md(self.__registers)
 
     def shutdown(self):
         """Shutdown plugins."""

@@ -28,6 +28,8 @@ from plugins.base_plugin import BasePlugin
 
 from devices.SEDtronic.u1wtvs import U1WTVS
 
+from data import verbal_const
+
 #region File Attributes
 
 __author__ = "Orlin Dimitrov"
@@ -178,7 +180,7 @@ class Lighting(BasePlugin):
 
     def __sensor_enabled_cb(self, register):
 
-        if register.value == 1 and self.__light_sensor is None:
+        if register.value == verbal_const.YES and self.__light_sensor is None:
             sensor_dev = self._config["registers"].by_name(self._key + ".sensor.dev").value
             sensor_circuit = self._config["registers"].by_name(self._key + ".sensor.circuit").value
 
@@ -193,7 +195,7 @@ class Lighting(BasePlugin):
             self.__light_sensor = U1WTVS(config)
             self.__light_sensor.init()
 
-        elif register.value == 0 and self.__light_sensor is not None:
+        elif register.value == verbal_const.NO and self.__light_sensor is not None:
             self.__light_sensor.shutdown()
             del self.__light_sensor
 
@@ -220,7 +222,7 @@ class Lighting(BasePlugin):
         sensor_enabled = self._config["registers"].by_name(self._key + ".sensor.enabled")
         if sensor_enabled is not None:
             sensor_enabled.update_handler = self.__sensor_enabled_cb
-            sensor_enabled.value = 1
+            sensor_enabled.value = verbal_const.YES
 
         v1_output = self._config["registers"].by_name(self._key + ".v1.output")
         if v1_output is not None:

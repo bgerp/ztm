@@ -40,6 +40,8 @@ from devices.Dallas.ds18b20 import DS18B20
 from devices.tests.leak_test.leak_test import LeakTest
 from devices.tests.electrical_performance.electrical_performance import ElectricalPerformance
 
+from data import verbal_const
+
 #region File Attributes
 
 __author__ = "Orlin Dimitrov"
@@ -276,7 +278,7 @@ class HVAC(BasePlugin):
 
     def __air_temp_cent_enabled_cb(self, register):
 
-        if register.value == 1 and self.__air_temp_cent_dev is None:
+        if register.value == verbal_const.YES and self.__air_temp_cent_dev is None:
             self.__air_temp_cent_dev = DS18B20.create(\
                 "Air temperature lower",\
                 self._key + ".air_temp_cent",\
@@ -287,7 +289,7 @@ class HVAC(BasePlugin):
                 self.__air_temp_cent_dev.init()
                 self.__temp_proc.add(self.__air_temp_cent_dev)
 
-        elif register.value == 0 and self.__air_temp_cent_dev is not None:
+        elif register.value == verbal_const.NO and self.__air_temp_cent_dev is not None:
 
             self.__temp_proc.add(self.__air_temp_cent_dev)
             self.__air_temp_cent_dev.shutdown()
@@ -295,7 +297,7 @@ class HVAC(BasePlugin):
 
     def __air_temp_lower_enabled_cb(self, register):
 
-        if register.value == 1 and self.__air_temp_lower_dev is None:
+        if register.value == verbal_const.YES and self.__air_temp_lower_dev is None:
             self.__air_temp_lower_dev = DS18B20.create(\
                 "Air temperature lower",\
                 self._key + ".air_temp_lower",\
@@ -306,7 +308,7 @@ class HVAC(BasePlugin):
                 self.__air_temp_lower_dev.init()
                 self.__temp_proc.add(self.__air_temp_lower_dev)
 
-        elif register.value == 0 and self.__air_temp_lower_dev is not None:
+        elif register.value == verbal_const.NO and self.__air_temp_lower_dev is not None:
 
             self.__temp_proc.remove(self.__air_temp_lower_dev)
             self.__air_temp_lower_dev.shutdown()
@@ -314,7 +316,7 @@ class HVAC(BasePlugin):
 
     def __air_temp_upper_enabled_cb(self, register):
 
-        if register.value == 1 and self.__air_temp_upper_dev is None:
+        if register.value == verbal_const.YES and self.__air_temp_upper_dev is None:
             self.__air_temp_upper_dev = DS18B20.create(\
                 "Air temperature upper",\
                 self._key + ".air_temp_upper",\
@@ -325,7 +327,7 @@ class HVAC(BasePlugin):
                 self.__air_temp_upper_dev.init()
                 self.__temp_proc.add(self.__air_temp_upper_dev)
 
-        elif register.value == 0 and self.__air_temp_upper_dev is not None:
+        elif register.value == verbal_const.NO and self.__air_temp_upper_dev is not None:
 
             self.__temp_proc.remove(self.__air_temp_upper_dev)
             self.__air_temp_upper_dev.shutdown()
@@ -334,7 +336,7 @@ class HVAC(BasePlugin):
 
     def __convector_enable_cb(self, register):
 
-        if register.value == 1 and self.__convector_dev is None:
+        if register.value == verbal_const.YES and self.__convector_dev is None:
             self.__convector_dev = Klimafan.create(\
                 "Convector 1",\
                 self._key + ".convector",\
@@ -344,14 +346,14 @@ class HVAC(BasePlugin):
             if self.__convector_dev is not None:
                 self.__convector_dev.init()
 
-        elif register.value == 0 and self.__convector_dev is not None:
+        elif register.value == verbal_const.NO and self.__convector_dev is not None:
             self.__convector_dev.shutdown()
             del self.__convector_dev
 
 
     def __loop1_cnt_enabled_cb(self, register):
 
-        if register.value == 1 and self.__loop1_cnt_dev is None:
+        if register.value == verbal_const.YES and self.__loop1_cnt_dev is None:
             self.__loop1_cnt_dev = Flowmeter.create(\
                 "Loop 2 flowmeter",\
                 self._key + ".loop2.cnt",\
@@ -361,17 +363,18 @@ class HVAC(BasePlugin):
             if self.__loop1_cnt_dev is not None:
                 self.__loop1_cnt_dev.init()
 
+                # 20 seconds is time for leak testing.
                 self.__loop1_leak_test = LeakTest(self.__loop1_cnt_dev, 20)
                 self.__loop1_leak_test.on_result(self.__loop1_leaktest_result)
 
-        elif register.value == 0 and self.__loop1_cnt_dev is not None:
+        elif register.value == verbal_const.NO and self.__loop1_cnt_dev is not None:
             self.__loop1_cnt_dev.shutdown()
             del self.__loop1_cnt_dev
             del self.__loop1_leak_test
 
     def __loop1_fan_enabled_cb(self, register):
 
-        if register.value == 1 and self.__loop1_fan_dev is None:
+        if register.value == verbal_const.YES and self.__loop1_fan_dev is None:
             self.__loop1_fan_dev = F3P146EC072600.create(\
                 "Loop 1 fan",\
                 self._key + ".loop1.fan",\
@@ -381,7 +384,7 @@ class HVAC(BasePlugin):
             if self.__loop1_fan_dev is not None:
                 self.__loop1_fan_dev.init()
 
-        elif register.value == 0 and self.__loop1_fan_dev is not None:
+        elif register.value == verbal_const.NO and self.__loop1_fan_dev is not None:
             self.__loop1_fan_dev.shutdown()
             del self.__loop1_fan_dev
 
@@ -397,7 +400,7 @@ class HVAC(BasePlugin):
 
     def __loop1_temp_enabled_cb(self, register):
 
-        if register.value == 1 and self.__loop1_temp_dev is None:
+        if register.value == verbal_const.YES and self.__loop1_temp_dev is None:
             self.__loop1_temp_dev = DS18B20.create(\
                 "Loop 1 temperature",\
                 self._key + ".loop1.temp",\
@@ -407,13 +410,13 @@ class HVAC(BasePlugin):
             if self.__loop1_temp_dev is not None:
                 self.__loop1_temp_dev.init()
 
-        elif register.value == 0 and self.__loop1_temp_dev is not None:
+        elif register.value == verbal_const.NO and self.__loop1_temp_dev is not None:
             self.__loop1_temp_dev.shutdown()
             del self.__loop1_temp_dev
 
     def __loop1_valve_enabled_cb(self, register):
 
-        if register.value == 1 and self.__loop1_valve_dev is None:
+        if register.value == verbal_const.YES and self.__loop1_valve_dev is None:
             self.__loop1_valve_dev = A20M15B2C.create(\
                 "Loop 1 valve",\
                 self._key + ".loop1.valve",\
@@ -423,14 +426,14 @@ class HVAC(BasePlugin):
             if self.__loop1_valve_dev is not None:
                 self.__loop1_valve_dev.init()
 
-        elif register.value == 0 and self.__loop1_valve_dev is not None:
+        elif register.value == verbal_const.NO and self.__loop1_valve_dev is not None:
             self.__loop1_valve_dev.shutdown()
             del self.__loop1_valve_dev
 
 
     def __loop2_cnt_enabled_cb(self, register):
 
-        if register.value == 1 and self.__loop2_cnt_dev is None:
+        if register.value == verbal_const.YES and self.__loop2_cnt_dev is None:
             self.__loop2_cnt_dev = Flowmeter.create(\
                 "Loop 2 flowmeter",\
                 self._key + ".loop2.cnt",\
@@ -443,14 +446,14 @@ class HVAC(BasePlugin):
                 self.__loop2_leak_teat = LeakTest(self.__loop2_cnt_dev, 20)
                 self.__loop2_leak_teat.on_result(self.__loop2_leaktest_result)
 
-        elif register.value == 0 and self.__loop2_cnt_dev is not None:
+        elif register.value == verbal_const.NO and self.__loop2_cnt_dev is not None:
             self.__loop2_cnt_dev.shutdown()
             del self.__loop2_cnt_dev
             del self.__loop2_leak_teat
 
     def __loop2_fan_enabled_cb(self, register):
 
-        if register.value == 1 and self.__loop2_fan_dev is None:
+        if register.value == verbal_const.YES and self.__loop2_fan_dev is None:
             self.__loop2_fan_dev = F3P146EC072600.create(\
                 "Loop 2 fan",\
                 self._key + ".loop2.fan",\
@@ -460,7 +463,7 @@ class HVAC(BasePlugin):
             if self.__loop2_fan_dev is not None:
                 self.__loop2_fan_dev.init()
 
-        elif register.value == 0 and self.__loop2_fan_dev is not None:
+        elif register.value == verbal_const.NO and self.__loop2_fan_dev is not None:
             self.__loop2_fan_dev.shutdown()
             del self.__loop2_fan_dev
 
@@ -476,7 +479,7 @@ class HVAC(BasePlugin):
 
     def __loop2_temp_enabled_cb(self, register):
 
-        if register.value == 1 and self.__loop2_temp_dev is None:
+        if register.value == verbal_const.YES and self.__loop2_temp_dev is None:
             self.__loop2_temp_dev = DS18B20.create(\
                 "Loop 2 temperature",\
                 self._key + ".loop2.temp",\
@@ -486,13 +489,13 @@ class HVAC(BasePlugin):
             if self.__loop2_temp_dev is not None:
                 self.__loop2_temp_dev.init()
 
-        elif register.value == 0 and self.__loop2_temp_dev is not None:
+        elif register.value == verbal_const.NO and self.__loop2_temp_dev is not None:
             self.__loop2_temp_dev.shutdown()
             del self.__loop2_temp_dev
 
     def __loop2_valve_enabled_cb(self, register):
 
-        if register.value == 1 and self.__loop2_valve_dev is None:
+        if register.value == verbal_const.YES and self.__loop2_valve_dev is None:
             self.__loop2_valve_dev = A20M15B2C.create(\
                 "Loop 2 valve",\
                 self._key + ".loop2.valve",\
@@ -502,7 +505,7 @@ class HVAC(BasePlugin):
             if self.__loop2_valve_dev is not None:
                 self.__loop2_valve_dev.init()
 
-        elif register.value == 0 and self.__loop2_valve_dev is not None:
+        elif register.value == verbal_const.NO and self.__loop2_valve_dev is not None:
             self.__loop2_valve_dev.shutdown()
             del self.__loop2_valve_dev
 

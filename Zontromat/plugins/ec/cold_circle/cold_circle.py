@@ -31,6 +31,8 @@ from plugins.base_plugin import BasePlugin
 
 from devices.Dallas.ds18b20 import DS18B20
 
+from data import verbal_const
+
 #region File Attributes
 
 __author__ = "Orlin Dimitrov"
@@ -126,7 +128,7 @@ class ColdCircle(BasePlugin):
 
     def __tank_temp_enabled_cb(self, register):
 
-        if register.value == 1 and self.__tank_temp_dev is None:
+        if register.value == verbal_const.YES and self.__tank_temp_dev is None:
             self.__tank_temp_dev = DS18B20.create(\
                 "Tank temperature",\
                 self._key + ".tank_temp",\
@@ -137,7 +139,7 @@ class ColdCircle(BasePlugin):
                 self.__tank_temp_dev.init()
                 self.__temp_proc.add(self.__tank_temp_dev)
 
-        elif register.value == 0 and self.__tank_temp_dev is not None:
+        elif register.value == verbal_const.NO and self.__tank_temp_dev is not None:
             self.__tank_temp_dev.shutdown()
             self.__temp_proc.remove(self.__tank_temp_dev)
             del self.__tank_temp_dev
