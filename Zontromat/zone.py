@@ -211,24 +211,6 @@ class Zone():
         self.__performance_profiler.on_time_change(self.__on_time_change)
         self.__performance_profiler.on_memory_change(self.__on_memory_change)
 
-        register = Register("self.ram.current")
-        register.scope = Scope.Global
-        register.source = Source.Zontromat
-        register.value = 0
-        self.__registers.add(register)
-
-        register = Register("self.ram.peak")
-        register.scope = Scope.Global
-        register.source = Source.Zontromat
-        register.value = 0
-        self.__registers.add(register)
-
-        register = Register("self.time.usage")
-        register.scope = Scope.Global
-        register.source = Source.Zontromat
-        register.value = 0
-        self.__registers.add(register)
-
         # Setup the performance profiler timer.
         self.__performance_profiler_timer = Timer(60000)
 
@@ -361,15 +343,23 @@ class Zone():
             self.__zone_state.set_state(ZoneState.Test)
 
     def __on_time_change(self, passed_time):
-        register = self.__registers.by_name("self.time.usage")
-        register.value = passed_time
+
+        time_usage = self.__registers.by_name("sys.time.usage")
+        if time_usage is not None:
+            time_usage.value = passed_time
+
         # print(f"Total time: {passed_time:06.3f} sec")
 
     def __on_memory_change(self, current, peak):
-        register = self.__registers.by_name("self.ram.current")
-        register.value = current
-        register = self.__registers.by_name("self.ram.peak")
-        register.value = peak
+
+        ram_current = self.__registers.by_name("sys.ram.current")
+        if ram_current is not None:
+            ram_current.value = current
+
+        ram_peak = self.__registers.by_name("sys.ram.peak")
+        if ram_peak is not None:
+            ram_peak.value = peak
+
         # print(f"Current memory usage is {current / 10**3}kB; Peak was {peak / 10**3}kB")
 
     @__performance_profiler.profile
