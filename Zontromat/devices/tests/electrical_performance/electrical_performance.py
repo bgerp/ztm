@@ -22,6 +22,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 
+import json
+
 from enum import Enum
 
 from data.registers import Registers
@@ -83,7 +85,7 @@ class ElectricalPerformance:
     """Test state machine."""
 
     __check_timer = None
-    """Leak test timer."""
+    """Check test timer."""
 
     __result_cb = None
     """Callback result device."""
@@ -103,7 +105,7 @@ class ElectricalPerformance:
 #region Constructor / Destructor
 
     def __init__(self):
-        self.__test_state = StateMachine(TestState.N)
+        self.__test_state = StateMachine(TestState.NONE)
         self.__check_timer = Timer(0)
         self.__registers = Registers.get_instance()
 
@@ -135,9 +137,10 @@ class ElectricalPerformance:
 
         current_power = 0
 
-        register = self.__registers.by_name("sc.sub_dev.current_power")
+        register = self.__registers.by_name("monitoring.pa.l1")
         if register is not None:
-            current_power = register.value
+            register_data = json.loads(register.value)
+            current_power = register_data["Current"]
 
         return current_power
 
