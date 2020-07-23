@@ -90,7 +90,7 @@ class ACT230(BaseDevice):
     """Card reader ID."""
 
     __reader_state = ReaderState.NONE
-    """Cart reader state flag."""
+    """Card reader state flag."""
 
 #endregion
 
@@ -232,7 +232,7 @@ class ACT230(BaseDevice):
                         frame = frame.decode("utf-8")
                         frame = frame.replace('\r', '').replace('\n', '').replace('?', '')
                         if len(frame) == self.__card_number_len:
-                            self.__cb_read_card(frame)
+                            self.__cb_read_card(frame, self.reader_id)
 
             except Exception:
                 self.stop()

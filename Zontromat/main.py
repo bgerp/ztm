@@ -84,7 +84,7 @@ def main():
 
     global __zone, __logger, __time_to_stop
 
-    # Create process name.
+    # Create process name. 
     if os.name == "posix":
         setproctitle.setproctitle('Zontromat')
 
