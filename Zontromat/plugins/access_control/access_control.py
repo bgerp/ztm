@@ -947,6 +947,12 @@ class AccessControl(BasePlugin):
 
         self.__update_occupation()
 
+        # Update last 30 attendees in list.
+        last30_attendees = self._registers.by_name(self._key + ".last30_attendees")
+        if last30_attendees is not None:
+            str_data = str(self.__last_30_attendees)
+            last30_attendees.value = str_data
+
 
     def shutdown(self):
         """Shutting down the reader."""

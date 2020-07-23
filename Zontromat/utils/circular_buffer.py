@@ -82,6 +82,11 @@ class CircularBuffer(object):
 
         return self._data.__repr__() + ' (' + str(len(self._data))+' items)'
 
+    def __str__(self):
+        """String representation."""
+        
+        return self._data.__repr__()
+
     def get_all(self):
         """return a list of all the elements"""
 
