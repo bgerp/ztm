@@ -34,20 +34,18 @@ from data.register import Register
 from data import verbal_const 
 from data import doc_generator
 
-# Room
-from plugins.sys.sys import Sys
-from plugins.tamper.tamper import Tamper
+# Plugins
 from plugins.access_control.access_control import AccessControl
+from plugins.tamper.tamper import Tamper
 from plugins.blinds.blinds import Blinds
+from plugins.monitoring.monitoring import Monitoring
+from plugins.environment.environment import Environment
 from plugins.hvac.hvac import HVAC
 from plugins.lighting.lighting import Lighting
-from plugins.wdt_tablet.wdt_tablet import WDTTablet
+from plugins.sys.sys import Sys
 
 # Test plugins
-from plugins.environment.environment import Environment
-from plugins.monitoring.monitoring import Monitoring
-
-# Energy center
+from plugins.wdt_tablet.wdt_tablet import WDTTablet
 from plugins.ec.cold_circle.cold_circle import ColdCircle
 from plugins.ec.hot_circle.hot_circle import HotCircle
 
@@ -85,32 +83,21 @@ __status__ = "Debug"
 class Plugins(Enum):
     """Zone device enumerator."""
 
-    # (ac)
-    AccessControl = 28
+    AccessControl = 1
+    AntiTampering = 2
+    Blinds = 3
+    Monitoring = 4
+    Environment = 5
+    HVAC = 6
+    MainLight = 7
+    Sys = 8
 
-    # (monitoring)
-    Monitoring = 2
-
-
-    # (env)
-    Environment = 10
-
-    # (hvac)
-    HVAC = 30
-
-    # General
-    Sys = 1
-
-    # Room
-    AntiTampering = 23
-    FireDetect = 24
-    Blinds = 27
-    MainLight = 31
-    WDTTablet = 32
+    # Comment the WDT Tablet.
+    WDTTablet = 10
 
     # Energy center
-    HotCircle = 50
-    ColdCircle = 51
+    HotCircle = 20
+    ColdCircle = 21
 
 class PluginsManager:
     """Template class doc."""
@@ -1461,7 +1448,7 @@ class PluginsManager:
 
 #endregion
 
-#region Anti tampering (atamp)
+#region Private Methods (atamp)
 
     def __anti_tampering_enabled(self, register):
         if register.value == verbal_const.YES and Plugins.AntiTampering not in self.__plugins:
