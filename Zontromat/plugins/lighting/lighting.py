@@ -219,16 +219,16 @@ class Lighting(BasePlugin):
 
         self.__set_voltages(0, 0)
 
-        sensor_enabled = self._config["registers"].by_name(self._key + ".sensor.enabled")
+        sensor_enabled = self._registers.by_name(self._key + ".sensor.enabled")
         if sensor_enabled is not None:
             sensor_enabled.update_handler = self.__sensor_enabled_cb
             sensor_enabled.value = verbal_const.YES
 
-        v1_output = self._config["registers"].by_name(self._key + ".v1.output")
+        v1_output = self._registers.by_name(self._key + ".v1.output")
         if v1_output is not None:
             v1_output.update_handler = self.__v1_output_cb
 
-        v2_output = self._config["registers"].by_name(self._key + ".v2.output")
+        v2_output = self._registers.by_name(self._key + ".v2.output")
         if v2_output is not None:
             v2_output.update_handler = self.__v2_output_cb
 
@@ -236,6 +236,8 @@ class Lighting(BasePlugin):
 
     def update(self):
         """Update the lights state."""
+
+        # TODO: Add interpolator when 
 
         # Update sensor data.
         self.__light_sensor.update()
@@ -259,6 +261,15 @@ class Lighting(BasePlugin):
         # print("Analog output 1: {:03}".format(self.v1))
 
         self.__set_voltages(self.v1, self.v2)
+
+        # If there is no one at the zone, just turn off the lights.
+        ac_zone_occupied = self._registers.by_name("ac.zone_occupied")
+        if ac_zone_occupied is not None:
+            if ac_zone_occupied.value == 1:
+                self.__logger.debug("Just turn off the light in the zone.")
+            if ac_zone_occupied.value == 0:
+                # TODO: Pass, but when activity has turnback return to normal state.
+                pass
 
     def shutdown(self):
         """Shutting down the lights."""

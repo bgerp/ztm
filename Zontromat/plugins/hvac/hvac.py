@@ -777,6 +777,15 @@ class HVAC(BasePlugin):
         #     # Update current time.
         #     self.__lastupdate_delta_time = time.time()
 
+        # If there is no one at the zone, just turn off the lights.
+        ac_zone_occupied = self._registers.by_name("ac.zone_occupied")
+        if ac_zone_occupied is not None:
+            if ac_zone_occupied.value == 1:
+                self.__logger.debug("Just turn off the HVAC in the zone.")
+            if ac_zone_occupied.value == 0:
+                # TODO: Pass, but when activity has turnback return to normal state.
+                pass
+
     def shutdown(self):
         """Shutdown the tamper."""
 
