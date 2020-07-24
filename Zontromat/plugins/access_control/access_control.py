@@ -113,13 +113,13 @@ class AccessControl(BasePlugin):
     __exit_reader_1 = None
     """Exit card reader 1."""
 
-    __exit_btn_1_input =  verbal_const.OFF # "DI0"
+    __exit_btn_1_input = verbal_const.OFF # "DI0"
     """Exit button input 1."""
 
-    __lock_mechanism_1_output =  verbal_const.OFF # "DO0"
+    __lock_mechanism_1_output = verbal_const.OFF # "DO0"
     """Locking mechanism 1 output."""
 
-    __door_1_closed_input =  verbal_const.OFF # "DI2"
+    __door_1_closed_input = verbal_const.OFF # "DI2"
     """Door 1 closed input."""
 
     __free_to_lock_1 = 0
@@ -144,10 +144,10 @@ class AccessControl(BasePlugin):
     __exit_reader_2 = None
     """Exit reader 2"""
 
-    __exit_btn_2_input =  verbal_const.OFF # "DI0"
+    __exit_btn_2_input = verbal_const.OFF # "DI0"
     """Exit button input 2."""
 
-    __lock_mechanism_2_output =  verbal_const.OFF # "DO0"
+    __lock_mechanism_2_output = verbal_const.OFF # "DO0"
     """Locking mechanism 2 output."""
 
     __door_2_closed_input = verbal_const.OFF # "DI2"
@@ -276,24 +276,53 @@ class AccessControl(BasePlugin):
 
     def __update_occupation(self):
 
-        pir_1 = self.__pir_1_state()
-        pir_2 = self.__pir_2_state()
-        door_1_closed_state = self.__door_1_closed_state()
-        door_2_closed_state = self.__door_2_closed_state()
+        pir_1_value = False
+        pir_1 = self._registers.by_name(self._key + ".pir.state")
+        if pir_1 is not None:
+            pir_1_value = pir_1.value
 
-        occupation_state = (pir_1 or pir_2 or door_1_closed_state or door_2_closed_state)
+        pir_2_value = False
+        pir_2 = self._registers.by_name(self._key + ".pir2.state")
+        if pir_2 is not None:
+            pir_2_value = pir_2.value
+
+        dc_1_value = False
+        cd_1 = self._registers.by_name(self._key + ".door_closed.state")
+        if cd_1 is not None:
+            dc_1_value = cd_1.value
+
+        dc_2_value = False
+        cd_2 = self._registers.by_name(self._key + ".door_closed2.state")
+        if cd_2 is not None:
+            dc_2_value = cd_2.value
+
+        wc_1_value = False
+        wc_1 = self._registers.by_name(self._key + ".window_closed.state")
+        if wc_1 is not None:
+            wc_1_value = wc_1.value
+
+        wc_2_value = False
+        wc_2 = self._registers.by_name(self._key + ".window_closed2.state")
+        if wc_2 is not None:
+            wc_2_value = wc_2.value
+
+        # Apply OR for all the signals.
+        occupation_state = \
+            (pir_1_value or pir_2_value or dc_1_value or dc_2_value or wc_1_value or wc_2_value)
 
         # Clear time interval.
         if occupation_state:
+            # Reset timer every time activity has present.
             self.__is_empty_timer.update_last_time()
             self.__set_zone_occupied(1)
 
         # Update is empty timer.
         self.__is_empty_timer.update()
-
         if self.__is_empty_timer.expired:
             self.__is_empty_timer.clear()
 
+            # If no activity has present for 3600 second,
+            # then the timer will expire and flag will be set to 0.
             self.__set_zone_occupied(0)
 
 #endregion
@@ -399,29 +428,32 @@ class AccessControl(BasePlugin):
 
     def __exit_btn_1_input_cb(self, register):
 
-            self.__exit_button_input = register.value
+        if self.__exit_btn_1_input != register.value:
+            self.__exit_btn_1_input = register.value
 
     def __exit_btn_1_state(self):
 
         state = 0
 
-        if self.__exit_button_input != verbal_const.OFF and self.__exit_button_input != "":
-            state = self._controller.digital_read(self.__exit_button_input)
+        if self.__exit_btn_1_input != verbal_const.OFF and self.__exit_btn_1_input != "":
+            state = self._controller.digital_read(self.__exit_btn_1_input)
 
         return state
 
     def __lock_mechanism_1_output_cb(self, register):
 
-        self.__lock_mechanism_output = register.value
+        if self.__lock_mechanism_1_output != register.value:
+            self.__lock_mechanism_1_output = register.value
 
     def __set_lock_mechanism_1(self, value=0):
 
-        if self.__lock_mechanism_output != verbal_const.OFF:
-            self._controller.digital_write(self.__lock_mechanism_output, value)
+        if self.__lock_mechanism_1_output != verbal_const.OFF and self.__exit_btn_1_input != "":
+            self._controller.digital_write(self.__lock_mechanism_1_output, value)
 
     def __time_to_open_1_cb(self, register):
 
-        self.__open_timer_1.expiration_time = register.value
+        if self.__open_timer_1.expiration_time != register.value:
+            self.__open_timer_1.expiration_time = register.value
 
     def __door_1_closed_state(self):
 
@@ -434,7 +466,8 @@ class AccessControl(BasePlugin):
 
     def __door_1_closed_input_cb(self, register):
 
-        self.__door_1_closed_input = register.value
+        if self.__door_1_closed_input != register.value:
+            self.__door_1_closed_input = register.value
 
     def __pir_1_state(self):
 
@@ -447,7 +480,8 @@ class AccessControl(BasePlugin):
 
     def __pir_1_input_cb(self, register):
 
-        self.__pir_1_input = register.value
+        if self.__pir_1_input != register.value:
+            self.__pir_1_input = register.value
 
     def __window_1_closed_state(self):
 
@@ -460,7 +494,8 @@ class AccessControl(BasePlugin):
 
     def __win_1_closed_input_cb(self, register):
 
-        self.__win_1_closed_input = register.value
+        if self.__win_1_closed_input != register.value:
+            self.__win_1_closed_input = register.value
 
     def __init_block_1(self):
 
@@ -682,49 +717,54 @@ class AccessControl(BasePlugin):
 
     def __exit_btn_2_input_cb(self, register):
 
-            self.__exit_button2_input = register.value
+        if self.__exit_btn_2_input != register.value:
+            self.__exit_btn_2_input = register.value
 
     def __exit_btn_2_state(self):
 
         state = 0
 
-        if self.__exit_button2_input != verbal_const.OFF and self.__exit_button2_input != "":
-            state = self._controller.digital_read(self.__exit_button2_input)
+        if self.__exit_btn_2_input != verbal_const.OFF and self.__exit_btn_2_input != "":
+            state = self._controller.digital_read(self.__exit_btn_2_input)
 
         return state
 
     def __lock_mechanism_2_output_cb(self, register):
 
-        self.__lock_mechanism2_output = register.value
+        if self.__lock_mechanism_2_output != register.value:
+            self.__lock_mechanism_2_output = register.value
 
     def __set_lock_mechanism_2(self, value=0):
 
-        if self.__lock_mechanism2_output != verbal_const.OFF:
-            self._controller.digital_write(self.__lock_mechanism2_output, value)
+        if self.__lock_mechanism_2_output != verbal_const.OFF and self.__lock_mechanism_2_output != "":
+            self._controller.digital_write(self.__lock_mechanism_2_output, value)
 
     def __time_to_open_2_cb(self, register):
 
-        self.__open_timer_2.expiration_time = register.value
+        if  self.__open_timer_2.expiration_time != register.value:
+            self.__open_timer_2.expiration_time = register.value
 
     def __door_2_closed_state(self):
 
         state = 0
 
-        if self.__door_closed_2_input != verbal_const.OFF and self.__door_closed_2_input != "":
-            state = self._controller.digital_read(self.__door_closed_2_input)
+        if self.__door_2_closed_input != verbal_const.OFF and self.__door_2_closed_input != "":
+            state = self._controller.digital_read(self.__door_2_closed_input)
 
         return state
 
     def __door_2_closed_input_cb(self, register):
 
-        self.__door_closed_2_input = register.value
+        if self.__door_2_closed_input != register.value:
+            self.__door_2_closed_input = register.value
 
     def __pir_2_input_cb(self, register):
 
-        self.__pir_2_input = register.value
+        if self.__pir_2_input != register.value:
+            self.__pir_2_input = register.value
 
     def __pir_2_state(self):
-        
+
         state = 0
 
         if self.__pir_2_input != verbal_const.OFF and self.__pir_2_input != "":
@@ -734,7 +774,8 @@ class AccessControl(BasePlugin):
 
     def __win_2_closed_input_cb(self, register):
 
-        self.__win_2_closed_input = register.value
+        if self.__win_2_closed_input != register.value:
+            self.__win_2_closed_input = register.value
 
     def __window_2_closed_state(self):
 
@@ -928,6 +969,8 @@ class AccessControl(BasePlugin):
 
         self.__update_block_2()
 
+        self.__update_occupation()
+
         # If the queue is not empty,
         # take first and send it to the ERP service.
         if self.__attendees_queue.empty() is not True:
@@ -945,14 +988,11 @@ class AccessControl(BasePlugin):
                     self.__logger.debug("Send ID: {}".format(self.__first_queue_record))
                     self.__registrar_state.set_state(RegistrarState.GetFromQue)
 
-        self.__update_occupation()
-
         # Update last 30 attendees in list.
         last30_attendees = self._registers.by_name(self._key + ".last30_attendees")
         if last30_attendees is not None:
             str_data = str(self.__last_30_attendees)
             last30_attendees.value = str_data
-
 
     def shutdown(self):
         """Shutting down the reader."""
