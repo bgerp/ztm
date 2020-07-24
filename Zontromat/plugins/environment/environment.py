@@ -149,8 +149,11 @@ class Environment(BasePlugin):
         self.__update_timer.update()
         if self.__update_timer.expired:
             self.__update_timer.clear()
+
             if self.__sunpos_enabled():
                 self.__calculate_position()
+
+            # TODO: Software update weathercast.
 
     def shutdown(self):
         """Shutdown the tamper."""
