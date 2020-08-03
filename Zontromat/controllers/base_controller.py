@@ -26,6 +26,10 @@ from enum import Enum
 
 from utils.configuarable import Configuarable
 
+from data import verbal_const
+
+from controllers.mapping import get_map
+
 #region File Attributes
 
 __author__ = "Orlin Dimitrov"
@@ -70,6 +74,55 @@ class PinModes(Enum):
 
 class BaseController(Configuarable):
     """Base controller"""
+
+#region Attributes
+
+    _gpio_map = None
+    """GPIO map"""
+
+#endregion
+
+#region Constructor
+
+    def __init__(self, config):
+        """Constructor"""
+
+        super().__init__(config)
+
+        self._gpio_map = get_map(self._config["model"])
+
+#endregion
+
+#region Protected Methods
+
+    def is_valid_gpio_type(self, gpio):
+        """Is valid GPIO type"""
+
+        return gpio is not None and gpio != ""
+
+    def is_off_gpio(self, gpio):
+        """Is not OFF"""
+
+        return (gpio == verbal_const.OFF)
+
+    def is_existing_gpio(self, gpio):
+        """Is part of the GPIO definitions"""
+
+        return gpio in self._gpio_map
+
+    def is_valid_gpio(self, gpio):
+        """Complex check is it valid."""
+
+        return not self.is_off_gpio(gpio) and self.is_existing_gpio(gpio) and self.is_valid_gpio_type(gpio)
+
+    def get_gpio_map(self):
+        """Return GPIO map."""
+
+        return self._gpio_map
+
+#endregion
+
+#region Public Methods
 
     def init(self):
         """Init the controller."""
@@ -269,3 +322,5 @@ class BaseController(Configuarable):
         tuple
             All 1W devices connected to the controller.
         """
+
+#endregion
