@@ -24,6 +24,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from utils.configuarable import Configuarable
 
+from plugins.sys.global_error_handler import GlobalErrorHandler
+from plugins.sys.error_codes import ErrorCodes
+
 #region File Attributes
 
 __author__ = "Orlin Dimitrov"
@@ -76,7 +79,21 @@ class BasePlugin(Configuarable):
         self._key = config["key"]
         self._registers = config["registers"]
         self._controller = config["controller"]
-        self._erp_service = config["erp_service"]
+
+#endregion
+
+#region Protected Methods
+
+    def _log_bad_value_register(self, logger, register):
+        """Log bad value register"""
+
+        message = "Inconsistent data type for register {} with content {}"\
+            .format(register.name, register.value)
+
+        logger.error(message)
+
+        # Put error to the queue.
+        GlobalErrorHandler.append(message, ErrorCodes.BadRegisterValue)
 
 #endregion
 
