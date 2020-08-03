@@ -175,14 +175,25 @@ class Lighting(BasePlugin):
             Voltage 2.
         """
 
-        self._controller.analog_write(self.__v1_output, v1)
-        self._controller.analog_write(self.__v2_output, v2)
+        if self._controller.is_valid_gpio(self.__v1_output):
+            self._controller.analog_write(self.__v1_output, v1)
+    
+        if self._controller.is_valid_gpio(self.__v2_output):
+            self._controller.analog_write(self.__v2_output, v2)
 
-    def __sensor_enabled_cb(self, register):
+    def __sensor_settings_cb(self, register):
 
-        if register.value == verbal_const.YES and self.__light_sensor is None:
-            sensor_dev = self._config["registers"].by_name(self._key + ".sensor.dev").value
-            sensor_circuit = self._config["registers"].by_name(self._key + ".sensor.circuit").value
+        # Check data type.
+        if not register.is_str():
+            self._log_bad_value_register(self.__logger, register)
+            return
+
+        if register.value != verbal_const.NO and self.__light_sensor is None:
+
+            params = register.value.split("/")
+
+            sensor_dev = params[0]
+            sensor_circuit = params[1]
 
             config = \
             {\
@@ -200,10 +211,22 @@ class Lighting(BasePlugin):
             del self.__light_sensor
 
     def __v1_output_cb(self, register):
+
+        # Check data type.
+        if not register.is_str():
+            self._log_bad_value_register(self.__logger, register)
+            return
+
         if self.__v1_output != register.value:
             self.__v1_output = register.value
 
     def __v2_output_cb(self, register):
+
+        # Check data type.
+        if not register.is_str():
+            self._log_bad_value_register(self.__logger, register)
+            return
+
         if self.__v2_output != register.value:
             self.__v2_output = register.value
 
@@ -219,10 +242,9 @@ class Lighting(BasePlugin):
 
         self.__set_voltages(0, 0)
 
-        sensor_enabled = self._registers.by_name(self._key + ".sensor.enabled")
+        sensor_enabled = self._registers.by_name(self._key + ".sensor.settings")
         if sensor_enabled is not None:
-            sensor_enabled.update_handler = self.__sensor_enabled_cb
-            sensor_enabled.value = verbal_const.YES
+            sensor_enabled.update_handler = self.__sensor_settings_cb
 
         v1_output = self._registers.by_name(self._key + ".v1.output")
         if v1_output is not None:
