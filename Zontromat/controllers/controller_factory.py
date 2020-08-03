@@ -22,6 +22,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 
+import os
+
 from controllers.neuron.neuron import Neuron
 
 #region File Attributes
@@ -81,5 +83,19 @@ class ControllerFactory():
                 controller = Neuron(config)
 
         return controller
+
+    @staticmethod
+    def get_info():
+
+        config = None
+
+        
+        # Try to read NEURON
+        try:
+            config = Neuron.read_eeprom()
+        except Exception as e:
+            pass
+
+        return config
 
 #endregion
