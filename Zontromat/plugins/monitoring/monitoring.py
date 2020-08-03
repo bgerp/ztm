@@ -22,16 +22,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 
-import os
 import json
+import os
+import subprocess
 
 from utils.logger import get_logger
 from utils.timer import Timer
 
 from plugins.base_plugin import BasePlugin
-from plugins.monitoring.monitoring_level import MonitoringLevel
-from plugins.monitoring.rule import Rule
-from plugins.monitoring.rules import Rules
 
 from devices.no_vendor.flowmeter import Flowmeter
 from devices.tests.leak_test.leak_test import LeakTest
@@ -39,6 +37,8 @@ from devices.Eastron.sdm120 import SDM120
 from devices.Eastron.sdm630 import SDM630
 
 from data import verbal_const
+
+from services.evok.settings import EvokSettings
 
 #region File Attributes
 
@@ -81,12 +81,6 @@ class Monitoring(BasePlugin):
     __logger = None
     """Logger"""
 
-    __update_timer = None
-    """Update timer."""
-
-    __rules = None
-    """Rules"""
-
     __cw_flowmetter_dev = None
     """Cold water flow meter."""
 
@@ -114,93 +108,8 @@ class Monitoring(BasePlugin):
     __parameters_values = []
     """Parameters values."""
 
-#endregion
-
-#region Private Methods (Colision Detection)
-
-    def __setup_rules(self):
-
-        self.__rules = Rules()
-
-        # GPIOs
-        for index in range(9):
-            self.__rules.add(Rule("DO{}".format(index), MonitoringLevel.Error))
-            self.__rules.add(Rule("DI{}".format(index), MonitoringLevel.Warning))
-            self.__rules.add(Rule("AO{}".format(index), MonitoringLevel.Error))
-            self.__rules.add(Rule("AI{}".format(index), MonitoringLevel.Warning))
-            self.__rules.add(Rule("RO{}".format(index), MonitoringLevel.Error))
-
-        # 1 Wire devices
-        ow_devices = self._controller.get_1w_devices()
-        for ow_device in ow_devices:
-            self.__rules.add(Rule(ow_device["circuit"], MonitoringLevel.Info))
-
-        # Serial Ports
-        if os.name == "nt":
-            self.__rules.add(Rule("COM4", MonitoringLevel.Error))
-            self.__rules.add(Rule("COM5", MonitoringLevel.Error))
-
-        elif os.name == "posix":
-            self.__rules.add(Rule("/dev/ttyUSB0", MonitoringLevel.Error))
-            self.__rules.add(Rule("/dev/ttyUSB1", MonitoringLevel.Error))
-
-        # Add event.
-        self.__rules.on_event(self.__on_event)
-
-    def __on_event(self, intersections, rule: Rule):
-        """On event callback for collisions."""
-
-        level = MonitoringLevel(rule.level)
-
-        if level == MonitoringLevel.Debug:
-            self.__logger.debug("Debug")
-            self.__logger.debug(intersections)
-
-        if level == MonitoringLevel.Info:
-            # self.__logger.info("Info")
-            # self.__logger.info(intersections)
-
-            info_message = self._registers.by_name(self._key + ".info_message")
-            if info_message is not None:
-                info_message.value = str(intersections)
-
-        if level == MonitoringLevel.Warning:
-            # self.__logger.warning("Warning")
-            # self.__logger.warning(intersections)
-
-            warning_message = self._registers.by_name(self._key + ".warning_message")
-            if warning_message is not None:
-                warning_message.value = str(intersections)
-
-        if level == MonitoringLevel.Error:
-            # self.__logger.error("Error")
-            # self.__logger.error(intersections)
-
-            error_message = self._registers.by_name(self._key + ".error_message")
-            if error_message is not None:
-                error_message.value = str(intersections)
-
-    def __clear_errors_cb(self, register):
-        """Clear errors callback."""
-
-        if register.value == 1:
-            # Clear the flag.
-            register.value = 0
-
-            # Clear info messages.
-            info_message = self._registers.by_name(self._key + ".info_message")
-            if info_message is not None:
-                info_message.value = ""
-
-            # Clear warning messages.
-            warning_message = self._registers.by_name(self._key + ".warning_message")
-            if warning_message is not None:
-                warning_message.value = ""
-
-            # Clear error messages.
-            error_message = self._registers.by_name(self._key + ".error_message")
-            if error_message is not None:
-                error_message.value = ""
+    __evok_setting = None
+    """EVOK settings."""
 
 #endregion
 
@@ -208,11 +117,23 @@ class Monitoring(BasePlugin):
 
     def __cw_input_cb(self, register):
 
-        self.__cw_flowmetter_dev.input = register.value
+        # Check data type.
+        if not register.is_str():
+            self._log_bad_value_register(self.__logger, register)
+            return
+
+        if self.__cw_flowmetter_dev.input != register.value:
+            self.__cw_flowmetter_dev.input = register.value
 
     def __cw_tpl_cb(self, register):
 
-        self.__cw_flowmetter_dev.tpl = register.value
+        # Check data type.
+        if not register.is_int_or_float():
+            self._log_bad_value_register(self.__logger, register)
+            return
+
+        if self.__cw_flowmetter_dev.tpl != register.value:
+            self.__cw_flowmetter_dev.tpl = register.value
 
     def __cw_leaktest_result(self, leak_liters):
 
@@ -222,6 +143,7 @@ class Monitoring(BasePlugin):
                 register.value = leak_liters
 
     def __init_cw(self):
+
         cw_input = self._registers.by_name(self._key + ".cw.input")
         if cw_input is not None:
             cw_input.update_handler = self.__cw_input_cb
@@ -263,11 +185,23 @@ class Monitoring(BasePlugin):
 
     def __hw_input_cb(self, register):
 
-        self.__hw_flowmetter_dev.input = register.value
+        # Check data type.
+        if not register.is_str():
+            self._log_bad_value_register(self.__logger, register)
+            return
+
+        if self.__hw_flowmetter_dev.input != register.value:
+            self.__hw_flowmetter_dev.input = register.value
 
     def __hw_tpl_cb(self, register):
 
-        self.__hw_flowmetter_dev.tpl = register.value
+        # Check data type.
+        if not register.is_int_or_float():
+            self._log_bad_value_register(self.__logger, register)
+            return
+
+        if self.__hw_flowmetter_dev.tpl != register.value:
+            self.__hw_flowmetter_dev.tpl = register.value
 
     def __hw_leaktest_result(self, leak_liters):
 
@@ -317,37 +251,76 @@ class Monitoring(BasePlugin):
 
 #region Private Methods (Power Analyser)
 
-    def __uart_cb(self, register):
+    def __pa_enabled_cb(self, register):
 
-        self.__uart = register.value
+        if not register.is_str():
+            return
 
-    def __dev_id_cb(self, register):
+        if register.value != verbal_const.NO and self.__power_analyser is None:
 
-        self.__dev_id = register.value
+            # Load EVOK.
+            if os.name == "posix":
+                self.__evok_setting = EvokSettings("/etc/evok.conf")
+            if os.name == "nt":
+                self.__evok_setting = EvokSettings("evok.conf")
+
+            params = register.value.split("/")
+
+            self.__dev_id = params[4]
+
+            if params[0] == "mb-rtu":
+                self.__uart = params[3]
+
+            vendor = params[1]
+            if vendor == "Eastron":
+
+                model = params[2]
+                if model == "SDM120":
+                    self.__power_analyser = SDM120()
+                    self.__register_type = "inp"
+
+                elif model == "SDM630":
+                    self.__power_analyser = SDM630()
+                    self.__register_type = "inp"
+
+                # Add the configuration.
+                # Add extention 1.
+                extention_1 = \
+                    {
+                        "global_id": self.__dev_id,
+                        "device_name": model,
+                        "modbus_uart_port": "/dev/extcomm/0/0",
+                        "allow_register_access": True,
+                        "address": self.__uart,
+                        "scan_frequency": 10,
+                        "scan_enabled": True,
+                        "baud_rate": 9600,
+                        "parity": "N",
+                        "stop_bits": 1
+                    }
+                # self.__evok_setting.add_named_device(extention_1, "EXTENTION_1")
+                # self.__evok_setting.save()
+
+        elif register.value == verbal_const.NO and self.__power_analyser is not None:
+            self.__power_analyser = None
+
+            # Remove the settings.
+            # self.__evok_setting.remove_device("EXTENTION_1")
+            # self.__evok_setting.save()
+
+        # Restart the service.
+        # subprocess.run("sudo systemctl restart evok.service")
 
     def __init_pa(self):
 
-        uart = self._registers.by_name(self._key + ".pa.uart")
-        if uart is not None:
-            uart.update_handler = self.__uart_cb
-
-        dev_id = self._registers.by_name(self._key + ".pa.dev_id")
-        if dev_id is not None:
-            dev_id.update_handler = self.__dev_id_cb
-
-        vendor = self._registers.by_name(self._key + ".pa.vendor").value
-        if vendor == "Eastron":
-
-            model = self._registers.by_name(self._key + ".pa.model").value
-            if model == "SDM120":
-                self.__power_analyser = SDM120()
-                self.__register_type = "inp"
-
-            elif model == "SDM630":
-                self.__power_analyser = SDM630()
-                self.__register_type = "inp"
+        pa_enabled = self._registers.by_name(self._key + ".pa.settings")
+        if pa_enabled is not None:
+            pa_enabled.update_handler = self.__pa_enabled_cb
 
     def __update_pa(self):
+
+        if self.__power_analyser is None:
+            return
 
         # Get structure data.
         registers_ids = self.__power_analyser.get_registers_ids()
@@ -431,15 +404,6 @@ class Monitoring(BasePlugin):
         self.__logger = get_logger(__name__)
         self.__logger.info("Starting up the {}".format(self.name))
 
-        self.__update_timer = Timer(1)
-
-        self.__setup_rules()
-
-        clear_errors = self._registers.by_name(self._key + ".clear_errors")
-        if clear_errors is not None:
-            clear_errors.update_handler = self.__clear_errors_cb
-            clear_errors.value = 1
-
         # Init cold water flow meter.
         self.__init_cw()
 
@@ -451,13 +415,6 @@ class Monitoring(BasePlugin):
 
     def update(self):
         """Runtime of the plugin."""
-
-        # Update the timer.
-        self.__update_timer.update()
-        if self.__update_timer.expired:
-            self.__update_timer.clear()
-
-            self.__rules.check(self._registers.to_dict())
 
         # Update cold water flow meter.
         self.__update_cw()
