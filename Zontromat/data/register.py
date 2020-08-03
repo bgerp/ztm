@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 import time
+import  json
 from enum import Enum
 
 #region File Attributes
@@ -76,7 +77,7 @@ class Register:
     __name = ""
     """Register name."""
 
-    __ts = None
+    __ts = 0
     """Timestamp of last update."""
 
     __value = None
@@ -90,6 +91,9 @@ class Register:
 
     __update_handler = None
     """Update handler."""
+
+    __force = False
+    """"""
 
 #endregion
 
@@ -275,5 +279,70 @@ class Register:
         """
         self.__update_handler = update_handler
 
+    @property
+    def force(self):
+        """Returns force flag of the register.
+
+        Returns
+        -------
+        bool
+            Force flag value.
+        """
+    
+        return self.__force
+
+    @force.setter
+    def force(self, value):
+        """Set force flag of the register.
+
+        Parameters
+        ----------
+        bool
+            Force flag value.
+        """
+    
+        self.__force = value
+
+#endregion
+
+#region Public Methods
+
+    def is_int_or_float(self):
+        """Try to determin is the content is int of float."""
+
+        return (isinstance(self.value, int) or isinstance(self.value, float))
+
+    def is_str(self):
+        """Try to determin is the content is string."""
+
+        return isinstance(self.value, str)
+
+    def is_json(self):
+        """Try to determin is the content string is JSON."""
+
+        result = False
+
+        if isinstance(self.value, list):
+            try:
+                json_object = json.dumps(self.value)
+                del json_object
+                result = True
+
+            except ValueError as e:
+                pass
+
+        elif isinstance(self.value, str):
+            try:
+                json_object = json.loads(self.value)
+                del json_object
+                result = True
+
+            except ValueError as e:
+                pass
+
+        else:
+            pass
+
+        return result
 
 #endregion
