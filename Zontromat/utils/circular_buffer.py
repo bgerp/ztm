@@ -87,6 +87,11 @@ class CircularBuffer(object):
         
         return self._data.__repr__()
 
+    def __len__(self):
+        """Length"""
+
+        return len(self._data)
+
     def get_all(self):
         """return a list of all the elements"""
 
