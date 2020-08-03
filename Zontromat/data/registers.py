@@ -22,6 +22,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 
+import time
+
 from data.register import Register
 
 from utils.logger import get_logger
@@ -170,6 +172,9 @@ class Registers:
                 result = True
                 break
 
+        if result == False:
+            self.__logger.warning("Register not found \"{}\"".format(name))
+
         return result
 
     def by_ts(self, ts):
@@ -190,6 +195,32 @@ class Registers:
 
         for register in self.__container:
             if ts < register.ts:
+                result.add(register)
+
+        return result
+
+    def new_then(self, seconds):
+        """Get registers newer then specific time from time of calling.
+
+        Parameters
+        ----------
+        seconds : float
+            seconds
+
+        Returns
+        -------
+        array
+            Registers specified time.
+        """
+
+        result = Registers()
+
+        time_now = time.time()
+
+        for register in self.__container:
+
+            delta_t = time_now - register.ts
+            if delta_t < seconds:
                 result.add(register)
 
         return result
