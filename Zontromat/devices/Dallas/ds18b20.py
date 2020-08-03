@@ -71,14 +71,16 @@ class DS18B20(BaseDevice):
 #region Public Static Methods
 
     @classmethod
-    def create(self, name, key, registers, controller):
+    def create(self, name, key, register, controller):
         """Value of the thermometer."""
 
         instance = None
 
-        circuit = registers.by_name(key + ".circuit")
-        dev = registers.by_name(key + ".dev")
-        typ = registers.by_name(key + ".type")
+        params = register.split("/")
+
+        circuit = params[2]
+        dev = params[0]
+        typ = params[1]
 
         if circuit is not None and\
             dev is not None and\
@@ -87,9 +89,9 @@ class DS18B20(BaseDevice):
             config = \
             {\
                 "name": name,
-                "dev": dev.value,
-                "circuit": circuit.value,
-                "typ": typ.value,
+                "dev": dev,
+                "circuit": circuit,
+                "typ": typ,
                 "controller": controller
             }
 
