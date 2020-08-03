@@ -128,7 +128,7 @@ class Blinds(BasePlugin):
     __deg_per_sec = 1
     """Degreases per sec."""
 
-    __sun_spot_update_timer = Timer(2)
+    __sun_spot_update_timer = None
     """Sun spot update timer."""
 
     __sun_azm = 0
@@ -162,28 +162,77 @@ class Blinds(BasePlugin):
 
 #region Private Methods
 
+    def __input_fb_cb(self, register):
+
+        # Check data type.
+        if not register.is_str():
+            self._log_bad_value_register(self.__logger, register)
+            return
+
+        if self.__input_fb != register.value:
+            self.__input_fb = register.value
+
+        if "D" in self.__input_fb.upper():
+            self.__feedback_type = FeedbackType.Digital
+
+        elif "A" in self.__input_fb.upper():
+            self.__feedback_type = FeedbackType.Analog
+
+    def __output_cw_cb(self, register):
+
+        # Check data type.
+        if not register.is_str():
+            self._log_bad_value_register(self.__logger, register)
+            return
+
+        if self.__output_cw != register.value:
+            self.__output_cw = register.value
+
+    def __output_ccw_cb(self, register):
+
+        # Check data type.
+        if not register.is_str():
+            self._log_bad_value_register(self.__logger, register)
+            return
+
+        if self.__output_ccw != register.value:
+            self.__output_ccw = register.value
+
+
     def __stop(self):
         """Stop the engine."""
 
-        self._controller.digital_write(self.__output_cw, 0)
-        self._controller.digital_write(self.__output_ccw, 0)
+        if self._controller.is_valid_gpio(self.__output_cw):
+            self._controller.digital_write(self.__output_cw, 0)
+
+        if self._controller.is_valid_gpio(self.__output_ccw):
+            self._controller.digital_write(self.__output_ccw, 0)
 
     def __turn_cw(self):
         """Turn the motor CW."""
 
-        self._controller.digital_write(self.__output_ccw, 0)
-        self._controller.digital_write(self.__output_cw, 1)
+        if self._controller.is_valid_gpio(self.__output_cw):
+            self._controller.digital_write(self.__output_cw, 1)
+
+        if self._controller.is_valid_gpio(self.__output_ccw):
+            self._controller.digital_write(self.__output_ccw, 0)
 
     def __turn_ccw(self):
         """Turn the motor CCW."""
 
-        self._controller.digital_write(self.__output_cw, 0)
-        self._controller.digital_write(self.__output_ccw, 1)
+        if self._controller.is_valid_gpio(self.__output_cw):
+            self._controller.digital_write(self.__output_cw, 0)
+
+        if self._controller.is_valid_gpio(self.__output_ccw):
+            self._controller.digital_write(self.__output_ccw, 1)
 
     def __reed_fb(self):
         """Read feedback."""
 
-        fb_value = None
+        fb_value = 0
+
+        if not self._controller.is_valid_gpio(self.__input_fb):
+            return fb_value
 
         if self.__feedback_type == FeedbackType.Digital:
             fb_value = self._controller.digital_read(self.__input_fb)
@@ -202,6 +251,11 @@ class Blinds(BasePlugin):
 
     def __on_new_pos(self, register):
         """Callback function that sets new position."""
+
+        # Check data type.
+        if not register.is_int_or_float():
+            self._log_bad_value_register(self.__logger, register)
+            return
 
         self.__set_position(register.value)
 
@@ -226,10 +280,20 @@ class Blinds(BasePlugin):
 
         sun_elev_reg = self._registers.by_name(self._key + ".sun.elevation.value")
         if sun_elev_reg:
+
+            if not sun_elev_reg.is_int_or_float():
+                self._log_bad_value_register(self.__logger, sun_elev_reg)
+                return
+
             self.__sun_elev = sun_elev_reg.value
 
         sun_azm_reg = self._registers.by_name(self._key + ".sun.azimuth.value")
         if sun_azm_reg:
+
+            if not sun_azm_reg.is_int_or_float():
+                self._log_bad_value_register(self.__logger, sun_azm_reg)
+                return
+
             self.__sun_azm = sun_azm_reg.value
 
         if (self.__sun_azm > 0) and (self.__sun_elev > 0):
@@ -266,29 +330,25 @@ class Blinds(BasePlugin):
 
         self.__move_timer = Timer()
 
+        self.__sun_spot_update_timer = Timer(2)
+
         self.__calibration_state = StateMachine(CalibrationState.NONE)
 
         input_fb = self._registers.by_name(self._key + ".input_fb")
         if input_fb is not None:
-            self.__input_fb = input_fb.value
-
-        output_ccw = self._registers.by_name(self._key + ".output_ccw")
-        if output_ccw is not None:
-            self.__output_ccw = output_ccw.value
+            input_fb.update_handler = self.__input_fb_cb
 
         output_cw = self._registers.by_name(self._key + ".output_cw")
         if output_cw is not None:
-            self.__output_cw = output_cw.value
+            output_cw.update_handler = self.__output_cw_cb
+
+        output_ccw = self._registers.by_name(self._key + ".output_ccw")
+        if output_ccw is not None:
+            output_ccw.update_handler = self.__output_ccw_cb
 
         # position = self._registers.by_name(self._key + ".position")
         # if position is not None:
         #     position.update_handler = self.__on_new_pos
-
-        if "D" in self.__input_fb.upper():
-            self.__feedback_type = FeedbackType.Digital
-
-        elif "A" in self.__input_fb.upper():
-            self.__feedback_type = FeedbackType.Analog
 
         self.__stop()
 
@@ -303,8 +363,8 @@ class Blinds(BasePlugin):
         if self.__sun_spot_update_timer.expired:
             self.__sun_spot_update_timer.clear()
 
-            # TODO: Uncomment before release.
-            # self.__calc_sun_spot()
+            if self.__blinds_state.is_state(BlindsState.Wait):
+                self.__calc_sun_spot()
 
         if self.__blinds_state.is_state(BlindsState.Prepare):
 
