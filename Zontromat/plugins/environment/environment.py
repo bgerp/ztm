@@ -89,9 +89,17 @@ class Environment(BasePlugin):
 
     def __sunpos_enabled_cb(self, register):
 
-        self.__sunpos_enabled_value = register.value
+        # Check data type.
+        if not register.is_str():
+            self._log_bad_value_register(self.__logger, register)
+            return
+
+        if self.__sunpos_enabled_value != register.value:
+            self.__sunpos_enabled_value = register.value
 
     def __calculate_position(self):
+
+        # TODO: To add registers for current position and parameters of the building
 
         # Latitude of the target.
         lat = 43.07779
