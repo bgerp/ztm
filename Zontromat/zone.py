@@ -44,6 +44,9 @@ from data.registers import Registers
 
 from plugins.plugins_manager import PluginsManager
 
+from services.http.server import Server
+from services.http.request_dispatcher import RequestDispatcher
+
 # from controllers.neuron.neuron.read_eeprom
 
 #region File Attributes
@@ -165,6 +168,9 @@ class Zone():
     __performance_profiler_timer = None
     """Performance profiler timer."""
 
+    __server = None
+    """Self hosting for EVOK WEB hooks."""
+
 #endregion
 
 #region Constructor
@@ -188,10 +194,30 @@ class Zone():
         self.__zone_state = StateMachine(ZoneState.Idle)
         self.__zone_state.on_change(self.__cb_zone_state)
 
+        # Take PLC info from settings.
+        vendor = self.__app_settings.get_controller["vendor"]
+        model = self.__app_settings.get_controller["model"]
+        serial = 0
+
+        # Read PLC information.
+        plc_info = ControllerFactory.get_info()
+
+        if "serial" in plc_info:
+            if plc_info["serial"] is not None:
+                serial = plc_info["serial"]
+
+        if "model" in plc_info:
+            if plc_info["model"] is not None:
+                model = plc_info["model"]
+
+        # TODO: To be scaled when get time for 1 minute intrval.
+        self.__update_timer.expiration_time = self.__update_timer.expiration_time + (serial / 1000)
+
         # Create Neuron.
         config = {
-            "vendor": self.__app_settings.get_controller["vendor"],
-            "model":  self.__app_settings.get_controller["model"],
+            "vendor": vendor,
+            "model": model,
+            "serial": serial,
             "host": self.__app_settings.get_controller["host"],
             "timeout": self.__app_settings.get_controller["timeout"]
         }
@@ -203,7 +229,7 @@ class Zone():
         self.__erp_service_update_timer = Timer(self.__erp_service_update_rate)
 
         # Set the plugin manager.
-        self.__plugin_manager = PluginsManager(self.__registers, self.__controller, self.__bgerp)
+        self.__plugin_manager = PluginsManager(self.__registers, self.__controller)
 
         # Set the performance profiler.
         self.__performance_profiler.enable_mem_profile = self.__app_settings.ram_usage
@@ -213,6 +239,13 @@ class Zone():
 
         # Setup the performance profiler timer.
         self.__performance_profiler_timer = Timer(60000)
+
+        # Create WEB service.
+        self.__server = Server("192.168.100.2", 8080)
+
+        # Set the IO map.
+        gpio_map = self.__controller.get_gpio_map()
+        RequestDispatcher.set_gpio_map(gpio_map)
 
 #endregion
 
@@ -280,6 +313,10 @@ class Zone():
 
     def __run(self):
 
+        # Start the server.
+        if not self.__server.is_alive:
+            self.__server.start()
+
         # Update the neuron.
         state = self.__controller.update()
 
@@ -309,8 +346,11 @@ class Zone():
             self.__erp_service_update_timer.clear()
 
             try:
+
                 ztm_regs = self.__registers.by_source(Source.Zontromat)
+                ztm_regs = ztm_regs.new_then(60)                
                 ztm_regs_dict = ztm_regs.to_dict()
+
                 update_state = self.__bgerp.sync(ztm_regs_dict)
 
                 if update_state is not None:
@@ -323,7 +363,7 @@ class Zone():
                     # self.__zone_state.set_state(ZoneState.Init)
 
             except Exception as e:
-                self.__logger.error("No connection to the ERP service.")
+                self.__logger.error(e) # "No connection to the ERP service."
 
     def __shutdown(self):
         """Shutdown procedure."""
@@ -435,6 +475,10 @@ class Zone():
 
     def shutdown(self):
         """Shutdown the process."""
+
+        # Stop the server.
+        if self.__server.is_alive:
+            self.__server.stop()
 
         self.__zone_state.set_state(ZoneState.Shutdown)
         self.__plugin_manager.shutdown()
