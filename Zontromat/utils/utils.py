@@ -164,6 +164,13 @@ def shadow_length(height, alpha):
         a - angle between Sun and horizon.
 
         @see https://planetcalc.com/1875/
+
+        Parameters
+        ----------
+        height : float
+            Height of the measurted object.
+        alpha : float
+            Angle between Sun and horizon.
     """
 
     return height / math.tan(alpha)
