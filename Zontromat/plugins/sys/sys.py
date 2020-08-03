@@ -22,10 +22,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 
+import os
+
 from utils.logger import get_logger
 from utils.timer import Timer
 
 from plugins.base_plugin import BasePlugin
+from plugins.sys.monitoring_level import MonitoringLevel
+from plugins.sys.rule import Rule
+from plugins.sys.rules import Rules
 
 from data import verbal_const
 
@@ -75,7 +80,16 @@ class Sys(BasePlugin):
     """Update timestamp."""
 
     __led_out = verbal_const.OFF
-    """Output"""
+    """LED Output"""
+
+    __tamper_input = verbal_const.OFF
+    """Tamper input."""
+
+    __collission_timer = None
+    """Update timer."""
+
+    __rules = None
+    """Rules"""
 
 #endregion
 
@@ -91,16 +105,127 @@ class Sys(BasePlugin):
 
     def __set_led(self, state):
 
-        if self.__led_out != verbal_const.OFF and self.__led_out != "":
+        if self._controller.is_valid_gpio(self.__led_out):
             self._controller.set_led(self.__led_out, state)
 
     def __blink_time_cb(self, register):
 
-        self.__blink_timer.expiration_time = register.value
+        # Check data type.
+        if not register.is_int_or_float():
+            self._log_bad_value_register(self.__logger, register)
+            return
+
+        if self.__blink_timer.expiration_time != register.value:
+            self.__blink_timer.expiration_time = register.value
 
     def __led_out_cb(self, register):
 
-        self.__led_out = register.value
+        # Check data type.
+        if not register.is_str():
+            self._log_bad_value_register(self.__logger, register)
+            return
+
+        if self.__led_out != register.value:
+            self.__led_out = register.value
+
+    def __tamper_input_cb(self, register):
+
+        # Check data type.
+        if not register.is_str():
+            self._log_bad_value_register(self.__logger, register)
+            return
+
+        if self.__tamper_input != register.value:
+            self.__tamper_input = register.value
+
+#region Private Methods (Colision Detection)
+
+    def __setup_rules(self):
+
+        self.__rules = Rules()
+
+        # GPIOs
+        for index in range(9):
+            self.__rules.add(Rule("DO{}".format(index), MonitoringLevel.Error))
+            self.__rules.add(Rule("DI{}".format(index), MonitoringLevel.Warning))
+            self.__rules.add(Rule("AO{}".format(index), MonitoringLevel.Error))
+            self.__rules.add(Rule("AI{}".format(index), MonitoringLevel.Warning))
+            self.__rules.add(Rule("RO{}".format(index), MonitoringLevel.Error))
+
+        # 1 Wire devices
+        ow_devices = self._controller.get_1w_devices()
+        for ow_device in ow_devices:
+            self.__rules.add(Rule(ow_device["circuit"], MonitoringLevel.Info))
+
+        # Serial Ports
+        if os.name == "nt":
+            self.__rules.add(Rule("COM4", MonitoringLevel.Error))
+            self.__rules.add(Rule("COM5", MonitoringLevel.Error))
+
+        elif os.name == "posix":
+            self.__rules.add(Rule("/dev/ttyUSB0", MonitoringLevel.Error))
+            self.__rules.add(Rule("/dev/ttyUSB1", MonitoringLevel.Error))
+
+        # Add event.
+        self.__rules.on_event(self.__on_event)
+
+    def __on_event(self, intersections, rule: Rule):
+        """On event callback for collisions."""
+
+        level = MonitoringLevel(rule.level)
+
+        if level == MonitoringLevel.Debug:
+            self.__logger.debug("Debug")
+            self.__logger.debug(intersections)
+
+        if level == MonitoringLevel.Info:
+            # self.__logger.info("Info")
+            # self.__logger.info(intersections)
+
+            info_message = self._registers.by_name(self._key + ".col.info_message")
+            if info_message is not None:
+                info_message.value = str(intersections)
+
+        if level == MonitoringLevel.Warning:
+            # self.__logger.warning("Warning")
+            # self.__logger.warning(intersections)
+
+            warning_message = self._registers.by_name(self._key + ".col.warning_message")
+            if warning_message is not None:
+                warning_message.value = str(intersections)
+
+        if level == MonitoringLevel.Error:
+            # self.__logger.error("Error")
+            # self.__logger.error(intersections)
+
+            error_message = self._registers.by_name(self._key + ".col.error_message")
+            if error_message is not None:
+                error_message.value = str(intersections)
+
+    def __clear_errors_cb(self, register):
+        """Clear errors callback."""
+
+        if register.value == 1:
+            # Clear the flag.
+            register.value = 0
+
+            # Clear info messages.
+            info_message = self._registers.by_name(self._key + ".col.info_message")
+            if info_message is not None:
+                info_message.value = ""
+
+            # Clear warning messages.
+            warning_message = self._registers.by_name(self._key + ".col.warning_message")
+            if warning_message is not None:
+                warning_message.value = ""
+
+            # Clear error messages.
+            error_message = self._registers.by_name(self._key + ".col.error_message")
+            if error_message is not None:
+                error_message.value = ""
+
+#endregion
+
 
 #endregion
 
@@ -109,22 +234,43 @@ class Sys(BasePlugin):
     def init(self):
         """Initialize the plugin."""
 
+        # Create logger.
         self.__logger = get_logger(__name__)
         self.__logger.info("Starting up the {}".format(self.name))
 
+        # Status LED blink timer.
         self.__blink_timer = Timer(1)
 
+        # Status LED blink time.
         blink_time = self._registers.by_name(self._key + ".sl.blink_time")
         if blink_time is not None:
             blink_time.update_handler = self.__blink_time_cb
 
+        # Status LED output.
         output = self._registers.by_name(self._key + ".sl.output")
         if output is not None:
             output.update_handler = self.__led_out_cb
 
+        # Anti tamper input.
+        tamper_input = self._registers.by_name(self._key + ".at.input")
+        if tamper_input is not None:
+            tamper_input.update_handler = self.__tamper_input_cb
+
+        # Colission detection.
+        self.__collission_timer = Timer(1)
+
+        self.__setup_rules()
+
+        clear_errors = self._registers.by_name(self._key + ".col.clear_errors")
+        if clear_errors is not None:
+            clear_errors.update_handler = self.__clear_errors_cb
+            clear_errors.value = 1
+
+
     def update(self):
         """Runtime of the plugin."""
 
+        # Update LED blink process.
         self.__blink_timer.update()
         if self.__blink_timer.expired:
             self.__blink_timer.clear()
@@ -135,6 +281,20 @@ class Sys(BasePlugin):
                 self.__led_state = 1
 
             self.__set_led(self.__led_state)
+
+        # Update tamper signal.
+        tamper_state = self._registers.by_name(self._key + ".at.state")
+        if tamper_state is not None:
+            if self._controller.is_valid_gpio(self.__tamper_input):
+                tamper_state.value = self._controller.digital_read(self.__tamper_input)
+
+        # Update the timer.
+        self.__collission_timer.update()
+        if self.__collission_timer.expired:
+            self.__collission_timer.clear()
+
+            self.__rules.check(self._registers.to_dict())
+
 
     def shutdown(self):
         """Shutting down the blinds."""
