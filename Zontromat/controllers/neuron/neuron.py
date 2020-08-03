@@ -80,40 +80,40 @@ class Neuron(BaseController):
     __timeout = 5
     """Communication timeout."""
 
-    __host = ''
+    __host = ""
     """Base URI."""
 
-    __rest_all = '/rest/all/'
+    __rest_all = "/rest/all/"
     """REST path to All devices."""
 
-    __rest_register = '/rest/register/'
+    __rest_register = "/rest/register/"
     """REST path to Registers."""
 
-    __rest_led = '/rest/led/'
+    __rest_led = "/rest/led/"
     """REST path to LEDs."""
 
-    __rest_relay = '/rest/relay/'
+    __rest_relay = "/rest/relay/"
     """REST path to Relays."""
 
-    __rest_output = '/rest/output/'
+    __rest_output = "/rest/output/"
     """REST path to DO."""
 
-    __rest_di = '/rest/di/'
+    __rest_di = "/rest/di/"
     """REST path to DI."""
 
-    __rest_ao = '/rest/ao/'
+    __rest_ao = "/rest/ao/"
     """REST path to AO."""
 
-    __rest_ai = '/rest/ai/'
+    __rest_ai = "/rest/ai/"
     """REST path to AI."""
 
-    __rest_watchdog = '/rest/watchdog/'
+    __rest_watchdog = "/rest/watchdog/"
     """REST path to WD"""
 
     __instance = None
     """Singelton instance."""
 
-    __gpio_map = None
+    _gpio_map = None
     """GPIO Mapping"""
 
 #endregion
@@ -155,7 +155,7 @@ class Neuron(BaseController):
         host_no_slash = host
 
         if host_no_slash.endswith("/"):
-            host_no_slash = host_no_slash.replace('.*/','')
+            host_no_slash = host_no_slash.replace(".*/","")
 
         self.__host = host_no_slash
 
@@ -193,7 +193,7 @@ class Neuron(BaseController):
             Neuron last communication time.
         """
 
-        return self.__get_device_parameter('last_comm')
+        return self.__get_device_parameter("last_comm")
 
     @property
     def model(self):
@@ -205,7 +205,7 @@ class Neuron(BaseController):
             Neuron model.
         """
 
-        return self.__get_device_parameter('model')
+        return self.__get_device_parameter("model")
 
     @property
     def serial_number(self):
@@ -217,7 +217,7 @@ class Neuron(BaseController):
             Neuron serial number.
         """
 
-        return self.__get_device_parameter('sn')
+        return self.__get_device_parameter("sn")
 
     @property
     def version(self):
@@ -229,7 +229,7 @@ class Neuron(BaseController):
             Neuron software version.
         """
 
-        return self.__get_device_parameter('ver2')
+        return self.__get_device_parameter("ver2")
 
 #endregion
 
@@ -243,7 +243,6 @@ class Neuron(BaseController):
         self.host = self._config["host"]
         self.timeout = self._config["timeout"]
         self.__logger = get_logger(__name__)
-        self.__gpio_map = get_map(self._config["model"])
 
 #endregion
 
@@ -266,8 +265,8 @@ class Neuron(BaseController):
         value = None
 
         for field in self.__json_data:
-            if ('circuit' in field) and ('dev' in field) and (parameter in field):
-                if (field['circuit'] == '1') and (field['dev'] == 'neuron'):
+            if ("circuit" in field) and ("dev" in field) and (parameter in field):
+                if (field["circuit"] == "1") and (field["dev"] == "neuron"):
                     value = field[parameter]
                     break
 
@@ -318,8 +317,8 @@ class Neuron(BaseController):
         device = None
 
         for field in self.__json_data:
-            if ('dev' in field)  and ('circuit' in field):
-                if (field['dev'] == dev) and (field['circuit'] == circuit):
+            if ("dev" in field)  and ("circuit" in field):
+                if (field["dev"] == dev) and (field["circuit"] == circuit):
                     device = field
 
         return device
@@ -334,6 +333,9 @@ class Neuron(BaseController):
         """
 
         circuits = []
+
+        if self.__json_data is None:
+            return circuits
 
         for field in self.__json_data:
             if "dev" in field:
@@ -353,6 +355,9 @@ class Neuron(BaseController):
             MODBUS devices.
         """
         circuits = []
+
+        if self.__json_data is None:
+            return circuits
 
         for field in self.__json_data:
             if "uart_port" in field:
@@ -417,7 +422,7 @@ class Neuron(BaseController):
         values = {}
 
         if registers is None:
-            raise Exception('Invalid registers.')
+            raise Exception("Invalid registers.")
 
         for register in registers:
             values[register] = self._get_uart_register(uart, dev_id, register, register_type)
@@ -444,7 +449,7 @@ class Neuron(BaseController):
 
         circuit = Neuron.generate_uart_circuit(uart, dev_id, register)
         uri = self.__host + self.__rest_register + circuit
-        response = requests.post(uri, data={'value':str(value)}, timeout=self.__timeout)
+        response = requests.post(uri, data={"value":str(value)}, timeout=self.__timeout)
         return json.loads(response.text)
 
     def _set_led(self, major_index, minor_index, value=0):
@@ -469,7 +474,7 @@ class Neuron(BaseController):
 
         circuit = Neuron.generate_device_circuit(major_index, minor_index)
         uri = self.__host + self.__rest_led + circuit
-        response = requests.post(uri, data={'value':str(value)}, timeout=self.__timeout)
+        response = requests.post(uri, data={"value":str(value)}, timeout=self.__timeout)
         return json.loads(response.text)
 
     def _set_relay(self, major_index, minor_index, value):
@@ -494,7 +499,7 @@ class Neuron(BaseController):
 
         circuit = Neuron.generate_device_circuit(major_index, minor_index)
         uri = self.__host + self.__rest_relay + circuit
-        response = requests.post(uri, data={'value':str(value)}, timeout=self.__timeout)
+        response = requests.post(uri, data={"value":str(value)}, timeout=self.__timeout)
         return json.loads(response.text)
 
     def _set_digital_output(self, major_index, minor_index, value):
@@ -519,7 +524,7 @@ class Neuron(BaseController):
 
         circuit = Neuron.generate_device_circuit(major_index, minor_index)
         uri = self.__host + self.__rest_output + circuit
-        response = requests.post(uri, data={'value':str(value), 'mode':'Simple'}, \
+        response = requests.post(uri, data={"value":str(value), "mode":"Simple"}, \
             timeout=self.__timeout)
         return json.loads(response.text)
 
@@ -547,8 +552,8 @@ class Neuron(BaseController):
 
         circuit = Neuron.generate_device_circuit(major_index, minor_index)
         uri = self.__host + self.__rest_output + circuit
-        response = requests.post(uri, data={'mode':'PWM', 'pwm_duty':int(value), \
-            'pwm_freq':int(freq)}, timeout=self.__timeout)
+        response = requests.post(uri, data={"mode":"PWM", "pwm_duty":int(value), \
+            "pwm_freq":int(freq)}, timeout=self.__timeout)
         return json.loads(response.text)
 
     def _set_analog_output(self, major_index, minor_index, value=0):
@@ -574,11 +579,11 @@ class Neuron(BaseController):
         circuit = Neuron.generate_device_circuit(major_index, minor_index)
         uri = self.__host + self.__rest_ao + circuit
 
-        response = requests.post(uri, data={'value':str(value), \
-            'mode':'Voltage'}, timeout=self.__timeout)
+        response = requests.post(uri, data={"value":str(value), \
+            "mode":"Voltage"}, timeout=self.__timeout)
         return json.loads(response.text)
 
-    def _set_input_mode(self, major_index, minor_index, mode='Simple'):
+    def _set_input_mode(self, major_index, minor_index, mode="Simple"):
         """Turn the DI state.
 
         See https://evok-14.api-docs.io/1.11/rest/change-digital-input-state
@@ -600,7 +605,7 @@ class Neuron(BaseController):
 
         circuit = Neuron.generate_device_circuit(major_index, minor_index)
         uri = self.__host + self.__rest_di + circuit
-        response = requests.post(uri, data={'mode':mode}, timeout=self.__timeout)
+        response = requests.post(uri, data={"mode":mode}, timeout=self.__timeout)
         return json.loads(response.text)
 
     def _set_input_debounce(self, major_index, minor_index, debounce=50):
@@ -625,7 +630,7 @@ class Neuron(BaseController):
 
         circuit = Neuron.generate_device_circuit(major_index, minor_index)
         uri = self.__host + self.__rest_di + circuit
-        response = requests.post(uri, data={'debounce':str(debounce)}, timeout=self.__timeout)
+        response = requests.post(uri, data={"debounce":str(debounce)}, timeout=self.__timeout)
         return json.loads(response.text)
 
     def _reset_input_counter(self, major_index, minor_index, counter=0):
@@ -650,7 +655,7 @@ class Neuron(BaseController):
 
         circuit = Neuron.generate_device_circuit(major_index, minor_index)
         uri = self.__host + self.__rest_di + circuit
-        response = requests.post(uri, data={'counter':str(counter)}, timeout=self.__timeout)
+        response = requests.post(uri, data={"counter":str(counter)}, timeout=self.__timeout)
         return json.loads(response.text)
 
     def _toggle_input_counter(self, major_index, minor_index, value=0):
@@ -673,13 +678,13 @@ class Neuron(BaseController):
             JSON response data.
         """
 
-        counter_mode = 'False'
+        counter_mode = "False"
 
         if value:
-            counter_mode = 'True'
+            counter_mode = "True"
         circuit = Neuron.generate_device_circuit(major_index, minor_index)
         uri = self.__host + self.__rest_di + circuit
-        response = requests.post(uri, data={'counter_mode':str(counter_mode)}, \
+        response = requests.post(uri, data={"counter_mode":str(counter_mode)}, \
             timeout=self.__timeout)
         return json.loads(response.text)
 
@@ -705,7 +710,7 @@ class Neuron(BaseController):
 
         circuit = Neuron.generate_device_circuit(major_index, minor_index)
         uri = self.__host + self.__rest_watchdog + circuit
-        response = requests.post(uri, data={'nv_save': 1}, timeout=self.__timeout)
+        response = requests.post(uri, data={"nv_save": 1}, timeout=self.__timeout)
         return json.loads(response.text)
 
     def _get_digital_input(self, major_index, minor_index):
@@ -792,15 +797,15 @@ class Neuron(BaseController):
             Neuron circuit.
         """
 
-        circuit = ''
+        circuit = ""
 
-        minor_index_l = ''
+        minor_index_l = ""
         if minor_index < 10:
-            minor_index_l = '0' + str(minor_index)
+            minor_index_l = "0" + str(minor_index)
         else:
             minor_index_l = minor_index
 
-        circuit = str(major_index) + '_' + str(minor_index_l)
+        circuit = str(major_index) + "_" + str(minor_index_l)
 
         return circuit
 
@@ -832,125 +837,127 @@ class Neuron(BaseController):
 
         if register_type is not None:
 
-            if 'inp' in register_type:
-                key = 'UART_' + str(uart) + '_' + str(dev_id) + '_' + \
-                    str(register) + '_' + register_type
+            if "inp" in register_type:
+                key = "UART_" + str(uart) + "_" + str(dev_id) + "_" + \
+                    str(register) + "_" + register_type
 
             elif register_type == "":
-                key = 'UART_' + str(uart) + '_' + str(dev_id) + '_' + str(register)
+                key = "UART_" + str(uart) + "_" + str(dev_id) + "_" + str(register)
 
         else:
-            key = 'UART_' + str(uart) + '_' + str(dev_id) + '_' + str(register)
+            key = "UART_" + str(uart) + "_" + str(dev_id) + "_" + str(register)
 
         return key
 
     @staticmethod
-    def read_eeprom(self):
+    def read_eeprom():
 
         device_cfg = {
-            'version': "UniPi 1.0",
-            'devices': {
-                'ai': {
-                    '1': 5.564920867,
-                    '2': 5.564920867,
+            "version": "UniPi 1.0",
+            "devices": {
+                "ai": {
+                    "1": 5.564920867,
+                    "2": 5.564920867,
                 }
             },
-            'version1': None,
-            'version2': None,
+            "version1": None,
+            "version2": None,
+            "serial": None,
+            "model": None
         }
 
         # Try to access the EEPROM at /sys/bus/i2c/devices/1-0050/eeprom
         try:
-            with open('/sys/bus/i2c/devices/1-0050/eeprom','rb') as eeprom:
+            with open("/sys/bus/i2c/devices/1-0050/eeprom","rb") as eeprom:
 
                 content = eeprom.read()
 
-                control = struct.unpack('>H', content[224:226])[0]
+                control = struct.unpack(">H", content[224:226])[0]
 
                 if control == 64085:
 
                     if ord(content[226]) == 1 and ord(content[227]) == 1:
-                        device_cfg['version'] = "UniPi 1.1"
+                        device_cfg["version"] = "UniPi 1.1"
 
                     elif ord(content[226]) == 11 and ord(content[227]) == 1:
-                        device_cfg['version'] = "UniPi Lite 1.1"
+                        device_cfg["version"] = "UniPi Lite 1.1"
 
                     else:
-                        device_cfg['version'] = "UniPi 1.0"
+                        device_cfg["version"] = "UniPi 1.0"
 
-                    device_cfg['version1'] = device_cfg['version']
+                    device_cfg["version1"] = device_cfg["version"]
 
                     #AIs coeff
-                    if device_cfg['version'] in ("UniPi 1.1", "UniPi 1.0"):
-                        device_cfg['devices'] = { 'ai': {
-                                                '1': struct.unpack('!f', content[240:244])[0],
-                                                '2': struct.unpack('!f', content[244:248])[0],
+                    if device_cfg["version"] in ("UniPi 1.1", "UniPi 1.0"):
+                        device_cfg["devices"] = { "ai": {
+                                                "1": struct.unpack("!f", content[240:244])[0],
+                                                "2": struct.unpack("!f", content[244:248])[0],
                                             }}
 
                     else:
-                        device_cfg['devices'] = { 'ai': {
-                                                '1': 0,
-                                                '2': 0,
+                        device_cfg["devices"] = { "ai": {
+                                                "1": 0,
+                                                "2": 0,
                                             }}
 
-                    device_cfg['serial'] = struct.unpack('i', content[228:232])[0]
+                    device_cfg["serial"] = struct.unpack("i", content[228:232])[0]
         except Exception:
             pass
 
         # Try to access the EEPROM at /sys/bus/i2c/devices/1-0057/eeprom
         try:
-            with open('/sys/bus/i2c/devices/1-0057/eeprom','rb') as eeprom:
+            with open("/sys/bus/i2c/devices/1-0057/eeprom","rb") as eeprom:
 
                 # Get content.
                 content = eeprom.read()
 
                 # Get control sum.
-                control = struct.unpack('>H', content[96:98])[0]
+                control = struct.unpack(">H", content[96:98])[0]
                 if control == 64085:
 
                     # Version
                     v1 = content[99]
                     v2 = content[98]
                     version2 = "{}.{}".format(v1, v2)
-                    device_cfg['version2'] = version2
+                    device_cfg["version2"] = version2
 
                     # Model
-                    model = struct.unpack('4s', content[106:110])
+                    model = struct.unpack("4s", content[106:110])
                     model = model[0]
                     model = model.decode("utf8")
-                    device_cfg['model'] = model
+                    device_cfg["model"] = model
 
                     # Serial Number
-                    device_cfg['serial'] = struct.unpack('i', content[100:104])[0]
+                    device_cfg["serial"] = struct.unpack("i", content[100:104])[0]
 
         except Exception:
             pass
 
         # Try to access the EEPROM at /sys/bus/i2c/devices/0-0057/eeprom
         try:
-            with open('/sys/bus/i2c/devices/0-0057/eeprom','rb') as eeprom:
+            with open("/sys/bus/i2c/devices/0-0057/eeprom","rb") as eeprom:
 
                 # Get content.
                 content = eeprom.read()
 
                 # Get control sum.
-                control = struct.unpack('>H', content[96:98])[0]
+                control = struct.unpack(">H", content[96:98])[0]
                 if control == 64085:
 
                     # Version
                     v1 = content[99]
                     v2 = content[98]
                     version2 = "{}.{}".format(v1, v2)
-                    device_cfg['version2'] = version2
+                    device_cfg["version2"] = version2
 
                     # Model
-                    model = struct.unpack('4s', content[106:110])
+                    model = struct.unpack("4s", content[106:110])
                     model = model[0]
                     model = model.decode("utf8")
-                    device_cfg['model'] = model
+                    device_cfg["model"] = model
 
                     # Serial Number
-                    device_cfg['serial'] = struct.unpack('i', content[100:104])[0]
+                    device_cfg["serial"] = struct.unpack("i", content[100:104])[0]
         except Exception:
             pass
 
@@ -979,23 +986,26 @@ class Neuron(BaseController):
             State of the pin.
         """
 
-        state = 0
+        state = False
 
         l_pin = pin.replace("!", "")
 
-        if l_pin is None or l_pin == "":
+        if not self.is_valid_gpio_type(l_pin):
             raise ValueError("Pin can not be None or empty string.")
 
-        if not l_pin in self.__gpio_map:
+        if not self.is_valid_gpio(l_pin):
             raise ValueError("Pin does not exists in pin map.")
 
-        gpio_map = self.__gpio_map[l_pin]
+        if self.is_off_gpio(l_pin):
+            return state
+
+        gpio_map = self._gpio_map[l_pin]
         response = self._get_digital_input(gpio_map["major_index"], gpio_map["minor_index"])
         if response is not None:
             state = response["value"]
 
         # Inversion
-        polarity = pin.startswith('!')
+        polarity = pin.startswith("!")
 
         if polarity:
             state = not state
@@ -1022,17 +1032,21 @@ class Neuron(BaseController):
         """
 
         l_pin = pin.replace("!", "")
+        response = None
 
-        if l_pin is None or l_pin == "":
+        if not self.is_valid_gpio_type(l_pin):
             raise ValueError("Pin can not be None or empty string.")
 
-        if not l_pin in self.__gpio_map:
+        if not self.is_valid_gpio(l_pin):
             raise ValueError("Pin does not exists in pin map.")
 
-        gpio_map = self.__gpio_map[l_pin]
+        if self.is_off_gpio(l_pin):
+            return response
+
+        gpio_map = self._gpio_map[l_pin]
 
         # Inversion
-        polarity = pin.startswith('!')
+        polarity = pin.startswith("!")
         state = 0
 
         if polarity:
@@ -1070,14 +1084,18 @@ class Neuron(BaseController):
             State of the pin.
         """
 
-        if pin is None or pin == "":
+        response = None
+
+        if not self.is_valid_gpio_type(pin):
             raise ValueError("Pin can not be None or empty string.")
 
-        if not pin in self.__gpio_map:
+        if not self.is_valid_gpio(pin):
             raise ValueError("Pin does not exists in pin map.")
 
-        response = None
-        gpio_map = self.__gpio_map[pin]
+        if self.is_off_gpio(pin):
+            return response
+
+        gpio_map = self._gpio_map[pin]
 
         if gpio_map["dev"] == "ao":
             response = self._set_analog_output(gpio_map["major_index"],\
@@ -1101,14 +1119,18 @@ class Neuron(BaseController):
             State of the pin.
         """
 
-        if pin is None or pin == "":
+        counter = 0
+
+        if not self.is_valid_gpio_type(pin):
             raise ValueError("Pin can not be None or empty string.")
 
-        if not pin in self.__gpio_map:
+        if not self.is_valid_gpio(pin):
             raise ValueError("Pin does not exists in pin map.")
 
-        counter = 0
-        gpio_map = self.__gpio_map[pin]
+        if self.is_off_gpio(pin):
+            return counter
+
+        gpio_map = self._gpio_map[pin]
 
         response = self._get_counter(gpio_map["major_index"], gpio_map["minor_index"])
         if response is not None:
@@ -1133,14 +1155,18 @@ class Neuron(BaseController):
             State of the pin.
         """
 
-        if pin is None or pin == "":
+        response = None
+
+        if not self.is_valid_gpio_type(pin):
             raise ValueError("Pin can not be None or empty string.")
 
-        if not pin in self.__gpio_map:
+        if not self.is_valid_gpio(pin):
             raise ValueError("Pin does not exists in pin map.")
 
-        response = None
-        gpio_map = self.__gpio_map[pin]
+        if self.is_off_gpio(pin):
+            return response
+
+        gpio_map = self._gpio_map[pin]
 
         if gpio_map["dev"] == "ai":
             response = self._get_analog_in(gpio_map["major_index"],\
@@ -1165,15 +1191,21 @@ class Neuron(BaseController):
             State of the pin.
         """
 
-        if pin is None or pin == "":
+        response = None
+
+        if not self.is_valid_gpio_type(pin):
             raise ValueError("Pin can not be None or empty string.")
 
-        if not pin in self.__gpio_map:
+        if not self.is_valid_gpio(pin):
             raise ValueError("Pin does not exists in pin map.")
 
-        gpio_map = self.__gpio_map[pin]
+        if self.is_off_gpio(pin):
+            return response
+
+        gpio_map = self._gpio_map[pin]
         response = self._reset_input_counter(gpio_map["major_index"],\
             gpio_map["minor_index"], value)
+
         return response
 
     def set_led(self, pin, value):
@@ -1195,10 +1227,21 @@ class Neuron(BaseController):
 
         l_pin = pin.replace("!", "")
 
-        gpio_map = self.__gpio_map[l_pin]
+        response = None
+
+        if not self.is_valid_gpio_type(l_pin):
+            raise ValueError("Pin can not be None or empty string.")
+
+        if not self.is_valid_gpio(l_pin):
+            raise ValueError("Pin does not exists in pin map.")
+
+        if self.is_off_gpio(l_pin):
+            return response
+
+        gpio_map = self._gpio_map[l_pin]
 
         # Inversion
-        polarity = pin.startswith('!')
+        polarity = pin.startswith("!")
         state = 0
 
         if polarity:
@@ -1209,6 +1252,7 @@ class Neuron(BaseController):
         state = int(state)
 
         response = self._set_led(gpio_map["major_index"], gpio_map["minor_index"], value)
+
         return response
 
     def read_temperature(self, dev, circuit):
@@ -1228,9 +1272,12 @@ class Neuron(BaseController):
             State of the device.
         """
 
+        value = 0
+
         device = self.get_device(dev, circuit)
 
-        value = 0
+        if device is None:
+            return value
 
         dev_type = device["typ"]
 
@@ -1259,11 +1306,14 @@ class Neuron(BaseController):
             State of the device.
         """
 
-        response = self.get_device(dev, circuit)
         value = 0
 
-        if response is not None:
-            value = float(response["vis"])
+        device = self.get_device(dev, circuit)
+
+        if device is None:
+            return value
+
+        value = float(device["vis"])
 
         return value
 
