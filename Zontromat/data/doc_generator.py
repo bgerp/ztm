@@ -85,25 +85,25 @@ def reg_to_json(registers):
     bgerp_regs = registers.by_source(Source.bgERP)
     dict_regs = bgerp_regs.to_dict()
     text = json.dumps(dict_regs, indent=4, sort_keys=True)
-    with open("bgerp_registers.json", "w") as f:
+    with open("registers_bgerp.json", "w") as f:
         f.write(text)
 
     ztm_regs = registers.by_source(Source.Zontromat)
     dict_regs = ztm_regs.to_dict()
     text = json.dumps(dict_regs, indent=4, sort_keys=True)
-    with open("ztm_registers.json", "w") as f:
+    with open("registers_ztm.json", "w") as f:
         f.write(text)
 
 def reg_to_csv(registers):
     """CSV output"""
 
     bgerp_regs = registers.by_source(Source.bgERP)
-    with open("bgerp_registers.csv", "w") as f:
+    with open("registers_bgerp.csv", "w") as f:
         for register in bgerp_regs:
             f.write("{}\t{}\n".format(register.name, register.value))
 
     ztm_regs = registers.by_source(Source.Zontromat)
-    with open("ztm_registers.csv", "w") as f:
+    with open("registers_ztm.csv", "w") as f:
         for register in ztm_regs:
             f.write("{}\t{}\n".format(register.name, register.value))
 
@@ -111,31 +111,31 @@ def reg_to_md(registers):
     """MD output"""
 
     bgerp_regs = registers.by_source(Source.bgERP)
-    with open("bgerp_registers.md", "w") as f:
+    with open("registers_bgerp.md", "w") as f:
 
         # Header
         f.write("| Purpose | Register | Type | Value |\n")
         f.write("|----------|:-------------|:------|:------|\n")
 
         # Body
-        for register in bgerp_regs:
+        for bgerp_register in bgerp_regs:
 
-            str_type = __get_type(register.value)
+            str_type = __get_type(bgerp_register.value)
 
             f.write("|  | {} | {} | {} |\n"\
-                .format(register.name, str_type, register.value))
+                .format(bgerp_register.name, str_type, bgerp_register.value))
 
     ztm_regs = registers.by_source(Source.Zontromat)
-    with open("ztm_registers.md", "w") as f:
+    with open("registers_ztm.md", "w") as f:
 
         # Header
         f.write("| Purpose | Register | Type | Value |\n")
         f.write("|----------|:-------------|:------|:------|\n")
 
         # Body
-        for register in ztm_regs:
+        for ztm_register in ztm_regs:
 
-            str_type = __get_type(register.value)
+            str_type = __get_type(ztm_register.value)
 
             f.write("|  | {} | {} | {} |\n"\
-                .format(register.name, str_type, register.value))
+                .format(ztm_register.name, str_type, ztm_register.value))
