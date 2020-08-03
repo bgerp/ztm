@@ -90,6 +90,9 @@ class bgERP():
     __last_sync = 0
     """Last sync time."""
 
+    __building_id = None
+    """Building identification."""
+
 #endregion
 
 #region Properties
@@ -146,6 +149,30 @@ class bgERP():
 
         self.__timeout = timeout
 
+    @property
+    def building_id(self):
+        """Building identity.
+
+        Returns
+        -------
+        mix
+            Building identity.
+        """
+
+        return self.__building_id
+
+    @property
+    def last_sync(self):
+        """Last sync time.
+
+        Returns
+        -------
+        float
+            Unix timestamp.
+        """
+
+        return self.__last_sync
+
 #endregion
 
 #region Constructor
@@ -160,8 +187,6 @@ class bgERP():
         timeout : int
             Connection timeout.
         """
-
-
 
         self.host = host
         self.timeout = timeout
@@ -199,10 +224,16 @@ class bgERP():
             if response.status_code == 200:
                 data = response.json()
                 if data is not None:
+
+                    # Authorization token.
                     if "token" in data:
                         self.__session.save(data["token"])
                         self.__session.load()
                         login_state = self.__session.session != ""
+
+                    # Building identity.
+                    if "bgerp_id" in data:
+                        self.__building_id = data["bgerp_id"]
 
             # Not authorized.
             elif response.status_code == 403:
