@@ -55,6 +55,8 @@ __status__ = "Debug"
 
 __L503 = \
 {\
+    "identification": {"vendor": "unipi", "model": "L503"},\
+
     "LED0": {"dev": "led", "major_index": 1, "minor_index": 1},\
     "LED1": {"dev": "led", "major_index": 1, "minor_index": 2},\
     "LED2": {"dev": "led", "major_index": 1, "minor_index": 3},\
@@ -126,6 +128,8 @@ __L503 = \
 
 __M503 = \
 {\
+    "identification": {"vendor": "unipi", "model": "M503"},\
+
     "LED0": {"dev": "led", "major_index": 1, "minor_index": 1},\
     "LED1": {"dev": "led", "major_index": 1, "minor_index": 2},\
     "LED2": {"dev": "led", "major_index": 1, "minor_index": 3},\
@@ -169,6 +173,8 @@ __M503 = \
 
 __M523 = \
 {\
+    "identification": {"vendor": "unipi", "model": "M523"},\
+
     "LED0": {"dev": "led", "major_index": 1, "minor_index": 1},\
     "LED1": {"dev": "led", "major_index": 1, "minor_index": 2},\
     "LED2": {"dev": "led", "major_index": 1, "minor_index": 3},\
@@ -210,6 +216,8 @@ __M523 = \
 
 __S103 = \
 {\
+    "identification": {"vendor": "unipi", "model": "S103"},\
+
     "LED0": {"dev": "led", "major_index": 1, "minor_index": 1},\
     "LED1": {"dev": "led", "major_index": 1, "minor_index": 2},\
     "LED2": {"dev": "led", "major_index": 1, "minor_index": 3},\
