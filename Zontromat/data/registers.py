@@ -28,6 +28,8 @@ from data.register import Register
 
 from utils.logger import get_logger
 
+from services.global_error_handler.global_error_handler import GlobalErrorHandler
+
 #region File Attributes
 
 __author__ = "Orlin Dimitrov"
@@ -133,7 +135,8 @@ class Registers:
                 register = Register(name)
                 register.value = registers[name]
                 self.add(register)
-                self.__logger.warning("Add automatically new register \"{}\"".format(name))
+
+                GlobalErrorHandler.log_unexpected_register(self.__logger, register)
 
     def add(self, register):
         """Add register.
@@ -173,7 +176,7 @@ class Registers:
                 break
 
         if result == False:
-            self.__logger.warning("Register not found \"{}\"".format(name))
+            GlobalErrorHandler.log_register_not_found(self.__logger, name)
 
         return result
 
