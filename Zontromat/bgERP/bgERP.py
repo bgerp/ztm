@@ -28,6 +28,7 @@ import time
 import requests
 
 from utils.logger import get_logger
+
 from bgERP.session import Session
 
 #region File Attributes
@@ -216,39 +217,44 @@ class bgERP():
         login_state = False
 
         uri = self.host + self.__api_login
-        response = requests.post(uri, data=credentials, timeout=self.timeout)
 
-        if response is not None:
+        try:
+            response = requests.post(uri, data=credentials, timeout=self.timeout)
 
-            # Take new login session key.
-            if response.status_code == 200:
-                data = response.json()
-                if data is not None:
+            if response is not None:
 
-                    # Authorization token.
-                    if "token" in data:
-                        self.__session.save(data["token"])
-                        self.__session.load()
-                        login_state = self.__session.session != ""
+                # Take new login session key.
+                if response.status_code == 200:
+                    data = response.json()
+                    if data is not None:
 
-                    # Building identity.
-                    if "bgerp_id" in data:
-                        self.__building_id = data["bgerp_id"]
+                        # Authorization token.
+                        if "token" in data:
+                            self.__session.save(data["token"])
+                            self.__session.load()
+                            login_state = self.__session.session != ""
 
-            # Not authorized.
-            elif response.status_code == 403:
-                login_state = False
+                        # Building identity.
+                        if "bgerp_id" in data:
+                            self.__building_id = data["bgerp_id"]
 
-            # Use saved session key.
-            elif response.status_code == 423:
-                self.__session.load()
-                login_state = self.__session.session != ""
+                # Not authorized.
+                elif response.status_code == 403:
+                    login_state = False
 
-            elif response.status_code == 404:
-                login_state = False
+                # Use saved session key.
+                elif response.status_code == 423:
+                    self.__session.load()
+                    login_state = self.__session.session != ""
 
-            else:
-                login_state = False
+                elif response.status_code == 404:
+                    login_state = False
+
+                else:
+                    login_state = False
+
+        except Exception:
+            login_state = False
 
         return login_state
 

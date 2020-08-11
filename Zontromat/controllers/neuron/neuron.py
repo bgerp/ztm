@@ -287,14 +287,19 @@ class Neuron(BaseController):
 
         # Call the Neuron.
         uri = self.__host + self.__rest_all
-        response = requests.get(uri, timeout=self.__timeout)
 
-        if response.status_code == 200:
-            self.__json_data = json.loads(response.text)
-            # Mark as successfull.
-            state = UpdateState.Success
+        try:
+            response = requests.get(uri, timeout=self.__timeout)
 
-        else:
+            if response.status_code == 200:
+                self.__json_data = json.loads(response.text)
+                # Mark as successfull.
+                state = UpdateState.Success
+
+            else:
+                state = UpdateState.Failure
+
+        except Exception:
             state = UpdateState.Failure
 
         return state
