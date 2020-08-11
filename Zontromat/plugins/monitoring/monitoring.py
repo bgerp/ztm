@@ -24,7 +24,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import json
 import os
-import subprocess
 
 from utils.logger import get_logger
 from utils.timer import Timer
@@ -39,6 +38,8 @@ from devices.Eastron.sdm630 import SDM630
 from data import verbal_const
 
 from services.evok.settings import EvokSettings
+
+from services.global_error_handler.global_error_handler import GlobalErrorHandler
 
 #region File Attributes
 
@@ -119,7 +120,7 @@ class Monitoring(BasePlugin):
 
         # Check data type.
         if not register.is_str():
-            self._log_bad_value_register(self.__logger, register)
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
 
         if self.__cw_flowmetter_dev.input != register.value:
@@ -129,7 +130,7 @@ class Monitoring(BasePlugin):
 
         # Check data type.
         if not register.is_int_or_float():
-            self._log_bad_value_register(self.__logger, register)
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
 
         if self.__cw_flowmetter_dev.tpl != register.value:
@@ -187,7 +188,7 @@ class Monitoring(BasePlugin):
 
         # Check data type.
         if not register.is_str():
-            self._log_bad_value_register(self.__logger, register)
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
 
         if self.__hw_flowmetter_dev.input != register.value:
@@ -197,7 +198,7 @@ class Monitoring(BasePlugin):
 
         # Check data type.
         if not register.is_int_or_float():
-            self._log_bad_value_register(self.__logger, register)
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
 
         if self.__hw_flowmetter_dev.tpl != register.value:
@@ -256,24 +257,30 @@ class Monitoring(BasePlugin):
         if not register.is_str():
             return
 
-        if register.value != verbal_const.NO and self.__power_analyser is None:
+        if register.value != verbal_const.OFF and self.__power_analyser is None:
 
-            # Load EVOK.
+            # Load EVOK settings.
             if os.name == "posix":
                 self.__evok_setting = EvokSettings("/etc/evok.conf")
             if os.name == "nt":
                 self.__evok_setting = EvokSettings("evok.conf")
 
+            # mb-rtu/Eastron/SDM630/2/3
+            # Split parammeters
             params = register.value.split("/")
 
+            # Set device ID.
             self.__dev_id = params[4]
 
+            # modbus type.
             if params[0] == "mb-rtu":
                 self.__uart = params[3]
 
+            # Vendor
             vendor = params[1]
             if vendor == "Eastron":
 
+                # Model
                 model = params[2]
                 if model == "SDM120":
                     self.__power_analyser = SDM120()
@@ -283,33 +290,47 @@ class Monitoring(BasePlugin):
                     self.__power_analyser = SDM630()
                     self.__register_type = "inp"
 
-                # Add the configuration.
-                # Add extention 1.
-                extention_1 = \
-                    {
-                        "global_id": self.__dev_id,
-                        "device_name": model,
-                        "modbus_uart_port": "/dev/extcomm/0/0",
-                        "allow_register_access": True,
-                        "address": self.__uart,
-                        "scan_frequency": 10,
-                        "scan_enabled": True,
-                        "baud_rate": 9600,
-                        "parity": "N",
-                        "stop_bits": 1
-                    }
-                # self.__evok_setting.add_named_device(extention_1, "EXTENTION_1")
-                # self.__evok_setting.save()
+                if not self.__evok_setting.device_exists("EXTENTION_1"):
 
-        elif register.value == verbal_const.NO and self.__power_analyser is not None:
+                    # Add extention 1.
+                    extention_1 = \
+                        {
+                            "global_id": self.__dev_id,
+                            "device_name": model,
+                            "modbus_uart_port": "/dev/extcomm/0/0",
+                            "allow_register_access": True,
+                            "address": self.__uart,
+                            "scan_frequency": 10,
+                            "scan_enabled": True,
+                            "baud_rate": 9600,
+                            "parity": "N",
+                            "stop_bits": 1
+                        }
+
+                    # Add the configuration.
+                    self.__evok_setting.add_named_device(extention_1, "EXTENTION_1")
+                    self.__evok_setting.save()
+                    self.__logger.debug("Enable the Power Analyser.")
+
+                    # Restart the service.
+                    if os.name == "posix":
+                        EvokSettings.restart()
+                        self.__logger.debug("Restart the EVOK service.")
+
+        elif register.value == verbal_const.OFF and self.__power_analyser is not None:
             self.__power_analyser = None
 
-            # Remove the settings.
-            # self.__evok_setting.remove_device("EXTENTION_1")
-            # self.__evok_setting.save()
+            if self.__evok_setting.device_exists("EXTENTION_1"):
 
-        # Restart the service.
-        # subprocess.run("sudo systemctl restart evok.service")
+                # Remove the settings.
+                self.__evok_setting.remove_device("EXTENTION_1")
+                self.__evok_setting.save()
+                self.__logger.debug("Disable the Power Analyser.")
+
+                # Restart the service.
+                if os.name == "posix":
+                    EvokSettings.restart()
+                    self.__logger.debug("Restart the EVOK service.")
 
     def __init_pa(self):
 
