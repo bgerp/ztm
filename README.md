@@ -33,7 +33,7 @@ This code is released under the [GPL3](https://www.gnu.org/licenses/gpl-3.0.html
 
 1. Prepare the SD card:
 
-- Use [Zontromat]() image, based on Rasppbian Strech.
+- Use [Zontromat]() image, based on Rasppbian Stretch.
 - Flash the SD card. Use [dd](http://man7.org/linux/man-pages/man1/dd.1.html) for Linux or [Etcher](https://www.balena.io/etcher/) for Windows.
 
 2. Configuring automatic update.
