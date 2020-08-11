@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import struct
 import getopt
 import sys
+import traceback
 
 #region File Attributes
 
@@ -60,82 +61,83 @@ __status__ = "Debug"
 def read_eeprom():
 
     device_cfg = {
-        'version': "UniPi 1.0",
-        'devices': {
-            'ai': {
-                '1': 5.564920867,
-                '2': 5.564920867,
+        "version": "UniPi 1.0",
+        "devices": {
+            "ai": {
+                "1": 5.564920867,
+                "2": 5.564920867,
             }
         },
-        'version1': None,
-        'version2': None,
+        "version1": None,
+        "version2": None,
+        "model": None,
+        "serial": None
     }
 
     # Try to access the EEPROM at /sys/bus/i2c/devices/1-0050/eeprom
     try:
-        with open('/sys/bus/i2c/devices/1-0050/eeprom','rb') as eeprom:
+        with open("/sys/bus/i2c/devices/1-0050/eeprom","rb") as eeprom:
 
             content = eeprom.read()
 
-            control = struct.unpack('>H', content[224:226])[0]
+            control = struct.unpack(">H", content[224:226])[0]
 
             if control == 64085:
 
                 if ord(content[226]) == 1 and ord(content[227]) == 1:
-                    device_cfg['version'] = "UniPi 1.1"
+                    device_cfg["version"] = "UniPi 1.1"
 
                 elif ord(content[226]) == 11 and ord(content[227]) == 1:
-                    device_cfg['version'] = "UniPi Lite 1.1"
+                    device_cfg["version"] = "UniPi Lite 1.1"
 
                 else:
-                    device_cfg['version'] = "UniPi 1.0"
+                    device_cfg["version"] = "UniPi 1.0"
 
-                device_cfg['version1'] = device_cfg['version']
+                device_cfg["version1"] = device_cfg["version"]
 
                 #AIs coeff
-                if device_cfg['version'] in ("UniPi 1.1", "UniPi 1.0"):
-                    device_cfg['devices'] = { 'ai': {
-                                              '1': struct.unpack('!f', content[240:244])[0],
-                                              '2': struct.unpack('!f', content[244:248])[0],
+                if device_cfg["version"] in ("UniPi 1.1", "UniPi 1.0"):
+                    device_cfg["devices"] = { "ai": {
+                                              "1": struct.unpack("!f", content[240:244])[0],
+                                              "2": struct.unpack("!f", content[244:248])[0],
                                          }}
 
                 else:
-                    device_cfg['devices'] = { 'ai': {
-                                              '1': 0,
-                                              '2': 0,
+                    device_cfg["devices"] = { "ai": {
+                                              "1": 0,
+                                              "2": 0,
                                          }}
 
-                device_cfg['serial'] = struct.unpack('i', content[228:232])[0]
+                device_cfg["serial"] = struct.unpack("i", content[228:232])[0]
     except Exception:
         pass
 
     # Try to access the EEPROM at /sys/bus/i2c/devices/1-0057/eeprom
     try:
-        with open('/sys/bus/i2c/devices/1-0057/eeprom','rb') as eeprom:
+        with open("/sys/bus/i2c/devices/1-0057/eeprom","rb") as eeprom:
 
             # Get content.
             content = eeprom.read()
 
             # Get control sum.
-            control = struct.unpack('>H', content[96:98])[0]
+            control = struct.unpack(">H", content[96:98])[0]
             if control == 64085:
 
                 # Version
                 v1 = content[99]
                 v2 = content[98]
                 version2 = "{}.{}".format(v1, v2)
-                device_cfg['version2'] = version2
+                device_cfg["version2"] = version2
 
                 # Model
-                model = struct.unpack('4s', content[106:110])
+                model = struct.unpack("4s", content[106:110])
                 model = model[0]
                 model = model.decode("utf8")
-                device_cfg['model'] = model
+                device_cfg["model"] = model
 
                 # Serial Number
-                device_cfg['serial'] = struct.unpack('i', content[100:104])[0]
-
-    except Exception as e:
+                device_cfg["serial"] = struct.unpack("i", content[100:104])[0]
+    except Exception:
         # Get current system exception
         ex_type, ex_value, ex_traceback = sys.exc_info()
 
@@ -151,51 +153,64 @@ def read_eeprom():
         print("Exception type : %s " % ex_type.__name__)
         print("Exception message : %s" %ex_value)
         print("Stack trace : %s" %stack_trace)
-        pass
 
     # Try to access the EEPROM at /sys/bus/i2c/devices/0-0057/eeprom
     try:
-        with open('/sys/bus/i2c/devices/0-0057/eeprom','rb') as eeprom:
+        with open("/sys/bus/i2c/devices/0-0057/eeprom","rb") as eeprom:
 
             # Get content.
             content = eeprom.read()
 
             # Get control sum.
-            control = struct.unpack('>H', content[96:98])[0]
+            control = struct.unpack(">H", content[96:98])[0]
             if control == 64085:
 
                 # Version
                 v1 = content[99]
                 v2 = content[98]
                 version2 = "{}.{}".format(v1, v2)
-                device_cfg['version2'] = version2
+                device_cfg["version2"] = version2
 
                 # Model
-                model = struct.unpack('4s', content[106:110])
+                model = struct.unpack("4s", content[106:110])
                 model = model[0]
                 model = model.decode("utf8")
-                device_cfg['model'] = model
+                device_cfg["model"] = model
 
                 # Serial Number
-                device_cfg['serial'] = struct.unpack('i', content[100:104])[0]
+                device_cfg["serial"] = struct.unpack("i", content[100:104])[0]
     except Exception:
         pass
 
     return device_cfg
 
 def main(argv):
-    opts, args = getopt.getopt(argv,"m",["model="])
+
+    opts, args = getopt.getopt(argv,"ms",["model=", "serial="])
 
     just_model = False
+    just_sn = False
+    show_all = True
+
     for opt, arg in opts:
-        if opt== '-m':
+        if opt== "-m":
             just_model = True
+            show_all = False
+
+        if opt== "-s":
+            just_sn = True
+            show_all = False
+
     configuration = read_eeprom()
+
     if just_model:
-        print(configuration['model'])
-    else:
+        print(configuration["model"])
+
+    if just_sn:
+        print(configuration["serial"])
+
+    if show_all:
         print(configuration)
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main(sys.argv[1:])
-
