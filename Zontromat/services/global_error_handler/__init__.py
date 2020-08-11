@@ -22,8 +22,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 
-from enum import Enum
-
 #region File Attributes
 
 __author__ = "Orlin Dimitrov"
@@ -54,11 +52,3 @@ __status__ = "Debug"
 """File status."""
 
 #endregion
-
-class ErrorCodes(Enum):
-
-    Error = 500
-    NoConnectionWithERP = 501
-    NoConnectionWithPLC = 502
-    BadRegisterValue = 503
-    BadRegisterDataType = 504

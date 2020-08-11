@@ -26,6 +26,8 @@ import time
 
 from data.register import Register
 
+from services.global_error_handler.error_codes import ErrorCodes
+
 #region File Attributes
 
 __author__ = "Orlin Dimitrov"
@@ -58,7 +60,7 @@ __status__ = "Debug"
 #endregion
 
 class GlobalErrorHandler:
-    """Last 100 errors handler."""
+    """Global error handler."""
 
 #region Attributes
 
@@ -108,10 +110,96 @@ class GlobalErrorHandler:
 #region Public Static Methods
 
     @staticmethod
+    def log_no_connection_erp(logger):
+        """Log no connection with ERP."""
+
+        message = "Communication lost with ERP."
+
+        logger.error(message)
+
+        # Put error to the queue.
+        GlobalErrorHandler.append(message, ErrorCodes.NoConnectionWithERP)
+
+    @staticmethod
+    def log_no_connection_plc(logger):
+        """Log bad value register"""
+
+        message = "Communication lost with PLC."
+
+        logger.error(message)
+
+        # Put error to the queue.
+        GlobalErrorHandler.append(message, ErrorCodes.NoConnectionWithPLC)
+
+    @staticmethod
+    def log_bad_register_value(logger, register):
+        """Log bad value register"""
+
+        message = "Inconsistent data for register {} with content {}"\
+            .format(register.name, register.value)
+
+        logger.error(message)
+
+        # Put error to the queue.
+        GlobalErrorHandler.append(message, ErrorCodes.BadRegisterValue)
+
+    @staticmethod
+    def log_bad_register_data_type(logger, register):
+        """Log bad value register"""
+
+        message = "Inconsistent data type for register {} with content {}"\
+            .format(register.name, register.value)
+
+        logger.error(message)
+
+        # Put error to the queue.
+        GlobalErrorHandler.append(message, ErrorCodes.BadRegisterDataType)
+
+    @staticmethod
+    def log_unexpected_register(logger, register):
+        """Unexpected register."""
+
+        message = "Add unexpected register {}; value: {}"\
+            .format(register.name, register.value)
+
+        logger.error(message)
+
+        # Put error to the queue.
+        GlobalErrorHandler.append(message, ErrorCodes.UnexpectedRegister)
+
+    @staticmethod
+    def log_register_not_found(logger, name):
+        """Unexpected register."""
+
+        message = "Register not found {}"\
+            .format(name)
+
+        logger.error(message)
+
+        # Put error to the queue.
+        GlobalErrorHandler.append(message, ErrorCodes.RegisterNotFound)
+
+    @staticmethod
+    def log_cart_reader_stop(logger, message):
+        """Log card reader stop."""
+
+        logger.warning(message)
+
+        # Put error to the queue.
+        GlobalErrorHandler.append(message, ErrorCodes.CartReaderStop)
+
+    @staticmethod
+    def log_cart_reader_none(logger, message):
+        """Log cart reader none."""
+
+        logger.warning(message)
+
+        # Put error to the queue.
+        GlobalErrorHandler.append(message, ErrorCodes.CartReaderNone)
+
+    @staticmethod
     def append(message, err_code):
         """Put message to the queue."""
-
-
 
         error = \
             {
