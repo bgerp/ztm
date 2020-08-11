@@ -188,8 +188,7 @@ class A20M15B2C(BaseDevice):
 
         self.__logger.debug("Name: {}; Value: {}".format(self.name, position))
 
-        # TODO: Do some processing of the possition.
-        return 0.0
+        return position * 10.0
 
     def set_pos(self, position):
         """Set position of the output.
