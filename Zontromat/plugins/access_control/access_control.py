@@ -37,6 +37,8 @@ from devices.TERACOM.act230 import ReaderState
 
 from data import verbal_const
 
+from services.global_error_handler.global_error_handler import GlobalErrorHandler
+
 #region File Attributes
 
 __author__ = "Orlin Dimitrov"
@@ -108,7 +110,7 @@ class AccessControl(BasePlugin):
 
         # Check data type.
         if not register.is_json():
-            self._log_bad_value_register(self.__logger, register)
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
 
         self.__security_zone_1.add_allowed_attendees(register.value)
@@ -118,7 +120,7 @@ class AccessControl(BasePlugin):
 
         # Check data type.
         if not register.is_int_or_float():
-            self._log_bad_value_register(self.__logger, register)
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
 
         if self.__is_empty_timer.expiration_time != register.value:
@@ -137,38 +139,39 @@ class AccessControl(BasePlugin):
     def __update_occupation(self):
 
         pir_1_value = False
-        pir_1 = self._registers.by_name(self._key + ".pir.state")
+        pir_1 = self._registers.by_name(self._key + ".pir_1.state")
         if pir_1 is not None:
             pir_1_value = pir_1.value
 
-        pir_2_value = False
-        pir_2 = self._registers.by_name(self._key + ".pir2.state")
-        if pir_2 is not None:
-            pir_2_value = pir_2.value
-
         dc_1_value = False
-        cd_1 = self._registers.by_name(self._key + ".door_closed.state")
-        if cd_1 is not None:
-            dc_1_value = cd_1.value
-
-        dc_2_value = False
-        cd_2 = self._registers.by_name(self._key + ".door_closed2.state")
-        if cd_2 is not None:
-            dc_2_value = cd_2.value
+        dc_1 = self._registers.by_name(self._key + ".door_closed_1.state")
+        if dc_1 is not None:
+            dc_1_value = dc_1.value
 
         wc_1_value = False
-        wc_1 = self._registers.by_name(self._key + ".window_closed.state")
+        wc_1 = self._registers.by_name(self._key + ".window_closed_1.state")
         if wc_1 is not None:
             wc_1_value = wc_1.value
 
+
+        pir_2_value = False
+        pir_2 = self._registers.by_name(self._key + ".pir_2.state")
+        if pir_2 is not None:
+            pir_2_value = pir_2.value
+
+        dc_2_value = False
+        dc_2 = self._registers.by_name(self._key + ".door_closed_2.state")
+        if dc_2 is not None:
+            dc_2_value = dc_2.value
+
         wc_2_value = False
-        wc_2 = self._registers.by_name(self._key + ".window_closed2.state")
+        wc_2 = self._registers.by_name(self._key + ".window_closed_2.state")
         if wc_2 is not None:
             wc_2_value = wc_2.value
 
         # Apply OR for all the signals.
         occupation_state = \
-            (pir_1_value or pir_2_value or dc_1_value or dc_2_value or wc_1_value or wc_2_value)
+            (pir_1_value or dc_1_value or wc_1_value or pir_2_value or dc_2_value or wc_2_value)
 
         # Clear time interval.
         if occupation_state:
@@ -236,7 +239,6 @@ class AccessControl(BasePlugin):
         if last_minute_attendees is not None:
             str_data = str(self.__last_minute_attendees)
             last_minute_attendees.value = str_data
-
 
 #endregion
 

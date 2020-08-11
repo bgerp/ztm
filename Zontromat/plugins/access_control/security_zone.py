@@ -36,6 +36,8 @@ from utils.timer import Timer
 
 from plugins.base_plugin import BasePlugin
 
+from services.global_error_handler.global_error_handler import GlobalErrorHandler
+
 #region File Attributes
 
 __author__ = "Orlin Dimitrov"
@@ -98,9 +100,6 @@ class SecurityZone(BasePlugin):
     __lock_mechanism_output = verbal_const.OFF # "DO0"
     """Locking mechanism output."""
 
-    __door_closed_input = verbal_const.OFF # "DI2"
-    """Door closed input."""
-
     __free_to_lock = 0
     """Free to lock flag."""
 
@@ -110,16 +109,12 @@ class SecurityZone(BasePlugin):
     __open_timer = None
     """Open timer."""
 
-    __pir_input = verbal_const.OFF # "DI0"
-    """PIR"""
-
-    __win_closed_input = verbal_const.OFF # "DI3"
-    """Window closed sensor."""
-
     __reader_read_cb = None
     """Reader read callback"""
 
     __name = ""
+    """Name of the zone."""
+
 #endregion
 
 #region Constructor
@@ -163,7 +158,7 @@ class SecurityZone(BasePlugin):
 
         return allowed
 
-    def __rader_read(self, card_id, reader_id):
+    def __reader_read(self, card_id, reader_id):
 
         # Set flag to open the door.
         if self.__is_allowed(card_id):
@@ -177,7 +172,7 @@ class SecurityZone(BasePlugin):
 
         # Check data type.
         if not register.is_str():
-            # self._log_bad_value_register(self.__logger, register)
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
 
         if register.value != verbal_const.NO and self.__entry_reader is None:
@@ -206,7 +201,7 @@ class SecurityZone(BasePlugin):
                     # Create card reader.
                     self.__entry_reader = ACT230(reader_config)
                     if self.__entry_reader.reader_state is ReaderState.NONE:
-                        self.__entry_reader.cb_read_card(self.__rader_read)
+                        self.__entry_reader.cb_read_card(self.__reader_read)
                         self.__entry_reader.start()
 
         elif register.value == verbal_const.NO and self.__entry_reader is not None:
@@ -221,7 +216,7 @@ class SecurityZone(BasePlugin):
 
         # Check data type.
         if not register.is_str():
-            # self._log_bad_value_register(self.__logger, register)
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
 
         if register.value != verbal_const.NO and self.__exit_reader is None:
@@ -251,7 +246,7 @@ class SecurityZone(BasePlugin):
                     # Create card reader.
                     self.__exit_reader = ACT230(reader_config)
                     if self.__exit_reader.reader_state is ReaderState.NONE:
-                        self.__exit_reader.cb_read_card(self.__rader_read)
+                        self.__exit_reader.cb_read_card(self.__reader_read)
                         self.__exit_reader.start()
 
         elif register.value == verbal_const.NO and self.__exit_reader is not None:
@@ -266,7 +261,7 @@ class SecurityZone(BasePlugin):
 
         # Check data type.
         if not register.is_str():
-            # self._log_bad_value_register(self.__logger, register)
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
 
         if self.__exit_btn_input != register.value:
@@ -285,7 +280,7 @@ class SecurityZone(BasePlugin):
 
         # Check data type.
         if not register.is_str():
-            # self._log_bad_value_register(self.__logger, register)
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
 
         if self.__lock_mechanism_output != register.value:
@@ -299,68 +294,11 @@ class SecurityZone(BasePlugin):
     def __time_to_open_cb(self, register):
 
         if not register.is_int_or_float():
-            # self._log_bad_value_register(self.__logger, register)
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
 
         if self.__open_timer.expiration_time != register.value:
             self.__open_timer.expiration_time = register.value
-
-    def __door_closed_state(self):
-
-        state = False
-
-        if self.__controller.is_valid_gpio(self.__door_closed_input):
-            state = self.__controller.digital_read(self.__door_closed_input)
-
-        return state
-
-    def __door_closed_input_cb(self, register):
-
-        # Check data type.
-        if not register.is_str():
-            # self._log_bad_value_register(self.__logger, register)
-            return
-
-        if self.__door_closed_input != register.value:
-            self.__door_closed_input = register.value
-
-    def __pir_state(self):
-
-        state = False
-
-        if self.__controller.is_valid_gpio(self.__pir_input):
-            state = self.__controller.digital_read(self.__pir_input)
-
-        return state
-
-    def __pir_input_cb(self, register):
-
-        # Check data type.
-        if not register.is_str():
-            # self._log_bad_value_register(self.__logger, register)
-            return
-
-        if self.__pir_input != register.value:
-            self.__pir_input = register.value
-
-    def __window_closed_state(self):
-
-        state = False
-
-        if self.__controller.is_valid_gpio(self.__win_closed_input):
-            state = self.__controller.digital_read(self.__win_closed_input)
-
-        return state
-
-    def __win_closed_input_cb(self, register):
-
-        # Check data type.
-        if not register.is_str():
-            # self._log_bad_value_register(self.__logger, register)
-            return
-
-        if self.__win_closed_input != register.value:
-            self.__win_closed_input = register.value
 
 #endregion
 
@@ -403,21 +341,6 @@ class SecurityZone(BasePlugin):
         if time_to_open is not None:
             time_to_open.update_handler = self.__time_to_open_cb
 
-        # Door closed 1
-        door_closed_input = self.__registers.by_name("{}.door_closed_{}.input".format(self.__key, self.__identifier))
-        if door_closed_input is not None:
-            door_closed_input.update_handler = self.__door_closed_input_cb
-
-        # PIR 1
-        pir_input = self.__registers.by_name("{}.pir_{}.input".format(self.__key, self.__identifier))
-        if pir_input is not None:
-            pir_input.update_handler = self.__pir_input_cb
-
-        # Window Closed 1
-        win_closed_input = self.__registers.by_name("{}.window_closed_{}.input".format(self.__key, self.__identifier))
-        if win_closed_input is not None:
-            win_closed_input.update_handler = self.__win_closed_input_cb
-
     def update(self):
 
         # Check entry card reader.
@@ -427,16 +350,22 @@ class SecurityZone(BasePlugin):
             self.__entry_reader.update()
 
             if self.__entry_reader.reader_state == ReaderState.STOP:
-                self.__logger.warning("Card reader {}; State {}; Port {}."\
+
+                message = "Card reader {}; State {}; Port {}."\
                     .format(self.__entry_reader.reader_id, \
                             self.__entry_reader.reader_state, \
-                            self.__entry_reader.port_name))
+                            self.__entry_reader.port_name)
+
+                GlobalErrorHandler.log_cart_reader_stop(self.__logger, message)
 
                 self.__entry_reader.start()
 
             if self.__entry_reader.reader_state == ReaderState.NONE:
-                self.__logger.warning("Card reader {}; State {}."\
-                    .format(self.__entry_reader.reader_id, self.__entry_reader.reader_state))
+
+                message = "Card reader {}; State {}."\
+                    .format(self.__entry_reader.reader_id, self.__entry_reader.reader_state)
+
+                GlobalErrorHandler.log_cart_reader_none(self.__logger, message)
 
                 self.__entry_reader.start()
 
@@ -447,16 +376,22 @@ class SecurityZone(BasePlugin):
             self.__exit_reader.update()
 
             if self.__exit_reader.reader_state == ReaderState.STOP:
-                self.__logger.warning("Card reader {}; State {}; Port {}."\
-                    .format(self.__exit_reader.reader_id, \
-                            self.__exit_reader.reader_state, \
-                            self.__exit_reader.port_name))
+
+                message = "Card reader {}; State {}; Port {}."\
+                    .format(self.__entry_reader.reader_id, \
+                            self.__entry_reader.reader_state, \
+                            self.__entry_reader.port_name)
+
+                GlobalErrorHandler.log_cart_reader_stop(self.__logger, message)
 
                 self.__exit_reader.start()
 
             if self.__exit_reader.reader_state == ReaderState.NONE:
-                self.__logger.warning("Card reader {}; State {}."\
-                    .format(self.__exit_reader.reader_id, self.__exit_reader.reader_state))
+
+                message = "Card reader {}; State {}."\
+                    .format(self.__entry_reader.reader_id, self.__entry_reader.reader_state)
+
+                GlobalErrorHandler.log_cart_reader_none(self.__logger, message)
 
                 self.__exit_reader.start()
 
@@ -483,21 +418,6 @@ class SecurityZone(BasePlugin):
                 if self.__free_to_lock == 1:
                     self.__set_lock_mechanism_1(0)
                     self.__free_to_lock = 0
-
-        # Read input flag of the door.
-        door_closed_state = self.__registers.by_name("{}.door_closed.state_{}".format(self.__key, self.__identifier))
-        if door_closed_state is not None:
-            door_closed_state.value = self.__door_closed_state()
-
-        # PIR 1
-        pir_state = self.__registers.by_name("{}.pir.state_{}".format(self.__key, self.__identifier))
-        if pir_state is not None:
-            pir_state.value = self.__pir_state()
-
-        # Window Closed 1
-        window_closed_state = self.__registers.by_name("{}.window_closed.state_{}".format(self.__key, self.__identifier))
-        if window_closed_state is not None:
-            window_closed_state.value = self.__window_closed_state()
 
     def shutdown(self):
 
