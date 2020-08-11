@@ -24,6 +24,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
 import configparser
+import re
+import subprocess
+import json
 
 #region File Attributes
 
@@ -66,6 +69,79 @@ class EvokSettings:
 
     __config = None
     """Configuration"""
+
+#endregion
+
+#region Properties
+
+    @property
+    def webhook_enabled(self):
+
+        return self.__config["MAIN"]["webhook_enabled"]
+
+    @property
+    def webhook_address(self):
+
+        return self.__config["MAIN"]["webhook_address"]
+
+    @property
+    def webhook_device_mask(self):
+
+        return self.__config["MAIN"]["webhook_device_mask"]
+
+    @property
+    def webhook_complex_events(self):
+
+        return self.__config["MAIN"]["webhook_complex_events"]
+
+    @webhook_enabled.setter
+    def webhook_enabled(self, value):
+
+        if value is None:
+            raise ValueError("Value should not be None.")
+
+        if not isinstance(value, bool):
+            raise TypeError("Value should be bool.")
+
+        self.__config["MAIN"]["webhook_enabled"] = str(value)
+
+    @webhook_address.setter
+    def webhook_address(self, value):
+
+        if value is None:
+            raise ValueError("Value should not be None.")
+
+        if not isinstance(value, str):
+            raise TypeError("Value should be string.")
+
+        p = re.compile('^(([^:/?#]+):)?(//([^/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?')
+        m = p.match(value)
+        if m:
+            self.__config["MAIN"]["webhook_address"] = str(value)
+        else:
+            raise ValueError("String should be URL.")
+
+    @webhook_device_mask.setter
+    def webhook_device_mask(self, value):
+
+        if value is None:
+            raise ValueError("Value should not be None.")
+
+        if not isinstance(value, list):
+            raise TypeError("Value should be bool.")
+
+        self.__config["MAIN"]["webhook_device_mask"] = json.dumps(value)
+
+    @webhook_complex_events.setter
+    def webhook_complex_events(self, value):
+
+        if value is None:
+            raise ValueError("Value should not be None.")
+
+        if not isinstance(value, bool):
+            raise TypeError("Value should be bool.")
+
+        self.__config["MAIN"]["webhook_complex_events"] = str(value)
 
 #endregion
 
@@ -137,7 +213,7 @@ class EvokSettings:
             raise ValueError("Extention allready exists.")
 
         if not isinstance(config, dict):
-            raise ValueError("Configuration should be list.")
+            raise ValueError("Configuration should be dict.")
 
         self.__config.add_section(extension_name)
 
@@ -154,25 +230,46 @@ class EvokSettings:
         existing_sections = self.__config.sections()
 
         if extension_name in existing_sections:
-            raise ValueError("Extention allready exists.")
+            raise ValueError("Extention allready exists: {}".format(extension_name))
 
-        if not isinstance(config, list):
-            raise ValueError("Configuration should be list.")
+        if not isinstance(config, dict):
+            raise ValueError("Configuration should be dict.")
 
         self.__config.add_section(extension_name)
 
         # Add the configuration.
         for row in config:
-            self.__config[extension_name][row] = config[row]
+            self.__config[extension_name][row] = str(config[row])
 
     def remove_device(self, extension_name):
         """Remove extension."""
 
         existing_sections = self.__config.sections()
 
-        if extension_name in existing_sections:
-            raise ValueError("Extention allready exists.")
+        if extension_name not in existing_sections:
+            raise ValueError("Extention does not exists.")
 
         self.__config.remove_section(extension_name)
+
+    def device_exists(self, extension_name):
+        """Extension has exists."""
+
+        extensions = self.__config.sections()
+        return extension_name in extensions
+
+#endregion
+
+#region Public Static Methods
+
+    @staticmethod
+    def restart():
+        """Restart EVOK service."""
+
+        try:
+            result = subprocess.call("systemctl restart evok", shell=True)
+            # print(result)
+
+        except Exception as e:
+            print(e)
 
 #endregion
