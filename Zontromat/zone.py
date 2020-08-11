@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 import traceback
+import os
 
 from enum import Enum
 
@@ -45,7 +46,9 @@ from data.registers import Registers
 from plugins.plugins_manager import PluginsManager
 
 from services.http.server import Server
-from services.http.request_dispatcher import RequestDispatcher
+from services.http.register_handler import RegisterHandler
+from services.evok.settings import EvokSettings
+from services.global_error_handler.global_error_handler import GlobalErrorHandler
 
 # from controllers.neuron.neuron.read_eeprom
 
@@ -221,6 +224,7 @@ class Zone():
             "host": self.__app_settings.get_controller["host"],
             "timeout": self.__app_settings.get_controller["timeout"]
         }
+
         self.__controller = ControllerFactory.create(config)
 
         # Create bgERP and login.
@@ -241,11 +245,33 @@ class Zone():
         self.__performance_profiler_timer = Timer(60000)
 
         # Create WEB service.
-        self.__server = Server("192.168.100.2", 8080)
+        if os.name == "posix":
+            
+            # Create entrance
+            evok_settings = EvokSettings("/etc/evok.conf")
+            
+            # Setup the EVOK web hooks.
+            evok_settings.webhook_enabled = True
+            evok_settings.webhook_address = "http://127.0.0.1:8889/api/evok-webhooks   ; Put your server endpoint address here (e.g. http://123.123.123.123:/wh )"
+            evok_settings.webhook_device_mask = ["input", "wd"]
+            evok_settings.webhook_complex_events = True
+            
+            # Save
+            evok_settings.save()
+
+            # Restart the service to accept the settings.
+            EvokSettings.restart()
+
+            # Create the WEB server.
+            self.__server = Server("127.0.0.1", 8889)
+
+        if os.name == "nt":
+            # self.__server = Server("176.33.1.207", 8889)
+            self.__server = Server("192.168.100.2", 8889)
 
         # Set the IO map.
         gpio_map = self.__controller.get_gpio_map()
-        RequestDispatcher.set_gpio_map(gpio_map)
+        RegisterHandler.set_gpio_map(gpio_map)
 
 #endregion
 
@@ -269,25 +295,20 @@ class Zone():
 
         elif state == UpdateState.Failure:
 
+            GlobalErrorHandler.log_no_connection_plc(self.__logger)
+
             self.__controller_comm_failures += 1
-            if self.__controller_comm_failures >= 10:
+            if self.__controller_comm_failures >= 30:
                 self.__controller_comm_failures = 0
 
                 # Restart service
                 # if os.name == "posix":
                 #     os.system("sudo service EVOK restart")
 
-                """
-                TODO: In case of failure:
-                - Try several times if result is still unsuccessful reestart the EVOK.
-                - Wait EVOK service to start.
-                - Continue main cycle.
-                """
-
-                message = "Communication lost with controller."
-                self.__logger.error(message)
-
-            self.__zone_state.set_state(ZoneState.Init)
+                # In case of failure:
+                # - Try several times if result is still unsuccessful reestart the EVOK.
+                # - Wait EVOK service to start.
+                # - Continue main cycle.
 
     def __login(self):
         """Login to bgERP."""
@@ -321,49 +342,37 @@ class Zone():
         state = self.__controller.update()
 
         if state == UpdateState.Success:
-            self.__plugin_manager.update()
             self.__controller_comm_failures = 0
 
         elif state == UpdateState.Failure:
             self.__controller_comm_failures += 1
-            if self.__controller_comm_failures >= 10:
+            if self.__controller_comm_failures >= 20:
                 self.__controller_comm_failures = 0
 
                 self.__logger.error("EVOK service should be restarted.")
-                """
-                TODO: In case of failure:
-                - Try several times if result is still unsuccessful reestart the EVOK.
-                - Wait EVOK service to start.
-                - Continue main cycle.
-                - Tell bgERP that the EVOK is not runing.
-                """
 
-            self.__logger.error("Module {} Communication lost with EVOK.".format(__name__))
+            GlobalErrorHandler.log_no_connection_plc(self.__logger)
+
+        # Give plugins runtime.
+        self.__plugin_manager.update()
 
         # Update periodically bgERP.
         self.__erp_service_update_timer.update()
         if self.__erp_service_update_timer.expired:
             self.__erp_service_update_timer.clear()
 
-            try:
+            ztm_regs = self.__registers.by_source(Source.Zontromat)
+            ztm_regs = ztm_regs.new_then(60)                
+            ztm_regs_dict = ztm_regs.to_dict()
 
-                ztm_regs = self.__registers.by_source(Source.Zontromat)
-                ztm_regs = ztm_regs.new_then(60)                
-                ztm_regs_dict = ztm_regs.to_dict()
+            update_state = self.__bgerp.sync(ztm_regs_dict)
 
-                update_state = self.__bgerp.sync(ztm_regs_dict)
+            if update_state is not None:
+                self.__registers.update(update_state)
 
-                if update_state is not None:
-                    self.__registers.update(update_state)
+            else:
+                GlobalErrorHandler.log_no_connection_erp(self.__logger)
 
-                else:
-                    pass
-                    # self.__logger.error("Unsuccessful update to ERP service.")
-                    # Pass it is not necessary to restart everything.
-                    # self.__zone_state.set_state(ZoneState.Init)
-
-            except Exception as e:
-                self.__logger.error(e) # "No connection to the ERP service."
 
     def __shutdown(self):
         """Shutdown procedure."""
@@ -469,7 +478,7 @@ class Zone():
                 # Log the exception without to close the application.
                 except Exception:
                     self.__logger.error(traceback.format_exc())
-                    self.__zone_state.set_state(ZoneState.Init)
+                    # self.__zone_state.set_state(ZoneState.Init)
 
                 self.__busy_flag = False
 
