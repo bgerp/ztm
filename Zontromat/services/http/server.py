@@ -26,7 +26,7 @@ from threading import Thread
 
 from http.server import HTTPServer
 
-from services.http.request_dispatcher import RequestDispatcher
+from services.http.request_handler import RequestHandler
 
 from utils.logger import get_logger
 
@@ -71,7 +71,7 @@ class Server:
     __host = "127.0.0.1"
     """Host"""
 
-    __port = 8080
+    __port = 8889
     """Port"""
 
     __server = None
@@ -84,7 +84,7 @@ class Server:
 
 #region Constructor
 
-    def __init__(self, host="127.0.0.1", port=8080):
+    def __init__(self, host="127.0.0.1", port=8889):
 
         if host is not None:
             self.__host = host
@@ -127,7 +127,7 @@ class Server:
 
                 # Create
                 self.__thread = Thread(target=self.__worker, args=(33,))
-                self.__server = HTTPServer((self.__host, self.__port), RequestDispatcher)
+                self.__server = HTTPServer((self.__host, self.__port), RequestHandler)
 
                 # Start if not.
                 if not self.__thread.is_alive():

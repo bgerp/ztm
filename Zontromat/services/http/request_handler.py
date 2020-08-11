@@ -24,9 +24,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 import json
-
 from http.server import BaseHTTPRequestHandler
 from urllib import parse
+
+from services.http.register_handler import RegisterHandler
 
 class RequestHandler(BaseHTTPRequestHandler):
     """Request Handler"""
@@ -53,8 +54,8 @@ class RequestHandler(BaseHTTPRequestHandler):
         # Convert to JSON object.
         req_body = json.loads(req_body)
 
-        # Dispatch handler.
-        self.dispatch_handler(req_body)
+        # Update handler.
+        RegisterHandler.update(req_body)
 
         # The response.
         self.send_response(200)
