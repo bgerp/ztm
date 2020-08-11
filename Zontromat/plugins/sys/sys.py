@@ -34,6 +34,8 @@ from plugins.sys.rules import Rules
 
 from data import verbal_const
 
+from services.global_error_handler.global_error_handler import GlobalErrorHandler
+
 #region File Attributes
 
 __author__ = "Orlin Dimitrov"
@@ -82,9 +84,6 @@ class Sys(BasePlugin):
     __led_out = verbal_const.OFF
     """LED Output"""
 
-    __tamper_input = verbal_const.OFF
-    """Tamper input."""
-
     __collission_timer = None
     """Update timer."""
 
@@ -112,7 +111,7 @@ class Sys(BasePlugin):
 
         # Check data type.
         if not register.is_int_or_float():
-            self._log_bad_value_register(self.__logger, register)
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
 
         if self.__blink_timer.expiration_time != register.value:
@@ -122,21 +121,11 @@ class Sys(BasePlugin):
 
         # Check data type.
         if not register.is_str():
-            self._log_bad_value_register(self.__logger, register)
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
 
         if self.__led_out != register.value:
             self.__led_out = register.value
-
-    def __tamper_input_cb(self, register):
-
-        # Check data type.
-        if not register.is_str():
-            self._log_bad_value_register(self.__logger, register)
-            return
-
-        if self.__tamper_input != register.value:
-            self.__tamper_input = register.value
 
 #region Private Methods (Colision Detection)
 
@@ -226,7 +215,6 @@ class Sys(BasePlugin):
 
 #endregion
 
-
 #endregion
 
 #region Public Methods
@@ -251,11 +239,6 @@ class Sys(BasePlugin):
         if output is not None:
             output.update_handler = self.__led_out_cb
 
-        # Anti tamper input.
-        tamper_input = self._registers.by_name(self._key + ".at.input")
-        if tamper_input is not None:
-            tamper_input.update_handler = self.__tamper_input_cb
-
         # Colission detection.
         self.__collission_timer = Timer(1)
 
@@ -265,7 +248,6 @@ class Sys(BasePlugin):
         if clear_errors is not None:
             clear_errors.update_handler = self.__clear_errors_cb
             clear_errors.value = 1
-
 
     def update(self):
         """Runtime of the plugin."""
@@ -282,19 +264,12 @@ class Sys(BasePlugin):
 
             self.__set_led(self.__led_state)
 
-        # Update tamper signal.
-        tamper_state = self._registers.by_name(self._key + ".at.state")
-        if tamper_state is not None:
-            if self._controller.is_valid_gpio(self.__tamper_input):
-                tamper_state.value = self._controller.digital_read(self.__tamper_input)
-
         # Update the timer.
         self.__collission_timer.update()
         if self.__collission_timer.expired:
             self.__collission_timer.clear()
 
             self.__rules.check(self._registers.to_dict())
-
 
     def shutdown(self):
         """Shutting down the blinds."""

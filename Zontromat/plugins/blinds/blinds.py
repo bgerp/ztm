@@ -34,6 +34,8 @@ from utils.utils import to_rad, shadow_length
 
 from plugins.base_plugin import BasePlugin
 
+from services.global_error_handler.global_error_handler import GlobalErrorHandler
+
 #region File Attributes
 
 __author__ = "Orlin Dimitrov"
@@ -166,7 +168,7 @@ class Blinds(BasePlugin):
 
         # Check data type.
         if not register.is_str():
-            self._log_bad_value_register(self.__logger, register)
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
 
         if self.__input_fb != register.value:
@@ -182,7 +184,7 @@ class Blinds(BasePlugin):
 
         # Check data type.
         if not register.is_str():
-            self._log_bad_value_register(self.__logger, register)
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
 
         if self.__output_cw != register.value:
@@ -192,7 +194,7 @@ class Blinds(BasePlugin):
 
         # Check data type.
         if not register.is_str():
-            self._log_bad_value_register(self.__logger, register)
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
 
         if self.__output_ccw != register.value:
@@ -254,7 +256,7 @@ class Blinds(BasePlugin):
 
         # Check data type.
         if not register.is_int_or_float():
-            self._log_bad_value_register(self.__logger, register)
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
 
         self.__set_position(register.value)
@@ -282,7 +284,7 @@ class Blinds(BasePlugin):
         if sun_elev_reg:
 
             if not sun_elev_reg.is_int_or_float():
-                self._log_bad_value_register(self.__logger, sun_elev_reg)
+                GlobalErrorHandler.log_bad_register_value(self.__logger, sun_elev_reg)
                 return
 
             self.__sun_elev = sun_elev_reg.value
@@ -291,7 +293,7 @@ class Blinds(BasePlugin):
         if sun_azm_reg:
 
             if not sun_azm_reg.is_int_or_float():
-                self._log_bad_value_register(self.__logger, sun_azm_reg)
+                GlobalErrorHandler.log_bad_register_value(self.__logger, sun_azm_reg)
                 return
 
             self.__sun_azm = sun_azm_reg.value

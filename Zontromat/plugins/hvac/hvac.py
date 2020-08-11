@@ -42,6 +42,8 @@ from devices.tests.electrical_performance.electrical_performance import Electric
 
 from data import verbal_const
 
+from services.global_error_handler.global_error_handler import GlobalErrorHandler
+
 #region File Attributes
 
 __author__ = "Orlin Dimitrov"
@@ -222,7 +224,7 @@ class HVAC(BasePlugin):
 
         # Check data type.
         if not register.is_int_or_float():
-            self._log_bad_value_register(self.__logger, register)
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
         
         if self.__update_rate != register.value:
@@ -232,7 +234,7 @@ class HVAC(BasePlugin):
 
         # Check data type.
         if not register.is_int_or_float():
-            self._log_bad_value_register(self.__logger, register)
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
         
         if self.__delta_time != register.value:
@@ -242,7 +244,7 @@ class HVAC(BasePlugin):
 
         # Check data type.
         if not register.is_int_or_float():
-            self._log_bad_value_register(self.__logger, register)
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
         
         mode = ThermalMode(register.value)
@@ -254,7 +256,7 @@ class HVAC(BasePlugin):
 
         # Check data type.
         if not register.is_int_or_float():
-            self._log_bad_value_register(self.__logger, register)
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
         
         if self.__thermal_force_limit != register.value:
@@ -264,7 +266,7 @@ class HVAC(BasePlugin):
 
         # Check data type.
         if not register.is_int_or_float():
-            self._log_bad_value_register(self.__logger, register)
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
 
         if self.__adjust_temp == register.value:
@@ -298,7 +300,7 @@ class HVAC(BasePlugin):
 
         # Check data type.
         if not register.is_int_or_float():
-            self._log_bad_value_register(self.__logger, register)
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
 
         # @see https://experta.bg/L/S/122745/m/Fwntindd
@@ -323,7 +325,7 @@ class HVAC(BasePlugin):
 
         # Check data type.
         if not register.is_str():
-            self._log_bad_value_register(self.__logger, register)
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
 
         if register.value != verbal_const.OFF and self.__air_temp_cent_dev is None:
@@ -348,7 +350,7 @@ class HVAC(BasePlugin):
 
         # Check data type.
         if not register.is_str():
-            self._log_bad_value_register(self.__logger, register)
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
 
         if register.value != verbal_const.OFF and self.__air_temp_lower_dev is None:
@@ -372,7 +374,7 @@ class HVAC(BasePlugin):
 
         # Check data type.
         if not register.is_str():
-            self._log_bad_value_register(self.__logger, register)
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
 
         if register.value != verbal_const.OFF and self.__air_temp_upper_dev is None:
@@ -400,7 +402,7 @@ class HVAC(BasePlugin):
 
         # Check data type.
         if not register.is_str():
-            self._log_bad_value_register(self.__logger, register)
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
 
         if register.value != verbal_const.OFF and self.__convector_dev is None:
@@ -425,7 +427,7 @@ class HVAC(BasePlugin):
 
         # Check data type.
         if not register.is_str():
-            self._log_bad_value_register(self.__logger, register)
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
 
         if register.value != verbal_const.OFF and self.__loop1_cnt_dev is None:
@@ -451,7 +453,7 @@ class HVAC(BasePlugin):
 
         # Check data type.
         if not register.is_str():
-            self._log_bad_value_register(self.__logger, register)
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
 
         if register.value != verbal_const.OFF and self.__loop1_fan_dev is None:
@@ -474,7 +476,7 @@ class HVAC(BasePlugin):
 
         # Check data type.
         if not register.is_int_or_float():
-            self._log_bad_value_register(self.__logger, register)
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
 
         if self.__loop1_fan_dev is not None:
@@ -485,7 +487,7 @@ class HVAC(BasePlugin):
 
         # Check data type.
         if not register.is_int_or_float():
-            self._log_bad_value_register(self.__logger, register)
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
 
         if self.__loop1_fan_dev is not None:
@@ -496,7 +498,7 @@ class HVAC(BasePlugin):
 
         # Check data type.
         if not register.is_str():
-            self._log_bad_value_register(self.__logger, register)
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
 
         if register.value != verbal_const.OFF and self.__loop1_temp_dev is None:
@@ -517,7 +519,7 @@ class HVAC(BasePlugin):
 
         # Check data type.
         if not register.is_str():
-            self._log_bad_value_register(self.__logger, register)
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
 
         if register.value != verbal_const.OFF and self.__loop1_valve_dev is None:
@@ -542,7 +544,7 @@ class HVAC(BasePlugin):
 
         # Check data type.
         if not register.is_str():
-            self._log_bad_value_register(self.__logger, register)
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
 
         if register.value != verbal_const.OFF and self.__loop2_cnt_dev is None:
@@ -567,7 +569,7 @@ class HVAC(BasePlugin):
 
         # Check data type.
         if not register.is_str():
-            self._log_bad_value_register(self.__logger, register)
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
 
         if register.value != verbal_const.OFF and self.__loop2_fan_dev is None:
@@ -590,7 +592,7 @@ class HVAC(BasePlugin):
 
         # Check data type.
         if not register.is_int_or_float():
-            self._log_bad_value_register(self.__logger, register)
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
 
         if self.__loop2_fan_dev is not None:
@@ -601,7 +603,7 @@ class HVAC(BasePlugin):
 
         # Check data type.
         if not register.is_int_or_float():
-            self._log_bad_value_register(self.__logger, register)
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
 
         if self.__loop2_fan_dev is not None:
@@ -612,7 +614,7 @@ class HVAC(BasePlugin):
 
         # Check data type.
         if not register.is_str():
-            self._log_bad_value_register(self.__logger, register)
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
 
         if register.value != verbal_const.OFF and self.__loop2_temp_dev is None:
@@ -633,7 +635,7 @@ class HVAC(BasePlugin):
 
         # Check data type.
         if not register.is_str():
-            self._log_bad_value_register(self.__logger, register)
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
 
         if register.value != verbal_const.OFF and self.__loop2_valve_dev is None:

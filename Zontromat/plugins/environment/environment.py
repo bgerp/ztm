@@ -34,6 +34,8 @@ from utils.timer import Timer
 
 from data import verbal_const
 
+from services.global_error_handler.global_error_handler import GlobalErrorHandler
+
 #region File Attributes
 
 __author__ = "Orlin Dimitrov"
@@ -91,7 +93,7 @@ class Environment(BasePlugin):
 
         # Check data type.
         if not register.is_str():
-            self._log_bad_value_register(self.__logger, register)
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
 
         if self.__sunpos_enabled_value != register.value:

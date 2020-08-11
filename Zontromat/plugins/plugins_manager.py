@@ -42,8 +42,8 @@ from plugins.environment.environment import Environment
 from plugins.hvac.hvac import HVAC
 from plugins.lighting.lighting import Lighting
 from plugins.sys.sys import Sys
-from plugins.sys.global_error_handler import GlobalErrorHandler
-from plugins.sys.error_codes import ErrorCodes
+
+from services.global_error_handler.global_error_handler import GlobalErrorHandler
 
 #region File Attributes
 
@@ -124,6 +124,8 @@ class PluginsManager:
         self.__registers = registers
         self.__controller = controller
         self.__add_registers()
+
+#endregion
 
 #region Private Methods
 
@@ -1029,9 +1031,7 @@ class PluginsManager:
 
         # Check data type.
         if not register.is_str():
-            message = "Inconsistent data type for register {} with content {}"\
-                .format(register.name, register.value)
-            GlobalErrorHandler.append(message, ErrorCodes.BadRegisterDataType)
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
             return
 
         if register.value == verbal_const.YES and Plugins.AccessControl not in self.__plugins:
@@ -1051,9 +1051,7 @@ class PluginsManager:
 
         # Check data type.
         if not register.is_str():
-            message = "Inconsistent data type for register {} with content {}"\
-                .format(register.name, register.value)
-            GlobalErrorHandler.append(message, ErrorCodes.BadRegisterDataType)
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
             return
 
         if register.value == verbal_const.YES and Plugins.Blinds not in self.__plugins:
@@ -1073,9 +1071,7 @@ class PluginsManager:
 
         # Check data type.
         if not register.is_str():
-            message = "Inconsistent data type for register {} with content {}"\
-                .format(register.name, register.value)
-            GlobalErrorHandler.append(message, ErrorCodes.BadRegisterDataType)
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
             return
 
         if register.value == verbal_const.YES and Plugins.Monitoring not in self.__plugins:
@@ -1095,9 +1091,7 @@ class PluginsManager:
 
         # Check data type.
         if not register.is_str():
-            message = "Inconsistent data type for register {} with content {}"\
-                .format(register.name, register.value)
-            GlobalErrorHandler.append(message, ErrorCodes.BadRegisterDataType)
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
             return
 
         if register.value == verbal_const.YES and Plugins.Environment not in self.__plugins:
@@ -1117,9 +1111,7 @@ class PluginsManager:
 
         # Check data type.
         if not register.is_str():
-            message = "Inconsistent data type for register {} with content {}"\
-                .format(register.name, register.value)
-            GlobalErrorHandler.append(message, ErrorCodes.BadRegisterDataType)
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
             return
 
         if register.value == verbal_const.YES and Plugins.HVAC not in self.__plugins:
@@ -1139,9 +1131,7 @@ class PluginsManager:
 
         # Check data type.
         if not register.is_str():
-            message = "Inconsistent data type for register {} with content {}"\
-                .format(register.name, register.value)
-            GlobalErrorHandler.append(message, ErrorCodes.BadRegisterDataType)
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
             return
 
         if register.value == verbal_const.YES and Plugins.MainLight not in self.__plugins:
@@ -1161,9 +1151,7 @@ class PluginsManager:
 
         # Check data type.
         if not register.is_str():
-            message = "Inconsistent data type for register {} with content {}"\
-                .format(register.name, register.value)
-            GlobalErrorHandler.append(message, ErrorCodes.BadRegisterDataType)
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
             return
 
         if register.value == verbal_const.YES and Plugins.Sys not in self.__plugins:
@@ -1185,7 +1173,12 @@ class PluginsManager:
         """Update plugins."""
 
         for key in self.__plugins:
-            self.__plugins[key].update()
+
+            try:
+                self.__plugins[key].update()
+
+            except:
+                pass
 
         # doc_generator.reg_to_json(self.__registers)
         # doc_generator.reg_to_md(self.__registers)
@@ -1194,6 +1187,11 @@ class PluginsManager:
         """Shutdown plugins."""
 
         for key in self.__plugins:
-            self.__plugins[key].shutdown()
+
+            try:
+                self.__plugins[key].shutdown()
+
+            except:
+                pass
 
 #endregion

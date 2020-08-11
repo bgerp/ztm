@@ -30,6 +30,8 @@ from devices.SEDtronic.u1wtvs import U1WTVS
 
 from data import verbal_const
 
+from services.global_error_handler.global_error_handler import GlobalErrorHandler
+
 #region File Attributes
 
 __author__ = "Orlin Dimitrov"
@@ -185,7 +187,7 @@ class Lighting(BasePlugin):
 
         # Check data type.
         if not register.is_str():
-            self._log_bad_value_register(self.__logger, register)
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
 
         if register.value != verbal_const.NO and self.__light_sensor is None:
@@ -214,7 +216,7 @@ class Lighting(BasePlugin):
 
         # Check data type.
         if not register.is_str():
-            self._log_bad_value_register(self.__logger, register)
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
 
         if self.__v1_output != register.value:
@@ -224,7 +226,7 @@ class Lighting(BasePlugin):
 
         # Check data type.
         if not register.is_str():
-            self._log_bad_value_register(self.__logger, register)
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
 
         if self.__v2_output != register.value:
