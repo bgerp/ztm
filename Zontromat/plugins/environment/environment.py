@@ -24,10 +24,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from datetime import datetime
 
+from plugins.base_plugin import BasePlugin
+
 # https://github.com/s-bear/sun-position
 # from sunposition import sunpos
 from plugins.environment.sunposition import sunpos
-from plugins.base_plugin import BasePlugin
 
 from utils.logger import get_logger
 from utils.timer import Timer

@@ -76,6 +76,18 @@ class ApplicationSettings():
 #region Properties
 
     @property
+    def exists(self):
+        """Does the the settings file exists.
+
+        Returns
+        -------
+        bool
+            File exists.
+        """
+
+        return os.path.exists(self.__file_name)
+
+    @property
     def ram_usage(self):
         """Ram usage flag.
 
@@ -122,7 +134,7 @@ class ApplicationSettings():
 
     @property
     def get_controller(self):
-        """Host name of the Neuron..
+        """Host name of the Neuron.
 
         Returns
         -------
@@ -133,27 +145,15 @@ class ApplicationSettings():
 
     @property
     def get_erp_service(self):
-        """Host name of the Neuron..
+        """ERP service domain.
 
         Returns
         -------
         str
-            Host name of the Neuron.
+            ERP service domain.
         """
 
         return self.__settings["erp_service"]
-
-    @property
-    def exists(self):
-        """Does the the settings file exists.
-
-        Returns
-        -------
-        bool
-            File exists.
-        """
-
-        return os.path.exists(self.__file_name)
 
 #endregion
 
@@ -177,14 +177,22 @@ class ApplicationSettings():
 
 #endregion
 
-#region Private Methods
+#region Public Methods
 
     def read(self):
         """Read YAML file."""
 
         if self.exists:
-            with open(self.__file_name, 'r') as stream:
+            with open(self.__file_name, "r") as stream:
                 self.__settings = yaml.safe_load(stream)
+                stream.close()
+
+    def save(self):
+        """Read YAML file."""
+
+        if self.exists:
+            with open(self.__file_name, 'w') as stream:
+                yaml.dump(self.__settings, stream, default_flow_style=False)
                 stream.close()
 
 #endregion
@@ -192,11 +200,11 @@ class ApplicationSettings():
 #region Static Methods
 
     @staticmethod
-    def get_instance():
+    def get_instance(file_path=None):
         """Singelton instance."""
 
         if ApplicationSettings.__instance is None:
-            ApplicationSettings.__instance = ApplicationSettings()
+            ApplicationSettings.__instance = ApplicationSettings(file_path)
 
         return ApplicationSettings.__instance
 
