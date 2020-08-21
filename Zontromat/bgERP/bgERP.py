@@ -91,8 +91,8 @@ class bgERP():
     __last_sync = 0
     """Last sync time."""
 
-    __building_id = None
-    """Building identification."""
+    __erp_id = None
+    """ERP identification."""
 
 #endregion
 
@@ -122,7 +122,7 @@ class bgERP():
         host_no_slash = host
 
         if host_no_slash.endswith("/"):
-            host_no_slash = host_no_slash.replace('.*/','')
+            host_no_slash = host_no_slash.replace(".*/","")
 
         self.__host = host_no_slash
 
@@ -151,16 +151,16 @@ class bgERP():
         self.__timeout = timeout
 
     @property
-    def building_id(self):
-        """Building identity.
+    def erp_id(self):
+        """ERP identity.
 
         Returns
         -------
         mix
-            Building identity.
+            ERP identity.
         """
 
-        return self.__building_id
+        return self.__erp_id
 
     @property
     def last_sync(self):
@@ -212,7 +212,7 @@ class bgERP():
             Success
         """
 
-        # TODO: bgERP ID to authorize the building.
+        # TODO: bgERP ID to authorize the ERP.
 
         login_state = False
 
@@ -234,9 +234,9 @@ class bgERP():
                             self.__session.load()
                             login_state = self.__session.session != ""
 
-                        # Building identity.
+                        # ERP identity.
                         if "bgerp_id" in data:
-                            self.__building_id = data["bgerp_id"]
+                            self.__erp_id = data["bgerp_id"]
 
                 # Not authorized.
                 elif response.status_code == 403:
@@ -253,7 +253,7 @@ class bgERP():
                 else:
                     login_state = False
 
-        except Exception:
+        except Exception as e:
             login_state = False
 
         return login_state

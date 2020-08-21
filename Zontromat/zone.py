@@ -217,7 +217,8 @@ class Zone():
         self.__update_timer.expiration_time = self.__update_timer.expiration_time + (serial / 1000)
 
         # Create Neuron.
-        config = {
+        config = \
+        {
             "vendor": vendor,
             "model": model,
             "serial": serial,
@@ -262,12 +263,8 @@ class Zone():
             # Restart the service to accept the settings.
             EvokSettings.restart()
 
-            # Create the WEB server.
-            self.__server = Server("127.0.0.1", 8889)
-
-        if os.name == "nt":
-            # self.__server = Server("176.33.1.207", 8889)
-            self.__server = Server("192.168.100.2", 8889)
+        # Create the WEB server.
+        self.__server = Server("", 8889)
 
         # Set the IO map.
         gpio_map = self.__controller.get_gpio_map()
@@ -321,6 +318,7 @@ class Zone():
             "model": self.__controller.model, \
             "version": self.__controller.version, \
             "config_time": self.__app_settings.get_erp_service["config_time"], \
+            "bgerp_id": self.__app_settings.get_erp_service["erp_id"], \
             # "one_wire": one_wire, \
             # "modbus": modbus, \
         }
@@ -328,6 +326,12 @@ class Zone():
         login_state = self.__bgerp.login(credentials)
 
         if login_state:
+
+            # Rewrite the ERP service ID.
+            if self.__app_settings.get_erp_service["erp_id"] != self.__bgerp.erp_id:
+                self.__app_settings.get_erp_service["erp_id"] = self.__bgerp.erp_id
+                self.__app_settings.save()
+
             self.__zone_state.set_state(ZoneState.Run)
         else:
             self.__zone_state.set_state(ZoneState.Init)

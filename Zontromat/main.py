@@ -86,7 +86,7 @@ def main():
 
     # Create process name. 
     if os.name == "posix":
-        setproctitle.setproctitle('Zontromat')
+        setproctitle.setproctitle("Zontromat")
 
     # Add signal handler.
     signal.signal(signal.SIGINT, interupt_handler)
