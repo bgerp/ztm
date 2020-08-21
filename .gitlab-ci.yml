@@ -1,12 +1,11 @@
 stages: 
   - deploy
 
-deploy_346:
+deploy_DC1:
   stage: deploy
   only: 
     - DC1
   script:
-    - cp sh/setup.sls /srv/salt/setup.sls
     - cp sh/upgrade.sls /srv/salt/upgrade.sls
     - tar -zcf /srv/salt/files/build.tar.gz . -X exclude.txt
     - salt -C 'G@roles:DC1' state.sls upgrade pillar='{"branch":"DC!"}'
@@ -16,7 +15,6 @@ deploy_all:
   only: 
     - master
   script:
-    - cp sh/setup.sls /srv/salt/setup.sls
     - cp sh/upgrade.sls /srv/salt/upgrade.sls
     - tar -zcf /srv/salt/files/build.tar.gz . -X exclude.txt
     - salt \* state.sls upgrade pillar='{"branch":"master"}'
