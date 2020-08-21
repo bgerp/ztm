@@ -267,9 +267,9 @@ class _sp:
         x1 = np.deg2rad(np.polyval([-1/3e5, -0.0001603, 35999.050340, 357.52772], jce))
         #mean anomaly of the moon, in radians:
         x2 = np.deg2rad(np.polyval([1./56250, 0.0086972, 477198.867398, 134.96298], jce))
-        #moon"s argument of latitude, in radians:
+        #moon's argument of latitude, in radians:
         x3 = np.deg2rad(np.polyval([1./327270, -0.0036825, 483202.017538, 93.27191], jce))
-        #Longitude of the ascending node of the moon"s mean orbit on the ecliptic
+        #Longitude of the ascending node of the moon's mean orbit on the ecliptic
         # measured from the mean equinox of the date, in radians
         x4 = np.deg2rad(np.polyval([1./45e4, 0.0020708, -1934.136261, 125.04452], jce))
 
@@ -316,7 +316,7 @@ class _sp:
     
     @staticmethod
     def sun_ra_decl(llambda, epsilon, beta):
-        """Calculate the sun"s geocentric right ascension (alpha, in degrees) and declination (delta, in degrees)"""
+        """Calculate the sun's geocentric right ascension (alpha, in degrees) and declination (delta, in degrees)"""
         l, e, b = map(np.deg2rad, (llambda, epsilon, beta))
         alpha = np.arctan2(np.sin(l)*np.cos(e) - np.tan(b)*np.sin(e), np.cos(l)) #x1 / x2
         alpha = np.rad2deg(alpha) % 360
@@ -326,7 +326,7 @@ class _sp:
     
     @staticmethod
     def sun_topo_ra_decl_hour(latitude, longitude, elevation, jd, delta_t = 0):
-        """Calculate the sun"s topocentric right ascension (alpha"), declination (delta"), and hour angle (H")"""
+        """Calculate the sun's topocentric right ascension (alpha'), declination (delta'), and hour angle (H')"""
         
         jde = _sp.julian_ephemeris_day(jd, delta_t)
         jce = _sp.julian_century(jde)
@@ -368,7 +368,7 @@ class _sp:
     
     @staticmethod
     def sun_topo_azimuth_zenith(latitude, delta_prime, H_prime, temperature=14.6, pressure=1013):
-        """Compute the sun"s topocentric azimuth and zenith angles
+        """Compute the sun's topocentric azimuth and zenith angles
         azimuth is measured eastward from north, zenith from vertical
         temperature = average temperature in C (default is 14.6 = global average in 2013)
         pressure = average pressure in mBar (default 1013 = global average)
@@ -486,7 +486,7 @@ def observed_sunpos(dt, latitude, longitude, elevation, temperature=None, pressu
     pressure : None or array_like of float, optional
         millibar, default is 1013 (global average in ??)
     delta_t : array_like of float, optional
-        seconds, default is 0, difference between the earth"s rotation time (TT) and universal time (UT)
+        seconds, default is 0, difference between the earth's rotation time (TT) and universal time (UT)
     radians : bool, optional
         return results in radians if True, degrees if False (default)
 
@@ -529,7 +529,7 @@ def topocentric_sunpos(dt, latitude, longitude, temperature=None, pressure=None,
     pressure : None or array_like of float, optional
         millibar, default is 1013 (global average in ??)
     delta_t : array_like of float, optional
-        seconds, default is 0, difference between the earth"s rotation time (TT) and universal time (UT)
+        seconds, default is 0, difference between the earth's rotation time (TT) and universal time (UT)
     radians : bool, optional
         return results in radians if True, degrees if False (default)
 
@@ -573,7 +573,7 @@ def sunpos(dt, latitude, longitude, elevation, temperature=None, pressure=None, 
     pressure : None or array_like of float, optional
         millibar, default is 1013 (global average in ??)
     delta_t : array_like of float, optional
-        seconds, default is 0, difference between the earth"s rotation time (TT) and universal time (UT)
+        seconds, default is 0, difference between the earth's rotation time (TT) and universal time (UT)
     radians : bool, optional
         return results in radians if True, degrees if False (default)
 
