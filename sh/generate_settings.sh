@@ -34,4 +34,4 @@ erp_service:
   host: http://zontromat.polygonteam.com/
   timeout: 5
   config_time: $time
-
+EOF
