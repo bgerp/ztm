@@ -178,7 +178,7 @@ class PluginsManager:
         register = Register("ac.zone_occupied")
         register.scope = Scope.Global
         register.source = Source.Zontromat
-        register.value = verbal_const.NO # 1595322860
+        register.value = 0
         self.__registers.add(register)
 
         # Entry card reader.
