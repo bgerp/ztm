@@ -11,12 +11,16 @@ mv /opt/Zontromat /opt/Zontromat-backup:
 
 mkdir /opt/Zontromat:
   cmd.run
-tar -xvzf /opt/build.tar.gz -C /opt/Zontromat:
+tar -xzf /opt/build.tar.gz -C /opt/Zontromat:
   cmd.run
+{%- if salt['file.file_exists' ]('/opt/Zontromat-backup/Zontromat/settings.yaml') %}
 cp /opt/Zontromat-backup/Zontromat/settings.yaml /opt/Zontromat/Zontromat/settings.yaml:
   cmd.run
+{%- endif %}
+{%- if salt['file.file_exists' ]('/opt/Zontromat-backup/Zontromat/session.txt') %}
 cp /opt/Zontromat-backup/Zontromat/session.txt /opt/Zontromat/Zontromat/session.txt:
   cmd.run  
+{%- endif %}
 cp /opt/Zontromat/hw_definitions/* /etc/hw_definitions:
   cmd.run
 systemctl restart evok:
