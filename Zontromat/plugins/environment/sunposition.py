@@ -21,7 +21,7 @@
 # SOFTWARE.
 
 # import sys
-# sys.path.append('C:\\Users\\POLYGONTeam\\Envs\\sun\\Lib\\site-packages\\numpy')
+# sys.path.append("C:\\Users\\POLYGONTeam\\Envs\\sun\\Lib\\site-packages\\numpy")
 
 import numpy as np
 from datetime import datetime
@@ -36,7 +36,7 @@ class _sp:
             try:
                 return _sp.calendar_time(datetime.utcfromtimestamp(dt)) #will raise OSError if dt is not acceptable
             except:
-                raise TypeError('dt must be datetime object or POSIX timestamp')
+                raise TypeError("dt must be datetime object or POSIX timestamp")
 
     @staticmethod
     def julian_day(dt):
@@ -267,9 +267,9 @@ class _sp:
         x1 = np.deg2rad(np.polyval([-1/3e5, -0.0001603, 35999.050340, 357.52772], jce))
         #mean anomaly of the moon, in radians:
         x2 = np.deg2rad(np.polyval([1./56250, 0.0086972, 477198.867398, 134.96298], jce))
-        #moon's argument of latitude, in radians:
+        #moon"s argument of latitude, in radians:
         x3 = np.deg2rad(np.polyval([1./327270, -0.0036825, 483202.017538, 93.27191], jce))
-        #Longitude of the ascending node of the moon's mean orbit on the ecliptic
+        #Longitude of the ascending node of the moon"s mean orbit on the ecliptic
         # measured from the mean equinox of the date, in radians
         x4 = np.deg2rad(np.polyval([1./45e4, 0.0020708, -1934.136261, 125.04452], jce))
 
@@ -316,7 +316,7 @@ class _sp:
     
     @staticmethod
     def sun_ra_decl(llambda, epsilon, beta):
-        """Calculate the sun's geocentric right ascension (alpha, in degrees) and declination (delta, in degrees)"""
+        """Calculate the sun"s geocentric right ascension (alpha, in degrees) and declination (delta, in degrees)"""
         l, e, b = map(np.deg2rad, (llambda, epsilon, beta))
         alpha = np.arctan2(np.sin(l)*np.cos(e) - np.tan(b)*np.sin(e), np.cos(l)) #x1 / x2
         alpha = np.rad2deg(alpha) % 360
@@ -326,7 +326,7 @@ class _sp:
     
     @staticmethod
     def sun_topo_ra_decl_hour(latitude, longitude, elevation, jd, delta_t = 0):
-        """Calculate the sun's topocentric right ascension (alpha'), declination (delta'), and hour angle (H')"""
+        """Calculate the sun"s topocentric right ascension (alpha"), declination (delta"), and hour angle (H")"""
         
         jde = _sp.julian_ephemeris_day(jd, delta_t)
         jce = _sp.julian_century(jde)
@@ -368,7 +368,7 @@ class _sp:
     
     @staticmethod
     def sun_topo_azimuth_zenith(latitude, delta_prime, H_prime, temperature=14.6, pressure=1013):
-        """Compute the sun's topocentric azimuth and zenith angles
+        """Compute the sun"s topocentric azimuth and zenith angles
         azimuth is measured eastward from north, zenith from vertical
         temperature = average temperature in C (default is 14.6 = global average in 2013)
         pressure = average pressure in mBar (default 1013 = global average)
@@ -486,7 +486,7 @@ def observed_sunpos(dt, latitude, longitude, elevation, temperature=None, pressu
     pressure : None or array_like of float, optional
         millibar, default is 1013 (global average in ??)
     delta_t : array_like of float, optional
-        seconds, default is 0, difference between the earth's rotation time (TT) and universal time (UT)
+        seconds, default is 0, difference between the earth"s rotation time (TT) and universal time (UT)
     radians : bool, optional
         return results in radians if True, degrees if False (default)
 
@@ -529,7 +529,7 @@ def topocentric_sunpos(dt, latitude, longitude, temperature=None, pressure=None,
     pressure : None or array_like of float, optional
         millibar, default is 1013 (global average in ??)
     delta_t : array_like of float, optional
-        seconds, default is 0, difference between the earth's rotation time (TT) and universal time (UT)
+        seconds, default is 0, difference between the earth"s rotation time (TT) and universal time (UT)
     radians : bool, optional
         return results in radians if True, degrees if False (default)
 
@@ -573,7 +573,7 @@ def sunpos(dt, latitude, longitude, elevation, temperature=None, pressure=None, 
     pressure : None or array_like of float, optional
         millibar, default is 1013 (global average in ??)
     delta_t : array_like of float, optional
-        seconds, default is 0, difference between the earth's rotation time (TT) and universal time (UT)
+        seconds, default is 0, difference between the earth"s rotation time (TT) and universal time (UT)
     radians : bool, optional
         return results in radians if True, degrees if False (default)
 
@@ -608,11 +608,11 @@ def main(args):
     az, zen, ra, dec, h = sunpos(args.t, args.lat, args.lon, args.elev, args.temp, args.p, args.dt, args.rad)
     if args.csv:
         #machine readable
-        print('{t}, {dt}, {lat}, {lon}, {elev}, {temp}, {p}, {az}, {zen}, {ra}, {dec}, {h}'.format(t=args.t, dt=args.dt, lat=args.lat, lon=args.lon, elev=args.elev,temp=args.temp, p=args.p,az=az, zen=zen, ra=ra, dec=dec, h=h))
+        print("{t}, {dt}, {lat}, {lon}, {elev}, {temp}, {p}, {az}, {zen}, {ra}, {dec}, {h}".format(t=args.t, dt=args.dt, lat=args.lat, lon=args.lon, elev=args.elev,temp=args.temp, p=args.p,az=az, zen=zen, ra=ra, dec=dec, h=h))
     else:
-        dr='deg'
+        dr="deg"
         if args.rad:
-            dr='rad'
+            dr="rad"
         print("Computing sun position at T = {t} + {dt} s".format(t=args.t, dt=args.dt))
         print("Lat, Lon, Elev = {lat} deg, {lon} deg, {elev} m".format(lat=args.lat, lon=args.lon, elev=args.elev))
         print("T, P = {temp} C, {press} mbar".format(temp=args.temp, press=args.p))
@@ -620,21 +620,21 @@ def main(args):
         print("Azimuth, zenith = {az} {dr}, {zen} {dr}".format(az=az,zen=zen,dr=dr))
         print("RA, dec, H = {ra} {dr}, {dec} {dr}, {h} {dr}".format(ra=ra, dec=dec, h=h, dr=dr))
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     from argparse import ArgumentParser
     import datetime, sys
-    parser = ArgumentParser(prog='sunposition',description='Compute sun position parameters given the time and location')
-    parser.add_argument('--version',action='version',version='%(prog)s 1.0')
-    parser.add_argument('--citation',dest='cite',action='store_true',help='Print citation information')
-    parser.add_argument('-t,--time',dest='t',type=str,default='now',help='"now" or date and time (UTC) in "YYYY-MM-DD hh:mm:ss.ssssss" format or a (UTC) POSIX timestamp')
-    parser.add_argument('-lat,--latitude',dest='lat',type=float,default=51.48,help='latitude, in decimal degrees, positive for north')
-    parser.add_argument('-lon,--longitude',dest='lon',type=float,default=0.0,help='longitude, in decimal degrees, positive for east')
-    parser.add_argument('-e,--elevation',dest='elev',type=float,default=0,help='elevation, in meters')
-    parser.add_argument('-T,--temperature',dest='temp',type=float,default=14.6,help='temperature, in degrees celcius')
-    parser.add_argument('-p,--pressure',dest='p',type=float,default=1013.0,help='atmospheric pressure, in millibar')
-    parser.add_argument('-dt',type=float,default=0.0,help='difference between earth\'s rotation time (TT) and universal time (UT1)')
-    parser.add_argument('-r,--radians',dest='rad',action='store_true',help='Output in radians instead of degrees')
-    parser.add_argument('--csv',dest='csv',action='store_true',help='Comma separated values (time,dt,lat,lon,elev,temp,pressure,az,zen,RA,dec,H)')
+    parser = ArgumentParser(prog="sunposition",description="Compute sun position parameters given the time and location")
+    parser.add_argument("--version",action="version",version="%(prog)s 1.0")
+    parser.add_argument("--citation",dest="cite",action="store_true",help="Print citation information")
+    parser.add_argument("-t,--time",dest="t",type=str,default="now",help="\"now\" or date and time (UTC) in \"YYYY-MM-DD hh:mm:ss.ssssss\" format or a (UTC) POSIX timestamp")
+    parser.add_argument("-lat,--latitude",dest="lat",type=float,default=51.48,help="latitude, in decimal degrees, positive for north")
+    parser.add_argument("-lon,--longitude",dest="lon",type=float,default=0.0,help="longitude, in decimal degrees, positive for east")
+    parser.add_argument("-e,--elevation",dest="elev",type=float,default=0,help="elevation, in meters")
+    parser.add_argument("-T,--temperature",dest="temp",type=float,default=14.6,help="temperature, in degrees celcius")
+    parser.add_argument("-p,--pressure",dest="p",type=float,default=1013.0,help="atmospheric pressure, in millibar")
+    parser.add_argument("-dt",type=float,default=0.0,help="difference between earth\"s rotation time (TT) and universal time (UT1)")
+    parser.add_argument("-r,--radians",dest="rad",action="store_true",help="Output in radians instead of degrees")
+    parser.add_argument("--csv",dest="csv",action="store_true",help="Comma separated values (time,dt,lat,lon,elev,temp,pressure,az,zen,RA,dec,H)")
     args = parser.parse_args()
     if args.cite:
         print("Implementation: Samuel Bear Powell, 2016")
@@ -645,12 +645,12 @@ if __name__ == '__main__':
         args.t = datetime.datetime.utcnow()
     elif ":" in args.t and "-" in args.t:
         try:
-            args.t = datetime.datetime.strptime(args.t,'%Y-%m-%d %H:%M:%S.%f') #with microseconds
+            args.t = datetime.datetime.strptime(args.t,"%Y-%m-%d %H:%M:%S.%f") #with microseconds
         except:
             try:
-                args.t = datetime.datetime.strptime(args.t,'%Y-%m-%d %H:%M:%S.') #without microseconds
+                args.t = datetime.datetime.strptime(args.t,"%Y-%m-%d %H:%M:%S.") #without microseconds
             except:
-                args.t = datetime.datetime.strptime(args.t,'%Y-%m-%d %H:%M:%S')
+                args.t = datetime.datetime.strptime(args.t,"%Y-%m-%d %H:%M:%S")
     else:
         args.t = datetime.datetime.utcfromtimestamp(int(args.t))
     main(args)

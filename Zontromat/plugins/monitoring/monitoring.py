@@ -360,10 +360,10 @@ class Monitoring(BasePlugin):
         for parameter_value in parameters_values:
             try:
                 parameters_values[parameter_value] = \
-                    float('{:06.3f}'.format(float(parameters_values[parameter_value])))
+                    float("{:06.3f}".format(float(parameters_values[parameter_value])))
 
             except ValueError:
-                parameters_values[parameter_value] = float('{:06.3f}'.format(000.0))
+                parameters_values[parameter_value] = float("{:06.3f}".format(000.0))
 
         self.__parameters_values = parameters_values
 

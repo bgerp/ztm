@@ -58,12 +58,12 @@ __status__ = "Debug"
 class ParameterType(Enum):
     """Parameter data type enumeration class."""
 
-    UINT16_T = 'uint16_t'
-    INT16_T = 'int16_t'
-    UINT32_T = 'uint32_t'
-    INT32_T = 'int32_t'
-    FLOAT = 'float'
-    STRING = 'string'
+    UINT16_T = "uint16_t"
+    INT16_T = "int16_t"
+    UINT32_T = "uint32_t"
+    INT32_T = "int32_t"
+    FLOAT = "float"
+    STRING = "string"
 
 #region Public static Methods
 

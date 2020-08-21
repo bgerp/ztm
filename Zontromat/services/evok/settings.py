@@ -114,7 +114,7 @@ class EvokSettings:
         if not isinstance(value, str):
             raise TypeError("Value should be string.")
 
-        p = re.compile('^(([^:/?#]+):)?(//([^/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?')
+        p = re.compile("^(([^:/?#]+):)?(//([^/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?")
         m = p.match(value)
         if m:
             self.__config["MAIN"]["webhook_address"] = str(value)
@@ -197,7 +197,7 @@ class EvokSettings:
     def save(self):
         """Save EVOK config."""
 
-        with open(self.__file_path, 'w') as configfile:
+        with open(self.__file_path, "w") as configfile:
             self.__config.write(configfile)
 
     def add_device(self, config):

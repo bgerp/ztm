@@ -80,7 +80,7 @@ class CircularBuffer(object):
     def __repr__(self):
         """return string representation"""
 
-        return self._data.__repr__() + ' (' + str(len(self._data))+' items)'
+        return self._data.__repr__() + " (" + str(len(self._data))+" items)"
 
     def __str__(self):
         """String representation."""

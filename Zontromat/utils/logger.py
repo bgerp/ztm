@@ -69,7 +69,7 @@ __modules_names = []
 
 #region Public Functions
 
-def crate_log_file(logs_dir_name='logs/'):
+def crate_log_file(logs_dir_name="logs/"):
     """This method create a new instance of the LOG direcotry.
 
     Parameters
@@ -85,10 +85,10 @@ def crate_log_file(logs_dir_name='logs/'):
         os.makedirs(logs_dir_name)
 
     # File name.
-    log_file = ''
+    log_file = ""
     log_file += logs_dir_name
     log_file += strftime("%Y%m%d", gmtime())
-    log_file += '.log'
+    log_file += ".log"
 
     # create message format.
     log_format = "%(asctime)s\t%(levelname)s\t%(name)s\t%(message)s"

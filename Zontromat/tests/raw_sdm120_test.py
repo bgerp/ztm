@@ -73,8 +73,8 @@ __registers_ids = [ \
 ]
 """Target device registers."""
 
-__log_format = ('%(asctime)-15s %(threadName)-15s '
-                '%(levelname)-8s %(module)-15s:%(lineno)-8s %(message)s')
+__log_format = ("%(asctime)-15s %(threadName)-15s "
+                "%(levelname)-8s %(module)-15s:%(lineno)-8s %(message)s")
 """Logging format."""
 
 __logger = None
@@ -85,8 +85,8 @@ __logger = None
 def to_float(registers):
     """Convers two registers to float value."""
 
-    bin_data = pack('<HH', registers[1], registers[0])
-    value = unpack('f', bin_data)[0]
+    bin_data = pack("<HH", registers[1], registers[0])
+    value = unpack("f", bin_data)[0]
     return value
 
 def main():

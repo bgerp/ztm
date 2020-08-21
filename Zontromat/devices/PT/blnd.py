@@ -65,5 +65,5 @@ class BLND(Device):
         """Constructor"""
 
         self._parameters.append(\
-            Parameter('Position', 'Increments',\
+            Parameter("Position", "Increments",\
                 ParameterType.UINT16_T, [0], RegisterType.HOLDING_REGISTERS))

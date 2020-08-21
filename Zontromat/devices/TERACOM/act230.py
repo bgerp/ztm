@@ -230,7 +230,7 @@ class ACT230(BaseDevice):
                     if size > 0:
                         frame = self.__port.read(size)
                         frame = frame.decode("utf-8")
-                        frame = frame.replace('\r', '').replace('\n', '').replace('?', '')
+                        frame = frame.replace("\r", "").replace("\n", "").replace("?", "")
                         if len(frame) == self.__card_number_len:
                             self.__cb_read_card(frame, self.reader_id)
 
