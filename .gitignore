@@ -153,6 +153,7 @@ session.txt
 ### Settings for the application
 Zontromat/settings.yaml
 settings.yaml
+settings-dump.yaml
 evok.conf
 
 # End of https://www.gitignore.io/api/python,visualstudiocode
