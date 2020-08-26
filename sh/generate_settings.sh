@@ -31,7 +31,8 @@ controller:
 erp_service:
 
   # Remote server host address.
-  host: http://zontromat.polygonteam.com/
+  host: https://test.bcvt.eu:443
   timeout: 5
   config_time: $time
+  erp_id: 33
 EOF
