@@ -29,7 +29,7 @@ from enum import Enum
 from utils.logger import get_logger
 
 from data.register import Scope
-from data.register import Source
+from data.register import Priority
 from data.register import Register
 from data import verbal_const 
 from data import doc_generator
@@ -146,57 +146,75 @@ class PluginsManager:
 
         register = Register("ac.enabled")
         register.scope = Scope.Global
-        register.source = Source.bgERP
+        register.priority = Priority.system
+        register.plugin_name = "Access Control"
+        register.description = "Plugin enabled"
         register.update_handler = self.__access_control_enabled
         register.value = verbal_const.NO
         self.__registers.add(register)
 
         register = Register("ac.allowed_attendees")
         register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.value = [] # {"card_id": "445E6046010080FF", "pin":"159753", "valid_until":"1595322860"}
+        register.priority = Priority.system
+        register.plugin_name = "Access Control"
+        register.description = "Allowed attendees"
+        register.value = [{'card_id': '445E6046010080FF', 'pin': '159753', 'valid_until': '1595322860'}]
         self.__registers.add(register)
 
         register = Register("ac.nearby_attendees")
         register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.value = [] # {"card_id": "445E6046010080FF", "ts":"1595322860"}
+        register.priority = Priority.system
+        register.plugin_name = "Access Control"
+        register.description = "Nearby attendees"
+        register.value = [{"card_id": "445E6046010080FF", "ts":"1595322860"}]
         self.__registers.add(register)
 
         register = Register("ac.last_minute_attendees")
         register.scope = Scope.Global
-        register.source = Source.Zontromat
-        register.value = [] # {"card_id": "445E6046010080FF", "ts":"1595322860", "reader_id":"2911"}
+        register.priority = Priority.device
+        register.plugin_name = "Access Control"
+        register.description = "Last minute attendee"
+        register.value = []
         self.__registers.add(register)
 
         register = Register("ac.next_attendance")
         register.scope = Scope.Global
-        register.source = Source.Zontromat
+        register.priority = Priority.device
+        register.plugin_name = "Access Control"
+        register.description = "Next attendance"
         register.value = 0 # 1595322860
         self.__registers.add(register)
 
         register = Register("ac.zone_occupied")
         register.scope = Scope.Global
-        register.source = Source.Zontromat
+        register.priority = Priority.device
+        register.plugin_name = "Access Control"
+        register.description = "Zone occupied flag"
         register.value = 0
         self.__registers.add(register)
 
         # Entry card reader.
         register = Register("ac.entry_reader_1.enabled")
         register.scope = Scope.Global
-        register.source = Source.bgERP
+        register.priority = Priority.system
+        register.plugin_name = "Access Control"
+        register.description = "Card reader enabled"
         register.value = "TERACOM/act230/2897"
         self.__registers.add(register)
 
         register = Register("ac.entry_reader_1.port.baudrate")
         register.scope = Scope.Global
-        register.source = Source.bgERP
+        register.priority = Priority.system
+        register.plugin_name = "Access Control"
+        register.description = "Card reader port baud rate"
         register.value = 9600
         self.__registers.add(register)
 
         register = Register("ac.entry_reader_1.port.name")
         register.scope = Scope.Global
-        register.source = Source.bgERP
+        register.priority = Priority.system
+        register.plugin_name = "Access Control"
+        register.description = "Card reader port name"
         if os.name == "posix":
             register.value = "/dev/ttyUSB0"
         if os.name == "nt":
@@ -206,19 +224,25 @@ class PluginsManager:
         # Exit card reader.
         register = Register("ac.exit_reader_1.enabled")
         register.scope = Scope.Global
-        register.source = Source.bgERP
+        register.priority = Priority.system
+        register.plugin_name = "Access Control"
+        register.description = "Card reader enabled"
         register.value = "TERACOM/act230/2911"
         self.__registers.add(register)
 
         register = Register("ac.exit_reader_1.port.baudrate")
         register.scope = Scope.Global
-        register.source = Source.bgERP
+        register.priority = Priority.system
+        register.plugin_name = "Access Control"
+        register.description = "Card reader 1 port baud rate"
         register.value = 9600
         self.__registers.add(register)
 
         register = Register("ac.exit_reader_1.port.name")
         register.scope = Scope.Global
-        register.source = Source.bgERP
+        register.priority = Priority.system
+        register.plugin_name = "Access Control"
+        register.description = "Card reader 1 port name"
         if os.name == "posix":
             register.value = "/dev/ttyUSB0"
         if os.name == "nt":
@@ -228,51 +252,67 @@ class PluginsManager:
         # 
         register = Register("ac.exit_button_1.input")
         register.scope = Scope.Global
-        register.source = Source.bgERP
+        register.priority = Priority.system
+        register.plugin_name = "Access Control"
+        register.description = "Exit button 1 input"
         register.value = verbal_const.OFF # "DI0"
         self.__registers.add(register)
 
         register = Register("ac.lock_mechanism_1.output")
         register.scope = Scope.Global
-        register.source = Source.bgERP
+        register.priority = Priority.system
+        register.plugin_name = "Access Control"
+        register.description = "Lock mechanism output"
         register.value = verbal_const.OFF # "DO2"
         self.__registers.add(register)
 
         register = Register("ac.time_to_open_1")
         register.scope = Scope.Global
-        register.source = Source.bgERP
+        register.priority = Priority.system
+        register.plugin_name = "Access Control"
+        register.description = "Lock mechanism time to open"
         register.value = 10
         self.__registers.add(register)
 
         register = Register("ac.door_closed_1.input")
         register.scope = Scope.Global
-        register.source = Source.bgERP
+        register.priority = Priority.system
+        register.plugin_name = "Access Control"
+        register.description = "Door closed input"
         register.value = verbal_const.OFF # "DI2"
         self.__registers.add(register)
 
         register = Register("ac.door_closed_1.state")
         register.scope = Scope.Global
-        register.source = Source.Zontromat
+        register.priority = Priority.device
+        register.plugin_name = "Access Control"
+        register.description = "Door closed input state"
         register.value = False
         self.__registers.add(register)
         
         # Entry card reader 2.
         register = Register("ac.entry_reader_2.enabled")
         register.scope = Scope.Global
-        register.source = Source.bgERP
+        register.priority = Priority.system
+        register.plugin_name = "Access Control"
+        register.description = "Card reader settings"
         register.value = "TERACOM/act230/2897"
         self.__registers.add(register)
 
 
         register = Register("ac.entry_reader_2.port.baudrate")
         register.scope = Scope.Global
-        register.source = Source.bgERP
+        register.priority = Priority.system
+        register.plugin_name = "Access Control"
+        register.description = "Card reader port baud rate"
         register.value = 9600
         self.__registers.add(register)
 
         register = Register("ac.entry_reader_2.port.name")
         register.scope = Scope.Global
-        register.source = Source.bgERP
+        register.priority = Priority.system
+        register.plugin_name = "Access Control"
+        register.description = "Card reader port name"
         if os.name == "posix":
             register.value = "/dev/ttyUSB0"
         if os.name == "nt":
@@ -282,19 +322,25 @@ class PluginsManager:
         # Exit card reader.
         register = Register("ac.exit_reader_2.enabled")
         register.scope = Scope.Global
-        register.source = Source.bgERP
+        register.priority = Priority.system
+        register.plugin_name = "Access Control"
+        register.description = "Card reader settings"
         register.value = "TERACOM/act230/2911"
         self.__registers.add(register)
 
         register = Register("ac.exit_reader_2.port.baudrate")
         register.scope = Scope.Global
-        register.source = Source.bgERP
+        register.priority = Priority.system
+        register.plugin_name = "Access Control"
+        register.description = "Card reader port baud rate"
         register.value = 9600
         self.__registers.add(register)
 
         register = Register("ac.exit_reader_2.port.name")
         register.scope = Scope.Global
-        register.source = Source.bgERP
+        register.priority = Priority.system
+        register.plugin_name = "Access Control"
+        register.description = "Card reader port name"
         if os.name == "posix":
             register.value = "/dev/ttyUSB0"
         if os.name == "nt":
@@ -304,81 +350,107 @@ class PluginsManager:
         # 
         register = Register("ac.exit_button_2.input")
         register.scope = Scope.Global
-        register.source = Source.bgERP
+        register.priority = Priority.system
+        register.plugin_name = "Access Control"
+        register.description = "Exit button 2 input"
         register.value = verbal_const.OFF # "DI0"
         self.__registers.add(register)
 
         register = Register("ac.lock_mechanism_2.output")
         register.scope = Scope.Global
-        register.source = Source.bgERP
+        register.priority = Priority.system
+        register.plugin_name = "Access Control"
+        register.description = "Lock 2 mechanism output"
         register.value = verbal_const.OFF # "DO2"
         self.__registers.add(register)
 
         register = Register("ac.time_to_open_2")
         register.scope = Scope.Global
-        register.source = Source.bgERP
+        register.priority = Priority.system
+        register.plugin_name = "Access Control"
+        register.description = "Lock 2 mechanism time to open"
         register.value = 10
         self.__registers.add(register)
 
         register = Register("ac.door_closed_2.input")
         register.scope = Scope.Global
-        register.source = Source.bgERP
+        register.priority = Priority.system
+        register.plugin_name = "Access Control"
+        register.description = "Door 2 closed input"
         register.value = verbal_const.OFF # "DI2"
         self.__registers.add(register)
 
         register = Register("ac.door_closed_2.state")
         register.scope = Scope.Global
-        register.source = Source.Zontromat
+        register.priority = Priority.device
+        register.plugin_name = "Access Control"
+        register.description = "Door 2 closed input state"
         register.value = False
         self.__registers.add(register)
 
         #
         register = Register("ac.pir_1.input")
         register.scope = Scope.Global
-        register.source = Source.bgERP
+        register.priority = Priority.system
+        register.plugin_name = "Access Control"
+        register.description = "PIR 1 sensor input"
         register.value = verbal_const.OFF # "DI0"
         self.__registers.add(register)
 
         register = Register("ac.pir_1.state")
         register.scope = Scope.Global
-        register.source = Source.Zontromat
+        register.priority = Priority.device
+        register.plugin_name = "Access Control"
+        register.description = "PIR 1 sensor input state"
         register.value = False
         self.__registers.add(register)
 
         register = Register("ac.pir_2.input")
         register.scope = Scope.Global
-        register.source = Source.bgERP
+        register.priority = Priority.system
+        register.plugin_name = "Access Control"
+        register.description = "PIR 2 sensor input"
         register.value = verbal_const.OFF # "DI0"
         self.__registers.add(register)
 
         register = Register("ac.pir_2.state")
         register.scope = Scope.Global
-        register.source = Source.Zontromat
+        register.priority = Priority.device
+        register.plugin_name = "Access Control"
+        register.description = "PIR 2 sensor input state"
         register.value = False
         self.__registers.add(register)
 
         #
         register = Register("ac.window_closed_1.input")
         register.scope = Scope.Global
-        register.source = Source.bgERP
+        register.priority = Priority.system
+        register.plugin_name = "Access Control"
+        register.description = "Window 1 closed input"
         register.value = verbal_const.OFF # "!DI3"
         self.__registers.add(register)
 
         register = Register("ac.window_closed_1.state")
         register.scope = Scope.Global
-        register.source = Source.Zontromat
+        register.priority = Priority.device
+        register.plugin_name = "Access Control"
+        register.description = "Window 1 closed input state"
         register.value = False
         self.__registers.add(register)
 
         register = Register("ac.window_closed_2.input")
         register.scope = Scope.Global
-        register.source = Source.bgERP
+        register.priority = Priority.system
+        register.plugin_name = "Access Control"
+        register.description = "Window 2 closed input"
         register.value = verbal_const.OFF # "!DI3"
         self.__registers.add(register)
 
         register = Register("ac.window_closed_2.state")
         register.scope = Scope.Global
-        register.source = Source.Zontromat
+        register.priority = Priority.device
+        register.plugin_name = "Access Control"
+        register.description = "Window 2 closed input state"
         register.value = False
         self.__registers.add(register)
 
@@ -388,55 +460,73 @@ class PluginsManager:
 
         register = Register("blinds.sun.azimuth.value")
         register.scope = Scope.Global
-        register.source = Source.bgERP
+        register.priority = Priority.system
+        register.plugin_name = "Blinds"
+        register.description = "Sun azimuth value"
         register.value = 0
         self.__registers.add(register)
 
         register = Register("blinds.sun.azimuth.mou")
         register.scope = Scope.Global
-        register.source = Source.bgERP
+        register.priority = Priority.system
+        register.plugin_name = "Blinds"
+        register.description = "MOU"
         register.value = "deg"
         self.__registers.add(register)
 
         register = Register("blinds.sun.elevation.value")
         register.scope = Scope.Global
-        register.source = Source.bgERP
+        register.priority = Priority.system
+        register.plugin_name = "Blinds"
+        register.description = "Sun elevation value"
         register.value = 0
         self.__registers.add(register)
 
         register = Register("blinds.sun.elevation.mou")
         register.scope = Scope.Global
-        register.source = Source.bgERP
+        register.priority = Priority.system
+        register.plugin_name = "Blinds"
+        register.description = "MOU"
         register.value = "deg"
         self.__registers.add(register)
 
         register = Register("blinds.input_fb")
         register.scope = Scope.Global
-        register.source = Source.bgERP
+        register.priority = Priority.system
+        register.plugin_name = "Blinds"
+        register.description = "Feedback input"
         register.value = "AI0" # "DI8"
         self.__registers.add(register)
 
         register = Register("blinds.output_ccw")
         register.scope = Scope.Global
-        register.source = Source.bgERP
+        register.priority = Priority.system
+        register.plugin_name = "Blinds"
+        register.description = "CCW output"
         register.value = "DO0"
         self.__registers.add(register)
 
         register = Register("blinds.output_cw")
         register.scope = Scope.Global
-        register.source = Source.bgERP
+        register.priority = Priority.system
+        register.plugin_name = "Blinds"
+        register.description = "CW output"
         register.value = "DO1"
         self.__registers.add(register)
 
         register = Register("blinds.position")
         register.scope = Scope.Global
-        register.source = Source.bgERP
+        register.priority = Priority.system
+        register.plugin_name = "Blinds"
+        register.description = "Position"
         register.value = 0
         self.__registers.add(register)
 
         register = Register("blinds.enabled")
         register.scope = Scope.Global
-        register.source = Source.bgERP
+        register.priority = Priority.system
+        register.plugin_name = "Blinds"
+        register.description = "Plugin enabled"
         register.update_handler = self.__blinds_enabled
         register.value = verbal_const.NO
         self.__registers.add(register)
@@ -448,82 +538,108 @@ class PluginsManager:
         # Cold water flow meter.
         register = Register("monitoring.cw.input")
         register.scope = Scope.Global
-        register.source = Source.bgERP
+        register.priority = Priority.system
+        register.plugin_name = "Monitoring"
+        register.description = "Cold water input flow meter"
         register.value = verbal_const.OFF # "DI6"
         self.__registers.add(register)
 
         register = Register("monitoring.cw.tpl")
         register.scope = Scope.Global
-        register.source = Source.bgERP
+        register.priority = Priority.system
+        register.plugin_name = "Monitoring"
+        register.description = "Cold water tics per liter"
         register.value = 1
         self.__registers.add(register)
 
         register = Register("monitoring.cw.value")
         register.scope = Scope.Global
-        register.source = Source.Zontromat
+        register.priority = Priority.device
+        register.plugin_name = "Monitoring"
+        register.description = "Cold water liters"
         register.value = 0
         self.__registers.add(register)
 
         register = Register("monitoring.cw.leak")
         register.scope = Scope.Global
-        register.source = Source.Zontromat
+        register.priority = Priority.device
+        register.plugin_name = "Monitoring"
+        register.description = "Cold water leaked liters"
         register.value = 1
         self.__registers.add(register) 
 
         # Hot water flow meter.
         register = Register("monitoring.hw.input")
         register.scope = Scope.Global
-        register.source = Source.bgERP
+        register.priority = Priority.system
+        register.plugin_name = "Monitoring"
+        register.description = "Hot water input flow meter"
         register.value = verbal_const.OFF # "DI7"
         self.__registers.add(register)
 
         register = Register("monitoring.hw.tpl")
         register.scope = Scope.Global
-        register.source = Source.bgERP
+        register.priority = Priority.system
+        register.plugin_name = "Monitoring"
+        register.description = "Hot water tics per liter"
         register.value = 1
         self.__registers.add(register)
 
         register = Register("monitoring.hw.value")
         register.scope = Scope.Global
-        register.source = Source.Zontromat
+        register.priority = Priority.device
+        register.plugin_name = "Monitoring"
+        register.description = "Hot water liters"
         register.value = 0
         self.__registers.add(register)
 
         register = Register("monitoring.hw.leak")
         register.scope = Scope.Global
-        register.source = Source.Zontromat
+        register.priority = Priority.device
+        register.plugin_name = "Monitoring"
+        register.description = "Hot water leaked liters"
         register.value = 1
         self.__registers.add(register) 
 
         # Power analyser.
         register = Register("monitoring.pa.settings")
         register.scope = Scope.Global
-        register.source = Source.bgERP
+        register.priority = Priority.system
+        register.plugin_name = "Monitoring"
+        register.description = "Power analyser settings"
         register.value = "mb-rtu/Eastron/SDM630/2/3"
         self.__registers.add(register)
 
         register = Register("monitoring.pa.l1")
         register.scope = Scope.Global
-        register.source = Source.Zontromat
+        register.priority = Priority.device
+        register.plugin_name = "Monitoring"
+        register.description = "Power analyser L1 parameters"
         register.value = []
         self.__registers.add(register)
 
         register = Register("monitoring.pa.l2")
         register.scope = Scope.Global
-        register.source = Source.Zontromat
+        register.priority = Priority.device
+        register.plugin_name = "Monitoring"
+        register.description = "Power analyser L2 parameters"
         register.value = []
         self.__registers.add(register)
 
         register = Register("monitoring.pa.l3")
         register.scope = Scope.Global
-        register.source = Source.Zontromat
+        register.priority = Priority.device
+        register.plugin_name = "Monitoring"
+        register.description = "Power analyser L3 parameters"
         register.value = []
         self.__registers.add(register)
 
         # Enable flag.
         register = Register("monitoring.enabled")
         register.scope = Scope.Global
-        register.source = Source.bgERP
+        register.priority = Priority.system
+        register.plugin_name = "Monitoring"
+        register.description = "Plugin enabled"
         register.update_handler = self.__monitoring_enabled
         register.value = verbal_const.NO
         self.__registers.add(register)
@@ -534,78 +650,114 @@ class PluginsManager:
 
         register = Register("env.is_empty")
         register.scope = Scope.Global
-        register.source = Source.Zontromat
+        register.priority = Priority.device
+        register.plugin_name = "Environment"
+        register.description = "Is empty flag"
         register.value = 1
         self.__registers.add(register)
 
         register = Register("env.is_empty_timeout")
         register.scope = Scope.Global
-        register.source = Source.bgERP
+        register.priority = Priority.system
+        register.plugin_name = "Environment"
+        register.description = "Is empty time out [s]"
         register.value = 3600
         self.__registers.add(register)
 
         register = Register("env.temp.actual")
         register.scope = Scope.Global
-        register.source = Source.bgERP
+        register.priority = Priority.system
+        register.plugin_name = "Environment"
+        register.description = "Actual outside temperature [C]"
+        register.value = 29
         self.__registers.add(register)
 
         register = Register("env.temp.a6")
         register.scope = Scope.Global
-        register.source = Source.bgERP
+        register.priority = Priority.system
+        register.plugin_name = "Environment"
+        register.description = "Actual outside temperature for 6 hours [C]"
+        register.value = 30
         self.__registers.add(register)
 
         register = Register("env.temp.min24")
         register.scope = Scope.Global
-        register.source = Source.bgERP
+        register.priority = Priority.system
+        register.plugin_name = "Environment"
+        register.description = "Minimum outside temperature for 24 hours [C]"
+        register.value = 20
         self.__registers.add(register)
 
         register = Register("env.temp.max24")
         register.scope = Scope.Global
-        register.source = Source.bgERP
+        register.priority = Priority.system
+        register.plugin_name = "Environment"
+        register.description = "Maximum outside temperature for 24 hours [C]"
+        register.value = 36
         self.__registers.add(register)
 
         register = Register("env.rh")
         register.scope = Scope.Global
-        register.source = Source.bgERP
+        register.priority = Priority.system
+        register.plugin_name = "Environment"
+        register.description = "Actual outside relative humidity [%]"
+        register.value = 60
         self.__registers.add(register)
 
         register = Register("env.wind.actual")
         register.scope = Scope.Global
-        register.source = Source.bgERP
+        register.priority = Priority.system
+        register.plugin_name = "Environment"
+        register.description = "Actual wind [m/sec]"
+        register.value = 3
         self.__registers.add(register)
 
         register = Register("env.wind.max12")
         register.scope = Scope.Global
-        register.source = Source.bgERP
+        register.priority = Priority.system
+        register.plugin_name = "Environment"
+        register.description = "Maximum wind for 12 hours [m/sec]"
+        register.value = 6
         self.__registers.add(register)
 
         register = Register("env.light")
         register.scope = Scope.Global
-        register.source = Source.bgERP
-        self.__registers.add(register)
-
-        register = Register("env.enabled")
-        register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.update_handler = self.__env_enabled
-        register.value = verbal_const.NO
+        register.priority = Priority.system
+        register.plugin_name = "Environment"
+        register.description = "Outside light [lux]"
+        register.value = 1000
         self.__registers.add(register)
 
         register = Register("env.energy") # Energy mode of the building.
         register.scope = Scope.Global
-        register.source = Source.bgERP
+        register.priority = Priority.system
+        register.plugin_name = "Environment"
+        register.description = "Energy mode of the building"
         register.value = 0
         self.__registers.add(register)
 
         register = Register("env.emergency") # Emergency bit coded flags of the building.
         register.scope = Scope.Global
-        register.source = Source.bgERP
+        register.priority = Priority.system
+        register.plugin_name = "Environment"
+        register.description = "Emergency flags of the building"
         register.value = 0
         self.__registers.add(register)
 
         register = Register("env.sunpos.enabled")
         register.scope = Scope.Global
-        register.source = Source.bgERP
+        register.priority = Priority.system
+        register.plugin_name = "Environment"
+        register.description = "Enable software calculation of the sun position"
+        register.value = verbal_const.NO
+        self.__registers.add(register)
+
+        register = Register("env.enabled")
+        register.scope = Scope.Global
+        register.priority = Priority.system
+        register.update_handler = self.__env_enabled
+        register.plugin_name = "Environment"
+        register.description = "Plugin enabled"
         register.value = verbal_const.NO
         self.__registers.add(register)
 
@@ -615,267 +767,349 @@ class PluginsManager:
 
         register = Register("hvac.adjust_temp")
         register.scope = Scope.Global
-        register.source = Source.bgERP
+        register.priority = Priority.system
+        register.plugin_name = "HVAC"
+        register.description = "Adjust temperature"
         register.value = 0
         self.__registers.add(register)
 
         # Air temp central.
         register = Register("hvac.air_temp_cent.settings")
         register.scope = Scope.Global
-        register.source = Source.bgERP
+        register.priority = Priority.system
+        register.plugin_name = "HVAC"
+        register.description = "Air temperature sensor center settings"
         register.value = "temp/DS18B20/28FFFCD0001703AE"
         self.__registers.add(register)
 
         # Air temp lower
         register = Register("hvac.air_temp_lower.settings")
         register.scope = Scope.Global
-        register.source = Source.bgERP
+        register.priority = Priority.system
+        register.plugin_name = "HVAC"
+        register.description = "Air temperature sensor lower settings"
         register.value = "temp/DS18B20/28FFC4EE00170349"
         self.__registers.add(register)
 
         # Air temp upper.
         register = Register("hvac.air_temp_upper.settings")
         register.scope = Scope.Global
-        register.source = Source.bgERP
+        register.priority = Priority.system
+        register.plugin_name = "HVAC"
+        register.description = "Air temperature sensor upper settings"
         register.value = "temp/DS18B20/28FF2B70C11604B7"
         self.__registers.add(register)
 
         # Convector
         register = Register("hvac.convector.settings")
         register.scope = Scope.Global
-        register.source = Source.bgERP
+        register.priority = Priority.system
+        register.plugin_name = "HVAC"
+        register.description = "Convector settings"
         register.value = "silpa/klimafan"
         self.__registers.add(register)
 
         register = Register("hvac.convector.stage_1.output")
         register.scope = Scope.Global
-        register.source = Source.bgERP
+        register.priority = Priority.system
+        register.plugin_name = "HVAC"
+        register.description = "Convector stage 1 output"
         register.value = "RO0"
         self.__registers.add(register)
 
         register = Register("hvac.convector.stage_2.output")
         register.scope = Scope.Global
-        register.source = Source.bgERP
+        register.priority = Priority.system
+        register.plugin_name = "HVAC"
+        register.description = "Convector stage 2 output"
         register.value = "RO1"
         self.__registers.add(register)
 
         register = Register("hvac.convector.stage_3.output")
         register.scope = Scope.Global
-        register.source = Source.bgERP
+        register.priority = Priority.system
+        register.plugin_name = "HVAC"
+        register.description = "Convector stage 3 output"
         register.value = "RO2"
         self.__registers.add(register)
 
         # Delta time.
         register = Register("hvac.delta_time")
         register.scope = Scope.Global
-        register.source = Source.bgERP
+        register.priority = Priority.system
+        register.plugin_name = "HVAC"
+        register.description = "Measuring delta time"
         register.value = 5
         self.__registers.add(register)
 
         # HVAC Enabled.
         register = Register("hvac.enabled")
         register.scope = Scope.Global
-        register.source = Source.bgERP
+        register.priority = Priority.system
         register.update_handler = self.__hvac_enabled
+        register.plugin_name = "HVAC"
+        register.description = "Plugin enabled"
         register.value = verbal_const.NO
         self.__registers.add(register)
 
         # Goal building temp.
         register = Register("hvac.goal_building_temp")
         register.scope = Scope.Global
-        register.source = Source.bgERP
+        register.priority = Priority.system
+        register.plugin_name = "HVAC"
+        register.description = "Goal of the building temperature"
         register.value = 20
         self.__registers.add(register)
 
         # Loop 1 flowmeter.
         register = Register("hvac.loop1.cnt.tpl")
         register.scope = Scope.Global
-        register.source = Source.bgERP
+        register.priority = Priority.system
+        register.plugin_name = "HVAC"
+        register.description = "Loop 1 water flow meter ticks per liter scale"
         register.value = 1
         self.__registers.add(register)
 
         register = Register("hvac.loop1.cnt.input")
         register.scope = Scope.Global
-        register.source = Source.bgERP
+        register.priority = Priority.system
+        register.plugin_name = "HVAC"
+        register.description = "Loop 1 water flow meter signal input"
         register.value = "DI4"
         self.__registers.add(register)
 
         # Loop 1 fan
         register = Register("hvac.loop1.fan.settings")
         register.scope = Scope.Global
-        register.source = Source.bgERP
+        register.priority = Priority.system
+        register.plugin_name = "HVAC"
+        register.description = "Loop 1 fan settings"
         register.value = "HangzhouAirflowElectricApplications/f3p146ec072600"
         self.__registers.add(register)
 
         register = Register("hvac.loop1.fan.output")
         register.scope = Scope.Global
-        register.source = Source.bgERP
+        register.priority = Priority.system
+        register.plugin_name = "HVAC"
+        register.description = "Loop 1 fan output"
         register.value = "AO3"
         self.__registers.add(register)
 
         register = Register("hvac.loop1.fan.min_speed")
         register.scope = Scope.Global
-        register.source = Source.bgERP
+        register.priority = Priority.system
+        register.plugin_name = "HVAC"
+        register.description = "Loop 1 fan minimum speed [%]"
         register.value = 0
         self.__registers.add(register)
 
         register = Register("hvac.loop1.fan.max_speed")
         register.scope = Scope.Global
-        register.source = Source.bgERP
+        register.priority = Priority.system
+        register.plugin_name = "HVAC"
+        register.description = "Loop 1 fan maximum speed [%]"
         register.value = 30
         self.__registers.add(register)
 
         # Loop 1 Temperature
         register = Register("hvac.loop1.temp.settings")
         register.scope = Scope.Global
-        register.source = Source.bgERP
+        register.priority = Priority.system
+        register.plugin_name = "HVAC"
+        register.description = "Loop 1 temperature sensor settings"
         register.value = "temp/DS18B20/28FF2B70C11604B7"
         self.__registers.add(register)
 
         # Loop 1 valve.
         register = Register("hvac.loop1.valve.settings")
         register.scope = Scope.Global
-        register.source = Source.bgERP
+        register.priority = Priority.system
+        register.plugin_name = "HVAC"
+        register.description = "Loop 1 valve settings"
         register.value = "TONHE/a20m15b2c"
         self.__registers.add(register)
 
         register = Register("hvac.loop1.valve.output")
         register.scope = Scope.Global
-        register.source = Source.bgERP
+        register.priority = Priority.system
+        register.plugin_name = "HVAC"
+        register.description = "Loop 1 valve output"
         register.value = "RO4"
         self.__registers.add(register)
 
         register = Register("hvac.loop1.valve.feedback")
         register.scope = Scope.Global
-        register.source = Source.bgERP
+        register.priority = Priority.system
+        register.plugin_name = "HVAC"
+        register.description = "Loop 1 valve feedback"
         register.value = "AI1"
         self.__registers.add(register)
 
         register = Register("hvac.loop1.valve.max_pos")
         register.scope = Scope.Global
-        register.source = Source.bgERP
+        register.priority = Priority.system
+        register.plugin_name = "HVAC"
+        register.description = "Loop 1 valve maximum position"
         register.value = 100
         self.__registers.add(register)
 
         register = Register("hvac.loop1.valve.min_pos")
         register.scope = Scope.Global
-        register.source = Source.bgERP
+        register.priority = Priority.system
+        register.plugin_name = "HVAC"
+        register.description = "Loop 1 valve minimum position"
         register.value = 0
         self.__registers.add(register)
 
         # Loop 2 flowmeter
         register = Register("hvac.loop2.cnt.tpl")
         register.scope = Scope.Global
-        register.source = Source.bgERP
+        register.priority = Priority.system
+        register.plugin_name = "HVAC"
+        register.description = "Loop 2 water flow meter ticks per liter scale"
         register.value = 1
         self.__registers.add(register)
 
         register = Register("hvac.loop2.cnt.input")
         register.scope = Scope.Global
-        register.source = Source.bgERP
+        register.priority = Priority.system
+        register.plugin_name = "HVAC"
+        register.description = "Loop 1 water flow meter signal input"
         register.value = "DI5"
         self.__registers.add(register)
 
         # Loop 2 fan
         register = Register("hvac.loop2.fan.settings")
         register.scope = Scope.Global
-        register.source = Source.bgERP
+        register.priority = Priority.system
+        register.plugin_name = "HVAC"
+        register.description = "Loop 2 fan settings"
         register.value = "HangzhouAirflowElectricApplications/f3p146ec072600"
         self.__registers.add(register)
 
         register = Register("hvac.loop2.fan.output")
         register.scope = Scope.Global
-        register.source = Source.bgERP
+        register.priority = Priority.system
+        register.plugin_name = "HVAC"
+        register.description = "Loop 2 fan output"
         register.value = "AO4"
         self.__registers.add(register)
 
         register = Register("hvac.loop2.fan.min_speed")
         register.scope = Scope.Global
-        register.source = Source.bgERP
+        register.priority = Priority.system
+        register.plugin_name = "HVAC"
+        register.description = "Loop 2 fan minimum speed [%]"
         register.value = 0
         self.__registers.add(register)
 
         register = Register("hvac.loop2.fan.max_speed")
         register.scope = Scope.Global
-        register.source = Source.bgERP
+        register.priority = Priority.system
+        register.plugin_name = "HVAC"
+        register.description = "Loop 2 fan maximum speed [%]"
         register.value = 30
         self.__registers.add(register)
 
         # Loop 2 Temperature
         register = Register("hvac.loop2.temp.settings")
         register.scope = Scope.Global
-        register.source = Source.bgERP
+        register.priority = Priority.system
+        register.plugin_name = "HVAC"
+        register.description = "Loop 2 temperature sensor settings"
         register.value = "temp/DS18B20/28FFC4EE00170349"
         self.__registers.add(register)
 
         # Loop 2 valve.
         register = Register("hvac.loop2.valve.settings")
         register.scope = Scope.Global
-        register.source = Source.bgERP
+        register.priority = Priority.system
+        register.plugin_name = "HVAC"
+        register.description = "Loop 2 valve settings"
         register.value = "TONHE/a20m15b2c"
         self.__registers.add(register)
 
         register = Register("hvac.loop2.valve.output")
         register.scope = Scope.Global
-        register.source = Source.bgERP
+        register.priority = Priority.system
+        register.plugin_name = "HVAC"
+        register.description = "Loop 2 valve output"
         register.value = "RO3"
         self.__registers.add(register)
 
         register = Register("hvac.loop2.valve.feedback")
         register.scope = Scope.Global
-        register.source = Source.bgERP
+        register.priority = Priority.system
+        register.plugin_name = "HVAC"
+        register.description = "Loop 2 valve feedback"
         register.value = "AI2"
         self.__registers.add(register)
 
         register = Register("hvac.loop2.valve.max_pos")
         register.scope = Scope.Global
-        register.source = Source.bgERP
+        register.priority = Priority.system
+        register.plugin_name = "HVAC"
+        register.description = "Loop 2 valve maximum position"
         register.value = 100
         self.__registers.add(register)
 
         register = Register("hvac.loop2.valve.min_pos")
         register.scope = Scope.Global
-        register.source = Source.bgERP
+        register.priority = Priority.system
+        register.plugin_name = "HVAC"
+        register.description = "Loop 2 valve minimum position"
         register.value = 0
         self.__registers.add(register)
 
         # Temperature actual
         register = Register("hvac.temp.actual")
         register.scope = Scope.Global
-        register.source = Source.bgERP
+        register.priority = Priority.system
+        register.plugin_name = "HVAC"
+        register.description = "Actual temperature"
         self.__registers.add(register)
 
         register = Register("hvac.temp.max")
         register.scope = Scope.Global
-        register.source = Source.bgERP
+        register.priority = Priority.system
         register.value = 30
+        register.plugin_name = "HVAC"
+        register.description = "Maximum achievable"
         self.__registers.add(register)
 
         register = Register("hvac.temp.min")
         register.scope = Scope.Global
-        register.source = Source.bgERP
+        register.priority = Priority.system
         register.value = 20
+        register.plugin_name = "HVAC"
+        register.description = "Minimum achievable"
         self.__registers.add(register)
 
         # Thermal force limit
         register = Register("hvac.thermal_force_limit")
         register.scope = Scope.Global
-        register.source = Source.bgERP
+        register.priority = Priority.system
         register.value = 100
+        register.plugin_name = "HVAC"
+        register.description = "Thermal force limit"
         self.__registers.add(register)
 
         # Thermal mode
         register = Register("hvac.thermal_mode")
         register.scope = Scope.Global
-        register.source = Source.bgERP
+        register.priority = Priority.system
         register.value = 2
+        register.plugin_name = "HVAC"
+        register.description = "Thermal mode"
         self.__registers.add(register)
 
         # Update rate.
         register = Register("hvac.update_rate")
         register.scope = Scope.Global
-        register.source = Source.bgERP
+        register.priority = Priority.system
         register.value = 3
+        register.plugin_name = "HVAC"
+        register.description = "Update rate of the plugin"
         self.__registers.add(register)
 
 #endregion
@@ -884,49 +1118,67 @@ class PluginsManager:
 
         register = Register("light.min")
         register.scope = Scope.Global
-        register.source = Source.bgERP
+        register.priority = Priority.system
+        register.plugin_name = "Light"
+        register.description = "Minimum limit"
         register.value = 800
         self.__registers.add(register)
 
         register = Register("light.max")
         register.scope = Scope.Global
-        register.source = Source.bgERP
+        register.priority = Priority.system
+        register.plugin_name = "Light"
+        register.description = "Maximum limit"
         register.value = 10000
         self.__registers.add(register)
 
         register = Register("light.v1.output")
         register.scope = Scope.Global
-        register.source = Source.bgERP
+        register.priority = Priority.system
+        register.plugin_name = "Light"
+        register.description = "Analog output 1"
         register.value = "AO1"
         self.__registers.add(register)
 
         register = Register("light.v2.output")
         register.scope = Scope.Global
-        register.source = Source.bgERP
+        register.priority = Priority.system
+        register.plugin_name = "Light"
+        register.description = "Analog output 2"
         register.value = "AO2"
         self.__registers.add(register)
 
         register = Register("light.sensor.settings")
         register.scope = Scope.Global
-        register.source = Source.bgERP
+        register.priority = Priority.system
+        register.plugin_name = "Light"
+        register.description = "Sensor settings"
         register.value = "1wdevice/26607314020000F8"
         self.__registers.add(register)
 
         # register = Register("light.sensor.model")
         # register.scope = Scope.Global
-        # register.source = Source.bgERP
+        # register.priority = Priority.system
+        # register.plugin_name = "Light"
+        # register.priority = "system"
+        # register.description = ""
         # register.value = "u1wtvs"
         # self.__registers.add(register)
 
         # register = Register("light.sensor.vendor")
         # register.scope = Scope.Global
-        # register.source = Source.bgERP
+        # register.priority = Priority.system
+        # register.plugin_name = "Light"
+        # register.priority = "system"
+        # register.description = ""
         # register.value = "SEDtronic"
         # self.__registers.add(register)
 
         register = Register("light.enabled")
         register.scope = Scope.Global
-        register.source = Source.bgERP
+        register.priority = Priority.system
+        register.plugin_name = "Light"
+        register.description = "Plugin enabled"
         register.update_handler = self.__light_enabled
         register.value = verbal_const.NO
         self.__registers.add(register)
@@ -938,87 +1190,113 @@ class PluginsManager:
         # Last 60 seconds
         register = Register("sys.last_minute_errs")
         register.scope = Scope.Global
-        register.source = Source.Zontromat
-        register.value = ""
+        register.priority = Priority.device
+        register.plugin_name = "System"
+        register.description = ""
+        register.value = "Last minute error"
         GlobalErrorHandler.set_register(register)
         self.__registers.add(register)
 
         # Systrem resources
         register = Register("sys.ram.current")
         register.scope = Scope.Global
-        register.source = Source.Zontromat
+        register.priority = Priority.device
+        register.plugin_name = "System"
+        register.description = "Current consumed RAM"
         register.value = 0
         self.__registers.add(register)
 
         register = Register("sys.ram.peak")
         register.scope = Scope.Global
-        register.source = Source.Zontromat
+        register.priority = Priority.device
+        register.plugin_name = "System"
+        register.description = "Peek of consumed RAM"
         register.value = 0
         self.__registers.add(register)
 
         register = Register("sys.time.usage")
         register.scope = Scope.Global
-        register.source = Source.Zontromat
+        register.priority = Priority.device
+        register.plugin_name = "System"
+        register.description = "Application time cycle"
         register.value = 0
         self.__registers.add(register)
 
         # Status LED
         register = Register("sys.sl.output")
         register.scope = Scope.Global
-        register.source = Source.bgERP
+        register.priority = Priority.system
+        register.plugin_name = "System"
+        register.description = "Status LED"
         register.value = "LED0"
         self.__registers.add(register)
 
         register = Register("sys.sl.blink_time")
         register.scope = Scope.Global
-        register.source = Source.bgERP
+        register.priority = Priority.system
+        register.plugin_name = "System"
+        register.description = "Blink time"
         register.value = 1
         self.__registers.add(register)
 
         # Anti tampering
         register = Register("sys.at.input")
         register.scope = Scope.Global
-        register.source = Source.bgERP
+        register.priority = Priority.system
+        register.plugin_name = "System"
+        register.description = "Anti tamper"
         register.value = "DI1"
         self.__registers.add(register)
 
         register = Register("sys.at.state")
         register.scope = Scope.Global
-        register.source = Source.Zontromat
+        register.priority = Priority.device
+        register.plugin_name = "System"
+        register.description = "Anti tampering state"
         register.value = False
         self.__registers.add(register)
 
         # Colision detector
         register = Register("sys.col.info_message")
         register.scope = Scope.Global
-        register.source = Source.Zontromat
+        register.priority = Priority.device
+        register.plugin_name = "System"
+        register.description = "Collision info message"
         register.value = ""
         self.__registers.add(register)
 
         register = Register("sys.col.warning_message")
         register.scope = Scope.Global
-        register.source = Source.Zontromat
+        register.priority = Priority.device
+        register.plugin_name = "System"
+        register.description = "Collision warning message"
         register.value = ""
         self.__registers.add(register)
 
         register = Register("sys.col.error_message")
         register.scope = Scope.Global
-        register.source = Source.Zontromat
+        register.priority = Priority.device
+        register.plugin_name = "System"
+        register.description = ""
         register.value = ""
         self.__registers.add(register)
 
         register = Register("sys.col.clear_errors")
         register.scope = Scope.Global
-        register.source = Source.bgERP
+        register.priority = Priority.system
+        register.plugin_name = "System"
+        register.description = "Collision error message"
         register.value = 0
         self.__registers.add(register)
 
         # Enable disable plugin.
         register = Register("sys.enabled")
         register.scope = Scope.Global
-        register.source = Source.bgERP
-        register.value = verbal_const.NO
+        register.priority = Priority.system
+        register.plugin_name = "System"
+        register.description = "Plugin enabled"
         register.update_handler = self.__sys_enabled
+        register.value = verbal_const.NO
         self.__registers.add(register)
 
 #endregion
@@ -1182,6 +1460,7 @@ class PluginsManager:
 
         # doc_generator.reg_to_json(self.__registers)
         # doc_generator.reg_to_md(self.__registers)
+        # doc_generator.reg_to_bgERP(self.__registers)
 
     def shutdown(self):
         """Shutdown plugins."""

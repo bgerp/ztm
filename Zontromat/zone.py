@@ -40,7 +40,7 @@ from controllers.update_state import UpdateState
 
 from bgERP.bgERP import bgERP
 
-from data.register import Register, Source, Scope
+from data.register import Register, Priority, Scope
 from data.registers import Registers
 
 from plugins.plugins_manager import PluginsManager
@@ -365,7 +365,7 @@ class Zone():
         if self.__erp_service_update_timer.expired:
             self.__erp_service_update_timer.clear()
 
-            ztm_regs = self.__registers.by_source(Source.Zontromat)
+            ztm_regs = self.__registers.by_priority(Priority.device)
             ztm_regs = ztm_regs.new_then(60)                
             ztm_regs_dict = ztm_regs.to_dict()
 

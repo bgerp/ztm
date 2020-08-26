@@ -63,11 +63,11 @@ class Scope(Enum):
     Global = 1
     Local = 2
 
-class Source(Enum):
-    """Source update modifier."""
+class Priority(Enum):
+    """Priority update modifier."""
 
-    Zontromat = 0
-    bgERP = 1
+    device = 0
+    system = 1
 
 class Register:
     """Register"""
@@ -86,14 +86,23 @@ class Register:
     __scope = Scope.Global
     """Scope of register."""
 
-    __source = Source.bgERP
-    """Source update modifier."""
+    __priority = Priority.system
+    """Priority update modifier."""
 
     __update_handler = None
     """Update handler."""
 
     __force = False
     """"""
+
+    __plugin_name = ""
+    """Plugin name."""
+
+    __priority = ""
+    """Priority"""
+
+    __description = ""
+    """Verbal register description."""
 
 #endregion
 
@@ -119,8 +128,8 @@ class Register:
             String representation of the instance.
 
         """
-        return "Name: {}; TS: {}; Value: {}; Scope: {}; Source: {}"\
-            .format(self.name, self.ts, self.value, self.scope, self.source)
+        return "Name: {}; TS: {}; Value: {}; Scope: {}; Priority: {}"\
+            .format(self.name, self.ts, self.value, self.scope, self.priority)
 
     __repr__ = __str__
 
@@ -221,6 +230,28 @@ class Register:
 
         return self.__scope
 
+    @property
+    def data_type(self):
+        
+        str_type = "None"
+
+        if isinstance(self.__value, str):
+            str_type = "str"
+
+        elif isinstance(self.__value, int):
+            str_type = "int"
+
+        elif isinstance(self.__value, float):
+            str_type = "float/int"
+
+        elif isinstance(self.__value, bool):
+            str_type = "bool"
+
+        elif isinstance(self.__value, list):
+            str_type = "json"
+
+        return str_type
+
     @scope.setter
     def scope(self, value):
         """Set the value of the scope flag.
@@ -234,28 +265,28 @@ class Register:
         self.__scope = value
 
     @property
-    def source(self):
-        """Returns the value of the source flag.
+    def priority(self):
+        """Returns the value of the priority flag.
 
         Returns
         -------
         Enum
-            Value of the source flag.
+            Value of the priority flag.
         """
 
-        return self.__source
+        return self.__priority
 
-    @source.setter
-    def source(self, value):
-        """Set the value of the source flag.
+    @priority.setter
+    def priority(self, value):
+        """Set the value of the priority flag.
 
         Parameters
         ----------
-        source : Enum
-            Value of the source flag.
+        priority : Enum
+            Value of the priority flag.
         """
 
-        self.__source = value
+        self.__priority = value
 
     @property
     def update_handler(self):
@@ -302,6 +333,42 @@ class Register:
         """
     
         self.__force = value
+
+    @property
+    def plugin_name(self):
+        """Plugin Name"""
+
+        return self.__plugin_name
+
+    @plugin_name.setter
+    def plugin_name(self, value):
+        """Plugin name."""
+
+        self.__plugin_name = value
+
+    @property
+    def priority(self):
+        """Priority"""
+
+        return self.__priority
+
+    @priority.setter
+    def priority(self, value):
+        """Priority"""
+
+        self.__priority = value
+
+    @property
+    def description(self):
+        """Description"""
+
+        return self.__description
+
+    @description.setter
+    def description(self, value):
+        """Description"""
+
+        self.__description = value
 
 #endregion
 

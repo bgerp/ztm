@@ -250,24 +250,24 @@ class Registers:
 
         return result
 
-    def by_source(self, source):
-        """Get registers with specified source.
+    def by_priority(self, priority):
+        """Get registers with specified priority.
 
         Parameters
         ----------
-        source : Source(Enum)
-            Source
+        priority : Priority(Enum)
+            Priority
 
         Returns
         -------
         array
-            Registers with source.
+            Registers with priority.
         """
 
         result = Registers()
 
         for register in self.__container:
-            if source == register.source:
+            if priority == register.priority:
                 result.add(register)
 
         return result

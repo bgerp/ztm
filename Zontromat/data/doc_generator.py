@@ -24,7 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import json
 
-from data.register import Source
+from data.register import Priority
 from data.registers import Registers
 
 #region File Attributes
@@ -58,37 +58,29 @@ __status__ = "Debug"
 
 #endregion
 
-def __get_type(inst):
+def __csv_escape(value):
 
-    str_type = ""
+    result = value
 
-    if isinstance(inst, str):
-        str_type = "str"
+    if isinstance(value, str):
+        if "," in value:
+            result = "\"" + value + "\""
 
-    elif isinstance(inst, int):
-        str_type = "int"
+    elif isinstance(value, list):
+        result = "\"" + str(value) + "\""
 
-    elif isinstance(inst, float):
-        str_type = "float/int"
-
-    elif isinstance(inst, bool):
-        str_type = "bool"
-
-    elif isinstance(inst, list):
-        str_type = "json"
-
-    return str_type
+    return result
 
 def reg_to_json(registers):
     """JSON output"""
 
-    bgerp_regs = registers.by_source(Source.bgERP)
+    bgerp_regs = registers.by_source(Priority.system)
     dict_regs = bgerp_regs.to_dict()
     text = json.dumps(dict_regs, indent=4, sort_keys=True)
     with open("registers_bgerp.json", "w") as f:
         f.write(text)
 
-    ztm_regs = registers.by_source(Source.Zontromat)
+    ztm_regs = registers.by_source(Priority.device)
     dict_regs = ztm_regs.to_dict()
     text = json.dumps(dict_regs, indent=4, sort_keys=True)
     with open("registers_ztm.json", "w") as f:
@@ -97,12 +89,12 @@ def reg_to_json(registers):
 def reg_to_csv(registers):
     """CSV output"""
 
-    bgerp_regs = registers.by_source(Source.bgERP)
+    bgerp_regs = registers.by_source(Priority.system)
     with open("registers_bgerp.csv", "w") as f:
         for register in bgerp_regs:
             f.write("{}\t{}\n".format(register.name, register.value))
 
-    ztm_regs = registers.by_source(Source.Zontromat)
+    ztm_regs = registers.by_source(Priority.device)
     with open("registers_ztm.csv", "w") as f:
         for register in ztm_regs:
             f.write("{}\t{}\n".format(register.name, register.value))
@@ -110,7 +102,7 @@ def reg_to_csv(registers):
 def reg_to_md(registers):
     """MD output"""
 
-    bgerp_regs = registers.by_source(Source.bgERP)
+    bgerp_regs = registers.by_source(Priority.system)
     with open("registers_bgerp.md", "w") as f:
 
         # Header
@@ -120,12 +112,10 @@ def reg_to_md(registers):
         # Body
         for bgerp_register in bgerp_regs:
 
-            str_type = __get_type(bgerp_register.value)
-
             f.write("|  | {} | {} | {} |\n"\
-                .format(bgerp_register.name, str_type, bgerp_register.value))
+                .format(bgerp_register.name, bgerp_register.data_type, bgerp_register.value))
 
-    ztm_regs = registers.by_source(Source.Zontromat)
+    ztm_regs = registers.by_source(Priority.device)
     with open("registers_ztm.md", "w") as f:
 
         # Header
@@ -135,7 +125,33 @@ def reg_to_md(registers):
         # Body
         for ztm_register in ztm_regs:
 
-            str_type = __get_type(ztm_register.value)
-
             f.write("|  | {} | {} | {} |\n"\
-                .format(ztm_register.name, str_type, ztm_register.value))
+                .format(ztm_register.name, bgerp_register.data_type, ztm_register.value))
+
+def reg_to_bgERP(registers):
+    """Export registers"""
+
+    with open("registers_bgerp.csv", "w") as f:
+
+        for register in registers:
+
+            data_type = "None"
+
+            if register.value == "yes" or register.value == "no":
+                data_type = "bool"
+
+            else:
+                data_type = register.data_type
+
+            value = __csv_escape(register.value)
+            description = __csv_escape(register.description)
+            priority = str(register.priority).replace("Priority.", "")
+
+            # if "ac." in register.name:
+            line = "{},{},{},{},{},{},{}\n".\
+                format(register.name, data_type, "", register.plugin_name,\
+                    priority, value, description)
+
+            f.write(line)
+
+        f.close()
