@@ -217,7 +217,7 @@ class bgERP():
 
         uri = self.host + self.__api_login
 
-        self.__logger.info("LOGIN; To bgERP: {}".format(credentials))
+        # self.__logger.info("LOGIN; To bgERP: {}".format(credentials))
 
         try:
             response = requests.post(uri, data=credentials, timeout=self.timeout)
@@ -231,7 +231,7 @@ class bgERP():
 
                         response_data = json.loads(response.text)
 
-                        self.__logger.info("LOGIN; From bgERP: {}".format(response_data))
+                        # self.__logger.info("LOGIN; From bgERP: {}".format(response_data))
 
                         # Authorization token.
                         if "token" in data:
@@ -285,7 +285,7 @@ class bgERP():
         # Payload
         payload = {"token": self.__session.session, "registers": registers, "last_sync": self.__last_sync } 
 
-        self.__logger.info("SYNC; To bgERP: {}".format(payload))
+        # self.__logger.info("SYNC; To bgERP: {}".format(payload))
 
         # Headers
         headers = {"Content-Type": "application/x-www-form-urlencoded"}
@@ -303,7 +303,7 @@ class bgERP():
                     # TODO: Test is ti JSON.
                     response_registers = json.loads(response.text)
 
-                    self.__logger.info("SYNC; From bgERP: {}".format(response_registers))
+                    # self.__logger.info("SYNC; From bgERP: {}".format(response_registers))
 
                     # Update last successful time.
                     self.__last_sync = time.time()
