@@ -237,13 +237,13 @@ class Zone():
         self.__plugin_manager = PluginsManager(self.__registers, self.__controller)
 
         # Set the performance profiler.
-        self.__performance_profiler.enable_mem_profile = self.__app_settings.ram_usage
-        self.__performance_profiler.enable_time_profile = self.__app_settings.run_time_usage
+        self.__performance_profiler.enable_mem_profile = True
+        self.__performance_profiler.enable_time_profile = True
         self.__performance_profiler.on_time_change(self.__on_time_change)
         self.__performance_profiler.on_memory_change(self.__on_memory_change)
 
-        # Setup the performance profiler timer.
-        self.__performance_profiler_timer = Timer(60000)
+        # Setup the performance profiler timer. (60) 10 is for tests.
+        self.__performance_profiler_timer = Timer(10)
 
         # Create WEB service.
         if os.name == "posix":
@@ -399,9 +399,7 @@ class Zone():
 
         time_usage = self.__registers.by_name("sys.time.usage")
         if time_usage is not None:
-            time_usage.value = passed_time
-
-        # print(f"Total time: {passed_time:06.3f} sec")
+            time_usage.value = float("{:10.4f}".format(passed_time))
 
     def __on_memory_change(self, current, peak):
 

@@ -88,36 +88,6 @@ class ApplicationSettings():
         return os.path.exists(self.__file_name)
 
     @property
-    def ram_usage(self):
-        """Ram usage flag.
-
-        Returns
-        -------
-        int
-            Enable flag.
-        """
-
-        # if self.__settings is not None:
-        #     return self.__settings["application"]["ram_usage"]
-
-        return 0
-
-    @property
-    def run_time_usage(self):
-        """Run time usage.
-
-        Returns
-        -------
-        int
-            Enable flag.
-        """
-
-        # if self.__settings is not None:
-        #    return self.__settings["application"]["run_time_usage"]
-
-        return 0
-
-    @property
     def debug_level(self):
         """Debug level.
 
