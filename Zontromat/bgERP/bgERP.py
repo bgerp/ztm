@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import json
 import time
+import traceback
 
 import requests
 
@@ -212,11 +213,11 @@ class bgERP():
             Success
         """
 
-        # TODO: bgERP ID to authorize the ERP.
-
         login_state = False
 
         uri = self.host + self.__api_login
+
+        self.__logger.info("LOGIN; To bgERP: {}".format(credentials))
 
         try:
             response = requests.post(uri, data=credentials, timeout=self.timeout)
@@ -228,6 +229,10 @@ class bgERP():
                     data = response.json()
                     if data is not None:
 
+                        response_data = json.loads(response.text)
+
+                        self.__logger.info("LOGIN; From bgERP: {}".format(response_data))
+
                         # Authorization token.
                         if "token" in data:
                             self.__session.save(data["token"])
@@ -238,22 +243,22 @@ class bgERP():
                         if "bgerp_id" in data:
                             self.__erp_id = data["bgerp_id"]
 
-                # Not authorized.
-                elif response.status_code == 403:
-                    login_state = False
-
                 # Use saved session key.
                 elif response.status_code == 423:
                     self.__session.load()
                     login_state = self.__session.session != ""
+                    self.__erp_id = credentials["bgerp_id"]
 
-                elif response.status_code == 404:
+                # Not authorized.
+                elif response.status_code == 403:
                     login_state = False
 
                 else:
+                    self.__logger.error("HTTP Error code: {}".format(response.status_code))
                     login_state = False
 
         except Exception as e:
+            self.__logger.error(traceback.format_exc())
             login_state = False
 
         return login_state
@@ -280,6 +285,8 @@ class bgERP():
         # Payload
         payload = {"token": self.__session.session, "registers": registers, "last_sync": self.__last_sync } 
 
+        self.__logger.info("SYNC; To bgERP: {}".format(payload))
+
         # Headers
         headers = {"Content-Type": "application/x-www-form-urlencoded"}
 
@@ -290,33 +297,20 @@ class bgERP():
 
             # OK
             if response.status_code == 200:
+
                 if response.text != "":
  
                     # TODO: Test is ti JSON.
                     response_registers = json.loads(response.text)
 
+                    self.__logger.info("SYNC; From bgERP: {}".format(response_registers))
+
                     # Update last successful time.
                     self.__last_sync = time.time()
 
-            # Forbidden
-            elif response.status_code == 403:
-                response_registers = None
-
-            # Not found
-            elif response.status_code == 404:
-                response_registers = None
-
-            # Too Many Requests
-            elif response.status_code == 429:
-                response_registers = None
-
-            # Internal server ERROR
-            elif response.status_code == 500:
-                response_registers = None
-
-            # Other bad reason
             else:
-                response_registers = None
+                self.__logger.error("HTTP Error code: {}".format(response.status_code))
+                response_registers = False
 
         else:
             response_registers = None
