@@ -158,7 +158,7 @@ class PluginsManager:
         register.priority = Priority.system
         register.plugin_name = "Access Control"
         register.description = "Allowed attendees"
-        register.value = [{'card_id': '445E6046010080FF', 'pin': '159753', 'valid_until': '1595322860'}]
+        register.value = [] # {'card_id': '445E6046010080FF', 'pin': '159753', 'valid_until': '1595322860'}
         self.__registers.add(register)
 
         register = Register("ac.nearby_attendees")
@@ -166,7 +166,7 @@ class PluginsManager:
         register.priority = Priority.system
         register.plugin_name = "Access Control"
         register.description = "Nearby attendees"
-        register.value = [{"card_id": "445E6046010080FF", "ts":"1595322860"}]
+        register.value = [] # {"card_id": "445E6046010080FF", "ts":"1595322860"}
         self.__registers.add(register)
 
         register = Register("ac.last_minute_attendees")
