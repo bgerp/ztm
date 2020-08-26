@@ -142,16 +142,15 @@ dmypy.json
 .history
 
 ### Logs
-### Ignore logs.
-logs/
+# Ignore logs.
+logs
 
 ### Session key
-### Session key for authorization.
+# Session key for authorization.
 session.txt
 
 ### Settings
-### Settings for the application
-Zontromat/settings.yaml
+# Settings for the application
 settings.yaml
 settings-dump.yaml
 evok.conf
