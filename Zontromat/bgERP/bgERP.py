@@ -282,8 +282,11 @@ class bgERP():
         # URI
         uri = self.host + self.__api_sync
 
+        # Convert to JSON.
+        str_registers = json.dumps(registers).replace("\'", "\"")
+
         # Payload
-        payload = {"token": self.__session.session, "registers": registers, "last_sync": self.__last_sync } 
+        payload = {"token": self.__session.session, "registers": str_registers, "last_sync": self.__last_sync } 
 
         # self.__logger.info("SYNC; To bgERP: {}".format(payload))
 
