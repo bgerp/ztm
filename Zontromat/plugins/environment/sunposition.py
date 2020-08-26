@@ -1,17 +1,17 @@
 # The MIT License (MIT)
-# 
+#
 # Copyright (c) 2016 Samuel Bear Powell
-# 
+#
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
 # in the Software without restriction, including without limitation the rights
 # to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be included in all
 # copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -259,7 +259,7 @@ class _sp:
     @staticmethod
     def nutation_obliquity(jce):
         """compute the nutation in longitude (delta_psi) and the true obliquity (epsilon) given the Julian Ephemeris Century"""
-        
+
         #mean elongation of the moon from the sun, in radians:
         #x0 = 297.85036 + 445267.111480*jce - 0.0019142*(jce**2) + (jce**3)/189474
         x0 = np.deg2rad(np.polyval([1./189474, -0.0019142, 445267.111480, 297.85036],jce))
@@ -290,12 +290,12 @@ class _sp:
         e = _sp.ecliptic_obliquity(_sp.julian_millennium(jce), de)
 
         return dp, e
-    
+
     @staticmethod
     def abberation_correction(R):
         """Calculate the abberation correction (delta_tau, in degrees) given the Earth Heliocentric Radius (in AU)"""
         return -20.4898/(3600*R)
-    
+
     @staticmethod
     def sun_longitude(helio_pos, delta_psi):
         """Calculate the apparent sun longitude (lambda, in degrees) and geocentric longitude (beta, in degrees) given the earth heliocentric position and delta_psi"""
@@ -304,7 +304,7 @@ class _sp:
         beta = -B
         ll = theta + delta_psi + _sp.abberation_correction(R)
         return ll, beta
-    
+
     @staticmethod
     def greenwich_sidereal_time(jd, delta_psi, epsilon):
         """Calculate the apparent Greenwich sidereal time (v, in degrees) given the Julian Day"""
@@ -313,7 +313,7 @@ class _sp:
         v0 = (280.46061837 + 360.98564736629*(jd - 2451545) + 0.000387933*(jc**2) - (jc**3)/38710000) % 360
         v = v0 + delta_psi*np.cos(np.deg2rad(epsilon))
         return v
-    
+
     @staticmethod
     def sun_ra_decl(llambda, epsilon, beta):
         """Calculate the sun's geocentric right ascension (alpha, in degrees) and declination (delta, in degrees)"""
@@ -323,11 +323,11 @@ class _sp:
         delta = np.arcsin(np.sin(b)*np.cos(e) + np.cos(b)*np.sin(e)*np.sin(l))
         delta = np.rad2deg(delta)
         return alpha, delta
-    
+
     @staticmethod
     def sun_topo_ra_decl_hour(latitude, longitude, elevation, jd, delta_t = 0):
         """Calculate the sun's topocentric right ascension (alpha'), declination (delta'), and hour angle (H')"""
-        
+
         jde = _sp.julian_ephemeris_day(jd, delta_t)
         jce = _sp.julian_century(jde)
         jme = _sp.julian_millennium(jce)
@@ -349,7 +349,7 @@ class _sp:
         delta_psi, epsilon = _sp.nutation_obliquity(jce) #
 
         llambda, beta = _sp.sun_longitude(helio_pos, delta_psi) #
-        
+
         alpha, delta = _sp.sun_ra_decl(llambda, epsilon, beta) #
 
         v = _sp.greenwich_sidereal_time(jd, delta_psi, epsilon) #
@@ -359,13 +359,13 @@ class _sp:
 
         dar = np.arctan2(-x*np.sin(xi)*np.sin(Hr), np.cos(dr)-x*np.sin(xi)*np.cos(Hr))
         delta_alpha = np.rad2deg(dar) #
-        
+
         alpha_prime = alpha + delta_alpha #
         delta_prime = np.rad2deg(np.arctan2((np.sin(dr) - y*np.sin(xi))*np.cos(dar), np.cos(dr) - y*np.sin(xi)*np.cos(Hr))) #
         H_prime = H - delta_alpha #
 
         return alpha_prime, delta_prime, H_prime
-    
+
     @staticmethod
     def sun_topo_azimuth_zenith(latitude, delta_prime, H_prime, temperature=14.6, pressure=1013):
         """Compute the sun's topocentric azimuth and zenith angles
@@ -441,7 +441,7 @@ def julian_day(dt):
 
 def arcdist(p0,p1,radians=False):
     """Angular distance between azimuth,zenith pairs
-    
+
     Parameters
     ----------
     p0 : array_like, shape (..., 2)
@@ -501,7 +501,7 @@ def observed_sunpos(dt, latitude, longitude, elevation, temperature=None, pressu
         temperature = 14.6
     if pressure is None:
         pressure = 1013
-    
+
     #6367444 = radius of earth
     #numpy broadcasting
     b = np.broadcast(dt,latitude,longitude,elevation,temperature,pressure,delta_t)
@@ -545,7 +545,7 @@ def topocentric_sunpos(dt, latitude, longitude, temperature=None, pressure=None,
         temperature = 14.6
     if pressure is None:
         pressure = 1013
-    
+
     #6367444 = radius of earth
     #numpy broadcasting
     b = np.broadcast(dt,latitude,longitude,elevation,temperature,pressure,delta_t)
@@ -555,7 +555,7 @@ def topocentric_sunpos(dt, latitude, longitude, temperature=None, pressure=None,
         res_vec[i] = _sp.topo_pos(*x)
     if radians:
         res = np.deg2rad(res)
-    return res   
+    return res
 
 def sunpos(dt, latitude, longitude, elevation, temperature=None, pressure=None, delta_t=0, radians=False):
     """Compute the observed and topocentric coordinates of the sun as viewed at the given time and location.
@@ -592,7 +592,7 @@ def sunpos(dt, latitude, longitude, elevation, temperature=None, pressure=None, 
         temperature = 14.6
     if pressure is None:
         pressure = 1013
-    
+
     #6367444 = radius of earth
     #numpy broadcasting
     b = np.broadcast(dt,latitude,longitude,elevation,temperature,pressure,delta_t)
