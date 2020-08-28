@@ -291,10 +291,11 @@ class bgERP():
         # self.__logger.info("SYNC; To bgERP: {}".format(payload))
 
         # Headers
-        headers = {"Content-Type": "application/x-www-form-urlencoded"}
+        # headers = {"Content-Type": "application/x-www-form-urlencoded"}
+        # , headers=headers
 
         # The request.
-        response = requests.post(uri, headers=headers, data=payload, timeout=self.timeout)
+        response = requests.post(uri, data=payload, timeout=self.timeout)
 
         if response is not None:
 
@@ -313,7 +314,7 @@ class bgERP():
 
             else:
                 self.__logger.error("HTTP Error code: {}".format(response.status_code))
-                response_registers = False
+                response_registers = None
 
         else:
             response_registers = None
