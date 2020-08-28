@@ -215,7 +215,7 @@ class GlobalErrorHandler:
 
         # Update the register.
         if GlobalErrorHandler.__register is not None:
-            GlobalErrorHandler.__register.value = str(GlobalErrorHandler.__last_minute_errors)
+            GlobalErrorHandler.__register.value = GlobalErrorHandler.__last_minute_errors
 
     @staticmethod
     def get_queue():

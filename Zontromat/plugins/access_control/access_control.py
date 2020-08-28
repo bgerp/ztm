@@ -237,8 +237,7 @@ class AccessControl(BasePlugin):
         # Update last 60 seconds attendee list.
         last_minute_attendees = self._registers.by_name(self._key + ".last_minute_attendees")
         if last_minute_attendees is not None:
-            str_data = str(self.__last_minute_attendees)
-            last_minute_attendees.value = str_data
+            last_minute_attendees.value = self.__last_minute_attendees
 
 #endregion
 

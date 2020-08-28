@@ -173,7 +173,7 @@ class Sys(BasePlugin):
 
             info_message = self._registers.by_name(self._key + ".col.info_message")
             if info_message is not None:
-                info_message.value = str(intersections)
+                info_message.value = intersections
 
         if level == MonitoringLevel.Warning:
             # self.__logger.warning("Warning")
@@ -181,7 +181,7 @@ class Sys(BasePlugin):
 
             warning_message = self._registers.by_name(self._key + ".col.warning_message")
             if warning_message is not None:
-                warning_message.value = str(intersections)
+                warning_message.value = intersections
 
         if level == MonitoringLevel.Error:
             # self.__logger.error("Error")
@@ -189,7 +189,7 @@ class Sys(BasePlugin):
 
             error_message = self._registers.by_name(self._key + ".col.error_message")
             if error_message is not None:
-                error_message.value = str(intersections)
+                error_message.value = intersections
 
     def __clear_errors_cb(self, register):
         """Clear errors callback."""
@@ -201,17 +201,17 @@ class Sys(BasePlugin):
             # Clear info messages.
             info_message = self._registers.by_name(self._key + ".col.info_message")
             if info_message is not None:
-                info_message.value = ""
+                info_message.value = {}
 
             # Clear warning messages.
             warning_message = self._registers.by_name(self._key + ".col.warning_message")
             if warning_message is not None:
-                warning_message.value = ""
+                warning_message.value = {}
 
             # Clear error messages.
             error_message = self._registers.by_name(self._key + ".col.error_message")
             if error_message is not None:
-                error_message.value = ""
+                error_message.value = {}
 
 #endregion
 
