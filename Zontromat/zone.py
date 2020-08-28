@@ -365,7 +365,7 @@ class Zone():
         if self.__erp_service_update_timer.expired:
             self.__erp_service_update_timer.clear()
 
-            ztm_regs = self.__registers.by_priority(Priority.device)
+            ztm_regs = self.__registers.by_priority(Priority.Device)
             ztm_regs = ztm_regs.new_then(60)                
             ztm_regs_dict = ztm_regs.to_dict()
 
