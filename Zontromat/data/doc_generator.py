@@ -74,13 +74,13 @@ def __csv_escape(value):
 def reg_to_json(registers):
     """JSON output"""
 
-    bgerp_regs = registers.by_source(Priority.system)
+    bgerp_regs = registers.by_source(Priority.System)
     dict_regs = bgerp_regs.to_dict()
     text = json.dumps(dict_regs, indent=4, sort_keys=True)
     with open("registers_bgerp.json", "w") as f:
         f.write(text)
 
-    ztm_regs = registers.by_source(Priority.device)
+    ztm_regs = registers.by_source(Priority.Device)
     dict_regs = ztm_regs.to_dict()
     text = json.dumps(dict_regs, indent=4, sort_keys=True)
     with open("registers_ztm.json", "w") as f:
@@ -89,12 +89,12 @@ def reg_to_json(registers):
 def reg_to_csv(registers):
     """CSV output"""
 
-    bgerp_regs = registers.by_source(Priority.system)
+    bgerp_regs = registers.by_source(Priority.System)
     with open("registers_bgerp.csv", "w") as f:
         for register in bgerp_regs:
             f.write("{}\t{}\n".format(register.name, register.value))
 
-    ztm_regs = registers.by_source(Priority.device)
+    ztm_regs = registers.by_source(Priority.Device)
     with open("registers_ztm.csv", "w") as f:
         for register in ztm_regs:
             f.write("{}\t{}\n".format(register.name, register.value))
@@ -102,7 +102,7 @@ def reg_to_csv(registers):
 def reg_to_md(registers):
     """MD output"""
 
-    bgerp_regs = registers.by_source(Priority.system)
+    bgerp_regs = registers.by_source(Priority.System)
     with open("registers_bgerp.md", "w") as f:
 
         # Header
@@ -115,7 +115,7 @@ def reg_to_md(registers):
             f.write("|  | {} | {} | {} |\n"\
                 .format(bgerp_register.name, bgerp_register.data_type, bgerp_register.value))
 
-    ztm_regs = registers.by_source(Priority.device)
+    ztm_regs = registers.by_source(Priority.Device)
     with open("registers_ztm.md", "w") as f:
 
         # Header
@@ -145,11 +145,11 @@ def reg_to_bgERP(registers):
 
             value = __csv_escape(register.value)
             description = __csv_escape(register.description)
-            priority = str(register.priority).replace("Priority.", "")
+            priority = str(register.priority).replace("Priority.", "").lower()
+            reg_range = __csv_escape(register.range)
 
-            # if "ac." in register.name:
             line = "{},{},{},{},{},{},{}\n".\
-                format(register.name, data_type, "", register.plugin_name,\
+                format(register.name, data_type, reg_range, register.plugin_name,\
                     priority, value, description)
 
             f.write(line)
