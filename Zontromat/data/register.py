@@ -66,8 +66,8 @@ class Scope(Enum):
 class Priority(Enum):
     """Priority update modifier."""
 
-    device = 0
-    system = 1
+    Device = 0
+    System = 1
 
 class Register:
     """Register"""
@@ -86,7 +86,7 @@ class Register:
     __scope = Scope.Global
     """Scope of register."""
 
-    __priority = Priority.system
+    __priority = Priority.System
     """Priority update modifier."""
 
     __update_handler = None
@@ -103,6 +103,9 @@ class Register:
 
     __description = ""
     """Verbal register description."""
+
+    __range = ""
+    """Range!"""
 
 #endregion
 
@@ -232,22 +235,25 @@ class Register:
 
     @property
     def data_type(self):
-        
+
         str_type = "None"
 
         if isinstance(self.__value, str):
             str_type = "str"
 
+        elif isinstance(self.__value, bool):
+            str_type = "bool"
+
         elif isinstance(self.__value, int):
             str_type = "int"
 
         elif isinstance(self.__value, float):
-            str_type = "float/int"
-
-        elif isinstance(self.__value, bool):
-            str_type = "bool"
+            str_type = "float"
 
         elif isinstance(self.__value, list):
+            str_type = "json"
+
+        elif isinstance(self.__value, dict):
             str_type = "json"
 
         return str_type
@@ -369,6 +375,18 @@ class Register:
         """Description"""
 
         self.__description = value
+
+    @property
+    def range(self):
+        """Range!"""
+
+        return self.__range
+
+    @range.setter
+    def range(self, value):
+        """Range!"""
+
+        self.__range = value
 
 #endregion
 
