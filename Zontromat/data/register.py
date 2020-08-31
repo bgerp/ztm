@@ -235,6 +235,7 @@ class Register:
 
     @property
     def data_type(self):
+        """Data type of the register.""" 
 
         str_type = "None"
 
@@ -325,7 +326,7 @@ class Register:
         bool
             Force flag value.
         """
-    
+
         return self.__force
 
     @force.setter
@@ -337,7 +338,7 @@ class Register:
         bool
             Force flag value.
         """
-    
+
         self.__force = value
 
     @property
@@ -351,18 +352,6 @@ class Register:
         """Plugin name."""
 
         self.__plugin_name = value
-
-    @property
-    def priority(self):
-        """Priority"""
-
-        return self.__priority
-
-    @priority.setter
-    def priority(self, value):
-        """Priority"""
-
-        self.__priority = value
 
     @property
     def description(self):
@@ -395,7 +384,7 @@ class Register:
     def is_int_or_float(self):
         """Try to determin is the content is int of float."""
 
-        return (isinstance(self.value, int) or isinstance(self.value, float))
+        return isinstance(self.value, int) or isinstance(self.value, float)
 
     def is_str(self):
         """Try to determin is the content is string."""
@@ -413,7 +402,7 @@ class Register:
                 del json_object
                 result = True
 
-            except ValueError as e:
+            except:
                 pass
 
         elif isinstance(self.value, str):
@@ -422,7 +411,7 @@ class Register:
                 del json_object
                 result = True
 
-            except ValueError as e:
+            except:
                 pass
 
         else:

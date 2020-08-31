@@ -31,8 +31,7 @@ from utils.logger import get_logger
 from data.register import Scope
 from data.register import Priority
 from data.register import Register
-from data import verbal_const 
-from data import doc_generator
+from data import verbal_const
 
 # Plugins
 from plugins.access_control.access_control import AccessControl
@@ -261,7 +260,7 @@ class PluginsManager:
             register.value = "COM11"
         self.__registers.add(register)
 
-        # 
+        #
         register = Register("ac.exit_button_1.input")
         register.scope = Scope.Global
         register.priority = Priority.System
@@ -306,7 +305,7 @@ class PluginsManager:
         register.range = "True,False"
         register.value = False
         self.__registers.add(register)
-        
+
         # Entry card reader 2.
         register = Register("ac.entry_reader_2.enabled")
         register.scope = Scope.Global
@@ -370,7 +369,7 @@ class PluginsManager:
             register.value = "COM11"
         self.__registers.add(register)
 
-        # 
+        #
         register = Register("ac.exit_button_2.input")
         register.scope = Scope.Global
         register.priority = Priority.System
@@ -615,7 +614,7 @@ class PluginsManager:
         register.description = "Cold water leaked liters"
         register.range = "0.0/"
         register.value = 1.0
-        self.__registers.add(register) 
+        self.__registers.add(register)
 
         # Hot water flow meter.
         register = Register("monitoring.hw.input")
@@ -652,7 +651,7 @@ class PluginsManager:
         register.description = "Hot water leaked liters"
         register.range = "0.0/"
         register.value = 1.0
-        self.__registers.add(register) 
+        self.__registers.add(register)
 
         # Power analyser.
         register = Register("monitoring.pa.settings")
@@ -1576,7 +1575,7 @@ class PluginsManager:
             self.__plugins[Plugins.Sys].shutdown()
             del self.__plugins[Plugins.Sys]
 
-        
+
 
 #endregion
 
@@ -1592,7 +1591,8 @@ class PluginsManager:
 
             except:
                 pass
-
+        
+        # from data import doc_generator
         # doc_generator.reg_to_json(self.__registers)
         # doc_generator.reg_to_md(self.__registers)
         # doc_generator.reg_to_bgERP(self.__registers)

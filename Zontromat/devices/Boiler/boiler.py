@@ -71,7 +71,6 @@ class Boiler(BaseDevice):
 
         print("Power: {}".format(power))
 
-
     def shutdown(self):
         """Shutdown"""
 
@@ -81,8 +80,8 @@ class Boiler(BaseDevice):
 
 #region Public Static Methods
 
-    @classmethod
-    def create(self, name, key, registers, controller):
+    @staticmethod
+    def create(name, key, registers, controller):
         """Value of the thermometer."""
 
         instance = None

@@ -194,7 +194,7 @@ class ACT230(BaseDevice):
 
                     del self.__port
 
-            except Exception:
+            except:
                 self.__set_state(ReaderState.NONE)
 
         # Start
@@ -215,7 +215,7 @@ class ACT230(BaseDevice):
                 # Change the state to RUN.
                 self.__set_state(ReaderState.RUN)
 
-            except Exception:
+            except:
                 # If something goes wrong go to NONE.
                 self.__set_state(ReaderState.NONE)
 
@@ -234,7 +234,7 @@ class ACT230(BaseDevice):
                         if len(frame) == self.__card_number_len:
                             self.__cb_read_card(frame, self.reader_id)
 
-            except Exception:
+            except:
                 self.stop()
 
 #endregion

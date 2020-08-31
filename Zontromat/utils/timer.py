@@ -89,7 +89,7 @@ class Timer:
             Current class instance.
         """
 
-        if expiration_time != None:
+        if expiration_time is not None:
             self.expiration_time = expiration_time
 
 #endregion
@@ -179,7 +179,9 @@ class Timer:
             self.__last_time = time.time()
 
     def clear(self):
-        if self.__expired == True:
+        """Clear"""
+
+        if self.__expired:
             self.__expired = False
 
     def set_callback(self, value):

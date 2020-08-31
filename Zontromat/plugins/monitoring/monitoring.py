@@ -26,7 +26,6 @@ import json
 import os
 
 from utils.logger import get_logger
-from utils.timer import Timer
 
 from plugins.base_plugin import BasePlugin
 

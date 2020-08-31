@@ -70,8 +70,8 @@ class DS18B20(BaseDevice):
 
 #region Public Static Methods
 
-    @classmethod
-    def create(self, name, key, register, controller):
+    @staticmethod
+    def create(name, key, register, controller):
         """Value of the thermometer."""
 
         instance = None

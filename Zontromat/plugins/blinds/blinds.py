@@ -324,6 +324,7 @@ class Blinds(BasePlugin):
 #region Public Methods
 
     def init(self):
+        """Ïnit"""
 
         self.__logger = get_logger(__name__)
         self.__logger.info("Starting up the {}".format(self.name))
@@ -355,6 +356,7 @@ class Blinds(BasePlugin):
         self.__stop()
 
     def update(self):
+        """Update"""
 
         # TODO: Remove, DEMO purpose only.
         if self._controller.digital_read("DI4"):
@@ -502,8 +504,10 @@ class Blinds(BasePlugin):
         # If there is no one at the zone, just turn off the lights.
         ac_zone_occupied = self._registers.by_name("ac.zone_occupied")
         if ac_zone_occupied is not None:
+
             if ac_zone_occupied.value == 1:
                 self.__logger.debug("Just close the blinds in the zone.")
+
             if ac_zone_occupied.value == 0:
                 # TODO: Pass, but when activity has turnback return to normal state.
                 pass

@@ -75,7 +75,7 @@ class TestState(Enum):
     TakeSecondConsumption = 5
     TurnTargetOff = 6
     ReturnResults = 7
-    
+
 class ElectricalPerformance:
     """Electrical performance test."""
 
@@ -105,11 +105,14 @@ class ElectricalPerformance:
 #region Constructor / Destructor
 
     def __init__(self):
+        """Constructor"""
+
         self.__test_state = StateMachine(TestState.NONE)
         self.__check_timer = Timer(0)
         self.__registers = Registers.get_instance()
 
     def __del__(self):
+        """Destructor"""
 
         if self.__check_timer is not None:
             del self.__check_timer
@@ -155,11 +158,12 @@ class ElectricalPerformance:
 
     def stop(self):
         """Start the test."""
-        
+
         self.__turn_target_off()
         self.__test_state.set_state(TestState.NONE)
 
     def set_test_target(self, target_device):
+        """Set test target device."""
 
         if target_device is None:
             return

@@ -23,9 +23,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 import os
-
-from time import gmtime, strftime
 import logging
+from time import gmtime, strftime
 
 from utils.settings import ApplicationSettings
 
@@ -119,6 +118,7 @@ def get_logger(module_name):
 
     if module_name in __modules_names:
         return logger
+
     else:
         __modules_names.append(module_name)
 

@@ -138,7 +138,7 @@ class Flowmeter(BaseDevice):
         """Get flowmeter counter."""
 
         value = 0
-        
+
         if self.input != verbal_const.OFF and self.input != "":
             value = self._controller.read_counter(self.__input)
 
@@ -153,8 +153,8 @@ class Flowmeter(BaseDevice):
 
 #region Public Static Methods
 
-    @classmethod
-    def create(self, name, key, registers, controller):
+    @staticmethod
+    def create(name, key, registers, controller):
         """Value of the thermometer."""
 
         instance = None

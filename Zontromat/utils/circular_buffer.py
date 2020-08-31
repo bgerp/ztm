@@ -53,24 +53,37 @@ __status__ = "Debug"
 
 #endregion
 
-class CircularBuffer(object):
+class CircularBuffer:
+    """Circular buffer"""
+
+#region Constructor
 
     def __init__(self, size):
-        """initialization"""
+        """Constructor"""
 
-        self.index= 0
-        self.size= size
+        self.index = 0
+        self.size = size
         self._data = []
 
+#endregion
+
+#region Public Methods
+
     def put(self, value):
-        """append an element"""
+        """Append an element."""
 
         if len(self._data) == self.size:
-            self._data[self.index]= value
+            self._data[self.index] = value
+
         else:
             self._data.append(value)
 
-        self.index= (self.index + 1) % self.size
+        self.index = (self.index + 1) % self.size
+
+    def get_all(self):
+        """return a list of all the elements"""
+
+        return self._data
 
     def __getitem__(self, key):
         """get element by index like a regular array"""
@@ -84,7 +97,7 @@ class CircularBuffer(object):
 
     def __str__(self):
         """String representation."""
-        
+
         return self._data.__repr__()
 
     def __len__(self):
@@ -92,8 +105,4 @@ class CircularBuffer(object):
 
         return len(self._data)
 
-    def get_all(self):
-        """return a list of all the elements"""
-
-        return self._data
-    
+#endregion

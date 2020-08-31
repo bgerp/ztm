@@ -175,7 +175,7 @@ class Registers:
                 result = True
                 break
 
-        if result == False:
+        if not result:
             GlobalErrorHandler.log_register_not_found(self.__logger, name)
 
         return result

@@ -31,7 +31,6 @@ from utils.logger import get_logger
 
 from controllers.base_controller import BaseController
 from controllers.update_state import UpdateState
-from controllers.mapping import get_map
 
 #region File Attributes
 
@@ -155,7 +154,7 @@ class Neuron(BaseController):
         host_no_slash = host
 
         if host_no_slash.endswith("/"):
-            host_no_slash = host_no_slash.replace(".*/","")
+            host_no_slash = host_no_slash.replace(".*/", "")
 
         self.__host = host_no_slash
 
@@ -856,7 +855,7 @@ class Neuron(BaseController):
 
     @staticmethod
     def read_eeprom():
-
+        """Read Neurons EEPROM."""
         device_cfg = {
             "version": "UniPi 1.0",
             "devices": {
@@ -873,7 +872,7 @@ class Neuron(BaseController):
 
         # Try to access the EEPROM at /sys/bus/i2c/devices/1-0050/eeprom
         try:
-            with open("/sys/bus/i2c/devices/1-0050/eeprom","rb") as eeprom:
+            with open("/sys/bus/i2c/devices/1-0050/eeprom", "rb") as eeprom:
 
                 content = eeprom.read()
 
@@ -894,16 +893,20 @@ class Neuron(BaseController):
 
                     #AIs coeff
                     if device_cfg["version"] in ("UniPi 1.1", "UniPi 1.0"):
-                        device_cfg["devices"] = { "ai": {
-                                                "1": struct.unpack("!f", content[240:244])[0],
-                                                "2": struct.unpack("!f", content[244:248])[0],
-                                            }}
+                        device_cfg["devices"] = {
+                            "ai": {
+                                "1": struct.unpack("!f", content[240:244])[0],
+                                "2": struct.unpack("!f", content[244:248])[0],
+                                }
+                            }
 
                     else:
-                        device_cfg["devices"] = { "ai": {
-                                                "1": 0,
-                                                "2": 0,
-                                            }}
+                        device_cfg["devices"] = {
+                            "ai": {
+                                "1": 0,
+                                "2": 0,
+                                }
+                            }
 
                     device_cfg["serial"] = struct.unpack("i", content[228:232])[0]
         except Exception:
@@ -911,7 +914,7 @@ class Neuron(BaseController):
 
         # Try to access the EEPROM at /sys/bus/i2c/devices/1-0057/eeprom
         try:
-            with open("/sys/bus/i2c/devices/1-0057/eeprom","rb") as eeprom:
+            with open("/sys/bus/i2c/devices/1-0057/eeprom", "rb") as eeprom:
 
                 # Get content.
                 content = eeprom.read()
@@ -940,7 +943,7 @@ class Neuron(BaseController):
 
         # Try to access the EEPROM at /sys/bus/i2c/devices/0-0057/eeprom
         try:
-            with open("/sys/bus/i2c/devices/0-0057/eeprom","rb") as eeprom:
+            with open("/sys/bus/i2c/devices/0-0057/eeprom", "rb") as eeprom:
 
                 # Get content.
                 content = eeprom.read()

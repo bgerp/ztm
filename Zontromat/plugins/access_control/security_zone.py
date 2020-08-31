@@ -22,10 +22,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 
-import time
-
-from enum import Enum
-
 from data import verbal_const
 
 from devices.TERACOM.act230 import ACT230
@@ -77,13 +73,8 @@ class SecurityZone(BasePlugin):
     __logger = None
     """Logger"""
 
-    __registers = None
-    """Registers"""
-
     __identifier = 0
     """Security zone identifier."""
-
-    __key = ""
 
     __allowed_attendant = []
     """Allowed attendant."""
@@ -117,17 +108,20 @@ class SecurityZone(BasePlugin):
 
 #endregion
 
-#region Constructor
+#region Constructor / Destructor
 
     def __init__(self, registers, controller, identifier):
+        """Constructor"""
 
-        self.__registers = registers
+        config = {
+            "key": self._key,
+            "registers": registers,
+            "controller": controller
+            }
+
+        super().__init__(config)
+
         self.__identifier = identifier
-        self.__controller = controller
-
-#endregion
-
-#region Destructor
 
     def __del__(self):
         """Destructor"""
@@ -176,6 +170,7 @@ class SecurityZone(BasePlugin):
             return
 
         if register.value != verbal_const.NO and self.__entry_reader is None:
+
             key = register.base_name
 
             params = register.value.split("/")
@@ -183,8 +178,12 @@ class SecurityZone(BasePlugin):
             card_reader_vendor = params[0]
             card_reader_model = params[1]
             card_reader_serial_number = params[2]
-            card_reader_port_name = self.__registers.by_name("{}.entry_reader_{}.port.name".format(key, self.__identifier)).value
-            card_reader_port_baudrate = self.__registers.by_name("{}.entry_reader_{}.port.baudrate".format(key, self.__identifier)).value
+
+            card_reader_port_name = self._registers.by_name("{}.entry_reader_{}.port.name"\
+                .format(key, self.__identifier)).value
+
+            card_reader_port_baudrate = self._registers.by_name("{}.entry_reader_{}.port.baudrate"\
+                .format(key, self.__identifier)).value
 
             # Filter by vendor and model.
             if card_reader_vendor == "TERACOM":
@@ -195,7 +194,7 @@ class SecurityZone(BasePlugin):
                         "port_name": card_reader_port_name,
                         "baudrate": card_reader_port_baudrate,
                         "serial_number": card_reader_serial_number,
-                        "controller": self.__controller,
+                        "controller": self._controller,
                     }
 
                     # Create card reader.
@@ -228,8 +227,8 @@ class SecurityZone(BasePlugin):
             card_reader_model = params[1]
             card_reader_serial_number = params[2]
 
-            card_reader_port_name = self.__registers.by_name("{}.exit_reader_{}.port.name".format(key, self.__identifier)).value
-            card_reader_port_baudrate = self.__registers.by_name("{}.exit_reader_{}.port.baudrate".format(key, self.__identifier)).value
+            card_reader_port_name = self._registers.by_name("{}.exit_reader_{}.port.name".format(key, self.__identifier)).value
+            card_reader_port_baudrate = self._registers.by_name("{}.exit_reader_{}.port.baudrate".format(key, self.__identifier)).value
 
             # Filter by vendor and model.
             if card_reader_vendor == "TERACOM":
@@ -240,7 +239,7 @@ class SecurityZone(BasePlugin):
                         "port_name": card_reader_port_name,
                         "baudrate": card_reader_port_baudrate,
                         "serial_number": card_reader_serial_number,
-                        "controller": self.__controller,
+                        "controller": self._controller,
                     }
 
                     # Create card reader.
@@ -271,8 +270,8 @@ class SecurityZone(BasePlugin):
 
         state = False
 
-        if self.__controller.is_valid_gpio(self.__exit_btn_input):
-            state = self.__controller.digital_read(self.__exit_btn_input)
+        if self._controller.is_valid_gpio(self.__exit_btn_input):
+            state = self._controller.digital_read(self.__exit_btn_input)
 
         return state
 
@@ -288,8 +287,8 @@ class SecurityZone(BasePlugin):
 
     def __set_lock_mechanism_1(self, value=0):
 
-        if self.__controller.is_valid_gpio(self.__lock_mechanism_output):
-            self.__controller.digital_write(self.__lock_mechanism_output, value)
+        if self._controller.is_valid_gpio(self.__lock_mechanism_output):
+            self._controller.digital_write(self.__lock_mechanism_output, value)
 
     def __time_to_open_cb(self, register):
 
@@ -305,6 +304,7 @@ class SecurityZone(BasePlugin):
 #region Public Methods
 
     def init(self):
+        """Init"""
 
         self.__key = "ac"
         self.__name = "Security Zone {}".format(self.__identifier)
@@ -317,31 +317,32 @@ class SecurityZone(BasePlugin):
         self.__open_timer = Timer(10)
 
         # Entry reader.
-        entry_reader = self.__registers.by_name("{}.entry_reader_{}.enabled".format(self.__key, self.__identifier))
+        entry_reader = self._registers.by_name("{}.entry_reader_{}.enabled".format(self.__key, self.__identifier))
         if entry_reader is not None:
             entry_reader.update_handler = self.__entry_reader_cb
 
         # Exit reader.
-        exit_reader = self.__registers.by_name("{}.exit_reader_{}.enabled".format(self.__key, self.__identifier))
+        exit_reader = self._registers.by_name("{}.exit_reader_{}.enabled".format(self.__key, self.__identifier))
         if exit_reader is not None:
             exit_reader.update_handler = self.__exit_reader_cb
 
         # Create exit button.
-        exit_button_input = self.__registers.by_name("{}.exit_button_{}.input".format(self.__key, self.__identifier))
+        exit_button_input = self._registers.by_name("{}.exit_button_{}.input".format(self.__key, self.__identifier))
         if exit_button_input is not None:
             exit_button_input.update_handler = self.__exit_btn_input_cb
 
         # Create locking mechanism.
-        lock_mechanism_output = self.__registers.by_name("{}.lock_mechanism_{}.output".format(self.__key, self.__identifier))
+        lock_mechanism_output = self._registers.by_name("{}.lock_mechanism_{}.output".format(self.__key, self.__identifier))
         if lock_mechanism_output is not None:
             lock_mechanism_output.update_handler = self.__lock_mechanism_output_cb
 
         # Get time to open the latch.
-        time_to_open = self.__registers.by_name("{}.time_to_open_{}".format(self.__key, self.__identifier))
+        time_to_open = self._registers.by_name("{}.time_to_open_{}".format(self.__key, self.__identifier))
         if time_to_open is not None:
             time_to_open.update_handler = self.__time_to_open_cb
 
     def update(self):
+        """Update"""
 
         # Check entry card reader.
         if self.__entry_reader is not None:
@@ -420,6 +421,7 @@ class SecurityZone(BasePlugin):
                     self.__free_to_lock = 0
 
     def shutdown(self):
+        """Shutdown"""
 
         self.__set_lock_mechanism_1(0)
 
@@ -437,6 +439,7 @@ class SecurityZone(BasePlugin):
                 pass
 
     def set_reader_read(self, cb):
+        """Set reader read calback."""
 
         if cb is None:
             return

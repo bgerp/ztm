@@ -147,6 +147,8 @@ class A20M15B2C(BaseDevice):
 
     @property
     def set_point(self):
+        """Set point."""
+
         return self.__position
 
 #endregion

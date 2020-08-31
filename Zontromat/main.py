@@ -22,18 +22,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 
+import sys
+import signal
 import os
 import time
-import signal
-import sys
-
-if os.name == "posix":
-    import setproctitle
 
 from utils.logger import get_logger, crate_log_file
 from utils.settings import ApplicationSettings
 
 from zone import Zone
+
+if os.name == "posix":
+    import setproctitle
 
 #region File Attributes
 
@@ -84,7 +84,7 @@ def main():
 
     global __zone, __logger, __time_to_stop
 
-    # Create process name. 
+    # Create process name.
     if os.name == "posix":
         setproctitle.setproctitle("Zontromat")
 

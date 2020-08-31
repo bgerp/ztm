@@ -25,7 +25,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import json
 
 from data.register import Priority
-from data.registers import Registers
 
 #region File Attributes
 
@@ -77,61 +76,61 @@ def reg_to_json(registers):
     bgerp_regs = registers.by_source(Priority.System)
     dict_regs = bgerp_regs.to_dict()
     text = json.dumps(dict_regs, indent=4, sort_keys=True)
-    with open("registers_bgerp.json", "w") as f:
-        f.write(text)
+    with open("registers_bgerp.json", "w") as file:
+        file.write(text)
 
     ztm_regs = registers.by_source(Priority.Device)
     dict_regs = ztm_regs.to_dict()
     text = json.dumps(dict_regs, indent=4, sort_keys=True)
-    with open("registers_ztm.json", "w") as f:
-        f.write(text)
+    with open("registers_ztm.json", "w") as file:
+        file.write(text)
 
 def reg_to_csv(registers):
     """CSV output"""
 
     bgerp_regs = registers.by_source(Priority.System)
-    with open("registers_bgerp.csv", "w") as f:
+    with open("registers_bgerp.csv", "w") as file:
         for register in bgerp_regs:
-            f.write("{}\t{}\n".format(register.name, register.value))
+            file.write("{}\t{}\n".format(register.name, register.value))
 
     ztm_regs = registers.by_source(Priority.Device)
-    with open("registers_ztm.csv", "w") as f:
+    with open("registers_ztm.csv", "w") as file:
         for register in ztm_regs:
-            f.write("{}\t{}\n".format(register.name, register.value))
+            file.write("{}\t{}\n".format(register.name, register.value))
 
 def reg_to_md(registers):
     """MD output"""
 
     bgerp_regs = registers.by_source(Priority.System)
-    with open("registers_bgerp.md", "w") as f:
+    with open("registers_bgerp.md", "w") as file:
 
         # Header
-        f.write("| Purpose | Register | Type | Value |\n")
-        f.write("|----------|:-------------|:------|:------|\n")
+        file.write("| Purpose | Register | Type | Value |\n")
+        file.write("|----------|:-------------|:------|:------|\n")
 
         # Body
-        for bgerp_register in bgerp_regs:
+        for bgerp_reg in bgerp_regs:
 
-            f.write("|  | {} | {} | {} |\n"\
-                .format(bgerp_register.name, bgerp_register.data_type, bgerp_register.value))
+            file.write("|  | {} | {} | {} |\n"\
+                .format(bgerp_reg.name, bgerp_reg.data_type, bgerp_reg.value))
 
     ztm_regs = registers.by_source(Priority.Device)
-    with open("registers_ztm.md", "w") as f:
+    with open("registers_ztm.md", "w") as file:
 
         # Header
-        f.write("| Purpose | Register | Type | Value |\n")
-        f.write("|----------|:-------------|:------|:------|\n")
+        file.write("| Purpose | Register | Type | Value |\n")
+        file.write("|----------|:-------------|:------|:------|\n")
 
         # Body
-        for ztm_register in ztm_regs:
+        for ztm_reg in ztm_regs:
 
-            f.write("|  | {} | {} | {} |\n"\
-                .format(ztm_register.name, bgerp_register.data_type, ztm_register.value))
+            file.write("|  | {} | {} | {} |\n"\
+                .format(ztm_reg.name, ztm_reg.data_type, ztm_reg.value))
 
 def reg_to_bgERP(registers):
     """Export registers"""
 
-    with open("registers_bgerp.csv", "w") as f:
+    with open("registers_bgerp.csv", "w") as file:
 
         for register in registers:
 
@@ -146,12 +145,12 @@ def reg_to_bgERP(registers):
             value = __csv_escape(register.value)
             description = __csv_escape(register.description)
             priority = str(register.priority).replace("Priority.", "").lower()
-            reg_range = __csv_escape(register.range)
+            reg_register = __csv_escape(register.range)
 
             line = "{},{},{},{},{},{},{}\n".\
-                format(register.name, data_type, reg_range, register.plugin_name,\
+                format(register.name, data_type, reg_register, register.plugin_name,\
                     priority, value, description)
 
-            f.write(line)
+            file.write(line)
 
-        f.close()
+        file.close()

@@ -76,26 +76,31 @@ class EvokSettings:
 
     @property
     def webhook_enabled(self):
+        """WEB hook enable flag."""
 
         return self.__config["MAIN"]["webhook_enabled"]
 
     @property
     def webhook_address(self):
+        """WEB hook address."""
 
         return self.__config["MAIN"]["webhook_address"]
 
     @property
     def webhook_device_mask(self):
+        """WEB hook mask."""
 
         return self.__config["MAIN"]["webhook_device_mask"]
 
     @property
     def webhook_complex_events(self):
+        """WEB hook complex event flag."""
 
         return self.__config["MAIN"]["webhook_complex_events"]
 
     @webhook_enabled.setter
     def webhook_enabled(self, value):
+        """WEB hook enable flag."""
 
         if value is None:
             raise ValueError("Value should not be None.")
@@ -107,6 +112,7 @@ class EvokSettings:
 
     @webhook_address.setter
     def webhook_address(self, value):
+        """WEB hook address."""
 
         if value is None:
             raise ValueError("Value should not be None.")
@@ -114,7 +120,7 @@ class EvokSettings:
         if not isinstance(value, str):
             raise TypeError("Value should be string.")
 
-        p = re.compile("^(([^:/?#]+):)?(//([^/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?")
+        p = re.compile(r"^(([^:/?#]+):)?(//([^/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?")
         m = p.match(value)
         if m:
             self.__config["MAIN"]["webhook_address"] = str(value)
@@ -123,6 +129,7 @@ class EvokSettings:
 
     @webhook_device_mask.setter
     def webhook_device_mask(self, value):
+        """WEB hook mask."""
 
         if value is None:
             raise ValueError("Value should not be None.")
@@ -134,6 +141,7 @@ class EvokSettings:
 
     @webhook_complex_events.setter
     def webhook_complex_events(self, value):
+        """WEB hook enable flag."""
 
         if value is None:
             raise ValueError("Value should not be None.")
@@ -153,7 +161,7 @@ class EvokSettings:
         self.__file_path = file_path
         self.__config = configparser.ConfigParser()
         self.load()
-        
+
 #endregion
 
 #region Private Methods

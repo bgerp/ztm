@@ -79,6 +79,7 @@ class RegisterHandler:
 
     @staticmethod
     def update(request_body):
+        """Update"""
 
         inputs = Registers()
 

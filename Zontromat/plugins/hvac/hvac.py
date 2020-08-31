@@ -226,7 +226,7 @@ class HVAC(BasePlugin):
         if not register.is_int_or_float():
             GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
-        
+
         if self.__update_rate != register.value:
             self.__update_rate = register.value
 
@@ -236,7 +236,7 @@ class HVAC(BasePlugin):
         if not register.is_int_or_float():
             GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
-        
+
         if self.__delta_time != register.value:
             self.__delta_time = register.value
 
@@ -246,7 +246,7 @@ class HVAC(BasePlugin):
         if not register.is_int_or_float():
             GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
-        
+
         mode = ThermalMode(register.value)
 
         if not self.__thermal_mode.is_state(mode):
@@ -258,7 +258,7 @@ class HVAC(BasePlugin):
         if not register.is_int_or_float():
             GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
-        
+
         if self.__thermal_force_limit != register.value:
             self.__thermal_force_limit = register.value
 

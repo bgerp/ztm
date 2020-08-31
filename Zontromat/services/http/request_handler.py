@@ -69,6 +69,7 @@ class RequestHandler(BaseHTTPRequestHandler):
 #region Public Methods
 
     def do_POST(self):
+        """Execute when POST request comes in."""
 
         parsed_path = parse.urlparse(self.path)
 
@@ -79,11 +80,12 @@ class RequestHandler(BaseHTTPRequestHandler):
             # The response.
             self.send_response(200)
             self.send_header("Content-Type",
-                            "text/plain; charset=utf-8")
+                             "text/plain; charset=utf-8")
             self.end_headers()
             self.wfile.write("OK".encode("utf-8"))
 
     def do_GET(self):
+        """Execute when GET request comes in."""
 
         parsed_path = parse.urlparse(self.path)
 
@@ -94,7 +96,7 @@ class RequestHandler(BaseHTTPRequestHandler):
             # The response.
             self.send_response(200)
             self.send_header("Content-Type",
-                            "text/plain; charset=utf-8")
+                             "text/plain; charset=utf-8")
             self.end_headers()
             self.wfile.write("OK".encode("utf-8"))
 

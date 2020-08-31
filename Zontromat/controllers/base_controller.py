@@ -103,7 +103,7 @@ class BaseController(Configuarable):
     def is_off_gpio(self, gpio):
         """Is not OFF"""
 
-        return (gpio == verbal_const.OFF)
+        return gpio == verbal_const.OFF
 
     def is_existing_gpio(self, gpio):
         """Is part of the GPIO definitions"""
@@ -113,7 +113,9 @@ class BaseController(Configuarable):
     def is_valid_gpio(self, gpio):
         """Complex check is it valid."""
 
-        return not self.is_off_gpio(gpio) and self.is_existing_gpio(gpio) and self.is_valid_gpio_type(gpio)
+        return not self.is_off_gpio(gpio)\
+            and self.is_existing_gpio(gpio)\
+            and self.is_valid_gpio_type(gpio)
 
     def get_gpio_map(self):
         """Return GPIO map."""

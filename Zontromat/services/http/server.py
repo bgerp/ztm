@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 
-from threading import Thread 
+from threading import Thread
 
 from http.server import HTTPServer
 
@@ -62,6 +62,7 @@ __status__ = "Debug"
 #endregion
 
 class Server:
+    """Local WEB server."""
 
 #region Attributes
 
@@ -101,6 +102,7 @@ class Server:
 
     @property
     def is_alive(self):
+        """Is alive flag."""
 
         state = False
 
@@ -121,6 +123,8 @@ class Server:
 #region Public Methods
 
     def start(self):
+        """Start the server."""
+
         # Create two threads as follows
         try:
             if self.__thread is None:
@@ -135,10 +139,11 @@ class Server:
 
                     self.__logger.info("Start WEB service.")
 
-        except Exception as e:
-            self.__logger.error(e)
+        except Exception as exception:
+            self.__logger.error(exception)
 
     def stop(self):
+        """Stop the server."""
 
         try:
             if self.__thread is not None:
@@ -161,7 +166,7 @@ class Server:
 
                     self.__logger.info("Stop WEB service.")
 
-        except Exception as e:
-            self.__logger.error(e)
+        except Exception as exception:
+            self.__logger.error(exception)
 
 #endregion

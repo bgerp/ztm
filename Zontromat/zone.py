@@ -40,7 +40,7 @@ from controllers.update_state import UpdateState
 
 from bgERP.bgERP import bgERP
 
-from data.register import Register, Priority, Scope
+from data.register import Priority
 from data.registers import Registers
 
 from plugins.plugins_manager import PluginsManager
@@ -213,7 +213,6 @@ class Zone():
             if plc_info["model"] is not None:
                 model = plc_info["model"]
 
-        # TODO: To be scaled when get time for 1 minute intrval.
         self.__update_timer.expiration_time = self.__update_timer.expiration_time + (serial / 1000)
 
         # Create Neuron.
@@ -247,16 +246,16 @@ class Zone():
 
         # Create WEB service.
         if os.name == "posix":
-            
+
             # Create entrance
             evok_settings = EvokSettings("/etc/evok.conf")
-            
+
             # Setup the EVOK web hooks.
             evok_settings.webhook_enabled = True
             evok_settings.webhook_address = "http://127.0.0.1:8889/api/evok-webhooks   ; Put your server endpoint address here (e.g. http://123.123.123.123:/wh )"
             evok_settings.webhook_device_mask = ["input", "wd"]
             evok_settings.webhook_complex_events = True
-            
+
             # Save
             evok_settings.save()
 
@@ -366,7 +365,7 @@ class Zone():
             self.__erp_service_update_timer.clear()
 
             ztm_regs = self.__registers.by_priority(Priority.Device)
-            ztm_regs = ztm_regs.new_then(60)                
+            ztm_regs = ztm_regs.new_then(60)
             ztm_regs_dict = ztm_regs.to_dict()
 
             update_state = self.__bgerp.sync(ztm_regs_dict)

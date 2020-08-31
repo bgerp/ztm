@@ -126,8 +126,8 @@ class Klimafan(BaseDevice):
 
 #region Public Static Methods
 
-    @classmethod
-    def create(self, name, key, registers, controller):
+    @staticmethod
+    def create(name, key, registers, controller):
         """Value of the thermometer."""
 
         instance = None

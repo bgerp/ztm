@@ -123,7 +123,7 @@ class bgERP():
         host_no_slash = host
 
         if host_no_slash.endswith("/"):
-            host_no_slash = host_no_slash.replace(".*/","")
+            host_no_slash = host_no_slash.replace(".*/", "")
 
         self.__host = host_no_slash
 
@@ -229,7 +229,7 @@ class bgERP():
                     data = response.json()
                     if data is not None:
 
-                        response_data = json.loads(response.text)
+                        # response_data = json.loads(response.text)
 
                         # self.__logger.info("LOGIN; From bgERP: {}".format(response_data))
 
@@ -286,7 +286,8 @@ class bgERP():
         str_registers = json.dumps(registers).replace("\'", "\"")
 
         # Payload
-        payload = {"token": self.__session.session, "registers": str_registers, "last_sync": self.__last_sync } 
+        payload = {"token": self.__session.session,\
+            "registers": str_registers, "last_sync": self.__last_sync}
 
         # self.__logger.info("SYNC; To bgERP: {}".format(payload))
 
@@ -303,8 +304,7 @@ class bgERP():
             if response.status_code == 200:
 
                 if response.text != "":
- 
-                    # TODO: Test is ti JSON.
+
                     response_registers = json.loads(response.text)
 
                     # self.__logger.info("SYNC; From bgERP: {}".format(response_registers))

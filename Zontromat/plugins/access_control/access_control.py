@@ -24,18 +24,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import time
 
-from enum import Enum
-
 from utils.logger import get_logger
 from utils.timer import Timer
 
 from plugins.base_plugin import BasePlugin
 from plugins.access_control.security_zone import SecurityZone
-
-from devices.TERACOM.act230 import ACT230
-from devices.TERACOM.act230 import ReaderState
-
-from data import verbal_const
 
 from services.global_error_handler.global_error_handler import GlobalErrorHandler
 
@@ -192,7 +185,7 @@ class AccessControl(BasePlugin):
 
         # Create filter list.
         filtered_atendee = []
-        
+
         # Reset delete flag.
         delete_flag = False
 

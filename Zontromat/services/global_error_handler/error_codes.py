@@ -56,6 +56,7 @@ __status__ = "Debug"
 #endregion
 
 class ErrorCodes(Enum):
+    """Global error codes."""
 
     Error = 500
     NoConnectionWithERP = 501

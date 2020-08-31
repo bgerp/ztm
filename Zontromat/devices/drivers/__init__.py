@@ -22,8 +22,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 
-from controllers.neuron.neuron import Neuron
-
 #region File Attributes
 
 __author__ = "Orlin Dimitrov"
@@ -52,49 +50,5 @@ __email__ = "or.dimitrov@polygonteam.com"
 
 __status__ = "Debug"
 """File status."""
-
-#endregion
-
-class ControllerFactory():
-    """Controller factory class."""
-
-#region Public Methods
-
-    @staticmethod
-    def create(config):
-        """Create controller."""
-
-        controller = None
-
-        if config["vendor"] == "unipi":
-
-            if config["model"] == "S103":
-                controller = Neuron(config)
-
-            elif config["model"] == "M503":
-                controller = Neuron(config)
-
-            elif config["model"] == "M523":
-                controller = Neuron(config)
-
-            elif config["model"] == "L503":
-                controller = Neuron(config)
-
-        return controller
-
-    @staticmethod
-    def get_info():
-        """Get controller info."""
-
-        config = None
-
-
-        # Try to read NEURON
-        try:
-            config = Neuron.read_eeprom()
-        except:
-            pass
-
-        return config
 
 #endregion

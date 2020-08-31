@@ -79,7 +79,7 @@ class GlobalErrorHandler:
 
         # Create filter list.
         filtered_atendee = []
-        
+
         # Reset delete flag.
         delete_flag = False
 

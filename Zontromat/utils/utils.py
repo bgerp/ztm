@@ -76,10 +76,12 @@ def mem_time_usage(function):
         t1 = time.time()
         passed_time = t1-t0
         current, peak = tracemalloc.get_traced_memory()
-        # print("Current memory usage is {}MB; Peak was {}MB".format(current / 10**6, peak / 10**6))
-        # print("Total time: {0:.3f} sec".format(passed_time))
+        print("Current memory usage is {}MB; Peak was {}MB".format(current / 10**6, peak / 10**6))
+        print("Total time: {0:.3f} sec".format(passed_time))
         tracemalloc.stop()
+
         return result
+
     return function_timer
 
 def mem_usage(function):
@@ -97,9 +99,11 @@ def mem_usage(function):
         tracemalloc.start()
         result = function(*args, **kwargs)
         current, peak = tracemalloc.get_traced_memory()
-        # print("Current memory usage is {}MB; Peak was {}MB".format(current / 10**6, peak / 10**6))
+        print("Current memory usage is {}MB; Peak was {}MB".format(current / 10**6, peak / 10**6))
         tracemalloc.stop()
+
         return result
+
     return function_timer
 
 def time_usage(function):
@@ -111,15 +115,17 @@ def time_usage(function):
         Pointer to function.
 
     """
-    
+
     @wraps(function)
     def function_timer(*args, **kwargs):
         t0 = time.time()
         result = function(*args, **kwargs)
         t1 = time.time()
         passed_time = t1-t0
-        # print("Total time: {0:.3f} sec".format(passed_time))
+        print("Total time: {0:.3f} sec".format(passed_time))
+
         return result
+
     return function_timer
 
 def l_scale(target, in_limit, out_limit):
@@ -144,9 +150,13 @@ def l_scale(target, in_limit, out_limit):
         (in_limit[1] - in_limit[0]) + out_limit[0]
 
 def to_deg(rad):
+    """"Radians to Degree."""
+
     return rad * (180.0 / math.pi)
 
 def to_rad(deg):
+    """Degrees to Radians."""
+
     return deg * (math.pi / 180.0)
 
 def shadow_length(height, alpha):
