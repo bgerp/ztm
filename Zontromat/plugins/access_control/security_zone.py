@@ -165,11 +165,11 @@ class SecurityZone(BasePlugin):
     def __entry_reader_cb(self, register):
 
         # Check data type.
-        if not register.is_str():
+        if not register.data_type == "bool":
             GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
 
-        if register.value != verbal_const.NO and self.__entry_reader is None:
+        if register.value != False and self.__entry_reader is None:
 
             key = register.base_name
 
@@ -203,7 +203,7 @@ class SecurityZone(BasePlugin):
                         self.__entry_reader.cb_read_card(self.__reader_read)
                         self.__entry_reader.start()
 
-        elif register.value == verbal_const.NO and self.__entry_reader is not None:
+        elif register.value == False and self.__entry_reader is not None:
             self.__entry_reader.stop()
 
             while self.__entry_reader.reader_state == ReaderState.RUN:
@@ -214,11 +214,11 @@ class SecurityZone(BasePlugin):
     def __exit_reader_cb(self, register):
 
         # Check data type.
-        if not register.is_str():
+        if not register.data_type == "str":
             GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
 
-        if register.value != verbal_const.NO and self.__exit_reader is None:
+        if register.value != False and self.__exit_reader is None:
             key = register.base_name
 
             params = register.value.split("/")
@@ -248,7 +248,7 @@ class SecurityZone(BasePlugin):
                         self.__exit_reader.cb_read_card(self.__reader_read)
                         self.__exit_reader.start()
 
-        elif register.value == verbal_const.NO and self.__exit_reader is not None:
+        elif register.value == False and self.__exit_reader is not None:
             self.__exit_reader.stop()
 
             while self.__exit_reader.reader_state == ReaderState.RUN:
@@ -259,7 +259,7 @@ class SecurityZone(BasePlugin):
     def __exit_btn_input_cb(self, register):
 
         # Check data type.
-        if not register.is_str():
+        if not register.data_type == "bool":
             GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
 
@@ -278,26 +278,51 @@ class SecurityZone(BasePlugin):
     def __lock_mechanism_output_cb(self, register):
 
         # Check data type.
-        if not register.is_str():
+        if not register.data_type == "str":
             GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
 
         if self.__lock_mechanism_output != register.value:
             self.__lock_mechanism_output = register.value
 
-    def __set_lock_mechanism_1(self, value=0):
+    def __set_lock_mechanism(self, value=0):
 
         if self._controller.is_valid_gpio(self.__lock_mechanism_output):
             self._controller.digital_write(self.__lock_mechanism_output, value)
 
     def __time_to_open_cb(self, register):
 
-        if not register.is_int_or_float():
+        if not register.data_type == "int":
             GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
 
         if self.__open_timer.expiration_time != register.value:
             self.__open_timer.expiration_time = register.value
+
+
+    def __door_window_blind_output_cb(self, register):
+
+        # Check data type.
+        if not register.data_type == "str":
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
+            return
+
+        if self.__door_window_blind_output != register.value:
+            self.__door_window_blind_output = register.value
+
+    def __door_window_blind_value_cb(self, register):
+
+        # Check data type.
+        if not register.data_type == "int":
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
+            return  
+
+        value = 0
+        if register.value == 0 or register.value == 1:
+            value = register.value
+
+        if self._controller.is_valid_gpio(self.__door_window_blind_output):
+            self._controller.digital_write(self.__door_window_blind_output, value)
 
 #endregion
 
@@ -340,6 +365,16 @@ class SecurityZone(BasePlugin):
         time_to_open = self._registers.by_name("{}.time_to_open_{}".format(self.__key, self.__identifier))
         if time_to_open is not None:
             time_to_open.update_handler = self.__time_to_open_cb
+
+        # Door window blind.
+        door_window_blind_output = self._registers.by_name("{}.door_window_blind_{}.output".format(self.__key, self.__identifier))
+        if door_window_blind_output is not None:
+            door_window_blind_output.update_handler = self.__door_window_blind_output_cb
+
+        # Door window blind.
+        door_window_blind_value = self._registers.by_name("{}.door_window_blind_{}.value".format(self.__key, self.__identifier))
+        if door_window_blind_value is not None:
+            door_window_blind_value.update_handler = self.__door_window_blind_value_cb
 
     def update(self):
         """Update"""
@@ -404,7 +439,7 @@ class SecurityZone(BasePlugin):
 
         # Check if the flag is raise.
         if self.__open_door_flag == 1:
-            self.__set_lock_mechanism_1(1)
+            self.__set_lock_mechanism(1)
             self.__open_timer.update_last_time()
             self.__open_door_flag = 0
             self.__free_to_lock = 1
@@ -417,13 +452,13 @@ class SecurityZone(BasePlugin):
                 self.__open_timer.clear()
 
                 if self.__free_to_lock == 1:
-                    self.__set_lock_mechanism_1(0)
+                    self.__set_lock_mechanism(0)
                     self.__free_to_lock = 0
 
     def shutdown(self):
         """Shutdown"""
 
-        self.__set_lock_mechanism_1(0)
+        self.__set_lock_mechanism(0)
 
         # Destroy the cardreader.
         if self.__entry_reader is not None:
