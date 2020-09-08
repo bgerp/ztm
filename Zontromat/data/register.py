@@ -60,14 +60,11 @@ __status__ = "Debug"
 class Scope(Enum):
     """Registers scope."""
 
-    Global = 1
-    Local = 2
-
-class Priority(Enum):
-    """Priority update modifier."""
-
-    Device = 0
-    System = 1
+    NONE = 0
+    Global = 1 # Global is like system.
+    Device = 2 # 
+    System = 3 # 
+    Both = 4 # 
 
 class Register:
     """Register"""
@@ -86,9 +83,6 @@ class Register:
     __scope = Scope.Global
     """Scope of register."""
 
-    __priority = Priority.System
-    """Priority update modifier."""
-
     __update_handler = None
     """Update handler."""
 
@@ -97,9 +91,6 @@ class Register:
 
     __plugin_name = ""
     """Plugin name."""
-
-    __priority = ""
-    """Priority"""
 
     __description = ""
     """Verbal register description."""
@@ -131,8 +122,12 @@ class Register:
             String representation of the instance.
 
         """
-        return "Name: {}; TS: {}; Value: {}; Scope: {}; Priority: {}"\
-            .format(self.name, self.ts, self.value, self.scope, self.priority)
+
+        return "Name: {}; Type: {}; Range: {}; Plugin: {}; Scope: {}; Value: {}; Description: {}; TS: {}"\
+            .format(self.name, self.data_type,\
+                    self.range, self.plugin_name,\
+                    self.scope, self.value,\
+                    self.description, self.ts)
 
     __repr__ = __str__
 
@@ -272,30 +267,6 @@ class Register:
         self.__scope = value
 
     @property
-    def priority(self):
-        """Returns the value of the priority flag.
-
-        Returns
-        -------
-        Enum
-            Value of the priority flag.
-        """
-
-        return self.__priority
-
-    @priority.setter
-    def priority(self, value):
-        """Set the value of the priority flag.
-
-        Parameters
-        ----------
-        priority : Enum
-            Value of the priority flag.
-        """
-
-        self.__priority = value
-
-    @property
     def update_handler(self):
         """Returns the timestamp of the register.
 
@@ -376,47 +347,5 @@ class Register:
         """Range!"""
 
         self.__range = value
-
-#endregion
-
-#region Public Methods
-
-    def is_int_or_float(self):
-        """Try to determin is the content is int of float."""
-
-        return isinstance(self.value, int) or isinstance(self.value, float)
-
-    def is_str(self):
-        """Try to determin is the content is string."""
-
-        return isinstance(self.value, str)
-
-    def is_json(self):
-        """Try to determin is the content string is JSON."""
-
-        result = False
-
-        if isinstance(self.value, list):
-            try:
-                json_object = json.dumps(self.value)
-                del json_object
-                result = True
-
-            except:
-                pass
-
-        elif isinstance(self.value, str):
-            try:
-                json_object = json.loads(self.value)
-                del json_object
-                result = True
-
-            except:
-                pass
-
-        else:
-            pass
-
-        return result
 
 #endregion

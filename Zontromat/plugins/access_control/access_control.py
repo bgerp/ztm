@@ -102,7 +102,7 @@ class AccessControl(BasePlugin):
     def __allowed_attendees_cb(self, register):
 
         # Check data type.
-        if not register.is_json():
+        if not register.data_type == "json":
             GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
 
@@ -112,7 +112,7 @@ class AccessControl(BasePlugin):
     def __is_empty_timeout_cb(self, register):
 
         # Check data type.
-        if not register.is_int_or_float():
+        if not register.data_type == "int":
             GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
 

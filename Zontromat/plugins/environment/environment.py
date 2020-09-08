@@ -79,7 +79,7 @@ class Environment(BasePlugin):
     __update_timer = None
     """Update timer."""
 
-    __sunpos_enabled_value = verbal_const.NO
+    __sunpos_enabled_value = False
     """Sun position local calculation enabled."""
 
 #endregion
@@ -88,12 +88,12 @@ class Environment(BasePlugin):
 
     def __sunpos_enabled(self):
 
-        return (self.__sunpos_enabled_value != verbal_const.NO and self.__sunpos_enabled_value != "")
+        return (self.__sunpos_enabled_value != False and self.__sunpos_enabled_value != "")
 
     def __sunpos_enabled_cb(self, register):
 
         # Check data type.
-        if not register.is_str():
+        if not register.data_type == "str":
             GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
 

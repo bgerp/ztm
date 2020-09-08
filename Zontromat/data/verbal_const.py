@@ -53,10 +53,10 @@ __status__ = "Debug"
 
 #endregion
 
-NO = "no"
+# NO = "no"
 """No"""
 
-YES = "yes"
+# YES = "yes"
 """Yes"""
 
 OFF = "off"

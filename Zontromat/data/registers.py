@@ -23,12 +23,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 import time
+import json
 
-from data.register import Register
+from Zontromat.data.register import Register
 
-from utils.logger import get_logger
+from Zontromat.utils.logger import get_logger
 
-from services.global_error_handler.global_error_handler import GlobalErrorHandler
+from Zontromat.services.global_error_handler.global_error_handler import GlobalErrorHandler
+
+from Zontromat.data.register import Scope
 
 #region File Attributes
 
@@ -61,7 +64,7 @@ __status__ = "Debug"
 
 #endregion
 
-class Registers:
+class Registers(list):
     """Registers"""
 
 #region Attributes
@@ -85,20 +88,10 @@ class Registers:
             Current class instance.
         """
 
-        self.__container = []
+        super().__init__()
 
         # Create logger.
         self.__logger = get_logger(__name__)
-
-#endregion
-
-#region Built In Methods
-
-    def __getitem__(self, item):
-        return self.__container[item] # delegate to li.__getitem__
-
-    def __len__(self):
-        return len(self.__container)
 
 #endregion
 
@@ -134,25 +127,9 @@ class Registers:
             else:
                 register = Register(name)
                 register.value = registers[name]
-                self.add(register)
+                self.append(register)
 
                 GlobalErrorHandler.log_unexpected_register(self.__logger, register)
-
-    def add(self, register):
-        """Add register.
-
-        Parameters
-        ----------
-        register : mixed
-            Register instance.
-        """
-
-        self.__container.append(register)
-
-    def delete(self):
-        """Clear registers."""
-
-        self.__container.clear()
 
     def exists(self, name):
         """Update registers content.
@@ -170,7 +147,7 @@ class Registers:
 
         result = False
 
-        for register in self.__container:
+        for register in self:
             if name in register.name:
                 result = True
                 break
@@ -196,9 +173,9 @@ class Registers:
 
         result = Registers()
 
-        for register in self.__container:
+        for register in self:
             if ts < register.ts:
-                result.add(register)
+                result.append(register)
 
         return result
 
@@ -220,11 +197,11 @@ class Registers:
 
         time_now = time.time()
 
-        for register in self.__container:
+        for register in self:
 
             delta_t = time_now - register.ts
             if delta_t < seconds:
-                result.add(register)
+                result.append(register)
 
         return result
 
@@ -244,31 +221,9 @@ class Registers:
 
         result = Registers()
 
-        for register in self.__container:
+        for register in self:
             if scope == register.scope:
-                result.add(register)
-
-        return result
-
-    def by_priority(self, priority):
-        """Get registers with specified priority.
-
-        Parameters
-        ----------
-        priority : Priority(Enum)
-            Priority
-
-        Returns
-        -------
-        array
-            Registers with priority.
-        """
-
-        result = Registers()
-
-        for register in self.__container:
-            if priority == register.priority:
-                result.add(register)
+                result.append(register)
 
         return result
 
@@ -288,9 +243,9 @@ class Registers:
 
         result = Registers()
 
-        for register in self.__container:
+        for register in self:
             if key in register.name:
-                result.add(register)
+                result.append(register)
 
         return result
 
@@ -310,7 +265,7 @@ class Registers:
 
         result = None
 
-        for register in self.__container:
+        for register in self:
             if name == register.name:
                 result = register
                 break
@@ -328,7 +283,7 @@ class Registers:
 
         result = []
 
-        for register in self.__container:
+        for register in self:
             result.append(register.name)
 
         return result
@@ -345,7 +300,7 @@ class Registers:
 
         result = {}
 
-        for register in self.__container:
+        for register in self:
             result[register.name] = register.value
 
         return result
@@ -366,7 +321,7 @@ class Registers:
 
         result = []
 
-        for register in self.__container:
+        for register in self:
             if register.name.startswith("{}.".format(name)):
                 result.append(register)
 
@@ -377,6 +332,73 @@ class Registers:
 #region Static Methods
 
     @staticmethod
+    def __csv_escape(value):
+
+        result = value
+
+        if isinstance(value, str):
+            if "," in value:
+                result = "\"" + value + "\""
+
+        elif isinstance(value, list):
+            result = "\"" + str(value) + "\""
+
+        elif isinstance(value, dict):
+            result = "\"" + str(value) + "\""
+
+        return result
+
+    @staticmethod
+    def __to_scope(scope):
+
+        p_scope = scope.lower()
+        out_scope = Scope.NONE
+
+        if p_scope == "global":
+            out_scope = Scope.Global
+
+        elif p_scope == "device":
+            out_scope = Scope.Device
+
+        elif p_scope == "system":
+            out_scope = Scope.System
+
+        elif p_scope == "both":
+            out_scope = Scope.Both
+
+        return out_scope
+
+    @staticmethod
+    def __to_value(typ, value):
+
+        out_value = None
+
+        # bool
+        if typ == "bool":
+            if value == "False":
+                out_value = False
+
+            if value == "True":
+                out_value = True
+
+        # int
+        elif typ == "int":
+            out_value = int(value)
+
+        # float
+        elif typ == "float":
+            out_value = float(value)
+
+        # json
+        elif typ == "json":
+
+            # if value.startswith("\""):
+
+            out_value = json.loads(value)
+
+        return out_value
+
+    @staticmethod
     def get_instance():
         """Singelton instance."""
 
@@ -384,5 +406,70 @@ class Registers:
             Registers.__instance = Registers()
 
         return Registers.__instance
+
+    @staticmethod
+    def to_CSV(registers, file_path="registers.csv"):
+
+        import csv
+
+        with open("registers.csv", "w", newline="") as csv_file:
+
+            fieldnames = ["name", "type", "range", "plugin", "scope", "default", "description"]
+            writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
+
+            writer.writeheader()
+
+            for register in registers:
+
+                value = Registers.__csv_escape(register.value)
+                reg_range = Registers.__csv_escape(register.range)
+                scope = str(register.scope).replace("Scope.", "").lower()
+                description = Registers.__csv_escape(register.description)
+
+                writer.writerow({"name": register.name,\
+                                "type": register.data_type,\
+                                "range": reg_range,\
+                                "plugin": register.plugin_name,\
+                                "scope": scope,\
+                                "default": value,\
+                                "description": description,\
+                                })
+
+            csv_file.close()
+
+    @staticmethod
+    def from_CSV(file_path=""):
+        """Load registers from CSV"""
+
+        registers = Registers()
+
+        import csv
+        
+        with open(file_path, newline='') as csv_file:
+
+            rows = csv.DictReader(csv_file)
+            for row in rows:
+
+                register = Register(row["name"])
+                register.range = row["range"]
+                register.plugin_name = row["plugin"]
+                register.scope = Registers.__to_scope(row["scope"])
+                register.value = Registers.__to_value(row["type"], row["default"])
+                register.description = row["description"]
+
+                registers.append(register)
+
+        return registers
+
+    @staticmethod
+    def to_JSON(registers):
+        """JSON output"""
+
+        dict_regs = registers.to_dict()
+        text = json.dumps(dict_regs, indent=4, sort_keys=True)
+
+        with open("registers.json", "w") as json_file:
+            json_file.write(text)
+            json_file.close()
 
 #endregion

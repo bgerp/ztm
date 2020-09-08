@@ -28,29 +28,27 @@ import os
 
 from enum import Enum
 
-from utils.settings import ApplicationSettings
-from utils.logger import get_logger
-from utils.state_machine import StateMachine
-from utils.timer import Timer
+from Zontromat.utils.settings import ApplicationSettings
+from Zontromat.utils.logger import get_logger
+from Zontromat.utils.state_machine import StateMachine
+from Zontromat.utils.timer import Timer
 #from utils.utils import time_usage, mem_usage, mem_time_usage
-from utils.performance_profiler import PerformanceProfiler
+from Zontromat.utils.performance_profiler import PerformanceProfiler
 
-from controllers.controller_factory import ControllerFactory
-from controllers.update_state import UpdateState
+from Zontromat.controllers.controller_factory import ControllerFactory
+from Zontromat.controllers.update_state import UpdateState
 
-from bgERP.bgERP import bgERP
+from Zontromat.bgERP.bgERP import bgERP
 
-from data.register import Priority
-from data.registers import Registers
+from Zontromat.data.register import Scope
+from Zontromat.data.registers import Registers
 
-from plugins.plugins_manager import PluginsManager
+from Zontromat.plugins.plugins_manager import PluginsManager
 
-from services.http.server import Server
-from services.http.register_handler import RegisterHandler
-from services.evok.settings import EvokSettings
-from services.global_error_handler.global_error_handler import GlobalErrorHandler
-
-# from controllers.neuron.neuron.read_eeprom
+from Zontromat.services.http.server import Server
+from Zontromat.services.http.register_handler import RegisterHandler
+from Zontromat.services.evok.settings import EvokSettings
+from Zontromat.services.global_error_handler.global_error_handler import GlobalErrorHandler
 
 #region File Attributes
 
@@ -184,11 +182,15 @@ class Zone():
         # Application settings.
         self.__app_settings = ApplicationSettings.get_instance()
 
+        # FIX
+        if self.__app_settings.exists:
+            self.__app_settings.read()
+
         # Create logger.
         self.__logger = get_logger(__name__)
 
         # Create registers.
-        self.__registers = Registers.get_instance()
+        self.__registers = Registers.from_CSV("registers.csv")
 
         # Update timer.
         self.__update_timer = Timer(self.__update_rate)
@@ -284,12 +286,12 @@ class Zone():
         # Update the neuron.
         state = self.__controller.update()
 
-        if state == UpdateState.Success:
+        if state.value == UpdateState.Success.value:
 
             # Clear all resources.
             self.__zone_state.set_state(ZoneState.Login)
 
-        elif state == UpdateState.Failure:
+        elif state.value == UpdateState.Failure.value:
 
             GlobalErrorHandler.log_no_connection_plc(self.__logger)
 
@@ -364,7 +366,7 @@ class Zone():
         if self.__erp_service_update_timer.expired:
             self.__erp_service_update_timer.clear()
 
-            ztm_regs = self.__registers.by_priority(Priority.Device)
+            ztm_regs = self.__registers.by_scope(Scope.Device)
             ztm_regs = ztm_regs.new_then(60)
             ztm_regs_dict = ztm_regs.to_dict()
 

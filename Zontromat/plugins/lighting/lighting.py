@@ -186,11 +186,11 @@ class Lighting(BasePlugin):
     def __sensor_settings_cb(self, register):
 
         # Check data type.
-        if not register.is_str():
+        if not register.data_type == "str":
             GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
 
-        if register.value != verbal_const.NO and self.__light_sensor is None:
+        if register.value != False and self.__light_sensor is None:
 
             params = register.value.split("/")
 
@@ -208,14 +208,14 @@ class Lighting(BasePlugin):
             self.__light_sensor = U1WTVS(config)
             self.__light_sensor.init()
 
-        elif register.value == verbal_const.NO and self.__light_sensor is not None:
+        elif register.value == False and self.__light_sensor is not None:
             self.__light_sensor.shutdown()
             del self.__light_sensor
 
     def __v1_output_cb(self, register):
 
         # Check data type.
-        if not register.is_str():
+        if not register.data_type == "str":
             GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
 
@@ -225,7 +225,7 @@ class Lighting(BasePlugin):
     def __v2_output_cb(self, register):
 
         # Check data type.
-        if not register.is_str():
+        if not register.data_type == "str":
             GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
 

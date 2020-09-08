@@ -110,7 +110,7 @@ class Sys(BasePlugin):
     def __blink_time_cb(self, register):
 
         # Check data type.
-        if not register.is_int_or_float():
+        if not register.data_type == "int":
             GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
 
@@ -120,7 +120,7 @@ class Sys(BasePlugin):
     def __led_out_cb(self, register):
 
         # Check data type.
-        if not register.is_str():
+        if not register.data_type == "str":
             GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
 

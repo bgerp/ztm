@@ -57,7 +57,7 @@ __status__ = "Debug"
 
 #endregion
 
-class ApplicationSettings():
+class ApplicationSettings:
     """Application settings class."""
 
 #region Attributes
@@ -138,6 +138,12 @@ class ApplicationSettings():
             File name.
         """
 
+        if ApplicationSettings.__instance is not None:
+            raise Exception("This class is a singleton!")
+
+        else:
+            ApplicationSettings.__instance = self
+
         if file_name is None:
             cwd = os.getcwd()
             self.__file_name = os.path.join(cwd, "settings.yaml")
@@ -174,7 +180,7 @@ class ApplicationSettings():
         """Singelton instance."""
 
         if ApplicationSettings.__instance is None:
-            ApplicationSettings.__instance = ApplicationSettings(file_path)
+            ApplicationSettings(file_path)
 
         return ApplicationSettings.__instance
 

@@ -167,7 +167,7 @@ class Blinds(BasePlugin):
     def __input_fb_cb(self, register):
 
         # Check data type.
-        if not register.is_str():
+        if not register.data_type == "str":
             GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
 
@@ -183,7 +183,7 @@ class Blinds(BasePlugin):
     def __output_cw_cb(self, register):
 
         # Check data type.
-        if not register.is_str():
+        if not register.data_type == "str":
             GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
 
@@ -193,7 +193,7 @@ class Blinds(BasePlugin):
     def __output_ccw_cb(self, register):
 
         # Check data type.
-        if not register.is_str():
+        if not register.data_type == "str":
             GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
 
@@ -255,7 +255,7 @@ class Blinds(BasePlugin):
         """Callback function that sets new position."""
 
         # Check data type.
-        if not register.is_int_or_float():
+        if not register.data_type == "float":
             GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
 

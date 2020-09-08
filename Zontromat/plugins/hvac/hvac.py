@@ -223,7 +223,7 @@ class HVAC(BasePlugin):
     def __update_rate_cb(self, register):
 
         # Check data type.
-        if not register.is_int_or_float():
+        if not register.data_type == "float":
             GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
 
@@ -233,7 +233,7 @@ class HVAC(BasePlugin):
     def __delta_time_cb(self, register):
 
         # Check data type.
-        if not register.is_int_or_float():
+        if not register.data_type == "float":
             GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
 
@@ -243,7 +243,7 @@ class HVAC(BasePlugin):
     def __thermal_mode_cb(self, register):
 
         # Check data type.
-        if not register.is_int_or_float():
+        if not register.data_type == "int":
             GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
 
@@ -255,7 +255,7 @@ class HVAC(BasePlugin):
     def __thermal_force_limit_cb(self, register):
 
         # Check data type.
-        if not register.is_int_or_float():
+        if not register.data_type == "float":
             GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
 
@@ -265,7 +265,7 @@ class HVAC(BasePlugin):
     def __adjust_temp_cb(self, register):
 
         # Check data type.
-        if not register.is_int_or_float():
+        if not register.data_type == "float":
             GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
 
@@ -299,7 +299,7 @@ class HVAC(BasePlugin):
     def __goal_building_temp_cb(self, register):
 
         # Check data type.
-        if not register.is_int_or_float():
+        if not register.data_type == "float":
             GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
 
@@ -324,7 +324,7 @@ class HVAC(BasePlugin):
     def __air_temp_cent_settings_cb(self, register):
 
         # Check data type.
-        if not register.is_str():
+        if not register.data_type == "str":
             GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
 
@@ -349,7 +349,7 @@ class HVAC(BasePlugin):
     def __air_temp_lower_settings_cb(self, register):
 
         # Check data type.
-        if not register.is_str():
+        if not register.data_type == "str":
             GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
 
@@ -373,7 +373,7 @@ class HVAC(BasePlugin):
     def __air_temp_upper_settings_cb(self, register):
 
         # Check data type.
-        if not register.is_str():
+        if not register.data_type == "str":
             GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
 
@@ -401,7 +401,7 @@ class HVAC(BasePlugin):
     def __convector_settings_cb(self, register):
 
         # Check data type.
-        if not register.is_str():
+        if not register.data_type == "str":
             GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
 
@@ -426,7 +426,7 @@ class HVAC(BasePlugin):
     def __loop1_cnt_input_cb(self, register):
 
         # Check data type.
-        if not register.is_str():
+        if not register.data_type == "str":
             GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
 
@@ -452,7 +452,7 @@ class HVAC(BasePlugin):
     def __loop1_fan_settings_cb(self, register):
 
         # Check data type.
-        if not register.is_str():
+        if not register.data_type == "str":
             GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
 
@@ -475,7 +475,7 @@ class HVAC(BasePlugin):
     def __loop1_fan_min_cb(self, register):
 
         # Check data type.
-        if not register.is_int_or_float():
+        if not register.data_type == "float":
             GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
 
@@ -486,7 +486,7 @@ class HVAC(BasePlugin):
     def __loop1_fan_max_cb(self, register):
 
         # Check data type.
-        if not register.is_int_or_float():
+        if not register.data_type == "float":
             GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
 
@@ -497,7 +497,7 @@ class HVAC(BasePlugin):
     def __loop1_temp_settings_cb(self, register):
 
         # Check data type.
-        if not register.is_str():
+        if not register.data_type == "str":
             GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
 
@@ -518,7 +518,7 @@ class HVAC(BasePlugin):
     def __loop1_valve_enabled_cb(self, register):
 
         # Check data type.
-        if not register.is_str():
+        if not register.data_type == "str":
             GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
 
@@ -543,7 +543,7 @@ class HVAC(BasePlugin):
     def __loop2_cnt_input_cb(self, register):
 
         # Check data type.
-        if not register.is_str():
+        if not register.data_type == "str":
             GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
 
@@ -568,7 +568,7 @@ class HVAC(BasePlugin):
     def __loop2_fan_settings_cb(self, register):
 
         # Check data type.
-        if not register.is_str():
+        if not register.data_type == "str":
             GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
 
@@ -591,7 +591,7 @@ class HVAC(BasePlugin):
     def __loop2_fan_min_cb(self, register):
 
         # Check data type.
-        if not register.is_int_or_float():
+        if not register.data_type == "float":
             GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
 
@@ -602,7 +602,7 @@ class HVAC(BasePlugin):
     def __loop2_fan_max_cb(self, register):
 
         # Check data type.
-        if not register.is_int_or_float():
+        if not register.data_type == "float":
             GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
 
@@ -613,7 +613,7 @@ class HVAC(BasePlugin):
     def __loop2_temp_settings_cb(self, register):
 
         # Check data type.
-        if not register.is_str():
+        if not register.data_type == "str":
             GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
 
@@ -634,7 +634,7 @@ class HVAC(BasePlugin):
     def __loop2_valve_settings_cb(self, register):
 
         # Check data type.
-        if not register.is_str():
+        if not register.data_type == "str":
             GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
 

@@ -118,7 +118,7 @@ class Monitoring(BasePlugin):
     def __cw_input_cb(self, register):
 
         # Check data type.
-        if not register.is_str():
+        if not register.data_type == "str":
             GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
 
@@ -128,7 +128,7 @@ class Monitoring(BasePlugin):
     def __cw_tpl_cb(self, register):
 
         # Check data type.
-        if not register.is_int_or_float():
+        if not register.data_type == "int":
             GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
 
@@ -186,7 +186,7 @@ class Monitoring(BasePlugin):
     def __hw_input_cb(self, register):
 
         # Check data type.
-        if not register.is_str():
+        if not register.data_type == "str":
             GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
 
@@ -196,7 +196,7 @@ class Monitoring(BasePlugin):
     def __hw_tpl_cb(self, register):
 
         # Check data type.
-        if not register.is_int_or_float():
+        if not register.data_type == "float":
             GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
 
@@ -253,7 +253,7 @@ class Monitoring(BasePlugin):
 
     def __pa_enabled_cb(self, register):
 
-        if not register.is_str():
+        if not register.data_type == "str":
             return
 
         if register.value != verbal_const.OFF and self.__power_analyser is None:

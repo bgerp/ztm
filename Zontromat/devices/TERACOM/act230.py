@@ -74,7 +74,7 @@ class ACT230(BaseDevice):
 
 #region Attributes
 
-    __logger = get_logger(__name__)
+    __logger = None
     """Logger"""
 
     __port = None
@@ -94,9 +94,18 @@ class ACT230(BaseDevice):
 
 #endregion
 
-#region Destructir
+#region Constructor / Destructor
+
+    def __init__(self, config):
+        """Constructor"""
+
+        super().__init__(config)
+
+        self.__logger = get_logger(__name__)
 
     def __del__(self):
+        """Destructor"""
+
         self.stop()
 
 #endregion
