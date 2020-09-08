@@ -59,6 +59,7 @@ __status__ = "Debug"
 #endregion
 
 def read_eeprom():
+    """Read the EEPROM."""
 
     device_cfg = {
         "version": "UniPi 1.0",
@@ -76,7 +77,7 @@ def read_eeprom():
 
     # Try to access the EEPROM at /sys/bus/i2c/devices/1-0050/eeprom
     try:
-        with open("/sys/bus/i2c/devices/1-0050/eeprom","rb") as eeprom:
+        with open("/sys/bus/i2c/devices/1-0050/eeprom", "rb") as eeprom:
 
             content = eeprom.read()
 
@@ -97,16 +98,20 @@ def read_eeprom():
 
                 #AIs coeff
                 if device_cfg["version"] in ("UniPi 1.1", "UniPi 1.0"):
-                    device_cfg["devices"] = { "ai": {
-                                              "1": struct.unpack("!f", content[240:244])[0],
-                                              "2": struct.unpack("!f", content[244:248])[0],
-                                         }}
+                    device_cfg["devices"] = {
+                        "ai": {
+                            "1": struct.unpack("!f", content[240:244])[0],
+                            "2": struct.unpack("!f", content[244:248])[0],
+                            }
+                        }
 
                 else:
-                    device_cfg["devices"] = { "ai": {
-                                              "1": 0,
-                                              "2": 0,
-                                         }}
+                    device_cfg["devices"] = {
+                        "ai": {
+                            "1": 0,
+                            "2": 0,
+                            }
+                        }
 
                 device_cfg["serial"] = struct.unpack("i", content[228:232])[0]
     except Exception:
@@ -114,7 +119,7 @@ def read_eeprom():
 
     # Try to access the EEPROM at /sys/bus/i2c/devices/1-0057/eeprom
     try:
-        with open("/sys/bus/i2c/devices/1-0057/eeprom","rb") as eeprom:
+        with open("/sys/bus/i2c/devices/1-0057/eeprom", "rb") as eeprom:
 
             # Get content.
             content = eeprom.read()
@@ -156,7 +161,7 @@ def read_eeprom():
 
     # Try to access the EEPROM at /sys/bus/i2c/devices/0-0057/eeprom
     try:
-        with open("/sys/bus/i2c/devices/0-0057/eeprom","rb") as eeprom:
+        with open("/sys/bus/i2c/devices/0-0057/eeprom", "rb") as eeprom:
 
             # Get content.
             content = eeprom.read()
@@ -185,19 +190,21 @@ def read_eeprom():
     return device_cfg
 
 def main(argv):
+    """Main function."""
 
-    opts, args = getopt.getopt(argv,"ms",["model=", "serial="])
+    opts, args = getopt.getopt(argv, "ms", ["model=", "serial="])
 
     just_model = False
     just_sn = False
     show_all = True
 
     for opt, arg in opts:
-        if opt== "-m":
+
+        if opt == "-m":
             just_model = True
             show_all = False
 
-        if opt== "-s":
+        if opt == "-s":
             just_sn = True
             show_all = False
 
