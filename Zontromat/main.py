@@ -79,6 +79,25 @@ __time_to_stop = False
 
 #endregion
 
+def interupt_handler(signum, frame):
+    """Interupt handler."""
+
+    global __zone, __logger, __time_to_stop
+
+    __time_to_stop = True
+
+    if signum == 2:
+        __logger.warning("Stopped by interupt.")
+
+    elif signum == 15:
+        __logger.warning("Stopped by termination.")
+
+    else:
+        __logger.warning("Signal handler called. Signal: {}; Frame: {}".format(signum, frame))
+
+    if __zone is not None:
+        __zone.shutdown()
+
 def main():
     """Main"""
 
@@ -116,25 +135,6 @@ def main():
 
     # Run the zone.
     __zone.run()
-
-def interupt_handler(signum, frame):
-    """Interupt handler."""
-
-    global __zone, __logger, __time_to_stop
-
-    __time_to_stop = True
-
-    if signum == 2:
-        __logger.warning("Stopped by interupt.")
-
-    elif signum == 15:
-        __logger.warning("Stopped by termination.")
-
-    else:
-        __logger.warning("Signal handler called. Signal: {}; Frame: {}".format(signum, frame))
-
-    if __zone is not None:
-        __zone.shutdown()
 
 if __name__ == "__main__":
     main()
