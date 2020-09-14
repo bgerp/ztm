@@ -53,7 +53,7 @@ __status__ = "Debug"
 
 #endregion
 
-class Configuarable():
+class Configuarable:
     """This class is dedicated to be base for each configurable class."""
 
 #region Attributes
@@ -88,6 +88,7 @@ class Configuarable():
         """
 
         self._config = config
+
         if "name" in self._config:
             self.__name = self._config["name"]
 
