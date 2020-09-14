@@ -25,13 +25,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import time
 import json
 
-from Zontromat.data.register import Register
+from data.register import Register
 
-from Zontromat.utils.logger import get_logger
+from utils.logger import get_logger
 
-from Zontromat.services.global_error_handler.global_error_handler import GlobalErrorHandler
+from services.global_error_handler.global_error_handler import GlobalErrorHandler
 
-from Zontromat.data.register import Scope
+from data.register import Scope
 
 #region File Attributes
 
@@ -93,9 +93,38 @@ class Registers(list):
         # Create logger.
         self.__logger = get_logger(__name__)
 
+        if Registers.__instance is None:
+            Registers.__instance = self
+            
 #endregion
 
 #region Private Methods
+
+    def __preprocess_value(self, value):
+
+        out_value = None
+
+        if isinstance(value, str):
+
+            if value == "false":
+                out_value = False
+
+            elif value == "true":
+                out_value = True
+
+            elif value.startswith("[") and value.endswith("]"):
+                out_value = json.loads(value)
+
+            elif value.startswith("{") and value.endswith("}"):
+                out_value = json.loads(value)
+
+            else:
+                out_value = value
+
+        else:
+            out_value = value
+
+        return out_value
 
 #endregion
 
@@ -121,12 +150,12 @@ class Registers(list):
             # Update registers.
             if name in self.names():
                 register = self.by_name(name)
-                register.value = registers[name]
+                register.value = self.__preprocess_value(registers[name])
 
             # Add missing register.
             else:
                 register = Register(name)
-                register.value = registers[name]
+                register.value = self.__preprocess_value(registers[name])
                 self.append(register)
 
                 GlobalErrorHandler.log_unexpected_register(self.__logger, register)
@@ -375,10 +404,10 @@ class Registers(list):
 
         # bool
         if typ == "bool":
-            if value == "False":
+            if value == "false":
                 out_value = False
 
-            if value == "True":
+            if value == "true":
                 out_value = True
 
         # int
@@ -391,10 +420,10 @@ class Registers(list):
 
         # json
         elif typ == "json":
-
-            # if value.startswith("\""):
-
             out_value = json.loads(value)
+
+        else:
+            out_value = value
 
         return out_value
 
@@ -403,7 +432,7 @@ class Registers(list):
         """Singelton instance."""
 
         if Registers.__instance is None:
-            Registers.__instance = Registers()
+            Registers()
 
         return Registers.__instance
 
@@ -421,7 +450,20 @@ class Registers(list):
 
             for register in registers:
 
-                value = Registers.__csv_escape(register.value)
+                value = None
+
+                # TODO: FIX ME UGLY!
+                if register.data_type == "bool":
+                    value = Registers.__csv_escape(register.value)
+
+                    if value:
+                        value = "true"
+                    else:
+                        value = "false"
+
+                else:
+                    value = Registers.__csv_escape(register.value)
+
                 reg_range = Registers.__csv_escape(register.range)
                 scope = str(register.scope).replace("Scope.", "").lower()
                 description = Registers.__csv_escape(register.description)
@@ -462,13 +504,13 @@ class Registers(list):
         return registers
 
     @staticmethod
-    def to_JSON(registers):
+    def to_JSON(registers, file_path="registers.csv"):
         """JSON output"""
 
         dict_regs = registers.to_dict()
         text = json.dumps(dict_regs, indent=4, sort_keys=True)
 
-        with open("registers.json", "w") as json_file:
+        with open(file_path, "w") as json_file:
             json_file.write(text)
             json_file.close()
 
