@@ -26,10 +26,10 @@ import argparse
 import os
 import csv
 
-from Zontromat.data.register import Register
-from Zontromat.data.register import Scope
-from Zontromat.data.registers import Registers
-from Zontromat.data import verbal_const
+from data.register import Register
+from data.register import Scope
+from data.registers import Registers
+from data import verbal_const
 
 #region File Attributes
 
@@ -78,7 +78,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "Access Control"
     register.description = "Plugin enabled"
-    register.range = "True|False"
+    register.range = "true|false"
     # register.update_handler = self.__access_control_enabled
     register.value = False
     __registers.append(register)
@@ -119,7 +119,7 @@ def __add_registers():
     register.scope = Scope.Device
     register.plugin_name = "Access Control"
     register.description = "Zone occupied flag"
-    register.range = "True|False"
+    register.range = "true|false"
     register.value = False
     __registers.append(register)
 
@@ -129,7 +129,7 @@ def __add_registers():
     register.plugin_name = "Access Control"
     register.description = "Card reader enabled"
     register.range = ""
-    register.value = "TERACOM/act230/2897"
+    register.value = "TERACOM/act230/2911"
     __registers.append(register)
 
     register = Register("ac.entry_reader_1.port.baudrate")
@@ -148,7 +148,7 @@ def __add_registers():
     if os.name == "posix":
         register.value = "/dev/ttyUSB0"
     if os.name == "nt":
-        register.value = "COM5"
+        register.value = "COM11"
     __registers.append(register)
 
     # Exit card reader.
@@ -157,7 +157,7 @@ def __add_registers():
     register.plugin_name = "Access Control"
     register.description = "Card reader enabled"
     register.range = ""
-    register.value = "TERACOM/act230/2911"
+    register.value = "TERACOM/act230/2897"
     __registers.append(register)
 
     register = Register("ac.exit_reader_1.port.baudrate")
@@ -176,7 +176,7 @@ def __add_registers():
     if os.name == "posix":
         register.value = "/dev/ttyUSB0"
     if os.name == "nt":
-        register.value = "COM11"
+        register.value = "COM5"
     __registers.append(register)
 
     #
@@ -216,7 +216,7 @@ def __add_registers():
     register.scope = Scope.Device
     register.plugin_name = "Access Control"
     register.description = "Door closed input state"
-    register.range = "True|False"
+    register.range = "true|false"
     register.value = False
     __registers.append(register)
 
@@ -226,7 +226,7 @@ def __add_registers():
     register.plugin_name = "Access Control"
     register.description = "Card reader settings"
     register.range = ""
-    register.value = "TERACOM/act230/2897"
+    register.value = "TERACOM/act230/2468"
     __registers.append(register)
 
 
@@ -246,7 +246,7 @@ def __add_registers():
     if os.name == "posix":
         register.value = "/dev/ttyUSB0"
     if os.name == "nt":
-        register.value = "COM5"
+        register.value = "COM9"
     __registers.append(register)
 
     # Exit card reader.
@@ -255,7 +255,7 @@ def __add_registers():
     register.plugin_name = "Access Control"
     register.description = "Card reader settings"
     register.range = ""
-    register.value = "TERACOM/act230/2911"
+    register.value = "TERACOM/act230/1208"
     __registers.append(register)
 
     register = Register("ac.exit_reader_2.port.baudrate")
@@ -274,7 +274,7 @@ def __add_registers():
     if os.name == "posix":
         register.value = "/dev/ttyUSB0"
     if os.name == "nt":
-        register.value = "COM11"
+        register.value = "COM8"
     __registers.append(register)
 
     #
@@ -314,7 +314,7 @@ def __add_registers():
     register.scope = Scope.Device
     register.plugin_name = "Access Control"
     register.description = "Door 2 closed input state"
-    register.range = "True|False"
+    register.range = "true|false"
     register.value = False
     __registers.append(register)
 
@@ -331,7 +331,7 @@ def __add_registers():
     register.scope = Scope.Device
     register.plugin_name = "Access Control"
     register.description = "PIR 1 sensor input state"
-    register.range = "True|False"
+    register.range = "true|false"
     register.value = False
     __registers.append(register)
 
@@ -347,7 +347,7 @@ def __add_registers():
     register.scope = Scope.Device
     register.plugin_name = "Access Control"
     register.description = "PIR 2 sensor input state"
-    register.range = "True|False"
+    register.range = "true|false"
     register.value = False
     __registers.append(register)
 
@@ -364,7 +364,7 @@ def __add_registers():
     register.scope = Scope.Device
     register.plugin_name = "Access Control"
     register.description = "Window 1 closed input state"
-    register.range = "True|False"
+    register.range = "true|false"
     register.value = False
     __registers.append(register)
 
@@ -380,7 +380,7 @@ def __add_registers():
     register.scope = Scope.Device
     register.plugin_name = "Access Control"
     register.description = "Window 2 closed input state"
-    register.range = "True|False"
+    register.range = "true|false"
     register.value = False
     __registers.append(register)
 
@@ -398,7 +398,7 @@ def __add_registers():
     register.scope = Scope.Device
     register.plugin_name = "Access Control"
     register.description = "Door window blind 1 value"
-    register.range = "True|False"
+    register.range = "true|false"
     register.value = False
     __registers.append(register)
 
@@ -416,7 +416,7 @@ def __add_registers():
     register.scope = Scope.Device
     register.plugin_name = "Access Control"
     register.description = "Door window blind 2 value"
-    register.range = "True|False"
+    register.range = "true|false"
     register.value = False
     __registers.append(register)
 
@@ -492,7 +492,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "Blinds"
     register.description = "Plugin enabled"
-    register.range = "True|False"
+    register.range = "true|false"
     # register.update_handler = self.__blinds_enabled
     register.value = False
     __registers.append(register)
@@ -605,7 +605,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "Monitoring"
     register.description = "Plugin enabled"
-    register.range = "True|False"
+    register.range = "true|false"
     # register.update_handler = self.__monitoring_enabled
     register.value = False
     __registers.append(register)
@@ -714,7 +714,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "Environment"
     register.description = "Enable software calculation of the sun position"
-    register.range = "True|False"
+    register.range = "true|false"
     register.value = False
     __registers.append(register)
 
@@ -723,7 +723,7 @@ def __add_registers():
     # register.update_handler = self.__env_enabled
     register.plugin_name = "Environment"
     register.description = "Plugin enabled"
-    register.range = "True|False"
+    register.range = "true|false"
     register.value = False
     __registers.append(register)
 
@@ -814,7 +814,7 @@ def __add_registers():
     # register.update_handler = self.__hvac_enabled
     register.plugin_name = "HVAC"
     register.description = "Plugin enabled"
-    register.range = "True|False"
+    register.range = "true|false"
     register.value = False
     __registers.append(register)
 
@@ -1147,7 +1147,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "Light"
     register.description = "Plugin enabled"
-    register.range = "True|False"
+    register.range = "true|false"
     # register.update_handler = self.__light_enabled
     register.value = False
     __registers.append(register)
@@ -1221,7 +1221,7 @@ def __add_registers():
     register.scope = Scope.Device
     register.plugin_name = "System"
     register.description = "Anti tampering state"
-    register.range = "True|False"
+    register.range = "true|false"
     register.value = False
     __registers.append(register)
 
@@ -1263,7 +1263,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "System"
     register.description = "Plugin enabled"
-    register.range = "True|False"
+    register.range = "true|false"
     # register.update_handler = self.__sys_enabled
     register.value = False
     __registers.append(register)
@@ -1293,7 +1293,6 @@ def main():
         Registers.to_CSV(__registers, "registers.csv")
 
     elif args.typ == "read":
-
         registers = Registers.from_CSV("registers.csv")
 
         for register in registers:
