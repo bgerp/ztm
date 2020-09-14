@@ -28,27 +28,27 @@ import os
 
 from enum import Enum
 
-from Zontromat.utils.settings import ApplicationSettings
-from Zontromat.utils.logger import get_logger
-from Zontromat.utils.state_machine import StateMachine
-from Zontromat.utils.timer import Timer
+from utils.settings import ApplicationSettings
+from utils.logger import get_logger
+from utils.state_machine import StateMachine
+from utils.timer import Timer
 #from utils.utils import time_usage, mem_usage, mem_time_usage
-from Zontromat.utils.performance_profiler import PerformanceProfiler
+from utils.performance_profiler import PerformanceProfiler
 
-from Zontromat.controllers.controller_factory import ControllerFactory
-from Zontromat.controllers.update_state import UpdateState
+from controllers.controller_factory import ControllerFactory
+from controllers.update_state import UpdateState
 
-from Zontromat.bgERP.bgERP import bgERP
+from bgERP.bgERP import bgERP
 
-from Zontromat.data.register import Scope
-from Zontromat.data.registers import Registers
+from data.register import Scope
+from data.registers import Registers
 
-from Zontromat.plugins.plugins_manager import PluginsManager
+from plugins.plugins_manager import PluginsManager
 
-from Zontromat.services.http.server import Server
-from Zontromat.services.http.register_handler import RegisterHandler
-from Zontromat.services.evok.settings import EvokSettings
-from Zontromat.services.global_error_handler.global_error_handler import GlobalErrorHandler
+from services.http.server import Server
+from services.http.register_handler import RegisterHandler
+from services.evok.settings import EvokSettings
+from services.global_error_handler.global_error_handler import GlobalErrorHandler
 
 #region File Attributes
 
@@ -182,18 +182,11 @@ class Zone():
         # Application settings.
         self.__app_settings = ApplicationSettings.get_instance()
 
-        # FIX
-        if self.__app_settings.exists:
-            self.__app_settings.read()
-
         # Create logger.
         self.__logger = get_logger(__name__)
 
         # Create registers.
         self.__registers = Registers.from_CSV("registers.csv")
-
-        # Update timer.
-        self.__update_timer = Timer(self.__update_rate)
 
         # Set zone state machine.
         self.__zone_state = StateMachine(ZoneState.Idle)
@@ -215,8 +208,6 @@ class Zone():
             if plc_info["model"] is not None:
                 model = plc_info["model"]
 
-        self.__update_timer.expiration_time = self.__update_timer.expiration_time + (serial / 1000)
-
         # Create Neuron.
         config = \
         {
@@ -226,13 +217,7 @@ class Zone():
             "host": self.__app_settings.get_controller["host"],
             "timeout": self.__app_settings.get_controller["timeout"]
         }
-
         self.__controller = ControllerFactory.create(config)
-
-        # Create bgERP and login.
-        self.__bgerp = bgERP(self.__app_settings.get_erp_service["host"],\
-            self.__app_settings.get_erp_service["timeout"])
-        self.__erp_service_update_timer = Timer(self.__erp_service_update_rate)
 
         # Set the plugin manager.
         self.__plugin_manager = PluginsManager(self.__registers, self.__controller)
@@ -270,6 +255,16 @@ class Zone():
         # Set the IO map.
         gpio_map = self.__controller.get_gpio_map()
         RegisterHandler.set_gpio_map(gpio_map)
+
+        # Update timer.
+        self.__update_timer = Timer(self.__update_rate)
+        # Update with offset based on the serial number of the device.
+        self.__update_timer.expiration_time = self.__update_timer.expiration_time + (serial / 1000)
+
+        # Create bgERP and login.
+        self.__bgerp = bgERP(self.__app_settings.get_erp_service["host"],\
+            self.__app_settings.get_erp_service["timeout"])
+        self.__erp_service_update_timer = Timer(self.__erp_service_update_rate)
 
 #endregion
 
@@ -366,6 +361,7 @@ class Zone():
         if self.__erp_service_update_timer.expired:
             self.__erp_service_update_timer.clear()
 
+            
             ztm_regs = self.__registers.by_scope(Scope.Device)
             ztm_regs = ztm_regs.new_then(60)
             ztm_regs_dict = ztm_regs.to_dict()
