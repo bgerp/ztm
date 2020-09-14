@@ -209,7 +209,7 @@ class ACT230(BaseDevice):
         # Start
         elif self.__reader_state == ReaderState.START:
             try:
-                # Creste port.
+                # Create port.
                 self.__port = serial.Serial(\
                     port=self._config["port_name"],\
                     baudrate=self._config["baudrate"],
@@ -243,7 +243,8 @@ class ACT230(BaseDevice):
                         if len(frame) == self.__card_number_len:
                             self.__cb_read_card(frame, self.reader_id)
 
-            except:
+            except Exception as e:
+                print(e)
                 self.stop()
 
 #endregion
