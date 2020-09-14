@@ -85,40 +85,45 @@ class RegisterHandler:
 
         registers = Registers.get_instance()
 
+        if len(registers) == 0:
+            return
+
         # Access control
-        inputs.add(registers.by_name("ac.door_closed_1.input"))
-        inputs.add(registers.by_name("ac.door_closed_2.input"))
-        # inputs.add(registers.by_name("ac.exit_button_1.input"))
-        # inputs.add(registers.by_name("ac.exit_button_2.input"))
-        inputs.add(registers.by_name("ac.pir_1.input"))
-        inputs.add(registers.by_name("ac.pir_2.input"))
-        inputs.add(registers.by_name("ac.window_closed_1.input"))
-        inputs.add(registers.by_name("ac.window_closed_2.input"))
+        inputs.append(registers.by_name("ac.door_closed_1.input"))
+        inputs.append(registers.by_name("ac.door_closed_2.input"))
+        # inputs.append(registers.by_name("ac.exit_button_1.input"))
+        # inputs.append(registers.by_name("ac.exit_button_2.input"))
+        inputs.append(registers.by_name("ac.pir_1.input"))
+        inputs.append(registers.by_name("ac.pir_2.input"))
+        inputs.append(registers.by_name("ac.window_closed_1.input"))
+        inputs.append(registers.by_name("ac.window_closed_2.input"))
 
         # HVAC
-        # inputs.add(registers.by_name("hvac.loop1.cnt.input"))
-        # inputs.add(registers.by_name("hvac.loop2.cnt.input"))
+        # inputs.append(registers.by_name("hvac.loop1.cnt.input"))
+        # inputs.append(registers.by_name("hvac.loop2.cnt.input"))
 
         # Monitoring
-        inputs.add(registers.by_name("monitoring.cw.input"))
-        inputs.add(registers.by_name("monitoring.hw.input"))
+        inputs.append(registers.by_name("monitoring.cw.input"))
+        inputs.append(registers.by_name("monitoring.hw.input"))
 
         # System
-        inputs.add(registers.by_name("sys.at.input"))
-        # inputs.add(registers.by_name("sys.sl.output"))
+        inputs.append(registers.by_name("sys.at.input"))
+        # inputs.append(registers.by_name("sys.sl.output"))
 
         for device in request_body:
 
             gpio = RegisterHandler.get_gpio(device["dev"], device["circuit"])
             for input_reg in inputs:
 
-                # Filter by type.
-                if input_reg.value == gpio:
-                    required_name = input_reg.name.replace("input", "state")
-                    target_reg = registers.by_name(required_name)
+                if input_reg is not None:
 
-                    # If register exists, apply value.
-                    if target_reg is not None:
-                        target_reg.value = device["value"]
+                    # Filter by type.
+                    if input_reg.value == gpio:
+                        required_name = input_reg.name.replace("input", "state")
+                        target_reg = registers.by_name(required_name)
+
+                        # If register exists, apply value.
+                        if target_reg is not None:
+                            target_reg.value = device["value"]
 
 #endregion
