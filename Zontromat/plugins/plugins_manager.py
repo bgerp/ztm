@@ -26,22 +26,22 @@ import os
 
 from enum import Enum
 
-from Zontromat.utils.logger import get_logger
+from utils.logger import get_logger
 
-from Zontromat.data.register import Scope
-from Zontromat.data.register import Register
-from Zontromat.data import verbal_const
+from data.register import Scope
+from data.register import Register
+from data import verbal_const
 
 # Plugins
-from Zontromat.plugins.access_control.access_control import AccessControl
-from Zontromat.plugins.blinds.blinds import Blinds
-from Zontromat.plugins.monitoring.monitoring import Monitoring
-from Zontromat.plugins.environment.environment import Environment
-from Zontromat.plugins.hvac.hvac import HVAC
-from Zontromat.plugins.lighting.lighting import Lighting
-from Zontromat.plugins.sys.sys import Sys
+from plugins.access_control.access_control import AccessControl
+from plugins.blinds.blinds import Blinds
+from plugins.monitoring.monitoring import Monitoring
+from plugins.environment.environment import Environment
+from plugins.hvac.hvac import HVAC
+from plugins.lighting.lighting import Lighting
+from plugins.sys.sys import Sys
 
-from Zontromat.services.global_error_handler.global_error_handler import GlobalErrorHandler
+from services.global_error_handler.global_error_handler import GlobalErrorHandler
 
 #region File Attributes
 
