@@ -24,8 +24,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from data import verbal_const
 
-from devices.TERACOM.act230 import ACT230
-from devices.TERACOM.act230 import ReaderState
+from devices.TERACOM.act230.act230 import ACT230
+from devices.TERACOM.act230.act230 import ReaderState
 
 from utils.logger import get_logger
 from utils.timer import Timer
@@ -106,6 +106,9 @@ class SecurityZone(BasePlugin):
     __name = ""
     """Name of the zone."""
 
+    __door_window_blind_output = verbal_const.OFF
+    """Door windows blind controll."""
+
 #endregion
 
 #region Constructor / Destructor
@@ -165,11 +168,11 @@ class SecurityZone(BasePlugin):
     def __entry_reader_cb(self, register):
 
         # Check data type.
-        if not register.data_type == "bool":
+        if not register.data_type == "str":
             GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
 
-        if register.value != False and self.__entry_reader is None:
+        if register.value != "" and self.__entry_reader is None:
 
             key = register.base_name
 
@@ -203,7 +206,7 @@ class SecurityZone(BasePlugin):
                         self.__entry_reader.cb_read_card(self.__reader_read)
                         self.__entry_reader.start()
 
-        elif register.value == False and self.__entry_reader is not None:
+        elif register.value == verbal_const.OFF and self.__entry_reader is not None:
             self.__entry_reader.stop()
 
             while self.__entry_reader.reader_state == ReaderState.RUN:
@@ -218,7 +221,7 @@ class SecurityZone(BasePlugin):
             GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
 
-        if register.value != False and self.__exit_reader is None:
+        if register.value != "" and self.__exit_reader is None:
             key = register.base_name
 
             params = register.value.split("/")
@@ -248,7 +251,7 @@ class SecurityZone(BasePlugin):
                         self.__exit_reader.cb_read_card(self.__reader_read)
                         self.__exit_reader.start()
 
-        elif register.value == False and self.__exit_reader is not None:
+        elif register.value == verbal_const.OFF and self.__exit_reader is not None:
             self.__exit_reader.stop()
 
             while self.__exit_reader.reader_state == ReaderState.RUN:
@@ -259,7 +262,7 @@ class SecurityZone(BasePlugin):
     def __exit_btn_input_cb(self, register):
 
         # Check data type.
-        if not register.data_type == "bool":
+        if not register.data_type == "str":
             GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
 
@@ -299,7 +302,6 @@ class SecurityZone(BasePlugin):
         if self.__open_timer.expiration_time != register.value:
             self.__open_timer.expiration_time = register.value
 
-
     def __door_window_blind_output_cb(self, register):
 
         # Check data type.
@@ -315,11 +317,12 @@ class SecurityZone(BasePlugin):
         # Check data type.
         if not register.data_type == "int":
             GlobalErrorHandler.log_bad_register_value(self.__logger, register)
-            return  
+            return
 
-        value = 0
         if register.value == 0 or register.value == 1:
-            value = register.value
+            self.__set_door_window_blind(register.value)
+
+    def __set_door_window_blind(self, value=0):
 
         if self._controller.is_valid_gpio(self.__door_window_blind_output):
             self._controller.digital_write(self.__door_window_blind_output, value)
@@ -440,25 +443,38 @@ class SecurityZone(BasePlugin):
         # Check if the flag is raise.
         if self.__open_door_flag == 1:
             self.__set_lock_mechanism(1)
+            self.__set_door_window_blind(1)
             self.__open_timer.update_last_time()
             self.__open_door_flag = 0
             self.__free_to_lock = 1
 
+        # Lock the door after when it is closed.
+        door_closed = self._registers.by_name("ac.door_closed_1.input")
+        if door_closed is not None:
+            state = self._controller.digital_read(door_closed.value)
+            if state == True:
+                if self.__free_to_lock == 1:
+                    self.__set_lock_mechanism(0)
+                    self.__set_door_window_blind(0)
+                    self.__free_to_lock = 0
+
         # Check is it time to close the latch.
         if self.__open_door_flag == 0:
-            self.__open_timer.update()
 
+            self.__open_timer.update()
             if self.__open_timer.expired:
                 self.__open_timer.clear()
 
                 if self.__free_to_lock == 1:
                     self.__set_lock_mechanism(0)
+                    self.__set_door_window_blind(0)
                     self.__free_to_lock = 0
 
     def shutdown(self):
         """Shutdown"""
 
         self.__set_lock_mechanism(0)
+        self.__set_door_window_blind(0)
 
         # Destroy the cardreader.
         if self.__entry_reader is not None:
