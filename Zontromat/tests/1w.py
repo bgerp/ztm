@@ -79,8 +79,8 @@ def main():
     global __neuron
 
     parser = argparse.ArgumentParser()
-    parser.add_argument("--ip", type=str, default="176.33.1.249", help="IP Address")
-    parser.add_argument("--port", type=int, default=8080, help="Port")
+    parser.add_argument("--host", type=str, default="http://127.0.0.1", help="IP Address")
+    parser.add_argument("--port", type=int, default=80, help="Port")
     parser.add_argument("--dev", type=str, default="temp", help="Device")
     parser.add_argument("--circuit", type=str, default="28FFC4EE00170349", help="Circuit")
 
