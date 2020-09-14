@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf8 -*-
+
 """
 
 Zontromat - Zonal Electronic Automation
@@ -20,8 +21,6 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
-
-from utils.logger import get_logger
 
 #region File Attributes
 
@@ -53,56 +52,3 @@ __status__ = "Debug"
 """File status."""
 
 #endregion
-
-class ACR122():
-    """ACR122 NFC Card Reader"""
-
-    def __init__(self, config):
-        """Constructor
-
-        Args:
-            config (mixed): Device configuration.
-            neuron (Neuron): Neuron instance.
-        """
-
-        # from devices.device_factory import DeviceFactory
-
-        self.__logger = get_logger(__name__)
-
-        self.__config = config
-
-        # params = self.__config["params"]
-
-        # if "speed_limit" in params:
-        #     self.speed_limit = params["speed_limit"]
-
-        # if "analog_output" in params:
-        #     analog_output = params["analog_output"]
-        #     self.__analog_output = DeviceFactory.get_device(analog_output)
-        #     self.__analog_output.init()
-
-
-    def init(self):
-        """Initialize the device."""
-
-        pass
-
-    def update(self):
-        """Update the device."""
-
-        pass
-
-    def shutdown(self):
-        """Shutdown the device."""
-
-        pass
-
-    def get_state(self):
-        """Return device state."""
-
-        return None
-
-    def set_state(self, state):
-        """Set device state."""
-
-        pass
