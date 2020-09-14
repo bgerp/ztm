@@ -139,6 +139,7 @@ class Neuron(BaseController):
         str
             Host URL of the servie.
         """
+
         return self.__host
 
     @host.setter
@@ -154,7 +155,7 @@ class Neuron(BaseController):
         host_no_slash = host
 
         if host_no_slash.endswith("/"):
-            host_no_slash = host_no_slash.replace(".*/", "")
+            host_no_slash = host_no_slash[:-1]
 
         self.__host = host_no_slash
 
