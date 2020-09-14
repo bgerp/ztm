@@ -62,32 +62,32 @@ __L503 = \
     "LED2": {"dev": "led", "major_index": 1, "minor_index": 3},\
     "LED3": {"dev": "led", "major_index": 1, "minor_index": 4},\
 
-    "DI0": {"dev": "di", "major_index": 1, "minor_index": 1},\
-    "DI1": {"dev": "di", "major_index": 1, "minor_index": 2},\
-    "DI2": {"dev": "di", "major_index": 1, "minor_index": 3},\
-    "DI3": {"dev": "di", "major_index": 1, "minor_index": 4},\
+    "DI0": {"dev": "input", "major_index": 1, "minor_index": 1},\
+    "DI1": {"dev": "input", "major_index": 1, "minor_index": 2},\
+    "DI2": {"dev": "input", "major_index": 1, "minor_index": 3},\
+    "DI3": {"dev": "input", "major_index": 1, "minor_index": 4},\
 
-    "DI4": {"dev": "di", "major_index": 2, "minor_index": 1},\
-    "DI5": {"dev": "di", "major_index": 2, "minor_index": 2},\
-    "DI6": {"dev": "di", "major_index": 2, "minor_index": 3},\
-    "DI7": {"dev": "di", "major_index": 2, "minor_index": 4},\
-    "DI8": {"dev": "di", "major_index": 2, "minor_index": 5},\
-    "DI9": {"dev": "di", "major_index": 2, "minor_index": 6},\
+    "DI4": {"dev": "input", "major_index": 2, "minor_index": 1},\
+    "DI5": {"dev": "input", "major_index": 2, "minor_index": 2},\
+    "DI6": {"dev": "input", "major_index": 2, "minor_index": 3},\
+    "DI7": {"dev": "input", "major_index": 2, "minor_index": 4},\
+    "DI8": {"dev": "input", "major_index": 2, "minor_index": 5},\
+    "DI9": {"dev": "input", "major_index": 2, "minor_index": 6},\
 
-    "DI10": {"dev": "di", "major_index": 3, "minor_index": 1},\
-    "DI11": {"dev": "di", "major_index": 3, "minor_index": 2},\
-    "DI12": {"dev": "di", "major_index": 3, "minor_index": 3},\
-    "DI13": {"dev": "di", "major_index": 3, "minor_index": 4},\
-    "DI14": {"dev": "di", "major_index": 3, "minor_index": 5},\
-    "DI15": {"dev": "di", "major_index": 3, "minor_index": 6},\
-    "DI16": {"dev": "di", "major_index": 3, "minor_index": 7},\
-    "DI17": {"dev": "di", "major_index": 3, "minor_index": 8},\
-    "DI18": {"dev": "di", "major_index": 3, "minor_index": 9},\
-    "DI19": {"dev": "di", "major_index": 3, "minor_index": 10},\
-    "DI20": {"dev": "di", "major_index": 3, "minor_index": 11},\
-    "DI21": {"dev": "di", "major_index": 3, "minor_index": 12},\
-    "DI22": {"dev": "di", "major_index": 3, "minor_index": 13},\
-    "DI23": {"dev": "di", "major_index": 3, "minor_index": 14},\
+    "DI10": {"dev": "input", "major_index": 3, "minor_index": 1},\
+    "DI11": {"dev": "input", "major_index": 3, "minor_index": 2},\
+    "DI12": {"dev": "input", "major_index": 3, "minor_index": 3},\
+    "DI13": {"dev": "input", "major_index": 3, "minor_index": 4},\
+    "DI14": {"dev": "input", "major_index": 3, "minor_index": 5},\
+    "DI15": {"dev": "input", "major_index": 3, "minor_index": 6},\
+    "DI16": {"dev": "input", "major_index": 3, "minor_index": 7},\
+    "DI17": {"dev": "input", "major_index": 3, "minor_index": 8},\
+    "DI18": {"dev": "input", "major_index": 3, "minor_index": 9},\
+    "DI19": {"dev": "input", "major_index": 3, "minor_index": 10},\
+    "DI20": {"dev": "input", "major_index": 3, "minor_index": 11},\
+    "DI21": {"dev": "input", "major_index": 3, "minor_index": 12},\
+    "DI22": {"dev": "input", "major_index": 3, "minor_index": 13},\
+    "DI23": {"dev": "input", "major_index": 3, "minor_index": 14},\
 
     "DO0": {"dev": "do", "major_index": 1, "minor_index": 1},\
     "DO1": {"dev": "do", "major_index": 1, "minor_index": 2},\
@@ -135,17 +135,17 @@ __M503 = \
     "LED2": {"dev": "led", "major_index": 1, "minor_index": 3},\
     "LED3": {"dev": "led", "major_index": 1, "minor_index": 4},\
 
-    "DI0": {"dev": "di", "major_index": 1, "minor_index": 1},\
-    "DI1": {"dev": "di", "major_index": 1, "minor_index": 2},\
-    "DI2": {"dev": "di", "major_index": 1, "minor_index": 3},\
-    "DI3": {"dev": "di", "major_index": 1, "minor_index": 4},\
+    "DI0": {"dev": "input", "major_index": 1, "minor_index": 1},\
+    "DI1": {"dev": "input", "major_index": 1, "minor_index": 2},\
+    "DI2": {"dev": "input", "major_index": 1, "minor_index": 3},\
+    "DI3": {"dev": "input", "major_index": 1, "minor_index": 4},\
 
-    "DI4": {"dev": "di", "major_index": 2, "minor_index": 1},\
-    "DI5": {"dev": "di", "major_index": 2, "minor_index": 2},\
-    "DI6": {"dev": "di", "major_index": 2, "minor_index": 3},\
-    "DI7": {"dev": "di", "major_index": 2, "minor_index": 4},\
-    "DI8": {"dev": "di", "major_index": 2, "minor_index": 5},\
-    "DI9": {"dev": "di", "major_index": 2, "minor_index": 6},\
+    "DI4": {"dev": "input", "major_index": 2, "minor_index": 1},\
+    "DI5": {"dev": "input", "major_index": 2, "minor_index": 2},\
+    "DI6": {"dev": "input", "major_index": 2, "minor_index": 3},\
+    "DI7": {"dev": "input", "major_index": 2, "minor_index": 4},\
+    "DI8": {"dev": "input", "major_index": 2, "minor_index": 5},\
+    "DI9": {"dev": "input", "major_index": 2, "minor_index": 6},\
 
     "DO0": {"dev": "do", "major_index": 1, "minor_index": 1},\
     "DO1": {"dev": "do", "major_index": 1, "minor_index": 2},\
@@ -180,15 +180,15 @@ __M523 = \
     "LED2": {"dev": "led", "major_index": 1, "minor_index": 3},\
     "LED3": {"dev": "led", "major_index": 1, "minor_index": 4},\
 
-    "DI0": {"dev": "di", "major_index": 1, "minor_index": 1},\
-    "DI1": {"dev": "di", "major_index": 1, "minor_index": 2},\
-    "DI2": {"dev": "di", "major_index": 1, "minor_index": 3},\
-    "DI3": {"dev": "di", "major_index": 1, "minor_index": 4},\
+    "DI0": {"dev": "input", "major_index": 1, "minor_index": 1},\
+    "DI1": {"dev": "input", "major_index": 1, "minor_index": 2},\
+    "DI2": {"dev": "input", "major_index": 1, "minor_index": 3},\
+    "DI3": {"dev": "input", "major_index": 1, "minor_index": 4},\
 
-    "DI4": {"dev": "di", "major_index": 2, "minor_index": 1},\
-    "DI5": {"dev": "di", "major_index": 2, "minor_index": 2},\
-    "DI6": {"dev": "di", "major_index": 2, "minor_index": 3},\
-    "DI7": {"dev": "di", "major_index": 2, "minor_index": 4},\
+    "DI4": {"dev": "input", "major_index": 2, "minor_index": 1},\
+    "DI5": {"dev": "input", "major_index": 2, "minor_index": 2},\
+    "DI6": {"dev": "input", "major_index": 2, "minor_index": 3},\
+    "DI7": {"dev": "input", "major_index": 2, "minor_index": 4},\
 
     "DO0": {"dev": "do", "major_index": 1, "minor_index": 1},\
     "DO1": {"dev": "do", "major_index": 1, "minor_index": 2},\
@@ -223,10 +223,10 @@ __S103 = \
     "LED2": {"dev": "led", "major_index": 1, "minor_index": 3},\
     "LED3": {"dev": "led", "major_index": 1, "minor_index": 4},\
 
-    "DI0": {"dev": "di", "major_index": 1, "minor_index": 1},\
-    "DI1": {"dev": "di", "major_index": 1, "minor_index": 2},\
-    "DI2": {"dev": "di", "major_index": 1, "minor_index": 3},\
-    "DI3": {"dev": "di", "major_index": 1, "minor_index": 4},\
+    "DI0": {"dev": "input", "major_index": 1, "minor_index": 1},\
+    "DI1": {"dev": "input", "major_index": 1, "minor_index": 2},\
+    "DI2": {"dev": "input", "major_index": 1, "minor_index": 3},\
+    "DI3": {"dev": "input", "major_index": 1, "minor_index": 4},\
 
     "DO0": {"dev": "do", "major_index": 1, "minor_index": 1},\
     "DO1": {"dev": "do", "major_index": 1, "minor_index": 2},\
