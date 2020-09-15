@@ -441,7 +441,7 @@ class Registers(list):
 
         import csv
 
-        with open("registers.csv", "w", newline="") as csv_file:
+        with open(file_path, "w", newline="") as csv_file:
 
             fieldnames = ["name", "type", "range", "plugin", "scope", "default", "description"]
             writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
