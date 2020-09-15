@@ -186,7 +186,12 @@ class Zone():
         self.__logger = get_logger(__name__)
 
         # Create registers.
-        self.__registers = Registers.from_CSV("registers.csv")
+        if os.name == "posix":
+            file_path = os.path.join("..", "registers.csv")
+            self.__registers = Registers.from_CSV(file_path)
+
+        elif os.name == "nt":
+            self.__registers = Registers.from_CSV("registers.csv")
 
         # Set zone state machine.
         self.__zone_state = StateMachine(ZoneState.Idle)
@@ -209,15 +214,11 @@ class Zone():
                 model = plc_info["model"]
 
         # Create Neuron.
-        config = \
-        {
-            "vendor": vendor,
-            "model": model,
-            "serial": serial,
-            "host": self.__app_settings.get_controller["host"],
-            "timeout": self.__app_settings.get_controller["timeout"]
-        }
-        self.__controller = ControllerFactory.create(config)
+        self.__controller = ControllerFactory.create(vendor=vendor,\
+                                                    model=model,\
+                                                    serial=serial,\
+                                                    host=self.__app_settings.get_controller["host"],\
+                                                    timeout=self.__app_settings.get_controller["timeout"])
 
         # Set the plugin manager.
         self.__plugin_manager = PluginsManager(self.__registers, self.__controller)
@@ -308,18 +309,17 @@ class Zone():
 
         # one_wire = self.__controller.get_1w_devices()
         # modbus = self.__controller.get_modbus_devices()
-        credentials = \
-        { \
-            "serial_number": self.__controller.serial_number, \
-            "model": self.__controller.model, \
-            "version": self.__controller.version, \
-            "config_time": self.__app_settings.get_erp_service["config_time"], \
-            "bgerp_id": self.__app_settings.get_erp_service["erp_id"], \
-            # "one_wire": one_wire, \
-            # "modbus": modbus, \
-        }
+        # credentials = {
+            # "one_wire=one_wire, \
+            # "modbus=modbus, \
+        # }
 
-        login_state = self.__bgerp.login(credentials)
+        login_state = self.__bgerp.login(\
+            serial_number=self.__controller.serial_number,\
+            model=self.__controller.model,\
+            version=self.__controller.version,\
+            config_time=self.__app_settings.get_erp_service["config_time"],\
+            bgerp_id=self.__app_settings.get_erp_service["erp_id"])
 
         if login_state:
 

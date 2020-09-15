@@ -61,7 +61,7 @@ class ControllerFactory():
 #region Public Methods
 
     @staticmethod
-    def create(config):
+    def create(**config):
         """Create controller."""
 
         controller = None

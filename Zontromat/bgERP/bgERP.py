@@ -199,7 +199,7 @@ class bgERP():
 
 #region Public Methods
 
-    def login(self, credentials):
+    def login(self, **credentials):
         """Log in to the service.
 
         Parameters
