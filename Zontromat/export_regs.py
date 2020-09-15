@@ -1268,6 +1268,34 @@ def __add_registers():
     register.value = False
     __registers.append(register)
 
+
+    # Enable info messages.
+    register = Register("sys.col.info_message.enable")
+    register.scope = Scope.System
+    register.plugin_name = "System"
+    register.description = "Enable info messages"
+    register.range = "true|false"
+    register.value = True
+    __registers.append(register)
+
+    # Enable warning messages.
+    register = Register("sys.col.warning_message.enable")
+    register.scope = Scope.System
+    register.plugin_name = "System"
+    register.description = "Enable warning messages"
+    register.range = "true|false"
+    register.value = True
+    __registers.append(register)
+
+    # Enable error messages.
+    register = Register("sys.col.error_message.enable")
+    register.scope = Scope.System
+    register.plugin_name = "System"
+    register.description = "Enable error messages"
+    register.range = "true|false"
+    register.value = True
+    __registers.append(register)
+
 #endregion
 
 def main():

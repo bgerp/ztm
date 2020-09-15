@@ -135,3 +135,6 @@ sys.col.warning_message,json,,System,device,"""{}""",Collision warning message
 sys.col.error_message,json,,System,device,"""{}""",Collision error message
 sys.col.clear_errors,int,0|1,System,system,0,Clear messages
 sys.enabled,bool,true|false,System,system,false,Plugin enabled
+sys.col.info_message.enable,bool,true|false,System,system,true,Enable info messages
+sys.col.warning_message.enable,bool,true|false,System,system,true,Enable warning messages
+sys.col.error_message.enable,bool,true|false,System,system,true,Enable error messages
