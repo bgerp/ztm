@@ -90,6 +90,15 @@ class Sys(BasePlugin):
     __rules = None
     """Rules"""
 
+    __enable_info_msg = True
+    """Enable info messages."""
+
+    __enable_wrn_msg = True
+    """Enable warning messages."""
+
+    __enable_err_msg = True
+    """Enable error messages."""
+
 #endregion
 
 #region Destructor
@@ -111,7 +120,7 @@ class Sys(BasePlugin):
 
         # Check data type.
         if not register.data_type == "int":
-            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
             return
 
         if self.__blink_timer.expiration_time != register.value:
@@ -121,7 +130,7 @@ class Sys(BasePlugin):
 
         # Check data type.
         if not register.data_type == "str":
-            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
             return
 
         if self.__led_out != register.value:
@@ -167,7 +176,7 @@ class Sys(BasePlugin):
             self.__logger.debug("Debug")
             self.__logger.debug(intersections)
 
-        if level == MonitoringLevel.Info:
+        if level == MonitoringLevel.Info and self.__enable_info_msg:
             # self.__logger.info("Info")
             # self.__logger.info(intersections)
 
@@ -175,7 +184,7 @@ class Sys(BasePlugin):
             if info_message is not None:
                 info_message.value = intersections
 
-        if level == MonitoringLevel.Warning:
+        if level == MonitoringLevel.Warning and self.__enable_wrn_msg:
             # self.__logger.warning("Warning")
             # self.__logger.warning(intersections)
 
@@ -183,7 +192,7 @@ class Sys(BasePlugin):
             if warning_message is not None:
                 warning_message.value = intersections
 
-        if level == MonitoringLevel.Error:
+        if level == MonitoringLevel.Error and self.__enable_err_msg:
             # self.__logger.error("Error")
             # self.__logger.error(intersections)
 
@@ -212,6 +221,33 @@ class Sys(BasePlugin):
             error_message = self._registers.by_name(self._key + ".col.error_message")
             if error_message is not None:
                 error_message.value = {}
+
+    def __enable_info_msg_cb(self, register):
+
+        # Check data type.
+        if not register.data_type == "bool":
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        self.__enable_info_msg = register.value
+
+    def __enable_wrn_msg_cb(self, register):
+
+        # Check data type.
+        if not register.data_type == "bool":
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        self.__enable_wrn_msg = register.value
+
+    def __enable_err_msg_cb(self, register):
+
+        # Check data type.
+        if not register.data_type == "bool":
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        self.__enable_err_msg = register.value
 
 #endregion
 
@@ -248,6 +284,21 @@ class Sys(BasePlugin):
         if clear_errors is not None:
             clear_errors.update_handler = self.__clear_errors_cb
             clear_errors.value = 1
+
+        # Enable info messages.
+        enable_info_msg = self._registers.by_name(self._key + ".col.info_message.enable")
+        if enable_info_msg is not None:
+            enable_info_msg.update_handler = self.__enable_info_msg_cb
+
+        # Enable warning messages.
+        enable_wrn_msg = self._registers.by_name(self._key + ".col.warning_message.enable")
+        if enable_wrn_msg is not None:
+            enable_wrn_msg.update_handler = self.__enable_wrn_msg_cb
+
+        # Enable error messages.
+        enable_err_msg = self._registers.by_name(self._key + ".col.error_message.enable")
+        if enable_err_msg is not None:
+            enable_err_msg.update_handler = self.__enable_err_msg_cb
 
     def update(self):
         """Runtime of the plugin."""
