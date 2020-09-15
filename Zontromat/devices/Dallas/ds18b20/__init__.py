@@ -20,10 +20,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-
 """
-
-from devices.base_device import BaseDevice
 
 #region File Attributes
 
@@ -53,50 +50,5 @@ __email__ = "or.dimitrov@polygonteam.com"
 
 __status__ = "Debug"
 """File status."""
-
-#endregion
-
-class DS18B20(BaseDevice):
-    """Digital thermometer by Dalas."""
-
-#region Public Methods
-
-    def value(self):
-        """Value of the thermometer."""
-
-        return self._controller.read_temperature(self._config["dev"], self._config["circuit"])
-
-#endregion
-
-#region Public Static Methods
-
-    @staticmethod
-    def create(name, key, register, controller):
-        """Value of the thermometer."""
-
-        instance = None
-
-        params = register.split("/")
-
-        circuit = params[2]
-        dev = params[0]
-        typ = params[1]
-
-        if circuit is not None and\
-            dev is not None and\
-            typ is not None:
-
-            config = \
-            {\
-                "name": name,
-                "dev": dev,
-                "circuit": circuit,
-                "typ": typ,
-                "controller": controller
-            }
-
-            instance = DS18B20(config)
-
-        return instance
 
 #endregion
