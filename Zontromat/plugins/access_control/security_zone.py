@@ -107,7 +107,6 @@ class SecurityZone(BasePlugin):
     """Name of the zone."""
 
     __door_window_blind_output = verbal_const.OFF
-    """Door windows blind controll."""
 
 #endregion
 
@@ -116,13 +115,9 @@ class SecurityZone(BasePlugin):
     def __init__(self, registers, controller, identifier):
         """Constructor"""
 
-        config = {
-            "key": self._key,
-            "registers": registers,
-            "controller": controller
-            }
-
-        super().__init__(config)
+        super().__init__(key=self._key,\
+                        registers=registers,\
+                        controller=controller)
 
         self.__identifier = identifier
 
@@ -180,28 +175,24 @@ class SecurityZone(BasePlugin):
 
             card_reader_vendor = params[0]
             card_reader_model = params[1]
-            card_reader_serial_number = params[2]
+            serial_number = params[2]
 
-            card_reader_port_name = self._registers.by_name("{}.entry_reader_{}.port.name"\
+            port_name = self._registers.by_name("{}.entry_reader_{}.port.name"\
                 .format(key, self.__identifier)).value
 
-            card_reader_port_baudrate = self._registers.by_name("{}.entry_reader_{}.port.baudrate"\
+            port_baudrate = self._registers.by_name("{}.entry_reader_{}.port.baudrate"\
                 .format(key, self.__identifier)).value
 
             # Filter by vendor and model.
             if card_reader_vendor == "TERACOM":
                 if card_reader_model == "act230":
 
-                    # Get card reader parameters.
-                    reader_config = {
-                        "port_name": card_reader_port_name,
-                        "baudrate": card_reader_port_baudrate,
-                        "serial_number": card_reader_serial_number,
-                        "controller": self._controller,
-                    }
-
                     # Create card reader.
-                    self.__entry_reader = ACT230(reader_config)
+                    self.__entry_reader = ACT230(port_name=port_name,\
+                                                baudrate=port_baudrate,\
+                                                serial_number=serial_number,\
+                                                controller=self._controller)
+
                     if self.__entry_reader.reader_state is ReaderState.NONE:
                         self.__entry_reader.cb_read_card(self.__reader_read)
                         self.__entry_reader.start()
@@ -228,25 +219,21 @@ class SecurityZone(BasePlugin):
 
             card_reader_vendor = params[0]
             card_reader_model = params[1]
-            card_reader_serial_number = params[2]
+            serial_number = params[2]
 
-            card_reader_port_name = self._registers.by_name("{}.exit_reader_{}.port.name".format(key, self.__identifier)).value
-            card_reader_port_baudrate = self._registers.by_name("{}.exit_reader_{}.port.baudrate".format(key, self.__identifier)).value
+            port_name = self._registers.by_name("{}.exit_reader_{}.port.name".format(key, self.__identifier)).value
+            port_baudrate = self._registers.by_name("{}.exit_reader_{}.port.baudrate".format(key, self.__identifier)).value
 
             # Filter by vendor and model.
             if card_reader_vendor == "TERACOM":
                 if card_reader_model == "act230":
 
-                    # Get card reader parameters.
-                    reader_config = {
-                        "port_name": card_reader_port_name,
-                        "baudrate": card_reader_port_baudrate,
-                        "serial_number": card_reader_serial_number,
-                        "controller": self._controller,
-                    }
-
                     # Create card reader.
-                    self.__exit_reader = ACT230(reader_config)
+                    self.__exit_reader = ACT230(port_name=port_name,\
+                                                baudrate=port_baudrate,\
+                                                serial_number=serial_number,\
+                                                controller=self._controller)
+
                     if self.__exit_reader.reader_state is ReaderState.NONE:
                         self.__exit_reader.cb_read_card(self.__reader_read)
                         self.__exit_reader.start()
