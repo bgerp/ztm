@@ -26,7 +26,7 @@ from utils.logger import get_logger
 
 from plugins.base_plugin import BasePlugin
 
-from devices.SEDtronic.u1wtvs import U1WTVS
+from devices.SEDtronic.u1wtvs.u1wtvs import U1WTVS
 
 from data import verbal_const
 

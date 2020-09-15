@@ -29,10 +29,10 @@ from utils.logger import get_logger
 
 from plugins.base_plugin import BasePlugin
 
-from devices.no_vendor.flowmeter import Flowmeter
+from devices.no_vendors.no_vendor_1.flowmeter import Flowmeter
 from devices.tests.leak_test.leak_test import LeakTest
-from devices.Eastron.sdm120 import SDM120
-from devices.Eastron.sdm630 import SDM630
+from devices.Eastron.sdm120.sdm120 import SDM120
+from devices.Eastron.sdm630.sdm630 import SDM630
 
 from data import verbal_const
 
