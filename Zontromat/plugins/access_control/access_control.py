@@ -103,7 +103,7 @@ class AccessControl(BasePlugin):
 
         # Check data type.
         if not register.data_type == "json":
-            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
             return
 
         self.__security_zone_1.add_allowed_attendees(register.value)
@@ -113,7 +113,7 @@ class AccessControl(BasePlugin):
 
         # Check data type.
         if not register.data_type == "int":
-            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
             return
 
         if self.__is_empty_timer.expiration_time != register.value:
