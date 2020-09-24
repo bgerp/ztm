@@ -224,28 +224,30 @@ class Rules:
         if registers is None:
             return
 
-        # Get keys.
-        registers_keys = registers.keys()
-
         # Create array of registers unique contents.
         registers_values = []
 
         # Go trough all keys.
-        for register_key in registers_keys:
-
-            # Get register value.
-            register_value = registers[register_key]
+        for register in registers:
 
             # Check for existence.
-            if not register_value in registers_values:
+            if not register.value in registers_values:
 
-                # If it is list, we do not care.
-                if isinstance(register_value, list):
-                    continue
+                # # If it is list, we do not care.
+                # if register.data_type == "list":
+                #     continue
+
+                # # If it is list, we do not care.
+                # if register.data_type == "dict":
+                #     continue
+
+                # # If it is list, we do not care.
+                # if register.data_type == "json":
+                #     continue
 
                 # If it is string, and it is part of allowed registers, append.
-                if isinstance(register_value, str):
-                    formated_reg_val = register_value.replace("!", "")
+                if register.data_type == "str":
+                    formated_reg_val = register.value.replace("!", "")
 
                     # If it is not exiting then add it.
                     if self.exists(formated_reg_val):
@@ -262,21 +264,26 @@ class Rules:
         # Go thought all registers fo find duplicates.
         for register in registers:
 
-            reg_value = registers[register]
-            reg_type = type(reg_value)
+            reg_value = register.value
+
+            # # We do not handle the list types.
+            # if register.data_type == "list":
+            #     continue
+
+            # elif register.data_type == "dict":
+            #     continue
+
+            # elif register.data_type == "json":
+            #     continue
 
             # If type is string, remove !, it is used as inversion.
-            if reg_type == type(""):
+            if register.data_type == "str":
                 reg_value = reg_value.replace("!", "")
 
-            # We do not handle the list types.
-            if reg_type == type([]):
-                continue
-
-            # If the value is part of the intersections, then append it.
-            if reg_value in intersections:
-                reg = {register: registers[register]}
-                intersections[reg_value].append(reg)
+                # If the value is part of the intersections, then append it.
+                if reg_value in intersections:
+                    reg = {register: register.value}
+                    intersections[reg_value].append(reg)
 
         for intersection in intersections:
 

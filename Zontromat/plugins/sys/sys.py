@@ -320,7 +320,7 @@ class Sys(BasePlugin):
         if self.__collission_timer.expired:
             self.__collission_timer.clear()
 
-            self.__rules.check(self._registers.to_dict())
+            self.__rules.check(self._registers)
 
     def shutdown(self):
         """Shutting down the blinds."""
