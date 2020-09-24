@@ -22,15 +22,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 
-from data import verbal_const
-
-from devices.TERACOM.act230.act230 import ACT230
-from devices.TERACOM.act230.act230 import ReaderState
+from plugins.base_plugin import BasePlugin
 
 from utils.logger import get_logger
 from utils.timer import Timer
 
-from plugins.base_plugin import BasePlugin
+from data import verbal_const
+
+from devices.utils.card_readers.card_reader_factory import CardReaderFactory
+from devices.utils.card_readers.card_reader_state import CardReaderState
 
 from services.global_error_handler.global_error_handler import GlobalErrorHandler
 
@@ -103,23 +103,19 @@ class SecurityZone(BasePlugin):
     __reader_read_cb = None
     """Reader read callback"""
 
-    __name = ""
-    """Name of the zone."""
-
     __door_window_blind_output = verbal_const.OFF
 
 #endregion
 
 #region Constructor / Destructor
 
-    def __init__(self, registers, controller, identifier):
+    def __init__(self, **kwargs):
         """Constructor"""
 
-        super().__init__(key=self._key,\
-                        registers=registers,\
-                        controller=controller)
+        super().__init__(kwargs)
 
-        self.__identifier = identifier
+        if "identifier" in kwargs:
+            self.__identifier = kwargs["identifier"]
 
     def __del__(self):
         """Destructor"""
@@ -150,7 +146,7 @@ class SecurityZone(BasePlugin):
 
         return allowed
 
-    def __reader_read(self, card_id, reader_id):
+    def __reader_read(self, card_id, serial_number):
 
         # Set flag to open the door.
         if self.__is_allowed(card_id):
@@ -158,7 +154,7 @@ class SecurityZone(BasePlugin):
                 self.__open_door_flag = 1
 
         if self.__reader_read_cb is not None:
-            self.__reader_read_cb(card_id, reader_id)
+            self.__reader_read_cb(card_id, serial_number)
 
     def __entry_reader_cb(self, register):
 
@@ -173,34 +169,40 @@ class SecurityZone(BasePlugin):
 
             params = register.value.split("/")
 
-            card_reader_vendor = params[0]
-            card_reader_model = params[1]
+            vendor = params[0]
+            model = params[1]
             serial_number = params[2]
 
-            port_name = self._registers.by_name("{}.entry_reader_{}.port.name"\
+            register = self._registers.by_name("{}.entry_reader_{}.port.name"\
+                .format(key, self.__identifier))
+
+            if "ac.entry_reader_1.port.name" == register.name:
+                register.value = "usb:072f:2200"
+
+            port_name = register.value
+
+            baudrate = self._registers.by_name("{}.entry_reader_{}.port.baudrate"\
                 .format(key, self.__identifier)).value
 
-            port_baudrate = self._registers.by_name("{}.entry_reader_{}.port.baudrate"\
-                .format(key, self.__identifier)).value
 
-            # Filter by vendor and model.
-            if card_reader_vendor == "TERACOM":
-                if card_reader_model == "act230":
+            # Create the card reader.
+            self.__entry_reader = CardReaderFactory.create(\
+                vendor=vendor,\
+                model=model,\
+                serial_number=serial_number,\
+                port_name=port_name,\
+                baudrate=baudrate)
 
-                    # Create card reader.
-                    self.__entry_reader = ACT230(port_name=port_name,\
-                                                baudrate=port_baudrate,\
-                                                serial_number=serial_number,\
-                                                controller=self._controller)
-
-                    if self.__entry_reader.reader_state is ReaderState.NONE:
-                        self.__entry_reader.cb_read_card(self.__reader_read)
-                        self.__entry_reader.start()
+            # Check if it is working.
+            if self.__entry_reader is not None:
+                if self.__entry_reader.reader_state == CardReaderState.NONE:
+                    self.__entry_reader.cb_read_card(self.__reader_read)
+                    self.__entry_reader.init()
 
         elif register.value == verbal_const.OFF and self.__entry_reader is not None:
-            self.__entry_reader.stop()
+            self.__entry_reader.shutdown()
 
-            while self.__entry_reader.reader_state == ReaderState.RUN:
+            while self.__entry_reader.reader_state == CardReaderState.RUN:
                 pass
 
             del self.__entry_reader
@@ -213,35 +215,39 @@ class SecurityZone(BasePlugin):
             return
 
         if register.value != "" and self.__exit_reader is None:
+
             key = register.base_name
 
             params = register.value.split("/")
 
-            card_reader_vendor = params[0]
-            card_reader_model = params[1]
+            vendor = params[0]
+            model = params[1]
             serial_number = params[2]
 
-            port_name = self._registers.by_name("{}.exit_reader_{}.port.name".format(key, self.__identifier)).value
-            port_baudrate = self._registers.by_name("{}.exit_reader_{}.port.baudrate".format(key, self.__identifier)).value
+            port_name = self._registers.by_name("{}.exit_reader_{}.port.name"\
+                .format(key, self.__identifier)).value
 
-            # Filter by vendor and model.
-            if card_reader_vendor == "TERACOM":
-                if card_reader_model == "act230":
+            baudrate = self._registers.by_name("{}.exit_reader_{}.port.baudrate"\
+                .format(key, self.__identifier)).value
 
-                    # Create card reader.
-                    self.__exit_reader = ACT230(port_name=port_name,\
-                                                baudrate=port_baudrate,\
-                                                serial_number=serial_number,\
-                                                controller=self._controller)
+            # Create the card reader.
+            self.__exit_reader = CardReaderFactory.create(\
+                vendor=vendor,\
+                model=model,\
+                serial_number=serial_number,\
+                port_name=port_name,\
+                baudrate=baudrate)
 
-                    if self.__exit_reader.reader_state is ReaderState.NONE:
-                        self.__exit_reader.cb_read_card(self.__reader_read)
-                        self.__exit_reader.start()
+            # Check if it is working.
+            if self.__exit_reader is not None:
+                if self.__exit_reader.reader_state == CardReaderState.NONE:
+                    self.__exit_reader.cb_read_card(self.__reader_read)
+                    self.__exit_reader.init()
 
         elif register.value == verbal_const.OFF and self.__exit_reader is not None:
-            self.__exit_reader.stop()
+            self.__exit_reader.shutdown()
 
-            while self.__exit_reader.reader_state == ReaderState.RUN:
+            while self.__exit_reader.reader_state == CardReaderState.RUN:
                 pass
 
             del self.__exit_reader
@@ -321,48 +327,45 @@ class SecurityZone(BasePlugin):
     def init(self):
         """Init"""
 
-        self.__key = "ac"
-        self.__name = "Security Zone {}".format(self.__identifier)
-
         # Create logger.
         self.__logger = get_logger(__name__)
-        self.__logger.info("Starting up the {}".format(self.__name))
+        self.__logger.info("Starting up the {}".format(self.name))
 
         # Open timer 1.
         self.__open_timer = Timer(10)
 
         # Entry reader.
-        entry_reader = self._registers.by_name("{}.entry_reader_{}.enabled".format(self.__key, self.__identifier))
+        entry_reader = self._registers.by_name("{}.entry_reader_{}.enabled".format(self._key, self.__identifier))
         if entry_reader is not None:
             entry_reader.update_handler = self.__entry_reader_cb
 
         # Exit reader.
-        exit_reader = self._registers.by_name("{}.exit_reader_{}.enabled".format(self.__key, self.__identifier))
+        exit_reader = self._registers.by_name("{}.exit_reader_{}.enabled".format(self._key, self.__identifier))
         if exit_reader is not None:
             exit_reader.update_handler = self.__exit_reader_cb
 
         # Create exit button.
-        exit_button_input = self._registers.by_name("{}.exit_button_{}.input".format(self.__key, self.__identifier))
+        exit_button_input = self._registers.by_name("{}.exit_button_{}.input".format(self._key, self.__identifier))
         if exit_button_input is not None:
             exit_button_input.update_handler = self.__exit_btn_input_cb
 
         # Create locking mechanism.
-        lock_mechanism_output = self._registers.by_name("{}.lock_mechanism_{}.output".format(self.__key, self.__identifier))
+        lock_mechanism_output = self._registers.by_name("{}.lock_mechanism_{}.output".format(self._key, self.__identifier))
         if lock_mechanism_output is not None:
             lock_mechanism_output.update_handler = self.__lock_mechanism_output_cb
 
         # Get time to open the latch.
-        time_to_open = self._registers.by_name("{}.time_to_open_{}".format(self.__key, self.__identifier))
+        time_to_open = self._registers.by_name("{}.time_to_open_{}".format(self._key, self.__identifier))
         if time_to_open is not None:
             time_to_open.update_handler = self.__time_to_open_cb
 
         # Door window blind.
-        door_window_blind_output = self._registers.by_name("{}.door_window_blind_{}.output".format(self.__key, self.__identifier))
+        door_window_blind_output = self._registers.by_name("{}.door_window_blind_{}.output".format(self._key, self.__identifier))
         if door_window_blind_output is not None:
             door_window_blind_output.update_handler = self.__door_window_blind_output_cb
 
         # Door window blind.
-        door_window_blind_value = self._registers.by_name("{}.door_window_blind_{}.value".format(self.__key, self.__identifier))
+        door_window_blind_value = self._registers.by_name("{}.door_window_blind_{}.value".format(self._key, self.__identifier))
         if door_window_blind_value is not None:
             door_window_blind_value.update_handler = self.__door_window_blind_value_cb
 
@@ -375,25 +378,25 @@ class SecurityZone(BasePlugin):
             # Update card reader.
             self.__entry_reader.update()
 
-            if self.__entry_reader.reader_state == ReaderState.STOP:
+            if self.__entry_reader.reader_state == CardReaderState.STOP:
 
                 message = "Card reader {}; State {}; Port {}."\
-                    .format(self.__entry_reader.reader_id, \
+                    .format(self.__entry_reader.serial_number, \
                             self.__entry_reader.reader_state, \
                             self.__entry_reader.port_name)
 
                 GlobalErrorHandler.log_cart_reader_stop(self.__logger, message)
 
-                self.__entry_reader.start()
+                self.__entry_reader.init()
 
-            if self.__entry_reader.reader_state == ReaderState.NONE:
+            if self.__entry_reader.reader_state == CardReaderState.NONE:
 
                 message = "Card reader {}; State {}."\
-                    .format(self.__entry_reader.reader_id, self.__entry_reader.reader_state)
+                    .format(self.__entry_reader.serial_number, self.__entry_reader.reader_state)
 
                 GlobalErrorHandler.log_cart_reader_none(self.__logger, message)
 
-                self.__entry_reader.start()
+                self.__entry_reader.init()
 
         # Check the exit card reader.
         if self.__exit_reader is not None:
@@ -401,25 +404,25 @@ class SecurityZone(BasePlugin):
             # Update card reader.
             self.__exit_reader.update()
 
-            if self.__exit_reader.reader_state == ReaderState.STOP:
+            if self.__exit_reader.reader_state == CardReaderState.STOP:
 
                 message = "Card reader {}; State {}; Port {}."\
-                    .format(self.__entry_reader.reader_id, \
+                    .format(self.__entry_reader.serial_number, \
                             self.__entry_reader.reader_state, \
                             self.__entry_reader.port_name)
 
                 GlobalErrorHandler.log_cart_reader_stop(self.__logger, message)
 
-                self.__exit_reader.start()
+                self.__exit_reader.init()
 
-            if self.__exit_reader.reader_state == ReaderState.NONE:
+            if self.__exit_reader.reader_state == CardReaderState.NONE:
 
                 message = "Card reader {}; State {}."\
-                    .format(self.__entry_reader.reader_id, self.__entry_reader.reader_state)
+                    .format(self.__entry_reader.serial_number, self.__entry_reader.reader_state)
 
                 GlobalErrorHandler.log_cart_reader_none(self.__logger, message)
 
-                self.__exit_reader.start()
+                self.__exit_reader.init()
 
         # Check if the button is pressed.
         btn_value = self.__exit_btn_state()
@@ -438,12 +441,13 @@ class SecurityZone(BasePlugin):
         # Lock the door after when it is closed.
         door_closed = self._registers.by_name("ac.door_closed_1.input")
         if door_closed is not None:
-            state = self._controller.digital_read(door_closed.value)
-            if state == True:
-                if self.__free_to_lock == 1:
-                    self.__set_lock_mechanism(0)
-                    self.__set_door_window_blind(0)
-                    self.__free_to_lock = 0
+            if self._controller.is_valid_gpio(door_closed.value):
+                state = self._controller.digital_read(door_closed.value)
+                if state == True:
+                    if self.__free_to_lock == 1:
+                        self.__set_lock_mechanism(0)
+                        self.__set_door_window_blind(0)
+                        self.__free_to_lock = 0
 
         # Check is it time to close the latch.
         if self.__open_door_flag == 0:
@@ -465,15 +469,15 @@ class SecurityZone(BasePlugin):
 
         # Destroy the cardreader.
         if self.__entry_reader is not None:
-            self.__entry_reader.stop()
+            self.__entry_reader.shutdown()
 
-            while self.__entry_reader.reader_state == ReaderState.RUN:
+            while self.__entry_reader.reader_state == CardReaderState.RUN:
                 pass
 
         if self.__exit_reader is not None:
-            self.__exit_reader.stop()
+            self.__exit_reader.shutdown()
 
-            while self.__exit_reader.reader_state == ReaderState.RUN:
+            while self.__exit_reader.reader_state == CardReaderState.RUN:
                 pass
 
     def set_reader_read(self, cb):

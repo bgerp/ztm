@@ -256,12 +256,18 @@ class AccessControl(BasePlugin):
             is_empty_timeout.update_handler = self.__is_empty_timeout_cb
 
         # Security zone 1.
-        self.__security_zone_1 = SecurityZone(self._registers, self._controller, 1)
+        self.__security_zone_1 = SecurityZone(\
+            registers=self._registers, controller=self._controller,\
+            identifier=1, key=self._key, name="Security Zone 1")
+
         self.__security_zone_1.set_reader_read(self.__reader_read)
         self.__security_zone_1.init()
 
         # Security zone 2.
-        self.__security_zone_2 = SecurityZone(self._registers, self._controller, 2)
+        self.__security_zone_2 = SecurityZone(\
+            registers=self._registers, controller=self._controller,\
+            identifier=2, key=self._key, name="Security Zone 2")
+        
         self.__security_zone_2.set_reader_read(self.__reader_read)
         self.__security_zone_2.init()
 
