@@ -65,7 +65,7 @@ class BaseDevice(Configuarable):
 
 #endregion
 
-#region Constructor
+#region Constructor / Destructor
 
     def __init__(self, config):
         """Constructor
@@ -78,7 +78,13 @@ class BaseDevice(Configuarable):
 
         super().__init__(config)
 
-        self._controller = self._config["controller"]
+        if "controller" in config:
+            self._controller = self._config["controller"]
+
+    def __del__(self):
+        """Destructor"""
+
+        self.shutdown()
 
 #endregion
 
