@@ -80,6 +80,8 @@ class ControllerFactory():
             elif config["model"] == "L503":
                 controller = Neuron(config)
 
+        # TODO: Add PiCons support.
+
         return controller
 
     @staticmethod
