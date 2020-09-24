@@ -27,7 +27,7 @@ import signal
 import time
 
 from devices.TERACOM.act230.act230 import ACT230
-from devices.TERACOM.act230.act230 import ReaderState
+from devices.utils.card_readers.card_reader_state import CardReaderState
 
 #region File Attributes
 
@@ -77,7 +77,7 @@ def stop():
     if __reader is not None:
         __reader.stop()
 
-        while __reader.reader_state == ReaderState.RUN:
+        while __reader.reader_state == CardReaderState.RUN:
             pass
 
         del __reader
@@ -101,7 +101,7 @@ def start(port_name, sn):
 
     # Create card reader.
     __reader = ACT230(reader_config)
-    if __reader.reader_state is ReaderState.NONE:
+    if __reader.reader_state is CardReaderState.NONE:
         __reader.cb_read_card(reader_read)
         __reader.start()
 
@@ -116,10 +116,10 @@ def update():
         # Update card reader.
         __reader.update()
 
-        if __reader.reader_state == ReaderState.STOP:
+        if __reader.reader_state == CardReaderState.STOP:
 
             message = "Card reader {}; State {}; Port {}."\
-                .format(__reader.reader_id, \
+                .format(__reader.serial_number, \
                 __reader.reader_state, \
                 __reader.port_name)
 
@@ -127,10 +127,10 @@ def update():
 
             __reader.start()
 
-        if __reader.reader_state == ReaderState.NONE:
+        if __reader.reader_state == CardReaderState.NONE:
 
             message = "Card reader {}; State {}."\
-                .format(__reader.reader_id, __reader.reader_state)
+                .format(__reader.serial_number, __reader.reader_state)
 
             print(message)
 
