@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 
+import sys, traceback
 import os
 
 from enum import Enum
@@ -296,8 +297,8 @@ class PluginsManager:
             try:
                 self.__plugins[key].update()
 
-            except:
-                pass
+            except Exception as e:
+                traceback.print_exc(file=sys.stdout)
 
     def shutdown(self):
         """Shutdown plugins."""
