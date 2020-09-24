@@ -330,7 +330,28 @@ class Registers(list):
         result = {}
 
         for register in self:
-            result[register.name] = register.value
+
+            # Handle list and dict types.
+            if register.data_type == "json":
+
+                if isinstance(register.value, list):
+                    pass
+
+                if isinstance(register.value, dict):
+                    temp_list = []
+                    for item in register.value:
+
+                        temp_dict = {}
+                        for sub_item in item:
+                            temp_dict[sub_item.name] = sub_item.value
+
+                        temp_list.append(temp_dict)
+
+                    result[register.name] = json.dumps(temp_list)
+
+            # No need special handling.
+            else:
+                result[register.name] = register.value
 
         return result
 
@@ -355,6 +376,16 @@ class Registers(list):
                 result.append(register)
 
         return result
+
+    def keys(self):
+        """Return keys."""
+
+        # Get keys.
+        registers_keys = []
+        for register in self:
+            registers_keys.append(register.name)
+
+        return registers_keys
 
 #endregion
 
