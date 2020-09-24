@@ -28,7 +28,8 @@ import serial
 
 from utils.logger import get_logger
 
-from devices.base_device import BaseDevice
+from devices.utils.card_readers.base_card_reader import BaseCardReader
+from devices.utils.card_readers.card_reader_state import CardReaderState
 
 #region File Attributes
 
@@ -61,15 +62,7 @@ __status__ = "Debug"
 
 #endregion
 
-class ReaderState(Enum):
-    """Card reader states."""
-
-    NONE = 0
-    START = 1
-    RUN = 2
-    STOP = 3
-
-class ACT230(BaseDevice):
+class ACT230(BaseCardReader):
     """Teracom RFID card reader model ACA100."""
 
 #region Attributes
@@ -77,174 +70,92 @@ class ACT230(BaseDevice):
     __logger = None
     """Logger"""
 
-    __port = None
-    """Actual serial port."""
-
-    __cb_read_card = None
-    """Read card callback."""
-
     __card_number_len = 16
     """RFID number length."""
 
-    __reader_id = None
-    """Card reader ID."""
-
-    __reader_state = ReaderState.NONE
-    """Card reader state flag."""
+    __serial_port = None
 
 #endregion
 
 #region Constructor / Destructor
 
-    def __init__(self, config):
+    def __init__(self, **config):
         """Constructor"""
 
         super().__init__(config)
 
         self.__logger = get_logger(__name__)
 
-    def __del__(self):
-        """Destructor"""
-
-        self.stop()
-
-#endregion
-
-#region Properties
-
-    @property
-    def reader_id(self):
-        """Returns the card reader ID.
-
-        Returns
-        -------
-        str
-            Returns the card reader ID.
-        """
-        return self.__reader_id
-
-    @property
-    def reader_state(self):
-        """Returns the card reader state.
-
-        Returns
-        -------
-        Enum
-            Returns the card reader state.
-        """
-
-        return self.__reader_state
-
-    @property
-    def port_name(self):
-        """Returns the card reader port name.
-
-        Returns
-        -------
-        Enum
-            Returns the card reader port name.
-        """
-
-        if self.__port is None:
-            return ""
-
-        return self.__port.name
-
-#endregion
-
-#region Private Methods
-
-    def __set_state(self, state):
-
-        if state is not self.__reader_state:
-            self.__reader_state = state
-
 #endregion
 
 #region Public Methods
 
-    def cb_read_card(self, callback):
-        """Add the card reader callback when card is inserted.
-
-        Parameters
-        ----------
-        callback : function pointer
-            Called function.
-        """
-
-        if callback is None:
-            raise ValueError("Callback can not be None.")
-
-        self.__cb_read_card = callback
-
-    def stop(self):
-        """Stop the reader."""
-
-        self.__set_state(ReaderState.STOP)
-
-    def start(self):
+    def init(self):
         """Start the reader."""
 
-        self.__set_state(ReaderState.START)
+        self._state.set_state(CardReaderState.START)
 
     def update(self):
         """Update card reader processing."""
 
         # Stop
-        if self.__reader_state == ReaderState.STOP:
+        if self._state.is_state(CardReaderState.STOP):
             try:
-                if self.__port.is_open:
-                    self.__port.close()
+                if self.__serial_port.is_open:
+                    self.__serial_port.close()
 
-                    self.__port = None
+                    self.__serial_port = None
 
-                    while self.__port is not None:
+                    while self.__serial_port is not None:
                         pass
 
-                    del self.__port
+                    del self.__serial_port
 
             except:
-                self.__set_state(ReaderState.NONE)
+                self._state.set_state(CardReaderState.NONE)
 
         # Start
-        elif self.__reader_state == ReaderState.START:
+        elif self._state.is_state(CardReaderState.START):
             try:
                 # Create port.
-                self.__port = serial.Serial(\
+                self.__serial_port = serial.Serial(\
                     port=self._config["port_name"],\
                     baudrate=self._config["baudrate"],
                     timeout=1)
 
-                self.__reader_id = self._config["serial_number"]
-
                 # Open the port.
-                if not self.__port.is_open:
-                    self.__port.open()
+                if not self.__serial_port.is_open:
+                    self.__serial_port.open()
 
                 # Change the state to RUN.
-                self.__set_state(ReaderState.RUN)
+                self._state.set_state(CardReaderState.RUN)
 
             except:
                 # If something goes wrong go to NONE.
-                self.__set_state(ReaderState.NONE)
+                self._state.set_state(CardReaderState.NONE)
 
         # Run
-        elif self.__reader_state == ReaderState.RUN:
+        elif self._state.is_state(CardReaderState.RUN):
             try:
-                if self.__cb_read_card is not None:
+                if self._cb_read_card is not None:
                     frame = None
 
-                    size = self.__port.inWaiting()
+                    size = self.__serial_port.inWaiting()
 
                     if size > 0:
-                        frame = self.__port.read(size)
+                        frame = self.__serial_port.read(size)
                         frame = frame.decode("utf-8")
                         frame = frame.replace("\r", "").replace("\n", "").replace("?", "")
                         if len(frame) == self.__card_number_len:
-                            self.__cb_read_card(frame, self.reader_id)
+                            self._cb_read_card(frame, self.serial_number)
 
             except Exception as e:
                 print(e)
-                self.stop()
+                self.shutdown()
+
+    def shutdown(self):
+        """Stop the reader."""
+
+        self._state.set_state(CardReaderState.STOP)
 
 #endregion
