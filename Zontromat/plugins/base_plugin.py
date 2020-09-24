@@ -68,14 +68,21 @@ class BasePlugin(Configuarable):
 
 #endregion
 
-#region Constructor
+#region Constructor / Destructor
 
     def __init__(self, config):
+        """Constructor"""
+
         super().__init__(config)
 
         self._key = config["key"]
         self._registers = config["registers"]
         self._controller = config["controller"]
+
+    def __del__(self):
+        """Destructor"""
+
+        self.shutdown()
 
 #endregion
 
