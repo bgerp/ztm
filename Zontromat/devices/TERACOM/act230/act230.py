@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 
+import traceback
 from enum import Enum
 
 import serial
@@ -149,8 +150,8 @@ class ACT230(BaseCardReader):
                         if len(frame) == self.__card_number_len:
                             self._cb_read_card(frame, self.serial_number)
 
-            except Exception as e:
-                print(e)
+            except:
+                self.__logger.error(traceback.format_exc())
                 self.shutdown()
 
     def shutdown(self):

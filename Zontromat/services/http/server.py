@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 
+import traceback
 from threading import Thread
 
 from http.server import HTTPServer
@@ -139,8 +140,8 @@ class Server:
 
                     self.__logger.info("Start WEB service.")
 
-        except Exception as exception:
-            self.__logger.error(exception)
+        except:
+            self.__logger.error(traceback.format_exc())
 
     def stop(self):
         """Stop the server."""

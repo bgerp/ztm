@@ -22,16 +22,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 
-import sys, traceback
-import os
+import traceback
 
 from enum import Enum
 
 from utils.logger import get_logger
-
-from data.register import Scope
-from data.register import Register
-from data import verbal_const
 
 # Plugins
 from plugins.access_control.access_control import AccessControl
@@ -146,12 +141,12 @@ class PluginsManager:
             GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
             return
 
-        if register.value == True and Plugins.AccessControl not in self.__plugins:
+        if register.value and Plugins.AccessControl not in self.__plugins:
             config = self.__prepare_config("Access control", register.base_name)
             self.__plugins[Plugins.AccessControl] = AccessControl(config)
             self.__plugins[Plugins.AccessControl].init()
 
-        elif register.value == False and Plugins.AccessControl in self.__plugins:
+        elif not register.value and Plugins.AccessControl in self.__plugins:
             self.__plugins[Plugins.AccessControl].shutdown()
             del self.__plugins[Plugins.AccessControl]
 
@@ -162,12 +157,12 @@ class PluginsManager:
             GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
             return
 
-        if register.value == True and Plugins.Blinds not in self.__plugins:
+        if register.value and Plugins.Blinds not in self.__plugins:
             config = self.__prepare_config("Blinds", register.base_name)
             self.__plugins[Plugins.Blinds] = Blinds(config)
             self.__plugins[Plugins.Blinds].init()
 
-        elif register.value == False and Plugins.Blinds in self.__plugins:
+        elif not register.value and Plugins.Blinds in self.__plugins:
             self.__plugins[Plugins.Blinds].shutdown()
             del self.__plugins[Plugins.Blinds]
 
@@ -178,12 +173,12 @@ class PluginsManager:
             GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
             return
 
-        if register.value == True and Plugins.Monitoring not in self.__plugins:
+        if register.value and Plugins.Monitoring not in self.__plugins:
             config = self.__prepare_config("Monitoring", register.base_name)
             self.__plugins[Plugins.Monitoring] = Monitoring(config)
             self.__plugins[Plugins.Monitoring].init()
 
-        elif register.value == False and Plugins.Monitoring in self.__plugins:
+        elif not register.value and Plugins.Monitoring in self.__plugins:
             self.__plugins[Plugins.Monitoring].shutdown()
             del self.__plugins[Plugins.Monitoring]
 
@@ -194,12 +189,12 @@ class PluginsManager:
             GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
             return
 
-        if register.value == True and Plugins.Environment not in self.__plugins:
+        if register.value and Plugins.Environment not in self.__plugins:
             config = self.__prepare_config("Environment", register.base_name)
             self.__plugins[Plugins.Environment] = Environment(config)
             self.__plugins[Plugins.Environment].init()
 
-        elif register.value == False and Plugins.Environment in self.__plugins:
+        elif not register.value and Plugins.Environment in self.__plugins:
             self.__plugins[Plugins.Environment].shutdown()
             del self.__plugins[Plugins.Environment]
 
@@ -210,12 +205,12 @@ class PluginsManager:
             GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
             return
 
-        if register.value == True and Plugins.HVAC not in self.__plugins:
+        if register.value and Plugins.HVAC not in self.__plugins:
             config = self.__prepare_config("HVAC", register.base_name)
             self.__plugins[Plugins.HVAC] = HVAC(config)
             self.__plugins[Plugins.HVAC].init()
 
-        elif register.value == False and Plugins.HVAC in self.__plugins:
+        elif not register.value and Plugins.HVAC in self.__plugins:
             self.__plugins[Plugins.HVAC].shutdown()
             del self.__plugins[Plugins.HVAC]
 
@@ -226,12 +221,12 @@ class PluginsManager:
             GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
             return
 
-        if register.value == True and Plugins.MainLight not in self.__plugins:
+        if register.value and Plugins.MainLight not in self.__plugins:
             config = self.__prepare_config("Lamps", register.base_name)
             self.__plugins[Plugins.MainLight] = Lighting(config)
             self.__plugins[Plugins.MainLight].init()
 
-        elif register.value == False and Plugins.MainLight in self.__plugins:
+        elif not register.value and Plugins.MainLight in self.__plugins:
             self.__plugins[Plugins.MainLight].shutdown()
             del self.__plugins[Plugins.MainLight]
 
@@ -242,12 +237,12 @@ class PluginsManager:
             GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
             return
 
-        if register.value == True and Plugins.Sys not in self.__plugins:
+        if register.value and Plugins.Sys not in self.__plugins:
             config = self.__prepare_config("System", register.base_name)
             self.__plugins[Plugins.Sys] = Sys(config)
             self.__plugins[Plugins.Sys].init()
 
-        elif register.value == False and Plugins.Sys in self.__plugins:
+        elif not register.value and Plugins.Sys in self.__plugins:
             self.__plugins[Plugins.Sys].shutdown()
             del self.__plugins[Plugins.Sys]
 
@@ -297,8 +292,8 @@ class PluginsManager:
             try:
                 self.__plugins[key].update()
 
-            except Exception as e:
-                traceback.print_exc(file=sys.stdout)
+            except:
+                self.__logger.error(traceback.format_exc())
 
     def shutdown(self):
         """Shutdown plugins."""

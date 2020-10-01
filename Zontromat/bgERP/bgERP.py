@@ -257,7 +257,7 @@ class bgERP():
                     self.__logger.error("HTTP Error code: {}".format(response.status_code))
                     login_state = False
 
-        except Exception as e:
+        except:
             self.__logger.error(traceback.format_exc())
             login_state = False
 
