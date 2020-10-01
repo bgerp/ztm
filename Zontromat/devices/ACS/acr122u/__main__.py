@@ -68,47 +68,49 @@ __time_to_stop = False
 
 #endregion
 
-def beam(llc):
-    global __time_to_stop, __clf
-
-    __time_to_stop = True
-
-    print(llc)
-
-    # snep_client = nfc.snep.SnepClient(llc)
-    # snep_client.put_records([ndef.TextRecord("Traby")])
-
-    # return
-
-    ndef_obj = llc.ndef
-    if ndef_obj is not None:
-        print(ndef_obj)
-        records = ndef_obj.records
-        if records is not None:
-            for record in records:
-                if record.type == "text/vcard":
-                    content = record.data.decode("utf-8")
-                    print(content)
-
-        # snep_client.put_records([ndef.UriRecord("http://nfcpy.org")])
-
 def on_startup(target):
-
-    print(target)
-
     return target
 
-def connected(llc):
+def on_connected(llc):
+
+    global __time_to_stop
 
     state = False
 
-    try:
-        Thread(target=beam, args=(llc,)).start()
-        state = True
-    except:
-        pass
+    ndef_obj = llc.ndef
+    if ndef_obj is not None:
+
+        records = ndef_obj.records
+        if records is not None:
+
+            for record in records:
+
+                if record.type == "text/vcard":
+                    print("Visit Card Record")
+                    content = record.data.decode("utf-8")
+                    print(content)
+
+                if record.type == "urn:nfc:wkt:T":
+                    print("Text Record")
+                    content = record.data.decode("utf-8")
+                    content = content.replace("en", "")
+                    content = content.replace("\x02", "")
+                    print(content)
+                    
+                state = True
+                __time_to_stop = True
 
     return state
+
+def run():
+
+    global __clf
+
+    __clf = nfc.ContactlessFrontend("usb:072f:2200")
+    # clf = nfc.ContactlessFrontend("usb")
+    # clf = nfc.ContactlessFrontend("udp")
+    state = __clf.connect(rdwr={'on-startup': on_startup, "on-connect": on_connected})
+    # state = __clf.connect(llcp={'on-startup': on_startup, "on-connect": on_connected})
 
 def interupt_handler(signum, frame):
     """Interupt handler."""
@@ -137,18 +139,10 @@ def main():
     signal.signal(signal.SIGINT, interupt_handler)
     signal.signal(signal.SIGTERM, interupt_handler)
 
-    __clf = nfc.ContactlessFrontend("usb:072f:2200")
-    # clf = nfc.ContactlessFrontend("usb")
-    # clf = nfc.ContactlessFrontend("udp")
-    state = __clf.connect(rdwr={'on-startup': on_startup, "on-connect": connected})
-    # state = __clf.connect(llcp={'on-startup': on_startup, "on-connect": connected})
-
-
-    # for record in tag.ndef.records:
-    #     print(record)
-
-    if not state:
-        __time_to_stop = True
+    try:
+        Thread(target=run, args=()).start()
+    except:
+        pass
 
     while not __time_to_stop:
         pass
