@@ -258,6 +258,7 @@ class Monitoring(BasePlugin):
 
         if register.value != verbal_const.OFF and self.__power_analyser is None:
 
+            # TODO: Make this action only iv EVOK is loaded.
             # Load EVOK settings.
             if os.name == "posix":
                 self.__evok_setting = EvokSettings("/etc/evok.conf")
