@@ -238,6 +238,32 @@ __S103 = \
     "AO0": {"dev": "ao", "major_index": 1, "minor_index": 1},\
 }
 
+__X1BLACKTITANIUM = \
+{\
+    "identification": {"vendor": "pt", "model": "X1BlackTitanium"},\
+
+    "DO0": {"dev": "do", "unit": "LogicLevel", "id": 0, "name": "Relay 1"},\
+    "DO1": {"dev": "do", "unit": "LogicLevel", "id": 1, "name": "Relay 2"},\
+    "DO2": {"dev": "do", "unit": "LogicLevel", "id": 2, "name": "Relay 3"},\
+    "DO3": {"dev": "do", "unit": "LogicLevel", "id": 3, "name": "Relay 4"},\
+
+    "DI0": {"dev": "input", "unit": "LogicLevel", "id": 4, "name": "Digital In 1"},\
+    "DI1": {"dev": "input", "unit": "LogicLevel", "id": 5, "name": "Digital In 2"},\
+    "DI2": {"dev": "input", "unit": "LogicLevel", "id": 6, "name": "Digital In 3"},\
+    "DI3": {"dev": "input", "unit": "LogicLevel", "id": 7, "name": "Digital In 4"},\
+    "DI4": {"dev": "input", "unit": "LogicLevel", "id": 8, "name": "Digital In 5"},\
+    "DI5": {"dev": "input", "unit": "LogicLevel", "id": 9, "name": "Digital In 6"},\
+
+    "AI0": {"dev": "ai", "unit": "V", "id": 12, "name": "Analog In 1"},\
+    "AI1": {"dev": "ai", "unit": "V", "id": 13, "name": "Analog In 2"},\
+    "AI2": {"dev": "ai", "unit": "V", "id": 14, "name": "Analog In 3"},\
+    "AI3": {"dev": "ai", "unit": "V", "id": 15, "name": "Analog In 4"},\
+    "AI4": {"dev": "ai", "unit": "V", "id": 16, "name": "Analog In 5"},\
+    "AI5": {"dev": "ai", "unit": "V", "id": 17, "name": "Analog In 6"},\
+    "AI6": {"dev": "ai", "unit": "V", "id": 18, "name": "Analog In 7"},\
+    "AI7": {"dev": "ai", "unit": "V", "id": 19, "name": "Analog In 8"},\
+}
+
 def get_map(model):
     """Get registers IDs.
 
@@ -268,5 +294,8 @@ def get_map(model):
 
     elif model == "S103":
         io_map = __S103
+
+    elif model == "X1BLACKTITANIUM":
+        io_map = __X1BLACKTITANIUM
 
     return io_map

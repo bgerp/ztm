@@ -170,7 +170,7 @@ class Zone():
     """Performance profiler timer."""
 
     __server = None
-    """Self hosting for EVOK WEB hooks."""
+    """Self hosting for PLC WEB hooks."""
 
 #endregion
 
@@ -232,6 +232,7 @@ class Zone():
         # Setup the performance profiler timer. (60) 10 is for tests.
         self.__performance_profiler_timer = Timer(10)
 
+        # TODO: Make this actions only if EVOK exists.
         # Create WEB service.
         if os.name == "posix":
 
@@ -295,15 +296,6 @@ class Zone():
             if self.__controller_comm_failures >= 30:
                 self.__controller_comm_failures = 0
 
-                # Restart service
-                # if os.name == "posix":
-                #     os.system("sudo service EVOK restart")
-
-                # In case of failure:
-                # - Try several times if result is still unsuccessful reestart the EVOK.
-                # - Wait EVOK service to start.
-                # - Continue main cycle.
-
     def __login(self):
         """Login to bgERP."""
 
@@ -349,7 +341,7 @@ class Zone():
             if self.__controller_comm_failures >= 20:
                 self.__controller_comm_failures = 0
 
-                self.__logger.error("EVOK service should be restarted.")
+                self.__logger.error("PLC service should be restarted.")
 
             GlobalErrorHandler.log_no_connection_plc(self.__logger)
 
@@ -361,7 +353,7 @@ class Zone():
         if self.__erp_service_update_timer.expired:
             self.__erp_service_update_timer.clear()
 
-            
+
             ztm_regs = self.__registers.by_scope(Scope.Device)
             ztm_regs = ztm_regs.new_then(60)
             ztm_regs_dict = ztm_regs.to_dict()

@@ -34,14 +34,14 @@ class RequestHandler(BaseHTTPRequestHandler):
 
 #region Attributes
 
-    __api_path_evok = "/api/evok-webhooks"
-    """API path to EVOK handler."""
+    __api_service_path = "/api/evok-webhooks"
+    """Service API path."""
 
 #endregion
 
 #region Private Methods
 
-    def __api_evok_webhooks_handler(self):
+    def __api_service_path_handler(self):
 
         # Get content length.
         content_length = self.headers["Content-Length"]
@@ -73,8 +73,8 @@ class RequestHandler(BaseHTTPRequestHandler):
 
         parsed_path = parse.urlparse(self.path)
 
-        if parsed_path.path == self.__api_path_evok:
-            self.__api_evok_webhooks_handler()
+        if parsed_path.path == self.__api_service_path:
+            self.__api_service_path_handler()
 
         else:
             # The response.
@@ -89,8 +89,8 @@ class RequestHandler(BaseHTTPRequestHandler):
 
         parsed_path = parse.urlparse(self.path)
 
-        if parsed_path.path == self.__api_path_evok:
-            self.__api_evok_webhooks_handler()
+        if parsed_path.path == self.__api_service_path:
+            self.__api_service_path_handler()
 
         else:
             # The response.
