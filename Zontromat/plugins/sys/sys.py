@@ -157,12 +157,14 @@ class Sys(BasePlugin):
 
         # Serial Ports
         if os.name == "nt":
-            self.__rules.add(Rule("COM4", MonitoringLevel.Error))
-            self.__rules.add(Rule("COM5", MonitoringLevel.Error))
+            for index in range(1, 11):
+                self.__rules.add(Rule("COM{}".format(index), MonitoringLevel.Error))
 
         elif os.name == "posix":
-            self.__rules.add(Rule("/dev/ttyUSB0", MonitoringLevel.Error))
-            self.__rules.add(Rule("/dev/ttyUSB1", MonitoringLevel.Error))
+            for index in range(0, 11):
+                self.__rules.add(Rule("/dev/ttyS{}".format(index), MonitoringLevel.Error))
+                self.__rules.add(Rule("/dev/ttyUSB{}".format(index), MonitoringLevel.Error))
+                self.__rules.add(Rule("/dev/ttyACM{}".format(index), MonitoringLevel.Error))
 
         # Add event.
         self.__rules.on_event(self.__on_event)
