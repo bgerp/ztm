@@ -21,12 +21,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 
-from enum import Enum
+import time
+import traceback
 from threading import Thread
-import sys, traceback
 
 import nfc
-import ndef
+# import ndef
 
 from utils.logger import get_logger
 
@@ -67,13 +67,16 @@ __status__ = "Debug"
 class ACR122U(BaseCardReader):
     """ACR122 NFC Card Reader"""
 
-#endregion
+#region Attributes
 
     __logger = None
     """Logger"""
 
     __clf = None
     """Contactless front-end."""
+
+    __worker_thread = None
+    """Worker thread."""
 
 #endregion
 
@@ -88,44 +91,79 @@ class ACR122U(BaseCardReader):
 
 #endregion
 
-    def __beam(self, llc):
+#region Private Messages
 
-        # snep_client = nfc.snep.SnepClient(llc)
-        # snep_client.put_records([ndef.TextRecord("Traby")])
-
-        # return
-        if self._state.is_state(CardReaderState.START):
-            ndef_obj = llc.ndef
-            if ndef_obj is not None:
-                print(ndef_obj)
-                records = ndef_obj.records
-                if records is not None:
-                    for record in records:
-                        if record.type == "urn:nfc:wkt:T":
-                            content = record.data.decode("utf-8")
-                            print(content)
-
-                # snep_client.put_records([ndef.UriRecord("http://nfcpy.org")])
-
-    def __on_startup(self, target):
-
-        print(target)
-
-        return target
-
-    def __connected(self, llc):
+    def __on_connected(self, llc):
 
         state = False
 
-        try:
-            if self._state.is_state(CardReaderState.START):
-                state = True
-                Thread(target=self.__beam, args=(llc,)).start()
+        ndef_obj = llc.ndef
+        if ndef_obj is not None:
 
-        except:
-            pass
+            records = ndef_obj.records
+            if records is not None:
+
+                for record in records:
+
+                    if record.type == "text/vcard":
+                        content = record.data.decode("utf-8")
+                        self.__logger.debug(content)
+
+                    if record.type == "urn:nfc:wkt:T":
+                        content = record.data.decode("utf-8")
+                        content = content.replace("en", "")
+                        content = content.replace("\x02", "")
+                        self._cb_read_card(content, self.serial_number)
+
+                        state = True
 
         return state
+
+    def __on_startup(self, target):
+
+        self.__logger.debug("Starting NFC: {}".format(time.time()))
+        return target
+
+    def __run(self):
+
+        try:
+            if self.__clf is not None:
+                return
+
+            # Port name: usb:072f:2200
+            self.__clf = nfc.ContactlessFrontend(self.port_name)
+
+            # Connect to the WFE.
+            self.__clf.connect(rdwr={'on-startup': self.__on_startup, "on-connect": self.__on_connected})
+
+            if self.__clf is not None:
+
+                self.__clf.close()
+
+                del self.__clf
+                self.__clf = None
+
+                self._state.set_state(CardReaderState.START)
+
+        except:
+            # When the horse when in to the river go to NONE state.
+            self._state.set_state(CardReaderState.STOP)
+            self.__logger.error(traceback.format_exc())
+
+    def __start(self):
+
+        try:
+            self.__worker_thread = Thread(target=self.__run, args=())
+            self.__worker_thread.start()
+
+            self._state.set_state(CardReaderState.RUN)
+
+        except:
+            # When the horse when in to the river go to STOP state.
+            self._state.set_state(CardReaderState.STOP)
+            self.__logger.error(traceback.format_exc())
+
+#endregion
 
 #region Public Methods
 
@@ -139,42 +177,27 @@ class ACR122U(BaseCardReader):
 
         # STOP
         if self._state.is_state(CardReaderState.STOP):
-            try:
-                if self.__clf is not None:
-                    del self.__clf
-                    self.__clf = None
-
-            except:
-                pass
+            self.shutdown()
 
         # START
         elif self._state.is_state(CardReaderState.START):
-            try:
-                # Create port.
-                # Port name: usb:072f:2200
-                self.__clf = nfc.ContactlessFrontend(self.port_name)
+            self.__start()
 
-                # Connect to the WFE.
-                state = self.__clf.connect(rdwr={'on-startup': self.__on_startup, "on-connect": self.__connected})
-
-                # If something goes wrong go to NONE.
-                self._state.set_state(CardReaderState.RUN)
-
-            except Exception as e:
-                print("Exception in user code:")
-                print("-"*60)
-                traceback.print_exc(file=sys.stdout)
-                print("-"*60)
-
-                # If something goes wrong go to NONE.
-                self._state.set_state(CardReaderState.STOP)
-
-        # START
+        # RUN
         elif self._state.is_state(CardReaderState.RUN):
-           pass
+            pass
 
     def shutdown(self):
         """Stop the reader."""
 
-        if self._state is not None:
-            self._state.set_state(CardReaderState.STOP)
+        try:
+            if self.__worker_thread is not None:
+                self.__worker_thread = None
+
+            if self.__clf is not None:
+                self.__clf.close()
+                del self.__clf
+                self.__clf = None
+
+        except:
+            self.__logger.error(traceback.format_exc())
