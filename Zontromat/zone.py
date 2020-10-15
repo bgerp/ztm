@@ -28,7 +28,7 @@ import os
 
 from enum import Enum
 
-from utils.settings import ApplicationSettings
+from Zontromat.utils.settings import ApplicationSettings
 from utils.logger import get_logger
 from utils.state_machine import StateMachine
 from utils.timer import Timer
@@ -181,6 +181,7 @@ class Zone():
 
         # Application settings.
         self.__app_settings = ApplicationSettings.get_instance()
+        self.__app_settings.read()
 
         # Create logger.
         self.__logger = get_logger(__name__)

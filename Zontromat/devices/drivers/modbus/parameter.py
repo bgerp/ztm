@@ -56,7 +56,7 @@ __status__ = "Debug"
 class Parameter:
     """Modbus parameter descriptor."""
 
-#region Atributes
+#region Attributes
 
     __parameter_name = "Parameter"
     """Parameter name."""
@@ -67,7 +67,7 @@ class Parameter:
     __data_type = ""
     """Data type."""
 
-    __adresses = []
+    __addresses = []
     """Modbus addresses."""
 
     __register_type = ""
@@ -113,7 +113,7 @@ class Parameter:
         """Data type
 
         Return:
-            adresses (list): Data type.
+            addresses (list): Data type.
         """
         return self.__data_type
 
@@ -128,24 +128,24 @@ class Parameter:
         self.__data_type = data_type
 
     @property
-    def adresses(self):
-        """Adresses
+    def addresses(self):
+        """addresses
 
         Return:
-            adresses (list): Adresses.
+            addresses (list): addresses.
         """
 
-        return self.__adresses
+        return self.__addresses
 
-    @adresses.setter
-    def adresses(self, adresses):
-        """Adresses
+    @addresses.setter
+    def addresses(self, addresses):
+        """addresses
 
         Args:
-            adresses (list): Adresses.
+            addresses (list): addresses.
         """
 
-        self.__adresses = adresses
+        self.__addresses = addresses
 
     @property
     def register_type(self):
@@ -167,21 +167,21 @@ class Parameter:
 
 #region Constructor
 
-    def __init__(self, parameter_name, mou, data_type, adresses, register_type):
+    def __init__(self, parameter_name, mou, data_type, addresses, register_type):
         """Constructor
 
         Args:
             parameter_name (string): Parameter name..
             mou (string): Measure of unit.
             data_type (string): Data type.
-            adresses (list): Modbus addresses.
+            addresses (list): Modbus addresses.
             register_type (string)
         """
 
         self.parameter_name = parameter_name
         self.mou = mou
         self.data_type = data_type
-        self.adresses = adresses
+        self.addresses = addresses
         self.register_type = register_type
 
 #endregion

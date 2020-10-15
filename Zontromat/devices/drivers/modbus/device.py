@@ -60,7 +60,7 @@ __status__ = "Debug"
 class Device():
     """Base class MODBUS devices."""
 
-    #region Variables
+    #region Attributes
 
     _parameters = []
     """Device parameters."""
@@ -111,7 +111,7 @@ class Device():
         reg_count = len(self._parameters)
 
         for reg_index in range(0, reg_count):
-            addresses = self._parameters[reg_index].adresses
+            addresses = self._parameters[reg_index].addresses
             adr_count = len(addresses)
             for adr_index in range(0, adr_count):
                 registers_ids.append(addresses[adr_index])
@@ -167,7 +167,7 @@ class Device():
 
             if parameter == parameter_name:
                 parameter_type = self._parameters[reg_index].data_type
-                addresses = self._parameters[reg_index].adresses
+                addresses = self._parameters[reg_index].addresses
                 value = Device.converts_to_parameter(parameter_type, addresses, registers)
                 break
 
