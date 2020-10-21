@@ -23,7 +23,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 import time
-import  json
 from enum import Enum
 
 #region File Attributes
@@ -62,9 +61,9 @@ class Scope(Enum):
 
     NONE = 0
     Global = 1 # Global is like system.
-    Device = 2 # 
-    System = 3 # 
-    Both = 4 # 
+    Device = 2 #
+    System = 3 #
+    Both = 4 #
 
 class Register:
     """Register"""
@@ -230,7 +229,7 @@ class Register:
 
     @property
     def data_type(self):
-        """Data type of the register.""" 
+        """Data type of the register."""
 
         str_type = "None"
 

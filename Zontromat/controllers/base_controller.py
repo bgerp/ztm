@@ -93,7 +93,7 @@ class BaseController(Configuarable):
 
 #endregion
 
-#region Protected Methods
+#region Public Methods
 
     def is_valid_gpio_type(self, gpio):
         """Is valid GPIO type"""
@@ -125,10 +125,6 @@ class BaseController(Configuarable):
         """Return GPIO map."""
 
         return self._gpio_map
-
-#endregion
-
-#region Public Methods
 
     def init(self):
         """Init the controller."""

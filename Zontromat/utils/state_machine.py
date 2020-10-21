@@ -143,17 +143,17 @@ class StateMachine():
 
         return self.__state == state
 
-    def on_change(self, cb):
+    def on_change(self, callback):
         """Set on change callback.
 
         Parameters
         ----------
-        cb : function pointer
+        callback : function pointer
             Pointer of the function callback.
         """
 
-        if cb is not None:
-            self.__cb_on_change = cb
+        if callback is not None:
+            self.__cb_on_change = callback
 
     def was(self, state):
         """Check previous state.

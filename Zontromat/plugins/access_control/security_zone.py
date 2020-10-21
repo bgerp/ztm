@@ -176,7 +176,7 @@ class SecurityZone(BasePlugin):
             register = self._registers.by_name("{}.entry_reader_{}.port.name"\
                 .format(key, self.__identifier))
 
-            if "ac.entry_reader_1.port.name" == register.name:
+            if register.name == "ac.entry_reader_1.port.name":
                 register.value = "usb:072f:2200"
 
             port_name = register.value
@@ -443,7 +443,7 @@ class SecurityZone(BasePlugin):
         if door_closed is not None:
             if self._controller.is_valid_gpio(door_closed.value):
                 state = self._controller.digital_read(door_closed.value)
-                if state == True:
+                if state:
                     if self.__free_to_lock == 1:
                         self.__set_lock_mechanism(0)
                         self.__set_door_window_blind(0)
@@ -480,13 +480,13 @@ class SecurityZone(BasePlugin):
             while self.__exit_reader.reader_state == CardReaderState.RUN:
                 pass
 
-    def set_reader_read(self, cb):
+    def set_reader_read(self, callback):
         """Set reader read calback."""
 
-        if cb is None:
+        if callback is None:
             return
 
-        self.__reader_read_cb = cb
+        self.__reader_read_cb = callback
 
     def add_allowed_attendant(self, card_id):
         """Add allowed attendant ID.
