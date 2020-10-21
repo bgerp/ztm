@@ -28,7 +28,7 @@ import os
 
 from enum import Enum
 
-from Zontromat.utils.settings import ApplicationSettings
+from utils.settings import ApplicationSettings
 from utils.logger import get_logger
 from utils.state_machine import StateMachine
 from utils.timer import Timer
@@ -45,8 +45,6 @@ from data.registers import Registers
 
 from plugins.plugins_manager import PluginsManager
 
-from services.http.server import Server
-from services.http.register_handler import RegisterHandler
 from services.evok.settings import EvokSettings
 from services.global_error_handler.global_error_handler import GlobalErrorHandler
 
@@ -160,17 +158,11 @@ class Zone():
     __busy_flag = False
     """Busy flag."""
 
-    __controller_comm_failures = 0
-    """Controller communication failures."""
-
     __performance_profiler = PerformanceProfiler()
     """Performance profiler."""
 
     __performance_profiler_timer = None
     """Performance profiler timer."""
-
-    __server = None
-    """Self hosting for PLC WEB hooks."""
 
 #endregion
 
@@ -181,7 +173,6 @@ class Zone():
 
         # Application settings.
         self.__app_settings = ApplicationSettings.get_instance()
-        self.__app_settings.read()
 
         # Create logger.
         self.__logger = get_logger(__name__)
@@ -215,11 +206,16 @@ class Zone():
                 model = plc_info["model"]
 
         # Create Neuron.
-        self.__controller = ControllerFactory.create(vendor=vendor,\
-                                                    model=model,\
-                                                    serial=serial,\
-                                                    host=self.__app_settings.get_controller["host"],\
-                                                    timeout=self.__app_settings.get_controller["timeout"])
+        self.__controller = ControllerFactory.create(\
+            vendor=vendor,\
+            model=model,\
+            serial=serial,\
+            host=self.__app_settings.get_controller["host"],\
+            timeout=self.__app_settings.get_controller["timeout"])
+
+        # Config EVOK - Only if it is Linux based and vendor is UniPi.
+        if os.name == "posix" and vendor == "unipi":
+            self.__config_evok()
 
         # Set the plugin manager.
         self.__plugin_manager = PluginsManager(self.__registers, self.__controller)
@@ -233,45 +229,76 @@ class Zone():
         # Setup the performance profiler timer. (60) 10 is for tests.
         self.__performance_profiler_timer = Timer(10)
 
-        # TODO: Make this actions only if EVOK exists.
-        # Create WEB service.
-        if os.name == "posix":
-
-            # Create entrance
-            evok_settings = EvokSettings("/etc/evok.conf")
-
-            # Setup the EVOK web hooks.
-            evok_settings.webhook_enabled = True
-            evok_settings.webhook_address = "http://127.0.0.1:8889/api/evok-webhooks   ; Put your server endpoint address here (e.g. http://123.123.123.123:/wh )"
-            evok_settings.webhook_device_mask = ["input", "wd"]
-            evok_settings.webhook_complex_events = True
-
-            # Save
-            evok_settings.save()
-
-            # Restart the service to accept the settings.
-            EvokSettings.restart()
-
-        # Create the WEB server.
-        self.__server = Server("", 8889)
-
-        # Set the IO map.
-        gpio_map = self.__controller.get_gpio_map()
-        RegisterHandler.set_gpio_map(gpio_map)
-
         # Update timer.
         self.__update_timer = Timer(self.__update_rate)
         # Update with offset based on the serial number of the device.
         self.__update_timer.expiration_time = self.__update_timer.expiration_time + (serial / 1000)
 
         # Create bgERP and login.
-        self.__bgerp = bgERP(self.__app_settings.get_erp_service["host"],\
-            self.__app_settings.get_erp_service["timeout"])
+        self.__bgerp = bgERP(host=self.__app_settings.get_erp_service["host"],\
+            timeout=self.__app_settings.get_erp_service["timeout"])
+        self.__bgerp.set_bgerp_cb(self.__bgerp_cb)
+        self.__bgerp.set_evok_cb(self.__evok_cb)
+
         self.__erp_service_update_timer = Timer(self.__erp_service_update_rate)
 
 #endregion
 
 #region Private Methods
+
+    def __bgerp_cb(self, registers):
+        """[summary]
+
+        Args:
+            registers (Registers): registers to be changed.
+        """
+
+        print(registers)
+
+    def __evok_cb(self, device):
+        """EVOK callback service handler.
+
+        Args:
+            registers (JSON): GPIO that was changed.
+        """
+
+        # Target inputs, by registers names.
+        names = ["ac.door_closed_1.input", "ac.door_closed_2.input",\
+            "ac.pir_1.input", "ac.pir_2.input",\
+            "ac.window_closed_1.input", "ac.window_closed_2.input",\
+            "monitoring.cw.input", "monitoring.hw.input", "sys.at.input"]
+        inputs = self.__registers.by_names(names)
+        gpio = self.__controller.device_to_uniname(device)
+
+        for input_reg in inputs:
+            if input_reg is not None:
+                if input_reg.value == gpio:
+
+                    # If register exists, apply value.
+                    required_name = input_reg.name.replace("input", "state")
+                    target_reg = self.__registers.by_name(required_name)
+                    if target_reg is not None:
+                        target_reg.value = device["value"]
+
+    def __config_evok(self):
+        """Configure the EVOK service file.
+        """
+
+        # Create entrance
+        evok_settings = EvokSettings("/etc/evok.conf")
+
+        # Setup the EVOK web hooks.
+        evok_settings.webhook_enabled = True
+        evok_settings.webhook_address = "http://127.0.0.1:8889/api/evok-webhooks   ; Put your server endpoint address here (e.g. http://123.123.123.123:/wh )"
+        evok_settings.webhook_device_mask = ["input", "wd"]
+        evok_settings.webhook_complex_events = True
+
+        # Save
+        evok_settings.save()
+
+        # Restart the service to accept the settings.
+        EvokSettings.restart()
+
 
     def __cb_zone_state(self, machine):
         """Set zone state."""
@@ -285,17 +312,12 @@ class Zone():
         state = self.__controller.update()
 
         if state.value == UpdateState.Success.value:
-
             # Clear all resources.
             self.__zone_state.set_state(ZoneState.Login)
 
         elif state.value == UpdateState.Failure.value:
-
             GlobalErrorHandler.log_no_connection_plc(self.__logger)
 
-            self.__controller_comm_failures += 1
-            if self.__controller_comm_failures >= 30:
-                self.__controller_comm_failures = 0
 
     def __login(self):
         """Login to bgERP."""
@@ -315,35 +337,23 @@ class Zone():
             bgerp_id=self.__app_settings.get_erp_service["erp_id"])
 
         if login_state:
-
             # Rewrite the ERP service ID.
             if self.__app_settings.get_erp_service["erp_id"] != self.__bgerp.erp_id:
                 self.__app_settings.get_erp_service["erp_id"] = self.__bgerp.erp_id
                 self.__app_settings.save()
 
             self.__zone_state.set_state(ZoneState.Run)
+
         else:
             self.__zone_state.set_state(ZoneState.Init)
 
     def __run(self):
 
-        # Start the server.
-        if not self.__server.is_alive:
-            self.__server.start()
-
         # Update the neuron.
         state = self.__controller.update()
 
-        if state == UpdateState.Success:
-            self.__controller_comm_failures = 0
-
-        elif state == UpdateState.Failure:
-            self.__controller_comm_failures += 1
-            if self.__controller_comm_failures >= 20:
-                self.__controller_comm_failures = 0
-
-                self.__logger.error("PLC service should be restarted.")
-
+        if state == UpdateState.Failure:
+            self.__logger.error("PLC service should be restarted.")
             GlobalErrorHandler.log_no_connection_plc(self.__logger)
 
         # Give plugins runtime.
@@ -353,7 +363,6 @@ class Zone():
         self.__erp_service_update_timer.update()
         if self.__erp_service_update_timer.expired:
             self.__erp_service_update_timer.clear()
-
 
             ztm_regs = self.__registers.by_scope(Scope.Device)
             ztm_regs = ztm_regs.new_then(60)
@@ -367,12 +376,10 @@ class Zone():
             else:
                 GlobalErrorHandler.log_no_connection_erp(self.__logger)
 
-
     def __shutdown(self):
         """Shutdown procedure."""
 
-        self.__plugin_manager.shutdown()
-        self.__stop_flag = True
+        pass
 
     def __test(self):
         """Test devices."""
@@ -446,7 +453,6 @@ class Zone():
             if self.__update_timer.expired:
                 self.__update_timer.clear()
 
-
                 # If the busy flag is raise pass the update cycle.
                 if self.__busy_flag:
                     pass
@@ -477,12 +483,7 @@ class Zone():
     def shutdown(self):
         """Shutdown the process."""
 
-        # Stop the server.
-        if self.__server.is_alive:
-            self.__server.stop()
-
         self.__zone_state.set_state(ZoneState.Shutdown)
-        self.__plugin_manager.shutdown()
         self.__stop_flag = True
 
 #endregion
