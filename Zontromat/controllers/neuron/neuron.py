@@ -974,6 +974,40 @@ class Neuron(BaseController):
 
 #endregion
 
+#region Public Methods
+
+    def device_to_uniname(self, device):
+        """Convert device to unified GPIO name.
+
+        Args:
+            device (JSON): Device description.
+
+        Returns:
+            str: Unified device name.
+        """
+
+        target = None
+        dev = device["dev"]
+        circuit = device["circuit"]
+
+        circuit = circuit.replace("0", "")
+        index = circuit.split("_")
+        major_index = int(index[0])
+        minor_index = int(index[1])
+
+        for item in self._gpio_map:
+            if item != "identification":
+                if dev == self._gpio_map[item]["dev"]\
+                    and major_index == self._gpio_map[item]["major_index"]\
+                    and minor_index == self._gpio_map[item]["minor_index"]:
+
+                    target = item
+
+        return target
+
+
+#endregion
+
 #region Base Controller Implementation
 
     def update(self):
