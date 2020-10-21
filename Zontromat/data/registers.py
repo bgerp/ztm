@@ -95,7 +95,7 @@ class Registers(list):
 
         if Registers.__instance is None:
             Registers.__instance = self
-            
+
 #endregion
 
 #region Private Methods
@@ -300,6 +300,18 @@ class Registers(list):
                 break
 
         return result
+
+    def by_names(self, names):
+
+        filtered = Registers()
+
+        for name in names:
+            selected = self.by_name(name)
+
+            if selected is not None:
+                filtered.append(selected)
+
+        return filtered
 
     def names(self):
         """Get registers names.
@@ -517,7 +529,7 @@ class Registers(list):
         registers = Registers()
 
         import csv
-        
+
         with open(file_path, newline='') as csv_file:
 
             rows = csv.DictReader(csv_file)
