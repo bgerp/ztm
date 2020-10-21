@@ -22,15 +22,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 
-import json
-import time
-import traceback
-
-import requests
-
 from utils.logger import get_logger
 
-from bgERP.session import Session
+from bgERP.client import Client
+from bgERP.server import Server
 
 #region File Attributes
 
@@ -63,37 +58,18 @@ __status__ = "Debug"
 
 #endregion
 
-class bgERP():
+class bgERP:
     """bgERP service communicator"""
 
 #region Attributes
 
-    __host = ""
-    """Base URI."""
-
-    __api_login = "/ztm/register" # /bcvt.eu/ztm/Ztm/login
-    """Login API call."""
-
-    __api_sync = "/ztm/sync" # /bcvt.eu/ztm/Ztm/sync
-    """Notify bgERP about the zone state API call."""
+    __host = "127.0.0.1"
 
     __timeout = 5
-    """Communication timeout."""
 
-    __logger = None
-    """Logger"""
+    __client = None
 
-    __session = None
-    """Session control."""
-
-    __instance = None
-    """Singelton instance."""
-
-    __last_sync = 0
-    """Last sync time."""
-
-    __erp_id = None
-    """ERP identification."""
+    __server = None
 
 #endregion
 
@@ -108,7 +84,7 @@ class bgERP():
         str
             Host URL of the servie.
         """
-        return self.__host
+        return self.__client.host
 
     @host.setter
     def host(self, host):
@@ -120,12 +96,7 @@ class bgERP():
             Host URL of the servie.
         """
 
-        host_no_slash = host
-
-        if host_no_slash.endswith("/"):
-            host_no_slash = host_no_slash[:-1]
-
-        self.__host = host_no_slash
+        self.__client.host = host
 
     @property
     def timeout(self):
@@ -137,7 +108,7 @@ class bgERP():
             Timeout.
         """
 
-        return self.__timeout
+        return self.__client.timeout
 
     @timeout.setter
     def timeout(self, timeout):
@@ -149,7 +120,7 @@ class bgERP():
             Timeout.
         """
 
-        self.__timeout = timeout
+        self.__client.timeout = timeout
 
     @property
     def erp_id(self):
@@ -161,7 +132,7 @@ class bgERP():
             ERP identity.
         """
 
-        return self.__erp_id
+        return self.__client.erp_id
 
     @property
     def last_sync(self):
@@ -173,27 +144,36 @@ class bgERP():
             Unix timestamp.
         """
 
-        return self.__last_sync
+        return self.__client.last_sync
 
 #endregion
 
-#region Constructor
+#region Constructor \ Destructor
 
-    def __init__(self, host="http://127.0.0.1", timeout=5):
+    def __init__(self, **kwargs):
         """Constructor
-
-        Parameters
-        ----------
-        host : str
-            URI of the service.
-        timeout : int
-            Connection timeout.
         """
 
-        self.host = host
-        self.timeout = timeout
+        host = "127.0.0.1"
+        if "host" in kwargs:
+            host = kwargs.get("host")
+
+        timeout = 5
+        if "timeout" in kwargs:
+            timeout = kwargs.get("timeout")
+
         self.__logger = get_logger(__name__)
-        self.__session = Session()
+
+        self.__client = Client(host=host, timeout=timeout)
+
+        self.__server = Server(__name__)
+
+    def __del__(self):
+        """Destructor
+        """
+
+        if self.__server is not None:
+            self.__server.stop()
 
 #endregion
 
@@ -213,55 +193,13 @@ class bgERP():
             Success
         """
 
-        login_state = False
+        state = self.__client.login(credentials)
 
-        uri = self.host + self.__api_login
+        if state:
+            if self.__server is not None:
+                self.__server.start()
 
-        # self.__logger.info("LOGIN; To bgERP: {}".format(credentials))
-
-        try:
-            response = requests.post(uri, data=credentials, timeout=self.timeout)
-
-            if response is not None:
-
-                # Take new login session key.
-                if response.status_code == 200:
-                    data = response.json()
-                    if data is not None:
-
-                        # response_data = json.loads(response.text)
-
-                        # self.__logger.info("LOGIN; From bgERP: {}".format(response_data))
-
-                        # Authorization token.
-                        if "token" in data:
-                            self.__session.save(data["token"])
-                            self.__session.load()
-                            login_state = self.__session.session != ""
-
-                        # ERP identity.
-                        if "bgerp_id" in data:
-                            self.__erp_id = data["bgerp_id"]
-
-                # Use saved session key.
-                elif response.status_code == 423:
-                    self.__session.load()
-                    login_state = self.__session.session != ""
-                    self.__erp_id = credentials["bgerp_id"]
-
-                # Not authorized.
-                elif response.status_code == 403:
-                    login_state = False
-
-                else:
-                    self.__logger.error("HTTP Error code: {}".format(response.status_code))
-                    login_state = False
-
-        except:
-            self.__logger.error(traceback.format_exc())
-            login_state = False
-
-        return login_state
+        return state
 
     def sync(self, registers):
         """Update zone registers.
@@ -277,66 +215,22 @@ class bgERP():
             Success
         """
 
-        response_registers = None
+        return self.__client.sync(registers)
 
-        # URI
-        uri = self.host + self.__api_sync
+    def set_evok_cb(self, callback):
+        """Set EVOK service callback.
 
-        # Convert to JSON.
-        str_registers = json.dumps(registers).replace("\'", "\"")
+        Args:
+            callback (function): EVOK service handler.
+        """
+        self.__server.set_evok_cb(callback)
 
-        # Payload
-        payload = {"token": self.__session.session,\
-            "registers": str_registers, "last_sync": self.__last_sync}
+    def set_bgerp_cb(self, callback):
+        """Set bgERP service callback.
 
-        # self.__logger.info("SYNC; To bgERP: {}".format(payload))
-
-        # Headers
-        # headers = {"Content-Type": "application/x-www-form-urlencoded"}
-        # , headers=headers
-
-        # The request.
-        response = requests.post(uri, data=payload, timeout=self.timeout)
-
-        if response is not None:
-
-            # OK
-            if response.status_code == 200:
-
-                if response.text != "":
-
-                    response_registers = json.loads(response.text)
-
-                    # self.__logger.info("SYNC; From bgERP: {}".format(response_registers))
-
-                    # Update last successful time.
-                    self.__last_sync = time.time()
-
-            else:
-                self.__logger.error("HTTP Error code: {}".format(response.status_code))
-                response_registers = None
-
-        else:
-            response_registers = None
-
-        return response_registers
-
-#endregion
-
-#region Public Static Methods
-
-    @staticmethod
-    def get_instance(host=None, timeout=None):
-        """Singelton instance."""
-
-        instance = None
-
-        if host is not None and timeout is not None:
-            bgERP.__instance = bgERP(host=host, timeout=timeout)
-
-        if bgERP.__instance is not None:
-            instance = bgERP.__instance
-
-        return instance
+        Args:
+            callback (function): bgERP service handler.
+        """
+        self.__server.set_bgerp_cb(callback)
 
 #endregion

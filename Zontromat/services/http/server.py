@@ -25,11 +25,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import traceback
 from threading import Thread
 
-from http.server import HTTPServer
-
-from services.http.request_handler import RequestHandler
-
-from utils.logger import get_logger
+from flask import Flask, request
+from werkzeug.serving import make_server
 
 #region File Attributes
 
@@ -62,112 +59,81 @@ __status__ = "Debug"
 
 #endregion
 
-class Server:
-    """Local WEB server."""
-
+class Server(Thread):
+    """BAse HTTP threaded server."""
 #region Attributes
 
-    __logger = None
-    """Logger"""
-
-    __host = "127.0.0.1"
-    """Host"""
+    _app = None
+    """Flask App."""
 
     __port = 8889
     """Port"""
 
-    __server = None
-    """WEB server."""
-
-    __thread = None
-    """Thread"""
-
-#endregion
-
-#region Constructor
-
-    def __init__(self, host="127.0.0.1", port=8889):
-
-        if host is not None:
-            self.__host = host
-
-        if port is not None:
-            self.__port = port
-
-        # Create logger.
-        self.__logger = get_logger(__name__)
+    __host = "0.0.0.0"
+    """Host"""
 
 #endregion
 
 #region Properties
 
     @property
-    def is_alive(self):
-        """Is alive flag."""
+    def app(self):
+        """App instance."""
 
-        state = False
+        return self._app
 
-        if self.__thread is not None:
-            state = self.__thread.is_alive()
+#endregion
 
-        return state
+#region Constructor
+
+    def __init__(self, **kwargs):
+        """Constructor"""
+
+        super().__init__(target=kwargs["target"])
+        self.setDaemon(True)
+
+        if "port" in kwargs:
+            self.__port = kwargs["port"]
+
+        if "host" in kwargs:
+            self.__host = kwargs["host"]
+
+        self._app = Flask(kwargs["name"])
 
 #endregion
 
 #region Private Methods
 
-    def __worker(self, args):
-        self.__server.serve_forever()
+    def __shutdown_server(self):
+
+        func = request.environ.get('werkzeug.server.shutdown')
+
+        if func is None:
+            raise RuntimeError('Not running with the Werkzeug Server')
+
+        func()
 
 #endregion
 
 #region Public Methods
 
-    def start(self):
-        """Start the server."""
+    def run(self):
+        """Run the server."""
 
-        # Create two threads as follows
-        try:
-            if self.__thread is None:
-
-                # Create
-                self.__thread = Thread(target=self.__worker, args=(33,))
-                self.__server = HTTPServer((self.__host, self.__port), RequestHandler)
-
-                # Start if not.
-                if not self.__thread.is_alive():
-                    self.__thread.start()
-
-                    self.__logger.info("Start WEB service.")
-
-        except:
-            self.__logger.error(traceback.format_exc())
+        self._app.run(host=self.__host, port=self.__port,\
+                    debug=True, use_reloader=False)
 
     def stop(self):
         """Stop the server."""
 
         try:
-            if self.__thread is not None:
+            # If it is alive join.
+            if self.is_alive():
 
-                # If it is alive join.
-                if self.__thread.is_alive():
-
-                    # Shutdown the server.
-                    self.__server.shutdown()
-
-                    # Wait to stop.
-                    while self.__thread.is_alive():
-                        pass
-
-                    self.__thread.join()
-
-                    # Delete
-                    self.__thread = None
-                    self.__server = None
-
-                    self.__logger.info("Stop WEB service.")
+                self.__shutdown_server()
+                self.join()
 
         except Exception as exception:
-            self.__logger.error(exception)
+            print(exception)
 
 #endregion
