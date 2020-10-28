@@ -247,13 +247,19 @@ class Zone():
 #region Private Methods
 
     def __bgerp_cb(self, registers):
-        """[summary]
+        """Callback that is executed everytime when update is called.
 
         Args:
-            registers (Registers): registers to be changed.
+            registers (JSON): registers to be changed.
         """
 
-        print(registers)
+        if registers is not None:
+
+            for register in registers:
+                target = self.__registers.by_name(register)
+
+                if target is not None:
+                    target.value = registers[register]
 
     def __evok_cb(self, device):
         """EVOK callback service handler.

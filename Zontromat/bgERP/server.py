@@ -113,8 +113,16 @@ class Server(HTTPServer):
             """bgERP registers update callback."""
             # TODO: Add authentication when requesting information.
 
-            if self.__bgerp_update_cb is not None:
-                self.__bgerp_update_cb("OK")
+            if "registers" in request.form:
+                data = request.form["registers"]
+                data = data.replace("\\", "")
+                data = data[1:-1]
+
+                if data is not None:
+                    json_data = json.loads(data)
+
+                    if self.__bgerp_update_cb is not None:
+                        self.__bgerp_update_cb(json_data)
 
             return ""
 
