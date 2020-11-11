@@ -214,7 +214,8 @@ class Register:
         # Execute CB.
         if self.__update_handlers is not None:
             for item in self.__update_handlers:
-                item(self)
+                if item is not None:
+                    item(self)
 
     @property
     def scope(self):
