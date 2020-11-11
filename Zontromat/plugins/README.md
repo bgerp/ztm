@@ -23,12 +23,13 @@ Every plugin has group of registers that is responsible for its behavior.
 
     Example: **example.enabled**
 
- - The Enabled register can take only two values 0 or 1. Any other value will be interpreted as 0. The format of this register is integer.
+ - The Enabled register can take only two values **false** or **true**. Any other value will be interpreted as 0. The format of this register is integer.
 
-    Example: **example.enabled = 0 / example.enabled = 1**
+    Example: **example.enabled = false / example.enabled = true**
 
- - There is 3 main data types of registers in the system
-   - Float/Integer
+ - There is few data types of registers in the system
+   - Integer
+   - Float
    - String
    - Array
    - JSON
@@ -46,6 +47,10 @@ Every plugin has group of registers that is responsible for its behavior.
 
  - The exchange format between the Zontromat and bgERP is **JSON**
 
+ - When register exists in the system it always have allowed values. For this purpose we use few special characters to describe is this enum, interval (open and close), or just a string value.
+   - In case of **Enum**, we divide possible values wit vertical pipe "**|**", example: 0|1|2|3|4|5
+   - In case we have **Interval** we use slash "**/**", example: from 0 to 5, 0/5. If we wan to define a lower limit 0/. This means that all positive values are allowed. Respectively we can define upper limit by doing this /50. It means that all values below 50 are acceptable.  
+
 # Registers
 
 In this hedging we will describe all the register related to the work of the Zontromat software.
@@ -59,7 +64,7 @@ In this hedging we will describe all the register related to the work of the Zon
 
 | Purpose | Register | Type | Value |
 |----------|:-------------|:------|:------|
-| Plugin enabled | ac.enabled | str | yes |
+| Plugin enabled | ac.enabled | str | true |
 | Allowed attendees | ac.allowed_attendees | json | [{'card_id': '445E6046010080FF', 'pin': '159753', 'valid_until': '1595322860'}] |
 |  | ac.nearby_attendees | json | [] |
 | Card reader - vendor/model/serial number | ac.entry_reader_1.enabled | str | TERACOM/act230/2897 |
@@ -70,7 +75,7 @@ In this hedging we will describe all the register related to the work of the Zon
 | Card reader port name | ac.exit_reader_1.port.name | str | COM11 |
 | Exit button input | ac.exit_button_1.input | str | DI8 |
 | Lock mechanism output | ac.lock_mechanism_1.output | str | DO1 |
-| Lock mechanism time to open | ac.time_to_open_1 | int/float | 2 |
+| Lock mechanism time to open | ac.time_to_open_1 | int | 2 |
 | Door closed input | ac.door_closed_1.input | str | DI2 |
 | PIR sensor input | ac.pir_1.input | str | DI0 |
 | Window closed input | ac.window_closed_1.input | str | DI3 |
@@ -82,7 +87,7 @@ In this hedging we will describe all the register related to the work of the Zon
 | Card reader port name | ac.exit_reader_2.port.name | str | COM11 |
 | Exit button input | ac.exit_button_2.input | str | off |
 | Lock mechanism output | ac.lock_mechanism_2.output | str | off |
-| Lock mechanism time to open | ac.time_to_open_2 | int/float | 2 |
+| Lock mechanism time to open | ac.time_to_open_2 | int | 2 |
 | Door closed input | ac.door_closed_2.input | str | off |
 | PIR sensor input | ac.pir_2.input | str | off |
 | Window closed input | ac.window_closed_2.input | str | off |
@@ -109,7 +114,7 @@ In this hedging we will describe all the register related to the work of the Zon
 
 | Purpose | Register | Type | Value |
 |----------|:-------------|:------|:------|
-| Enabled | blinds.enabled | int | 0 |
+| Enabled | blinds.enabled | int | false |
 | Feedback input | blinds.input_fb | str | AI1 |
 | CCW output | blinds.output_ccw | str | DO0 |
 | CW output | blinds.output_cw | str | DO1 |
@@ -136,7 +141,7 @@ None
 | Hot water input flow meter | monitoring.hw.input | str | DI7 |
 | Hot water tics per liter | monitoring.hw.tpl | int/float | 1 |
 | Power analyser - Modbus type/Vendor/EVOK UART Index/EVOK Device index | monitoring.pa.settings | str | mb-rtu/Eastron/SDM630/2/3 |
-| Enabled | monitoring.enabled | str | yes |
+| Enabled | monitoring.enabled | str | true |
 
  - From **Zontromat** to **bgERP**
 
@@ -168,10 +173,10 @@ None
 | Actual wind [m/sec] | env.wind.actual | int/float | 3 |
 | Maximum wind for 12 hours [m/sec] | env.wind.max12 | int/float | 6 |
 | Outside light [lux] | env.light | int/float | 1000 |
-| Enabled | env.enabled | str | yes |
+| Enabled | env.enabled | str | false |
 | Energy mode of the building | env.energy | int/float | 0 |
 | Emergency flags of the building  | env.emergency | int/float | 0 |
-| Enable software calculation of the sun position | env.sunpos.enabled | str | no |
+| Enable software calculation of the sun position | env.sunpos.enabled | str | false |
 
  - From **Zontromat** to **bgERP**
 
@@ -196,7 +201,7 @@ None
 | Convector stage 2 output | hvac.convector.stage_2.output | str | RO1 |
 | Convector stage 3 output | hvac.convector.stage_3.output | str | RO2 |
 | Measuring delta time | hvac.delta_time | int | 5 |
-| Enabled | hvac.enabled | int |0 |
+| Enabled | hvac.enabled | int | false |
 | Goal of the building temperature | hvac.goal_building_temp | int | 20 |
 | Loop 1, water flow meter ticks per liter scale. | hvac.loop1.cnt.tpl | int | 1 |
 | Loop 1, water flow meter signal input. | hvac.loop1.cnt.input | str | DI4 |
@@ -241,7 +246,7 @@ None
 
 | Purpose | Register | Type | Value |
 |----------|:-------------|:------|:------|
-| Enabled | light.enabled | int |0 |
+| Enabled | light.enabled | int |false |
 | Maximum limit | light.max | int | 10000 |
 | Minimum limit | light.min | int | 800 |
 | Sensor - device/circuit | light.sensor.settings | str | 1wdevice/26607314020000F8 |
@@ -262,9 +267,9 @@ None
 | Purpose | Register | Type | Value |
 |----------|:-------------|:------|:------|
 | System activity LED output | sys.sl.output | str | LED0 |
-| LED blink time | sys.sl.blink_time | int/float | 1 |
+| LED blink time | sys.sl.blink_time | float | 1 |
 | Anti tampering input. | sys.at.input | str | DI1 |
-| Enabled | sys.enabled | str | yes |
+| Enabled | sys.enabled | str | true |
 | Clear last messages in the registers below | sys.col.clear_errors | int | 0 |
 
  - From **Zontromat** to **bgERP**
@@ -272,9 +277,9 @@ None
 | Purpose | Register | Type | Value |
 |----------|:-------------|:------|:------|
 | Error frm the last minute. | sys.last_minute_errs | str |  |
-| Current consumed RAM. | sys.ram.current | int/float | 0 |
-| Maximum consumed RAM. | sys.ram.peak | int/float | 0 |
-| Application cycle time. | sys.time.usage | int/float | 0 |
+| Current consumed RAM. | sys.ram.current | int | 0 |
+| Maximum consumed RAM. | sys.ram.peak | int | 0 |
+| Application cycle time. | sys.time.usage | float | 0 |
 | Antin tampering state. | sys.at.state | bool | False |
 | Info, similar resource detected description. | sys.col.info_message | str |  |
 | Warning, similar resource description. | sys.col.warning_message | str |  |
