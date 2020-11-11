@@ -79,7 +79,7 @@ def __add_registers():
     register.plugin_name = "Access Control"
     register.description = "Plugin enabled"
     register.range = "true|false"
-    # register.update_handler = self.__access_control_enabled
+    # register.update_handlers = self.__access_control_enabled
     register.value = False
     __registers.append(register)
 
@@ -493,7 +493,7 @@ def __add_registers():
     register.plugin_name = "Blinds"
     register.description = "Plugin enabled"
     register.range = "true|false"
-    # register.update_handler = self.__blinds_enabled
+    # register.update_handlers = self.__blinds_enabled
     register.value = False
     __registers.append(register)
 
@@ -606,7 +606,7 @@ def __add_registers():
     register.plugin_name = "Monitoring"
     register.description = "Plugin enabled"
     register.range = "true|false"
-    # register.update_handler = self.__monitoring_enabled
+    # register.update_handlers = self.__monitoring_enabled
     register.value = False
     __registers.append(register)
 
@@ -720,7 +720,7 @@ def __add_registers():
 
     register = Register("env.enabled")
     register.scope = Scope.System
-    # register.update_handler = self.__env_enabled
+    # register.update_handlers = self.__env_enabled
     register.plugin_name = "Environment"
     register.description = "Plugin enabled"
     register.range = "true|false"
@@ -811,7 +811,7 @@ def __add_registers():
     # HVAC Enabled.
     register = Register("hvac.enabled")
     register.scope = Scope.System
-    # register.update_handler = self.__hvac_enabled
+    # register.update_handlers = self.__hvac_enabled
     register.plugin_name = "HVAC"
     register.description = "Plugin enabled"
     register.range = "true|false"
@@ -857,7 +857,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "HVAC"
     register.description = "Loop 1 fan output"
-    register.range = "off|AI0|AI1|AI2|AI3|AI4|AI5|AI6|AI7|AI8"
+    register.range = "off|AO0|AO1|AO2|AO3|AO4|AO5|AO6|AO7|AO8"
     register.value = "AO3"
     __registers.append(register)
 
@@ -1148,7 +1148,7 @@ def __add_registers():
     register.plugin_name = "Light"
     register.description = "Plugin enabled"
     register.range = "true|false"
-    # register.update_handler = self.__light_enabled
+    # register.update_handlers = self.__light_enabled
     register.value = False
     __registers.append(register)
 
@@ -1264,7 +1264,7 @@ def __add_registers():
     register.plugin_name = "System"
     register.description = "Plugin enabled"
     register.range = "true|false"
-    # register.update_handler = self.__sys_enabled
+    # register.update_handlers = self.__sys_enabled
     register.value = False
     __registers.append(register)
 
