@@ -146,11 +146,11 @@ class Monitoring(BasePlugin):
 
         cw_input = self._registers.by_name(self._key + ".cw.input")
         if cw_input is not None:
-            cw_input.update_handler = self.__cw_input_cb
+            cw_input.update_handlers = self.__cw_input_cb
 
         cw_tpl = self._registers.by_name(self._key + ".cw.tpl")
         if cw_tpl is not None:
-            cw_tpl.update_handler = self.__cw_tpl_cb
+            cw_tpl.update_handlers = self.__cw_tpl_cb
 
         config = \
         {\
@@ -214,11 +214,11 @@ class Monitoring(BasePlugin):
 
         hw_input = self._registers.by_name(self._key + ".hw.input")
         if hw_input is not None:
-            hw_input.update_handler = self.__hw_input_cb
+            hw_input.update_handlers = self.__hw_input_cb
 
         hw_tpl = self._registers.by_name(self._key + ".hw.tpl")
         if hw_tpl is not None:
-            hw_tpl.update_handler = self.__hw_tpl_cb
+            hw_tpl.update_handlers = self.__hw_tpl_cb
 
         config = \
         {\
@@ -336,7 +336,7 @@ class Monitoring(BasePlugin):
 
         pa_enabled = self._registers.by_name(self._key + ".pa.settings")
         if pa_enabled is not None:
-            pa_enabled.update_handler = self.__pa_enabled_cb
+            pa_enabled.update_handlers = self.__pa_enabled_cb
 
     def __update_pa(self):
 

@@ -337,37 +337,37 @@ class SecurityZone(BasePlugin):
         # Entry reader.
         entry_reader = self._registers.by_name("{}.entry_reader_{}.enabled".format(self._key, self.__identifier))
         if entry_reader is not None:
-            entry_reader.update_handler = self.__entry_reader_cb
+            entry_reader.update_handlers = self.__entry_reader_cb
 
         # Exit reader.
         exit_reader = self._registers.by_name("{}.exit_reader_{}.enabled".format(self._key, self.__identifier))
         if exit_reader is not None:
-            exit_reader.update_handler = self.__exit_reader_cb
+            exit_reader.update_handlers = self.__exit_reader_cb
 
         # Create exit button.
         exit_button_input = self._registers.by_name("{}.exit_button_{}.input".format(self._key, self.__identifier))
         if exit_button_input is not None:
-            exit_button_input.update_handler = self.__exit_btn_input_cb
+            exit_button_input.update_handlers = self.__exit_btn_input_cb
 
         # Create locking mechanism.
         lock_mechanism_output = self._registers.by_name("{}.lock_mechanism_{}.output".format(self._key, self.__identifier))
         if lock_mechanism_output is not None:
-            lock_mechanism_output.update_handler = self.__lock_mechanism_output_cb
+            lock_mechanism_output.update_handlers = self.__lock_mechanism_output_cb
 
         # Get time to open the latch.
         time_to_open = self._registers.by_name("{}.time_to_open_{}".format(self._key, self.__identifier))
         if time_to_open is not None:
-            time_to_open.update_handler = self.__time_to_open_cb
+            time_to_open.update_handlers = self.__time_to_open_cb
 
         # Door window blind.
         door_window_blind_output = self._registers.by_name("{}.door_window_blind_{}.output".format(self._key, self.__identifier))
         if door_window_blind_output is not None:
-            door_window_blind_output.update_handler = self.__door_window_blind_output_cb
+            door_window_blind_output.update_handlers = self.__door_window_blind_output_cb
 
         # Door window blind.
         door_window_blind_value = self._registers.by_name("{}.door_window_blind_{}.value".format(self._key, self.__identifier))
         if door_window_blind_value is not None:
-            door_window_blind_value.update_handler = self.__door_window_blind_value_cb
+            door_window_blind_value.update_handlers = self.__door_window_blind_value_cb
 
     def update(self):
         """Update"""

@@ -250,27 +250,27 @@ class PluginsManager:
 
         register = self.__registers.by_name("ac.enabled")
         if register is not None:
-            register.update_handler = self.__access_control_enabled
+            register.update_handlers = self.__access_control_enabled
 
         register = self.__registers.by_name("blinds.enabled")
         if register is not None:
-            register.update_handler = self.__blinds_enabled
+            register.update_handlers = self.__blinds_enabled
 
         register = self.__registers.by_name("monitoring.enabled")
         if register is not None:
-            register.update_handler = self.__monitoring_enabled
+            register.update_handlers = self.__monitoring_enabled
 
         register = self.__registers.by_name("env.enabled")
         if register is not None:
-            register.update_handler = self.__env_enabled
+            register.update_handlers = self.__env_enabled
 
         register = self.__registers.by_name("hvac.enabled")
         if register is not None:
-            register.update_handler = self.__hvac_enabled
+            register.update_handlers = self.__hvac_enabled
 
         register = self.__registers.by_name("light.enabled")
         if register is not None:
-            register.update_handler = self.__light_enabled
+            register.update_handlers = self.__light_enabled
 
         register = self.__registers.by_name("sys.last_minute_errs")
         if register is not None:
@@ -278,7 +278,7 @@ class PluginsManager:
 
         register = self.__registers.by_name("sys.enabled")
         if register is not None:
-            register.update_handler = self.__sys_enabled
+            register.update_handlers = self.__sys_enabled
 
 #endregion
 

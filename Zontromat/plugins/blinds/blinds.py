@@ -339,19 +339,19 @@ class Blinds(BasePlugin):
 
         input_fb = self._registers.by_name(self._key + ".input_fb")
         if input_fb is not None:
-            input_fb.update_handler = self.__input_fb_cb
+            input_fb.update_handlers = self.__input_fb_cb
 
         output_cw = self._registers.by_name(self._key + ".output_cw")
         if output_cw is not None:
-            output_cw.update_handler = self.__output_cw_cb
+            output_cw.update_handlers = self.__output_cw_cb
 
         output_ccw = self._registers.by_name(self._key + ".output_ccw")
         if output_ccw is not None:
-            output_ccw.update_handler = self.__output_ccw_cb
+            output_ccw.update_handlers = self.__output_ccw_cb
 
         # position = self._registers.by_name(self._key + ".position")
         # if position is not None:
-        #     position.update_handler = self.__on_new_pos
+        #     position.update_handlers = self.__on_new_pos
 
         self.__stop()
 

@@ -82,7 +82,7 @@ class Register:
     __scope = Scope.Global
     """Scope of register."""
 
-    __update_handler = None
+    __update_handlers = []
     """Update handler."""
 
     __force = False
@@ -212,8 +212,9 @@ class Register:
         self.__value = value
 
         # Execute CB.
-        if self.__update_handler is not None:
-            self.__update_handler(self)
+        if self.__update_handlers is not None:
+            for item in self.__update_handlers:
+                item(self)
 
     @property
     def scope(self):
@@ -266,26 +267,29 @@ class Register:
         self.__scope = value
 
     @property
-    def update_handler(self):
-        """Returns the timestamp of the register.
+    def update_handlers(self):
+        """Returns list of the handlers.
 
         Returns
         -------
-        int
-            Timestamp of the register.
+        function
+            List of the handlers.
         """
-        return self.__update_handler
 
-    @update_handler.setter
-    def update_handler(self, update_handler):
-        """Set the timestamp of the register.
+        return self.__update_handlers
+
+    @update_handlers.setter
+    def update_handlers(self, update_handler):
+        """Add update handler to the list of the handlers.
 
         Parameters
         ----------
-        host : int
-            Timestamp of the register.
+        update_handler : function
+            Callback pointer.
         """
-        self.__update_handler = update_handler
+
+        if self.__update_handlers is not None:
+            self.__update_handlers.append(update_handler)
 
     @property
     def force(self):

@@ -270,12 +270,12 @@ class Sys(BasePlugin):
         # Status LED blink time.
         blink_time = self._registers.by_name(self._key + ".sl.blink_time")
         if blink_time is not None:
-            blink_time.update_handler = self.__blink_time_cb
+            blink_time.update_handlers = self.__blink_time_cb
 
         # Status LED output.
         output = self._registers.by_name(self._key + ".sl.output")
         if output is not None:
-            output.update_handler = self.__led_out_cb
+            output.update_handlers = self.__led_out_cb
 
         # Colission detection.
         self.__collission_timer = Timer(1)
@@ -284,23 +284,23 @@ class Sys(BasePlugin):
 
         clear_errors = self._registers.by_name(self._key + ".col.clear_errors")
         if clear_errors is not None:
-            clear_errors.update_handler = self.__clear_errors_cb
+            clear_errors.update_handlers = self.__clear_errors_cb
             clear_errors.value = 1
 
         # Enable info messages.
         enable_info_msg = self._registers.by_name(self._key + ".col.info_message.enable")
         if enable_info_msg is not None:
-            enable_info_msg.update_handler = self.__enable_info_msg_cb
+            enable_info_msg.update_handlers = self.__enable_info_msg_cb
 
         # Enable warning messages.
         enable_wrn_msg = self._registers.by_name(self._key + ".col.warning_message.enable")
         if enable_wrn_msg is not None:
-            enable_wrn_msg.update_handler = self.__enable_wrn_msg_cb
+            enable_wrn_msg.update_handlers = self.__enable_wrn_msg_cb
 
         # Enable error messages.
         enable_err_msg = self._registers.by_name(self._key + ".col.error_message.enable")
         if enable_err_msg is not None:
-            enable_err_msg.update_handler = self.__enable_err_msg_cb
+            enable_err_msg.update_handlers = self.__enable_err_msg_cb
 
     def update(self):
         """Runtime of the plugin."""

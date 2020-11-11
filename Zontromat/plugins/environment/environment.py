@@ -153,7 +153,7 @@ class Environment(BasePlugin):
         # Software sun position enabled.
         sunpos_enabled = self._registers.by_name(self._key + ".sunpos.enabled")
         if sunpos_enabled is not None:
-            sunpos_enabled.update_handler = self.__sunpos_enabled_cb
+            sunpos_enabled.update_handlers = self.__sunpos_enabled_cb
 
     def update(self):
 

@@ -245,7 +245,7 @@ class AccessControl(BasePlugin):
         # Card reader allowed IDs.
         allowed_attendees = self._registers.by_name(self._key + ".allowed_attendees")
         if allowed_attendees is not None:
-            allowed_attendees.update_handler = self.__allowed_attendees_cb
+            allowed_attendees.update_handlers = self.__allowed_attendees_cb
 
         # Is empty timer.
         self.__is_empty_timer = Timer(3600)
@@ -253,7 +253,7 @@ class AccessControl(BasePlugin):
         # Is empty timeout.
         is_empty_timeout = self._registers.by_name("env.is_empty_timeout")
         if is_empty_timeout is not None:
-            is_empty_timeout.update_handler = self.__is_empty_timeout_cb
+            is_empty_timeout.update_handlers = self.__is_empty_timeout_cb
 
         # Security zone 1.
         self.__security_zone_1 = SecurityZone(\

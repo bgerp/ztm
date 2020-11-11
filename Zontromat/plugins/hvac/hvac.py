@@ -750,95 +750,95 @@ class HVAC(BasePlugin):
         # Region parameters
         update_rate = self._registers.by_name(self._key + ".update_rate")
         if update_rate is not None:
-            update_rate.update_handler = self.__update_rate_cb
+            update_rate.update_handlers = self.__update_rate_cb
 
         delta_time = self._registers.by_name(self._key + ".delta_time")
         if delta_time is not None:
-            delta_time.update_handler = self.__delta_time_cb
+            delta_time.update_handlers = self.__delta_time_cb
 
         thermal_mode = self._registers.by_name(self._key + ".thermal_mode")
         if thermal_mode is not None:
-            thermal_mode.update_handler = self.__thermal_mode_cb
+            thermal_mode.update_handlers = self.__thermal_mode_cb
 
         thermal_force_limit = self._registers.by_name(self._key + ".thermal_force_limit")
         if thermal_force_limit is not None:
-            thermal_force_limit.update_handler = self.__thermal_force_limit_cb
+            thermal_force_limit.update_handlers = self.__thermal_force_limit_cb
 
         adjust_temp = self._registers.by_name(self._key + ".adjust_temp")
         if adjust_temp is not None:
-            adjust_temp.update_handler = self.__adjust_temp_cb
+            adjust_temp.update_handlers = self.__adjust_temp_cb
 
         goal_building_temp = self._registers.by_name(self._key + ".goal_building_temp")
         if goal_building_temp is not None:
-            goal_building_temp.update_handler = self.__goal_building_temp_cb
+            goal_building_temp.update_handlers = self.__goal_building_temp_cb
 
         # Air temperatures.
         air_temp_cent_enabled = self._registers.by_name(self._key + ".air_temp_cent.settings")
         if air_temp_cent_enabled is not None:
-            air_temp_cent_enabled.update_handler = self.__air_temp_cent_settings_cb
+            air_temp_cent_enabled.update_handlers = self.__air_temp_cent_settings_cb
 
         air_temp_lower_enabled = self._registers.by_name(self._key + ".air_temp_lower.settings")
         if air_temp_lower_enabled is not None:
-            air_temp_lower_enabled.update_handler = self.__air_temp_lower_settings_cb
+            air_temp_lower_enabled.update_handlers = self.__air_temp_lower_settings_cb
 
         air_temp_upper_enabled = self._registers.by_name(self._key + ".air_temp_upper.settings")
         if air_temp_upper_enabled is not None:
-            air_temp_upper_enabled.update_handler = self.__air_temp_upper_settings_cb
+            air_temp_upper_enabled.update_handlers = self.__air_temp_upper_settings_cb
 
         # Convector
         convector_enable = self._registers.by_name(self._key + ".convector.settings")
         if convector_enable is not None:
-            convector_enable.update_handler = self.__convector_settings_cb
+            convector_enable.update_handlers = self.__convector_settings_cb
 
         # Loop 1
         loop1_cnt_enabled = self._registers.by_name(self._key + ".loop1.cnt.input")
         if loop1_cnt_enabled is not None:
-            loop1_cnt_enabled.update_handler = self.__loop1_cnt_input_cb
+            loop1_cnt_enabled.update_handlers = self.__loop1_cnt_input_cb
 
         loop1_fan_enabled = self._registers.by_name(self._key + ".loop1.fan.settings")
         if loop1_fan_enabled is not None:
-            loop1_fan_enabled.update_handler = self.__loop1_fan_settings_cb
+            loop1_fan_enabled.update_handlers = self.__loop1_fan_settings_cb
 
         loop1_fan_min = self._registers.by_name(self._key + ".loop1.fan.min_speed")
         if loop1_fan_min is not None:
-            loop1_fan_min.update_handler = self.__loop1_fan_min_cb
+            loop1_fan_min.update_handlers = self.__loop1_fan_min_cb
 
         loop1_fan_max = self._registers.by_name(self._key + ".loop1.fan.max_speed")
         if loop1_fan_max is not None:
-            loop1_fan_max.update_handler = self.__loop1_fan_max_cb
+            loop1_fan_max.update_handlers = self.__loop1_fan_max_cb
 
         loop1_temp_enabled = self._registers.by_name(self._key + ".loop1.temp.settings")
         if loop1_temp_enabled is not None:
-            loop1_temp_enabled.update_handler = self.__loop1_temp_settings_cb
+            loop1_temp_enabled.update_handlers = self.__loop1_temp_settings_cb
 
         loop1_valve_enabled = self._registers.by_name(self._key + ".loop1.valve.settings")
         if loop1_valve_enabled is not None:
-            loop1_valve_enabled.update_handler = self.__loop1_valve_enabled_cb
+            loop1_valve_enabled.update_handlers = self.__loop1_valve_enabled_cb
 
         # Loop 2
         loop2_cnt_enabled = self._registers.by_name(self._key + ".loop2.cnt.input")
         if loop2_cnt_enabled is not None:
-            loop2_cnt_enabled.update_handler = self.__loop2_cnt_input_cb
+            loop2_cnt_enabled.update_handlers = self.__loop2_cnt_input_cb
 
         loop2_fan_enabled = self._registers.by_name(self._key + ".loop2.fan.settings")
         if loop2_fan_enabled is not None:
-            loop2_fan_enabled.update_handler = self.__loop2_fan_settings_cb
+            loop2_fan_enabled.update_handlers = self.__loop2_fan_settings_cb
 
         loop2_fan_min = self._registers.by_name(self._key + ".loop2.fan.min_speed")
         if loop2_fan_min is not None:
-            loop2_fan_min.update_handler = self.__loop2_fan_min_cb
+            loop2_fan_min.update_handlers = self.__loop2_fan_min_cb
 
         loop2_fan_max = self._registers.by_name(self._key + ".loop2.fan.max_speed")
         if loop2_fan_max is not None:
-            loop2_fan_max.update_handler = self.__loop2_fan_max_cb
+            loop2_fan_max.update_handlers = self.__loop2_fan_max_cb
 
         loop2_temp_enabled = self._registers.by_name(self._key + ".loop2.temp.settings")
         if loop2_temp_enabled is not None:
-            loop2_temp_enabled.update_handler = self.__loop2_temp_settings_cb
+            loop2_temp_enabled.update_handlers = self.__loop2_temp_settings_cb
 
         loop2_valve_enabled = self._registers.by_name(self._key + ".loop2.valve.settings")
         if loop2_valve_enabled is not None:
-            loop2_valve_enabled.update_handler = self.__loop2_valve_settings_cb
+            loop2_valve_enabled.update_handlers = self.__loop2_valve_settings_cb
 
 
         # Shutting down all the devices.

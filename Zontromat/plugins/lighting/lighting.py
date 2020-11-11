@@ -246,15 +246,15 @@ class Lighting(BasePlugin):
 
         sensor_enabled = self._registers.by_name(self._key + ".sensor.settings")
         if sensor_enabled is not None:
-            sensor_enabled.update_handler = self.__sensor_settings_cb
+            sensor_enabled.update_handlers = self.__sensor_settings_cb
 
         v1_output = self._registers.by_name(self._key + ".v1.output")
         if v1_output is not None:
-            v1_output.update_handler = self.__v1_output_cb
+            v1_output.update_handlers = self.__v1_output_cb
 
         v2_output = self._registers.by_name(self._key + ".v2.output")
         if v2_output is not None:
-            v2_output.update_handler = self.__v2_output_cb
+            v2_output.update_handlers = self.__v2_output_cb
 
         self.v1 = 1.0 #TODO: Only test purpose.
 
