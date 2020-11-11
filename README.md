@@ -10,7 +10,7 @@ The application is provoking communication with specified server of bgERP.
 Server is responsible to give configuration and parameters to this app,
 immediately the application starts to control the chosen zones.
 
-The main hardware controller behind this app is [UniPi Neuron M503](https://www.unipi.technology/unipi-neuron-m503-p104).
+The main hardware controller behind this app is [UniPi Neuron M503](https://www.unipi.technology/unipi-neuron-m503-p104) and [UniPi Neuron M523](https://www.unipi.technology/unipi-neuron-m523-p320)
 
 Software that is running on the controller is [Evok](https://www.unipi.technology/products/evok-47)
 
@@ -164,3 +164,38 @@ application:
   # NOTSET 0
   debug_level: 10
 ```
+
+## Application dependency graph
+
+![](app_deps_graph.svg)
+
+For generating the dependency graph you need to do the following steps.
+
+  - Go to the main project directory
+ ```sh
+ cd zontromat
+ ```
+
+  - Call tha following module in **Windows**.
+ ```sh
+python -m pydeps .\zontromat\main.py --max-bacon 33 --cluster --max-cluster-size 101 --noise-level 33 --include-missing --keep-target-cluster --rmprefix data. services. bgERP. devices. controllers. plugins. utils. sys. -o .\app_deps_graph.svg
+ ```
+ 
+  - Call tha following module in **Linux**.
+ ```sh
+python3 -m pydeps .\zontromat\main.py --max-bacon 33 --cluster --max-cluster-size 101 --noise-level 33 --include-missing --keep-target-cluster --rmprefix data. services. bgERP. devices. controllers. plugins. utils. sys. -o .\app_deps_graph.svg
+ ```
+ 
+  - The result will be write ans SVG in **app_deps_graph.svg**
+
+  ## Generate HTML documentation
+
+  - Go to the main project directory
+ ```sh
+ cd zontromat
+ ```
+
+  - Call tha following module in **Windows**.
+  ```sh
+python -m pdoc .\Zontromat --html --skip-errors --force -o .\doc
+  ```
