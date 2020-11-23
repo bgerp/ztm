@@ -82,7 +82,7 @@ class Register:
     __scope = Scope.Global
     """Scope of register."""
 
-    __update_handlers = []
+    __handlers = None
     """Update handler."""
 
     __force = False
@@ -111,6 +111,9 @@ class Register:
         """
 
         self.__name = name
+
+        if self.__handlers is None:
+            self.__handlers = []
 
     def __str__(self):
         """As string
@@ -212,8 +215,8 @@ class Register:
         self.__value = value
 
         # Execute CB.
-        if self.__update_handlers is not None:
-            for item in self.__update_handlers:
+        if self.update_handlers is not None:
+            for item in self.update_handlers:
                 if item is not None:
                     item(self)
 
@@ -277,7 +280,7 @@ class Register:
             List of the handlers.
         """
 
-        return self.__update_handlers
+        return self.__handlers
 
     @update_handlers.setter
     def update_handlers(self, update_handler):
@@ -289,8 +292,8 @@ class Register:
             Callback pointer.
         """
 
-        if self.__update_handlers is not None:
-            self.__update_handlers.append(update_handler)
+        if self.update_handlers is not None:
+            self.update_handlers.append(update_handler)
 
     @property
     def force(self):
