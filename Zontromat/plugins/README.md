@@ -174,8 +174,13 @@ None
 | Maximum wind for 12 hours [m/sec] | env.wind.max12 | int/float | 6 |
 | Outside light [lux] | env.light | int/float | 1000 |
 | Enabled | env.enabled | str | false |
-| Energy mode of the building | env.energy | int/float | 0 |
-| Emergency flags of the building  | env.emergency | int/float | 0 |
+| Energy mode of the building | env.energy | float | 0 |
+| Emergency index for the fire. | env.flag_fire | int | 0 |
+| Emergency index for the storm. | env.flag_storm | int | 0 |
+| Emergency index for the earthquake. | env.flag_earthquake | Int | 0 |
+| Emergency index for the gassing. | env.flag_gassing | int | 0 |
+| Emergency index for the flooding. | env.flag_flooding | int | 0 |
+| Emergency index for the blocking. | env.flag_blocked | int | 0 |
 | Enable software calculation of the sun position | env.sunpos.enabled | str | false |
 
  - From **Zontromat** to **bgERP**

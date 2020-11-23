@@ -702,11 +702,51 @@ def __add_registers():
     register.value = 0
     __registers.append(register)
 
-    register = Register("env.emergency") # Emergency bit coded flags of the building.
+    register = Register("env.flag_fire")
     register.scope = Scope.System
     register.plugin_name = "Environment"
-    register.description = "Emergency flags of the building"
-    register.range = ""
+    register.description = "Emergency index for the fire."
+    register.range = "0/3"
+    register.value = 0
+    __registers.append(register)
+
+    register = Register("env.flag_storm")
+    register.scope = Scope.System
+    register.plugin_name = "Environment"
+    register.description = "Emergency index for the storm."
+    register.range = "0/3"
+    register.value = 0
+    __registers.append(register)
+
+    register = Register("env.flag_earthquake")
+    register.scope = Scope.System
+    register.plugin_name = "Environment"
+    register.description = "Emergency index for the earthquake."
+    register.range = "0/3"
+    register.value = 0
+    __registers.append(register)
+
+    register = Register("env.flag_gassing")
+    register.scope = Scope.System
+    register.plugin_name = "Environment"
+    register.description = "Emergency index for the gassing."
+    register.range = "0/3"
+    register.value = 0
+    __registers.append(register)
+
+    register = Register("env.flag_flooding")
+    register.scope = Scope.System
+    register.plugin_name = "Environment"
+    register.description = "Emergency index for the flooding."
+    register.range = "0/3"
+    register.value = 0
+    __registers.append(register)
+
+    register = Register("env.flag_blocked")
+    register.scope = Scope.System
+    register.plugin_name = "Environment"
+    register.description = "Emergency index for the blocking."
+    register.range = "0/3"
     register.value = 0
     __registers.append(register)
 
