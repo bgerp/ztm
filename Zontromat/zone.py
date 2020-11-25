@@ -89,18 +89,6 @@ class EnergyMode(Enum):
     Accumulate = 2 # accumulate (акумулиране)
     Generator = 3 # generator (на генератор)
 
-class EmergencyMode:
-    """Energy mode enumeration.
-        @see Zontromat document
-    """
-    Normal = 0 # normal (0) - Нормално опериране
-    Fire = 1 # isFire (1) - има пожар в сградата
-    Storm = 2 # isStorm (2) - има буря около сградата
-    Earthquake = 4 # isEarthquake (4) - има земетресение
-    Gassing = 8 # isGassing (8) - има обгазяване около сградата
-    Flooding = 16 # isFlooding (16) - има наводнение около сградата
-    Blocked = 32 # isBlocked (32) - сградата е блокирана
-
 class ZoneState(Enum):
     """Zone state machine flags."""
 
