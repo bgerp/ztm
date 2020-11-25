@@ -5,10 +5,10 @@ ac.nearby_attendees,json,,Access Control,system,"""[]""",Nearby attendees
 ac.last_minute_attendees,json,,Access Control,device,"""[]""",Last minute attendee
 ac.next_attendance,float,0.0/,Access Control,device,0.0,Next attendance
 ac.zone_occupied,bool,true|false,Access Control,device,false,Zone occupied flag
-ac.entry_reader_1.enabled,str,,Access Control,system,TERACOM/act230/2911,Card reader enabled
+ac.entry_reader_1.enabled,str,,Access Control,system,off,Card reader enabled
 ac.entry_reader_1.port.baudrate,int,300|600|1200|2400|4800|9600|19200|38400|57600|115200,Access Control,system,9600,Card reader port baud rate
 ac.entry_reader_1.port.name,str,,Access Control,system,COM11,Card reader port name
-ac.exit_reader_1.enabled,str,,Access Control,system,TERACOM/act230/2897,Card reader enabled
+ac.exit_reader_1.enabled,str,,Access Control,system,off,Card reader enabled
 ac.exit_reader_1.port.baudrate,int,300|600|1200|2400|4800|9600|19200|38400|57600|115200,Access Control,system,9600,Card reader 1 port baud rate
 ac.exit_reader_1.port.name,str,,Access Control,system,COM5,Card reader 1 port name
 ac.exit_button_1.input,str,off|DI0|DI1|DI2|DI3|DI4|DI5|DI6|DI7|DI8,Access Control,system,off,Exit button 1 input
@@ -16,10 +16,10 @@ ac.lock_mechanism_1.output,str,off|DO0|DO1|DO2|DO3|DO4|DO5|DO6|DO7|DO8,Access Co
 ac.time_to_open_1,int,0/60,Access Control,system,10,Lock mechanism time to open [s]
 ac.door_closed_1.input,str,off|DI0|DI1|DI2|DI3|DI4|DI5|DI6|DI7|DI8,Access Control,system,off,Door closed input
 ac.door_closed_1.state,bool,true|false,Access Control,device,false,Door closed input state
-ac.entry_reader_2.enabled,str,,Access Control,system,TERACOM/act230/2468,Card reader settings
+ac.entry_reader_2.enabled,str,,Access Control,system,off,Card reader settings
 ac.entry_reader_2.port.baudrate,int,300|600|1200|2400|4800|9600|19200|38400|57600|115200,Access Control,system,9600,Card reader port baud rate
 ac.entry_reader_2.port.name,str,,Access Control,system,COM9,Card reader port name
-ac.exit_reader_2.enabled,str,,Access Control,system,TERACOM/act230/1208,Card reader settings
+ac.exit_reader_2.enabled,str,,Access Control,system,off,Card reader settings
 ac.exit_reader_2.port.baudrate,int,300|600|1200|2400|4800|9600|19200|38400|57600|115200,Access Control,system,9600,Card reader port baud rate
 ac.exit_reader_2.port.name,str,,Access Control,system,COM8,Card reader port name
 ac.exit_button_2.input,str,off|DI0|DI1|DI2|DI3|DI4|DI5|DI6|DI7|DI8,Access Control,system,off,Exit button 2 input
@@ -56,7 +56,7 @@ monitoring.hw.input,str,off|DI0|DI1|DI2|DI3|DI4|DI5|DI6|DI7|DI8,Monitoring,syste
 monitoring.hw.tpl,float,0.0/,Monitoring,system,1.0,Hot water tics per liter
 monitoring.hw.value,float,0.0/,Monitoring,device,0.0,Hot water liters
 monitoring.hw.leak,float,0.0/,Monitoring,device,1.0,Hot water leaked liters
-monitoring.pa.settings,str,,Monitoring,system,mb-rtu/Eastron/SDM630/2/3,Power analyser settings
+monitoring.pa.settings,str,,Monitoring,system,off,Power analyser settings
 monitoring.pa.l1,json,,Monitoring,device,"""[]""",Power analyser L1 parameters
 monitoring.pa.l2,json,,Monitoring,device,"""[]""",Power analyser L2 parameters
 monitoring.pa.l3,json,,Monitoring,device,"""[]""",Power analyser L3 parameters
@@ -92,7 +92,7 @@ hvac.delta_time,float,0.0/,HVAC,system,5.0,Measuring delta time
 hvac.enabled,bool,true|false,HVAC,system,false,Plugin enabled
 hvac.goal_building_temp,float,-50.0/50.0,HVAC,system,20.0,Goal of the building temperature
 hvac.loop1.cnt.tpl,float,0.0/,HVAC,system,1.0,Loop 1 water flow meter ticks per liter scale
-hvac.loop1.cnt.input,str,off|DI0|DI1|DI2|DI3|DI4|DI5|DI6|DI7|DI8,HVAC,system,DI4,Loop 1 water flow meter signal input
+hvac.loop1.cnt.input,str,off|DI0|DI1|DI2|DI3|DI4|DI5|DI6|DI7|DI8,HVAC,system,off,Loop 1 water flow meter signal input
 hvac.loop1.fan.settings,str,,HVAC,system,HangzhouAirflowElectricApplications/f3p146ec072600,Loop 1 fan settings
 hvac.loop1.fan.output,str,off|AO0|AO1|AO2|AO3|AO4|AO5|AO6|AO7|AO8,HVAC,system,AO3,Loop 1 fan output
 hvac.loop1.fan.min_speed,float,0.0/100.0,HVAC,system,0.0,Loop 1 fan minimum speed [%]
@@ -104,7 +104,7 @@ hvac.loop1.valve.feedback,str,off|AI0|AI1|AI2|AI3|AI4|AI5|AI6|AI7|AI8,HVAC,syste
 hvac.loop1.valve.max_pos,float,0.0/100.0,HVAC,system,100.0,Loop 1 valve maximum position
 hvac.loop1.valve.min_pos,float,0.0/100.0,HVAC,system,0.0,Loop 1 valve minimum position
 hvac.loop2.cnt.tpl,float,0.0/,HVAC,system,1.0,Loop 2 water flow meter ticks per liter scale
-hvac.loop2.cnt.input,str,off|DI0|DI1|DI2|DI3|DI4|DI5|DI6|DI7|DI8,HVAC,system,DI5,Loop 1 water flow meter signal input
+hvac.loop2.cnt.input,str,off|DI0|DI1|DI2|DI3|DI4|DI5|DI6|DI7|DI8,HVAC,system,off,Loop 1 water flow meter signal input
 hvac.loop2.fan.settings,str,,HVAC,system,HangzhouAirflowElectricApplications/f3p146ec072600,Loop 2 fan settings
 hvac.loop2.fan.output,str,off|AO0|AO1|AO2|AO3|AO4|AO5|AO6|AO7|AO8,HVAC,system,AO4,Loop 2 fan output
 hvac.loop2.fan.min_speed,float,0.0/100.0,HVAC,system,0.0,Loop 2 fan minimum speed [%]
@@ -133,7 +133,7 @@ sys.ram.peak,int,0/,System,device,0,Peek of consumed RAM
 sys.time.usage,float,0.0/,System,device,0.0,Application time cycle
 sys.sl.output,str,off|LED0|LED1|LED2|LED3,System,system,LED0,Status LED
 sys.sl.blink_time,float,0.0/,System,system,1.0,Blink time
-sys.at.input,str,off|DI0|DI1|DI2|DI3|DI4|DI5|DI6|DI7|DI8,System,system,DI1,Anti tamper
+sys.at.input,str,off|DI0|DI1|DI2|DI3|DI4|DI5|DI6|DI7|DI8,System,system,off,Anti tamper
 sys.at.state,bool,true|false,System,device,false,Anti tampering state
 sys.col.info_message,json,,System,device,"""{}""",Collision info message
 sys.col.warning_message,json,,System,device,"""{}""",Collision warning message
@@ -143,3 +143,4 @@ sys.enabled,bool,true|false,System,system,false,Plugin enabled
 sys.col.info_message.enable,bool,true|false,System,system,true,Enable info messages
 sys.col.warning_message.enable,bool,true|false,System,system,true,Enable warning messages
 sys.col.error_message.enable,bool,true|false,System,system,true,Enable error messages
+test.value,json,,TEST PLUGIN,device,"""{'port': '/dev/ttuUSB0', 'baudrate': 9600, 'vendor': 'TERACOM', 'model': 'ACT230', 'sn': '3033'}""",Test JSON settings

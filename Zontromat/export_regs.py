@@ -129,7 +129,7 @@ def __add_registers():
     register.plugin_name = "Access Control"
     register.description = "Card reader enabled"
     register.range = ""
-    register.value = "TERACOM/act230/2911"
+    register.value = verbal_const.OFF
     __registers.append(register)
 
     register = Register("ac.entry_reader_1.port.baudrate")
@@ -146,7 +146,7 @@ def __add_registers():
     register.description = "Card reader port name"
     register.range = ""
     if os.name == "posix":
-        register.value = "/dev/ttyUSB0"
+        register.value = "/dev/ttyUSB1"
     if os.name == "nt":
         register.value = "COM11"
     __registers.append(register)
@@ -157,7 +157,7 @@ def __add_registers():
     register.plugin_name = "Access Control"
     register.description = "Card reader enabled"
     register.range = ""
-    register.value = "TERACOM/act230/2897"
+    register.value = "off"
     __registers.append(register)
 
     register = Register("ac.exit_reader_1.port.baudrate")
@@ -209,7 +209,7 @@ def __add_registers():
     register.plugin_name = "Access Control"
     register.description = "Door closed input"
     register.range = "off|DI0|DI1|DI2|DI3|DI4|DI5|DI6|DI7|DI8"
-    register.value = verbal_const.OFF # "DI2"
+    register.value = verbal_const.OFF # "DI5"
     __registers.append(register)
 
     register = Register("ac.door_closed_1.state")
@@ -226,7 +226,7 @@ def __add_registers():
     register.plugin_name = "Access Control"
     register.description = "Card reader settings"
     register.range = ""
-    register.value = "TERACOM/act230/2468"
+    register.value = verbal_const.OFF
     __registers.append(register)
 
 
@@ -255,7 +255,7 @@ def __add_registers():
     register.plugin_name = "Access Control"
     register.description = "Card reader settings"
     register.range = ""
-    register.value = "TERACOM/act230/1208"
+    register.value = verbal_const.OFF
     __registers.append(register)
 
     register = Register("ac.exit_reader_2.port.baudrate")
@@ -324,7 +324,7 @@ def __add_registers():
     register.plugin_name = "Access Control"
     register.description = "PIR 1 sensor input"
     register.range = "off|DI0|DI1|DI2|DI3|DI4|DI5|DI6|DI7|DI8"
-    register.value = verbal_const.OFF # "DI0"
+    register.value = verbal_const.OFF # "DI6"
     __registers.append(register)
 
     register = Register("ac.pir_1.state")
@@ -357,7 +357,7 @@ def __add_registers():
     register.plugin_name = "Access Control"
     register.description = "Window 1 closed input"
     register.range = "off|DI0|DI1|DI2|DI3|DI4|DI5|DI6|DI7|DI8"
-    register.value = verbal_const.OFF # "!DI3"
+    register.value = verbal_const.OFF # "!DI4"
     __registers.append(register)
 
     register = Register("ac.window_closed_1.state")
@@ -507,7 +507,7 @@ def __add_registers():
     register.plugin_name = "Monitoring"
     register.description = "Cold water input flow meter"
     register.range = "off|DI0|DI1|DI2|DI3|DI4|DI5|DI6|DI7|DI8"
-    register.value = verbal_const.OFF # "DI6"
+    register.value = verbal_const.OFF # "DI3"
     __registers.append(register)
 
     register = Register("monitoring.cw.tpl")
@@ -540,7 +540,7 @@ def __add_registers():
     register.plugin_name = "Monitoring"
     register.description = "Hot water input flow meter"
     register.range = "off|DI0|DI1|DI2|DI3|DI4|DI5|DI6|DI7|DI8"
-    register.value = verbal_const.OFF # "DI7"
+    register.value = verbal_const.OFF # "DI2"
     __registers.append(register)
 
     register = Register("monitoring.hw.tpl")
@@ -573,7 +573,7 @@ def __add_registers():
     register.plugin_name = "Monitoring"
     register.description = "Power analyser settings"
     register.range = ""
-    register.value = "mb-rtu/Eastron/SDM630/2/3"
+    register.value = verbal_const.OFF # "mb-rtu/Eastron/SDM630/2/3"
     __registers.append(register)
 
     register = Register("monitoring.pa.l1")
@@ -881,7 +881,7 @@ def __add_registers():
     register.plugin_name = "HVAC"
     register.description = "Loop 1 water flow meter signal input"
     register.range = "off|DI0|DI1|DI2|DI3|DI4|DI5|DI6|DI7|DI8"
-    register.value = "DI4"
+    register.value = verbal_const.OFF # "DI1"
     __registers.append(register)
 
     # Loop 1 fan
@@ -981,7 +981,7 @@ def __add_registers():
     register.plugin_name = "HVAC"
     register.description = "Loop 1 water flow meter signal input"
     register.range = "off|DI0|DI1|DI2|DI3|DI4|DI5|DI6|DI7|DI8"
-    register.value = "DI5"
+    register.value = verbal_const.OFF # "DI0"
     __registers.append(register)
 
     # Loop 2 fan
@@ -1254,7 +1254,7 @@ def __add_registers():
     register.plugin_name = "System"
     register.description = "Anti tamper"
     register.range = "off|DI0|DI1|DI2|DI3|DI4|DI5|DI6|DI7|DI8"
-    register.value = "DI1"
+    register.value = verbal_const.OFF # "DI7"
     __registers.append(register)
 
     register = Register("sys.at.state")
@@ -1334,6 +1334,19 @@ def __add_registers():
     register.description = "Enable error messages"
     register.range = "true|false"
     register.value = True
+    __registers.append(register)
+
+#endregion
+
+#region Test
+
+    # Systrem resources
+    register = Register("test.value")
+    register.scope = Scope.Device
+    register.plugin_name = "TEST PLUGIN"
+    register.description = "Test JSON settings"
+    register.range = ""
+    register.value = { "port":"/dev/ttuUSB0", "baudrate": 9600, "vendor": "TERACOM", "model": "ACT230", "sn":"3033" }
     __registers.append(register)
 
 #endregion
