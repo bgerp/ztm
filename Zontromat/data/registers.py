@@ -142,6 +142,9 @@ class Registers(list):
         if registers is None:
             raise ValueError("Registers can not be None.")
 
+        if len(registers) <= 0:
+            return
+
         # Go through registers.
         for name in registers:
 
