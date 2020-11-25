@@ -214,11 +214,7 @@ class Register:
         # Update value.
         self.__value = value
 
-        # Execute CB.
-        if self.update_handlers is not None:
-            for item in self.update_handlers:
-                if item is not None:
-                    item(self)
+        self.update()
 
     @property
     def scope(self):
@@ -354,5 +350,17 @@ class Register:
         """Range!"""
 
         self.__range = value
+
+#endregion
+
+#region Public Methods
+
+    def update(self):
+
+        # Execute CB.
+        if self.update_handlers is not None:
+            for item in self.update_handlers:
+                if item is not None:
+                    item(self)
 
 #endregion
