@@ -67,6 +67,17 @@ __status__ = "Debug"
 __registers = None
 """Registers"""
 
+__range = {
+    "DI": "off|DI0|DI1|DI2|DI3|DI4|DI5|DI6|DI7|DI8|!DI0|!DI1|!DI2|!DI3|!DI4|!DI5|!DI6|!DI7|!DI8",
+    "DO": "off|DO0|DO1|DO2|DO3|DO4|DO5|DO6|DO7|DO8|!DO0|!DO1|!DO2|!DO3|!DO4|!DO5|!DO6|!DO7|!DO8",
+    "RO": "off|RO0|RO1|RO2|RO3|RO4|RO5|RO6|RO7|RO8|!RO0|!RO1|!RO2|!RO3|!RO4|!RO5|!RO6|!RO7|!RO8",
+    "AO": "off|AO0|AO1|AO2|AO3|AO4|AO5|AO6|AO7|AO8",
+    "AI": "off|AI0|AI1|AI2|AI3|AI4|AI5|AI6|AI7|AI8",
+    "LED": "off|LED0|LED1|LED2|LED3|!LED0|!LED1|!LED2|!LED3",
+    "BAUD": "300|600|1200|2400|4800|9600|19200|38400|57600|115200",
+    "BOOL": "true|false",
+}
+
 #endregion
 
 def __add_registers():
@@ -78,7 +89,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "Access Control"
     register.description = "Plugin enabled"
-    register.range = "true|false"
+    register.range = __range["BOOL"]
     # register.update_handlers = self.__access_control_enabled
     register.value = False
     __registers.append(register)
@@ -119,7 +130,7 @@ def __add_registers():
     register.scope = Scope.Device
     register.plugin_name = "Access Control"
     register.description = "Zone occupied flag"
-    register.range = "true|false"
+    register.range = __range["BOOL"]
     register.value = False
     __registers.append(register)
 
@@ -136,7 +147,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "Access Control"
     register.description = "Card reader port baud rate"
-    register.range = "300|600|1200|2400|4800|9600|19200|38400|57600|115200"
+    register.range = __range["BAUD"]
     register.value = 9600
     __registers.append(register)
 
@@ -164,7 +175,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "Access Control"
     register.description = "Card reader 1 port baud rate"
-    register.range = "300|600|1200|2400|4800|9600|19200|38400|57600|115200"
+    register.range = __range["BAUD"]
     register.value = 9600
     __registers.append(register)
 
@@ -184,7 +195,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "Access Control"
     register.description = "Exit button 1 input"
-    register.range = "off|DI0|DI1|DI2|DI3|DI4|DI5|DI6|DI7|DI8"
+    register.range = __range["DI"]
     register.value = verbal_const.OFF # "DI0"
     __registers.append(register)
 
@@ -192,7 +203,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "Access Control"
     register.description = "Lock mechanism output"
-    register.range = "off|DO0|DO1|DO2|DO3|DO4|DO5|DO6|DO7|DO8"
+    register.range = __range["DO"]
     register.value = verbal_const.OFF # "DO2"
     __registers.append(register)
 
@@ -208,7 +219,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "Access Control"
     register.description = "Door closed input"
-    register.range = "off|DI0|DI1|DI2|DI3|DI4|DI5|DI6|DI7|DI8"
+    register.range = __range["DI"]
     register.value = verbal_const.OFF # "DI5"
     __registers.append(register)
 
@@ -216,7 +227,7 @@ def __add_registers():
     register.scope = Scope.Device
     register.plugin_name = "Access Control"
     register.description = "Door closed input state"
-    register.range = "true|false"
+    register.range = __range["BOOL"]
     register.value = False
     __registers.append(register)
 
@@ -234,7 +245,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "Access Control"
     register.description = "Card reader port baud rate"
-    register.range = "300|600|1200|2400|4800|9600|19200|38400|57600|115200"
+    register.range = __range["BAUD"]
     register.value = 9600
     __registers.append(register)
 
@@ -262,7 +273,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "Access Control"
     register.description = "Card reader port baud rate"
-    register.range = "300|600|1200|2400|4800|9600|19200|38400|57600|115200"
+    register.range = __range["BAUD"]
     register.value = 9600
     __registers.append(register)
 
@@ -282,7 +293,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "Access Control"
     register.description = "Exit button 2 input"
-    register.range = "off|DI0|DI1|DI2|DI3|DI4|DI5|DI6|DI7|DI8"
+    register.range = __range["DI"]
     register.value = verbal_const.OFF # "DI0"
     __registers.append(register)
 
@@ -290,7 +301,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "Access Control"
     register.description = "Lock 2 mechanism output"
-    register.range = "off|DO0|DO1|DO2|DO3|DO4|DO5|DO6|DO7|DO8"
+    register.range = __range["DO"]
     register.value = verbal_const.OFF # "DO2"
     __registers.append(register)
 
@@ -306,7 +317,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "Access Control"
     register.description = "Door 2 closed input"
-    register.range = "off|DI0|DI1|DI2|DI3|DI4|DI5|DI6|DI7|DI8"
+    register.range = __range["DI"]
     register.value = verbal_const.OFF # "DI2"
     __registers.append(register)
 
@@ -314,7 +325,7 @@ def __add_registers():
     register.scope = Scope.Device
     register.plugin_name = "Access Control"
     register.description = "Door 2 closed input state"
-    register.range = "true|false"
+    register.range = __range["BOOL"]
     register.value = False
     __registers.append(register)
 
@@ -323,7 +334,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "Access Control"
     register.description = "PIR 1 sensor input"
-    register.range = "off|DI0|DI1|DI2|DI3|DI4|DI5|DI6|DI7|DI8"
+    register.range = __range["DI"]
     register.value = verbal_const.OFF # "DI6"
     __registers.append(register)
 
@@ -331,7 +342,7 @@ def __add_registers():
     register.scope = Scope.Device
     register.plugin_name = "Access Control"
     register.description = "PIR 1 sensor input state"
-    register.range = "true|false"
+    register.range = __range["BOOL"]
     register.value = False
     __registers.append(register)
 
@@ -339,7 +350,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "Access Control"
     register.description = "PIR 2 sensor input"
-    register.range = "off|DI0|DI1|DI2|DI3|DI4|DI5|DI6|DI7|DI8"
+    register.range = __range["DI"]
     register.value = verbal_const.OFF # "DI0"
     __registers.append(register)
 
@@ -347,7 +358,7 @@ def __add_registers():
     register.scope = Scope.Device
     register.plugin_name = "Access Control"
     register.description = "PIR 2 sensor input state"
-    register.range = "true|false"
+    register.range = __range["BOOL"]
     register.value = False
     __registers.append(register)
 
@@ -356,7 +367,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "Access Control"
     register.description = "Window 1 closed input"
-    register.range = "off|DI0|DI1|DI2|DI3|DI4|DI5|DI6|DI7|DI8"
+    register.range = __range["DI"]
     register.value = verbal_const.OFF # "!DI4"
     __registers.append(register)
 
@@ -364,7 +375,7 @@ def __add_registers():
     register.scope = Scope.Device
     register.plugin_name = "Access Control"
     register.description = "Window 1 closed input state"
-    register.range = "true|false"
+    register.range = __range["BOOL"]
     register.value = False
     __registers.append(register)
 
@@ -372,7 +383,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "Access Control"
     register.description = "Window 2 closed input"
-    register.range = "off|DI0|DI1|DI2|DI3|DI4|DI5|DI6|DI7|DI8"
+    register.range = __range["DI"]
     register.value = verbal_const.OFF # "!DI3"
     __registers.append(register)
 
@@ -380,7 +391,7 @@ def __add_registers():
     register.scope = Scope.Device
     register.plugin_name = "Access Control"
     register.description = "Window 2 closed input state"
-    register.range = "true|false"
+    register.range = __range["BOOL"]
     register.value = False
     __registers.append(register)
 
@@ -389,7 +400,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "Access Control"
     register.description = "Door window blind 1 output"
-    register.range = "off|DO0|DO1|DO2|DO3|DO4|DO5|DO6|DO7|DO8"
+    register.range = __range["DO"]
     register.value = verbal_const.OFF # "DO2"
     __registers.append(register)
 
@@ -398,7 +409,7 @@ def __add_registers():
     register.scope = Scope.Device
     register.plugin_name = "Access Control"
     register.description = "Door window blind 1 value"
-    register.range = "true|false"
+    register.range = __range["BOOL"]
     register.value = False
     __registers.append(register)
 
@@ -407,7 +418,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "Access Control"
     register.description = "Door window blind 2 output"
-    register.range = "off|DO0|DO1|DO2|DO3|DO4|DO5|DO6|DO7|DO8"
+    register.range = __range["DO"]
     register.value = verbal_const.OFF # "DO2"
     __registers.append(register)
 
@@ -416,7 +427,7 @@ def __add_registers():
     register.scope = Scope.Device
     register.plugin_name = "Access Control"
     register.description = "Door window blind 2 value"
-    register.range = "true|false"
+    register.range = __range["BOOL"]
     register.value = False
     __registers.append(register)
 
@@ -468,7 +479,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "Blinds"
     register.description = "CCW output"
-    register.range = "off|DO0|DO1|DO2|DO3|DO4|DO5|DO6|DO7|DO8"
+    register.range = __range["DO"]
     register.value = "DO0"
     __registers.append(register)
 
@@ -476,7 +487,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "Blinds"
     register.description = "CW output"
-    register.range = "off|DO0|DO1|DO2|DO3|DO4|DO5|DO6|DO7|DO8"
+    register.range = __range["DO"]
     register.value = "DO1"
     __registers.append(register)
 
@@ -492,7 +503,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "Blinds"
     register.description = "Plugin enabled"
-    register.range = "true|false"
+    register.range = __range["BOOL"]
     # register.update_handlers = self.__blinds_enabled
     register.value = False
     __registers.append(register)
@@ -506,7 +517,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "Monitoring"
     register.description = "Cold water input flow meter"
-    register.range = "off|DI0|DI1|DI2|DI3|DI4|DI5|DI6|DI7|DI8"
+    register.range = __range["DI"]
     register.value = verbal_const.OFF # "DI3"
     __registers.append(register)
 
@@ -539,7 +550,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "Monitoring"
     register.description = "Hot water input flow meter"
-    register.range = "off|DI0|DI1|DI2|DI3|DI4|DI5|DI6|DI7|DI8"
+    register.range = __range["DI"]
     register.value = verbal_const.OFF # "DI2"
     __registers.append(register)
 
@@ -605,7 +616,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "Monitoring"
     register.description = "Plugin enabled"
-    register.range = "true|false"
+    register.range = __range["BOOL"]
     # register.update_handlers = self.__monitoring_enabled
     register.value = False
     __registers.append(register)
@@ -754,7 +765,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "Environment"
     register.description = "Enable software calculation of the sun position"
-    register.range = "true|false"
+    register.range = __range["BOOL"]
     register.value = False
     __registers.append(register)
 
@@ -763,7 +774,7 @@ def __add_registers():
     # register.update_handlers = self.__env_enabled
     register.plugin_name = "Environment"
     register.description = "Plugin enabled"
-    register.range = "true|false"
+    register.range = __range["BOOL"]
     register.value = False
     __registers.append(register)
 
@@ -819,7 +830,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "HVAC"
     register.description = "Convector stage 1 output"
-    register.range = "off|RO0|RO1|RO2|RO3|RO4|RO5|RO6|RO7|RO8"
+    register.range = __range["RO"]
     register.value = "RO0"
     __registers.append(register)
 
@@ -827,7 +838,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "HVAC"
     register.description = "Convector stage 2 output"
-    register.range = "off|RO0|RO1|RO2|RO3|RO4|RO5|RO6|RO7|RO8"
+    register.range = __range["RO"]
     register.value = "RO1"
     __registers.append(register)
 
@@ -835,7 +846,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "HVAC"
     register.description = "Convector stage 3 output"
-    register.range = "off|RO0|RO1|RO2|RO3|RO4|RO5|RO6|RO7|RO8"
+    register.range = __range["RO"]
     register.value = "RO2"
     __registers.append(register)
 
@@ -854,7 +865,7 @@ def __add_registers():
     # register.update_handlers = self.__hvac_enabled
     register.plugin_name = "HVAC"
     register.description = "Plugin enabled"
-    register.range = "true|false"
+    register.range = __range["BOOL"]
     register.value = False
     __registers.append(register)
 
@@ -880,7 +891,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "HVAC"
     register.description = "Loop 1 water flow meter signal input"
-    register.range = "off|DI0|DI1|DI2|DI3|DI4|DI5|DI6|DI7|DI8"
+    register.range = __range["DI"]
     register.value = verbal_const.OFF # "DI1"
     __registers.append(register)
 
@@ -897,7 +908,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "HVAC"
     register.description = "Loop 1 fan output"
-    register.range = "off|AO0|AO1|AO2|AO3|AO4|AO5|AO6|AO7|AO8"
+    register.range = __range["AO"]
     register.value = "AO3"
     __registers.append(register)
 
@@ -939,7 +950,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "HVAC"
     register.description = "Loop 1 valve output"
-    register.range = "off|RO0|RO1|RO2|RO3|RO4|RO5|RO6|RO7|RO8"
+    register.range = __range["RO"]
     register.value = "RO4"
     __registers.append(register)
 
@@ -947,7 +958,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "HVAC"
     register.description = "Loop 1 valve feedback"
-    register.range = "off|AI0|AI1|AI2|AI3|AI4|AI5|AI6|AI7|AI8"
+    register.range = __range["AI"]
     register.value = "AI1"
     __registers.append(register)
 
@@ -980,7 +991,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "HVAC"
     register.description = "Loop 1 water flow meter signal input"
-    register.range = "off|DI0|DI1|DI2|DI3|DI4|DI5|DI6|DI7|DI8"
+    register.range = __range["DI"]
     register.value = verbal_const.OFF # "DI0"
     __registers.append(register)
 
@@ -997,7 +1008,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "HVAC"
     register.description = "Loop 2 fan output"
-    register.range = "off|AO0|AO1|AO2|AO3|AO4|AO5|AO6|AO7|AO8"
+    register.range = __range["AO"]
     register.value = "AO4"
     __registers.append(register)
 
@@ -1039,7 +1050,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "HVAC"
     register.description = "Loop 2 valve output"
-    register.range = "off|RO0|RO1|RO2|RO3|RO4|RO5|RO6|RO7|RO8"
+    register.range = __range["RO"]
     register.value = "RO3"
     __registers.append(register)
 
@@ -1047,7 +1058,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "HVAC"
     register.description = "Loop 2 valve feedback"
-    register.range = "off|AI0|AI1|AI2|AI3|AI4|AI5|AI6|AI7|AI8"
+    register.range = __range["AI"]
     register.value = "AI2"
     __registers.append(register)
 
@@ -1143,7 +1154,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "Light"
     register.description = "Analog output 1"
-    register.range = "off|AO0|AO1|AO2|AO3|AO4|AO5|AO6|AO7|AO8"
+    register.range = __range["AO"]
     register.value = "AO1"
     __registers.append(register)
 
@@ -1151,7 +1162,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "Light"
     register.description = "Analog output 2"
-    register.range = "off|AO0|AO1|AO2|AO3|AO4|AO5|AO6|AO7|AO8"
+    register.range = __range["AO"]
     register.value = "AO2"
     __registers.append(register)
 
@@ -1187,7 +1198,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "Light"
     register.description = "Plugin enabled"
-    register.range = "true|false"
+    register.range = __range["BOOL"]
     # register.update_handlers = self.__light_enabled
     register.value = False
     __registers.append(register)
@@ -1236,7 +1247,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "System"
     register.description = "Status LED"
-    register.range = "off|LED0|LED1|LED2|LED3"
+    register.range = __range["LED"]
     register.value = "LED0"
     __registers.append(register)
 
@@ -1253,7 +1264,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "System"
     register.description = "Anti tamper"
-    register.range = "off|DI0|DI1|DI2|DI3|DI4|DI5|DI6|DI7|DI8"
+    register.range = __range["DI"]
     register.value = verbal_const.OFF # "DI7"
     __registers.append(register)
 
@@ -1261,7 +1272,7 @@ def __add_registers():
     register.scope = Scope.Device
     register.plugin_name = "System"
     register.description = "Anti tampering state"
-    register.range = "true|false"
+    register.range = __range["BOOL"]
     register.value = False
     __registers.append(register)
 
@@ -1303,7 +1314,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "System"
     register.description = "Plugin enabled"
-    register.range = "true|false"
+    register.range = __range["BOOL"]
     # register.update_handlers = self.__sys_enabled
     register.value = False
     __registers.append(register)
@@ -1314,7 +1325,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "System"
     register.description = "Enable info messages"
-    register.range = "true|false"
+    register.range = __range["BOOL"]
     register.value = True
     __registers.append(register)
 
@@ -1323,7 +1334,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "System"
     register.description = "Enable warning messages"
-    register.range = "true|false"
+    register.range = __range["BOOL"]
     register.value = True
     __registers.append(register)
 
@@ -1332,7 +1343,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "System"
     register.description = "Enable error messages"
-    register.range = "true|false"
+    register.range = __range["BOOL"]
     register.value = True
     __registers.append(register)
 
