@@ -402,6 +402,17 @@ class Registers(list):
 
         return registers_keys
 
+    def write(self, name, value):
+
+        status = False
+
+        target_register = self.by_name(name)
+        if target_register is not None:
+            target_register.value = value
+            status = True
+
+        return status
+
 #endregion
 
 #region Static Methods
