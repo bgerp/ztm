@@ -373,7 +373,7 @@ class Zone():
     def __shutdown(self):
         """Shutdown procedure."""
 
-        pass
+        self.__plugin_manager.shutdown()
 
     def __test(self):
         """Test devices."""
@@ -479,5 +479,6 @@ class Zone():
 
         self.__zone_state.set_state(ZoneState.Shutdown)
         self.__stop_flag = True
+        self.__plugin_manager.shutdown()
 
 #endregion
