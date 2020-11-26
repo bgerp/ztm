@@ -152,13 +152,11 @@ class Monitoring(BasePlugin):
         if cw_tpl is not None:
             cw_tpl.update_handlers = self.__cw_tpl_cb
 
-        config = \
-        {\
-            "name": self.name + " cold water flow meter",
-            "controller": self._controller
-        }
-
-        self.__cw_flowmetter_dev = Flowmeter(config)
+        self.__cw_flowmetter_dev = Flowmeter.create(\
+            self.name + " cold water flow meter",\
+            "monitoring.cw",\
+            self._registers,\
+            self._controller)
         self.__cw_flowmetter_dev.init()
 
         self.__cw_leak_test = LeakTest(self.__cw_flowmetter_dev, 20)
@@ -220,13 +218,11 @@ class Monitoring(BasePlugin):
         if hw_tpl is not None:
             hw_tpl.update_handlers = self.__hw_tpl_cb
 
-        config = \
-        {\
-            "name": self.name + " hot water flow meter",
-            "controller": self._controller
-        }
-
-        self.__hw_flowmetter_dev = Flowmeter(config)
+        self.__hw_flowmetter_dev = Flowmeter.create(\
+            self.name + " hot water flow meter",\
+            "monitoring.hw",\
+            self._registers,\
+            self._controller)
         self.__hw_flowmetter_dev.init()
 
         self.__hw_leak_test = LeakTest(self.__hw_flowmetter_dev, 20)
@@ -245,7 +241,7 @@ class Monitoring(BasePlugin):
             is_empty is not None and\
             is_empty.value == 1:
 
-            self.__cw_leak_test.run()
+            self.__hw_leak_test.run()
 
 #endregion
 
@@ -276,6 +272,8 @@ class Monitoring(BasePlugin):
             if params[0] == "mb-rtu":
                 self.__uart = params[3]
 
+            baudrate = 9600
+
             # Vendor
             vendor = params[1]
             if vendor == "Eastron":
@@ -285,10 +283,12 @@ class Monitoring(BasePlugin):
                 if model == "SDM120":
                     self.__power_analyser = SDM120()
                     self.__register_type = "inp"
+                    baudrate = 2400
 
                 elif model == "SDM630":
                     self.__power_analyser = SDM630()
                     self.__register_type = "inp"
+                    baudrate = 9600
 
                 if not self.__evok_setting.device_exists("EXTENTION_1"):
 
@@ -302,7 +302,7 @@ class Monitoring(BasePlugin):
                             "address": self.__uart,
                             "scan_frequency": 10,
                             "scan_enabled": True,
-                            "baud_rate": 9600,
+                            "baud_rate": baudrate,
                             "parity": "N",
                             "stop_bits": 1
                         }
