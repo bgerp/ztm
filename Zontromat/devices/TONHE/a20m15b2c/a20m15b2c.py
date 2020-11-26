@@ -188,7 +188,7 @@ class A20M15B2C(BaseDevice):
         elif "A" in self.__feedback:
             position = self._controller.analog_read(self.__feedback)
 
-        self.__logger.debug("Name: {}; Value: {}".format(self.name, position))
+        self.__logger.debug("Name: {}; Position: {}".format(self.name, position))
 
         return position * 10.0
 
@@ -198,6 +198,9 @@ class A20M15B2C(BaseDevice):
         Args:
             position (int): Output position.
         """
+
+        if self.__position == position:
+            return
 
         in_position = position
 
@@ -236,7 +239,7 @@ class A20M15B2C(BaseDevice):
             value_pos = self.__position / 10
             self._controller.analog_write(self.__output, value_pos)
 
-        self.__logger.debug("Name: {}; Value: {}".format(self.name, self.__position))
+        self.__logger.debug("Name: {}; Position: {}".format(self.name, self.__position))
 
     def in_place(self):
         """Returns if the valve is in place."""
