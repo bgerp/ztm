@@ -156,12 +156,27 @@ class SecurityZone(BasePlugin):
         if self.__reader_read_cb is not None:
             self.__reader_read_cb(card_id, serial_number)
 
+    def __delete_reader(self, reader):
+
+        if reader is not None:
+
+            reader.shutdown()
+
+            while reader.reader_state == CardReaderState.RUN:
+                pass
+
+            del reader
+
+
     def __entry_reader_cb(self, register):
 
         # Check data type.
         if not register.data_type == "str":
             GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
+
+        if register.value != "" and self.__entry_reader is not None:       
+            self.__entry_reader(self.__entry_reader)
 
         if register.value != "" and self.__entry_reader is None:
 
@@ -176,14 +191,14 @@ class SecurityZone(BasePlugin):
             register = self._registers.by_name("{}.entry_reader_{}.port.name"\
                 .format(key, self.__identifier))
 
-            if register.name == "ac.entry_reader_1.port.name":
-                register.value = "usb:072f:2200"
+            # UNCOMMENT ONLY FOR TEST PURPOSE
+            # if register.name == "ac.entry_reader_1.port.name":
+            #     register.value = "usb:072f:2200"
 
             port_name = register.value
 
             baudrate = self._registers.by_name("{}.entry_reader_{}.port.baudrate"\
                 .format(key, self.__identifier)).value
-
 
             # Create the card reader.
             self.__entry_reader = CardReaderFactory.create(\
@@ -200,12 +215,7 @@ class SecurityZone(BasePlugin):
                     self.__entry_reader.init()
 
         elif register.value == verbal_const.OFF and self.__entry_reader is not None:
-            self.__entry_reader.shutdown()
-
-            while self.__entry_reader.reader_state == CardReaderState.RUN:
-                pass
-
-            del self.__entry_reader
+            self.__delete_reader(self.__entry_reader)
 
     def __exit_reader_cb(self, register):
 
@@ -213,6 +223,9 @@ class SecurityZone(BasePlugin):
         if not register.data_type == "str":
             GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
+
+        if register.value != "" and self.__exit_reader is not None:       
+            self.__delete_reader(self.__exit_reader)
 
         if register.value != "" and self.__exit_reader is None:
 
@@ -245,12 +258,7 @@ class SecurityZone(BasePlugin):
                     self.__exit_reader.init()
 
         elif register.value == verbal_const.OFF and self.__exit_reader is not None:
-            self.__exit_reader.shutdown()
-
-            while self.__exit_reader.reader_state == CardReaderState.RUN:
-                pass
-
-            del self.__exit_reader
+            self.__delete_reader(self.__exit_reader)
 
     def __exit_btn_input_cb(self, register):
 
