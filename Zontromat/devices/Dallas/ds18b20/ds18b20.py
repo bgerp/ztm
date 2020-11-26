@@ -57,7 +57,7 @@ __status__ = "Debug"
 #endregion
 
 class DS18B20(BaseDevice):
-    """Digital thermometer by Dalas."""
+    """Digital thermometer by Dallas."""
 
 #region Public Methods
 
@@ -86,9 +86,16 @@ class DS18B20(BaseDevice):
             dev is not None and\
             typ is not None:
 
-            instance = DS18B20(name=name, dev=dev,\
-                    	circuit=circuit, typ=typ,\
-                        controller=controller)
+            config = \
+            {\
+                "name": name, 
+                "dev": dev,
+                "circuit": circuit, 
+                "typ": typ,
+                "controller": controller
+            }
+
+            instance = DS18B20(config)
 
         return instance
 
