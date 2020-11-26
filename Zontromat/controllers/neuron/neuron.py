@@ -1031,6 +1031,9 @@ class Neuron(BaseController):
 
         state = False
 
+        if pin is None:
+            raise ValueError("Pin can not be None.")
+
         l_pin = pin.replace("!", "")
 
         if not self.is_valid_gpio_type(l_pin):
