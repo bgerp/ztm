@@ -98,7 +98,8 @@ In this hedging we will describe all the register related to the work of the Zon
 |----------|:-------------|:------|:------|
 | Attendees for last minute. | ac.last_minute_attendees | json | [] |
 | Next attendance | ac.next_attendance | int | 0 |
-| Zone occupied flag. | ac.zone_occupied | int | 0 |
+| Zone 1 occupied flag. | ac.zone_1_occupied | int | 0 |
+| Zone 2 occupied flag. | ac.zone_2_occupied | int | 0 |
 | Door closed flag | ac.door_closed_1.state | bool | False |
 | Door closed flag | ac.door_closed_2.state | bool | False |
 | PIR sensor flag | ac.pir_1.state | bool | False |
