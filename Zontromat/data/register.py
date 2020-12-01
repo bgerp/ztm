@@ -97,6 +97,9 @@ class Register:
     __range = ""
     """Range!"""
 
+    __limit = 0.0
+    """Limit!"""
+
 #endregion
 
 #region Constructor
@@ -207,6 +210,14 @@ class Register:
         value : mixed
             Value of the register.
         """
+
+        # Pass if the value is the same from the last time.
+        if value == self.__value:
+            return
+
+        if self.data_type == "float":
+            if (self.value - value) < self.limit:
+                return
 
         # Update time.
         self.__ts = int(time.time())
@@ -350,6 +361,18 @@ class Register:
         """Range!"""
 
         self.__range = value
+
+    @property
+    def limit(self):
+        """Limit!"""
+
+        return self.__limit
+
+    @limit.setter
+    def limit(self, value):
+        """Limit!"""
+
+        self.__limit = value
 
 #endregion
 
