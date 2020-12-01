@@ -24,7 +24,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import argparse
 import os
-import csv
 
 from data.register import Register
 from data.register import Scope
@@ -81,7 +80,7 @@ __range = {
 #endregion
 
 def __add_registers():
-    global __registers
+    global __registers, __range
 
 #region Access Control (ac)
 
@@ -126,21 +125,13 @@ def __add_registers():
     register.value = 0.0 # 1595322860
     __registers.append(register)
 
-    register = Register("ac.zone_occupied")
-    register.scope = Scope.Device
-    register.plugin_name = "Access Control"
-    register.description = "Zone occupied flag"
-    register.range = __range["BOOL"]
-    register.value = False
-    __registers.append(register)
-
     # Entry card reader.
     register = Register("ac.entry_reader_1.enabled")
     register.scope = Scope.System
     register.plugin_name = "Access Control"
     register.description = "Card reader enabled"
     register.range = ""
-    register.value = verbal_const.OFF
+    register.value = verbal_const.OFF # "TERACOM/act230/2911"
     __registers.append(register)
 
     register = Register("ac.entry_reader_1.port.baudrate")
@@ -168,7 +159,7 @@ def __add_registers():
     register.plugin_name = "Access Control"
     register.description = "Card reader enabled"
     register.range = ""
-    register.value = "off"
+    register.value = verbal_const.OFF # "TERACOM/act230/2897"
     __registers.append(register)
 
     register = Register("ac.exit_reader_1.port.baudrate")
@@ -231,13 +222,14 @@ def __add_registers():
     register.value = False
     __registers.append(register)
 
+
     # Entry card reader 2.
     register = Register("ac.entry_reader_2.enabled")
     register.scope = Scope.System
     register.plugin_name = "Access Control"
     register.description = "Card reader settings"
     register.range = ""
-    register.value = verbal_const.OFF
+    register.value = verbal_const.OFF # "TERACOM/act230/2486"
     __registers.append(register)
 
 
@@ -257,7 +249,7 @@ def __add_registers():
     if os.name == "posix":
         register.value = "/dev/ttyUSB0"
     if os.name == "nt":
-        register.value = "COM9"
+        register.value = "COM8"
     __registers.append(register)
 
     # Exit card reader.
@@ -266,7 +258,7 @@ def __add_registers():
     register.plugin_name = "Access Control"
     register.description = "Card reader settings"
     register.range = ""
-    register.value = verbal_const.OFF
+    register.value = verbal_const.OFF # "TERACOM/act230/1208"
     __registers.append(register)
 
     register = Register("ac.exit_reader_2.port.baudrate")
@@ -285,7 +277,7 @@ def __add_registers():
     if os.name == "posix":
         register.value = "/dev/ttyUSB0"
     if os.name == "nt":
-        register.value = "COM8"
+        register.value = "COM9"
     __registers.append(register)
 
     #
@@ -422,11 +414,27 @@ def __add_registers():
     register.value = verbal_const.OFF # "DO2"
     __registers.append(register)
 
-
     register = Register("ac.door_window_blind_2.value")
     register.scope = Scope.Device
     register.plugin_name = "Access Control"
     register.description = "Door window blind 2 value"
+    register.range = __range["BOOL"]
+    register.value = False
+    __registers.append(register)
+
+    # Occupation
+    register = Register("ac.zone_1_occupied")
+    register.scope = Scope.Device
+    register.plugin_name = "Access Control"
+    register.description = "Zone occupied flag"
+    register.range = __range["BOOL"]
+    register.value = False
+    __registers.append(register)
+
+    register = Register("ac.zone_2_occupied")
+    register.scope = Scope.Device
+    register.plugin_name = "Access Control"
+    register.description = "Zone occupied flag"
     register.range = __range["BOOL"]
     register.value = False
     __registers.append(register)
@@ -1349,21 +1357,8 @@ def __add_registers():
 
 #endregion
 
-#region Test
-
-    # Systrem resources
-    register = Register("test.value")
-    register.scope = Scope.Device
-    register.plugin_name = "TEST PLUGIN"
-    register.description = "Test JSON settings"
-    register.range = ""
-    register.value = { "port":"/dev/ttuUSB0", "baudrate": 9600, "vendor": "TERACOM", "model": "ACT230", "sn":"3033" }
-    __registers.append(register)
-
-#endregion
-
 def main():
-    global __registers
+    global __registers, __range
 
     __registers = Registers()
 
