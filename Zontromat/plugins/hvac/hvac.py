@@ -880,7 +880,7 @@ class HVAC(BasePlugin):
 
         # If there is no one at the zone, just turn off the lights.
         ac_zone_occupied_flag = 0
-        ac_zone_occupied = self._registers.by_name("ac.zone_occupied")
+        ac_zone_occupied = self._registers.by_name("ac.zone_1_occupied")
         if ac_zone_occupied is not None:
             ac_zone_occupied_flag = ac_zone_occupied.value
 
