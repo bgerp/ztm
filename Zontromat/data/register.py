@@ -216,7 +216,7 @@ class Register:
             return
 
         if self.data_type == "float":
-            if (self.value - value) < self.limit:
+            if abs(self.value - value) < self.limit:
                 return
 
         # Update time.
