@@ -790,7 +790,7 @@ def __add_registers():
 
 #region HVAC (hvac)
 
-    register = Register("hvac.adjust_temp")
+    register = Register("hvac.adjust_temp_1")
     register.scope = Scope.System
     register.plugin_name = "HVAC"
     register.description = "Adjust temperature"
@@ -799,7 +799,7 @@ def __add_registers():
     __registers.append(register)
 
     # Air temp central.
-    register = Register("hvac.air_temp_cent.settings")
+    register = Register("hvac.air_temp_cent_1.settings")
     register.scope = Scope.System
     register.plugin_name = "HVAC"
     register.description = "Air temperature sensor center settings"
@@ -808,7 +808,7 @@ def __add_registers():
     __registers.append(register)
 
     # Air temp lower
-    register = Register("hvac.air_temp_lower.settings")
+    register = Register("hvac.air_temp_lower_1.settings")
     register.scope = Scope.System
     register.plugin_name = "HVAC"
     register.description = "Air temperature sensor lower settings"
@@ -817,7 +817,7 @@ def __add_registers():
     __registers.append(register)
 
     # Air temp upper.
-    register = Register("hvac.air_temp_upper.settings")
+    register = Register("hvac.air_temp_upper_1.settings")
     register.scope = Scope.System
     register.plugin_name = "HVAC"
     register.description = "Air temperature sensor upper settings"
@@ -826,7 +826,7 @@ def __add_registers():
     __registers.append(register)
 
     # Convector
-    register = Register("hvac.convector.settings")
+    register = Register("hvac.convector_1.settings")
     register.scope = Scope.System
     register.plugin_name = "HVAC"
     register.description = "Convector settings"
@@ -834,7 +834,7 @@ def __add_registers():
     register.value = "silpa/klimafan"
     __registers.append(register)
 
-    register = Register("hvac.convector.stage_1.output")
+    register = Register("hvac.convector_1.stage_1.output")
     register.scope = Scope.System
     register.plugin_name = "HVAC"
     register.description = "Convector stage 1 output"
@@ -842,7 +842,7 @@ def __add_registers():
     register.value = "RO0"
     __registers.append(register)
 
-    register = Register("hvac.convector.stage_2.output")
+    register = Register("hvac.convector_1.stage_2.output")
     register.scope = Scope.System
     register.plugin_name = "HVAC"
     register.description = "Convector stage 2 output"
@@ -850,7 +850,7 @@ def __add_registers():
     register.value = "RO1"
     __registers.append(register)
 
-    register = Register("hvac.convector.stage_3.output")
+    register = Register("hvac.convector_1.stage_3.output")
     register.scope = Scope.System
     register.plugin_name = "HVAC"
     register.description = "Convector stage 3 output"
@@ -859,7 +859,7 @@ def __add_registers():
     __registers.append(register)
 
     # Delta time.
-    register = Register("hvac.delta_time")
+    register = Register("hvac.delta_time_1")
     register.scope = Scope.System
     register.plugin_name = "HVAC"
     register.description = "Measuring delta time"
@@ -887,7 +887,7 @@ def __add_registers():
     __registers.append(register)
 
     # Loop 1 flowmeter.
-    register = Register("hvac.loop1.cnt.tpl")
+    register = Register("hvac.loop1_1.cnt.tpl")
     register.scope = Scope.System
     register.plugin_name = "HVAC"
     register.description = "Loop 1 water flow meter ticks per liter scale"
@@ -895,7 +895,7 @@ def __add_registers():
     register.value = 1.0
     __registers.append(register)
 
-    register = Register("hvac.loop1.cnt.input")
+    register = Register("hvac.loop1_1.cnt.input")
     register.scope = Scope.System
     register.plugin_name = "HVAC"
     register.description = "Loop 1 water flow meter signal input"
@@ -904,7 +904,7 @@ def __add_registers():
     __registers.append(register)
 
     # Loop 1 fan
-    register = Register("hvac.loop1.fan.settings")
+    register = Register("hvac.loop1_1.fan.settings")
     register.scope = Scope.System
     register.plugin_name = "HVAC"
     register.description = "Loop 1 fan settings"
@@ -912,7 +912,7 @@ def __add_registers():
     register.value = "HangzhouAirflowElectricApplications/f3p146ec072600"
     __registers.append(register)
 
-    register = Register("hvac.loop1.fan.output")
+    register = Register("hvac.loop1_1.fan.output")
     register.scope = Scope.System
     register.plugin_name = "HVAC"
     register.description = "Loop 1 fan output"
@@ -920,7 +920,7 @@ def __add_registers():
     register.value = "AO3"
     __registers.append(register)
 
-    register = Register("hvac.loop1.fan.min_speed")
+    register = Register("hvac.loop1_1.fan.min_speed")
     register.scope = Scope.System
     register.plugin_name = "HVAC"
     register.description = "Loop 1 fan minimum speed [%]"
@@ -928,7 +928,7 @@ def __add_registers():
     register.value = 0.0
     __registers.append(register)
 
-    register = Register("hvac.loop1.fan.max_speed")
+    register = Register("hvac.loop1_1.fan.max_speed")
     register.scope = Scope.System
     register.plugin_name = "HVAC"
     register.description = "Loop 1 fan maximum speed [%]"
@@ -937,7 +937,7 @@ def __add_registers():
     __registers.append(register)
 
     # Loop 1 Temperature
-    register = Register("hvac.loop1.temp.settings")
+    register = Register("hvac.loop1_1.temp.settings")
     register.scope = Scope.System
     register.plugin_name = "HVAC"
     register.description = "Loop 1 temperature sensor settings"
@@ -946,7 +946,7 @@ def __add_registers():
     __registers.append(register)
 
     # Loop 1 valve.
-    register = Register("hvac.loop1.valve.settings")
+    register = Register("hvac.loop1_1.valve.settings")
     register.scope = Scope.System
     register.plugin_name = "HVAC"
     register.description = "Loop 1 valve settings"
@@ -954,7 +954,7 @@ def __add_registers():
     register.value = "TONHE/a20m15b2c"
     __registers.append(register)
 
-    register = Register("hvac.loop1.valve.output")
+    register = Register("hvac.loop1_1.valve.output")
     register.scope = Scope.System
     register.plugin_name = "HVAC"
     register.description = "Loop 1 valve output"
@@ -962,7 +962,7 @@ def __add_registers():
     register.value = "RO4"
     __registers.append(register)
 
-    register = Register("hvac.loop1.valve.feedback")
+    register = Register("hvac.loop1_1.valve.feedback")
     register.scope = Scope.System
     register.plugin_name = "HVAC"
     register.description = "Loop 1 valve feedback"
@@ -970,7 +970,7 @@ def __add_registers():
     register.value = "AI1"
     __registers.append(register)
 
-    register = Register("hvac.loop1.valve.max_pos")
+    register = Register("hvac.loop1_1.valve.max_pos")
     register.scope = Scope.System
     register.plugin_name = "HVAC"
     register.description = "Loop 1 valve maximum position"
@@ -978,7 +978,7 @@ def __add_registers():
     register.value = 100.0
     __registers.append(register)
 
-    register = Register("hvac.loop1.valve.min_pos")
+    register = Register("hvac.loop1_1.valve.min_pos")
     register.scope = Scope.System
     register.plugin_name = "HVAC"
     register.description = "Loop 1 valve minimum position"
@@ -987,7 +987,7 @@ def __add_registers():
     __registers.append(register)
 
     # Loop 2 flowmeter
-    register = Register("hvac.loop2.cnt.tpl")
+    register = Register("hvac.loop2_1.cnt.tpl")
     register.scope = Scope.System
     register.plugin_name = "HVAC"
     register.description = "Loop 2 water flow meter ticks per liter scale"
@@ -995,7 +995,7 @@ def __add_registers():
     register.value = 1.0
     __registers.append(register)
 
-    register = Register("hvac.loop2.cnt.input")
+    register = Register("hvac.loop2_1.cnt.input")
     register.scope = Scope.System
     register.plugin_name = "HVAC"
     register.description = "Loop 1 water flow meter signal input"
@@ -1004,7 +1004,7 @@ def __add_registers():
     __registers.append(register)
 
     # Loop 2 fan
-    register = Register("hvac.loop2.fan.settings")
+    register = Register("hvac.loop2_1.fan.settings")
     register.scope = Scope.System
     register.plugin_name = "HVAC"
     register.description = "Loop 2 fan settings"
@@ -1012,7 +1012,7 @@ def __add_registers():
     register.value = "HangzhouAirflowElectricApplications/f3p146ec072600"
     __registers.append(register)
 
-    register = Register("hvac.loop2.fan.output")
+    register = Register("hvac.loop2_1.fan.output")
     register.scope = Scope.System
     register.plugin_name = "HVAC"
     register.description = "Loop 2 fan output"
@@ -1020,7 +1020,7 @@ def __add_registers():
     register.value = "AO4"
     __registers.append(register)
 
-    register = Register("hvac.loop2.fan.min_speed")
+    register = Register("hvac.loop2_1.fan.min_speed")
     register.scope = Scope.System
     register.plugin_name = "HVAC"
     register.description = "Loop 2 fan minimum speed [%]"
@@ -1028,7 +1028,7 @@ def __add_registers():
     register.value = 0.0
     __registers.append(register)
 
-    register = Register("hvac.loop2.fan.max_speed")
+    register = Register("hvac.loop2_1.fan.max_speed")
     register.scope = Scope.System
     register.plugin_name = "HVAC"
     register.description = "Loop 2 fan maximum speed [%]"
@@ -1037,7 +1037,7 @@ def __add_registers():
     __registers.append(register)
 
     # Loop 2 Temperature
-    register = Register("hvac.loop2.temp.settings")
+    register = Register("hvac.loop2_1.temp.settings")
     register.scope = Scope.System
     register.plugin_name = "HVAC"
     register.description = "Loop 2 temperature sensor settings"
@@ -1046,7 +1046,7 @@ def __add_registers():
     __registers.append(register)
 
     # Loop 2 valve.
-    register = Register("hvac.loop2.valve.settings")
+    register = Register("hvac.loop2_1.valve.settings")
     register.scope = Scope.System
     register.plugin_name = "HVAC"
     register.description = "Loop 2 valve settings"
@@ -1054,7 +1054,7 @@ def __add_registers():
     register.value = "TONHE/a20m15b2c"
     __registers.append(register)
 
-    register = Register("hvac.loop2.valve.output")
+    register = Register("hvac.loop2_1.valve.output")
     register.scope = Scope.System
     register.plugin_name = "HVAC"
     register.description = "Loop 2 valve output"
@@ -1062,7 +1062,7 @@ def __add_registers():
     register.value = "RO3"
     __registers.append(register)
 
-    register = Register("hvac.loop2.valve.feedback")
+    register = Register("hvac.loop2_1.valve.feedback")
     register.scope = Scope.System
     register.plugin_name = "HVAC"
     register.description = "Loop 2 valve feedback"
@@ -1070,7 +1070,7 @@ def __add_registers():
     register.value = "AI2"
     __registers.append(register)
 
-    register = Register("hvac.loop2.valve.max_pos")
+    register = Register("hvac.loop2_1.valve.max_pos")
     register.scope = Scope.System
     register.plugin_name = "HVAC"
     register.description = "Loop 2 valve maximum position"
@@ -1078,7 +1078,7 @@ def __add_registers():
     register.value = 100.0
     __registers.append(register)
 
-    register = Register("hvac.loop2.valve.min_pos")
+    register = Register("hvac.loop2_1.valve.min_pos")
     register.scope = Scope.System
     register.plugin_name = "HVAC"
     register.description = "Loop 2 valve minimum position"
@@ -1087,7 +1087,7 @@ def __add_registers():
     __registers.append(register)
 
     # Temperature actual
-    register = Register("hvac.temp.actual")
+    register = Register("hvac.temp_1.actual")
     register.scope = Scope.System
     register.plugin_name = "HVAC"
     register.description = "Actual temperature"
@@ -1095,7 +1095,7 @@ def __add_registers():
     register.value = 0.0
     __registers.append(register)
 
-    register = Register("hvac.temp.max")
+    register = Register("hvac.temp_1.max")
     register.scope = Scope.System
     register.plugin_name = "HVAC"
     register.description = "Maximum achievable"
@@ -1103,7 +1103,7 @@ def __add_registers():
     register.value = 30.0
     __registers.append(register)
 
-    register = Register("hvac.temp.min")
+    register = Register("hvac.temp_1.min")
     register.scope = Scope.System
     register.plugin_name = "HVAC"
     register.description = "Minimum achievable"
@@ -1112,7 +1112,7 @@ def __add_registers():
     __registers.append(register)
 
     # Thermal force limit
-    register = Register("hvac.thermal_force_limit")
+    register = Register("hvac.thermal_force_limit_1")
     register.scope = Scope.System
     register.plugin_name = "HVAC"
     register.description = "Thermal force limit"
@@ -1121,7 +1121,7 @@ def __add_registers():
     __registers.append(register)
 
     # Thermal mode
-    register = Register("hvac.thermal_mode")
+    register = Register("hvac.thermal_mode_1")
     register.scope = Scope.System
     register.plugin_name = "HVAC"
     register.description = "Thermal mode"
@@ -1130,7 +1130,7 @@ def __add_registers():
     __registers.append(register)
 
     # Update rate.
-    register = Register("hvac.update_rate")
+    register = Register("hvac.update_rate_1")
     register.scope = Scope.System
     register.plugin_name = "HVAC"
     register.description = "Update rate of the plugin [s]"
@@ -1248,6 +1248,30 @@ def __add_registers():
     register.description = "Application time cycle"
     register.range = "0.0/"
     register.value = 0.0
+    __registers.append(register)
+
+    register = Register("sys.disc.total")
+    register.scope = Scope.Device
+    register.plugin_name = "System"
+    register.description = "Total disc space"
+    register.range = "0/"
+    register.value = 0
+    __registers.append(register)
+
+    register = Register("sys.disc.used")
+    register.scope = Scope.Device
+    register.plugin_name = "System"
+    register.description = "Used disc space"
+    register.range = "0/"
+    register.value = 0
+    __registers.append(register)
+
+    register = Register("sys.disc.free")
+    register.scope = Scope.Device
+    register.plugin_name = "System"
+    register.description = "Free disc space"
+    register.range = "0/"
+    register.value = 0
     __registers.append(register)
 
     # Status LED
