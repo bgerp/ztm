@@ -172,9 +172,6 @@ class F3P146EC072600(BaseDevice):
             speed (int): Output speed of the fan.
         """
 
-        if self.__speed == speed:
-            return
-
         in_value = speed
 
         if speed > 100:
@@ -189,11 +186,14 @@ class F3P146EC072600(BaseDevice):
         if speed < self.min_speed:
             in_value = self.min_speed
 
+        if self.__speed == in_value:
+            return
+        
         self.__speed = in_value
 
         value_speed = self.__speed / 10
         self._controller.analog_write(self.__output, value_speed)
-        self.__logger.debug("Name: {}; Speed {}".format(self.name, self.__speed))
+        self.__logger.debug("Name: {}; Speed {:3.3f}".format(self.name, self.__speed))
 
     def shutdown(self):
         """Shutdown"""

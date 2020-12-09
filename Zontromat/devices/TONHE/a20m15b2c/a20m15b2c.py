@@ -188,7 +188,7 @@ class A20M15B2C(BaseDevice):
         elif "A" in self.__feedback:
             position = self._controller.analog_read(self.__feedback)
 
-        self.__logger.debug("Name: {}; Position: {}".format(self.name, position))
+        self.__logger.debug("Name: {}; Position: {:3.3f}".format(self.name, position))
 
         return position * 10.0
 
