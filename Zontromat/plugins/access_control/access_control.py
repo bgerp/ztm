@@ -73,10 +73,7 @@ class AccessControl(BasePlugin):
     """Logger"""
 
     __last_minute_attendees = []
-    """Last 30 attendees"""
-
-    __is_empty_timer = None
-    """Is empty timer."""
+    """Last minute attendees"""
 
     __security_zone_1 = None
     """Security zone 1"""
@@ -108,78 +105,6 @@ class AccessControl(BasePlugin):
 
         self.__security_zone_1.add_allowed_attendees(register.value)
         self.__security_zone_2.add_allowed_attendees(register.value)
-
-    def __is_empty_timeout_cb(self, register):
-
-        # Check data type.
-        if not register.data_type == "int":
-            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
-            return
-
-        if self.__is_empty_timer.expiration_time != register.value:
-            self.__is_empty_timer.expiration_time = register.value
-
-    def __set_zone_occupied(self, flag):
-
-        is_empty = self._registers.by_name(self._key + ".zone_occupied")
-        if is_empty is not None:
-            is_empty.value = flag
-
-        is_empty = self._registers.by_name("env.is_empty")
-        if is_empty is not None:
-            is_empty.value = flag
-
-    def __update_occupation(self):
-
-        pir_1_value = False
-        pir_1 = self._registers.by_name(self._key + ".pir_1.state")
-        if pir_1 is not None:
-            pir_1_value = pir_1.value
-
-        dc_1_value = False
-        dc_1 = self._registers.by_name(self._key + ".door_closed_1.state")
-        if dc_1 is not None:
-            dc_1_value = dc_1.value
-
-        wc_1_value = False
-        wc_1 = self._registers.by_name(self._key + ".window_closed_1.state")
-        if wc_1 is not None:
-            wc_1_value = wc_1.value
-
-
-        pir_2_value = False
-        pir_2 = self._registers.by_name(self._key + ".pir_2.state")
-        if pir_2 is not None:
-            pir_2_value = pir_2.value
-
-        dc_2_value = False
-        dc_2 = self._registers.by_name(self._key + ".door_closed_2.state")
-        if dc_2 is not None:
-            dc_2_value = dc_2.value
-
-        wc_2_value = False
-        wc_2 = self._registers.by_name(self._key + ".window_closed_2.state")
-        if wc_2 is not None:
-            wc_2_value = wc_2.value
-
-        # Apply OR for all the signals.
-        occupation_state = \
-            (pir_1_value or dc_1_value or wc_1_value or pir_2_value or dc_2_value or wc_2_value)
-
-        # Clear time interval.
-        if occupation_state:
-            # Reset timer every time activity has present.
-            self.__is_empty_timer.update_last_time()
-            self.__set_zone_occupied(1)
-
-        # Update is empty timer.
-        self.__is_empty_timer.update()
-        if self.__is_empty_timer.expired:
-            self.__is_empty_timer.clear()
-
-            # If no activity has present for 3600 second,
-            # then the timer will expire and flag will be set to 0.
-            self.__set_zone_occupied(0)
 
     def __filter_atendee_by_time(self, time_sec):
 
@@ -247,18 +172,10 @@ class AccessControl(BasePlugin):
         if allowed_attendees is not None:
             allowed_attendees.update_handlers = self.__allowed_attendees_cb
 
-        # Is empty timer.
-        self.__is_empty_timer = Timer(3600)
-
-        # Is empty timeout.
-        is_empty_timeout = self._registers.by_name("env.is_empty_timeout")
-        if is_empty_timeout is not None:
-            is_empty_timeout.update_handlers = self.__is_empty_timeout_cb
-
         # Security zone 1.
         self.__security_zone_1 = SecurityZone(\
             registers=self._registers, controller=self._controller,\
-            identifier=1, key=self._key, name="Security Zone 1")
+            identifier=1, key=self._key, name="Security Zone")
 
         self.__security_zone_1.set_reader_read(self.__reader_read)
         self.__security_zone_1.init()
@@ -266,7 +183,7 @@ class AccessControl(BasePlugin):
         # Security zone 2.
         self.__security_zone_2 = SecurityZone(\
             registers=self._registers, controller=self._controller,\
-            identifier=2, key=self._key, name="Security Zone 2")
+            identifier=2, key=self._key, name="Security Zone")
         
         self.__security_zone_2.set_reader_read(self.__reader_read)
         self.__security_zone_2.init()
@@ -276,13 +193,12 @@ class AccessControl(BasePlugin):
 
         self.__security_zone_1.update()
         self.__security_zone_2.update()
-        self.__update_occupation()
 
     def shutdown(self):
         """Shutting down the reader."""
 
+        self.__logger.info("Shutting down the {}".format(self.name))
         self.__security_zone_1.shutdown()
         self.__security_zone_2.shutdown()
-        self.__logger.info("Shutting down the {}".format(self.name))
 
 #endregion
