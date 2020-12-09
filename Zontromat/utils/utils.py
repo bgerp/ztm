@@ -26,6 +26,7 @@ import time
 from functools import wraps
 import tracemalloc
 import math
+import shutil
 
 #region File Attributes
 
@@ -127,6 +128,12 @@ def time_usage(function):
         return result
 
     return function_timer
+
+def disk_size():
+
+    total, used, free = shutil.disk_usage("/")
+
+    return (total, used, free)
 
 def l_scale(target, in_limit, out_limit):
     """Linear scaling function.
