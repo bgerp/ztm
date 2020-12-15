@@ -21,6 +21,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
+from collections import deque
 
 from utils.logger import get_logger
 from utils.utils import l_scale
@@ -96,6 +97,9 @@ class AirConditioner(BasePlugin):
 
     __air_temp_lower_dev = None
     """Air thermometer lower."""
+
+    __queue_temperatures = None
+    """Queue of the temperatures."""    
 
 
     __convector_dev = None
@@ -235,6 +239,9 @@ class AirConditioner(BasePlugin):
 
         if self.__loop2_leak_teat is not None:
             del self.__loop2_leak_teat
+
+        if self.__queue_temperatures is not None:
+            del self.__queue_temperatures
 
 #endregion
 
@@ -850,6 +857,9 @@ class AirConditioner(BasePlugin):
         # Create temperature processor.
         self.__temp_proc = TemperatureProcessor()
 
+        # Create temperature queue.
+        self.__queue_temperatures = deque([], maxlen = 20)
+
         # Air temperatures.
         air_temp_cent_enabled = self._registers.by_name("{}.air_temp_cent_{}.settings".format(self._key, self.__identifier))
         if air_temp_cent_enabled is not None:
@@ -1015,6 +1025,9 @@ class AirConditioner(BasePlugin):
 
             # Update current room temperature.
             temperature = self.temperature
+
+            # Add temperature to the queue.
+            self.__queue_temperatures.append(temperature)
             self.__logger.debug("ROOM: {:3.3f}".format(temperature))
 
             # 1. Изчислява се целевата температура на стаята:
