@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 from utils.logger import get_logger
+from utils.timer import Timer
 
 from plugins.base_plugin import BasePlugin
 
@@ -69,119 +70,52 @@ class Lighting(BasePlugin):
 #region Attributes
 
     __logger = None
-    """Logger"""
+    """Logger
+    """
 
-    __v1_output = "AO0"
-    """Analog voltage output 0"""
-
-    __v2_output = "AO1"
-    """Analog voltage output 1"""
-
-    __v1_value = 0
-    """V1 value."""
-
-    __v2_value = 0
-    """V2 value."""
+    __update_timer = None
+    """Update timer.
+    """
 
     __light_sensor = None
-    """Light sensor."""
+    """Light sensor.
+    """
 
-    __animation_bit = True
-    """Animation purpose only."""
+    __v1_output = verbal_const.OFF
+    """Analog voltage output 1.
+    """
 
-    __animation_step = 0.01
-    """Animation purpose only."""
+    __v2_output = verbal_const.OFF
+    """Analog voltage output 2
+    """
 
-    __animation_max = 5
-    """Animation purpose only."""
+    __target_illumination = 700 # TODO: Move to register.
+    """Target illumination. [Lux]
+    """    
 
-    __animation_min = 0
-    """Animation purpose only."""
+    __delta_illumination = 0
+    """Delta illumination. [Lux]
+    """
+    
+    __error_gain = 0.1
+    """Gain of the error. This parameter is the smoothness of the curve.
+    """
 
-#endregion
+    __output_limit = 5000 # TODO: Move to register.
+    """Illumination force limit. [V]
+    """   
 
-#region Properties
+    __tmp_output = 0
+    """Temporary output. [V]
+    """
 
-    @property
-    def v1(self):
-        """Voltage 1.
-
-        Returns
-        -------
-        float
-            Voltage 1.
-        """
-
-        return self.__v1_value
-
-    @v1.setter
-    def v1(self, value):
-        """Voltage 1.
-
-        Parameters
-        ----------
-        value : float
-            Voltage 1
-        """
-
-        if value > 10:
-            value = 10
-
-        if value < 0:
-            value = 0
-
-        self.__v1_value = value
-
-    @property
-    def v2(self):
-        """Voltage 2.
-
-        Returns
-        -------
-        float
-            Voltage 2.
-        """
-
-        return self.__v2_value
-
-    @v2.setter
-    def v2(self, value):
-        """Voltage 2.
-
-        Parameters
-        ----------
-        value : float
-            Voltage 2
-        """
-
-        if value > 10:
-            value = 10
-
-        if value < 0:
-            value = 0
-
-        self.__v2_value = value
+    __output = 0
+    """Main output. [V]
+    """    
 
 #endregion
 
 #region Private Methods
-
-    def __set_voltages(self, v1, v2):
-        """Set the voltage outputs.
-
-        Parameters
-        ----------
-        v1 : float
-            Voltage 1.
-        v2 : float
-            Voltage 2.
-        """
-
-        if self._controller.is_valid_gpio(self.__v1_output):
-            self._controller.analog_write(self.__v1_output, v1)
-    
-        if self._controller.is_valid_gpio(self.__v2_output):
-            self._controller.analog_write(self.__v2_output, v2)
 
     def __sensor_settings_cb(self, register):
 
@@ -216,21 +150,98 @@ class Lighting(BasePlugin):
 
         # Check data type.
         if not register.data_type == "str":
-            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
             return
 
-        if self.__v1_output != register.value:
-            self.__v1_output = register.value
+        self.__v1_output = register.value
 
     def __v2_output_cb(self, register):
 
         # Check data type.
         if not register.data_type == "str":
-            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
             return
 
-        if self.__v2_output != register.value:
-            self.__v2_output = register.value
+        self.__v2_output = register.value
+
+    def __read_zoneoccupied_flag(self):
+
+        state = False
+
+        ac_zone_occupied = self._registers.by_name("ac.zone_1_occupied")
+        if ac_zone_occupied is not None:
+            state = ac_zone_occupied.value
+
+        return state
+
+    def __calculate(self):
+        """ Apply thermal force to the devices. """
+
+        current_illumination = self.__light_sensor.get_value()
+
+        # Calculate the target error.
+        error = self.__target_illumination - current_illumination
+
+        # Integrate the delta to temporal output..
+        delta = error * self.__error_gain
+        self.__tmp_output += delta
+
+        # Limitate the output by target value.
+        if self.__tmp_output > abs(self.__output_limit):
+            self.__tmp_output = self.__output_limit
+
+        # Limitate by absolute maximum and minimum.
+        if self.__tmp_output < 0:
+            self.__tmp_output = 0
+        if self.__tmp_output > 10000:
+            self.__tmp_output = 10000
+
+        # Apply the output if it is different.
+        if self.__tmp_output != self.__output:
+            self.__output = self.__tmp_output
+
+            # TODO: Convert lux to voltage.
+            # Convert to volgate.
+            out_to_v = self.__output * 0.001
+
+            self.__set_voltages(out_to_v, out_to_v)
+
+            self.__logger.debug("TRG {:3.3f}\tINP {:3.3f}\tERR: {:3.3f}\tOUT: {:3.3f}"\
+                .format(self.__target_illumination, current_illumination, delta, out_to_v))
+
+    def __set_voltages(self, v1, v2):
+        """Set the voltage outputs.
+
+        Parameters
+        ----------
+        v1 : float
+            Voltage 1.
+        v2 : float
+            Voltage 2.
+        """
+
+        value_v1 = v1
+
+        if value_v1 > 10:
+            value_v1 = 10
+
+        if value_v1 < 0:
+            value_v1 = 0
+
+        value_v2 = v2
+
+        if value_v2 > 10:
+            value_v2 = 10
+
+        if value_v2 < 0:
+            value_v2 = 0
+
+
+        if self._controller.is_valid_gpio(self.__v1_output):
+            self._controller.analog_write(self.__v1_output, value_v1)
+    
+        if self._controller.is_valid_gpio(self.__v2_output):
+            self._controller.analog_write(self.__v2_output, value_v2)
 
 #endregion
 
@@ -242,66 +253,60 @@ class Lighting(BasePlugin):
         self.__logger = get_logger(__name__)
         self.__logger.info("Starting up the {}".format(self.name))
 
+        self.__update_timer = Timer(1)
+
         self.__set_voltages(0, 0)
 
         sensor_enabled = self._registers.by_name(self._key + ".sensor.settings")
         if sensor_enabled is not None:
             sensor_enabled.update_handlers = self.__sensor_settings_cb
+            sensor_enabled.update()
 
         v1_output = self._registers.by_name(self._key + ".v1.output")
         if v1_output is not None:
             v1_output.update_handlers = self.__v1_output_cb
+            v1_output.update()
 
         v2_output = self._registers.by_name(self._key + ".v2.output")
         if v2_output is not None:
             v2_output.update_handlers = self.__v2_output_cb
+            v2_output.update()
 
-        self.v1 = 1.0 #TODO: Only test purpose.
+        target_illum = self._registers.by_name(self._key + ".target_illum")
+        if target_illum is not None:
+            target_illum.update_handlers = self.__target_illum_cb
+            target_illum.update()
+
+        target_illum = self._registers.by_name(self._key + ".target_illum")
+        if target_illum is not None:
+            target_illum.update_handlers = self.__target_illum_cb
+            target_illum.update()
 
     def update(self):
         """Update the lights state."""
 
-        # TODO: Add interpolator when 
+        # If there is no one at the zone, just turn off the lights.
+        ac_zone_occupied = self.__read_zoneoccupied_flag()
+        if ac_zone_occupied:
+            pass
+            # self.__logger.debug("Just turn off the light in the zone.")
+        else:
+            # TODO: Pass, but when activity has turnback return to normal state.
+            pass
 
         # Update sensor data.
         self.__light_sensor.update()
 
-        #self.__animation_max = self.__light_sensor.get_value() / 10
+        self.__update_timer.update()
+        if self.__update_timer.expired:
+            self.__update_timer.clear()
 
-        # TODO: After repairing sensor create negative proportional feedback controll.
-        if self.__animation_bit:
-            self.v1 += self.__animation_step
-            if self.v1 >= self.__animation_max:
-                self.__animation_bit = False
-
-        if not self.__animation_bit:
-            self.v1 -= self.__animation_step
-            if self.v1 <= self.__animation_min:
-                self.__animation_bit = True
-
-        # This is for test purpose of lamp lightsup ramp.
-        if self.v1 >= 1.18:
-            self.__animation_step = 0.0
-        # print("Analog output 1: {:03}".format(self.v1))
-
-        self.__set_voltages(self.v1, self.v2)
-
-        # If there is no one at the zone, just turn off the lights.
-        ac_zone_occupied = self._registers.by_name("ac.zone_1_occupied")
-        if ac_zone_occupied is not None:
-            if ac_zone_occupied.value == 1:
-                self.__logger.debug("Just turn off the light in the zone.")
-            if ac_zone_occupied.value == 0:
-                # TODO: Pass, but when activity has turnback return to normal state.
-                pass
+            self.__calculate()
 
     def shutdown(self):
         """Shutting down the lights."""
 
         self.__logger.info("Shutting down the {}".format(self.name))
         self.__set_voltages(0, 0)
-
-    def get_state(self):
-        return self.__light_sensor.get_value()
 
 #endregion
