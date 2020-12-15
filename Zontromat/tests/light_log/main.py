@@ -74,11 +74,15 @@ logger = None
 prev_time = 0
 """Previous time to update queue."""
 
-update_rate = 60
-"""Queue update rate."""
+update_interval = 60
+"""Update interval."""
 
 send_lock = False
 """Send lock mechanism flag."""
+
+device = None
+
+host = None
 
 #endregion
 
@@ -142,13 +146,13 @@ def get_logger(logger_name):
 
 #region Runtime
 
-def time_to_measure():
+def measure():
     """Time to measure procedure."""
 
-    global logger
+    global logger, host, device
 
     # API-endpoint.
-    URL = "http://176.33.1.249:8080/json/temp/26607314020000F8"
+    URL = "http://{}:8080/json/temp/{}".format(host, device)
 
     # Defining a params dict for the parameters to be sent to the API.
     PARAMS = {}
@@ -162,25 +166,25 @@ def time_to_measure():
     # Get VIS value.
     vsi = data["data"]["vis"]
 
+    float_vsi = float(vsi) * 4000
+
     # Log VIS value.
-    logger.info(vsi)
+    logger.info("{}\t {}".format(vsi, float_vsi))
 
 def update():
     """Update procedure."""
 
     global prev_time, send_lock
 
-    # Main update rate at ~ 20 second.
-    # На всеки 20 секунди се правят следните стъпки:
-    diff = time.time() - prev_time
+    delta_t = time.time() - prev_time
 
-    if diff > update_rate:
+    if delta_t > update_interval:
         # Update current time.
         prev_time = time.time()
 
         if not send_lock:
             send_lock = True
-            time_to_measure()
+            measure()
             send_lock = False
 
 #endregion
@@ -188,18 +192,23 @@ def update():
 def main():
     """Main"""
 
-    global logger, logger_name, time_to_stop
+    global logger, logger_name, time_to_stop, host, device
 
     parser = argparse.ArgumentParser()
-    parser.add_argument("--mode", type=str, default="s", help="Mode of execution")
+    parser.add_argument("--mode", type=str, default="s", help="Mode of execution. c - Continues, s - Single")
+    parser.add_argument("--device", type=str, default="26607314020000F8", help="Device identifier.")
+    parser.add_argument("--host", type=str, default="192.168.0.51", help="Device identifier.")
 
     args = parser.parse_args()
 
     # Create LOG file.
     crate_log_file()
 
-    # Get loger.
+    # Get logger.
     logger = get_logger(logger_name)
+
+    device = args.device
+    host = args.host
 
     if args.mode == "c":
         logger.info("Starting")
@@ -207,7 +216,7 @@ def main():
         while not time_to_stop:
             update()
     elif args.mode == "s":
-        time_to_measure()
+        measure()
 
 def kb_interupt():
     """Keyboard interupt handler."""
@@ -220,5 +229,9 @@ def kb_interupt():
 if __name__ == "__main__":
     try:
         main()
+
     except KeyboardInterrupt:
         kb_interupt()
+
+    except Exception as e:
+        print(e)
