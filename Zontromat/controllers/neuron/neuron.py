@@ -319,6 +319,10 @@ class Neuron(BaseController):
         mixed
             Description of device values and parameters.
         """
+
+        if self.__json_data is None:
+            raise BufferError("Data buffer is not set yet.")
+
         device = None
 
         for field in self.__json_data:
@@ -1004,7 +1008,6 @@ class Neuron(BaseController):
                     target = item
 
         return target
-
 
 #endregion
 
