@@ -25,8 +25,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import argparse
 import sys
 
-from controllers.neuron.neuron import Neuron
-from utils.perfformance_profiler import PerformanceProfiler
+from controllers.controller_factory import ControllerFactory
+from utils.performance_profiler import PerformanceProfiler
+from controllers.update_state import UpdateState
 
 #region File Attributes
 
@@ -59,13 +60,9 @@ __status__ = "Debug"
 
 #endregion
 
-__neuron = None
+__controller = None
 
 __performance_profiler = PerformanceProfiler()
-__performance_profiler.enable_mem_profile = True
-__performance_profiler.enable_time_profile = True
-__performance_profiler.max_mem = 0.03
-__performance_profiler.on_change(__on_change)
 
 def __on_change(current, peak, passed_time):
 
@@ -76,7 +73,7 @@ def __on_change(current, peak, passed_time):
 def main():
     """Main"""
 
-    global __neuron
+    global __controller, __performance_profiler
 
     parser = argparse.ArgumentParser()
     parser.add_argument("--host", type=str, default="http://127.0.0.1", help="IP Address")
@@ -86,11 +83,29 @@ def main():
 
     args = parser.parse_args()
 
-    __neuron = Neuron(args.ip, args.port)
-    __neuron.update()
-    device = __neuron.get_device(args.dev, args.circuit)
+    __performance_profiler.enable_mem_profile = True
+    __performance_profiler.enable_time_profile = True
+    __performance_profiler.max_mem = 0.03
+    __performance_profiler.on_change(__on_change)
 
-    print(device)
+    host = "{}:{}/".format(args.host, args.port)
+
+    # Create Neuron.
+    __controller = ControllerFactory.create(\
+        vendor="unipi",\
+        model="M503",\
+        serial=25,\
+        host=host,\
+        timeout=5)
+
+    state = __controller.update()
+
+    if state == UpdateState.Failure:
+        print("Unable to connect the controller.")
+
+    elif state == UpdateState.Success:
+        device = __controller.get_device(args.dev, args.circuit)
+        print(device)
 
 def kb_interupt():
     """Keyboard interupt handler."""
@@ -100,5 +115,9 @@ def kb_interupt():
 if __name__ == "__main__":
     try:
         main()
+
     except KeyboardInterrupt:
         kb_interupt()
+
+    except Exception as e:
+        print(e)
