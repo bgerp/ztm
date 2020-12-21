@@ -96,7 +96,7 @@ In this hedging we will describe all the register related to the work of the Zon
 
 | Purpose | Register | Type | Value |
 |----------|:-------------|:------|:------|
-| Attendees for last minute. | ac.last_minute_attendees | json | [] |
+| Attendees for last minute. | ac.last_minute_attendees | json | [{"ts": 1608550536.6481645, "card_id": "6E536046010080FF", "reader_id": "1205"}] |
 | Next attendance | ac.next_attendance | int | 0 |
 | Zone 1 occupied flag. | ac.zone_1_occupied | int | 0 |
 | Zone 2 occupied flag. | ac.zone_2_occupied | int | 0 |

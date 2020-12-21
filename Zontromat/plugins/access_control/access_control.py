@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 import time
+import json
 
 from utils.logger import get_logger
 from utils.timer import Timer
@@ -155,7 +156,9 @@ class AccessControl(BasePlugin):
         # Update last 60 seconds attendee list.
         last_minute_attendees = self._registers.by_name(self._key + ".last_minute_attendees")
         if last_minute_attendees is not None:
-            last_minute_attendees.value = self.__last_minute_attendees
+            obj = json.loads(last_minute_attendees.value)
+            obj.append(self.__last_minute_attendees)
+            last_minute_attendees.value = json.dumps(obj[0])
 
 #endregion
 
