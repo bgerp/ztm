@@ -23,6 +23,10 @@ cp /opt/Zontromat-backup/Zontromat/session.txt /opt/Zontromat/Zontromat/session.
 {%- endif %}
 cp /opt/Zontromat/hw_definitions/* /etc/hw_definitions:
   cmd.run
+{%- if salt['file.file_exists' ]('/opt/Zontromat/requirements.txt') %}
+pip install -r /opt/Zontromat/requirements.txt:
+  cmd.run
+{%- endif %}
 systemctl restart evok:
   cmd.run
 systemctl restart zontromat:
