@@ -73,8 +73,8 @@ class AccessControl(BasePlugin):
     __logger = None
     """Logger"""
 
-    __last_minute_attendees = []
-    """Last minute attendees"""
+    __last_update_cycle_attendees = []
+    """Last update cycle attendees"""
 
     __security_zone_1 = None
     """Security zone 1"""
@@ -119,7 +119,7 @@ class AccessControl(BasePlugin):
         time_now = time.time()
 
         # Filter all records.
-        for attendee in self.__last_minute_attendees:
+        for attendee in self.__last_update_cycle_attendees:
 
             # Calculate delta time.
             delta_t = time_now - attendee["ts"]
@@ -134,8 +134,8 @@ class AccessControl(BasePlugin):
 
         # Execute the flag.
         if delete_flag:
-            self.__last_minute_attendees.clear()
-            self.__last_minute_attendees = filtered_atendee
+            self.__last_update_cycle_attendees.clear()
+            self.__last_update_cycle_attendees = filtered_atendee
 
     def __reader_read(self, card_id, reader_id):
 
@@ -147,17 +147,17 @@ class AccessControl(BasePlugin):
         }
 
         # Append new record.
-        self.__last_minute_attendees.append(record)
+        self.__last_update_cycle_attendees.append(record)
 
-        self.__filter_atendee_by_time(60)
+        #self.__filter_atendee_by_time(60)
 
-        # print(self.__last_minute_attendees)
+        # print(self.__last_update_cycle_attendees)
 
         # Update last 60 seconds attendee list.
-        last_minute_attendees = self._registers.by_name(self._key + ".last_minute_attendees")
+        last_minute_attendees = self._registers.by_name(self._key + ".last_update_attendees")
         if last_minute_attendees is not None:
             obj = json.loads(last_minute_attendees.value)
-            obj.append(self.__last_minute_attendees)
+            obj.append(self.__last_update_cycle_attendees)
             last_minute_attendees.value = json.dumps(obj[0])
 
 #endregion

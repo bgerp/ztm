@@ -109,10 +109,10 @@ def __add_registers():
     register.value = [] # {"card_id": "445E6046010080FF", "ts":"1595322860"}
     __registers.append(register)
 
-    register = Register("ac.last_minute_attendees")
+    register = Register("ac.last_update_attendees")
     register.scope = Scope.Device
     register.plugin_name = "Access Control"
-    register.description = "Last minute attendee"
+    register.description = "Last update attendee"
     register.range = ""
     register.value = []
     __registers.append(register)
@@ -1216,10 +1216,10 @@ def __add_registers():
 #region System (sys)
 
     # Last 60 seconds
-    register = Register("sys.last_minute_errs")
+    register = Register("sys.last_update_errs")
     register.scope = Scope.Device
     register.plugin_name = "System"
-    register.description = "Last minute error"
+    register.description = "Last update cycle error"
     register.range = ""
     register.value = []
     # GlobalErrorHandler.set_register(register)

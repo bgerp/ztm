@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import traceback
 import os
+import queue
 
 from enum import Enum
 
@@ -152,6 +153,9 @@ class Zone():
     __performance_profiler_timer = None
     """Performance profiler timer."""
 
+    __registers_snapshot = None
+    """Registers snapshot."""    
+
 #endregion
 
 #region Constructor
@@ -229,6 +233,8 @@ class Zone():
         self.__bgerp.set_evok_cb(self.__evok_cb)
 
         self.__erp_service_update_timer = Timer(self.__erp_service_update_rate)
+
+        self.__registers_snapshot = queue.Queue()
 
 #endregion
 
@@ -367,7 +373,22 @@ class Zone():
             if update_state is not None:
                 self.__registers.update(update_state)
 
+                # Clear the last atendies. (Eml6287)
+                aa = self.__registers.by_name("ac.last_update_attendees")
+                if aa is not None:
+                    aa.value = str([])
+
+                # TODO: Comment is this algorithm is OK?
+                not_send_len = len(self.__registers_snapshot)
+                if not_send_len > 0:
+                    snapshot = self.__registers_snapshot.get()
+                    snapshot_dict = snapshot.to_dict()
+                    self.__bgerp.sync(snapshot_dict)
+
             else:
+                # Create absolute copy of the object.
+                self.__registers_snapshot.put(self.__registers.copy())
+
                 GlobalErrorHandler.log_no_connection_erp(self.__logger)
 
     def __shutdown(self):
