@@ -255,6 +255,8 @@ class Zone():
                 if target is not None:
                     target.value = registers[register]
 
+        # TODO: To call sync for manual sync with ERP.
+
     def __evok_cb(self, device):
         """EVOK callback service handler.
 
@@ -379,7 +381,7 @@ class Zone():
                     aa.value = str([])
 
                 # TODO: Comment is this algorithm is OK?
-                not_send_len = len(self.__registers_snapshot)
+                not_send_len = self.__registers_snapshot.qsize()
                 if not_send_len > 0:
                     snapshot = self.__registers_snapshot.get()
                     snapshot_dict = snapshot.to_dict()

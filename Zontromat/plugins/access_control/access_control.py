@@ -110,7 +110,8 @@ class AccessControl(BasePlugin):
     def __filter_atendee_by_time(self, time_sec):
 
         # Create filter list.
-        filtered_atendee = []
+        filtered_atendees = self.__last_update_cycle_attendees.copy()
+        filtered_atendees.clear()
 
         # Reset delete flag.
         delete_flag = False
@@ -126,7 +127,7 @@ class AccessControl(BasePlugin):
 
             # Filter
             if delta_t < time_sec:
-                filtered_atendee.append(attendee)
+                filtered_atendees.append(attendee)
 
             # Else mark for deletion.
             else:
@@ -135,21 +136,24 @@ class AccessControl(BasePlugin):
         # Execute the flag.
         if delete_flag:
             self.__last_update_cycle_attendees.clear()
-            self.__last_update_cycle_attendees = filtered_atendee
+            for atendee in filtered_atendees:
+                self.__last_update_cycle_attendees.append(atendee)
 
-    def __reader_read(self, card_id, reader_id):
+    def __reader_read(self, card_id, reader_id, card_state):
 
         # Create a record.
         record = { \
             "ts": time.time(), \
             "card_id": card_id, \
             "reader_id": reader_id, \
+            # Request - Eml6287
+            "card_state": card_state, \
         }
 
         # Append new record.
         self.__last_update_cycle_attendees.append(record)
 
-        #self.__filter_atendee_by_time(60)
+        self.__filter_atendee_by_time(60)
 
         # print(self.__last_update_cycle_attendees)
 
@@ -157,8 +161,9 @@ class AccessControl(BasePlugin):
         last_minute_attendees = self._registers.by_name(self._key + ".last_update_attendees")
         if last_minute_attendees is not None:
             obj = json.loads(last_minute_attendees.value)
-            obj.append(self.__last_update_cycle_attendees)
-            last_minute_attendees.value = json.dumps(obj[0])
+            for attendee in self.__last_update_cycle_attendees:
+                obj.append(attendee)
+            last_minute_attendees.value = json.dumps(obj)
 
 #endregion
 

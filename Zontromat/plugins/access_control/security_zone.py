@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import time
 
 from plugins.base_plugin import BasePlugin
+from plugins.access_control.card_state import CardState
 
 from utils.logger import get_logger
 from utils.timer import Timer
@@ -430,28 +431,41 @@ class SecurityZone(BasePlugin):
 
 #region Private Methods (I/O Signals)
 
-    def __is_allowed(self, card_id):
+    def __check_card_state(self, card_id):
 
-        allowed = False
+        # Request - Eml6287
+        card_state = CardState.NONE
 
+        allowed_len = len(self.__allowed_attendant)
+        checked_index = 0
         for card in self.__allowed_attendant:
             if card["card_id"] == card_id:
                 now = time.time()
+
                 if now < card["valid_until"]:
-                    allowed = True
+                    card_state = CardState.Allowed
                     break
 
-        return allowed
+                else:
+                    card_state = CardState.Expired
+                    break
+            
+            checked_index += 1
+            if checked_index == allowed_len and card_state == CardState.NONE:
+                card_state = CardState.NotAllowed
+
+        return card_state
 
     def __reader_read(self, card_id, serial_number):
 
         # Set flag to open the door.
-        if self.__is_allowed(card_id):
+        card_state = self.__check_card_state(card_id)
+        if card_state == CardState.Allowed:
             if self.__open_door_flag == 0:
                 self.__open_door_flag = 1
 
         if self.__reader_read_cb is not None:
-            self.__reader_read_cb(card_id, serial_number)
+            self.__reader_read_cb(card_id, serial_number, card_state.value)
 
     def __delete_reader(self, reader):
 
