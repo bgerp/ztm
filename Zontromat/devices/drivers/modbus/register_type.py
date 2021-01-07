@@ -58,11 +58,14 @@ __status__ = "Debug"
 class RegisterType(Enum):
     """Register type"""
 
-    COILS = 1
-    DISCRETE_INPUTS = 2
-    HOLDING_REGISTERS = 3
-    ANALOG_INPUTS = 4
-    INPUT_REGISTER = 5
+    ReadCoil = 1
+    ReadDiscreteInput = 2
+    ReadHoldingRegisters = 3
+    ReadInputRegisters = 4
+    WriteSingleCoil = 5
+    WriteSingleHoldingRegister = 6
+    WriteMultipleCoils = 15
+    WriteMultipleHoldingRegisters = 16
 
     @staticmethod
     def is_valid_type(data_type):
@@ -70,22 +73,9 @@ class RegisterType(Enum):
 
         state = False
 
-        if RegisterType.COILS == data_type:
-            state = True
-
-        elif RegisterType.DISCRETE_INPUTS == data_type:
-            state = True
-
-        elif RegisterType.HOLDING_REGISTERS == data_type:
-            state = True
-
-        elif RegisterType.ANALOG_INPUTS == data_type:
-            state = True
-
-        elif RegisterType.INPUT_REGISTER == data_type:
-            state = True
-
-        else:
-            state = False
+        for register_type in RegisterType:
+            if data_type == register_type:
+                state = True
+                break
 
         return state
