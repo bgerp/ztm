@@ -37,7 +37,6 @@ from utils.timer import Timer
 from utils.performance_profiler import PerformanceProfiler
 
 from controllers.controller_factory import ControllerFactory
-from controllers.update_state import UpdateState
 
 from bgERP.bgERP import bgERP
 
@@ -189,11 +188,11 @@ class Zone():
         # Read PLC information.
         plc_info = ControllerFactory.get_info()
 
-        if "serial" in plc_info:
+        if plc_info is not None and "serial" in plc_info:
             if plc_info["serial"] is not None:
                 serial = plc_info["serial"]
 
-        if "model" in plc_info:
+        if plc_info is not None and "model" in plc_info:
             if plc_info["model"] is not None:
                 model = plc_info["model"]
 
@@ -313,11 +312,11 @@ class Zone():
         # Update the neuron.
         state = self.__controller.update()
 
-        if state.value == UpdateState.Success.value:
+        if state:
             # Clear all resources.
             self.__zone_state.set_state(ZoneState.Login)
 
-        elif state.value == UpdateState.Failure.value:
+        else:
             GlobalErrorHandler.log_no_connection_plc(self.__logger)
 
 
@@ -354,7 +353,7 @@ class Zone():
         # Update the neuron.
         state = self.__controller.update()
 
-        if state == UpdateState.Failure:
+        if not state:
             self.__logger.error("PLC service should be restarted.")
             GlobalErrorHandler.log_no_connection_plc(self.__logger)
 
@@ -372,7 +371,7 @@ class Zone():
 
             update_state = self.__bgerp.sync(ztm_regs_dict)
 
-            if update_state is not None:
+            if update_state is not None: #  is not None
                 self.__registers.update(update_state)
 
                 # Clear the last atendies. (Eml6287)
@@ -383,13 +382,20 @@ class Zone():
                 # TODO: Comment is this algorithm is OK?
                 not_send_len = self.__registers_snapshot.qsize()
                 if not_send_len > 0:
+
+                    # Get from the queue.
                     snapshot = self.__registers_snapshot.get()
-                    snapshot_dict = snapshot.to_dict()
-                    self.__bgerp.sync(snapshot_dict)
+
+                    # Send the firs from the queue.
+                    self.__bgerp.sync(snapshot)
 
             else:
+
                 # Create absolute copy of the object.
-                self.__registers_snapshot.put(self.__registers.copy())
+                reg_copy = self.__registers.by_scope(Scope.Device).to_dict().copy()
+
+                # Put the copy to the queue.
+                self.__registers_snapshot.put(reg_copy)
 
                 GlobalErrorHandler.log_no_connection_erp(self.__logger)
 
