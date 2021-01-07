@@ -22,11 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 
-from controllers.neuron.l503 import L503
-from controllers.neuron.m503 import M503
-from controllers.neuron.m523 import M523
-from controllers.neuron.s103 import S103
-from controllers.picons.x1_black_titanium import X1BlackTitanium
+from controllers.neuron.neuron import Neuron
 
 #region File Attributes
 
@@ -59,52 +55,45 @@ __status__ = "Debug"
 
 #endregion
 
-class ControllerFactory():
-    """Controller factory class."""
+class S103(Neuron):
+    """Neuron S103
+    """
 
-#region Public Methods
+#region Attributes
 
-    @staticmethod
-    def create(**config):
-        """Create controller."""
+    __map = \
+    {\
+        "identification": {"vendor": "unipi", "model": "S103"},\
 
-        controller = None
+        "LED0": {"dev": "led", "major_index": 1, "minor_index": 1},\
+        "LED1": {"dev": "led", "major_index": 1, "minor_index": 2},\
+        "LED2": {"dev": "led", "major_index": 1, "minor_index": 3},\
+        "LED3": {"dev": "led", "major_index": 1, "minor_index": 4},\
 
-        if config["vendor"] == "unipi":
+        "DI0": {"dev": "input", "major_index": 1, "minor_index": 1},\
+        "DI1": {"dev": "input", "major_index": 1, "minor_index": 2},\
+        "DI2": {"dev": "input", "major_index": 1, "minor_index": 3},\
+        "DI3": {"dev": "input", "major_index": 1, "minor_index": 4},\
 
-            if config["model"] == "S103":
-                controller = S103(config)
+        "DO0": {"dev": "do", "major_index": 1, "minor_index": 1},\
+        "DO1": {"dev": "do", "major_index": 1, "minor_index": 2},\
+        "DO2": {"dev": "do", "major_index": 1, "minor_index": 3},\
+        "DO3": {"dev": "do", "major_index": 1, "minor_index": 4},\
 
-            elif config["model"] == "M503":
-                controller = M503(config)
+        "AI0": {"dev": "ai", "major_index": 1, "minor_index": 1},\
 
-            elif config["model"] == "M523":
-                controller = M523(config)
+        "AO0": {"dev": "ao", "major_index": 1, "minor_index": 1},\
+    }
 
-            elif config["model"] == "L503":
-                controller = L503(config)
+#endregion
 
+#region Constructor
 
-        elif config["vendor"] == "pt":
+    def __init__(self, config):
+        """Class constructor."""
 
-            if config["model"] == "X1BlackTitanium":
-                controller = X1BlackTitanium(config)
+        super().__init__(config)
 
-        return controller
-
-    @staticmethod
-    def get_info():
-        """Get controller info."""
-
-        config = None
-
-
-        # Try to read NEURON
-        try:
-            config = Neuron.read_eeprom()
-        except:
-            pass
-
-        return config
+        self._gpio_map = self.__map
 
 #endregion

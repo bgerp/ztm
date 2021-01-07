@@ -32,7 +32,6 @@ import requests
 from utils.logger import get_logger
 
 from controllers.base_controller import BaseController
-from controllers.update_state import UpdateState
 
 #region File Attributes
 
@@ -269,7 +268,7 @@ class PiCons(BaseController):
     def _update(self):
         """Make request to the device to update the data."""
 
-        state = UpdateState.Failure
+        state = False
 
         # Call the Neuron.
         uri = self.__host + self.__args
@@ -284,14 +283,14 @@ class PiCons(BaseController):
                 # print(self.__json_data)
 
                 # Mark as successfull.
-                state = UpdateState.Success
+                state = True
 
             else:
                 self.__logger.error("Controller answer with: {}".format(response.status_code))
-                state = UpdateState.Failure
+                state = False
 
         except:
-            state = UpdateState.Failure
+            state = False
             self.__logger.error(traceback.format_exc())
 
         return state
