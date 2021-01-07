@@ -27,7 +27,6 @@ import sys
 
 from controllers.controller_factory import ControllerFactory
 from utils.performance_profiler import PerformanceProfiler
-from controllers.update_state import UpdateState
 
 #region File Attributes
 
@@ -100,10 +99,10 @@ def main():
 
     state = __controller.update()
 
-    if state == UpdateState.Failure:
+    if state == False:
         print("Unable to connect the controller.")
 
-    elif state == UpdateState.Success:
+    elif state == True:
         device = __controller.get_device(args.dev, args.circuit)
         print(device)
 
