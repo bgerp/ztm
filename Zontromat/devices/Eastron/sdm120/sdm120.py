@@ -70,86 +70,86 @@ class SDM120(Device):
 
         self._parameters.append(
             Parameter("Voltage", "V",\
-            ParameterType.FLOAT, [0, 1], RegisterType.INPUT_REGISTER))
+            ParameterType.FLOAT, [0, 1], RegisterType.ReadInputRegisters))
 
         self._parameters.append(\
             Parameter("Current", "A",\
-            ParameterType.FLOAT, [6, 7], RegisterType.INPUT_REGISTER))
+            ParameterType.FLOAT, [6, 7], RegisterType.ReadInputRegisters))
 
         self._parameters.append(\
             Parameter("ActivePower", "W",\
-            ParameterType.FLOAT, [12, 13], RegisterType.INPUT_REGISTER))
+            ParameterType.FLOAT, [12, 13], RegisterType.ReadInputRegisters))
 
         self._parameters.append(\
             Parameter("ApparentPower", "VA",\
-            ParameterType.FLOAT, [18, 19], RegisterType.INPUT_REGISTER))
+            ParameterType.FLOAT, [18, 19], RegisterType.ReadInputRegisters))
 
         self._parameters.append(\
             Parameter("ReactivePower", "VAr",\
-            ParameterType.FLOAT, [24, 25], RegisterType.INPUT_REGISTER))
+            ParameterType.FLOAT, [24, 25], RegisterType.ReadInputRegisters))
 
         self._parameters.append(\
             Parameter("PowerFactor", "DEG",\
-            ParameterType.FLOAT, [30, 31], RegisterType.INPUT_REGISTER))
+            ParameterType.FLOAT, [30, 31], RegisterType.ReadInputRegisters))
 
         self._parameters.append(\
             Parameter("Frequency", "Hz",\
-            ParameterType.FLOAT, [70, 71], RegisterType.INPUT_REGISTER))
+            ParameterType.FLOAT, [70, 71], RegisterType.ReadInputRegisters))
 
         self._parameters.append(\
             Parameter("ImportActiveEnergy", "kWr",\
-            ParameterType.FLOAT, [72, 73], RegisterType.INPUT_REGISTER))
+            ParameterType.FLOAT, [72, 73], RegisterType.ReadInputRegisters))
 
         self._parameters.append(\
             Parameter("ExportActiveEnergy", "kWr",\
-            ParameterType.FLOAT, [74, 75], RegisterType.INPUT_REGISTER))
+            ParameterType.FLOAT, [74, 75], RegisterType.ReadInputRegisters))
 
         self._parameters.append(\
             Parameter("ImportReactiveEnergy", "kvarh",\
-            ParameterType.FLOAT, [76, 77], RegisterType.INPUT_REGISTER))
+            ParameterType.FLOAT, [76, 77], RegisterType.ReadInputRegisters))
 
         self._parameters.append(\
             Parameter("ExportReactiveEnergy", "kvarh",\
-            ParameterType.FLOAT, [78, 79], RegisterType.INPUT_REGISTER))
+            ParameterType.FLOAT, [78, 79], RegisterType.ReadInputRegisters))
 
         self._parameters.append(\
             Parameter("TotalSystemPowerDemand", "W",\
-            ParameterType.FLOAT, [84, 85], RegisterType.INPUT_REGISTER))
+            ParameterType.FLOAT, [84, 85], RegisterType.ReadInputRegisters))
 
         self._parameters.append(\
             Parameter("MaximumTotalSystemPowerDemand", "W",\
-            ParameterType.FLOAT, [86, 87], RegisterType.INPUT_REGISTER))
+            ParameterType.FLOAT, [86, 87], RegisterType.ReadInputRegisters))
 
         self._parameters.append(\
             Parameter("ImportSystemPowerDemand", "W",\
-            ParameterType.FLOAT, [88, 89], RegisterType.INPUT_REGISTER))
+            ParameterType.FLOAT, [88, 89], RegisterType.ReadInputRegisters))
 
         self._parameters.append(\
             Parameter("MaximumImportSystemPowerDemand", "W",\
-            ParameterType.FLOAT, [90, 91], RegisterType.INPUT_REGISTER))
+            ParameterType.FLOAT, [90, 91], RegisterType.ReadInputRegisters))
 
         self._parameters.append(\
             Parameter("ExportSystemPowerDemand", "W",\
-            ParameterType.FLOAT, [92, 93], RegisterType.INPUT_REGISTER))
+            ParameterType.FLOAT, [92, 93], RegisterType.ReadInputRegisters))
 
         self._parameters.append(\
             Parameter("MaximumExportSystemPowerDemand", "W",\
-            ParameterType.FLOAT, [94, 95], RegisterType.INPUT_REGISTER))
+            ParameterType.FLOAT, [94, 95], RegisterType.ReadInputRegisters))
 
         self._parameters.append(\
             Parameter("CurrentDemand", "A",\
-            ParameterType.FLOAT, [258, 259], RegisterType.INPUT_REGISTER))
+            ParameterType.FLOAT, [258, 259], RegisterType.ReadInputRegisters))
 
         self._parameters.append(\
             Parameter("MaximumCurrentDemand", "A",\
-            ParameterType.FLOAT, [264, 265], RegisterType.INPUT_REGISTER))
+            ParameterType.FLOAT, [264, 265], RegisterType.ReadInputRegisters))
 
         self._parameters.append(\
             Parameter("TotalActiveEnergy", "kWh",\
-            ParameterType.FLOAT, [342, 343], RegisterType.INPUT_REGISTER))
+            ParameterType.FLOAT, [342, 343], RegisterType.ReadInputRegisters))
 
         self._parameters.append(\
             Parameter("TotalReactiveEnergy", "kVArh",\
-            ParameterType.FLOAT, [344, 345], RegisterType.INPUT_REGISTER))
+            ParameterType.FLOAT, [344, 345], RegisterType.ReadInputRegisters))
 
 #endregion
