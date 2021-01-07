@@ -22,13 +22,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 
-from enum import Enum
-
 from utils.configuarable import Configuarable
 
 from data import verbal_const
-
-from controllers.mapping import get_map
 
 #region File Attributes
 
@@ -61,17 +57,6 @@ __status__ = "Debug"
 
 #endregion
 
-class PinModes(Enum):
-    """Pin modes."""
-
-    OFF = 0
-    DigitalInput = 1
-    DigitalOutput = 2
-    AnalogInput = 3
-    AnalogOutput = 4
-    PWM = 5
-    RelayOutput = 6
-
 class BaseController(Configuarable):
     """Base controller"""
 
@@ -88,8 +73,6 @@ class BaseController(Configuarable):
         """Constructor"""
 
         super().__init__(config)
-
-        self._gpio_map = get_map(self._config["model"])
 
 #endregion
 
