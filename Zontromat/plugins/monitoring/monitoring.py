@@ -33,6 +33,7 @@ from devices.no_vendors.no_vendor_1.flowmeter import Flowmeter
 from devices.tests.leak_test.leak_test import LeakTest
 from devices.Eastron.sdm120.sdm120 import SDM120
 from devices.Eastron.sdm630.sdm630 import SDM630
+from devices.drivers.modbus.register_type import RegisterType
 
 from data import verbal_const
 
@@ -282,12 +283,12 @@ class Monitoring(BasePlugin):
                 model = params[2]
                 if model == "SDM120":
                     self.__power_analyser = SDM120()
-                    self.__register_type = "inp"
+                    self.__register_type = RegisterType.ReadInputRegisters #"inp"
                     baudrate = 2400
 
                 elif model == "SDM630":
                     self.__power_analyser = SDM630()
-                    self.__register_type = "inp"
+                    self.__register_type = RegisterType.ReadInputRegisters #"inp"
                     baudrate = 9600
 
                 if not self.__evok_setting.device_exists("EXTENTION_1"):
