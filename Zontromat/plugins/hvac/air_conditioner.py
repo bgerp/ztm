@@ -770,6 +770,21 @@ class AirConditioner(BasePlugin):
 
         return state
 
+    def __is_hot_water(self):
+
+        # Request: Eml6419
+        down_limit_value = 10
+
+        down_limit = self._registers.by_name("{}.loop1_{}.temp.down_limit".format(self._key, self.__identifier))
+        if down_limit is not None:
+            down_limit_value = down_limit.value
+
+        temperature = 0
+        if self.__loop1_temp_dev is not None:
+            temperature = self.__loop1_temp_dev.value()
+
+        return temperature >= down_limit_value
+
     def __thermal_mode_on_change(self, machine):
         self.__logger.info("Thermal mode: {}".format(machine.get_state()))
 
@@ -985,6 +1000,7 @@ class AirConditioner(BasePlugin):
 
 
 
+
         # Shutting down all the devices.
         # self.__set_thermal_force(0)
 
@@ -996,8 +1012,12 @@ class AirConditioner(BasePlugin):
 
         # If the window is opened, just turn off the HVAC.
         window_closed_1_state = self.__read_window_closed_sensor()
-        
-        stop_flag = (not ac_zone_occupied_flag or not window_closed_1_state)
+
+        # If temperature is less then 10 deg on loop 1.
+        hot_water = self.__is_hot_water()
+
+        # Take all necessary condition for normal operation of the HVAC.
+        stop_flag = (not ac_zone_occupied_flag or not window_closed_1_state or not hot_water)
 
         if stop_flag:
             self.__stop_timer.update()
