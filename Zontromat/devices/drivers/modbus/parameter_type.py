@@ -62,6 +62,8 @@ class ParameterType(Enum):
     INT16_T = "int16_t"
     UINT32_T = "uint32_t"
     INT32_T = "int32_t"
+    UINT64_T = "uint64_t"
+    INT64_T = "int64_t"
     FLOAT = "float"
     STRING = "string"
 
@@ -75,26 +77,13 @@ class ParameterType(Enum):
             (bool: Valid data type.
         """
 
-        is_valid = False
+        state = False
 
-        if ParameterType.UINT16_T == data_type:
-            is_valid = True
+        for parameter_type in ParameterType:
+            if data_type == parameter_type:
+                state = True
+                break
 
-        if ParameterType.INT16_T == data_type:
-            is_valid = True
-
-        if ParameterType.UINT32_T == data_type:
-            is_valid = True
-
-        if ParameterType.INT32_T == data_type:
-            is_valid = True
-
-        if ParameterType.FLOAT == data_type:
-            is_valid = True
-
-        if ParameterType.STRING == data_type:
-            is_valid = True
-
-        return is_valid
+        return state
 
 #endregion
