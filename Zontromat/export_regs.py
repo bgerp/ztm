@@ -945,6 +945,15 @@ def __add_registers():
     register.value = "temp/DS18B20/28FF2B70C11604B7"
     __registers.append(register)
 
+    # Loop 1 Down Limit Temperature # Request: Eml6419
+    register = Register("hvac.loop1_1.temp.down_limit")
+    register.scope = Scope.System
+    register.plugin_name = "HVAC"
+    register.description = "Loop 1 temperature down limit"
+    register.range = "0.0/"
+    register.value = 15
+    __registers.append(register)
+
     # Loop 1 valve.
     register = Register("hvac.loop1_1.valve.settings")
     register.scope = Scope.System
