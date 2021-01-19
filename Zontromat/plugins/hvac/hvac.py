@@ -66,7 +66,7 @@ class HVAC(BasePlugin):
     __logger = None
     """Logger"""
 
-    __thermal_zones = None
+    __thermal_zones = []
     """Therml zones."""
 
 #endregion
@@ -92,7 +92,7 @@ class HVAC(BasePlugin):
         self.__logger = get_logger(__name__)
         self.__logger.info("Starting up the {}".format(self.name))
 
-        self.__thermal_zones = []
+        self.__thermal_zones.clear()
 
         ac1 = AirConditioner(\
             registers=self._registers, controller=self._controller,\
