@@ -31,6 +31,8 @@ from utils.logger import get_logger
 
 from controllers.base_controller import BaseController
 
+from devices.drivers.modbus.register_type import RegisterType
+
 #region File Attributes
 
 __author__ = "Orlin Dimitrov"
@@ -295,7 +297,8 @@ class Evok(BaseController):
             else:
                 state = False
 
-        except Exception:
+        except Exception as exception:
+            print(exception)
             state = False
 
         return state
@@ -842,11 +845,11 @@ class Evok(BaseController):
 
         if register_type is not None:
 
-            if "inp" in register_type:
+            if register_type.value is RegisterType.ReadDiscreteInput.value:
                 key = "UART_" + str(uart) + "_" + str(dev_id) + "_" + \
-                    str(register) + "_" + register_type
+                    str(register) + "_" + "inp"
 
-            elif register_type == "":
+            else:
                 key = "UART_" + str(uart) + "_" + str(dev_id) + "_" + str(register)
 
         else:
@@ -925,9 +928,9 @@ class Evok(BaseController):
                 if control == 64085:
 
                     # Version
-                    v1 = content[99]
-                    v2 = content[98]
-                    version2 = "{}.{}".format(v1, v2)
+                    ver_1 = content[99]
+                    ver_2 = content[98]
+                    version2 = "{}.{}".format(ver_1, ver_2)
                     device_cfg["version2"] = version2
 
                     # Model
@@ -954,9 +957,9 @@ class Evok(BaseController):
                 if control == 64085:
 
                     # Version
-                    v1 = content[99]
-                    v2 = content[98]
-                    version2 = "{}.{}".format(v1, v2)
+                    ver_1 = content[99]
+                    ver_2 = content[98]
+                    version2 = "{}.{}".format(ver_1, ver_2)
                     device_cfg["version2"] = version2
 
                     # Model
@@ -1044,14 +1047,77 @@ class Evok(BaseController):
         if self.is_off_gpio(l_pin):
             return state
 
-        gpio_map = self._gpio_map[l_pin]
-        response = self._get_digital_input(gpio_map["major_index"], gpio_map["minor_index"])
-        if response is not None:
-            state = response["value"]
+        is_remote = False
+        try:
+            is_remote = self.is_remote_gpio(pin)
+        except Exception as exception:
+            pass
+
+        if is_remote:
+
+            pin_data = self.parse_remote_gpio(pin)
+            print(pin_data)
+            if pin_data is not None:
+
+                # This is the map of the GPIO to registers.
+                if pin_data["io_type"] == "DI":
+                    io_index = pin_data["io_index"]
+
+                    """
+                    # Comments are from date 15.01.2021 y., meeting with M.G.
+ 
+                    # 1. Create remote module.
+                    from devices.Mainland.hhc_r4i4d.hhc_r4i4d import HHC_R4I4D
+                    remote_module = HHC_R4I4D()
+
+                    # 2. Get registers IDs.
+                    registers_ids = remote_module.get_registers_ids()
+
+                    # 3. Get values by the structure.
+                    registers_values = self._controller.read_mb_registers(\
+                        pin_data["uart"], \
+                        pin_data["mb_id"], \
+                        registers_ids, \
+                        RegisterType.ReadDiscreteInput)
+
+                    # 4. Read the Input specific bit.
+                    value = registers_values[0]
+                    if value is not None:
+
+                        # Extract individual bits, that holds, them.
+                        state = (value & (1 << io_index)) != 0
+
+                        print(state)
+
+                    """
+
+                    # Add two serial registers that holding two 16 bit boolean inputs.
+                    reg_adr = 244
+                    if -1 < io_index < 16:
+                        reg_adr = 244
+
+                    if 16 >= io_index < 32:
+                        reg_adr = 245
+
+                    # After determing the registers...
+                    value = self._get_uart_register(pin_data["uart"], pin_data["mb_id"], reg_adr)
+                    if value is not None:
+
+                        # Extract individual bits, that holds, them.
+                        state = (value & (1 << io_index)) != 0
+
+                        print(value)
+
+        if not is_remote:
+            gpio_map = self._gpio_map[l_pin]
+            response = self._get_digital_input(gpio_map["major_index"], gpio_map["minor_index"])
+            if response is not None:
+                state = response["value"]
 
         # Inversion
         polarity = pin.startswith("!")
 
+        # Check and apply the polarity of the state.
         if polarity:
             state = not state
         else:

@@ -26,6 +26,9 @@ from utils.configuarable import Configuarable
 
 from data import verbal_const
 
+from controllers.utils.resource_identifiers import Identifiers
+from controllers.utils.pin_modes import PinModes
+
 #region File Attributes
 
 __author__ = "Orlin Dimitrov"
@@ -62,8 +65,10 @@ class BaseController(Configuarable):
 
 #region Attributes
 
-    _gpio_map = None
+    _gpio_map = {}
     """GPIO map"""
+
+    _delimiter = "."
 
 #endregion
 
@@ -83,6 +88,109 @@ class BaseController(Configuarable):
 
         return gpio is not None and gpio != ""
 
+    def is_valid_remote_gpio(self, gpio):
+        """[summary]
+
+        Args:
+            gpio (str): Remote GPIO description
+            U1.M1.DI2 -> UART 1; Modbus ID 1; Digital Input 2
+
+        Raises:
+            SyntaxError: [description]
+            SyntaxError: [description]
+            SyntaxError: [description]
+            ValueError: [description]
+            ValueError: [description]
+            SyntaxError: [description]
+            ValueError: [description]
+            ValueError: [description]
+            ValueError: [description]
+
+        Returns:
+            [bool]: True - Valid syntax; False Invalid syntax.
+        """
+
+        # Capitalize the target.
+        io_name = gpio.upper()
+
+        # Remove flip sign.
+        io_name = io_name.replace("!", "")
+
+        # Chaeck for splitter symbiol.
+        has_delimiter = (self._delimiter in io_name)
+
+        if not has_delimiter:
+            raise SyntaxError("No delimiter symbol included.") 
+
+        # Split the target in to chunks.
+        chunks = io_name.split(self._delimiter)
+
+        # Get the chunks length.
+        chunks_count = len(chunks)
+
+        if chunks_count != 3:
+            raise SyntaxError("Invalid chunks count must be 3. OR Invalid place of the delimiter.")
+
+        # Check for UART identifier.
+        has_uart_identifier = "U" in chunks[Identifiers.UART.value]
+        if not has_uart_identifier:
+            raise SyntaxError("UART identifier should be provided. (U1)")
+
+        # Get the UART identifier.
+        uart_identifier = chunks[Identifiers.UART.value].replace("U", "")
+
+        if uart_identifier == "":
+            raise ValueError("UART identifier should be U0 to U255.")
+
+        uart_identifier = int(uart_identifier)
+
+        # Validate the MODBUS range.
+        valid_uart_identifier = (uart_identifier > -1) and (uart_identifier < 256)
+
+        if not valid_uart_identifier:
+            raise ValueError("MODBUS identifier should be M1 to M254.")
+
+        # Check for MODBUS identifier.
+        has_mb_identifier = "M" in chunks[Identifiers.MODBUS.value]
+
+        if not has_mb_identifier:
+            raise SyntaxError("MODBUS identifier should be provided. (M1)")
+
+        # Get the MODBUS identifier.
+        mb_identifier = chunks[Identifiers.MODBUS.value].replace("M", "")
+
+        if mb_identifier == "":
+            raise ValueError("MODBUS identifier should be M1 to M254.")
+
+        mb_identifier = int(mb_identifier)
+
+        # Validate the MODBUS range.
+        valid_mb_identifier = (mb_identifier > 0) and (mb_identifier < 255)
+
+        if not valid_mb_identifier:
+            raise ValueError("MODBUS identifier should be M1 to M254.")
+
+        # Disable mapping check.
+        disable_mapping = True
+
+        # Check does the GPIO is part of the map.
+        has_io_identifier = False
+        for item in self._gpio_map:
+            if chunks[Identifiers.IO.value] in item:
+                has_io_identifier = True
+                break
+
+        if not (has_io_identifier or disable_mapping):
+            raise ValueError("Target IO is not part of the mapping.")
+
+        # Combine all requirements to one expresion.
+        valid = has_delimiter and (chunks_count == 3) and \
+            has_uart_identifier and valid_uart_identifier and \
+            has_mb_identifier and valid_mb_identifier and (has_io_identifier or disable_mapping)
+
+        # Return the result.
+        return valid
+
     def is_off_gpio(self, gpio):
         """Is not OFF"""
 
@@ -100,14 +208,88 @@ class BaseController(Configuarable):
         is_existing_gpio = self.is_existing_gpio(gpio)
         is_valid_gpio_type = self.is_valid_gpio_type(gpio)
 
-        return is_off_gpio\
+        is_valid_remote_gpio = False
+        try:
+            is_valid_remote_gpio = self.is_valid_remote_gpio(gpio)
+        except Exception as exception:
+            pass
+
+        result = (is_off_gpio\
             and is_existing_gpio\
-            and is_valid_gpio_type
+            and is_valid_gpio_type) or is_valid_remote_gpio
+
+        return result
+
+    def is_remote_gpio(self, gpio):
+
+        # Capitalize the target.
+        io_name = gpio.upper()
+
+        # Chaeck for splitter symbiol.
+        has_delimiter = (self._delimiter in io_name)
+
+        if not has_delimiter:
+            raise SyntaxError("No delimiter symbol included.") 
+
+        # Split the target in to chunks.
+        chunks = io_name.split(self._delimiter)
+
+        # Get the chunks length.
+        chunks_count = len(chunks)
+
+        # Combine all requirements to one expresion.
+        valid = has_delimiter and (chunks_count == 3)
+
+        # Return the result.
+        return valid
+
+    def parse_remote_gpio(self, gpio):
+
+        io_name = gpio.upper()
+
+        # Remove flip identification.
+        io_name = io_name.replace("!", "")
+
+        # Split in to chunks.
+        chunks = io_name.split(self._delimiter)
+
+        # Get UART identifier.
+        uart = chunks[Identifiers.UART.value].replace("U", "") 
+
+        # Get MODBUS identifier.
+        mb_id = chunks[Identifiers.MODBUS.value].replace("M", "")
+
+        # Get io type.
+        io_type = verbal_const.OFF
+        io_identifier = chunks[Identifiers.IO.value]
+        io_type = ''.join([i for i in io_identifier if not i.isdigit()])
+
+        # Validate IO type.
+        valid_io_type = False
+        for pin_mode in PinModes:
+            if pin_mode.name == io_type:
+                valid_io_type = True
+                break
+
+        if not valid_io_type:
+            raise TypeError("Invalid IO type.")
+
+        # Get IO index.
+        io_index = int(''.join(filter(str.isdigit, io_identifier)))
+
+        # Create data structure that holds the MODBUS identifier, IO type and IO index.
+        identifier = {"uart": uart, "mb_id": mb_id, "io_type": io_type, "io_index": io_index}
+
+        return identifier
 
     def get_gpio_map(self):
         """Return GPIO map."""
 
         return self._gpio_map
+
+#endregion
+
+#region Public Virtual Methods
 
     def init(self):
         """Init the controller."""
