@@ -64,12 +64,32 @@ class bgERP:
 #region Attributes
 
     __host = "127.0.0.1"
+    """Host
+    """
 
     __timeout = 5
+    """Timeout
+    """
 
     __client = None
+    """Client instance.
+    """
 
     __server = None
+    """Server instance.
+    """
+
+    __is_logged = False
+    """Is logged in flag.
+    """
+
+    __get_registers = None
+    """Get register callback.
+    """
+
+    __set_registers = None
+    """Set register callback.
+    """
 
 #endregion
 
@@ -146,6 +166,15 @@ class bgERP:
 
         return self.__client.last_sync
 
+    @property
+    def is_logged(self):
+        """Is logged.
+
+        Returns:
+            bool: Logged in state.
+        """
+        return self.__is_logged
+
 #endregion
 
 #region Constructor \ Destructor
@@ -166,7 +195,8 @@ class bgERP:
 
         self.__client = Client(host=host, timeout=timeout)
 
-        self.__server = Server(__name__)
+        self.__server = Server()
+        #self.__server.set_sync_cb(lambda: self.sync({}))
 
     def __del__(self):
         """Destructor
@@ -182,55 +212,44 @@ class bgERP:
     def login(self, **credentials):
         """Log in to the service.
 
-        Parameters
-        ----------
-        credentials : mixed
-            Credentials of the device for the service.
+        Args:
+            credentials (dict): Credentials of the device for the service.
 
-        Returns
-        -------
-        bool
-            Success
+        Returns:
+            bool: Success
         """
 
-        state = self.__client.login(credentials)
+        self.__is_logged = self.__client.login(credentials)
 
-        if state:
+        if self.__is_logged:
             if self.__server is not None:
+                self.__server.set_registers_cb(
+                    get_cb=self.__get_registers,\
+                    set_cb=self.__set_registers)
                 self.__server.start()
 
-        return state
+        return self.__is_logged
 
     def sync(self, registers):
-        """Update zone registers.
+        """Sync the registers.
 
-        Parameters
-        ----------
-        registers : mixed
-            Room registers.
+        Args:
+            registers (dict): Registers
 
-        Returns
-        -------
-        bool
-            Success
+        Returns:
+            bool: Status of sync.
         """
 
         return self.__client.sync(registers)
 
-    def set_evok_cb(self, callback):
-        """Set EVOK service callback.
-
-        Args:
-            callback (function): EVOK service handler.
+    def set_registers_cb(self, **kwargs):
+        """Set callback for get/set registers.
         """
-        self.__server.set_evok_cb(callback)
 
-    def set_bgerp_cb(self, callback):
-        """Set bgERP service callback.
+        if "get_cb" in kwargs:
+            self.__get_registers = kwargs["get_cb"]
 
-        Args:
-            callback (function): bgERP service handler.
-        """
-        self.__server.set_bgerp_cb(callback)
+        if "set_cb" in kwargs:
+            self.__set_registers = kwargs["set_cb"]
 
 #endregion

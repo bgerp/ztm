@@ -24,7 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import json
 
-from flask import Flask, request
+from flask import Flask, request, make_response
 
 from utils.logger import get_logger
 
@@ -67,20 +67,34 @@ class Server(HTTPServer):
 #region Attributes
 
     __logger = None
-    """Logger"""
+    """Logger
+    """
 
-    __evok_update_cb = None
-    """EVOK Update callback handler."""
+    __sync_cb = None
+    """bgERP update callback handler.
+    """
 
-    __bgerp_update_cb = None
-    """bgERP update callback handler."""
+    __get_registers = None
+    """Get register callback.
+    """
+
+    __set_registers = None
+    """Set register callback.
+    """
 
 #endregion
 
 #region Constructor
 
-    def __init__(self, name):
-        super().__init__(target=self, name=name)
+    def __init__(self, **kwargs):
+        """Constructor
+        """
+
+        port = 8890
+        if "port" in kwargs:
+            port = kwargs["port"]
+
+        super().__init__(target=self, name=__name__, port=port)
 
         self.__logger = get_logger(__name__)
 
@@ -108,51 +122,87 @@ class Server(HTTPServer):
 
             return "Unknown Error", 500
 
-        @self._app.route("/bgerp/sync", methods=["POST"])
-        def bgerp_api_post():
+        @self._app.route("/api/v1/bgerp/sync", methods=["POST"])
+        def sync_post():
             """bgERP registers update callback."""
             # TODO: Add authentication when requesting information.
 
+            if self.__sync_cb is not None:
+                self.__sync_cb()
+
+            response = make_response()
+            response.headers["Content-Type"] = "application/json; charset=utf-8"
+
+            return response
+
+        @self._app.route("/api/v1/bgerp/registers/get", methods=["POST"])
+        def get_register_post():
+            """Callback that set the register.
+            """
+            # TODO: Add authentication when requesting information.
+            # (Request to have WEB API for work with registers. MG @ 15.01.2021)
+
+            data = "{}"
+            json_data = {}
+            response = data, 200
+            
             if "registers" in request.form:
                 data = request.form["registers"]
-                data = data.replace("\\", "")
-                data = data[1:-1]
-
-                if data is not None:
-                    json_data = json.loads(data)
-
-                    if self.__bgerp_update_cb is not None:
-                        self.__bgerp_update_cb(json_data)
-
-            return ""
-
-        # Evok event handler.
-        @self._app.route("/api/evok-webhooks", methods=["POST"])
-        def evok_api_post():
-            """Evok WEB hooks for POST method."""
-
-            data = request.get_data(as_text=True)
-            if data is not None:
+            
+            if data is not None and data != "":
                 json_data = json.loads(data)
-                if json_data is not None:
-                    for item in json_data:
-                        if self.__evok_update_cb is not None:
-                            self.__evok_update_cb(item)
 
-            return ""
+            if self.__get_registers is not None:
+                registers = self.__get_registers(json_data)
+
+            response = make_response(registers)
+            response.headers["Content-Type"] = "application/json; charset=utf-8"
+
+            return response
+
+        @self._app.route("/api/v1/bgerp/registers/set", methods=["POST"])
+        def set_register_post():
+            """Callback that get the register.
+            """
+            # TODO: Add authentication when requesting information.
+            # (Request to have WEB API for work with registers. MG @ 15.01.2021)
+
+            data = "{}"
+            json_data = {}
+            response = data, 200
+            
+            if "registers" in request.form:
+                data = request.form["registers"]
+            
+            if data is not None and data != "":
+                json_data = json.loads(data)
+
+            if self.__set_registers is not None:
+                registers = self.__set_registers(json_data)
+
+            response = make_response(registers)
+            response.headers["Content-Type"] = "application/json; charset=utf-8"
+
+            return response
 
 #endregion
 
 #region Public Methods
 
-    def set_evok_cb(self, callback):
-        """Set update callback."""
-
-        self.__evok_update_cb = callback
-
-    def set_bgerp_cb(self, callback):
+    def set_sync_cb(self, callback):
         """Set bgERP update callback"""
 
-        self.__bgerp_update_cb = callback
+        self.__sync_cb = callback
+
+    def set_registers_cb(self, **kwargs):
+        """Set callbacks for the handlers.
+        """
+        # (Request to have WEB API for work with registers. MG @ 15.01.2021)
+
+        if "get_cb" in kwargs:
+            self.__get_registers = kwargs["get_cb"]
+
+        if "set_cb" in kwargs:
+            self.__set_registers = kwargs["set_cb"]
 
 #endregion
