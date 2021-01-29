@@ -807,6 +807,14 @@ def __add_registers():
     register.value = "temp/DS18B20/28FFFCD0001703AE"
     __registers.append(register)
 
+    register = Register("hvac.air_temp_cent_1.value")
+    register.scope = Scope.System
+    register.plugin_name = "HVAC"
+    register.description = "Air temperature sensor center value"
+    register.range = "/"
+    register.value = 0.0
+    __registers.append(register)
+
     # Air temp lower
     register = Register("hvac.air_temp_lower_1.settings")
     register.scope = Scope.System
@@ -816,6 +824,14 @@ def __add_registers():
     register.value = "temp/DS18B20/28FFC4EE00170349"
     __registers.append(register)
 
+    register = Register("hvac.air_temp_lower_1.value")
+    register.scope = Scope.System
+    register.plugin_name = "HVAC"
+    register.description = "Air temperature sensor lower value"
+    register.range = "/"
+    register.value = 0.0
+    __registers.append(register)
+
     # Air temp upper.
     register = Register("hvac.air_temp_upper_1.settings")
     register.scope = Scope.System
@@ -823,6 +839,14 @@ def __add_registers():
     register.description = "Air temperature sensor upper settings"
     register.range = ""
     register.value = "temp/DS18B20/28FF2B70C11604B7"
+    __registers.append(register)
+
+    register = Register("hvac.air_temp_upper_1.value")
+    register.scope = Scope.System
+    register.plugin_name = "HVAC"
+    register.description = "Air temperature sensor upper value"
+    register.range = "/"
+    register.value = 0.0
     __registers.append(register)
 
     # Convector
@@ -945,6 +969,14 @@ def __add_registers():
     register.value = "temp/DS18B20/28FF2B70C11604B7"
     __registers.append(register)
 
+    register = Register("hvac.loop1_1.temp.value")
+    register.scope = Scope.System
+    register.plugin_name = "HVAC"
+    register.description = "Loop 1 temperature sensor value"
+    register.range = "/"
+    register.value = 0.0
+    __registers.append(register)
+
     # Loop 1 Down Limit Temperature # Request: Eml6419
     register = Register("hvac.loop1_1.temp.down_limit")
     register.scope = Scope.System
@@ -1052,6 +1084,14 @@ def __add_registers():
     register.description = "Loop 2 temperature sensor settings"
     register.range = ""
     register.value = "temp/DS18B20/28FFC4EE00170349"
+    __registers.append(register)
+
+    register = Register("hvac.loop2_1.temp.value")
+    register.scope = Scope.System
+    register.plugin_name = "HVAC"
+    register.description = "Loop 1 temperature sensor value"
+    register.range = "/"
+    register.value = 0.0
     __registers.append(register)
 
     # Loop 2 valve.
