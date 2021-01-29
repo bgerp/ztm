@@ -60,13 +60,14 @@ __status__ = "Debug"
 #endregion
 
 class Server(Thread):
-    """BAse HTTP threaded server."""
+    """Base HTTP threaded server."""
+
 #region Attributes
 
     _app = None
     """Flask App."""
 
-    __port = 8889
+    __port = 10203
     """Port"""
 
     __host = "0.0.0.0"
