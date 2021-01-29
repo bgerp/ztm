@@ -27,6 +27,7 @@ from controllers.neuron.m503 import M503
 from controllers.neuron.m523 import M523
 from controllers.neuron.s103 import S103
 from controllers.picons.x1_black_titanium import X1BlackTitanium
+from controllers.neuron.neuron import Neuron
 
 #region File Attributes
 
@@ -65,46 +66,49 @@ class ControllerFactory():
 #region Public Methods
 
     @staticmethod
-    def create(**config):
+    def create(**kwargs):
         """Create controller."""
 
         controller = None
 
-        if config["vendor"] == "unipi":
+        # Unipi suport 
+        if kwargs["vendor"] == "unipi":
 
-            if config["model"] == "S103":
-                controller = S103(config)
+            # Read PLC information.
+            plc_info = Neuron.read_eeprom()
 
-            elif config["model"] == "M503":
-                controller = M503(config)
+            # Read serial number.
+            if plc_info is not None and "serial" in plc_info:
+                if (plc_info["serial"] is not None) and ("serial" in kwargs) and (kwargs["serial"] is None):
+                    kwargs["serial"] = plc_info["serial"]   
 
-            elif config["model"] == "M523":
-                controller = M523(config)
+            # Read serial number.
+            if plc_info is not None and "model" in plc_info:
+                if plc_info["model"] is not None and kwargs["model"] is None:
+                    kwargs["model"] = plc_info["model"]   
 
-            elif config["model"] == "L503":
-                controller = L503(config)
+            if kwargs["model"] == "S103":
+                controller = S103(kwargs)
 
+            elif kwargs["model"] == "M503":
+                controller = M503(kwargs)
 
-        elif config["vendor"] == "pt":
+            elif kwargs["model"] == "M523":
+                controller = M523(kwargs)
 
-            if config["model"] == "X1BlackTitanium":
-                controller = X1BlackTitanium(config)
+            elif kwargs["model"] == "L503":
+                controller = L503(kwargs)
+
+        # Pi-Cons Suport by POLYGONTeam Ltd.
+        elif kwargs["vendor"] == "pt":
+
+            if kwargs["model"] == "X1BlackTitanium":
+                controller = X1BlackTitanium(kwargs)
+
+        elif kwargs["vendor"] == "some_chines":
+            # TODO: If the serial is not in the controller load it from file, if not create it and save it.
+            pass 
 
         return controller
-
-    @staticmethod
-    def get_info():
-        """Get controller info."""
-
-        config = None
-
-
-        # Try to read NEURON
-        try:
-            config = Neuron.read_eeprom()
-        except:
-            pass
-
-        return config
 
 #endregion

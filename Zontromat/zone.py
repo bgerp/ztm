@@ -116,8 +116,8 @@ class Zone():
     __controller = None
     """Neuron controller."""
 
-    __bgerp = None
-    """Communication with bgERP."""
+    __erp = None
+    """Communication with the ERP."""
 
     __registers = None
     """Registers"""
@@ -152,8 +152,9 @@ class Zone():
     __performance_profiler_timer = None
     """Performance profiler timer."""
 
-    __registers_snapshot = None
-    """Registers snapshot."""    
+    # (Request to stop the queue from MG @ 15.01.2021)
+    # __registers_snapshot = None
+    # """Registers snapshot."""
 
 #endregion
 
@@ -180,33 +181,8 @@ class Zone():
         self.__zone_state = StateMachine(ZoneState.Idle)
         self.__zone_state.on_change(self.__cb_zone_state)
 
-        # Take PLC info from settings.
-        vendor = self.__app_settings.get_controller["vendor"]
-        model = self.__app_settings.get_controller["model"]
-        serial = 0
-
-        # Read PLC information.
-        plc_info = ControllerFactory.get_info()
-
-        if plc_info is not None and "serial" in plc_info:
-            if plc_info["serial"] is not None:
-                serial = plc_info["serial"]
-
-        if plc_info is not None and "model" in plc_info:
-            if plc_info["model"] is not None:
-                model = plc_info["model"]
-
-        # Create Neuron.
-        self.__controller = ControllerFactory.create(\
-            vendor=vendor,\
-            model=model,\
-            serial=serial,\
-            host=self.__app_settings.get_controller["host"],\
-            timeout=self.__app_settings.get_controller["timeout"])
-
-        # Config EVOK - Only if it is Linux based and vendor is UniPi.
-        if os.name == "posix" and vendor == "unipi":
-            self.__config_evok()
+        # Setup the PLC.
+        self.__setup_controller()
 
         # Set the plugin manager.
         self.__plugin_manager = PluginsManager(self.__registers, self.__controller)
@@ -223,44 +199,34 @@ class Zone():
         # Update timer.
         self.__update_timer = Timer(self.__update_rate)
         # Update with offset based on the serial number of the device.
-        self.__update_timer.expiration_time = self.__update_timer.expiration_time + (serial / 1000)
+        time_offset = 0
+        if self.__controller.serial_number is not None and self.__controller.serial_number.isdigit():
+            time_offset = int(self.__controller.serial_number)
+        self.__update_timer.expiration_time = self.__update_timer.expiration_time + (time_offset / 1000)
 
-        # Create bgERP and login.
-        self.__bgerp = bgERP(host=self.__app_settings.get_erp_service["host"],\
-            timeout=self.__app_settings.get_erp_service["timeout"])
-        self.__bgerp.set_bgerp_cb(self.__bgerp_cb)
-        self.__bgerp.set_evok_cb(self.__evok_cb)
 
-        self.__erp_service_update_timer = Timer(self.__erp_service_update_rate)
+        # Setup the ERP.
+        self.__setup_erp()
 
-        self.__registers_snapshot = queue.Queue()
+        # # (Request to stop the queue from MG @ 15.01.2021)
+        # self.__registers_snapshot = queue.Queue()
 
 #endregion
 
 #region Private Methods
 
-    def __bgerp_cb(self, registers):
-        """Callback that is executed everytime when update is called.
-
-        Args:
-            registers (JSON): registers to be changed.
+    def __cb_zone_state(self, machine):
+        """Set zone state.
         """
 
-        if registers is not None:
+        self.__logger.info("Zone state: {}".format(machine.get_state()))
 
-            for register in registers:
-                target = self.__registers.by_name(register)
-
-                if target is not None:
-                    target.value = registers[register]
-
-        # TODO: To call sync for manual sync with ERP.
 
     def __evok_cb(self, device):
         """EVOK callback service handler.
 
         Args:
-            registers (JSON): GPIO that was changed.
+            device (JSON): GPIOs that was changed.
         """
 
         # Target inputs, by registers names.
@@ -281,30 +247,117 @@ class Zone():
                     if target_reg is not None:
                         target_reg.value = device["value"]
 
-    def __config_evok(self):
-        """Configure the EVOK service file.
+    def __setup_controller(self):
+        """Setup the controller.
         """
 
-        # Create entrance
-        evok_settings = EvokSettings("/etc/evok.conf")
+        # Take PLC info from settings.
+        plc_vendor = self.__app_settings.get_controller["vendor"]
+        plc_model = self.__app_settings.get_controller["model"]
+        plc_host=self.__app_settings.get_controller["host"]
+        plc_timeout=self.__app_settings.get_controller["timeout"]
 
-        # Setup the EVOK web hooks.
-        evok_settings.webhook_enabled = True
-        evok_settings.webhook_address = "http://127.0.0.1:8889/api/evok-webhooks   ; Put your server endpoint address here (e.g. http://123.123.123.123:/wh )"
-        evok_settings.webhook_device_mask = ["input", "wd"]
-        evok_settings.webhook_complex_events = True
+        # Create PLC.
+        self.__controller = ControllerFactory.create(\
+            vendor=plc_vendor,\
+            model=plc_model,\
+            host=plc_host,\
+            timeout=plc_timeout)
 
-        # Save
-        evok_settings.save()
+        if self.__controller is None:
+            return
 
-        # Restart the service to accept the settings.
-        EvokSettings.restart()
+        if self.__controller.vendor == "unipi":
+
+            self.__controller.set_webhook(self.__evok_cb)
+            self.__controller.start_web_service()
+
+            # Create entrance
+            if os.name == "posix":
+
+                # Load settings
+                evok_settings = EvokSettings("/etc/evok.conf")
+
+                # Modifie
+                evok_settings.webhook_address = "http://127.0.0.1:8889/api/v1/evok/webhooks   ; Put your server endpoint address here (e.g. http://123.123.123.123:/wh )"
+                evok_settings.webhook_enabled = True
+                evok_settings.webhook_device_mask = ["input", "wd"]
+                evok_settings.webhook_complex_events = True
+
+                # Save
+                evok_settings.save()
+
+                # Restart the service to accept the settings.
+                EvokSettings.restart()
 
 
-    def __cb_zone_state(self, machine):
-        """Set zone state."""
+    def __erp_set_registers(self, registers):
+        """ERP set registers values.
 
-        self.__logger.info("Zone state: {}".format(machine.get_state()))
+        Args:
+            registers (dict): Registers names and values.
+        """
+
+        # (Request to have WEB API for work with registers. MG @ 15.01.2021)
+
+        result = {}
+
+        if registers is not None:
+            for register_name in registers:
+                register = self.__registers.by_name(register_name)
+                if registers is not None:
+
+                    # Apply the changes.
+                    register.value = registers[register_name]
+
+                    # In th response add what is going on.
+                    result[register.name] = register.value
+    
+        return result
+
+    def __erp_get_registers(self, registers):
+        """ERP get registers values.
+
+        Args:
+            registers (dict): Names of registers.
+
+        Returns:
+            dict: Dictionary of registers values and their names.
+        """
+
+        # (Request to have WEB API for work with registers. MG @ 15.01.2021)
+
+        result = {}
+
+        if registers is not None:
+            for register_name in registers:
+                register = self.__registers.by_name(register_name)
+                if registers is not None:
+                    result[register.name] = register.value
+        
+        return result
+
+    def __setup_erp(self):
+        """Setup the ERP.
+        """
+
+        # Take ERP info from settings.
+        erp_host=self.__app_settings.get_erp_service["host"]
+        erp_timeout=self.__app_settings.get_erp_service["timeout"]
+
+        # Create ERP.
+        self.__erp = bgERP(\
+            host=erp_host,\
+            timeout=erp_timeout)
+
+        # Set callbacks.
+        self.__erp.set_registers_cb(\
+            get_cb=self.__erp_get_registers,\
+            set_cb=self.__erp_set_registers)
+
+        # Set the ERP update timer.
+        self.__erp_service_update_timer = Timer(self.__erp_service_update_rate)
+
 
     def __init(self):
         """Init the zone."""
@@ -319,7 +372,6 @@ class Zone():
         else:
             GlobalErrorHandler.log_no_connection_plc(self.__logger)
 
-
     def __login(self):
         """Login to bgERP."""
 
@@ -330,7 +382,7 @@ class Zone():
             # "modbus=modbus, \
         # }
 
-        login_state = self.__bgerp.login(\
+        login_state = self.__erp.login(\
             serial_number=self.__controller.serial_number,\
             model=self.__controller.model,\
             version=self.__controller.version,\
@@ -339,8 +391,8 @@ class Zone():
 
         if login_state:
             # Rewrite the ERP service ID.
-            if self.__app_settings.get_erp_service["erp_id"] != self.__bgerp.erp_id:
-                self.__app_settings.get_erp_service["erp_id"] = self.__bgerp.erp_id
+            if self.__app_settings.get_erp_service["erp_id"] != self.__erp.erp_id:
+                self.__app_settings.get_erp_service["erp_id"] = self.__erp.erp_id
                 self.__app_settings.save()
 
             self.__zone_state.set_state(ZoneState.Run)
@@ -369,7 +421,7 @@ class Zone():
             ztm_regs = ztm_regs.new_then(60)
             ztm_regs_dict = ztm_regs.to_dict()
 
-            update_state = self.__bgerp.sync(ztm_regs_dict)
+            update_state = self.__erp.sync(ztm_regs_dict)
 
             if update_state is not None: #  is not None
                 self.__registers.update(update_state)
@@ -379,25 +431,24 @@ class Zone():
                 if aa is not None:
                     aa.value = str([])
 
-                # TODO: Comment is this algorithm is OK?
-                not_send_len = self.__registers_snapshot.qsize()
-                if not_send_len > 0:
-
-                    # Get from the queue.
-                    snapshot = self.__registers_snapshot.get()
-
-                    # Send the firs from the queue.
-                    self.__bgerp.sync(snapshot)
+                # (Eml6287)
+                # (Request to stop the queue from MG @ 15.01.2021)
+                # not_send_len = self.__registers_snapshot.qsize()
+                # if not_send_len > 0:
+                #     Get from the queue.
+                #     snapshot = self.__registers_snapshot.get()
+                #     Send the firs from the queue.
+                #     self.__erp.sync(snapshot)
 
             else:
 
-                # Create absolute copy of the object.
-                reg_copy = self.__registers.by_scope(Scope.Device).to_dict().copy()
-
-                # Put the copy to the queue.
-                self.__registers_snapshot.put(reg_copy)
-
                 GlobalErrorHandler.log_no_connection_erp(self.__logger)
+
+                # # (Request to stop the queue from MG @ 15.01.2021)
+                # # Create absolute copy of the object.
+                # reg_copy = self.__registers.by_scope(Scope.Device).to_dict().copy()
+                # # Put the copy to the queue.
+                # self.__registers_snapshot.put(reg_copy)
 
     def __shutdown(self):
         """Shutdown procedure."""
@@ -414,6 +465,7 @@ class Zone():
 
         else:
             self.__zone_state.set_state(ZoneState.Test)
+
 
     def __on_time_change(self, passed_time):
 
@@ -509,5 +561,6 @@ class Zone():
         self.__zone_state.set_state(ZoneState.Shutdown)
         self.__stop_flag = True
         self.__plugin_manager.shutdown()
+
 
 #endregion
