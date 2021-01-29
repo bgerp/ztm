@@ -751,6 +751,60 @@ class AirConditioner(BasePlugin):
 
 #region Private Methods
 
+    def __update_thermometers_values(self):
+
+        # TODO: Get all thermometers and load its values to the folowing registers.
+
+        # 1. If thermometer is available, gets its value.
+        air_temp_lower_value = 0
+        if self.__air_temp_lower_dev is not None:
+            air_temp_lower_value = self.__air_temp_lower_dev.value()
+
+        # 1. If thermometer is available, gets its value.
+        air_temp_cent_value = 0
+        if self.__air_temp_cent_dev is not None:
+            air_temp_cent_value = self.__air_temp_cent_dev.value()
+
+        # 1. If thermometer is available, gets its value.
+        air_temp_upper_value = 0
+        if self.__air_temp_upper_dev is not None:
+            air_temp_upper_value = self.__air_temp_upper_dev.value()
+
+        # 1. If thermometer is available, gets its value.
+        loop1_temp_value = 0
+        if self.__loop1_temp_dev is not None:
+            loop1_temp_value = self.__loop1_temp_dev.value()
+
+        # 1. If thermometer is available, gets its value.
+        loop2_temp_value = 0
+        if self.__loop2_temp_dev is not None:
+            loop2_temp_value = self.__loop2_temp_dev.value()
+
+        # 2. If the folowing register is available then set ist value to the thermometers value.
+        air_temp_lower = self._registers.by_name("{}.air_temp_lower_{}.value".format(self._key, self.__identifier))
+        if air_temp_lower is not None:
+            air_temp_lower.value = air_temp_lower_value
+
+        # 2. If the folowing register is available then set ist value to the thermometers value.
+        air_temp_cent = self._registers.by_name("{}.air_temp_cent_{}.value".format(self._key, self.__identifier))
+        if air_temp_cent is not None:
+            air_temp_cent.value = air_temp_cent_value
+
+        # 2. If the folowing register is available then set ist value to the thermometers value.
+        air_temp_upper = self._registers.by_name("{}.air_temp_upper_{}.value".format(self._key, self.__identifier))
+        if air_temp_upper is not None:
+            air_temp_upper.value = air_temp_upper_value
+
+        # 2. If the folowing register is available then set ist value to the thermometers value.
+        loop1_temp = self._registers.by_name("{}.loop1_{}.temp.value".format(self._key, self.__identifier))
+        if loop1_temp is not None:
+            loop1_temp.value = loop1_temp_value
+
+        # 2. If the folowing register is available then set ist value to the thermometers value.
+        loop2_temp = self._registers.by_name("{}.loop2_{}.temp.value".format(self._key, self.__identifier))
+        if loop2_temp is not None:
+            loop2_temp.value = loop2_temp_value
+
     def __read_zoneoccupied_flag(self):
 
         state = False
@@ -1006,6 +1060,9 @@ class AirConditioner(BasePlugin):
 
     def update(self):
         """ Update cycle. """
+
+        # Update thermometres values.
+        self.__update_thermometers_values()
 
         # If there is no one at the zone, just turn off the lights.
         ac_zone_occupied_flag = self.__read_zoneoccupied_flag()
