@@ -81,6 +81,47 @@ class BaseController(Configuarable):
 
 #endregion
 
+#region Properties
+
+    @property
+    def vendor(self):
+        """Get device vendor.
+
+        Returns
+        -------
+        str
+            Vendor
+        """
+
+        return None
+
+    @property
+    def model(self):
+        """Get device model.
+
+        Returns
+        -------
+        str
+            Model
+        """
+
+        return None
+
+    @property
+    def serial_number(self):
+        """Get device serial number.
+
+        Returns
+        -------
+        str
+            Serial number.
+        """
+
+        return None
+
+
+#endregion
+
 #region Public Methods
 
     def is_valid_gpio_type(self, gpio):
