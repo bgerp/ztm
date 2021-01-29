@@ -30,6 +30,7 @@ import requests
 from utils.logger import get_logger
 
 from controllers.base_controller import BaseController
+from controllers.neuron.evok.server import Server
 
 from devices.drivers.modbus.register_type import RegisterType
 
@@ -42,7 +43,7 @@ __copyright__ = "Copyright 2020, POLYGON Team Ltd."
 """Copyrighter
 @see http://polygonteam.com/"""
 
-__credits__ = ["Angel Boyarov, Zdravko Ivanov"]
+__credits__ = ["Angel Boyarov"]
 """Credits"""
 
 __license__ = "GPLv3"
@@ -109,6 +110,14 @@ class Evok(BaseController):
 
     __rest_watchdog = "/rest/watchdog/"
     """REST path to WD"""
+
+    __webhook_cb = None
+    """webhook callback function.
+    """    
+
+    __web_service = None
+    """EVOK web service.
+    """    
 
     __instance = None
     """Singelton instance."""
@@ -194,6 +203,18 @@ class Evok(BaseController):
         return self.__get_device_parameter("last_comm")
 
     @property
+    def vendor(self):
+        """Get device vendor.
+
+        Returns
+        -------
+        str
+            Vendor
+        """
+
+        return "unipi"
+
+    @property
     def model(self):
         """Get device model.
 
@@ -234,13 +255,21 @@ class Evok(BaseController):
 #region Constructor
 
     def __init__(self, config):
-        """Class constructor."""
+        """Constructor
+        """
 
         super().__init__(config)
 
         self.host = self._config["host"]
         self.timeout = self._config["timeout"]
         self.__logger = get_logger(__name__)
+
+    def __del__(self):
+        """Destructor
+        """
+
+        if self.__web_service is not None:
+            del self.__web_service
 
 #endregion
 
@@ -261,6 +290,9 @@ class Evok(BaseController):
         """
 
         value = None
+
+        if self.__json_data is None:
+            return value
 
         for field in self.__json_data:
             if ("circuit" in field) and ("dev" in field) and (parameter in field):
@@ -1010,6 +1042,31 @@ class Evok(BaseController):
 
 #endregion
 
+#region WEB hooks services
+
+    def start_web_service(self):
+        """Start the WEB service for the webhooks.
+        """
+
+        if self.__web_service is not None:
+            return
+
+        self.__web_service = Server()
+
+        if self.__web_service is not None:
+            self.__web_service.start()
+
+    def set_webhook(self, callback):
+        """We webhook method.
+
+        Args:
+            callback (function): [description]
+        """
+
+        self.__webhook_cb = callback
+
+#endregion
+
 #region Base Controller Implementation
 
     def update(self):
@@ -1465,3 +1522,36 @@ class Evok(BaseController):
         return self._get_1w_devices()
 
 #endregion
+
+    # def set_evok_cb(self, callback):
+    #     """Set update callback."""
+
+    #     self.__webhook_cb = callback
+
+    #     # Evok event handler.
+    #     @self._app.route("/api/evok-webhooks", methods=["POST"])
+    #     def evok_api_post():
+    #         """Evok WEB hooks for POST method."""
+
+    #         data = request.get_data(as_text=True)
+    #         if data is not None:
+    #             json_data = json.loads(data)
+    #             if json_data is not None:
+    #                 for item in json_data:
+    #                     if self.__webhook_cb is not None:
+    #                         self.__webhook_cb(item)
+
+    #         return ""
+
+
+    # __webhook_cb = None
+    # """EVOK Update callback handler."""
+
+
+    # def set_evok_cb(self, callback):
+    #     """Set EVOK service callback.
+
+    #     Args:
+    #         callback (function): EVOK service handler.
+    #     """
+    #     self.__server.set_evok_cb(callback)
