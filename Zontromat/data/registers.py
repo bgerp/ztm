@@ -42,7 +42,7 @@ __copyright__ = "Copyright 2019, POLYGON Team Ltd."
 """Copyrighter
 @see http://polygonteam.com/"""
 
-__credits__ = ["Angel Boyarov, Zdravko Ivanov"]
+__credits__ = ["Angel Boyarov"]
 """Credits"""
 
 __license__ = "MIT"

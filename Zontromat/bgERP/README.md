@@ -301,3 +301,63 @@ Answer body:
 ```
 
  - Any status code other than 200 is considered an invalid configuration.
+
+# Builtin WEB server
+
+## Goal
+
+This module has builtin WEB server. The server allows to get and set values of the registers manually. This feature is necessary for local application control. For example local WEB page can control the Zontromat via tis server.
+
+## Get register
+
+Getting register means that client application can read the value of the target register by requesting information from the WEB server. This is done by making **HTTP-POST** request.
+
+Example: http://ip-address:8890/api/v1/bgerp/registers/get
+
+The body of the POST request is formatted in JSON.
+
+Example: 
+```json
+{"registers": ["sys.disc.free", "sys.disc.used"]}
+```
+
+The field registers holds the array of target names that should be returned from the WEB server. The response of te server is also formatted in JSON. Content type response header is added, **"Content-Type": "application/json; charset=utf-8"**.
+
+Example:
+```json
+{"hvac.loop2_1.fan.min_speed": 5, "ac.zone_1_occupied": 0}
+```
+
+A "curl" example is provided for better comprehension of the request.
+
+Example:
+```sh
+curl -v -XPOST -H 'Content-type: application/json' -d '{"registers": ["sys.disc.free", "sys.disc.used"]}' 'http://192.168.0.52:8890/api/v1/bgerp/registers/get'
+```
+
+## Set register
+
+Setting register means that client application can write value to the target register by sending information to the WEB server. This is done by making **HTTP-POST** request.
+
+Example: http://ip-address:8890/api/v1/bgerp/registers/set
+
+The body of the POST request is formatted in JSON.
+
+Example: 
+```json
+{"registers": {"hvac.loop2_1.fan.min_speed": 5, "ac.zone_1_occupied": 0}}
+```
+
+The field registers holds the dict of target names that should be set to specified values. A response is expected from the WEB server as shown below. The response of te server is also formatted in JSON. Content type response header is added, **"Content-Type": "application/json; charset=utf-8"**.
+
+Example:
+```json
+{"hvac.loop2_1.fan.min_speed": 5, "ac.zone_1_occupied": 0}
+```
+
+A "curl" example is provided for better comprehension of the request.
+
+Example:
+```sh
+curl -v -XPOST -H 'Content-type: application/json' -d '{"registers": {"hvac.loop2_1.fan.min_speed": 0, "ac.zone_1_occupied": 0}}' 'http://192.168.0.52:8890/api/v1/bgerp/registers/set'
+```

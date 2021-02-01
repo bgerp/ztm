@@ -39,7 +39,7 @@ __copyright__ = "Copyright 2020, POLYGON Team Ltd."
 """Copyrighter
 @see http://polygonteam.com/"""
 
-__credits__ = ["Angel Boyarov, Zdravko Ivanov"]
+__credits__ = ["Angel Boyarov"]
 """Credits"""
 
 __license__ = "GPLv3"
@@ -142,15 +142,11 @@ class Server(HTTPServer):
             # TODO: Add authentication when requesting information.
             # (Request to have WEB API for work with registers. MG @ 15.01.2021)
 
-            data = "{}"
             json_data = {}
-            response = data, 200
-            
-            if "registers" in request.form:
-                data = request.form["registers"]
-            
-            if data is not None and data != "":
-                json_data = json.loads(data)
+            response = "{}", 200
+                        
+            if request.data is not None and request.data != "":
+                json_data = json.loads(request.data)
 
             if self.__get_registers is not None:
                 registers = self.__get_registers(json_data)
@@ -167,15 +163,11 @@ class Server(HTTPServer):
             # TODO: Add authentication when requesting information.
             # (Request to have WEB API for work with registers. MG @ 15.01.2021)
 
-            data = "{}"
             json_data = {}
-            response = data, 200
-            
-            if "registers" in request.form:
-                data = request.form["registers"]
-            
-            if data is not None and data != "":
-                json_data = json.loads(data)
+            response = "{}", 200
+                        
+            if request.data is not None and request.data != "":
+                json_data = json.loads(request.data)
 
             if self.__set_registers is not None:
                 registers = self.__set_registers(json_data)

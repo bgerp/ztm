@@ -57,7 +57,7 @@ __copyright__ = "Copyright 2020, POLYGON Team Ltd."
 """Copyrighter
 @see http://polygonteam.com/"""
 
-__credits__ = ["Angel Boyarov, Zdravko Ivanov"]
+__credits__ = ["Angel Boyarov"]
 """Credits"""
 
 __license__ = "GPLv3"
@@ -291,31 +291,35 @@ class Zone():
                 EvokSettings.restart()
 
 
-    def __erp_set_registers(self, registers):
+    def __erp_set_registers(self, data):
         """ERP set registers values.
 
         Args:
-            registers (dict): Registers names and values.
+            data (dict): Registers names and values.
         """
 
         # (Request to have WEB API for work with registers. MG @ 15.01.2021)
 
+
         result = {}
+        registers = {}
 
-        if registers is not None:
-            for register_name in registers:
-                register = self.__registers.by_name(register_name)
-                if registers is not None:
+        if data is not None:
+            registers = data["registers"]
 
-                    # Apply the changes.
-                    register.value = registers[register_name]
+        for register_name in registers:
+            register = self.__registers.by_name(register_name)
+            if registers is not None:
 
-                    # In th response add what is going on.
-                    result[register.name] = register.value
+                # Apply the changes.
+                register.value = registers[register_name]
+
+                # In th response add what is going on.
+                result[register.name] = register.value
     
         return result
 
-    def __erp_get_registers(self, registers):
+    def __erp_get_registers(self, data):
         """ERP get registers values.
 
         Args:
@@ -328,12 +332,15 @@ class Zone():
         # (Request to have WEB API for work with registers. MG @ 15.01.2021)
 
         result = {}
+        registers = {}
 
-        if registers is not None:
-            for register_name in registers:
-                register = self.__registers.by_name(register_name)
-                if registers is not None:
-                    result[register.name] = register.value
+        if data is not None:
+            registers = data["registers"]
+
+        for register_name in registers:
+            register = self.__registers.by_name(register_name)
+            if register is not None:
+                result[register.name] = register.value
         
         return result
 
