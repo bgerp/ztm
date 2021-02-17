@@ -21,21 +21,11 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
-
+import os
+import importlib
 import traceback
 
-from enum import Enum
-
 from utils.logger import get_logger
-
-# Plugins
-from plugins.access_control.access_control import AccessControl
-from plugins.blinds.blinds import Blinds
-from plugins.monitoring.monitoring import Monitoring
-from plugins.environment.environment import Environment
-from plugins.hvac.hvac import HVAC
-from plugins.lighting.lighting import Lighting
-from plugins.sys.sys import Sys
 
 from services.global_error_handler.global_error_handler import GlobalErrorHandler
 
@@ -70,17 +60,6 @@ __status__ = "Debug"
 
 #endregion
 
-class Plugins(Enum):
-    """Zone device enumerator."""
-
-    AccessControl = 1
-    Blinds = 2
-    Monitoring = 3
-    Environment = 4
-    HVAC = 5
-    MainLight = 6
-    Sys = 7
-
 class PluginsManager:
     """Template class doc."""
 
@@ -105,12 +84,9 @@ class PluginsManager:
     def __init__(self, registers, controller):
         """Constructor
 
-        Parameters
-        ----------
-        registers : Registers
-            Registers class instance.
-        controller : mixed
-            Hardware controller.
+        Args:
+            registers (Registers): Registers class instance.
+            controller (BaseController): Hardware controller
         """
 
         self.__logger = get_logger(__name__)
@@ -124,6 +100,15 @@ class PluginsManager:
 #region Private Methods
 
     def __prepare_config(self, name, key):
+        """Prepare configuration of the plugin.
+
+        Args:
+            name (str): Name of the plugin.
+            key (str): Key of the plugin.
+
+        Returns:
+            dict: Configuration of the plugin.
+        """
 
         config = {
             "name": name,
@@ -134,21 +119,81 @@ class PluginsManager:
 
         return config
 
-    def __access_control_enabled(self, register):
+    def __load_plugin(self, module_name):
+        """Load the plugin.
+
+        Args:
+            module_name (str): Name of the plugin.
+
+        Raises:
+            ImportError: Raise when module can not me imported.
+            ModuleNotFoundError: Raise when module can not be found.
+            AttributeError: Not existing attribute.
+            ValueError: Attribute __class_name__ is not set properly.
+
+        Returns:
+            [mixed]: Instance of the class module.
+        """
+
+        module_path = "plugins.{}.{}".format(module_name, module_name)
+
+        module = importlib.import_module(module_path)
+        if module is None:
+            raise ImportError("{}.{}".format(module_path))        
+
+        if not hasattr(module, "__class_name__"):
+            raise AttributeError("Module: {}, has no attribute __class_name__.".format(module_path))
+
+        if module.__class_name__ == "":
+            raise ValueError("Module: {}.__class_name__ is empty.".format(module_path))
+
+        class_module = getattr(module, module.__class_name__)
+        if class_module is None:
+            raise ModuleNotFoundError("{}.{}".format(module_path, module.__class_name__))
+
+        config = self.__prepare_config(module.__class_name__, module_name)
+        
+        class_isinstance = class_module(config)
+
+        return class_isinstance
+
+    def __list_plugins(self):
+
+        list_of_dirs = []
+
+        dir_path = os.path.dirname(os.path.realpath(__file__))
+
+        dirs = os.listdir(dir_path)
+        for item in dirs:
+
+            if item.startswith("__"):
+                continue
+
+            if item == "template_plugin":
+                continue
+
+            plugin_path = os.path.join(dir_path, item)
+
+            if os.path.isdir(plugin_path):
+                list_of_dirs.append(item)
+
+        return list_of_dirs
+
+    def __ac_enabled(self, register):
 
         # Check data type.
         if not register.data_type == "bool":
             GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
             return
 
-        if register.value and Plugins.AccessControl not in self.__plugins:
-            config = self.__prepare_config("Access control", register.base_name)
-            self.__plugins[Plugins.AccessControl] = AccessControl(config)
-            self.__plugins[Plugins.AccessControl].init()
+        name = register.base_name
+        if register.value and name not in self.__plugins:
+            self.__plugins[name] = self.__load_plugin(name)
+            self.__plugins[name].init()
 
-        elif not register.value and Plugins.AccessControl in self.__plugins:
-            self.__plugins[Plugins.AccessControl].shutdown()
-            del self.__plugins[Plugins.AccessControl]
+        elif not register.value and name in self.__plugins:
+            self.__plugins[name].shutdown()
+            del self.__plugins[name]
 
     def __blinds_enabled(self, register):
 
@@ -157,14 +202,14 @@ class PluginsManager:
             GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
             return
 
-        if register.value and Plugins.Blinds not in self.__plugins:
-            config = self.__prepare_config("Blinds", register.base_name)
-            self.__plugins[Plugins.Blinds] = Blinds(config)
-            self.__plugins[Plugins.Blinds].init()
+        name = "blinds"
+        if register.value and name not in self.__plugins:
+            self.__plugins[name] = self.__load_plugin(name)
+            self.__plugins[name].init()
 
-        elif not register.value and Plugins.Blinds in self.__plugins:
-            self.__plugins[Plugins.Blinds].shutdown()
-            del self.__plugins[Plugins.Blinds]
+        elif not register.value and name in self.__plugins:
+            self.__plugins[name].shutdown()
+            del self.__plugins[name]
 
     def __monitoring_enabled(self, register):
 
@@ -173,14 +218,14 @@ class PluginsManager:
             GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
             return
 
-        if register.value and Plugins.Monitoring not in self.__plugins:
-            config = self.__prepare_config("Monitoring", register.base_name)
-            self.__plugins[Plugins.Monitoring] = Monitoring(config)
-            self.__plugins[Plugins.Monitoring].init()
+        name = register.base_name
+        if register.value and name not in self.__plugins:
+            self.__plugins[name] = self.__load_plugin(name)
+            self.__plugins[name].init()
 
-        elif not register.value and Plugins.Monitoring in self.__plugins:
-            self.__plugins[Plugins.Monitoring].shutdown()
-            del self.__plugins[Plugins.Monitoring]
+        elif not register.value and name in self.__plugins:
+            self.__plugins[name].shutdown()
+            del self.__plugins[name]
 
     def __env_enabled(self, register):
 
@@ -189,14 +234,14 @@ class PluginsManager:
             GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
             return
 
-        if register.value and Plugins.Environment not in self.__plugins:
-            config = self.__prepare_config("Environment", register.base_name)
-            self.__plugins[Plugins.Environment] = Environment(config)
-            self.__plugins[Plugins.Environment].init()
+        name = "envm"
+        if register.value and name not in self.__plugins:
+            self.__plugins[name] = self.__load_plugin(name)
+            self.__plugins[name].init()
 
-        elif not register.value and Plugins.Environment in self.__plugins:
-            self.__plugins[Plugins.Environment].shutdown()
-            del self.__plugins[Plugins.Environment]
+        elif not register.value and name in self.__plugins:
+            self.__plugins[name].shutdown()
+            del self.__plugins[name]
 
     def __hvac_enabled(self, register):
 
@@ -205,14 +250,14 @@ class PluginsManager:
             GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
             return
 
-        if register.value and Plugins.HVAC not in self.__plugins:
-            config = self.__prepare_config("HVAC", register.base_name)
-            self.__plugins[Plugins.HVAC] = HVAC(config)
-            self.__plugins[Plugins.HVAC].init()
+        name = register.base_name
+        if register.value and name not in self.__plugins:
+            self.__plugins[name] = self.__load_plugin(name)
+            self.__plugins[name].init()
 
-        elif not register.value and Plugins.HVAC in self.__plugins:
-            self.__plugins[Plugins.HVAC].shutdown()
-            del self.__plugins[Plugins.HVAC]
+        elif not register.value and name in self.__plugins:
+            self.__plugins[name].shutdown()
+            del self.__plugins[name]
 
     def __light_enabled(self, register):
 
@@ -221,14 +266,14 @@ class PluginsManager:
             GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
             return
 
-        if register.value and Plugins.MainLight not in self.__plugins:
-            config = self.__prepare_config("Lamps", register.base_name)
-            self.__plugins[Plugins.MainLight] = Lighting(config)
-            self.__plugins[Plugins.MainLight].init()
+        name = register.base_name
+        if register.value and name not in self.__plugins:
+            self.__plugins[name] = self.__load_plugin(name)
+            self.__plugins[name].init()
 
-        elif not register.value and Plugins.MainLight in self.__plugins:
-            self.__plugins[Plugins.MainLight].shutdown()
-            del self.__plugins[Plugins.MainLight]
+        elif not register.value and name in self.__plugins:
+            self.__plugins[name].shutdown()
+            del self.__plugins[name]
 
     def __sys_enabled(self, register):
 
@@ -237,20 +282,24 @@ class PluginsManager:
             GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
             return
 
-        if register.value and Plugins.Sys not in self.__plugins:
-            config = self.__prepare_config("System", register.base_name)
-            self.__plugins[Plugins.Sys] = Sys(config)
-            self.__plugins[Plugins.Sys].init()
+        name = register.base_name
+        if register.value and name not in self.__plugins:
+            self.__plugins[name] = self.__load_plugin(name)
+            self.__plugins[name].init()
 
-        elif not register.value and Plugins.Sys in self.__plugins:
-            self.__plugins[Plugins.Sys].shutdown()
-            del self.__plugins[Plugins.Sys]
+        elif not register.value and name in self.__plugins:
+            self.__plugins[name].shutdown()
+            del self.__plugins[name]
 
     def __add_handlers(self):
 
+        names = self.__list_plugins()
+        for name in names:
+            self.__logger.info("Found plugin: {}".format(name))
+
         register = self.__registers.by_name("ac.enabled")
         if register is not None:
-            register.update_handlers = self.__access_control_enabled
+            register.update_handlers = self.__ac_enabled
 
         register = self.__registers.by_name("blinds.enabled")
         if register is not None:
@@ -280,6 +329,11 @@ class PluginsManager:
         if register is not None:
             register.update_handlers = self.__sys_enabled
 
+        # only for test purposes.
+        # name = "ec"
+        # self.__plugins[name] = self.__load_plugin(name)
+        # self.__plugins[name].init()
+
 #endregion
 
 #region Public Methods
@@ -304,6 +358,6 @@ class PluginsManager:
                 self.__plugins[key].shutdown()
 
             except:
-                pass
+                self.__logger.error(traceback.format_exc())
 
 #endregion
