@@ -251,18 +251,8 @@ class Zone():
         """Setup the controller.
         """
 
-        # Take PLC info from settings.
-        plc_vendor = self.__app_settings.get_controller["vendor"]
-        plc_model = self.__app_settings.get_controller["model"]
-        plc_host=self.__app_settings.get_controller["host"]
-        plc_timeout=self.__app_settings.get_controller["timeout"]
-
         # Create PLC.
-        self.__controller = ControllerFactory.create(\
-            vendor=plc_vendor,\
-            model=plc_model,\
-            host=plc_host,\
-            timeout=plc_timeout)
+        self.__controller = ControllerFactory.create(config=self.__app_settings.controller)
 
         if self.__controller is None:
             return
