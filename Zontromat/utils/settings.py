@@ -103,7 +103,7 @@ class ApplicationSettings:
         return 0
 
     @property
-    def get_controller(self):
+    def controller(self):
         """Host name of the Neuron.
 
         Returns
