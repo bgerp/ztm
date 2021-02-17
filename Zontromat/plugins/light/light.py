@@ -62,10 +62,13 @@ __email__ = "or.dimitrov@polygonteam.com"
 __status__ = "Debug"
 """File status."""
 
+__class_name__ = "Light"
+"""Plugin class name."""
+
 #endregion
 
-class Lighting(BasePlugin):
-    """Lamp controller"""
+class Light(BasePlugin):
+    """Light controller plugin."""
 
 #region Attributes
 
