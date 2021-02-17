@@ -25,7 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import time
 
 from plugins.base_plugin import BasePlugin
-from plugins.access_control.card_state import CardState
+from plugins.ac.card_state import CardState
 
 from utils.logger import get_logger
 from utils.timer import Timer

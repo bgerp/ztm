@@ -29,7 +29,7 @@ from utils.logger import get_logger
 from utils.timer import Timer
 
 from plugins.base_plugin import BasePlugin
-from plugins.access_control.security_zone import SecurityZone
+from plugins.ac.security_zone import SecurityZone
 
 from services.global_error_handler.global_error_handler import GlobalErrorHandler
 
@@ -61,6 +61,9 @@ __email__ = "or.dimitrov@polygonteam.com"
 
 __status__ = "Debug"
 """File status."""
+
+__class_name__ = "AccessControl"
+"""Plugin class name."""
 
 #endregion
 
