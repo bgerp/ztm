@@ -30,6 +30,8 @@ from utils.logger import get_logger
 
 from services.http.server import Server as HTTPServer
 
+from bgERP.session import Session
+
 #region File Attributes
 
 __author__ = "Orlin Dimitrov"
@@ -82,6 +84,9 @@ class Server(HTTPServer):
     """Set register callback.
     """
 
+    __session = None
+    """Session control."""
+
 #endregion
 
 #region Constructor
@@ -97,6 +102,9 @@ class Server(HTTPServer):
         super().__init__(target=self, name=__name__, port=port)
 
         self.__logger = get_logger(__name__)
+
+        self.__session = Session()
+        self.__session.load()
 
         self.__set_routs()
 
@@ -144,9 +152,19 @@ class Server(HTTPServer):
 
             json_data = {}
             response = "{}", 200
+            token = ""
                         
             if request.data is not None and request.data != "":
                 json_data = json.loads(request.data)
+
+            if "token" in json_data:
+                token = json_data["token"]
+
+            if token is None or "":
+                return "Invalid token.", 401
+
+            if token != self.__session.session:
+                return "Invalid token.", 401
 
             if self.__get_registers is not None:
                 registers = self.__get_registers(json_data)
@@ -165,9 +183,19 @@ class Server(HTTPServer):
 
             json_data = {}
             response = "{}", 200
+            token = ""
                         
             if request.data is not None and request.data != "":
                 json_data = json.loads(request.data)
+
+            if "token" in json_data:
+                token = json_data["token"]
+
+            if token is None or "":
+                return "Invalid token.", 401
+
+            if token != self.__session.session:
+                return "Invalid token.", 401
 
             if self.__set_registers is not None:
                 registers = self.__set_registers(json_data)
