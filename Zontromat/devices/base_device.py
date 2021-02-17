@@ -84,7 +84,9 @@ class BaseDevice(Configuarable):
     def __del__(self):
         """Destructor"""
 
-        self.shutdown()
+        super().__del__()
+
+        del self._controller
 
 #endregion
 
