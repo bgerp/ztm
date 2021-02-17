@@ -109,7 +109,7 @@ class Evok(BaseController):
     """REST path to AI."""
 
     __rest_watchdog = "/rest/watchdog/"
-    """REST path to WD"""
+    """REST path to WD."""
 
     __webhook_cb = None
     """webhook callback function.
