@@ -28,6 +28,7 @@ from controllers.neuron.m523 import M523
 from controllers.neuron.s103 import S103
 from controllers.picons.x1_black_titanium import X1BlackTitanium
 from controllers.neuron.neuron import Neuron
+from controllers.dummy.dummy import Dummy
 
 #region File Attributes
 
@@ -69,45 +70,51 @@ class ControllerFactory():
     def create(**kwargs):
         """Create controller."""
 
+        # TODO: If the serial is not in the controller load it from file, if not create it and save it.
         controller = None
 
+        config = []
+        if "config" in kwargs:
+            config = kwargs["config"]
+
         # Unipi suport 
-        if kwargs["vendor"] == "unipi":
+        if config["vendor"] == "unipi":
 
             # Read PLC information.
             plc_info = Neuron.read_eeprom()
 
             # Read serial number.
             if plc_info is not None and "serial" in plc_info:
-                if (plc_info["serial"] is not None) and ("serial" in kwargs) and (kwargs["serial"] is None):
-                    kwargs["serial"] = plc_info["serial"]   
+                if (plc_info["serial"] is not None) and ("serial" in config) and (config["serial"] is None):
+                    config["serial"] = plc_info["serial"]   
 
             # Read serial number.
             if plc_info is not None and "model" in plc_info:
-                if plc_info["model"] is not None and kwargs["model"] is None:
-                    kwargs["model"] = plc_info["model"]   
+                if plc_info["model"] is not None and config["model"] is None:
+                    config["model"] = plc_info["model"]   
 
-            if kwargs["model"] == "S103":
-                controller = S103(kwargs)
+            if config["model"] == "S103":
+                controller = S103(config)
 
-            elif kwargs["model"] == "M503":
-                controller = M503(kwargs)
+            elif config["model"] == "M503":
+                controller = M503(config)
 
-            elif kwargs["model"] == "M523":
-                controller = M523(kwargs)
+            elif config["model"] == "M523":
+                controller = M523(config)
 
-            elif kwargs["model"] == "L503":
-                controller = L503(kwargs)
+            elif config["model"] == "L503":
+                controller = L503(config)
 
         # Pi-Cons Suport by POLYGONTeam Ltd.
-        elif kwargs["vendor"] == "pt":
+        elif config["vendor"] == "pt":
 
-            if kwargs["model"] == "X1BlackTitanium":
-                controller = X1BlackTitanium(kwargs)
+            if config["model"] == "X1BlackTitanium":
+                controller = X1BlackTitanium(config)
 
-        elif kwargs["vendor"] == "some_chines":
-            # TODO: If the serial is not in the controller load it from file, if not create it and save it.
-            pass 
+        # Dummy controller for tests.
+        elif config["vendor"] == "Dummy":
+
+            controller = Dummy(config)
 
         return controller
 
