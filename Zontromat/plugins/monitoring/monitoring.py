@@ -70,7 +70,8 @@ __email__ = "or.dimitrov@polygonteam.com"
 __status__ = "Debug"
 """File status."""
 
-__name_space__ = "monitoring"
+__class_name__ = "Monitoring"
+"""Plugin class name."""
 
 #endregion
 

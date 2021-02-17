@@ -56,6 +56,9 @@ __email__ = "or.dimitrov@polygonteam.com"
 __status__ = "Debug"
 """File status."""
 
+__class_name__ = "HVAC"
+"""Plugin class name."""
+
 #endregion
 
 class HVAC(BasePlugin):
@@ -64,10 +67,12 @@ class HVAC(BasePlugin):
 #region Attributes
 
     __logger = None
-    """Logger"""
+    """Logger
+    """
 
     __thermal_zones = []
-    """Therml zones."""
+    """Thermal zones.
+    """
 
 #endregion
 
@@ -102,7 +107,6 @@ class HVAC(BasePlugin):
         for ac in self.__thermal_zones:
             ac.init()
 
-
     def update(self):
         """ Update cycle. """
 
@@ -116,8 +120,5 @@ class HVAC(BasePlugin):
         
         for ac in self.__thermal_zones:
             ac.shutdown()
-
-        if __thermal_zones is not None:
-            del __thermal_zones
 
 #endregion

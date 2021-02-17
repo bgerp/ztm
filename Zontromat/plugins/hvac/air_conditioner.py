@@ -198,6 +198,8 @@ class AirConditioner(BasePlugin):
     def __del__(self):
         """Destructor"""
 
+        super().__del__()
+
         if self.__logger is not None:
             del self.__logger
 

@@ -56,6 +56,9 @@ __email__ = "or.dimitrov@polygonteam.com"
 __status__ = "Debug"
 """File status."""
 
+__class_name__ = "TemplatePlugin"
+"""Plugin class name."""
+
 #endregion
 
 class TemplatePlugin(BasePlugin):

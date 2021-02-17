@@ -65,6 +65,9 @@ __email__ = "or.dimitrov@polygonteam.com"
 __status__ = "Debug"
 """File status."""
 
+__class_name__ = "Blinds"
+"""Plugin class name."""
+
 #endregion
 
 class FeedbackType(Enum):
