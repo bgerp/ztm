@@ -5221,3 +5221,1427 @@
         "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\zone.py"
     }
 }
+{
+    "__main__": {
+        "bacon": 0,
+        "imports": [
+            "bgERP.client",
+            "bgERP.server",
+            "controllers.unipi.evok.evok",
+            "controllers.unipi.evok.server",
+            "main",
+            "services.http.server",
+            "utils.settings"
+        ],
+        "name": "__main__",
+        "path": null
+    },
+    "bgERP": {
+        "bacon": 2,
+        "imported_by": [
+            "bgERP.bgERP",
+            "bgERP.client",
+            "bgERP.server",
+            "zone"
+        ],
+        "name": "bgERP",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\bgERP\\__init__.py"
+    },
+    "bgERP.bgERP": {
+        "bacon": 3,
+        "imported_by": [
+            "zone"
+        ],
+        "imports": [
+            "bgERP",
+            "bgERP.client",
+            "bgERP.server",
+            "utils",
+            "utils.logger"
+        ],
+        "name": "bgERP.bgERP",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\bgERP\\bgERP.py"
+    },
+    "bgERP.client": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "bgERP.bgERP"
+        ],
+        "imports": [
+            "bgERP",
+            "bgERP.session",
+            "requests",
+            "utils",
+            "utils.logger"
+        ],
+        "name": "bgERP.client",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\bgERP\\client.py"
+    },
+    "bgERP.server": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "bgERP.bgERP"
+        ],
+        "imports": [
+            "bgERP",
+            "bgERP.session",
+            "flask",
+            "services",
+            "services.http",
+            "services.http.server",
+            "utils",
+            "utils.logger"
+        ],
+        "name": "bgERP.server",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\bgERP\\server.py"
+    },
+    "bgERP.session": {
+        "bacon": 2,
+        "imported_by": [
+            "bgERP.client",
+            "bgERP.server"
+        ],
+        "imports": [
+            "utils",
+            "utils.logger"
+        ],
+        "name": "bgERP.session",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\bgERP\\session.py"
+    },
+    "controllers": {
+        "bacon": 2,
+        "imported_by": [
+            "controllers.base_controller",
+            "controllers.controller_factory",
+            "controllers.unipi.evok.evok",
+            "controllers.unipi.l503",
+            "controllers.unipi.neuron",
+            "zone"
+        ],
+        "name": "controllers",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\controllers\\__init__.py"
+    },
+    "controllers.base_controller": {
+        "bacon": 2,
+        "imported_by": [
+            "controllers.unipi.evok.evok"
+        ],
+        "imports": [
+            "controllers",
+            "controllers.utils",
+            "controllers.utils.pin_modes",
+            "controllers.utils.resource_identifiers",
+            "data",
+            "data.verbal_const",
+            "utils",
+            "utils.configuarable"
+        ],
+        "name": "controllers.base_controller",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\controllers\\base_controller.py"
+    },
+    "controllers.controller_factory": {
+        "bacon": 3,
+        "imported_by": [
+            "zone"
+        ],
+        "imports": [
+            "controllers",
+            "controllers.unipi",
+            "controllers.unipi.l503"
+        ],
+        "name": "controllers.controller_factory",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\controllers\\controller_factory.py"
+    },
+    "controllers.unipi": {
+        "bacon": 2,
+        "imported_by": [
+            "controllers.controller_factory",
+            "controllers.unipi.evok.evok",
+            "controllers.unipi.l503",
+            "controllers.unipi.neuron"
+        ],
+        "name": "controllers.unipi",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\controllers\\unipi\\__init__.py"
+    },
+    "controllers.unipi.evok": {
+        "bacon": 2,
+        "imported_by": [
+            "controllers.unipi.evok.evok",
+            "controllers.unipi.neuron"
+        ],
+        "name": "controllers.unipi.evok",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\controllers\\unipi\\evok\\__init__.py"
+    },
+    "controllers.unipi.evok.evok": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "controllers.unipi.neuron"
+        ],
+        "imports": [
+            "controllers",
+            "controllers.base_controller",
+            "controllers.unipi",
+            "controllers.unipi.evok",
+            "controllers.unipi.evok.server",
+            "devices",
+            "devices.drivers",
+            "devices.drivers.modbus",
+            "devices.drivers.modbus.register_type",
+            "requests",
+            "utils",
+            "utils.logger"
+        ],
+        "name": "controllers.unipi.evok.evok",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\controllers\\unipi\\evok\\evok.py"
+    },
+    "controllers.unipi.evok.server": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "controllers.unipi.evok.evok"
+        ],
+        "imports": [
+            "flask",
+            "services",
+            "services.http",
+            "services.http.server",
+            "utils",
+            "utils.logger"
+        ],
+        "name": "controllers.unipi.evok.server",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\controllers\\unipi\\evok\\server.py"
+    },
+    "controllers.unipi.l503": {
+        "bacon": 4,
+        "imported_by": [
+            "controllers.controller_factory"
+        ],
+        "imports": [
+            "controllers",
+            "controllers.unipi",
+            "controllers.unipi.neuron"
+        ],
+        "name": "controllers.unipi.l503",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\controllers\\unipi\\l503.py"
+    },
+    "controllers.unipi.neuron": {
+        "bacon": 5,
+        "imported_by": [
+            "controllers.unipi.l503"
+        ],
+        "imports": [
+            "controllers",
+            "controllers.unipi",
+            "controllers.unipi.evok",
+            "controllers.unipi.evok.evok"
+        ],
+        "name": "controllers.unipi.neuron",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\controllers\\unipi\\neuron.py"
+    },
+    "controllers.utils": {
+        "bacon": 3,
+        "imported_by": [
+            "controllers.base_controller"
+        ],
+        "name": "controllers.utils",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\controllers\\utils\\__init__.py"
+    },
+    "controllers.utils.pin_modes": {
+        "bacon": 3,
+        "imported_by": [
+            "controllers.base_controller"
+        ],
+        "name": "controllers.utils.pin_modes",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\controllers\\utils\\pin_modes.py"
+    },
+    "controllers.utils.resource_identifiers": {
+        "bacon": 3,
+        "imported_by": [
+            "controllers.base_controller"
+        ],
+        "name": "controllers.utils.resource_identifiers",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\controllers\\utils\\resource_identifiers.py"
+    },
+    "data": {
+        "bacon": 3,
+        "imported_by": [
+            "controllers.base_controller",
+            "data.registers",
+            "services.global_error_handler.global_error_handler",
+            "zone"
+        ],
+        "name": "data",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\data\\__init__.py"
+    },
+    "data.register": {
+        "bacon": 3,
+        "imported_by": [
+            "data.registers",
+            "services.global_error_handler.global_error_handler",
+            "zone"
+        ],
+        "name": "data.register",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\data\\register.py"
+    },
+    "data.registers": {
+        "bacon": 3,
+        "imported_by": [
+            "zone"
+        ],
+        "imports": [
+            "data",
+            "data.register",
+            "services",
+            "services.global_error_handler",
+            "services.global_error_handler.global_error_handler",
+            "utils",
+            "utils.logger"
+        ],
+        "name": "data.registers",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\data\\registers.py"
+    },
+    "data.verbal_const": {
+        "bacon": 3,
+        "imported_by": [
+            "controllers.base_controller"
+        ],
+        "name": "data.verbal_const",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\data\\verbal_const.py"
+    },
+    "devices": {
+        "bacon": 2,
+        "imported_by": [
+            "controllers.unipi.evok.evok"
+        ],
+        "name": "devices",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\devices\\__init__.py"
+    },
+    "devices.drivers": {
+        "bacon": 2,
+        "imported_by": [
+            "controllers.unipi.evok.evok"
+        ],
+        "name": "devices.drivers",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\devices\\drivers\\__init__.py"
+    },
+    "devices.drivers.modbus": {
+        "bacon": 2,
+        "imported_by": [
+            "controllers.unipi.evok.evok"
+        ],
+        "name": "devices.drivers.modbus",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\devices\\drivers\\modbus\\__init__.py"
+    },
+    "devices.drivers.modbus.register_type": {
+        "bacon": 2,
+        "imported_by": [
+            "controllers.unipi.evok.evok"
+        ],
+        "name": "devices.drivers.modbus.register_type",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\devices\\drivers\\modbus\\register_type.py"
+    },
+    "flask": {
+        "bacon": 2,
+        "imported_by": [
+            "bgERP.server",
+            "controllers.unipi.evok.server",
+            "services.http.server"
+        ],
+        "name": "flask",
+        "path": null
+    },
+    "main": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__"
+        ],
+        "imports": [
+            "setproctitle",
+            "utils",
+            "utils.logger",
+            "utils.settings",
+            "zone"
+        ],
+        "name": "main",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\main.py"
+    },
+    "plugins": {
+        "bacon": 3,
+        "imported_by": [
+            "zone"
+        ],
+        "name": "plugins",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\plugins\\__init__.py"
+    },
+    "plugins.plugins_manager": {
+        "bacon": 3,
+        "imported_by": [
+            "zone"
+        ],
+        "imports": [
+            "services",
+            "services.global_error_handler",
+            "services.global_error_handler.global_error_handler",
+            "utils",
+            "utils.logger"
+        ],
+        "name": "plugins.plugins_manager",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\plugins\\plugins_manager.py"
+    },
+    "requests": {
+        "bacon": 2,
+        "imported_by": [
+            "bgERP.client",
+            "controllers.unipi.evok.evok"
+        ],
+        "name": "requests",
+        "path": null
+    },
+    "services": {
+        "bacon": 2,
+        "imported_by": [
+            "bgERP.server",
+            "controllers.unipi.evok.server",
+            "data.registers",
+            "plugins.plugins_manager",
+            "services.global_error_handler.global_error_handler",
+            "zone"
+        ],
+        "name": "services",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\services\\__init__.py"
+    },
+    "services.evok": {
+        "bacon": 3,
+        "imported_by": [
+            "zone"
+        ],
+        "name": "services.evok",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\services\\evok\\__init__.py"
+    },
+    "services.evok.settings": {
+        "bacon": 3,
+        "imported_by": [
+            "zone"
+        ],
+        "name": "services.evok.settings",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\services\\evok\\settings.py"
+    },
+    "services.global_error_handler": {
+        "bacon": 3,
+        "imported_by": [
+            "data.registers",
+            "plugins.plugins_manager",
+            "services.global_error_handler.global_error_handler",
+            "zone"
+        ],
+        "name": "services.global_error_handler",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\services\\global_error_handler\\__init__.py"
+    },
+    "services.global_error_handler.error_codes": {
+        "bacon": 4,
+        "imported_by": [
+            "services.global_error_handler.global_error_handler"
+        ],
+        "name": "services.global_error_handler.error_codes",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\services\\global_error_handler\\error_codes.py"
+    },
+    "services.global_error_handler.global_error_handler": {
+        "bacon": 3,
+        "imported_by": [
+            "data.registers",
+            "plugins.plugins_manager",
+            "zone"
+        ],
+        "imports": [
+            "data",
+            "data.register",
+            "services",
+            "services.global_error_handler",
+            "services.global_error_handler.error_codes"
+        ],
+        "name": "services.global_error_handler.global_error_handler",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\services\\global_error_handler\\global_error_handler.py"
+    },
+    "services.http": {
+        "bacon": 2,
+        "imported_by": [
+            "bgERP.server",
+            "controllers.unipi.evok.server"
+        ],
+        "name": "services.http",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\services\\http\\__init__.py"
+    },
+    "services.http.server": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "bgERP.server",
+            "controllers.unipi.evok.server"
+        ],
+        "imports": [
+            "flask",
+            "werkzeug.serving"
+        ],
+        "name": "services.http.server",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\services\\http\\server.py"
+    },
+    "setproctitle": {
+        "bacon": 2,
+        "imported_by": [
+            "main"
+        ],
+        "name": "setproctitle",
+        "path": null
+    },
+    "utils": {
+        "bacon": 2,
+        "imported_by": [
+            "bgERP.bgERP",
+            "bgERP.client",
+            "bgERP.server",
+            "bgERP.session",
+            "controllers.base_controller",
+            "controllers.unipi.evok.evok",
+            "controllers.unipi.evok.server",
+            "data.registers",
+            "main",
+            "plugins.plugins_manager",
+            "utils.logger",
+            "zone"
+        ],
+        "name": "utils",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\utils\\__init__.py"
+    },
+    "utils.configuarable": {
+        "bacon": 3,
+        "imported_by": [
+            "controllers.base_controller"
+        ],
+        "name": "utils.configuarable",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\utils\\configuarable.py"
+    },
+    "utils.logger": {
+        "bacon": 2,
+        "imported_by": [
+            "bgERP.bgERP",
+            "bgERP.client",
+            "bgERP.server",
+            "bgERP.session",
+            "controllers.unipi.evok.evok",
+            "controllers.unipi.evok.server",
+            "data.registers",
+            "main",
+            "plugins.plugins_manager",
+            "zone"
+        ],
+        "imports": [
+            "utils",
+            "utils.settings"
+        ],
+        "name": "utils.logger",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\utils\\logger.py"
+    },
+    "utils.performance_profiler": {
+        "bacon": 3,
+        "imported_by": [
+            "zone"
+        ],
+        "name": "utils.performance_profiler",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\utils\\performance_profiler.py"
+    },
+    "utils.settings": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "main",
+            "utils.logger",
+            "zone"
+        ],
+        "imports": [
+            "yaml"
+        ],
+        "name": "utils.settings",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\utils\\settings.py"
+    },
+    "utils.state_machine": {
+        "bacon": 3,
+        "imported_by": [
+            "zone"
+        ],
+        "name": "utils.state_machine",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\utils\\state_machine.py"
+    },
+    "utils.timer": {
+        "bacon": 3,
+        "imported_by": [
+            "zone"
+        ],
+        "name": "utils.timer",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\utils\\timer.py"
+    },
+    "werkzeug.serving": {
+        "bacon": 2,
+        "imported_by": [
+            "services.http.server"
+        ],
+        "name": "werkzeug.serving",
+        "path": null
+    },
+    "yaml": {
+        "bacon": 2,
+        "imported_by": [
+            "utils.settings"
+        ],
+        "name": "yaml",
+        "path": null
+    },
+    "zone": {
+        "bacon": 2,
+        "imported_by": [
+            "main"
+        ],
+        "imports": [
+            "bgERP",
+            "bgERP.bgERP",
+            "controllers",
+            "controllers.controller_factory",
+            "data",
+            "data.register",
+            "data.registers",
+            "plugins",
+            "plugins.plugins_manager",
+            "services",
+            "services.evok",
+            "services.evok.settings",
+            "services.global_error_handler",
+            "services.global_error_handler.global_error_handler",
+            "utils",
+            "utils.logger",
+            "utils.performance_profiler",
+            "utils.settings",
+            "utils.state_machine",
+            "utils.timer"
+        ],
+        "name": "zone",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\zone.py"
+    }
+}
+{
+    "__main__": {
+        "bacon": 0,
+        "imports": [
+            "bgERP.client",
+            "bgERP.server",
+            "main",
+            "services.http.server",
+            "utils.settings"
+        ],
+        "name": "__main__",
+        "path": null
+    },
+    "bgERP": {
+        "bacon": 2,
+        "imported_by": [
+            "bgERP.bgERP",
+            "bgERP.client",
+            "bgERP.server",
+            "zone"
+        ],
+        "name": "bgERP",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\bgERP\\__init__.py"
+    },
+    "bgERP.bgERP": {
+        "bacon": 3,
+        "imported_by": [
+            "zone"
+        ],
+        "imports": [
+            "bgERP",
+            "bgERP.client",
+            "bgERP.server",
+            "utils",
+            "utils.logger"
+        ],
+        "name": "bgERP.bgERP",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\bgERP\\bgERP.py"
+    },
+    "bgERP.client": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "bgERP.bgERP"
+        ],
+        "imports": [
+            "bgERP",
+            "bgERP.session",
+            "requests",
+            "utils",
+            "utils.logger"
+        ],
+        "name": "bgERP.client",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\bgERP\\client.py"
+    },
+    "bgERP.server": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "bgERP.bgERP"
+        ],
+        "imports": [
+            "bgERP",
+            "bgERP.session",
+            "flask",
+            "services",
+            "services.http",
+            "services.http.server",
+            "utils",
+            "utils.logger"
+        ],
+        "name": "bgERP.server",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\bgERP\\server.py"
+    },
+    "bgERP.session": {
+        "bacon": 2,
+        "imported_by": [
+            "bgERP.client",
+            "bgERP.server"
+        ],
+        "imports": [
+            "utils",
+            "utils.logger"
+        ],
+        "name": "bgERP.session",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\bgERP\\session.py"
+    },
+    "controllers": {
+        "bacon": 3,
+        "imported_by": [
+            "zone"
+        ],
+        "name": "controllers",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\controllers\\__init__.py"
+    },
+    "controllers.controller_factory": {
+        "bacon": 3,
+        "imported_by": [
+            "zone"
+        ],
+        "name": "controllers.controller_factory",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\controllers\\controller_factory.py"
+    },
+    "data": {
+        "bacon": 3,
+        "imported_by": [
+            "data.registers",
+            "services.global_error_handler.global_error_handler",
+            "zone"
+        ],
+        "name": "data",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\data\\__init__.py"
+    },
+    "data.register": {
+        "bacon": 3,
+        "imported_by": [
+            "data.registers",
+            "services.global_error_handler.global_error_handler",
+            "zone"
+        ],
+        "name": "data.register",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\data\\register.py"
+    },
+    "data.registers": {
+        "bacon": 3,
+        "imported_by": [
+            "zone"
+        ],
+        "imports": [
+            "data",
+            "data.register",
+            "services",
+            "services.global_error_handler",
+            "services.global_error_handler.global_error_handler",
+            "utils",
+            "utils.logger"
+        ],
+        "name": "data.registers",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\data\\registers.py"
+    },
+    "flask": {
+        "bacon": 2,
+        "imported_by": [
+            "bgERP.server",
+            "services.http.server"
+        ],
+        "name": "flask",
+        "path": null
+    },
+    "main": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__"
+        ],
+        "imports": [
+            "setproctitle",
+            "utils",
+            "utils.logger",
+            "utils.settings",
+            "zone"
+        ],
+        "name": "main",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\main.py"
+    },
+    "plugins": {
+        "bacon": 3,
+        "imported_by": [
+            "zone"
+        ],
+        "name": "plugins",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\plugins\\__init__.py"
+    },
+    "plugins.plugins_manager": {
+        "bacon": 3,
+        "imported_by": [
+            "zone"
+        ],
+        "imports": [
+            "services",
+            "services.global_error_handler",
+            "services.global_error_handler.global_error_handler",
+            "utils",
+            "utils.logger"
+        ],
+        "name": "plugins.plugins_manager",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\plugins\\plugins_manager.py"
+    },
+    "requests": {
+        "bacon": 2,
+        "imported_by": [
+            "bgERP.client"
+        ],
+        "name": "requests",
+        "path": null
+    },
+    "services": {
+        "bacon": 2,
+        "imported_by": [
+            "bgERP.server",
+            "data.registers",
+            "plugins.plugins_manager",
+            "services.global_error_handler.global_error_handler",
+            "zone"
+        ],
+        "name": "services",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\services\\__init__.py"
+    },
+    "services.evok": {
+        "bacon": 3,
+        "imported_by": [
+            "zone"
+        ],
+        "name": "services.evok",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\services\\evok\\__init__.py"
+    },
+    "services.evok.settings": {
+        "bacon": 3,
+        "imported_by": [
+            "zone"
+        ],
+        "name": "services.evok.settings",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\services\\evok\\settings.py"
+    },
+    "services.global_error_handler": {
+        "bacon": 3,
+        "imported_by": [
+            "data.registers",
+            "plugins.plugins_manager",
+            "services.global_error_handler.global_error_handler",
+            "zone"
+        ],
+        "name": "services.global_error_handler",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\services\\global_error_handler\\__init__.py"
+    },
+    "services.global_error_handler.error_codes": {
+        "bacon": 4,
+        "imported_by": [
+            "services.global_error_handler.global_error_handler"
+        ],
+        "name": "services.global_error_handler.error_codes",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\services\\global_error_handler\\error_codes.py"
+    },
+    "services.global_error_handler.global_error_handler": {
+        "bacon": 3,
+        "imported_by": [
+            "data.registers",
+            "plugins.plugins_manager",
+            "zone"
+        ],
+        "imports": [
+            "data",
+            "data.register",
+            "services",
+            "services.global_error_handler",
+            "services.global_error_handler.error_codes"
+        ],
+        "name": "services.global_error_handler.global_error_handler",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\services\\global_error_handler\\global_error_handler.py"
+    },
+    "services.http": {
+        "bacon": 2,
+        "imported_by": [
+            "bgERP.server"
+        ],
+        "name": "services.http",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\services\\http\\__init__.py"
+    },
+    "services.http.server": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "bgERP.server"
+        ],
+        "imports": [
+            "flask",
+            "werkzeug.serving"
+        ],
+        "name": "services.http.server",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\services\\http\\server.py"
+    },
+    "setproctitle": {
+        "bacon": 2,
+        "imported_by": [
+            "main"
+        ],
+        "name": "setproctitle",
+        "path": null
+    },
+    "utils": {
+        "bacon": 2,
+        "imported_by": [
+            "bgERP.bgERP",
+            "bgERP.client",
+            "bgERP.server",
+            "bgERP.session",
+            "data.registers",
+            "main",
+            "plugins.plugins_manager",
+            "utils.logger",
+            "zone"
+        ],
+        "name": "utils",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\utils\\__init__.py"
+    },
+    "utils.logger": {
+        "bacon": 2,
+        "imported_by": [
+            "bgERP.bgERP",
+            "bgERP.client",
+            "bgERP.server",
+            "bgERP.session",
+            "data.registers",
+            "main",
+            "plugins.plugins_manager",
+            "zone"
+        ],
+        "imports": [
+            "utils",
+            "utils.settings"
+        ],
+        "name": "utils.logger",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\utils\\logger.py"
+    },
+    "utils.performance_profiler": {
+        "bacon": 3,
+        "imported_by": [
+            "zone"
+        ],
+        "name": "utils.performance_profiler",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\utils\\performance_profiler.py"
+    },
+    "utils.settings": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "main",
+            "utils.logger",
+            "zone"
+        ],
+        "imports": [
+            "yaml"
+        ],
+        "name": "utils.settings",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\utils\\settings.py"
+    },
+    "utils.state_machine": {
+        "bacon": 3,
+        "imported_by": [
+            "zone"
+        ],
+        "name": "utils.state_machine",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\utils\\state_machine.py"
+    },
+    "utils.timer": {
+        "bacon": 3,
+        "imported_by": [
+            "zone"
+        ],
+        "name": "utils.timer",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\utils\\timer.py"
+    },
+    "werkzeug.serving": {
+        "bacon": 2,
+        "imported_by": [
+            "services.http.server"
+        ],
+        "name": "werkzeug.serving",
+        "path": null
+    },
+    "yaml": {
+        "bacon": 2,
+        "imported_by": [
+            "utils.settings"
+        ],
+        "name": "yaml",
+        "path": null
+    },
+    "zone": {
+        "bacon": 2,
+        "imported_by": [
+            "main"
+        ],
+        "imports": [
+            "bgERP",
+            "bgERP.bgERP",
+            "controllers",
+            "controllers.controller_factory",
+            "data",
+            "data.register",
+            "data.registers",
+            "plugins",
+            "plugins.plugins_manager",
+            "services",
+            "services.evok",
+            "services.evok.settings",
+            "services.global_error_handler",
+            "services.global_error_handler.global_error_handler",
+            "utils",
+            "utils.logger",
+            "utils.performance_profiler",
+            "utils.settings",
+            "utils.state_machine",
+            "utils.timer"
+        ],
+        "name": "zone",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\zone.py"
+    }
+}
+{
+    "__main__": {
+        "bacon": 0,
+        "imports": [
+            "bgERP.client",
+            "bgERP.server",
+            "main",
+            "services.http.server",
+            "utils.settings"
+        ],
+        "name": "__main__",
+        "path": null
+    },
+    "bgERP": {
+        "bacon": 2,
+        "imported_by": [
+            "bgERP.bgERP",
+            "bgERP.client",
+            "bgERP.server",
+            "zone"
+        ],
+        "name": "bgERP",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\bgERP\\__init__.py"
+    },
+    "bgERP.bgERP": {
+        "bacon": 3,
+        "imported_by": [
+            "zone"
+        ],
+        "imports": [
+            "bgERP",
+            "bgERP.client",
+            "bgERP.server",
+            "utils",
+            "utils.logger"
+        ],
+        "name": "bgERP.bgERP",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\bgERP\\bgERP.py"
+    },
+    "bgERP.client": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "bgERP.bgERP"
+        ],
+        "imports": [
+            "bgERP",
+            "bgERP.session",
+            "requests",
+            "utils",
+            "utils.logger"
+        ],
+        "name": "bgERP.client",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\bgERP\\client.py"
+    },
+    "bgERP.server": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "bgERP.bgERP"
+        ],
+        "imports": [
+            "bgERP",
+            "bgERP.session",
+            "flask",
+            "services",
+            "services.http",
+            "services.http.server",
+            "utils",
+            "utils.logger"
+        ],
+        "name": "bgERP.server",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\bgERP\\server.py"
+    },
+    "bgERP.session": {
+        "bacon": 2,
+        "imported_by": [
+            "bgERP.client",
+            "bgERP.server"
+        ],
+        "imports": [
+            "utils",
+            "utils.logger"
+        ],
+        "name": "bgERP.session",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\bgERP\\session.py"
+    },
+    "controllers": {
+        "bacon": 3,
+        "imported_by": [
+            "zone"
+        ],
+        "name": "controllers",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\controllers\\__init__.py"
+    },
+    "controllers.controller_factory": {
+        "bacon": 3,
+        "imported_by": [
+            "zone"
+        ],
+        "name": "controllers.controller_factory",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\controllers\\controller_factory.py"
+    },
+    "data": {
+        "bacon": 3,
+        "imported_by": [
+            "data.registers",
+            "services.global_error_handler.global_error_handler",
+            "zone"
+        ],
+        "name": "data",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\data\\__init__.py"
+    },
+    "data.register": {
+        "bacon": 3,
+        "imported_by": [
+            "data.registers",
+            "services.global_error_handler.global_error_handler",
+            "zone"
+        ],
+        "name": "data.register",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\data\\register.py"
+    },
+    "data.registers": {
+        "bacon": 3,
+        "imported_by": [
+            "zone"
+        ],
+        "imports": [
+            "data",
+            "data.register",
+            "services",
+            "services.global_error_handler",
+            "services.global_error_handler.global_error_handler",
+            "utils",
+            "utils.logger"
+        ],
+        "name": "data.registers",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\data\\registers.py"
+    },
+    "flask": {
+        "bacon": 2,
+        "imported_by": [
+            "bgERP.server",
+            "services.http.server"
+        ],
+        "name": "flask",
+        "path": null
+    },
+    "main": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__"
+        ],
+        "imports": [
+            "setproctitle",
+            "utils",
+            "utils.logger",
+            "utils.settings",
+            "zone"
+        ],
+        "name": "main",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\main.py"
+    },
+    "plugins": {
+        "bacon": 3,
+        "imported_by": [
+            "zone"
+        ],
+        "name": "plugins",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\plugins\\__init__.py"
+    },
+    "plugins.plugins_manager": {
+        "bacon": 3,
+        "imported_by": [
+            "zone"
+        ],
+        "imports": [
+            "services",
+            "services.global_error_handler",
+            "services.global_error_handler.global_error_handler",
+            "utils",
+            "utils.logger"
+        ],
+        "name": "plugins.plugins_manager",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\plugins\\plugins_manager.py"
+    },
+    "requests": {
+        "bacon": 2,
+        "imported_by": [
+            "bgERP.client"
+        ],
+        "name": "requests",
+        "path": null
+    },
+    "services": {
+        "bacon": 2,
+        "imported_by": [
+            "bgERP.server",
+            "data.registers",
+            "plugins.plugins_manager",
+            "services.global_error_handler.global_error_handler",
+            "zone"
+        ],
+        "name": "services",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\services\\__init__.py"
+    },
+    "services.evok": {
+        "bacon": 3,
+        "imported_by": [
+            "zone"
+        ],
+        "name": "services.evok",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\services\\evok\\__init__.py"
+    },
+    "services.evok.settings": {
+        "bacon": 3,
+        "imported_by": [
+            "zone"
+        ],
+        "name": "services.evok.settings",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\services\\evok\\settings.py"
+    },
+    "services.global_error_handler": {
+        "bacon": 3,
+        "imported_by": [
+            "data.registers",
+            "plugins.plugins_manager",
+            "services.global_error_handler.global_error_handler",
+            "zone"
+        ],
+        "name": "services.global_error_handler",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\services\\global_error_handler\\__init__.py"
+    },
+    "services.global_error_handler.error_codes": {
+        "bacon": 4,
+        "imported_by": [
+            "services.global_error_handler.global_error_handler"
+        ],
+        "name": "services.global_error_handler.error_codes",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\services\\global_error_handler\\error_codes.py"
+    },
+    "services.global_error_handler.global_error_handler": {
+        "bacon": 3,
+        "imported_by": [
+            "data.registers",
+            "plugins.plugins_manager",
+            "zone"
+        ],
+        "imports": [
+            "data",
+            "data.register",
+            "services",
+            "services.global_error_handler",
+            "services.global_error_handler.error_codes"
+        ],
+        "name": "services.global_error_handler.global_error_handler",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\services\\global_error_handler\\global_error_handler.py"
+    },
+    "services.http": {
+        "bacon": 2,
+        "imported_by": [
+            "bgERP.server"
+        ],
+        "name": "services.http",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\services\\http\\__init__.py"
+    },
+    "services.http.server": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "bgERP.server"
+        ],
+        "imports": [
+            "flask",
+            "werkzeug.serving"
+        ],
+        "name": "services.http.server",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\services\\http\\server.py"
+    },
+    "setproctitle": {
+        "bacon": 2,
+        "imported_by": [
+            "main"
+        ],
+        "name": "setproctitle",
+        "path": null
+    },
+    "utils": {
+        "bacon": 2,
+        "imported_by": [
+            "bgERP.bgERP",
+            "bgERP.client",
+            "bgERP.server",
+            "bgERP.session",
+            "data.registers",
+            "main",
+            "plugins.plugins_manager",
+            "utils.logger",
+            "zone"
+        ],
+        "name": "utils",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\utils\\__init__.py"
+    },
+    "utils.logger": {
+        "bacon": 2,
+        "imported_by": [
+            "bgERP.bgERP",
+            "bgERP.client",
+            "bgERP.server",
+            "bgERP.session",
+            "data.registers",
+            "main",
+            "plugins.plugins_manager",
+            "zone"
+        ],
+        "imports": [
+            "utils",
+            "utils.settings"
+        ],
+        "name": "utils.logger",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\utils\\logger.py"
+    },
+    "utils.performance_profiler": {
+        "bacon": 3,
+        "imported_by": [
+            "zone"
+        ],
+        "name": "utils.performance_profiler",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\utils\\performance_profiler.py"
+    },
+    "utils.settings": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "main",
+            "utils.logger",
+            "zone"
+        ],
+        "imports": [
+            "yaml"
+        ],
+        "name": "utils.settings",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\utils\\settings.py"
+    },
+    "utils.state_machine": {
+        "bacon": 3,
+        "imported_by": [
+            "zone"
+        ],
+        "name": "utils.state_machine",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\utils\\state_machine.py"
+    },
+    "utils.timer": {
+        "bacon": 3,
+        "imported_by": [
+            "zone"
+        ],
+        "name": "utils.timer",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\utils\\timer.py"
+    },
+    "werkzeug.serving": {
+        "bacon": 2,
+        "imported_by": [
+            "services.http.server"
+        ],
+        "name": "werkzeug.serving",
+        "path": null
+    },
+    "yaml": {
+        "bacon": 2,
+        "imported_by": [
+            "utils.settings"
+        ],
+        "name": "yaml",
+        "path": null
+    },
+    "zone": {
+        "bacon": 2,
+        "imported_by": [
+            "main"
+        ],
+        "imports": [
+            "bgERP",
+            "bgERP.bgERP",
+            "controllers",
+            "controllers.controller_factory",
+            "data",
+            "data.register",
+            "data.registers",
+            "plugins",
+            "plugins.plugins_manager",
+            "services",
+            "services.evok",
+            "services.evok.settings",
+            "services.global_error_handler",
+            "services.global_error_handler.global_error_handler",
+            "utils",
+            "utils.logger",
+            "utils.performance_profiler",
+            "utils.settings",
+            "utils.state_machine",
+            "utils.timer"
+        ],
+        "name": "zone",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\zone.py"
+    }
+}

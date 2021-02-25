@@ -1,0 +1,311 @@
+{
+    "__main__": {
+        "bacon": 0,
+        "imports": [
+            "controllers",
+            "controllers.unipi",
+            "controllers.unipi.evok.evok",
+            "controllers.unipi.evok.server",
+            "controllers.unipi.m503",
+            "services.http.server",
+            "utils.settings"
+        ],
+        "name": "__main__",
+        "path": null
+    },
+    "controllers": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "controllers.base_controller",
+            "controllers.unipi.evok.evok",
+            "controllers.unipi.m503",
+            "controllers.unipi.neuron"
+        ],
+        "name": "controllers",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\controllers\\__init__.py"
+    },
+    "controllers.base_controller": {
+        "bacon": 2,
+        "imported_by": [
+            "controllers.unipi.evok.evok"
+        ],
+        "imports": [
+            "controllers",
+            "controllers.utils",
+            "controllers.utils.pin_modes",
+            "controllers.utils.resource_identifiers",
+            "data",
+            "data.verbal_const",
+            "utils",
+            "utils.configuarable"
+        ],
+        "name": "controllers.base_controller",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\controllers\\base_controller.py"
+    },
+    "controllers.unipi": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "controllers.unipi.evok.evok",
+            "controllers.unipi.m503",
+            "controllers.unipi.neuron"
+        ],
+        "name": "controllers.unipi",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\controllers\\unipi\\__init__.py"
+    },
+    "controllers.unipi.evok": {
+        "bacon": 2,
+        "imported_by": [
+            "controllers.unipi.evok.evok",
+            "controllers.unipi.neuron"
+        ],
+        "name": "controllers.unipi.evok",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\controllers\\unipi\\evok\\__init__.py"
+    },
+    "controllers.unipi.evok.evok": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "controllers.unipi.neuron"
+        ],
+        "imports": [
+            "controllers",
+            "controllers.base_controller",
+            "controllers.unipi",
+            "controllers.unipi.evok",
+            "controllers.unipi.evok.server",
+            "devices",
+            "devices.drivers",
+            "devices.drivers.modbus",
+            "devices.drivers.modbus.register_type",
+            "requests",
+            "utils",
+            "utils.logger"
+        ],
+        "name": "controllers.unipi.evok.evok",
+        "path": null
+    },
+    "controllers.unipi.evok.server": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "controllers.unipi.evok.evok"
+        ],
+        "imports": [
+            "flask",
+            "services",
+            "services.http",
+            "services.http.server",
+            "utils",
+            "utils.logger"
+        ],
+        "name": "controllers.unipi.evok.server",
+        "path": null
+    },
+    "controllers.unipi.m503": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__"
+        ],
+        "imports": [
+            "controllers",
+            "controllers.unipi",
+            "controllers.unipi.neuron"
+        ],
+        "name": "controllers.unipi.m503",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\controllers\\unipi\\m503.py"
+    },
+    "controllers.unipi.neuron": {
+        "bacon": 2,
+        "imported_by": [
+            "controllers.unipi.m503"
+        ],
+        "imports": [
+            "controllers",
+            "controllers.unipi",
+            "controllers.unipi.evok",
+            "controllers.unipi.evok.evok"
+        ],
+        "name": "controllers.unipi.neuron",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\controllers\\unipi\\neuron.py"
+    },
+    "controllers.utils": {
+        "bacon": 3,
+        "imported_by": [
+            "controllers.base_controller"
+        ],
+        "name": "controllers.utils",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\controllers\\utils\\__init__.py"
+    },
+    "controllers.utils.pin_modes": {
+        "bacon": 3,
+        "imported_by": [
+            "controllers.base_controller"
+        ],
+        "name": "controllers.utils.pin_modes",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\controllers\\utils\\pin_modes.py"
+    },
+    "controllers.utils.resource_identifiers": {
+        "bacon": 3,
+        "imported_by": [
+            "controllers.base_controller"
+        ],
+        "name": "controllers.utils.resource_identifiers",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\controllers\\utils\\resource_identifiers.py"
+    },
+    "data": {
+        "bacon": 3,
+        "imported_by": [
+            "controllers.base_controller"
+        ],
+        "name": "data",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\data\\__init__.py"
+    },
+    "data.verbal_const": {
+        "bacon": 3,
+        "imported_by": [
+            "controllers.base_controller"
+        ],
+        "name": "data.verbal_const",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\data\\verbal_const.py"
+    },
+    "devices": {
+        "bacon": 2,
+        "imported_by": [
+            "controllers.unipi.evok.evok"
+        ],
+        "name": "devices",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\devices\\__init__.py"
+    },
+    "devices.drivers": {
+        "bacon": 2,
+        "imported_by": [
+            "controllers.unipi.evok.evok"
+        ],
+        "name": "devices.drivers",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\devices\\drivers\\__init__.py"
+    },
+    "devices.drivers.modbus": {
+        "bacon": 2,
+        "imported_by": [
+            "controllers.unipi.evok.evok"
+        ],
+        "name": "devices.drivers.modbus",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\devices\\drivers\\modbus\\__init__.py"
+    },
+    "devices.drivers.modbus.register_type": {
+        "bacon": 2,
+        "imported_by": [
+            "controllers.unipi.evok.evok"
+        ],
+        "name": "devices.drivers.modbus.register_type",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\devices\\drivers\\modbus\\register_type.py"
+    },
+    "flask": {
+        "bacon": 2,
+        "imported_by": [
+            "controllers.unipi.evok.server",
+            "services.http.server"
+        ],
+        "name": "flask",
+        "path": null
+    },
+    "requests": {
+        "bacon": 2,
+        "imported_by": [
+            "controllers.unipi.evok.evok"
+        ],
+        "name": "requests",
+        "path": null
+    },
+    "services": {
+        "bacon": 2,
+        "imported_by": [
+            "controllers.unipi.evok.server"
+        ],
+        "name": "services",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\services\\__init__.py"
+    },
+    "services.http": {
+        "bacon": 2,
+        "imported_by": [
+            "controllers.unipi.evok.server"
+        ],
+        "name": "services.http",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\services\\http\\__init__.py"
+    },
+    "services.http.server": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "controllers.unipi.evok.server"
+        ],
+        "imports": [
+            "flask",
+            "werkzeug.serving"
+        ],
+        "name": "services.http.server",
+        "path": null
+    },
+    "utils": {
+        "bacon": 2,
+        "imported_by": [
+            "controllers.base_controller",
+            "controllers.unipi.evok.evok",
+            "controllers.unipi.evok.server",
+            "utils.logger"
+        ],
+        "name": "utils",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\utils\\__init__.py"
+    },
+    "utils.configuarable": {
+        "bacon": 3,
+        "imported_by": [
+            "controllers.base_controller"
+        ],
+        "name": "utils.configuarable",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\utils\\configuarable.py"
+    },
+    "utils.logger": {
+        "bacon": 2,
+        "imported_by": [
+            "controllers.unipi.evok.evok",
+            "controllers.unipi.evok.server"
+        ],
+        "imports": [
+            "utils",
+            "utils.settings"
+        ],
+        "name": "utils.logger",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\utils\\logger.py"
+    },
+    "utils.settings": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "utils.logger"
+        ],
+        "imports": [
+            "yaml"
+        ],
+        "name": "utils.settings",
+        "path": null
+    },
+    "werkzeug.serving": {
+        "bacon": 2,
+        "imported_by": [
+            "services.http.server"
+        ],
+        "name": "werkzeug.serving",
+        "path": null
+    },
+    "yaml": {
+        "bacon": 2,
+        "imported_by": [
+            "utils.settings"
+        ],
+        "name": "yaml",
+        "path": null
+    }
+}
