@@ -53,6 +53,10 @@ __email__ = "or.dimitrov@polygonteam.com"
 __status__ = "Debug"
 """File status."""
 
+__class_name__ = "X1BlackTitanium"
+"""Controller target class.
+"""
+
 #endregion
 
 class X1BlackTitanium(PiCons):
