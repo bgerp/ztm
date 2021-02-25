@@ -30,7 +30,7 @@ import requests
 from utils.logger import get_logger
 
 from controllers.base_controller import BaseController
-from controllers.neuron.evok.server import Server
+from controllers.unipi.evok.server import Server
 
 from devices.drivers.modbus.register_type import RegisterType
 
@@ -891,7 +891,9 @@ class Evok(BaseController):
 
     @staticmethod
     def read_eeprom():
-        """Read Neurons EEPROM."""
+        """Read Neurons EEPROM.
+        """
+
         device_cfg = {
             "version": "UniPi 1.0",
             "devices": {

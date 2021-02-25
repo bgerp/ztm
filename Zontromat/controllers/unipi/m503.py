@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 
-from controllers.neuron.neuron import Neuron
+from controllers.unipi.neuron import Neuron
 
 #region File Attributes
 
@@ -53,17 +53,21 @@ __email__ = "or.dimitrov@polygonteam.com"
 __status__ = "Debug"
 """File status."""
 
+__class_name__ = "M503"
+"""Controller target class.
+"""
+
 #endregion
 
-class M523(Neuron):
-    """Neuron M523
+class M503(Neuron):
+    """Neuron M503
     """
 
 #region Attributes
 
     __map = \
     {\
-        "identification": {"vendor": "unipi", "model": "M523"},\
+        "identification": {"vendor": "unipi", "model": "M503"},\
 
         "LED0": {"dev": "led", "major_index": 1, "minor_index": 1},\
         "LED1": {"dev": "led", "major_index": 1, "minor_index": 2},\
@@ -79,6 +83,8 @@ class M523(Neuron):
         "DI5": {"dev": "input", "major_index": 2, "minor_index": 2},\
         "DI6": {"dev": "input", "major_index": 2, "minor_index": 3},\
         "DI7": {"dev": "input", "major_index": 2, "minor_index": 4},\
+        "DI8": {"dev": "input", "major_index": 2, "minor_index": 5},\
+        "DI9": {"dev": "input", "major_index": 2, "minor_index": 6},\
 
         "DO0": {"dev": "do", "major_index": 1, "minor_index": 1},\
         "DO1": {"dev": "do", "major_index": 1, "minor_index": 2},\

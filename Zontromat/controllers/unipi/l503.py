@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 
-from controllers.neuron.neuron import Neuron
+from controllers.unipi.neuron import Neuron
 
 #region File Attributes
 
@@ -52,6 +52,10 @@ __email__ = "or.dimitrov@polygonteam.com"
 
 __status__ = "Debug"
 """File status."""
+
+__class_name__ = "L503"
+"""Controller target class.
+"""
 
 #endregion
 
