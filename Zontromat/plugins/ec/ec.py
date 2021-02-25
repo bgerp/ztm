@@ -28,12 +28,14 @@ from datetime import date
 from enum import Enum
 
 from utils.logger import get_logger
-from utils.timer import Timer
+#from utils.timer import Timer
+#from utils.state_machine import StateMachine
 
 from plugins.base_plugin import BasePlugin
-from plugins.ec.heat_pump_mode import HeatPumpMode
-
-from devices.base_device import BaseDevice
+from plugins.ec.valve import Valve
+from plugins.ec.valve_control_group import ValveControlGroup
+from plugins.ec.heat_pump_control_group import HeatPumpControllGroup
+from plugins.ec.heat_pump import HeatPumpMode
 
 from services.global_error_handler.global_error_handler import GlobalErrorHandler
 
@@ -73,674 +75,6 @@ __class_name__ = "EnergyCenter"
 
 #endregion
 
-
-class Boiler(BaseDevice):
-    """Boiler.
-    """
-
-#region Attributes
-
-    __logger = None
-    """Logger
-    """
-
-    __heat = 0
-    """Debit of the pump.
-    """
-
-#endregion
-
-#region Constructor / Destructor
-
-    def __init__(self, **config):
-
-        super().__init__(config)
-
-        # Create logger.
-        self.__logger = get_logger(__name__)
-        self.__logger.info("Starting up the: {}".format(self.name))
-
-    def __del__(self):
-        """Destructor
-        """
-
-        super().__del__()
-
-        if self.__logger is not None:
-            del self.__logger
-
-#endregion
-
-#region Public Methods
-
-    def set_heat(self, debit):
-
-        self.__debit = debit
-
-        self.__logger.debug("Set the heat of {} to {}".format(self.name, self.__debit))
-
-    def init(self):
-
-        self.__logger.debug("Init the: {}".format(self.name))
-
-    def shutdown(self):
-
-        self.__logger.debug("Shutdown the: {}".format(self.name))
-
-    def update(self):
-
-        self.__logger.debug("The heat of {} is {}.".format(self.name, self.__debit))
-
-#endregion
-
-
-class WaterPump(BaseDevice):
-    """Water pump.
-    """
-
-#region Attributes
-
-    __logger = None
-    """Logger
-    """
-
-    __debit = 0
-    """Debit of the pump.
-    """
-
-#endregion
-
-#region Constructor / Destructor
-
-    def __init__(self, **config):
-
-        super().__init__(config)
-
-        # Create logger.
-        self.__logger = get_logger(__name__)
-        self.__logger.info("Starting up the: {}".format(self.name))
-
-    def __del__(self):
-        """Destructor
-        """
-
-        super().__del__()
-
-        if self.__logger is not None:
-            del self.__logger
-
-#endregion
-
-#region Public Methods
-
-    def set_debit(self, debit):
-
-        self.__debit = debit
-
-        self.__logger.debug("Set the debit of {} to {}".format(self.name, self.__debit))
-
-    def init(self):
-
-        self.__logger.debug("Init the: {}".format(self.name))
-
-    def shutdown(self):
-
-        self.__logger.debug("Shutdown the: {}".format(self.name))
-
-    def update(self):
-
-        self.__logger.debug("The debit of {} is {}.".format(self.name, self.__debit))
-
-#endregion
-
-
-class Valve(BaseDevice):
-
-#region Attributes
-
-    __logger = None
-    """Logger
-    """
-
-    __position = 0
-    """Position of the valve.
-    """    
-
-#endregion
-
-#region Constructor / Destructor
-
-    def __init__(self, **config):
-
-        super().__init__(config)
-
-        # Create logger.
-        self.__logger = get_logger(__name__)
-        self.__logger.info("Starting up the: {}".format(self.name))
-
-    def __del__(self):
-        """Destructor
-        """
-
-        super().__del__()
-
-        if self.__logger is not None:
-            del self.__logger
-
-#endregion
-
-#region Public Methods
-
-    def set_position(self, position):
-        """Set the position of the valve.
-
-        Args:
-            position (int): Position of the valve.
-        """
-
-        self.__position = position
-        self.__logger.debug("Set position of {} to {}".format(self.name, position))
-
-    def init(self):
-        """Init the valve.
-        """
-
-        self.__logger.debug("Init the: {}".format(self.name))
-
-    def shutdown(self):
-        """Shutdown the valve.
-        """
-
-        self.set_position(0)
-        self.__logger.debug("Shutdown the: {}".format(self.name))
-
-    def update(self):
-        """Update the valve state.
-        """
-
-        self.__logger.debug("Valve {} is on position {}.".format(self.name, self.__position))
-
-#endregion
-
-
-class ValveControlGroup(BaseDevice):
-
-#region Attributes
-
-    __logger = None
-    """Logger
-    """
-
-    __input_valve = None
-    """Input valve.
-    """
-
-    __output_valve = None
-    """Output valve.
-    """
-
-    __short_valve = None
-    """Short valve.
-    """
-
-#endregion
-
-#region Constructor / Destructor
-
-    def __init__(self, **config):
-        """Constructor
-        """
-
-        super().__init__(config)
-
-        # Create logger.
-        self.__logger = get_logger(__name__)
-        self.__logger.info("Starting up the: {}".format(self.name))
-
-        if "input" in config:
-            self.__input_valve = config["input"]
-
-        if "output" in config:
-            self.__output_valve = config["output"]
-
-        if "short" in config:
-            self.__short_valve = config["short"]
-
-    def __del__(self):
-        """Destructor
-        """
-
-        super().__del__()
-
-        if self.__logger is not None:
-            del self.__logger
-
-#endregion
-
-#region Public Methods
-
-    def set_position(self, position):
-
-        if self.__input_valve is not None:
-            self.__input_valve.set_position(position)
-
-        if self.__output_valve is not None:
-            self.__output_valve.set_position(position)
-
-        if self.__short_valve is not None:
-            self.__short_valve.set_position(-position)
-
-    def init(self):
-        """Init the group.
-        """
-
-        if self.__input_valve is not None:
-            self.__input_valve.init()
-
-        if self.__output_valve is not None:
-            self.__output_valve.init()
-
-        if self.__short_valve is not None:
-            self.__short_valve.init()
-
-    def shutdown(self):
-        """Shutdown the group.
-        """
-
-        if self.__input_valve is not None:
-            self.__input_valve.shutdown()
-
-        if self.__output_valve is not None:
-            self.__output_valve.shutdown()
-
-        if self.__short_valve is not None:
-            self.__short_valve.shutdown()
-
-    def update(self):
-        """Update valve state.
-        """
-
-        if self.__input_valve is not None:
-            self.__input_valve.update()
-
-        if self.__output_valve is not None:
-            self.__output_valve.update()
-
-        if self.__short_valve is not None:
-            self.__short_valve.update()
-
-#endregion
-
-
-class TempSwitch(BaseDevice):
-
-#region Attributes
-
-    __logger = None
-    """Logger
-    """
-
-    __v_cold = None
-    """Valve cold water.
-    """    
-
-    __v_hot = None
-    """Valve hot water.
-    """ 
-
-    __position = 0
-    """Position
-    """
-
-#endregion
-
-#region Constructor / Destructor
-
-    def __init__(self, **config):
-
-        super().__init__(config)
-
-        # Create logger.
-        self.__logger = get_logger(__name__)
-        self.__logger.info("Starting up the: {}".format(self.name))
-
-        if "v_hot" in config:
-            self.__v_hot = config["v_hot"]
-
-        if "v_cold" in config:
-            self.__v_cold = config["v_cold"]
-
-    def __del__(self):
-        """Destructor
-        """
-
-        super().__del__()
-
-        if self.__logger is not None:
-            del self.__logger
-
-#endregion
-
-#region Public Methods
-
-    def set_position(self, position):
-        """Set position of the 
-
-        Args:
-            position ([type]): [description]
-        """
-
-        if self.__position != position:
-            self.__position = position
-
-
-        if self.__v_hot is not None:
-            self.__v_hot.set_position(self.__position)
-
-        if self.__v_cold is not None:
-            self.__v_cold.set_position(-self.__position)
-
-    def init(self):
-
-        self.__logger.debug("Init the: {}".format(self.name))
-
-    def shutdown(self):
-
-        self.__logger.debug("Shutdown the: {}".format(self.name))
-
-    def update(self):
-
-        self.__logger.debug("The heat of {} is {}.".format(self.name, self.__position))
-
-#endregion
-
-
-class HeatPump(BaseDevice):
-
-#region Attributes
-
-    __logger = None
-    """Logger
-    """
-
-    __mode = HeatPumpMode.NONE
-    """Mode of the heat pump.
-    """
-
-    __power = 0
-    """Power of the pump.
-    """
-
-#endregion
-
-#region Constructor / Destructor
-
-    def __init__(self, **config):
-        """Constructor
-        """
-
-        super().__init__(config)
-
-        # Create logger.
-        self.__logger = get_logger(__name__)
-        self.__logger.info("Starting up the: {}".format(self.name))
-
-    def __del__(self):
-        """Destructor
-        """
-
-        super().__del__()
-
-        if self.__logger is not None:
-            del self.__logger
-
-#endregion
-
-#region Public Methods
-
-    def set_mode(self, mode):
-        """Set heat pump mode.
-
-        Args:
-            mode (HeatPumpMode): Heat pump mode.
-        """
-
-        if self.__mode == mode:
-            return
-
-        self.__mode = mode
-
-        self.__logger.debug(self.__mode.name)
-
-    def set_power(self, power):
-        """Set heat pump power.
-
-        Args:
-            power (int): Power of the machine.
-        """
-
-        if self.__power == power:
-            return
-
-        self.__power = power
-
-        self.__logger.debug(self.__power)
-
-    def init(self):
-        """Init the heat pump.
-        """
-
-        self.__logger.debug("Init the: {}".format(self.name))
-
-    def shutdown(self):
-        """Shutdown the heat pump.
-        """
-
-        self.set_power(0)
-        self.__logger.debug("Shutdown the: {}".format(self.name))
-
-    def update(self):
-        """Update heat pump state.
-        """
-
-        self.__logger.debug("Het pump mode: {} and power {}".format(self.__mode.name, self.__power))
-
-#endregion
-
-
-class HeatPumpControllGroup(BaseDevice):
-
-#region Attributes
-
-    _registers = None
-
-    __mode = HeatPumpMode.NONE
-    """Mode of the heat pump.
-    """
-
-    __power = 0
-    """Power of the pump.
-    """
-
-    __v_cold_buff = None
-
-    __v_cold_geo = None
-
-    __v_warm_geo = None
-
-    __v_warm_floor = None
-
-    __v_hot = None
-
-    __heat_pump = None
-
-    __cold_water_pump = None
-
-    __hot_water_pump = None
-
-    __warm_water_pump = None
-
-#endregion
-
-#region Constructor / Destructor
-
-    def __init__(self, **config):
-
-        super().__init__(config)
-
-        # Create logger.
-        self.__logger = get_logger(__name__)
-        self.__logger.info("Starting up the: {}".format(self.name))
-
-        if "registers" in config:
-            self._registers = config["registers"]
-
-        # Valve group cold buffer. (Blue)
-        v_cold_buff_input = Valve(name="v_cold_buff_input", controller=self._controller, registers=self._registers)
-        v_cold_buff_output = Valve(name="v_cold_buff_output", controller=self._controller, registers=self._registers)
-        v_cold_buff_short = Valve(name="v_cold_buff_short", controller=self._controller, registers=self._registers)
-        self.__v_cold_buff = ValveControlGroup(name="v_cold_buff", input=v_cold_buff_input, output=v_cold_buff_output, short=v_cold_buff_short)
-        
-        # Valve group cold geo. (Green)
-        v_cold_geo_input = Valve(name="v_cold_geo_input", controller=self._controller, registers=self._registers)
-        v_cold_geo_output = Valve(name="v_cold_geo_output", controller=self._controller, registers=self._registers)
-        v_cold_geo_short = Valve(name="v_cold_geo_short", controller=self._controller, registers=self._registers)
-        self.__v_cold_geo = ValveControlGroup(name="v_cold_geo", input=v_cold_geo_input, output=v_cold_geo_output, short=v_cold_geo_short)
-
-        # Valve group warm geo. (Green)
-        v_warm_geo_input = Valve(name="v_warm_geo_input", controller=self._controller, registers=self._registers)
-        v_warm_geo_output = Valve(name="v_warm_geo_output", controller=self._controller, registers=self._registers)
-        v_warm_geo_short = Valve(name="v_warm_geo_short", controller=self._controller, registers=self._registers)
-        self.__v_warm_geo = ValveControlGroup(name="v_warm_geo", input=v_warm_geo_input, output=v_warm_geo_output, short=v_warm_geo_short)
-
-        # Valve group warm floor. (Purple)
-        v_warm_floor_input = Valve(name="v_warm_floor_input", controller=self._controller, registers=self._registers)
-        v_warm_floor_output = Valve(name="v_warm_floor_output", controller=self._controller, registers=self._registers)
-        v_warm_floor_short = Valve(name="v_warm_floor_short", controller=self._controller, registers=self._registers)
-        self.__v_warm_floor = ValveControlGroup(name="v_warm_floor", input=v_warm_floor_input, output=v_warm_floor_output, short=v_warm_floor_short)
-
-        # Valve group hot. (Red)
-        v_hot_input = Valve(name="v_hot_input", controller=self._controller, registers=self._registers)
-        v_hot_output = Valve(name="v_hot_output", controller=self._controller, registers=self._registers)
-        self.__v_hot = ValveControlGroup(name="v_hot", input=v_hot_input, output=v_hot_output)
-
-        self.__cold_water_pump = WaterPump(name="cold_water_pump", controller=self._controller, registers=self._registers)
-        self.__hot_water_pump = WaterPump(name="hot_water_pump", controller=self._controller, registers=self._registers)
-        self.__warm_water_pump = WaterPump(name="warm_water_pump", controller=self._controller, registers=self._registers)
-
-        self.__heat_pump = HeatPump(name=self._config["name"], controller=self._controller, registers=self._registers)
-
-    def __del__(self):
-        """Destructor
-        """
-
-        super().__del__()
-
-        # Valve groups.
-        del self.__v_cold_buff
-        del self.__v_cold_geo
-        del self.__v_warm_geo
-        del self.__v_warm_floor
-        del self.__v_hot
-
-        # Thermal agents pumps.
-        del self.__cold_water_pump
-        del self.__hot_water_pump
-        del self.__warm_water_pump
-
-        # Heat pump.
-        del self.__heat_pump
-
-        if self.__logger is not None:
-            del self.__logger
-
-#endregion
-
-#region Public Methods
-
-    def set_mode(self, mode):
-        """Set heat pump mode.
-
-        Args:
-            mode (HeatPumpMode): Heat pump mode.
-        """
-
-        if self.__mode == mode:
-            return
-
-        self.__mode = mode
-
-        self.__logger.debug("Heatpump {} set on {} mode.".format(self.name, self.__mode))
-
-    def set_power(self, power):
-        """Set heat pump power.
-
-        Args:
-            power (int): Power of the machine.
-        """
-
-        if self.__power == power:
-            return
-
-        self.__power = power
-
-        self.__logger.debug("Heatpump {} set on {} power.".format(self.name, self.__power))
-
-    def init(self):
-        """Init the group.
-        """
-
-        # Valve groups.
-        self.__v_cold_buff.init()
-        self.__v_cold_geo.init()
-        self.__v_warm_geo.init()
-        self.__v_warm_floor.init()
-        self.__v_hot.init()
-
-        # Thermal agents pumps.
-        self.__cold_water_pump.init()
-        self.__hot_water_pump.init()
-        self.__warm_water_pump.init()
-
-        # Heat pump.
-        self.__heat_pump.init()
-
-    def shutdown(self):
-
-        # Valve groups.
-        self.__v_cold_buff.shutdown()
-        self.__v_cold_geo.shutdown()
-        self.__v_warm_geo.shutdown()
-        self.__v_warm_floor.shutdown()
-        self.__v_hot.shutdown()
-
-        # Thermal agents pumps.
-        self.__cold_water_pump.shutdown()
-        self.__hot_water_pump.shutdown()
-        self.__warm_water_pump.shutdown()
-
-        # Heat pump.
-        self.__heat_pump.shutdown()
-
-    def update(self):
-
-        # Valve groups.
-        self.__v_cold_buff.update()
-        self.__v_cold_geo.update()
-        self.__v_warm_geo.update()
-        self.__v_warm_floor.update()
-        self.__v_hot.update()
-
-        # Thermal agents pumps.
-        self.__cold_water_pump.update()
-        self.__hot_water_pump.update()
-        self.__warm_water_pump.update()
-
-        # Heat pump.
-        self.__heat_pump.update()
-        # self.__logger.info("Update: {}".format(self.name))
-
-#endregion
 
 
 class EnergyCenter(BasePlugin):
@@ -826,7 +160,7 @@ class EnergyCenter(BasePlugin):
 
     __v_foyer = None
     """Valve foyer.
-    """    
+    """
 
     __v_underfloor_heating_trestle = None
     """Underfloor heating trestle.
@@ -840,27 +174,27 @@ class EnergyCenter(BasePlugin):
     """Pool heating.
     """
 
-    __v_tva_pool = None
+    __vcg_tva_pool = None
     """TVA pool.
     """
 
-    __v_convectors_east = None
+    __vcg_convectors_east = None
     """Convectors east.
     """
 
-    __v_floor_east = None
+    __vcg_floor_east = None
     """Floor east.
     """
 
-    __v_convectors_west = None
+    __vcg_convectors_west = None
     """Convectors west.
     """
 
-    __v_tva_fitness = None
+    __vcg_tva_fitness = None
     """TVA fitness.
     """
 
-    __v_tva_roof_floor = None
+    __vcg_tva_roof_floor = None
     """TVA roof floor.
     """
 
@@ -882,7 +216,7 @@ class EnergyCenter(BasePlugin):
 
     __v_generators_cooling = None
     """Generators cooling.
-    """    
+    """
 
 #endregion
 
@@ -901,31 +235,132 @@ class EnergyCenter(BasePlugin):
         self.__logger = get_logger(__name__)
         self.__logger.info("Starting up the: {}".format(self.name))
 
+        # Create heatpump groups.
         self.__heat_pumps.append(HeatPumpControllGroup(name="HP1", controller=self._controller, registers=self._registers))
         self.__heat_pumps.append(HeatPumpControllGroup(name="HP2", controller=self._controller, registers=self._registers))
         self.__heat_pumps.append(HeatPumpControllGroup(name="HP3", controller=self._controller, registers=self._registers))
 
-        # Valve group. (Purple)
-        self.__v_foyer = Valve(name="v_foyer", controller=self._controller, registers=self._registers)
-        self.__v_underfloor_heating_trestle  = Valve(name="v_underfloor_heating_trestle", controller=self._controller, registers=self._registers)
-        self.__v_underfloor_heating_pool  = Valve(name="v_underfloor_heating_pool", controller=self._controller, registers=self._registers)
+        # Valve group. (PURPLE)
+        self.__v_foyer = Valve(\
+            name="v_foyer",
+            controller=self._controller,
+            registers=self._registers)
 
-        # 
-        self.__v_pool_heating = Valve(name="v_pool_heating", controller=self._controller, registers=self._registers)
-        self.__v_tva_pool = TempSwitch(name="v_tva_pool", controller=self._controller, registers=self._registers)
-        self.__v_convectors_east = TempSwitch(name="v_convectors_east", controller=self._controller, registers=self._registers)
-        self.__v_floor_east = TempSwitch(name="v_floor_east", controller=self._controller, registers=self._registers)
-        self.__v_convectors_west = TempSwitch(name="v_convectors_west", controller=self._controller, registers=self._registers)
-        self.__v_tva_fitness = TempSwitch(name="v_tva_fitness", controller=self._controller, registers=self._registers)
-        self.__v_tva_roof_floor = TempSwitch(name="v_tva_roof_floor", controller=self._controller, registers=self._registers)
-        self.__v_floor_west = TempSwitch(name="v_floor_west", controller=self._controller, registers=self._registers)
-        self.__v_tva_conference_center = TempSwitch(name="v_tva_conference_center", controller=self._controller, registers=self._registers)
-        self.__v_convectors_kitchen = TempSwitch(name="v_convectors_kitchen", controller=self._controller, registers=self._registers)
-        self.__v_tva_warehouse = TempSwitch(name="v_tva_warehouse", controller=self._controller, registers=self._registers)
+        self.__v_underfloor_heating_trestle  = Valve(
+            name="v_underfloor_heating_trestle",
+            controller=self._controller,
+            registers=self._registers)
 
+        self.__v_underfloor_heating_pool  = Valve(
+            name="v_underfloor_heating_pool",
+            controller=self._controller,
+            registers=self._registers)
+
+        # Consumers (RED)
+        self.__v_pool_heating = ValveControlGroup.create(\
+            name="v_pool_heating",
+            fw_valves=["v_hot_pool_heating"],
+            fw_pumps=["p_pool_heating"],
+            controller=self._controller,
+            registers=self._registers)
+
+        # TVA Pool (RED and BLUE)
+        self.__vcg_tva_pool = ValveControlGroup.create(\
+            name="v_tva_pool",
+            fw_valves=["v_cold_tva_pool"],
+            rev_valves=["v_hot_tva_pool"],
+            fw_pumps=["p_tva_pool"],
+            controller=self._controller,
+            registers=self._registers)
+
+        # Convectors East (RED and BLUE)
+        self.__vcg_convectors_east = ValveControlGroup.create(\
+            name="v_convectors_east",
+            fw_valves=["v_cold_convectors_east"],
+            rev_valves=["v_hot_convectors_east"],
+            fw_pumps=["p_convectors_east"],
+            controller=self._controller,
+            registers=self._registers)
+
+        # Floor East (RED and BLUE)
+        self.__vcg_floor_east = ValveControlGroup.create(\
+            name="v_floor_east",
+            fw_valves=["v_cold_floor_east"],
+            rev_valves=["v_hot_floor_east"],
+            fw_pumps=["p_floor_east"],
+            controller=self._controller,
+            registers=self._registers)
+
+
+        # Convectors West (RED and BLUE)
+        self.__vcg_convectors_west = ValveControlGroup.create(\
+            name="v_convectors_west",
+            fw_valves=["v_cold_convectors_west"],
+            rev_valves=["v_hot_convectors_west"],
+            fw_pumps=["p_convectors_west"],
+            controller=self._controller,
+            registers=self._registers)
+
+        # TVA Fitness (RED and BLUE)
+        self.__vcg_tva_fitness = ValveControlGroup.create(\
+            name="v_tva_fitness",
+            fw_valves=["v_cold_tva_fitness"],
+            rev_valves=["v_hot_tva_fitness"],
+            fw_pumps=["p_tva_fitness"],
+            controller=self._controller,
+            registers=self._registers)
+
+        # TVA Roof Floor (RED and BLUE)
+        self.__vcg_tva_roof_floor = ValveControlGroup.create(\
+            name="v_tva_roof_floor",
+            fw_valves=["v_cold_tva_roof_floor"],
+            rev_valves=["v_hot_tva_roof_floor"],
+            fw_pumps=["p_tva_roof_floor"],
+            controller=self._controller,
+            registers=self._registers)
+
+        # Floor West (RED and BLUE)
+        self.__vcg_floor_west = ValveControlGroup.create(\
+            name="v_floor_west",
+            fw_valves=["v_cold_floor_west"],
+            rev_valves=["v_hot_floor_west"],
+            fw_pumps=["p_floor_west"],
+            controller=self._controller,
+            registers=self._registers)
+
+        # TVA Conference (RED and BLUE)
+        self.__vcg_tva_conference_center = ValveControlGroup.create(\
+            name="v_tva_conference_center",
+            fw_valves=["v_cold_tva_conference_center"],
+            rev_valves=["v_hot_tva_conference_center"],
+            fw_pumps=["p_conference_center"],
+            controller=self._controller,
+            registers=self._registers)
+
+        # Convectors Kitchen (RED and BLUE)
+        self.__vcg_convectors_kitchen = ValveControlGroup.create(\
+            name="v_convectors_kitchen",
+            fw_valves=["v_cold_convectors_kitchen"],
+            rev_valves=["v_hot_convectors_kitchen"],
+            fw_pumps=["p_convectors_kitchen"],
+            controller=self._controller,
+            registers=self._registers)
+
+        # TVA Wearhouse (RED and BLUE)
+        self.__vcg_tva_warehouse = ValveControlGroup.create(\
+            name="v_tva_warehouse",
+            fw_valves=["v_cold_tva_warehouse"],
+            rev_valves=["v_hot_tva_warehouse"],
+            fw_pumps=["p_tva_warehouse"],
+            controller=self._controller,
+            registers=self._registers)
+
+        # Generators Cooling (GREEN)
         self.__v_generators_cooling = Valve(name="v_generators_cooling", controller=self._controller, registers=self._registers)
-        self.__v_air_cooling = Valve(name="v_generators_cooling", controller=self._controller, registers=self._registers)
-        self.__v_ = Valve(name="v_generators_cooling", controller=self._controller, registers=self._registers)
+        self.__v_ground_drill = Valve(name="v_ground_drill", controller=self._controller, registers=self._registers)
+
+        # Air cooling tower (PURPLE)
+        self.__v_air_cooling = Valve(name="v_air_cooling", controller=self._controller, registers=self._registers)
 
     def __del__(self):
         """Destructor
@@ -941,9 +376,6 @@ class EnergyCenter(BasePlugin):
             if heat_pump is not None:
                 del heat_pump
 
-        if self.__heat_pumps is not None:
-            del self.__heat_pumps
-
         # Worm circle (PURPLE)
         if self.__v_foyer is not None:
             del self.__v_foyer
@@ -958,23 +390,23 @@ class EnergyCenter(BasePlugin):
         if self.__v_pool_heating is not None:
             del self.__v_pool_heating
 
-        if self.__v_tva_pool is not None:
-            del self.__v_tva_pool
+        if self.__vcg_tva_pool is not None:
+            del self.__vcg_tva_pool
 
-        if self.__v_convectors_east is not None:
-            del self.__v_convectors_east
+        if self.__vcg_convectors_east is not None:
+            del self.__vcg_convectors_east
 
-        if self.__v_floor_east is not None:
-            del self.__v_floor_east
+        if self.__vcg_floor_east is not None:
+            del self.__vcg_floor_east
 
-        if self.__v_convectors_west is not None:
-            del self.__v_convectors_west
+        if self.__vcg_convectors_west is not None:
+            del self.__vcg_convectors_west
 
-        if self.__v_tva_fitness is not None:
-            del self.__v_tva_fitness
+        if self.__vcg_tva_fitness is not None:
+            del self.__vcg_tva_fitness
 
-        if self.__v_tva_roof_floor is not None:
-            del self.__v_tva_roof_floor
+        if self.__vcg_tva_roof_floor is not None:
+            del self.__vcg_tva_roof_floor
 
         if self.__v_floor_west is not None:
             del self.__v_floor_west
@@ -1192,31 +624,31 @@ class EnergyCenter(BasePlugin):
 
         self.__generate_order()
 
-        # 
+        # Heat Pumps
         for heat_pump in self.__heat_pumps:
             heat_pump.init()
             heat_pump.set_mode(HeatPumpMode.NONE)
             heat_pump.set_power(0)
 
-        # 
+        # Warm (PURPLE)
         self.__v_foyer.init()
         self.__v_underfloor_heating_trestle.init()
         self.__v_underfloor_heating_pool.init()
 
-        # 
+        # Valve Control Groups (RED and BLUE)
         self.__v_pool_heating.init()
-        self.__v_tva_pool.init()
-        self.__v_convectors_east.init()
-        self.__v_floor_east.init()
-        self.__v_convectors_west.init()
-        self.__v_tva_fitness.init()
-        self.__v_tva_roof_floor.init()
-        self.__v_floor_west.init()
-        self.__v_tva_conference_center.init()
-        self.__v_convectors_kitchen.init()
-        self.__v_tva_warehouse.init()
+        self.__vcg_tva_pool.init()
+        self.__vcg_convectors_east.init()
+        self.__vcg_floor_east.init()
+        self.__vcg_convectors_west.init()
+        self.__vcg_tva_fitness.init()
+        self.__vcg_tva_roof_floor.init()
+        self.__vcg_floor_west.init()
+        self.__vcg_tva_conference_center.init()
+        self.__vcg_convectors_kitchen.init()
+        self.__vcg_tva_warehouse.init()
 
-        # Generator
+        # Generators (GREEN)
         self.__v_generators_cooling.init()
 
     def update(self):
@@ -1251,18 +683,18 @@ class EnergyCenter(BasePlugin):
         self.__v_underfloor_heating_trestle.update()
         self.__v_underfloor_heating_pool.update()
 
-        # 
+        # Valve Control Groups
         self.__v_pool_heating.update()
-        self.__v_tva_pool.update()
-        self.__v_convectors_east.update()
-        self.__v_floor_east.update()
-        self.__v_convectors_west.update()
-        self.__v_tva_fitness.update()
-        self.__v_tva_roof_floor.update()
-        self.__v_floor_west.update()
-        self.__v_tva_conference_center.update()
-        self.__v_convectors_kitchen.update()
-        self.__v_tva_warehouse.update()
+        self.__vcg_tva_pool.update()
+        self.__vcg_convectors_east.update()
+        self.__vcg_floor_east.update()
+        self.__vcg_convectors_west.update()
+        self.__vcg_tva_fitness.update()
+        self.__vcg_tva_roof_floor.update()
+        self.__vcg_floor_west.update()
+        self.__vcg_tva_conference_center.update()
+        self.__vcg_convectors_kitchen.update()
+        self.__vcg_tva_warehouse.update()
 
         # Generator
         self.__v_generators_cooling.update()
@@ -1275,23 +707,23 @@ class EnergyCenter(BasePlugin):
         for heat_pump in self.__heat_pumps:
             heat_pump.shutdown()
 
-        # 
+        #
         self.__v_foyer.shutdown()
         self.__v_underfloor_heating_trestle.shutdown()
         self.__v_underfloor_heating_pool.shutdown()
 
-        # 
+        # Valve Control Groups
         self.__v_pool_heating.shutdown()
-        self.__v_tva_pool.shutdown()
-        self.__v_convectors_east.shutdown()
-        self.__v_floor_east.shutdown()
-        self.__v_convectors_west.shutdown()
-        self.__v_tva_fitness.shutdown()
-        self.__v_tva_roof_floor.shutdown()
-        self.__v_floor_west.shutdown()
-        self.__v_tva_conference_center.shutdown()
-        self.__v_convectors_kitchen.shutdown()
-        self.__v_tva_warehouse.shutdown()
+        self.__vcg_tva_pool.shutdown()
+        self.__vcg_convectors_east.shutdown()
+        self.__vcg_floor_east.shutdown()
+        self.__vcg_convectors_west.shutdown()
+        self.__vcg_tva_fitness.shutdown()
+        self.__vcg_tva_roof_floor.shutdown()
+        self.__vcg_floor_west.shutdown()
+        self.__vcg_tva_conference_center.shutdown()
+        self.__vcg_convectors_kitchen.shutdown()
+        self.__vcg_tva_warehouse.shutdown()
 
         # Generator
         self.__v_generators_cooling.shutdown()

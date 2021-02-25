@@ -22,7 +22,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 
+import time
 from enum import Enum
+
+from utils.logger import get_logger
+from utils.timer import Timer
+from utils.state_machine import StateMachine
+
+from devices.base_device import BaseDevice
 
 # (Request from mail: Eml6429)
 
@@ -57,10 +64,61 @@ __status__ = "Debug"
 
 #endregion
 
-class HeatPumpMode(Enum):
-    """Heat pumps mode.
+class Boiler(BaseDevice):
+    """Boiler.
     """
 
-    NONE = 0
-    Summer = 1
-    Winter = 2
+#region Attributes
+
+    __logger = None
+    """Logger
+    """
+
+    __heat = 0
+    """Debit of the pump.
+    """
+
+#endregion
+
+#region Constructor / Destructor
+
+    def __init__(self, **config):
+
+        super().__init__(config)
+
+        # Create logger.
+        self.__logger = get_logger(__name__)
+        self.__logger.info("Starting up the: {}".format(self.name))
+
+    def __del__(self):
+        """Destructor
+        """
+
+        super().__del__()
+
+        if self.__logger is not None:
+            del self.__logger
+
+#endregion
+
+#region Public Methods
+
+    def set_heat(self, debit):
+
+        self.__debit = debit
+
+        self.__logger.debug("Set the heat of {} to {}".format(self.name, self.__debit))
+
+    def init(self):
+
+        self.__logger.debug("Init the: {}".format(self.name))
+
+    def shutdown(self):
+
+        self.__logger.debug("Shutdown the: {}".format(self.name))
+
+    def update(self):
+
+        self.__logger.debug("The heat of {} is {}.".format(self.name, self.__debit))
+
+#endregion
