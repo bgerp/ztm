@@ -70,10 +70,8 @@ class BaseDevice(Configuarable):
     def __init__(self, config):
         """Constructor
 
-        Parameters
-        ----------
-        self : Template
-            Current class instance.
+        Args:
+            config (dict): Configuration of the device.
         """
 
         super().__init__(config)
@@ -82,28 +80,30 @@ class BaseDevice(Configuarable):
             self._controller = self._config["controller"]
 
     def __del__(self):
-        """Destructor"""
+        """Destructor
+        """
 
         super().__del__()
-
-        del self._controller
 
 #endregion
 
 #region Public Methods
 
     def init(self):
-        """Init the device."""
+        """Init the device.
+        """
 
         pass
 
-    def get_state(self):
-        """Return device state."""
+    def update(self):
+        """Update the device logic.
+        """
 
-        return None
+        pass
 
     def shutdown(self):
-        """Shutdown procedure of the device."""
+        """Shutdown procedure of the device.
+        """
 
         pass
 
