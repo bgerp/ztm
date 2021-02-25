@@ -26,8 +26,6 @@ from utils.logger import get_logger
 
 from controllers.base_controller import BaseController
 
-from devices.drivers.modbus.register_type import RegisterType
-
 #region File Attributes
 
 __author__ = "Orlin Dimitrov"
@@ -72,6 +70,10 @@ class Dummy(BaseController):
     __instance = None
     """Singelton instance.
     """
+
+    __test = None
+    """Test
+    """    
 
 #endregion
 
@@ -129,6 +131,9 @@ class Dummy(BaseController):
         super().__init__(config)
 
         self.__logger = get_logger(__name__)
+
+        if "test" in config:
+            self.__test = config["test"]
 
     def __del__(self):
         """Destructor
