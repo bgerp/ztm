@@ -22,13 +22,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 
-from controllers.neuron.l503 import L503
-from controllers.neuron.m503 import M503
-from controllers.neuron.m523 import M523
-from controllers.neuron.s103 import S103
-from controllers.picons.x1_black_titanium import X1BlackTitanium
-from controllers.neuron.neuron import Neuron
-from controllers.dummy.dummy import Dummy
+# from controllers.unipi.l503 import L503
+# from controllers.unipi.m503 import M503
+# from controllers.unipi.m523 import M523
+# from controllers.unipi.s103 import S103
+# from controllers.unipi.neuron import Neuron
+
+# from controllers.picons.x1_black_titanium import X1BlackTitanium
+
+# from controllers.dummy.dummy import Dummy
+
+import os
+import importlib
 
 #region File Attributes
 
@@ -64,57 +69,64 @@ __status__ = "Debug"
 class ControllerFactory():
     """Controller factory class."""
 
+    @staticmethod
+    def __load_controller(vendor, model, config):
+        """Load controller.
+
+        Args:
+            vendor (str): Vendor name.
+            model (str): Model name.
+            config (dict): Controller configuration.
+
+        Raises:
+            ImportError: Raise when module can not me imported.
+            ModuleNotFoundError: Raise when module can not be found.
+            AttributeError: Not existing attribute.
+            ValueError: Attribute __class_name__ is not set properly.
+
+        Returns:
+            mixed: Instance of the class module.
+        """
+
+        module_path = "controllers.{}.{}".format(vendor, model)
+
+        module_path = module_path.lower()
+
+        module = importlib.import_module(module_path)
+        if module is None:
+            raise ImportError("{}".format(module_path))        
+
+        if not hasattr(module, "__class_name__"):
+            raise AttributeError("Module: {}, has no attribute __class_name__.".format(module_path))
+
+        if module.__class_name__ == "":
+            raise ValueError("Module: {}.__class_name__ is empty.".format(module_path))
+
+        class_module = getattr(module, module.__class_name__)
+        if class_module is None:
+            raise ModuleNotFoundError("{}.{}".format(module_path, module.__class_name__))
+
+        class_isinstance = class_module(config)
+
+        return class_isinstance
+
 #region Public Methods
 
     @staticmethod
-    def create(**kwargs):
+    def create(config):
         """Create controller."""
 
         # TODO: If the serial is not in the controller load it from file, if not create it and save it.
         controller = None
 
-        config = []
-        if "config" in kwargs:
-            config = kwargs["config"]
+        if "vendor" not in config:
+            raise ValueError("Missing vendor descriptor.")
 
-        # Unipi suport 
-        if config["vendor"] == "unipi":
+        if "model" not in config:
+            raise ValueError("Missing model descriptor.")
 
-            # Read PLC information.
-            plc_info = Neuron.read_eeprom()
-
-            # Read serial number.
-            if plc_info is not None and "serial" in plc_info:
-                if (plc_info["serial"] is not None) and ("serial" in config) and (config["serial"] is None):
-                    config["serial"] = plc_info["serial"]   
-
-            # Read serial number.
-            if plc_info is not None and "model" in plc_info:
-                if plc_info["model"] is not None and config["model"] is None:
-                    config["model"] = plc_info["model"]   
-
-            if config["model"] == "S103":
-                controller = S103(config)
-
-            elif config["model"] == "M503":
-                controller = M503(config)
-
-            elif config["model"] == "M523":
-                controller = M523(config)
-
-            elif config["model"] == "L503":
-                controller = L503(config)
-
-        # Pi-Cons Suport by POLYGONTeam Ltd.
-        elif config["vendor"] == "pt":
-
-            if config["model"] == "X1BlackTitanium":
-                controller = X1BlackTitanium(config)
-
-        # Dummy controller for tests.
-        elif config["vendor"] == "Dummy":
-
-            controller = Dummy(config)
+        # Load controller module.
+        controller = ControllerFactory.__load_controller(config["vendor"], config["model"], config)
 
         return controller
 
