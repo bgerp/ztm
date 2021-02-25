@@ -36,7 +36,7 @@ currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentfram
 parentdir = os.path.dirname(currentdir)
 sys.path.insert(0, parentdir) 
 
-from controllers.neuron.neuron import Neuron
+from controllers.unipi.neuron import Neuron
 from settings import ApplicationSettings
 
 #region File Attributes

@@ -30,7 +30,7 @@ from prettytable import PrettyTable
 
 sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 
-from controllers.neuron.neuron import Neuron
+from controllers.unipi.neuron import Neuron
 
 #region File Attributes
 
