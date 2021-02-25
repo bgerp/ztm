@@ -92,4 +92,8 @@ class Configuarable:
         if "name" in self._config:
             self.__name = self._config["name"]
 
+    def __del__(self):
+
+        pass
+
 #endregion
