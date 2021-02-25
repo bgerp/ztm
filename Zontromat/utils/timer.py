@@ -168,7 +168,7 @@ class Timer:
         # Recalculate passed time.
         self.__now = time.time()
         pass_time = self.__now - self.__last_time
-        if pass_time > self.__expiration_time:
+        if pass_time >= self.__expiration_time:
             self.__expired = True
 
             # Execute if there is callback attached.
