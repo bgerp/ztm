@@ -252,7 +252,7 @@ class Zone():
         """
 
         # Create PLC.
-        self.__controller = ControllerFactory.create(config=self.__app_settings.controller)
+        self.__controller = ControllerFactory.create(self.__app_settings.controller)
 
         if self.__controller is None:
             return
