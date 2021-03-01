@@ -103,11 +103,11 @@ class Boiler(BaseDevice):
 
 #region Public Methods
 
-    def set_heat(self, debit):
+    def set_heat(self, heat):
 
-        self.__debit = debit
+        self.__heat = heat
 
-        self.__logger.debug("Set the heat of {} to {}".format(self.name, self.__debit))
+        self.__logger.debug("Set the heat of {} to {}".format(self.name, self.__heat))
 
     def init(self):
 
@@ -119,6 +119,6 @@ class Boiler(BaseDevice):
 
     def update(self):
 
-        self.__logger.debug("The heat of {} is {}.".format(self.name, self.__debit))
+        self.__logger.debug("The heat of {} is {}.".format(self.name, self.__heat))
 
 #endregion

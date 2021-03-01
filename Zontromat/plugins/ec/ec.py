@@ -36,6 +36,7 @@ from plugins.ec.valve import Valve
 from plugins.ec.valve_control_group import ValveControlGroup
 from plugins.ec.heat_pump_control_group import HeatPumpControllGroup
 from plugins.ec.heat_pump import HeatPumpMode
+from plugins.ec.boiler import Boiler
 
 from services.global_error_handler.global_error_handler import GlobalErrorHandler
 
@@ -74,8 +75,6 @@ __class_name__ = "EnergyCenter"
 """Plugin class name."""
 
 #endregion
-
-
 
 class EnergyCenter(BasePlugin):
     """Energy center control plugin."""
@@ -158,6 +157,10 @@ class EnergyCenter(BasePlugin):
     """Heat pumps.
     """
 
+    __boilers = []
+    """Electrical heater.s
+    """    
+
     __v_foyer = None
     """Valve foyer.
     """
@@ -218,6 +221,10 @@ class EnergyCenter(BasePlugin):
     """Generators cooling.
     """
 
+    __v_short_green_purple = None
+    """Short valve between green and purple pipes.
+    """    
+
 #endregion
 
 #region Constructor / Destructor
@@ -239,6 +246,10 @@ class EnergyCenter(BasePlugin):
         self.__heat_pumps.append(HeatPumpControllGroup(name="HP1", controller=self._controller, registers=self._registers))
         self.__heat_pumps.append(HeatPumpControllGroup(name="HP2", controller=self._controller, registers=self._registers))
         self.__heat_pumps.append(HeatPumpControllGroup(name="HP3", controller=self._controller, registers=self._registers))
+
+        self.__boilers.append(Boiler(name="B1", controller=self._controller, registers=self._registers))
+        self.__boilers.append(Boiler(name="B2", controller=self._controller, registers=self._registers))
+        self.__boilers.append(Boiler(name="B3", controller=self._controller, registers=self._registers))
 
         # Valve group. (PURPLE)
         self.__v_foyer = Valve(\
@@ -290,7 +301,6 @@ class EnergyCenter(BasePlugin):
             fw_pumps=["p_floor_east"],
             controller=self._controller,
             registers=self._registers)
-
 
         # Convectors West (RED and BLUE)
         self.__vcg_convectors_west = ValveControlGroup.create(\
@@ -362,6 +372,9 @@ class EnergyCenter(BasePlugin):
         # Air cooling tower (PURPLE)
         self.__v_air_cooling = Valve(name="v_air_cooling", controller=self._controller, registers=self._registers)
 
+        # Short valve between green and purple pipes.
+        self.__v_short_green_purple = Valve(name="v_short_green_purple", controller=self._controller, registers=self._registers)
+
     def __del__(self):
         """Destructor
         """
@@ -375,6 +388,11 @@ class EnergyCenter(BasePlugin):
         for heat_pump in self.__heat_pumps:
             if heat_pump is not None:
                 del heat_pump
+
+        # Boilers (RED)
+        for boiler in self.__boilers:
+            if boiler is not None:
+                del boiler
 
         # Worm circle (PURPLE)
         if self.__v_foyer is not None:
@@ -419,6 +437,9 @@ class EnergyCenter(BasePlugin):
 
         if self.__v_tva_warehouse is not None:
             del self.__v_tva_warehouse
+
+        if self.__v_short_green_purple is not None:
+            del self.__v_short_green_purple
 
 #region Private Methods
 
@@ -630,6 +651,11 @@ class EnergyCenter(BasePlugin):
             heat_pump.set_mode(HeatPumpMode.NONE)
             heat_pump.set_power(0)
 
+        # Boilers (RED)
+        for boiler in self.__boilers:
+            if boiler is not None:
+                boiler.init()
+
         # Warm (PURPLE)
         self.__v_foyer.init()
         self.__v_underfloor_heating_trestle.init()
@@ -650,6 +676,9 @@ class EnergyCenter(BasePlugin):
 
         # Generators (GREEN)
         self.__v_generators_cooling.init()
+
+        # Short valve between green and purple pipes.
+        self.__v_short_green_purple.init()
 
     def update(self):
         """Update the plugin state.
@@ -673,11 +702,15 @@ class EnergyCenter(BasePlugin):
         for index in range(self.__heat_pumps_count):
             self.__heat_pumps[self.__heat_pump_orders[self.__day_order][index]].set_mode(self.__heat_pump_mode)
             self.__heat_pumps[self.__heat_pump_orders[self.__day_order][index]].set_power(self.__heat_pump_power)
+
+            # Update the heat pump groups.
+            self.__heat_pumps[self.__heat_pump_orders[self.__day_order][index]].update()
         # -----
 
-        # Update the heat pump groups.
-        for index in range(self.__heat_pumps_count):
-            self.__heat_pumps[self.__heat_pump_orders[self.__day_order][index]].update()
+        # Boilers (RED)
+        for boiler in self.__boilers:
+            if boiler is not None:
+                boiler.update()
 
         self.__v_foyer.update()
         self.__v_underfloor_heating_trestle.update()
@@ -699,15 +732,25 @@ class EnergyCenter(BasePlugin):
         # Generator
         self.__v_generators_cooling.update()
 
+        # Short valve between green and purple pipes.
+        self.__v_short_green_purple.update()
+
     def shutdown(self):
         """Shutting down the plugin.
         """
 
         self.__logger.info("Shutting down the {}".format(self.name))
-        for heat_pump in self.__heat_pumps:
-            heat_pump.shutdown()
 
-        #
+        # Shutdown in order the heatpumps.
+        for index in range(self.__heat_pumps_count):
+            self.__heat_pumps[self.__heat_pump_orders[self.__day_order][index]].shutdown()
+
+        # Boilers (RED)
+        for boiler in self.__boilers:
+            if boiler is not None:
+                boiler.shutdown()
+
+        # Valves
         self.__v_foyer.shutdown()
         self.__v_underfloor_heating_trestle.shutdown()
         self.__v_underfloor_heating_pool.shutdown()
@@ -727,5 +770,8 @@ class EnergyCenter(BasePlugin):
 
         # Generator
         self.__v_generators_cooling.shutdown()
+
+        # Short valve between green and purple pipes.
+        self.__v_short_green_purple.shutdown()
 
 #endregion

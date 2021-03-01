@@ -106,6 +106,15 @@ class Valve(BaseDevice):
     def __init__(self, **config):
         super().__init__(config)
 
+        # Create logger.
+        self.__logger = get_logger(__name__)
+        self.__logger.info("Starting up the: {}".format(self.name))
+
+        self.__valve_state = StateMachine(ValveState.Wait)
+        self.__valve_state.set_state(ValveState.Wait)
+
+        self.__move_timer = Timer()
+
     def __del__(self):
         """Destructor
         """
@@ -183,14 +192,8 @@ class Valve(BaseDevice):
         """Init the valve.
         """
 
-        # Create logger.
-        self.__logger = get_logger(__name__)
-        self.__logger.info("Starting up the: {}".format(self.name))
+        pass
 
-        self.__valve_state = StateMachine(ValveState.Wait)
-        self.__valve_state.set_state(ValveState.Wait)
-
-        self.__move_timer = Timer()
 
     def shutdown(self):
         """Shutdown the valve.
