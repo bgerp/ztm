@@ -25,7 +25,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import time
 from functools import wraps
 import tracemalloc
-import math
 import shutil
 
 #region File Attributes
@@ -134,60 +133,3 @@ def disk_size():
     total, used, free = shutil.disk_usage("/")
 
     return (total, used, free)
-
-def l_scale(target, in_limit, out_limit):
-    """Linear scaling function.
-
-    Parameters
-    ----------
-    target : float
-        Logger instance.
-    in_limit : Array
-        Array of two elements with minimum and maximum.
-    out_limit : Array
-        Array of two elements with minimum and maximum.
-
-    Returns
-    -------
-    float
-        Scaled value.
-    """
-
-    return (target - in_limit[0]) * (out_limit[1] - out_limit[0]) / \
-        (in_limit[1] - in_limit[0]) + out_limit[0]
-
-def to_deg(rad):
-    """"Radians to Degree."""
-
-    return rad * (180.0 / math.pi)
-
-def to_rad(deg):
-    """Degrees to Radians."""
-
-    return deg * (math.pi / 180.0)
-
-def shadow_length(height, alpha):
-    """Length of the shadow.
-        This simple online calculator gives a vertical object
-        shadow length for specified day and geographic coordinate.
-        The calculator uses Sun position algorithm to calculate sun altitude.
-
-        Then it uses this formula to calculate shadow length:
-
-        L = h/tan(alpha),
-
-        where
-        h - object height,
-        a - angle between Sun and horizon.
-
-        @see https://planetcalc.com/1875/
-
-        Parameters
-        ----------
-        height : float
-            Height of the measurted object.
-        alpha : float
-            Angle between Sun and horizon.
-    """
-
-    return height / math.tan(alpha)
