@@ -27,7 +27,7 @@ from devices.base_device import BaseDevice
 
 from devices.utils.card_readers.card_reader_state import CardReaderState
 
-from utils.state_machine import StateMachine
+from utils.logic.state_machine import StateMachine
 
 #region File Attributes
 

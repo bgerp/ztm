@@ -24,10 +24,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from collections import deque
 
 from utils.logger import get_logger
-from utils.utils import l_scale
-from utils.state_machine import StateMachine
-from utils.timer import Timer
-from utils.temp_processor import TemperatureProcessor
+
+from utils.logic.functions import l_scale
+from utils.logic.state_machine import StateMachine
+from utils.logic.timer import Timer
+from utils.logic.temp_processor import TemperatureProcessor
 
 from plugins.base_plugin import BasePlugin
 from plugins.hvac.thermal_mode import ThermalMode

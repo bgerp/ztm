@@ -26,7 +26,7 @@ import time
 import json
 
 from utils.logger import get_logger
-from utils.timer import Timer
+from utils.logic.timer import Timer
 
 from plugins.base_plugin import BasePlugin
 from plugins.ac.security_zone import SecurityZone

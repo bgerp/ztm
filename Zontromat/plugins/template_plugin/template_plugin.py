@@ -23,7 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 from utils.logger import get_logger
-from utils.timer import Timer
+from utils.logic.timer import Timer
 
 from plugins.base_plugin import BasePlugin
 

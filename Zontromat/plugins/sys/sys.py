@@ -25,7 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import os
 
 from utils.logger import get_logger
-from utils.timer import Timer
+from utils.logic.timer import Timer
 from utils.utils import disk_size
 
 from plugins.base_plugin import BasePlugin

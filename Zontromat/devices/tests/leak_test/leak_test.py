@@ -24,8 +24,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from enum import Enum
 
-from utils.state_machine import StateMachine
-from utils.timer import Timer
+from utils.logic.state_machine import StateMachine
+from utils.logic.timer import Timer
 
 #region File Attributes
 

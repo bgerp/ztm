@@ -28,7 +28,7 @@ from plugins.base_plugin import BasePlugin
 from plugins.ac.card_state import CardState
 
 from utils.logger import get_logger
-from utils.timer import Timer
+from utils.logic.timer import Timer
 
 from data import verbal_const
 

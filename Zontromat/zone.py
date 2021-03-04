@@ -31,11 +31,10 @@ from enum import Enum
 
 from utils.settings import ApplicationSettings
 from utils.logger import get_logger
-from utils.state_machine import StateMachine
-from utils.timer import Timer
-#from utils.utils import time_usage, mem_usage, mem_time_usage
 from utils.performance_profiler import PerformanceProfiler
 
+from utils.logic.state_machine import StateMachine
+from utils.logic.timer import Timer
 from controllers.controller_factory import ControllerFactory
 
 from bgERP.bgERP import bgERP

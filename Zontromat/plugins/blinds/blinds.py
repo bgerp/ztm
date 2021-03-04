@@ -28,8 +28,8 @@ import time
 from enum import Enum
 
 from utils.logger import get_logger
-from utils.state_machine import StateMachine
-from utils.timer import Timer
+from utils.logic.state_machine import StateMachine
+from utils.logic.timer import Timer
 from utils.utils import to_rad, shadow_length
 
 from plugins.base_plugin import BasePlugin
