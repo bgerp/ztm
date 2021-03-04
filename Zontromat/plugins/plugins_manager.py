@@ -331,9 +331,18 @@ class PluginsManager:
             register.update_handlers = self.__sys_enabled
 
         # only for test purposes.
-        # name = "ec"
+        # name = "ecc"
         # self.__plugins[name] = self.__load_plugin(name)
         # self.__plugins[name].init()
+
+        # name = "echp"
+        # self.__plugins[name] = self.__load_plugin(name)
+        # self.__plugins[name].init()
+
+        # name = "ecd"
+        # self.__plugins[name] = self.__load_plugin(name)
+        # self.__plugins[name].init()
+
 
 #endregion
 
