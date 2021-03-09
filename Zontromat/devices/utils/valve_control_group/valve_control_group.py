@@ -27,7 +27,7 @@ from enum import Enum
 
 from utils.logger import get_logger
 
-from devices.base_device import BaseDevice
+from plugins.base_plugin import BasePlugin
 
 from services.global_error_handler.global_error_handler import GlobalErrorHandler
 
@@ -70,7 +70,7 @@ __class_name__ = "EnergyCenter"
 
 #endregion
 
-class ValveControlGroup(BaseDevice):
+class ValveControlGroup(BasePlugin):
 
 #region Attributes
 
@@ -236,6 +236,7 @@ class ValveControlGroup(BaseDevice):
             ValveControlGroup: Instance of the control group.
         """
 
+
         controller = None
         if "controller" in kwargs:
             controller = kwargs["controller"]
@@ -243,6 +244,10 @@ class ValveControlGroup(BaseDevice):
         registers = None
         if "registers" in kwargs:
             registers = kwargs["registers"]
+
+        key = None
+        if "key" in kwargs:
+            key = kwargs["key"]
 
         group_name = None
         if "name" in kwargs:
@@ -266,7 +271,7 @@ class ValveControlGroup(BaseDevice):
 
         f_valves = []
         for name in fw_valves:
-            f_valves.append(Valve(name=name, controller=controller, registers=registers))
+            f_valves.append(Valve(name=name, controller=controller, registers=registers, key="{}.{}".format(key, name)))
 
         r_valves = []
         for name in rev_valves:

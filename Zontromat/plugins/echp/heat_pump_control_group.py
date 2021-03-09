@@ -29,7 +29,7 @@ from utils.logger import get_logger
 from utils.logic.timer import Timer
 from utils.logic.state_machine import StateMachine
 
-from devices.base_device import BaseDevice
+from plugins.base_plugin import BasePlugin
 
 from devices.no_vendors.no_vendor_5.heat_pump import HeatPump, HeatPumpMode
 from devices.no_vendors.no_vendor_4.water_pump import WaterPump
@@ -68,7 +68,7 @@ __status__ = "Debug"
 
 #endregion
 
-class HeatPumpControllGroup(BaseDevice):
+class HeatPumpControllGroup(BasePlugin):
 
 #region Attributes
 
@@ -117,39 +117,40 @@ class HeatPumpControllGroup(BaseDevice):
 
         # Valve group cold buffer. (BLUE)
         self.__vcg_cold_buff = ValveControlGroup.create(\
-            name="{}_vcg_cold_buff".format(self.name),
-            fw_valves=["{}_v_cold_buff_input".format(self.name), "{}_v_cold_buff_output".format(self.name)],
-            rev_valves=["{}_v_cold_buff_short".format(self.name)],
+            name="vcg_cold_buff",
+            fw_valves=["v_cold_buff_input", "v_cold_buff_output"],
+            rev_valves=["v_cold_buff_short"],
             controller=self._controller,
-            registers=self._registers)
+            registers=self._registers,
+            key="{}.cold_buf".format(self._key))
 
         # Valve group cold geo. (GREEN)
         self.__vcg_cold_geo = ValveControlGroup.create(\
-            name="{}_vcg_cold_geo".format(self.name),
-            fw_valves=["{}_v_cold_geo_input".format(self.name), "{}_v_cold_geo_output".format(self.name)],
-            rev_valves=["{}_v_cold_geo_short".format(self.name)],
+            name="vcg_cold_geo",
+            fw_valves=["v_cold_geo_input", "v_cold_geo_output"],
+            rev_valves=["v_cold_geo_short"],
             controller=self._controller,
             registers=self._registers)
 
         # Valve group warm geo. (GREEN)
         self.__vcg_warm_geo = ValveControlGroup.create(\
-            name="{}_vcg_warm_geo".format(self.name),
-            fw_valves=["{}_v_warm_geo_input".format(self.name), "{}_v_warm_geo_output".format(self.name)],
-            rev_valves=["{}_v_warm_geo_short".format(self.name)],
+            name="vcg_warm_geo",
+            fw_valves=["v_warm_geo_input", "v_warm_geo_output"],
+            rev_valves=["v_warm_geo_short"],
             controller=self._controller,
             registers=self._registers)
 
         # Valve group warm floor. (PURPLE)
         self.__vcg_warm_floor = ValveControlGroup.create(\
-            name="{}_vcg_warm_floor".format(self.name),
-            fw_valves=["{}_v_warm_floor_input".format(self.name), "{}_v_warm_floor_output".format(self.name)],
-            rev_valves=["{}_v_warm_floor_short".format(self.name)],
+            name="vcg_warm_floor",
+            fw_valves=["v_warm_floor_input", "v_warm_floor_output"],
+            rev_valves=["v_warm_floor_short"],
             controller=self._controller,
             registers=self._registers)
 
-        self.__cold_water_pump = WaterPump(name="{}_wp_cold".format(self.name), controller=self._controller, registers=self._registers)
-        self.__hot_water_pump = WaterPump(name="{}_wp_hot".format(self.name), controller=self._controller, registers=self._registers)
-        self.__warm_water_pump = WaterPump(name="{}_wp_warm".format(self.name), controller=self._controller, registers=self._registers)
+        self.__cold_water_pump = WaterPump(name="wp_cold", controller=self._controller, registers=self._registers)
+        self.__hot_water_pump = WaterPump(name="wp_hot", controller=self._controller, registers=self._registers)
+        self.__warm_water_pump = WaterPump(name="wp_warm", controller=self._controller, registers=self._registers)
 
         self.__heat_pump = HeatPump(name=self._config["name"], controller=self._controller, registers=self._registers)
 

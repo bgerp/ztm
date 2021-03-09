@@ -22,20 +22,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 
-import time
-import json
+# import time
+# import json
 from datetime import date
-from enum import Enum
+# from enum import Enum
 
 from utils.logger import get_logger
+from utils.logic.functions import rotate_list
 #from utils.logic.timer import Timer
 #from utils.logic.state_machine import StateMachine
 
 from plugins.base_plugin import BasePlugin
 from plugins.echp.heat_pump_control_group import HeatPumpControllGroup
-from devices.utils.valve_control_group.valve_control_group import ValveControlGroup
 
-from devices.no_vendors.no_vendor_3.valve import Valve
 from devices.no_vendors.no_vendor_5.heat_pump import HeatPumpMode
 
 from services.global_error_handler.global_error_handler import GlobalErrorHandler
@@ -85,6 +84,42 @@ class EnergyCenterHeatpump(BasePlugin):
     """Logger
     """
 
+    __heat_pump = None
+    """Heat pump.
+    """
+
+    __heat_pump_orders = []
+    """Het pump priority order.
+    """
+
+    __day_order = -1
+    """Day order index.
+    """
+
+    __interval_step = 3
+    """Interval step.
+    """
+
+    __cold_interval = 0
+    """Cold interval.
+    """
+
+    __hot_interval = 0
+    """Hot interval.
+    """
+
+#endregion
+
+#region Attributes Registers Values
+
+    __heat_pumps_count = 3
+    """Het pump count.
+    """
+
+    __heat_pump_index = 0
+    """Heat pump index.
+    """
+
     __cold_min = 5
     """Cold water minimum.
     """
@@ -101,24 +136,12 @@ class EnergyCenterHeatpump(BasePlugin):
     """Hot water maximum.
     """
 
-    __cold_interval = 0
-    """Cold interval.
-    """
-
-    __hot_interval = 0
-    """Hot interval.
-    """
-
     __temp_cold = 0
     """Temperature cold water.
     """
 
     __temp_hot = 0
     """Temperature hot water.
-    """
-
-    __day_order = -1
-    """Day order index.
     """
 
     __winter_power = 0
@@ -141,25 +164,6 @@ class EnergyCenterHeatpump(BasePlugin):
     """Heat pump run flag.
     """
 
-    __interval_step = 3
-    """Interval step.
-    """
-
-    __heat_pump_orders = []
-    """Het pump priority order.
-    """
-
-    __heat_pump = None
-    """Heat pump.
-    """
-
-    __heat_pumps_count = 3
-    """Het pump count.
-    """
-
-    __heat_pump_index = 0
-    """Heat pump index.
-    """    
 
 #endregion
 
@@ -178,8 +182,11 @@ class EnergyCenterHeatpump(BasePlugin):
         self.__logger = get_logger(__name__)
         self.__logger.info("Starting up the: {}".format(self.name))
 
-        # TODO: Add index to name. Get count of all pumps.
-        self.__heat_pump = HeatPumpControllGroup(name="HP1", controller=self._controller, registers=self._registers)
+        self.__heat_pump = HeatPumpControllGroup(
+            name="HeatPumpControllGroup",
+            controller=self._controller,
+            registers=self._registers,
+            key="{}.hpcg".format(self._key))
 
     def __del__(self):
         """Destructor
@@ -194,20 +201,61 @@ class EnergyCenterHeatpump(BasePlugin):
         if self.__heat_pump is not None:
             del self.__heat_pump
 
-#region Private Methods
+#region Properties
 
-    def __rotate_list(self, l, n):
-        """Rotate list.
-
-        Args:
-            l (list): Target list.
-            n (int): Rotations count.
-
-        Returns:
-            list: Rotated list.
+    @property
+    def temp_cold(self):
+        """Cold water temperature.
         """
 
-        return l[-n:] + l[:-n]
+        return self.__temp_cold
+
+    @temp_cold.setter
+    def temp_cold(self, value):
+        """Cold water temperature.
+        """
+
+        if self.__temp_cold == value:
+            return
+
+        temp_value = value
+
+        if temp_value < self.__cold_min:
+            temp_value = self.__cold_min
+
+        if temp_value > self.__cold_max:
+            temp_value = self.__cold_max
+
+        self.__temp_cold = temp_value
+
+    @property
+    def temp_hot(self):
+        """Hot water temperature.
+        """
+
+        return self.__temp_hot
+
+    @temp_hot.setter
+    def temp_hot(self, value):
+        """Hot water temperature.
+        """
+
+        if self.__temp_hot == value:
+            return
+
+        temp_value = value
+
+        if temp_value < self.__hot_min:
+            temp_value = self.__hot_min
+
+        if temp_value > self.__hot_max:
+            temp_value = self.__hot_max
+
+        self.__temp_hot = temp_value
+
+#endregion
+
+#region Private Methods
 
     def __generate_order(self):
 
@@ -219,7 +267,7 @@ class EnergyCenterHeatpump(BasePlugin):
 
         for index in range(self.__heat_pumps_count):
 
-            temp_list = self.__rotate_list(first_order, index)
+            temp_list = rotate_list(first_order, index)
 
             self.__heat_pump_orders.append(temp_list.copy())
 
@@ -232,9 +280,9 @@ class EnergyCenterHeatpump(BasePlugin):
 
         days = -1
 
-        d0 = date(1970, 1, 1)
-        d1 = date.today()
-        delta = d1 - d0
+        day_0 = date(1970, 1, 1)
+        day_1 = date.today()
+        delta = day_1 - day_0
         days = delta.days
 
         return days
@@ -264,15 +312,23 @@ class EnergyCenterHeatpump(BasePlugin):
         """Update cold temperature.
         """
 
-        # Тези температури ще се вземат или от bgERP или от директно свързаните датчици към Зонтромат или от датчиците на машините на техните съответни входове.
-        pass
+        # Тези температури ще се вземат:
+        # или от bgERP
+        # или от директно свързаните датчици към Зонтромат
+        # или от датчиците на машините на техните съответни входове.
+
+        self.temp_cold = 2.5
 
     def __update_temp_hot(self):
         """Update hotwater temperature.
         """
 
-        # Тези температури ще се вземат или от bgERP или от директно свързаните датчици към Зонтромат или от датчиците на машините на техните съответни входове.
-        pass
+        # Тези температури ще се вземат
+        # или от bgERP
+        # или от директно свързаните датчици към Зонтромат
+        # или от датчиците на машините на техните съответни входове.
+
+        self.temp_hot = 42.5
 
     def __update_winter_power(self):
         """Update winter power.
@@ -334,59 +390,177 @@ class EnergyCenterHeatpump(BasePlugin):
 
 #endregion
 
-#region Properties
+#region Registers Interface
 
-    @property
-    def temp_cold(self):
-        """Cold water temperature.
+    def __hp_count_cb(self, register):
+        """Heat pump control group count callback.
+
+        Args:
+            register (Register): Register container.
         """
 
-        return self.__temp_cold
+        # Check data type.
+        if not register.data_type == "int":
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
 
-    @temp_cold.setter
-    def temp_cold(self, value):
-        """Cold water temperature.
+        if register.value < 0:
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
+            return
+
+        self.__heat_pumps_count = register.value
+
+    def __hp_index_cb(self, register):
+        """Heat pump control group index callback.
+
+        Args:
+            register (Register): Register container.
         """
 
-        temp_value = value
+        # Check data type.
+        if not register.data_type == "int":
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
 
-        if temp_value < self.__cold_min:
-            temp_value = self.__cold_min
+        if register.value < 0:
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
+            return
 
-        if temp_value > self.__cold_max:
-            temp_value = self.__cold_max
+        self.__heat_pump_index = register.value
 
-        self.__temp_cold = temp_value
+    def __hp_cold_min_cb(self, register):
+        """Heat pump control group cold minimum callback.
 
-    @property
-    def temp_hot(self):
-        """Hot water temperature.
+        Args:
+            register (Register): Register container.
         """
 
-        return self.__temp_hot
+        # Check data type.
+        if not register.data_type == "int":
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
 
-    @temp_hot.setter
-    def temp_hot(self, value):
-        """Hot water temperature.
+        self.__cold_min = register.value
+
+    def __hp_cold_max_cb(self, register):
+        """Heat pump control group cold maximum callback.
+
+        Args:
+            register (Register): Register container.
         """
 
-        temp_value = value
+        # Check data type.
+        if not register.data_type == "int":
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
 
-        if temp_value < self.__hot_min:
-            temp_value = self.__hot_min
+        self.__cold_min = register.value
 
-        if temp_value > self.__hot_max:
-            temp_value = self.__hot_max
+    def __hp_hot_min_cb(self, register):
+        """Heat pump control group hot maximum callback.
 
-        self.__temp_hot = temp_value
+        Args:
+            register (Register): Register container.
+        """
+
+        # Check data type.
+        if not register.data_type == "int":
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        self.__hot_min = register.value
+
+    def __hp_hot_max_cb(self, register):
+        """Heat pump control group hot maximum callback.
+
+        Args:
+            register (Register): Register container.
+        """
+
+        # Check data type.
+        if not register.data_type == "int":
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        self.__hot_max = register.value
+
+    def __init_registers_cb(self):
+        """Initialize the registers callbacks.
+        """
+
+        hp_count = self._registers.by_name("{}.hp.count".format(self._key))
+        if hp_count is not None:
+            hp_count.update_handlers = self.__hp_count_cb
+            hp_count.update()
+
+        hp_index = self._registers.by_name("{}.hp.index".format(self._key))
+        if hp_index is not None:
+            hp_index.update_handlers = self.__hp_index_cb
+            hp_index.update()
+
+        hp_cold_min = self._registers.by_name("{}.hp.cold_min".format(self._key))
+        if hp_cold_min is not None:
+            hp_cold_min.update_handlers = self.__hp_cold_min_cb
+            hp_cold_min.update()
+
+        hp_cold_max = self._registers.by_name("{}.hp.cold_max".format(self._key))
+        if hp_cold_max is not None:
+            hp_cold_max.update_handlers = self.__hp_cold_max_cb
+            hp_cold_max.update()
+
+        hp_hot_min = self._registers.by_name("{}.hp.hot_min".format(self._key))
+        if hp_hot_min is not None:
+            hp_hot_min.update_handlers = self.__hp_hot_min_cb
+            hp_hot_min.update()
+
+        hp_hot_max = self._registers.by_name("{}.hp.hot_max".format(self._key))
+        if hp_hot_max is not None:
+            hp_hot_max.update_handlers = self.__hp_hot_max_cb
+            hp_hot_max.update()
+
+    def __update_registers(self):
+
+        # Update machine power.
+        hp_power = self._registers.by_name("{}.hp.power".format(self._key))
+        if hp_power is not None:
+            hp_power.value = self.__heat_pump_power
+
+        # Update machine mode.
+        hp_mode = self._registers.by_name("{}.hp.mode".format(self._key))
+        if hp_mode is not None:
+            hp_mode.value = self.__heat_pump_mode
+
+        hp_mode = self._registers.by_name("{}.hp.run".format(self._key))
+        if hp_mode is not None:
+            hp_mode.value = self.__heat_pump_run
 
 #endregion
 
 #region Public Methods
 
+    def test_method(self, arg1, arg2):
+        """Test method for demonstrating docstring.
+
+        Args:
+            arg1 (int): Argument one.
+            arg2 (str): Argument two.
+
+        Returns:
+            int: Returned result.
+        """
+
+        variable1 = 0
+
+
+        return variable1
+
     def init(self):
         """Init the plugin.
         """
+
+        self.__init_registers_cb()
+
+        self.__generate_order()
 
         # Set default values for temperatures.
         self.temp_cold = ((self.__cold_max - self.__cold_min) / 2) + self.__cold_min
@@ -395,8 +569,6 @@ class EnergyCenterHeatpump(BasePlugin):
         # Set intervals.
         self.__cold_interval = (self.__cold_max - self.__cold_min) / self.__interval_step
         self.__hot_interval = (self.__hot_max - self.__hot_min) / self.__interval_step
-
-        self.__generate_order()
 
         # Heat Pumps
         self.__heat_pump.init()
@@ -423,6 +595,8 @@ class EnergyCenterHeatpump(BasePlugin):
         self.__heat_pump.set_mode(self.__heat_pump_mode)
         self.__heat_pump.set_power(self.__heat_pump_power)
         self.__heat_pump.update()
+
+        self.__update_registers()
 
     def shutdown(self):
         """Shutting down the plugin.

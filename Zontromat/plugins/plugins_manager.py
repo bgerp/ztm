@@ -98,7 +98,7 @@ class PluginsManager:
 
 #endregion
 
-#region Private Methods
+#region Private Methods Enable Handlers
 
     def __prepare_config(self, name, key):
         """Prepare configuration of the plugin.
@@ -292,6 +292,58 @@ class PluginsManager:
             self.__plugins[name].shutdown()
             del self.__plugins[name]
 
+    def __ecc_enabled(self, register):
+
+        # Check data type.
+        if not register.data_type == "bool":
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        name = register.base_name
+        if register.value and name not in self.__plugins:
+            self.__plugins[name] = self.__load_plugin(name)
+            self.__plugins[name].init()
+
+        elif not register.value and name in self.__plugins:
+            self.__plugins[name].shutdown()
+            del self.__plugins[name]
+
+    def __ecd_enabled(self, register):
+
+        # Check data type.
+        if not register.data_type == "bool":
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        name = register.base_name
+        if register.value and name not in self.__plugins:
+            self.__plugins[name] = self.__load_plugin(name)
+            self.__plugins[name].init()
+
+        elif not register.value and name in self.__plugins:
+            self.__plugins[name].shutdown()
+            del self.__plugins[name]
+
+    def __echp_enabled(self, register):
+
+        # Check data type.
+        if not register.data_type == "bool":
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        name = register.base_name
+        if register.value and name not in self.__plugins:
+            self.__plugins[name] = self.__load_plugin(name)
+            self.__plugins[name].init()
+
+        elif not register.value and name in self.__plugins:
+            self.__plugins[name].shutdown()
+            del self.__plugins[name]
+
+#endregion
+
+#region Private Methods
+
     def __add_handlers(self):
 
         names = self.__list_plugins()
@@ -330,19 +382,23 @@ class PluginsManager:
         if register is not None:
             register.update_handlers = self.__sys_enabled
 
-        # only for test purposes.
-        # name = "ecc"
-        # self.__plugins[name] = self.__load_plugin(name)
-        # self.__plugins[name].init()
+        register = self.__registers.by_name("ecc.enabled")
+        if register is not None:
+            register.update_handlers = self.__ecc_enabled
+            # only for test purposes.
+            # register.update()
 
-        # name = "echp"
-        # self.__plugins[name] = self.__load_plugin(name)
-        # self.__plugins[name].init()
+        register = self.__registers.by_name("ecd.enabled")
+        if register is not None:
+            register.update_handlers = self.__ecd_enabled
+            # only for test purposes.
+            # register.update()
 
-        # name = "ecd"
-        # self.__plugins[name] = self.__load_plugin(name)
-        # self.__plugins[name].init()
-
+        register = self.__registers.by_name("echp.enabled")
+        if register is not None:
+            register.update_handlers = self.__echp_enabled
+            # only for test purposes.
+            register.update()
 
 #endregion
 

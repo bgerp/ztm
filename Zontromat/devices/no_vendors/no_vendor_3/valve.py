@@ -116,6 +116,9 @@ class Valve(BaseDevice):
 
         self.__move_timer = Timer()
 
+        if "key" in config:
+            self.__key = config["key"]
+
     def __del__(self):
         """Destructor
         """
