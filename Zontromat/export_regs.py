@@ -1430,6 +1430,124 @@ def __add_registers():
 
 #endregion
 
+#region Energy Center Common
+
+    register = Register("ecc.enabled")
+    register.scope = Scope.System
+    register.plugin_name = "Energy Center Common"
+    register.description = "Plugin enabled"
+    register.range = __range["BOOL"]
+    register.value = True
+    __registers.append(register)
+
+#endregion
+
+#region Energy Center Distribution
+
+    register = Register("ecd.enabled")
+    register.scope = Scope.System
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "Plugin enabled"
+    register.range = __range["BOOL"]
+    register.value = True
+    __registers.append(register)
+
+#endregion
+
+#region Energy Center Heat Pump controller (echp)
+
+    # Input registers.
+
+    # Count of the heat pump control groups.
+    register = Register("echp.hp.count")
+    register.scope = Scope.System
+    register.plugin_name = "ECHP"
+    register.description = "Energy Center Heat Pump machines count"
+    register.range = "0/"
+    register.value = 3
+    __registers.append(register)
+
+    # Index of the heat pump control group.
+    register = Register("echp.hp.index")
+    register.scope = Scope.System
+    register.plugin_name = "ECHP"
+    register.description = "Energy Center Heat Pump machine index"
+    register.range = "0/"
+    register.value = 0
+    __registers.append(register)
+
+    # Cold minimum of the heat pump control group.
+    register = Register("echp.hp.cold_min")
+    register.scope = Scope.System
+    register.plugin_name = "ECHP"
+    register.description = "Energy Center Heat Pump cold minimum"
+    register.range = "3.0/8.0"
+    register.value = 5
+    __registers.append(register)
+
+    # Cold maximum of the heat pump control group.
+    register = Register("echp.hp.cold_max")
+    register.scope = Scope.System
+    register.plugin_name = "ECHP"
+    register.description = "Energy Center Heat Pump cold maximum"
+    register.range = "3.0/8.0"
+    register.value = 7
+    __registers.append(register)
+
+    # Hot minimum of the heat pump control group.
+    register = Register("echp.hp.hot_min")
+    register.scope = Scope.System
+    register.plugin_name = "ECHP"
+    register.description = "Energy Center Heat Pump hot minimum"
+    register.range = "40.0/47.0"
+    register.value = 41.0
+    __registers.append(register)
+
+    # Hot maximum of the heat pump control group.
+    register = Register("echp.hp.hot_max")
+    register.scope = Scope.System
+    register.plugin_name = "ECHP"
+    register.description = "Energy Center Heat Pump hot maximum"
+    register.range = "40.0/47.0"
+    register.value = 46.0
+    __registers.append(register)
+
+    # Output registers.
+
+    register = Register("echp.hp.power")
+    register.scope = Scope.System
+    register.plugin_name = "ECHP"
+    register.description = "The power of machine"
+    register.range = "-100/100"
+    register.value = 0
+    __registers.append(register)
+
+    register = Register("echp.hp.mode")
+    register.scope = Scope.System
+    register.plugin_name = "ECHP"
+    register.description = "The mode of the machine"
+    register.range = ""
+    register.value = 0
+    __registers.append(register)
+
+    register = Register("echp.hp.run")
+    register.scope = Scope.Device
+    register.plugin_name = "ECHP"
+    register.description = "The state of the machine"
+    register.range = ""
+    register.value = 0
+    __registers.append(register)
+
+    register = Register("echp.enabled")
+    register.scope = Scope.System
+    register.plugin_name = "Energy Center Heat Pump"
+    register.description = "Plugin enabled"
+    register.range = __range["BOOL"]
+    register.value = True
+    __registers.append(register)
+
+#endregion
+
 def main():
     global __registers, __range
 
