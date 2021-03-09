@@ -148,11 +148,15 @@ logs
 ### Session key
 # Session key for authorization.
 session.txt
+session*.txt
 
 ### Settings
 # Settings for the application
 settings.yaml
-settings-dump.yaml
+settings*.yaml
+
+### Evok Software
+# Evok Software application settings.
 evok.conf
 
 # End of https://www.gitignore.io/api/python,visualstudiocode
