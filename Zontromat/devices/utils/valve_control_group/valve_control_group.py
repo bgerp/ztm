@@ -94,31 +94,19 @@ class ValveControlGroup(BasePlugin):
     """Revers pumps control.
     """    
 
+    __target_position = 0
+    """Valve group target position.
+    """    
+
 #endregion
 
 #region Constructor / Destructor
 
-    def __init__(self, **config):
+    def __init__(self, **kwargs):
         """Constructor
         """
 
-        super().__init__(config)
-
-        # Create logger.
-        self.__logger = get_logger(__name__)
-        self.__logger.info("Starting up the: {}".format(self.name))
-
-        if "fw_valves" in config:
-            self.__fw_valves = config["fw_valves"]
-
-        if "rev_valves" in config:
-            self.__rev_valves = config["rev_valves"]
-
-        if "fw_pumps" in config:
-            self.__fw_pumps = config["fw_pumps"]
-
-        if "rev_pumps" in config:
-            self.__rev_pumps = config["rev_pumps"]
+        super().__init__(kwargs) 
 
     def __del__(self):
         """Destructor
@@ -147,6 +135,40 @@ class ValveControlGroup(BasePlugin):
 
 #endregion
 
+#region Properties
+
+    @property
+    def target_position(self):
+
+        return self.__target_position
+
+    @target_position.setter
+    def target_position(self, position):
+        """Set the position of the valve.
+
+        Args:
+            position (int): Position of the valve.
+        """
+
+        if position == self.__target_position:
+            return
+
+        if position > 100:
+            position = 100
+
+        elif position < 0:
+            position = 0
+
+        self.__target_position = position
+
+        for valve in self.__v_hot:
+            value.target_position = self.__target_position
+
+
+        
+
+#endregion
+
 #region Public Methods
 
     def set_position(self, position):
@@ -167,6 +189,22 @@ class ValveControlGroup(BasePlugin):
     def init(self):
         """Init the group.
         """
+
+        # Create logger.
+        self.__logger = get_logger(__name__)
+        self.__logger.info("Starting up the: {}".format(self.name))
+
+        if "fw_valves" in self._config:
+            self.__fw_valves = self._config["fw_valves"]
+
+        if "rev_valves" in self._config:
+            self.__rev_valves = self._config["rev_valves"]
+
+        if "fw_pumps" in self._config:
+            self.__fw_pumps = self._config["fw_pumps"]
+
+        if "rev_pumps" in self._config:
+            self.__rev_pumps = self._config["rev_pumps"]
 
         if self.__fw_valves is not None:
             for valve in self.__fw_valves:
@@ -236,6 +274,13 @@ class ValveControlGroup(BasePlugin):
             ValveControlGroup: Instance of the control group.
         """
 
+        group_name = ""
+        if "name" in kwargs:
+            group_name = kwargs["name"]
+
+        key = None
+        if "key" in kwargs:
+            key = kwargs["key"]
 
         controller = None
         if "controller" in kwargs:
@@ -245,13 +290,6 @@ class ValveControlGroup(BasePlugin):
         if "registers" in kwargs:
             registers = kwargs["registers"]
 
-        key = None
-        if "key" in kwargs:
-            key = kwargs["key"]
-
-        group_name = None
-        if "name" in kwargs:
-            group_name = kwargs["name"]
 
         fw_valves = []
         if "fw_valves" in kwargs:
@@ -269,27 +307,47 @@ class ValveControlGroup(BasePlugin):
         if "rev_pumps" in kwargs:
             rev_pumps = kwargs["rev_pumps"]
 
+
         f_valves = []
         for name in fw_valves:
-            f_valves.append(Valve(name=name, controller=controller, registers=registers, key="{}.{}".format(key, name)))
+            f_valves.append(
+                Valve(
+                    name=name,
+                    key="{}.{}".format(key, name),
+                    controller=controller)) # TODO: Add settings to the valve.
 
         r_valves = []
         for name in rev_valves:
-            r_valves.append(Valve(name=name, controller=controller, registers=registers))
+            r_valves.append(
+                Valve(
+                    name=name,
+                    key="{}.{}".format(key, name),
+                    controller=controller)) # TODO: Add settings to the valve.
 
         f_pumps = []
         for name in fw_pumps:
-            f_pumps.append(WaterPump(name=name, controller=controller, registers=registers))
+            f_pumps.append(
+                WaterPump(
+                    name=name,
+                    key="{}.{}".format(key, name),
+                    controller=controller)) # TODO: Add settings to the water pump.
 
         r_pumps = []
         for name in rev_pumps:
-            r_pumps.append(WaterPump(name=name, controller=controller, registers=registers))
+            r_pumps.append(
+                WaterPump(
+                    name=name,
+                    key="{}.{}".format(key, name),
+                    controller=controller)) # TODO: Add settings to the water pump.
 
-        control_group = ValveControlGroup(\
-            name=group_name,\
-            fw_valves=f_valves,\
-            rev_valves=r_valves,\
-            fw_pumps=f_pumps,\
+        control_group = ValveControlGroup(
+            name=group_name,
+            key=key,
+            registers=registers,
+            controller=controller,
+            fw_valves=f_valves,
+            rev_valves=r_valves,
+            fw_pumps=f_pumps,
             rev_pumps=r_pumps)
 
         return control_group
