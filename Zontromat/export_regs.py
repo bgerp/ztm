@@ -1482,7 +1482,7 @@ def __add_registers():
     register.plugin_name = "ECHP"
     register.description = "Energy Center Heat Pump cold minimum"
     register.range = "3.0/8.0"
-    register.value = 5
+    register.value = 5.0
     __registers.append(register)
 
     # Cold maximum of the heat pump control group.
@@ -1491,7 +1491,7 @@ def __add_registers():
     register.plugin_name = "ECHP"
     register.description = "Energy Center Heat Pump cold maximum"
     register.range = "3.0/8.0"
-    register.value = 7
+    register.value = 7.0
     __registers.append(register)
 
     # Hot minimum of the heat pump control group.

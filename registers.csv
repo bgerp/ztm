@@ -157,8 +157,8 @@ ecc.enabled,bool,true|false,Energy Center Common,system,true,Plugin enabled
 ecd.enabled,bool,true|false,Energy Center Distribution,system,true,Plugin enabled
 echp.hp.count,int,0/,ECHP,system,3,Energy Center Heat Pump machines count
 echp.hp.index,int,0/,ECHP,system,0,Energy Center Heat Pump machine index
-echp.hp.cold_min,int,3.0/8.0,ECHP,system,5,Energy Center Heat Pump cold minimum
-echp.hp.cold_max,int,3.0/8.0,ECHP,system,7,Energy Center Heat Pump cold maximum
+echp.hp.cold_min,float,3.0/8.0,ECHP,system,5.0,Energy Center Heat Pump cold minimum
+echp.hp.cold_max,float,3.0/8.0,ECHP,system,7.0,Energy Center Heat Pump cold maximum
 echp.hp.hot_min,float,40.0/47.0,ECHP,system,41.0,Energy Center Heat Pump hot minimum
 echp.hp.hot_max,float,40.0/47.0,ECHP,system,46.0,Energy Center Heat Pump hot maximum
 echp.hp.power,int,-100/100,ECHP,system,0,The power of machine
