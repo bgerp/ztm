@@ -61,28 +61,31 @@ class BasePlugin(Configuarable):
 #region Attributes
 
     _controller = None
-    """Controller"""
+    """Controller
+    """
 
-    _key = ""
-    """Key of the plugin."""
+    _registers = None
+    """Registers
+    """
 
 #endregion
 
 #region Constructor / Destructor
 
     def __init__(self, config):
-        """Constructor"""
+        """Constructor
+        """
 
         super().__init__(config)
 
-        self._key = config["key"]
-        self._registers = config["registers"]
         self._controller = config["controller"]
+        self._registers = config["registers"]
 
     def __del__(self):
-        """Destructor"""
+        """Destructor
+        """
 
-        self.shutdown()
+        super().__del__()
 
 #endregion
 
@@ -100,14 +103,6 @@ class BasePlugin(Configuarable):
 
     def shutdown(self):
         """Shutdown the device."""
-
-    def get_state(self):
-        """Return device state."""
-
-    def set_state(self, state):
-        """Set device state."""
-
-        return None
 
     def test(self):
         """Test the device."""

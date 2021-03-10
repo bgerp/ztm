@@ -59,7 +59,16 @@ class Configuarable:
 #region Attributes
 
     _config = None
-    """Configuration."""
+    """Configuration.
+    """
+
+    __key = ""
+    """Key of the plugin.
+    """
+
+    __name = ""
+    """Name
+    """    
 
 #endregion
 
@@ -69,12 +78,21 @@ class Configuarable:
     def name(self):
         """Name
 
-        Returns
-        -------
-        str
-            Name
+        Returns:
+            str: Name of the object.
         """
+
         return self.__name
+
+    @property
+    def key(self):
+        """Key
+
+        Returns:
+            str: Key of the object.
+        """
+
+        return self.__key
 
 #endregion
 
@@ -91,6 +109,9 @@ class Configuarable:
 
         if "name" in self._config:
             self.__name = self._config["name"]
+
+        if "key" in config:
+            self.__key = self._config["key"]
 
     def __del__(self):
 
