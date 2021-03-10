@@ -87,15 +87,11 @@ class WaterPump(BaseDevice):
 
 #region Constructor / Destructor
 
-    def __init__(self, **config):
+    def __init__(self, **kwargs):
         """Constructor
         """
 
-        super().__init__(config)
-
-        # Create logger.
-        self.__logger = get_logger(__name__)
-        self.__logger.info("Starting up the: {}".format(self.name))
+        super().__init__(kwargs) 
 
     def __del__(self):
         """Destructor
@@ -112,20 +108,37 @@ class WaterPump(BaseDevice):
 
     def set_debit(self, debit):
 
-        self.__debit = debit
+        if self.__debit == debit:
+            return
 
-        self.__logger.debug("Set the debit of {} to {}".format(self.name, self.__debit))
+        temp_debit = debit
+
+        if temp_debit < 0:
+            temp_debit = 0
+
+        if temp_debit > 100:
+            temp_debit = 100
+
+        self.__debit = temp_debit
 
     def init(self):
+        """Init the pump.
+        """
 
-        self.__logger.debug("Init the: {}".format(self.name))
-
-    def shutdown(self):
-
-        self.__logger.debug("Shutdown the: {}".format(self.name))
+        # Create logger.
+        self.__logger = get_logger(__name__)
+        self.__logger.info("Starting up the: {}".format(self.name))
 
     def update(self):
+        """Update the pump logic.
+        """
 
-        self.__logger.debug("The debit of {} is {}.".format(self.name, self.__debit))
+        pass
+
+    def shutdown(self):
+        """Shutdown the pump.
+        """
+
+        pass
 
 #endregion

@@ -92,15 +92,11 @@ class HeatPump(BaseDevice):
 
 #region Constructor / Destructor
 
-    def __init__(self, **config):
+    def __init__(self, **kwargs):
         """Constructor
         """
 
-        super().__init__(config)
-
-        # Create logger.
-        self.__logger = get_logger(__name__)
-        self.__logger.info("Starting up the: {}".format(self.name))
+        super().__init__(kwargs) 
 
     def __del__(self):
         """Destructor
@@ -147,9 +143,9 @@ class HeatPump(BaseDevice):
         """Init the heat pump.
         """
 
-        # print(self._key)
-
-        self.__logger.debug("Init the: {}".format(self.name))
+        # Create logger.
+        self.__logger = get_logger(__name__)
+        self.__logger.info("Starting up the: {}".format(self.name))
 
     def shutdown(self):
         """Shutdown the heat pump.
@@ -162,7 +158,7 @@ class HeatPump(BaseDevice):
         """Update heat pump state.
         """
 
-        self.__logger.debug("{} is in mode: {} and power {}".format(self.name, self.__mode.name, self.__power))
+        pass
 
 #endregion
 

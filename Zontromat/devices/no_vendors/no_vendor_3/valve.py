@@ -91,7 +91,7 @@ class Valve(BaseDevice):
     """
 
     __target_position = 0
-    
+
     __current_position = 0
 
     __valve_state = None
@@ -104,20 +104,11 @@ class Valve(BaseDevice):
 
 #region Constructor / Destructor
 
-    def __init__(self, **config):
-        super().__init__(config)
+    def __init__(self, **kwargs):
+        """Constructor
+        """
 
-        # Create logger.
-        self.__logger = get_logger(__name__)
-        self.__logger.info("Starting up the: {}".format(self.name))
-
-        self.__valve_state = StateMachine(ValveState.Wait)
-        self.__valve_state.set_state(ValveState.Wait)
-
-        self.__move_timer = Timer()
-
-        if "key" in config:
-            self.__key = config["key"]
+        super().__init__(kwargs) 
 
     def __del__(self):
         """Destructor
@@ -196,8 +187,16 @@ class Valve(BaseDevice):
         """Init the valve.
         """
 
-        pass
+        # Create logger.
+        self.__logger = get_logger(__name__)
+        self.__logger.info("Starting up the: {}".format(self.name))
 
+        self.__valve_state = StateMachine(ValveState.Wait)
+        self.__valve_state.set_state(ValveState.Wait)
+
+        self.__move_timer = Timer()
+
+        self.target_position = 0
 
     def shutdown(self):
         """Shutdown the valve.
@@ -223,7 +222,7 @@ class Valve(BaseDevice):
                 return
 
             time_to_move = self.__to_time(abs(delta_pos))
-            self.__logger.info("Time: {}".format(time_to_move))
+            self.__logger.debug("Time: {}".format(time_to_move))
 
             self.__move_timer.expiration_time = time_to_move
             self.__move_timer.update_last_time()
