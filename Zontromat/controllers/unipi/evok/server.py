@@ -115,7 +115,6 @@ class Server(HTTPServer):
         @self._app.route("/api/v1/evok/webhooks", methods=["POST"])
         def evok_webhook_post():
             """EVOK webhook."""
-            # TODO: Add authentication when requesting information.
 
             json_data = None
             registers = None
