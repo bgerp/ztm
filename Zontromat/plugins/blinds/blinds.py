@@ -283,7 +283,7 @@ class Blinds(BasePlugin):
 
     def __calc_sun_spot(self):
 
-        sun_elev_reg = self._registers.by_name(self._key + ".sun.elevation.value")
+        sun_elev_reg = self._registers.by_name(self.key + ".sun.elevation.value")
         if sun_elev_reg:
 
             if not sun_elev_reg.is_int_or_float():
@@ -292,7 +292,7 @@ class Blinds(BasePlugin):
 
             self.__sun_elev = sun_elev_reg.value
 
-        sun_azm_reg = self._registers.by_name(self._key + ".sun.azimuth.value")
+        sun_azm_reg = self._registers.by_name(self.key + ".sun.azimuth.value")
         if sun_azm_reg:
 
             if not sun_azm_reg.is_int_or_float():
@@ -340,19 +340,19 @@ class Blinds(BasePlugin):
 
         self.__calibration_state = StateMachine(CalibrationState.NONE)
 
-        input_fb = self._registers.by_name(self._key + ".input_fb")
+        input_fb = self._registers.by_name(self.key + ".input_fb")
         if input_fb is not None:
             input_fb.update_handlers = self.__input_fb_cb
 
-        output_cw = self._registers.by_name(self._key + ".output_cw")
+        output_cw = self._registers.by_name(self.key + ".output_cw")
         if output_cw is not None:
             output_cw.update_handlers = self.__output_cw_cb
 
-        output_ccw = self._registers.by_name(self._key + ".output_ccw")
+        output_ccw = self._registers.by_name(self.key + ".output_ccw")
         if output_ccw is not None:
             output_ccw.update_handlers = self.__output_ccw_cb
 
-        # position = self._registers.by_name(self._key + ".position")
+        # position = self._registers.by_name(self.key + ".position")
         # if position is not None:
         #     position.update_handlers = self.__on_new_pos
 

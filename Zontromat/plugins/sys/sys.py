@@ -189,7 +189,7 @@ class Sys(BasePlugin):
             # self.__logger.info("Info")
             # self.__logger.info(intersections)
 
-            info_message = self._registers.by_name(self._key + ".col.info_message")
+            info_message = self._registers.by_name(self.key + ".col.info_message")
             if info_message is not None:
                 info_message.value = intersections
 
@@ -197,7 +197,7 @@ class Sys(BasePlugin):
             # self.__logger.warning("Warning")
             # self.__logger.warning(intersections)
 
-            warning_message = self._registers.by_name(self._key + ".col.warning_message")
+            warning_message = self._registers.by_name(self.key + ".col.warning_message")
             if warning_message is not None:
                 warning_message.value = intersections
 
@@ -205,7 +205,7 @@ class Sys(BasePlugin):
             # self.__logger.error("Error")
             # self.__logger.error(intersections)
 
-            error_message = self._registers.by_name(self._key + ".col.error_message")
+            error_message = self._registers.by_name(self.key + ".col.error_message")
             if error_message is not None:
                 error_message.value = intersections
 
@@ -217,17 +217,17 @@ class Sys(BasePlugin):
             register.value = 0
 
             # Clear info messages.
-            info_message = self._registers.by_name(self._key + ".col.info_message")
+            info_message = self._registers.by_name(self.key + ".col.info_message")
             if info_message is not None:
                 info_message.value = {}
 
             # Clear warning messages.
-            warning_message = self._registers.by_name(self._key + ".col.warning_message")
+            warning_message = self._registers.by_name(self.key + ".col.warning_message")
             if warning_message is not None:
                 warning_message.value = {}
 
             # Clear error messages.
-            error_message = self._registers.by_name(self._key + ".col.error_message")
+            error_message = self._registers.by_name(self.key + ".col.error_message")
             if error_message is not None:
                 error_message.value = {}
 
@@ -293,13 +293,13 @@ class Sys(BasePlugin):
         self.__blink_timer = Timer(1)
 
         # Status LED blink time.
-        blink_time = self._registers.by_name(self._key + ".sl.blink_time")
+        blink_time = self._registers.by_name(self.key + ".sl.blink_time")
         if blink_time is not None:
             blink_time.update_handlers = self.__blink_time_cb
             blink_time.update()
 
         # Status LED output.
-        output = self._registers.by_name(self._key + ".sl.output")
+        output = self._registers.by_name(self.key + ".sl.output")
         if output is not None:
             output.update_handlers = self.__led_out_cb
             output.update()
@@ -309,25 +309,25 @@ class Sys(BasePlugin):
 
         self.__setup_rules()
 
-        clear_errors = self._registers.by_name(self._key + ".col.clear_errors")
+        clear_errors = self._registers.by_name(self.key + ".col.clear_errors")
         if clear_errors is not None:
             clear_errors.update_handlers = self.__clear_errors_cb
             clear_errors.value = 1
 
         # Enable info messages.
-        enable_info_msg = self._registers.by_name(self._key + ".col.info_message.enable")
+        enable_info_msg = self._registers.by_name(self.key + ".col.info_message.enable")
         if enable_info_msg is not None:
             enable_info_msg.update_handlers = self.__enable_info_msg_cb
             enable_info_msg.update()
 
         # Enable warning messages.
-        enable_wrn_msg = self._registers.by_name(self._key + ".col.warning_message.enable")
+        enable_wrn_msg = self._registers.by_name(self.key + ".col.warning_message.enable")
         if enable_wrn_msg is not None:
             enable_wrn_msg.update_handlers = self.__enable_wrn_msg_cb
             enable_wrn_msg.update()
 
         # Enable error messages.
-        enable_err_msg = self._registers.by_name(self._key + ".col.error_message.enable")
+        enable_err_msg = self._registers.by_name(self.key + ".col.error_message.enable")
         if enable_err_msg is not None:
             enable_err_msg.update_handlers = self.__enable_err_msg_cb
             enable_err_msg.update()

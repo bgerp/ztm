@@ -140,17 +140,17 @@ class Monitoring(BasePlugin):
     def __cw_leaktest_result(self, leak_liters):
 
         if leak_liters > 0:
-            register = self._registers.by_name(self._key + ".cw.leak")
+            register = self._registers.by_name(self.key + ".cw.leak")
             if register is not None:
                 register.value = leak_liters
 
     def __init_cw(self):
 
-        cw_input = self._registers.by_name(self._key + ".cw.input")
+        cw_input = self._registers.by_name(self.key + ".cw.input")
         if cw_input is not None:
             cw_input.update_handlers = self.__cw_input_cb
 
-        cw_tpl = self._registers.by_name(self._key + ".cw.tpl")
+        cw_tpl = self._registers.by_name(self.key + ".cw.tpl")
         if cw_tpl is not None:
             cw_tpl.update_handlers = self.__cw_tpl_cb
 
@@ -166,7 +166,7 @@ class Monitoring(BasePlugin):
 
     def __update_cw(self):
 
-        fm_state = self._registers.by_name(self._key + ".cw.value")
+        fm_state = self._registers.by_name(self.key + ".cw.value")
         if self.__cw_flowmetter_dev is not None and\
             fm_state is not None:
             fm_state.value = self.__cw_flowmetter_dev.get_liters()
@@ -206,17 +206,17 @@ class Monitoring(BasePlugin):
     def __hw_leaktest_result(self, leak_liters):
 
         if leak_liters > 0:
-            register = self._registers.by_name(self._key + ".hw.leak")
+            register = self._registers.by_name(self.key + ".hw.leak")
             if register is not None:
                 register.value = leak_liters
 
     def __init_hw(self):
 
-        hw_input = self._registers.by_name(self._key + ".hw.input")
+        hw_input = self._registers.by_name(self.key + ".hw.input")
         if hw_input is not None:
             hw_input.update_handlers = self.__hw_input_cb
 
-        hw_tpl = self._registers.by_name(self._key + ".hw.tpl")
+        hw_tpl = self._registers.by_name(self.key + ".hw.tpl")
         if hw_tpl is not None:
             hw_tpl.update_handlers = self.__hw_tpl_cb
 
@@ -232,7 +232,7 @@ class Monitoring(BasePlugin):
 
     def __update_hw(self):
 
-        fm_state = self._registers.by_name(self._key + ".hw.value")
+        fm_state = self._registers.by_name(self.key + ".hw.value")
         if self.__hw_flowmetter_dev is not None and\
             fm_state is not None:
             fm_state.value = self.__hw_flowmetter_dev.get_liters()
@@ -336,7 +336,7 @@ class Monitoring(BasePlugin):
 
     def __init_pa(self):
 
-        pa_enabled = self._registers.by_name(self._key + ".pa.settings")
+        pa_enabled = self._registers.by_name(self.key + ".pa.settings")
         if pa_enabled is not None:
             pa_enabled.update_handlers = self.__pa_enabled_cb
 
@@ -377,7 +377,7 @@ class Monitoring(BasePlugin):
                 "ApparentPower": self.__parameters_values["ApparentPower"]\
                 }
 
-            reg_l1 = self._registers.by_name(self._key + ".pa.l1")
+            reg_l1 = self._registers.by_name(self.key + ".pa.l1")
             if reg_l1 is not None:
                 reg_l1.value = json.dumps(l1_data)
 
@@ -402,15 +402,15 @@ class Monitoring(BasePlugin):
                 }
 
             # Update parameters in the registers.
-            reg_l1 = self._registers.by_name(self._key + ".pa.l1")
+            reg_l1 = self._registers.by_name(self.key + ".pa.l1")
             if reg_l1 is not None:
                 reg_l1.value = json.dumps(l1_data)
 
-            reg_l2 = self._registers.by_name(self._key + ".pa.l2")
+            reg_l2 = self._registers.by_name(self.key + ".pa.l2")
             if reg_l2 is not None:
                 reg_l2.value = json.dumps(l2_data)
 
-            reg_l3 = self._registers.by_name(self._key + ".pa.l3")
+            reg_l3 = self._registers.by_name(self.key + ".pa.l3")
             if reg_l3 is not None:
                 reg_l3.value = json.dumps(l3_data)
 

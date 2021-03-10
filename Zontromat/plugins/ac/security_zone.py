@@ -584,7 +584,7 @@ class SecurityZone(BasePlugin):
 
     def __set_zone_occupied(self, flag):
 
-        reg_occupation = self._registers.by_name("{}.zone_{}_occupied".format(self._key, self.__identifier))
+        reg_occupation = self._registers.by_name("{}.zone_{}_occupied".format(self.key, self.__identifier))
         if reg_occupation is not None:
             reg_occupation.value = flag
 
@@ -610,7 +610,7 @@ class SecurityZone(BasePlugin):
         self.__presence_timer = Timer(60)
 
         # Get time to open the latch.
-        time_to_open = self._registers.by_name("{}.time_to_open_{}".format(self._key, self.__identifier))
+        time_to_open = self._registers.by_name("{}.time_to_open_{}".format(self.key, self.__identifier))
         if time_to_open is not None:
             time_to_open.update_handlers = self.__time_to_open_cb
             time_to_open.update()
@@ -622,74 +622,74 @@ class SecurityZone(BasePlugin):
 
 
         # Entry reader.
-        entry_reader_enabled = self._registers.by_name("{}.entry_reader_{}.enabled".format(self._key, self.__identifier))
+        entry_reader_enabled = self._registers.by_name("{}.entry_reader_{}.enabled".format(self.key, self.__identifier))
         if entry_reader_enabled is not None:
             entry_reader_enabled.update_handlers = self.__entry_reader_cb
 
-        entry_reader_port_baudrate = self._registers.by_name("{}.entry_reader_{}.port.baudrate".format(self._key, self.__identifier))
+        entry_reader_port_baudrate = self._registers.by_name("{}.entry_reader_{}.port.baudrate".format(self.key, self.__identifier))
         if entry_reader_port_baudrate is not None:
             entry_reader_port_baudrate.update_handlers = self.__entry_reader_cb
 
-        entry_reader_port_name = self._registers.by_name("{}.entry_reader_{}.port.name".format(self._key, self.__identifier))
+        entry_reader_port_name = self._registers.by_name("{}.entry_reader_{}.port.name".format(self.key, self.__identifier))
         if entry_reader_port_name is not None:
             entry_reader_port_name.update_handlers = self.__entry_reader_cb
             entry_reader_port_name.update()
 
 
         # Exit reader.
-        exit_reader = self._registers.by_name("{}.exit_reader_{}.enabled".format(self._key, self.__identifier))
+        exit_reader = self._registers.by_name("{}.exit_reader_{}.enabled".format(self.key, self.__identifier))
         if exit_reader is not None:
             exit_reader.update_handlers = self.__exit_reader_cb
 
-        exit_reader_port_baudrate = self._registers.by_name("{}.exit_reader_{}.port.baudrate".format(self._key, self.__identifier))
+        exit_reader_port_baudrate = self._registers.by_name("{}.exit_reader_{}.port.baudrate".format(self.key, self.__identifier))
         if exit_reader_port_baudrate is not None:
             exit_reader_port_baudrate.update_handlers = self.__exit_reader_cb
 
-        exit_reader_port_name = self._registers.by_name("{}.exit_reader_{}.port.name".format(self._key, self.__identifier))
+        exit_reader_port_name = self._registers.by_name("{}.exit_reader_{}.port.name".format(self.key, self.__identifier))
         if exit_reader_port_name is not None:
             exit_reader_port_name.update_handlers = self.__exit_reader_cb
             exit_reader_port_name.update()
 
 
         # Create exit button.
-        exit_button_input = self._registers.by_name("{}.exit_button_{}.input".format(self._key, self.__identifier))
+        exit_button_input = self._registers.by_name("{}.exit_button_{}.input".format(self.key, self.__identifier))
         if exit_button_input is not None:
             exit_button_input.update_handlers = self.__exit_btn_input_cb
             exit_button_input.update()
 
         # Create window closed sensor.
-        window_closed_input = self._registers.by_name("{}.window_closed_{}.input".format(self._key, self.__identifier))
+        window_closed_input = self._registers.by_name("{}.window_closed_{}.input".format(self.key, self.__identifier))
         if window_closed_input is not None:
             window_closed_input.update_handlers = self.__window_closed_input_cb
             window_closed_input.update()
 
         # Create door closed sensor.
-        door_closed_input = self._registers.by_name("{}.door_closed_{}.input".format(self._key, self.__identifier))
+        door_closed_input = self._registers.by_name("{}.door_closed_{}.input".format(self.key, self.__identifier))
         if door_closed_input is not None:
             door_closed_input.update_handlers = self.__door_closed_input_cb
             door_closed_input.update()
 
         # Create PIR sensor.
-        pir_input = self._registers.by_name("{}.pir_{}.input".format(self._key, self.__identifier))
+        pir_input = self._registers.by_name("{}.pir_{}.input".format(self.key, self.__identifier))
         if pir_input is not None:
             pir_input.update_handlers = self.__pir_input_cb
             pir_input.update()
 
 
         # Create locking mechanism.
-        lock_mechanism_output = self._registers.by_name("{}.lock_mechanism_{}.output".format(self._key, self.__identifier))
+        lock_mechanism_output = self._registers.by_name("{}.lock_mechanism_{}.output".format(self.key, self.__identifier))
         if lock_mechanism_output is not None:
             lock_mechanism_output.update_handlers = self.__lock_mechanism_output_cb
             lock_mechanism_output.update()
 
         # Door window blind.
-        door_window_blind_output = self._registers.by_name("{}.door_window_blind_{}.output".format(self._key, self.__identifier))
+        door_window_blind_output = self._registers.by_name("{}.door_window_blind_{}.output".format(self.key, self.__identifier))
         if door_window_blind_output is not None:
             door_window_blind_output.update_handlers = self.__door_window_blind_output_cb
             door_window_blind_output.update()
 
         # Door window blind.
-        door_window_blind_value = self._registers.by_name("{}.door_window_blind_{}.value".format(self._key, self.__identifier))
+        door_window_blind_value = self._registers.by_name("{}.door_window_blind_{}.value".format(self.key, self.__identifier))
         if door_window_blind_value is not None:
             door_window_blind_value.update_handlers = self.__door_window_blind_value_cb
             door_window_blind_value.update()

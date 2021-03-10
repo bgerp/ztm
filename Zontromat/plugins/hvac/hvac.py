@@ -101,7 +101,7 @@ class HVAC(BasePlugin):
 
         ac1 = AirConditioner(\
             registers=self._registers, controller=self._controller,\
-            identifier=1, key=self._key, name="AC")
+            identifier=1, key=self.key, name="AC")
         self.__thermal_zones.append(ac1)
 
         for ac in self.__thermal_zones:

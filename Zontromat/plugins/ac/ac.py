@@ -161,7 +161,7 @@ class AccessControl(BasePlugin):
         # print(self.__last_update_cycle_attendees)
 
         # Update last 60 seconds attendee list.
-        last_minute_attendees = self._registers.by_name(self._key + ".last_update_attendees")
+        last_minute_attendees = self._registers.by_name(self.key + ".last_update_attendees")
         if last_minute_attendees is not None:
             obj = json.loads(last_minute_attendees.value)
             for attendee in self.__last_update_cycle_attendees:
@@ -179,14 +179,14 @@ class AccessControl(BasePlugin):
         self.__logger.info("Starting up the {}".format(self.name))
 
         # Card reader allowed IDs.
-        allowed_attendees = self._registers.by_name(self._key + ".allowed_attendees")
+        allowed_attendees = self._registers.by_name(self.key + ".allowed_attendees")
         if allowed_attendees is not None:
             allowed_attendees.update_handlers = self.__allowed_attendees_cb
 
         # Security zone 1.
         self.__security_zone_1 = SecurityZone(\
             registers=self._registers, controller=self._controller,\
-            identifier=1, key=self._key, name="Security Zone")
+            identifier=1, key=self.key, name="Security Zone")
 
         self.__security_zone_1.set_reader_read(self.__reader_read)
         self.__security_zone_1.init()
@@ -194,7 +194,7 @@ class AccessControl(BasePlugin):
         # Security zone 2.
         self.__security_zone_2 = SecurityZone(\
             registers=self._registers, controller=self._controller,\
-            identifier=2, key=self._key, name="Security Zone")
+            identifier=2, key=self.key, name="Security Zone")
         
         self.__security_zone_2.set_reader_read(self.__reader_read)
         self.__security_zone_2.init()

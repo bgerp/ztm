@@ -341,12 +341,12 @@ class AirConditioner(BasePlugin):
         min_temp = 2.5
         max_temp = -2.5
 
-        min_temp_reg = self._registers.by_name("{}.temp_{}.min".format(self._key, self.__identifier))
+        min_temp_reg = self._registers.by_name("{}.temp_{}.min".format(self.key, self.__identifier))
         if min_temp_reg is not None:
             if min_temp_reg.is_int_or_float():
                 min_temp = min_temp_reg.value
 
-        max_temp_reg = self._registers.by_name("{}.temp_{}.max".format(self._key, self.__identifier))
+        max_temp_reg = self._registers.by_name("{}.temp_{}.max".format(self.key, self.__identifier))
         if max_temp_reg is not None:
             if max_temp_reg.is_int_or_float():
                 max_temp = max_temp_reg.value
@@ -406,7 +406,7 @@ class AirConditioner(BasePlugin):
 
             self.__air_temp_cent_dev = DS18B20.create(\
                 "Air temperature lower",\
-                self._key + ".air_temp_cent",\
+                self.key + ".air_temp_cent",\
                 register.value,\
                 self._controller)
 
@@ -430,7 +430,7 @@ class AirConditioner(BasePlugin):
         if register.value != verbal_const.OFF and self.__air_temp_lower_dev is None:
             self.__air_temp_lower_dev = DS18B20.create(\
                 "Air temperature lower",\
-                self._key + ".air_temp_lower",\
+                self.key + ".air_temp_lower",\
                 register.value,\
                 self._controller)
 
@@ -454,7 +454,7 @@ class AirConditioner(BasePlugin):
         if register.value != verbal_const.OFF and self.__air_temp_upper_dev is None:
             self.__air_temp_upper_dev = DS18B20.create(\
                 "Air temperature upper",\
-                self._key + ".air_temp_upper",\
+                self.key + ".air_temp_upper",\
                 register.value,\
                 self._controller)
 
@@ -482,7 +482,7 @@ class AirConditioner(BasePlugin):
         if register.value != verbal_const.OFF and self.__convector_dev is None:
             self.__convector_dev = Klimafan.create(\
                 "Convector 1",\
-                "{}.convector_{}".format(self._key, self.__identifier),\
+                "{}.convector_{}".format(self.key, self.__identifier),\
                 self._registers,\
                 self._controller)
 
@@ -507,7 +507,7 @@ class AirConditioner(BasePlugin):
         if register.value != verbal_const.OFF and self.__loop1_cnt_dev is None:
             self.__loop1_cnt_dev = Flowmeter.create(\
                 "Loop 2 flowmeter",\
-                "{}.loop2_{}.cnt".format(self._key, self.__identifier),\
+                "{}.loop2_{}.cnt".format(self.key, self.__identifier),\
                 self._registers,\
                 self._controller)
 
@@ -535,7 +535,7 @@ class AirConditioner(BasePlugin):
             if "f3p146ec072600" in register.value:
                 self.__loop1_fan_dev = F3P146EC072600.create(\
                     "Loop 1 fan",\
-                    "{}.loop1_{}.fan".format(self._key, self.__identifier),\
+                    "{}.loop1_{}.fan".format(self.key, self.__identifier),\
                     self._registers,\
                     self._controller)
 
@@ -584,7 +584,7 @@ class AirConditioner(BasePlugin):
         if register.value != verbal_const.OFF and self.__loop1_temp_dev is None:
             self.__loop1_temp_dev = DS18B20.create(\
                 "Loop 1 temperature",\
-                "{}.loop1_{}.temp".format(self._key, self.__identifier),\
+                "{}.loop1_{}.temp".format(self.key, self.__identifier),\
                 register.value,\
                 self._controller)
 
@@ -605,7 +605,7 @@ class AirConditioner(BasePlugin):
         if register.value != verbal_const.OFF and self.__loop1_valve_dev is None:
             self.__loop1_valve_dev = A20M15B2C.create(\
                 "Loop 1 valve",\
-                "{}.loop1_{}.valve".format(self._key, self.__identifier),\
+                "{}.loop1_{}.valve".format(self.key, self.__identifier),\
                 self._registers,\
                 self._controller)
 
@@ -630,7 +630,7 @@ class AirConditioner(BasePlugin):
         if register.value != verbal_const.OFF and self.__loop2_cnt_dev is None:
             self.__loop2_cnt_dev = Flowmeter.create(\
                 "Loop 2 flowmeter",\
-                "{}.loop2_{}.cnt".format(self._key, self.__identifier),\
+                "{}.loop2_{}.cnt".format(self.key, self.__identifier),\
                 self._registers,\
                 self._controller)
 
@@ -657,7 +657,7 @@ class AirConditioner(BasePlugin):
             if "f3p146ec072600" in register.value:
                 self.__loop2_fan_dev = F3P146EC072600.create(\
                     "Loop 2 fan",\
-                    "{}.loop2_{}.fan".format(self._key, self.__identifier),\
+                    "{}.loop2_{}.fan".format(self.key, self.__identifier),\
                     self._registers,\
                     self._controller)
 
@@ -706,7 +706,7 @@ class AirConditioner(BasePlugin):
         if register.value != verbal_const.OFF and self.__loop2_temp_dev is None:
             self.__loop2_temp_dev = DS18B20.create(\
                 "Loop 2 temperature",\
-                "{}.loop2_{}.temp".format(self._key, self.__identifier),\
+                "{}.loop2_{}.temp".format(self.key, self.__identifier),\
                 register.value,\
                 self._controller)
 
@@ -727,7 +727,7 @@ class AirConditioner(BasePlugin):
         if register.value != verbal_const.OFF and self.__loop2_valve_dev is None:
             self.__loop2_valve_dev = A20M15B2C.create(\
                 "Loop 2 valve",\
-                "{}.loop2_{}.valve".format(self._key, self.__identifier),\
+                "{}.loop2_{}.valve".format(self.key, self.__identifier),\
                 self._registers,\
                 self._controller)
 
@@ -784,27 +784,27 @@ class AirConditioner(BasePlugin):
             loop2_temp_value = self.__loop2_temp_dev.value()
 
         # 2. If the folowing register is available then set ist value to the thermometers value.
-        air_temp_lower = self._registers.by_name("{}.air_temp_lower_{}.value".format(self._key, self.__identifier))
+        air_temp_lower = self._registers.by_name("{}.air_temp_lower_{}.value".format(self.key, self.__identifier))
         if air_temp_lower is not None:
             air_temp_lower.value = air_temp_lower_value
 
         # 2. If the folowing register is available then set ist value to the thermometers value.
-        air_temp_cent = self._registers.by_name("{}.air_temp_cent_{}.value".format(self._key, self.__identifier))
+        air_temp_cent = self._registers.by_name("{}.air_temp_cent_{}.value".format(self.key, self.__identifier))
         if air_temp_cent is not None:
             air_temp_cent.value = air_temp_cent_value
 
         # 2. If the folowing register is available then set ist value to the thermometers value.
-        air_temp_upper = self._registers.by_name("{}.air_temp_upper_{}.value".format(self._key, self.__identifier))
+        air_temp_upper = self._registers.by_name("{}.air_temp_upper_{}.value".format(self.key, self.__identifier))
         if air_temp_upper is not None:
             air_temp_upper.value = air_temp_upper_value
 
         # 2. If the folowing register is available then set ist value to the thermometers value.
-        loop1_temp = self._registers.by_name("{}.loop1_{}.temp.value".format(self._key, self.__identifier))
+        loop1_temp = self._registers.by_name("{}.loop1_{}.temp.value".format(self.key, self.__identifier))
         if loop1_temp is not None:
             loop1_temp.value = loop1_temp_value
 
         # 2. If the folowing register is available then set ist value to the thermometers value.
-        loop2_temp = self._registers.by_name("{}.loop2_{}.temp.value".format(self._key, self.__identifier))
+        loop2_temp = self._registers.by_name("{}.loop2_{}.temp.value".format(self.key, self.__identifier))
         if loop2_temp is not None:
             loop2_temp.value = loop2_temp_value
 
@@ -832,7 +832,7 @@ class AirConditioner(BasePlugin):
         # Request: Eml6419
         down_limit_value = 10
 
-        down_limit = self._registers.by_name("{}.loop1_{}.temp.down_limit".format(self._key, self.__identifier))
+        down_limit = self._registers.by_name("{}.loop1_{}.temp.down_limit".format(self.key, self.__identifier))
         if down_limit is not None:
             down_limit_value = down_limit.value
 
@@ -933,48 +933,48 @@ class AirConditioner(BasePlugin):
         self.__queue_temperatures = deque([], maxlen = 20)
 
         # Air temperatures.
-        air_temp_cent_enabled = self._registers.by_name("{}.air_temp_cent_{}.settings".format(self._key, self.__identifier))
+        air_temp_cent_enabled = self._registers.by_name("{}.air_temp_cent_{}.settings".format(self.key, self.__identifier))
         if air_temp_cent_enabled is not None:
             air_temp_cent_enabled.update_handlers = self.__air_temp_cent_settings_cb
             air_temp_cent_enabled.update()
 
-        air_temp_lower_enabled = self._registers.by_name("{}.air_temp_lower_{}.settings".format(self._key, self.__identifier))
+        air_temp_lower_enabled = self._registers.by_name("{}.air_temp_lower_{}.settings".format(self.key, self.__identifier))
         if air_temp_lower_enabled is not None:
             air_temp_lower_enabled.update_handlers = self.__air_temp_lower_settings_cb
             air_temp_lower_enabled.update()
 
-        air_temp_upper_enabled = self._registers.by_name("{}.air_temp_upper_{}.settings".format(self._key, self.__identifier))
+        air_temp_upper_enabled = self._registers.by_name("{}.air_temp_upper_{}.settings".format(self.key, self.__identifier))
         if air_temp_upper_enabled is not None:
             air_temp_upper_enabled.update_handlers = self.__air_temp_upper_settings_cb
             air_temp_upper_enabled.update()
 
         # Region parameters
-        update_rate = self._registers.by_name("{}.update_rate_{}".format(self._key, self.__identifier))
+        update_rate = self._registers.by_name("{}.update_rate_{}".format(self.key, self.__identifier))
         if update_rate is not None:
             update_rate.update_handlers = self.__update_rate_cb
             update_rate.update()
 
-        delta_time = self._registers.by_name("{}.delta_time_{}".format(self._key, self.__identifier))
+        delta_time = self._registers.by_name("{}.delta_time_{}".format(self.key, self.__identifier))
         if delta_time is not None:
             delta_time.update_handlers = self.__delta_time_cb
             delta_time.update()
 
-        thermal_mode = self._registers.by_name("{}.thermal_mode_{}".format(self._key, self.__identifier))
+        thermal_mode = self._registers.by_name("{}.thermal_mode_{}".format(self.key, self.__identifier))
         if thermal_mode is not None:
             thermal_mode.update_handlers = self.__thermal_mode_cb
             thermal_mode.update()
 
-        thermal_force_limit = self._registers.by_name("{}.thermal_force_limit_{}".format(self._key, self.__identifier))
+        thermal_force_limit = self._registers.by_name("{}.thermal_force_limit_{}".format(self.key, self.__identifier))
         if thermal_force_limit is not None:
             thermal_force_limit.update_handlers = self.__thermal_force_limit_cb
             thermal_force_limit.update()
 
-        adjust_temp = self._registers.by_name("{}.adjust_temp_{}".format(self._key, self.__identifier))
+        adjust_temp = self._registers.by_name("{}.adjust_temp_{}".format(self.key, self.__identifier))
         if adjust_temp is not None:
             adjust_temp.update_handlers = self.__adjust_temp_cb
             adjust_temp.update()
 
-        goal_building_temp = self._registers.by_name("{}.goal_building_temp".format(self._key))
+        goal_building_temp = self._registers.by_name("{}.goal_building_temp".format(self.key))
         if goal_building_temp is not None:
             goal_building_temp.update_handlers = self.__goal_building_temp_cb
             goal_building_temp.update()
@@ -982,69 +982,69 @@ class AirConditioner(BasePlugin):
 
 
         # Convector
-        convector_enable = self._registers.by_name("{}.convector_{}.settings".format(self._key, self.__identifier))
+        convector_enable = self._registers.by_name("{}.convector_{}.settings".format(self.key, self.__identifier))
         if convector_enable is not None:
             convector_enable.update_handlers = self.__convector_settings_cb
             convector_enable.update()
 
         # Loop 1
-        loop1_cnt_enabled = self._registers.by_name("{}.loop1_{}.cnt.input".format(self._key, self.__identifier))
+        loop1_cnt_enabled = self._registers.by_name("{}.loop1_{}.cnt.input".format(self.key, self.__identifier))
         if loop1_cnt_enabled is not None:
             loop1_cnt_enabled.update_handlers = self.__loop1_cnt_input_cb
             loop1_cnt_enabled.update()
 
-        loop1_fan_enabled = self._registers.by_name("{}.loop1_{}.fan.settings".format(self._key, self.__identifier))
+        loop1_fan_enabled = self._registers.by_name("{}.loop1_{}.fan.settings".format(self.key, self.__identifier))
         if loop1_fan_enabled is not None:
             loop1_fan_enabled.update_handlers = self.__loop1_fan_settings_cb
             loop1_fan_enabled.update()
 
-        loop1_fan_min = self._registers.by_name("{}.loop1_{}.fan.min_speed".format(self._key, self.__identifier))
+        loop1_fan_min = self._registers.by_name("{}.loop1_{}.fan.min_speed".format(self.key, self.__identifier))
         if loop1_fan_min is not None:
             loop1_fan_min.update_handlers = self.__loop1_fan_min_cb
             loop1_fan_min.update()
 
-        loop1_fan_max = self._registers.by_name("{}.loop1_{}.fan.max_speed".format(self._key, self.__identifier))
+        loop1_fan_max = self._registers.by_name("{}.loop1_{}.fan.max_speed".format(self.key, self.__identifier))
         if loop1_fan_max is not None:
             loop1_fan_max.update_handlers = self.__loop1_fan_max_cb
             loop1_fan_max.update()
 
-        loop1_temp_enabled = self._registers.by_name("{}.loop1_{}.temp.settings".format(self._key, self.__identifier))
+        loop1_temp_enabled = self._registers.by_name("{}.loop1_{}.temp.settings".format(self.key, self.__identifier))
         if loop1_temp_enabled is not None:
             loop1_temp_enabled.update_handlers = self.__loop1_temp_settings_cb
             loop1_temp_enabled.update()
 
-        loop1_valve_enabled = self._registers.by_name("{}.loop1_{}.valve.settings".format(self._key, self.__identifier))
+        loop1_valve_enabled = self._registers.by_name("{}.loop1_{}.valve.settings".format(self.key, self.__identifier))
         if loop1_valve_enabled is not None:
             loop1_valve_enabled.update_handlers = self.__loop1_valve_enabled_cb
             loop1_valve_enabled.update()
 
         # Loop 2
-        loop2_cnt_enabled = self._registers.by_name("{}.loop2_{}.cnt.input".format(self._key, self.__identifier))
+        loop2_cnt_enabled = self._registers.by_name("{}.loop2_{}.cnt.input".format(self.key, self.__identifier))
         if loop2_cnt_enabled is not None:
             loop2_cnt_enabled.update_handlers = self.__loop2_cnt_input_cb
             loop1_cnt_enabled.update()
 
-        loop2_fan_enabled = self._registers.by_name("{}.loop2_{}.fan.settings".format(self._key, self.__identifier))
+        loop2_fan_enabled = self._registers.by_name("{}.loop2_{}.fan.settings".format(self.key, self.__identifier))
         if loop2_fan_enabled is not None:
             loop2_fan_enabled.update_handlers = self.__loop2_fan_settings_cb
             loop2_fan_enabled.update()
 
-        loop2_fan_min = self._registers.by_name("{}.loop2_{}.fan.min_speed".format(self._key, self.__identifier))
+        loop2_fan_min = self._registers.by_name("{}.loop2_{}.fan.min_speed".format(self.key, self.__identifier))
         if loop2_fan_min is not None:
             loop2_fan_min.update_handlers = self.__loop2_fan_min_cb
             loop2_fan_min.update()
 
-        loop2_fan_max = self._registers.by_name("{}.loop2_{}.fan.max_speed".format(self._key, self.__identifier))
+        loop2_fan_max = self._registers.by_name("{}.loop2_{}.fan.max_speed".format(self.key, self.__identifier))
         if loop2_fan_max is not None:
             loop2_fan_max.update_handlers = self.__loop2_fan_max_cb
             loop2_fan_max.update()
 
-        loop2_temp_enabled = self._registers.by_name("{}.loop2_{}.temp.settings".format(self._key, self.__identifier))
+        loop2_temp_enabled = self._registers.by_name("{}.loop2_{}.temp.settings".format(self.key, self.__identifier))
         if loop2_temp_enabled is not None:
             loop2_temp_enabled.update_handlers = self.__loop2_temp_settings_cb
             loop2_temp_enabled.update()
 
-        loop2_valve_enabled = self._registers.by_name("{}.loop2_{}.valve.settings".format(self._key, self.__identifier))
+        loop2_valve_enabled = self._registers.by_name("{}.loop2_{}.valve.settings".format(self.key, self.__identifier))
         if loop2_valve_enabled is not None:
             loop2_valve_enabled.update_handlers = self.__loop2_valve_settings_cb
             loop2_valve_enabled.update()
@@ -1145,7 +1145,7 @@ class AirConditioner(BasePlugin):
                     if self.__loop2_leak_teat is not None: 
                         self.__loop2_leak_teat.run()
 
-            temp_actual = self._registers.by_name("{}.temp_{}.actual".format(self._key, self.__identifier))
+            temp_actual = self._registers.by_name("{}.temp_{}.actual".format(self.key, self.__identifier))
             if temp_actual is not None:
                 temp_actual.value = temperature
 

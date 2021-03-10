@@ -260,27 +260,27 @@ class Light(BasePlugin):
 
         self.__set_voltages(0, 0)
 
-        sensor_enabled = self._registers.by_name(self._key + ".sensor.settings")
+        sensor_enabled = self._registers.by_name(self.key + ".sensor.settings")
         if sensor_enabled is not None:
             sensor_enabled.update_handlers = self.__sensor_settings_cb
             sensor_enabled.update()
 
-        v1_output = self._registers.by_name(self._key + ".v1.output")
+        v1_output = self._registers.by_name(self.key + ".v1.output")
         if v1_output is not None:
             v1_output.update_handlers = self.__v1_output_cb
             v1_output.update()
 
-        v2_output = self._registers.by_name(self._key + ".v2.output")
+        v2_output = self._registers.by_name(self.key + ".v2.output")
         if v2_output is not None:
             v2_output.update_handlers = self.__v2_output_cb
             v2_output.update()
 
-        target_illum = self._registers.by_name(self._key + ".target_illum")
+        target_illum = self._registers.by_name(self.key + ".target_illum")
         if target_illum is not None:
             target_illum.update_handlers = self.__target_illum_cb
             target_illum.update()
 
-        target_illum = self._registers.by_name(self._key + ".target_illum")
+        target_illum = self._registers.by_name(self.key + ".target_illum")
         if target_illum is not None:
             target_illum.update_handlers = self.__target_illum_cb
             target_illum.update()

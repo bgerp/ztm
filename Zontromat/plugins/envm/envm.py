@@ -154,7 +154,7 @@ class Environment(BasePlugin):
         self.__update_timer = Timer(2)
 
         # Software sun position enabled.
-        sunpos_enabled = self._registers.by_name(self._key + ".sunpos.enabled")
+        sunpos_enabled = self._registers.by_name(self.key + ".sunpos.enabled")
         if sunpos_enabled is not None:
             sunpos_enabled.update_handlers = self.__sunpos_enabled_cb
 
