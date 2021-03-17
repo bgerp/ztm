@@ -1204,14 +1204,14 @@ class Evok(BaseController):
         l_pin = pin.replace("!", "")
         response = None
 
+        if self.is_off_gpio(l_pin):
+            return response
+
         if not self.is_valid_gpio_type(l_pin):
             raise ValueError("Pin can not be None or empty string.")
 
         if not self.is_valid_gpio(l_pin):
             raise ValueError("Pin does not exists in pin map.")
-
-        if self.is_off_gpio(l_pin):
-            return response
 
         gpio_map = self._gpio_map[l_pin]
 
