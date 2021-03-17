@@ -133,6 +133,9 @@ def main():
     # Create zone.
     __zone = Zone()
 
+    # Init the zone.
+    __zone.init()
+
     # Run the zone.
     __zone.run()
 

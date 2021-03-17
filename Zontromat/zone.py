@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 
+import sys
 import traceback
 import os
 import queue
@@ -103,14 +104,11 @@ class Zone():
 
 #region Attributes
 
-    __app_settings = None
-    """Application settings."""
-
-    __zone_state = ZoneState.Idle
-    """Zone state."""
-
     __logger = None
     """Logger"""
+
+    __app_settings = None
+    """Application settings."""
 
     __controller = None
     """Neuron controller."""
@@ -160,31 +158,15 @@ class Zone():
 #region Constructor
 
     def __init__(self):
-        """Init the process."""
+        """Init the zone."""
 
-        # Application settings.
-        self.__app_settings = ApplicationSettings.get_instance()
+        pass
 
-        # Create logger.
-        self.__logger = get_logger(__name__)
+#endregion
 
-        # Create registers.
-        if os.name == "posix":
-            file_path = os.path.join("..", "registers.csv")
-            self.__registers = Registers.from_CSV(file_path)
+#region Private Methods
 
-        elif os.name == "nt":
-            self.__registers = Registers.from_CSV("registers.csv")
-
-        # Set zone state machine.
-        self.__zone_state = StateMachine(ZoneState.Idle)
-        self.__zone_state.on_change(self.__cb_zone_state)
-
-        # Setup the PLC.
-        self.__setup_controller()
-
-        # Set the plugin manager.
-        self.__plugin_manager = PluginsManager(self.__registers, self.__controller)
+    def __init_runtime(self):
 
         # Set the performance profiler.
         self.__performance_profiler.enable_mem_profile = True
@@ -195,8 +177,15 @@ class Zone():
         # Setup the performance profiler timer. (60) 10 is for tests.
         self.__performance_profiler_timer = Timer(10)
 
+
+        # Set zone state machine.
+        self.__zone_state = StateMachine()
+        self.__zone_state.on_change(self.__cb_zone_state)
+        self.__zone_state.set_state(ZoneState.Idle)
+
         # Update timer.
         self.__update_timer = Timer(self.__update_rate)
+            
         # Update with offset based on the serial number of the device.
         time_offset = 0
         if self.__controller.serial_number is not None and self.__controller.serial_number.isdigit():
@@ -204,21 +193,16 @@ class Zone():
         self.__update_timer.expiration_time = self.__update_timer.expiration_time + (time_offset / 1000)
 
 
-        # Setup the ERP.
-        self.__setup_erp()
-
-        # # (Request to stop the queue from MG @ 15.01.2021)
-        # self.__registers_snapshot = queue.Queue()
-
-#endregion
-
-#region Private Methods
-
-    def __cb_zone_state(self, machine):
-        """Set zone state.
+    def __init_registers(self):
+        """Setup registers source.
         """
 
-        self.__logger.info("Zone state: {}".format(machine.get_state()))
+        if os.name == "posix":
+            file_path = os.path.join("..", "registers.csv")
+            self.__registers = Registers.from_CSV(file_path)
+
+        elif os.name == "nt":
+            self.__registers = Registers.from_CSV("registers.csv")
 
 
     def __evok_cb(self, device):
@@ -246,15 +230,15 @@ class Zone():
                     if target_reg is not None:
                         target_reg.value = device["value"]
 
-    def __setup_controller(self):
-        """Setup the controller.
+    def __init_controller(self):
+        """Init the controller.
         """
 
         # Create PLC.
         self.__controller = ControllerFactory.create(self.__app_settings.controller)
 
         if self.__controller is None:
-            return
+            raise ValueError("Controller is not created.")
 
         if self.__controller.vendor == "unipi":
 
@@ -333,7 +317,7 @@ class Zone():
         
         return result
 
-    def __setup_erp(self):
+    def __init_erp(self):
         """Setup the ERP.
         """
 
@@ -354,6 +338,15 @@ class Zone():
         # Set the ERP update timer.
         self.__erp_service_update_timer = Timer(self.__erp_service_update_rate)
 
+#endregion 
+
+#region Private Methods Zone States
+
+    def __cb_zone_state(self, machine):
+        """Set zone state.
+        """
+
+        self.__logger.info("Zone state: {}".format(machine.get_state()))
 
     def __init(self):
         """Init the zone."""
@@ -462,6 +455,9 @@ class Zone():
         else:
             self.__zone_state.set_state(ZoneState.Test)
 
+#endregion
+
+#region Private Methods Performance Profiler
 
     def __on_time_change(self, passed_time):
 
@@ -510,6 +506,39 @@ class Zone():
 #endregion
 
 #region Public Methods
+
+    def init(self):
+        """Init the process."""
+
+        try:
+            # Application settings.
+            self.__app_settings = ApplicationSettings.get_instance()
+
+            # Create logger.
+            self.__logger = get_logger(__name__)
+
+            # Create registers.
+            self.__init_registers()
+
+            # Create PLC.
+            self.__init_controller()
+
+            # Create the plugin manager.
+            self.__plugin_manager = PluginsManager(self.__registers, self.__controller)
+
+            # Setup the ERP.
+            self.__init_erp()
+
+            # Init the runtime.
+            self.__init_runtime()
+
+            # # (Request to stop the queue from MG @ 15.01.2021)
+            # self.__registers_snapshot = queue.Queue()
+
+        except Exception:
+            exc_info = sys.exc_info()
+            self.__logger.error(traceback.format_exc())
+            sys.exit(0)
 
     def run(self):
         """Run the process."""
