@@ -22,17 +22,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 
-# from controllers.unipi.l503 import L503
-# from controllers.unipi.m503 import M503
-# from controllers.unipi.m523 import M523
-# from controllers.unipi.s103 import S103
-# from controllers.unipi.neuron import Neuron
-
-# from controllers.picons.x1_black_titanium import X1BlackTitanium
-
-# from controllers.dummy.dummy import Dummy
-
 import os
+from os import path
+
 import importlib
 
 #region File Attributes
@@ -92,19 +84,25 @@ class ControllerFactory():
 
         module_path = module_path.lower()
 
+        current_directory = os.path.dirname(os.path.realpath(__file__))
+        module_file_path = os.path.join(current_directory, vendor, model) + ".py"
+        exists = path.exists(module_file_path)
+        if not exists:
+            raise FileNotFoundError("Controller file \"{}\" does not exit.".format(module_path))
+
         module = importlib.import_module(module_path)
         if module is None:
             raise ImportError("{}".format(module_path))        
 
         if not hasattr(module, "__class_name__"):
-            raise AttributeError("Module: {}, has no attribute __class_name__.".format(module_path))
+            raise AttributeError("Controller file: {}, has no attribute __class_name__.".format(module_path))
 
         if module.__class_name__ == "":
-            raise ValueError("Module: {}.__class_name__ is empty.".format(module_path))
+            raise ValueError("Controller file: {}.__class_name__ is empty.".format(module_path))
 
         class_module = getattr(module, module.__class_name__)
         if class_module is None:
-            raise ModuleNotFoundError("{}.{}".format(module_path, module.__class_name__))
+            raise ModuleNotFoundError("Controller: \"{}.{}\" not found.".format(module_path, module.__class_name__))
 
         class_isinstance = class_module(config)
 
