@@ -69,8 +69,8 @@ __class_name__ = "EnergyCenter"
 
 #endregion
 
-class WaterPump(BaseDevice):
-    """Water pump.
+class Pump(BaseDevice):
+    """Fluid pump.
     """
 
 #region Attributes
@@ -121,6 +121,8 @@ class WaterPump(BaseDevice):
 
         self.__debit = temp_debit
 
+        self.__logger.debug("Set debit of {} to {}".format(self.name, self.__debit))
+
     def init(self):
         """Init the pump.
         """
@@ -132,6 +134,8 @@ class WaterPump(BaseDevice):
     def update(self):
         """Update the pump logic.
         """
+
+        # TODO: Check which register is responsible for controlling the debit of the pump.
 
         pass
 
