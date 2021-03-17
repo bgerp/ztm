@@ -34,6 +34,8 @@ from devices.base_device import BaseDevice
 
 from services.global_error_handler.global_error_handler import GlobalErrorHandler
 
+from data import verbal_const
+
 # (Request from mail: Eml6429)
 
 #region File Attributes
@@ -100,6 +102,14 @@ class Valve(BaseDevice):
 
     __move_timer = None
 
+    __output_fw = verbal_const.OFF
+    """Valve output forward GPIO.
+    """    
+
+    __output_rev = verbal_const.OFF
+    """Valve output revers GPIO.
+    """    
+
 #endregion
 
 #region Constructor / Destructor
@@ -108,7 +118,13 @@ class Valve(BaseDevice):
         """Constructor
         """
 
-        super().__init__(kwargs) 
+        super().__init__(kwargs)
+
+        if "output_fw" in kwargs:
+            self.__output_fw = kwargs["output_fw"]
+
+        if "output_rev" in kwargs:
+            self.__output_rev = kwargs["output_rev"]
 
     def __del__(self):
         """Destructor
@@ -124,22 +140,42 @@ class Valve(BaseDevice):
 #region Private Methods
 
     def __to_time(self, position):
+        """Convert position in to time.
+
+        Args:
+            position (float): Position in %.
+
+        Returns:
+            float: Time in seconds.
+        """
 
         return position / self.__scale_per_sec
 
     def __stop(self):
+        """Stop the valve motor.
+        """
 
-        self.__logger.debug("Valve {} stop".format(self.name))
+        self._controller.digital_write(self.__output_fw, 0)
+        self._controller.digital_write(self.__output_rev, 0)
 
     def __turn_cw(self):
-
-        self.__logger.debug("Valve {} cw".format(self.name))
+        """Turn to CW direction.
+        """
+        
+        self._controller.digital_write(self.__output_fw, 1)
 
     def __turn_ccw(self):
+        """Turn to CCW direction.
+        """
 
-        self.__logger.debug("Valve {} ccw".format(self.name))
+        self._controller.digital_write(self.__output_rev, 1)
 
     def __reed_fb(self):
+        """Feedback function from the valve.
+
+        Returns:
+            bool: State of the feedback.
+        """
 
         return False
 
@@ -256,5 +292,43 @@ class Valve(BaseDevice):
             # TODO: Calibration sequence.
 
             self.__valve_state.set_state(ValveState.Wait)
+
+#endregion
+
+#region Public Static Methods
+
+    @staticmethod
+    def create(name, key, registers, controller):
+        """Create instance of the class.
+
+        Args:
+            name (str): Name of the object.
+            key (str): Key used for registers base path.
+            registers (Registers): System registers.
+            controller (BaseController): Controller instance.
+
+        Returns:
+            Valve: Valve control instance.
+        """
+
+        instance = None
+
+        output_fw = registers.by_name("{}.output_fw".format(key)).value
+        output_rev = registers.by_name("{}.output_rev".format(key)).value
+        valve_fb = registers.by_name("{}.feedback".format(key)).value
+        max_pos = registers.by_name("{}.max_pos".format(key)).value
+        min_pos = registers.by_name("{}.min_pos".format(key)).value
+
+        instance = Valve(
+            name=name,
+            key=key,
+            controller=controller,
+            output_fw=output_fw,
+            output_rev=output_rev,
+            feedback=valve_fb,
+            min_pos=min_pos,
+            max_pos=max_pos)
+
+        return instance
 
 #endregion

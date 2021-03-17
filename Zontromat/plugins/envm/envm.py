@@ -28,7 +28,7 @@ from plugins.base_plugin import BasePlugin
 
 # https://github.com/s-bear/sun-position
 # from sunposition import sunpos
-from plugins.environment.sunposition import sunpos
+from plugins.envm.sunposition import sunpos
 
 from utils.logger import get_logger
 from utils.logic.timer import Timer

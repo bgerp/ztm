@@ -34,8 +34,10 @@ from utils.logic.functions import rotate_list
 from plugins.base_plugin import BasePlugin
 
 from devices.no_vendors.no_vendor_5.heat_pump import HeatPump, HeatPumpMode
-from devices.no_vendors.no_vendor_4.water_pump import WaterPump
+from devices.no_vendors.no_vendor_4.pump import Pump
 from devices.utils.valve_control_group.valve_control_group import ValveControlGroup
+
+from services.global_error_handler.global_error_handler import GlobalErrorHandler
 
 # (Request from mail: Eml6429)
 
@@ -220,17 +222,17 @@ class HeatPumpControllGroup(BasePlugin):
             fw_valves=["input", "output"],
             rev_valves=["short"])
 
-        self.__cold_water_pump = WaterPump(
+        self.__cold_water_pump = Pump(
             name="wp_cold",
             key="{}.wp_cold".format(self.key),
             controller=self._controller) # TODO: Add settings to the water pump.
         
-        self.__hot_water_pump = WaterPump(
+        self.__hot_water_pump = Pump(
             name="wp_hot",
             key="{}.hot_water_pump".format(self.key),
             controller=self._controller) # TODO: Add settings to the water pump.
 
-        self.__warm_water_pump = WaterPump(
+        self.__warm_water_pump = Pump(
             name="wp_warm",
             key="{}.warm_water_pump".format(self.key),
             controller=self._controller) # TODO: Add settings to the water pump.
@@ -249,9 +251,9 @@ class HeatPumpControllGroup(BasePlugin):
         # Valve Control Groups
         del self.__vcg_cold_buff
         del self.__vcg_cold_geo
-        del self.__v_warm_geo
-        del self.__v_warm_floor
-        del self.__v_hot
+        # del self.__v_warm_geo
+        # del self.__v_warm_floor
+        # del self.__v_hot
 
         # Thermal agents pumps.
         del self.__cold_water_pump
@@ -607,10 +609,6 @@ class HeatPumpControllGroup(BasePlugin):
         """Init the group.
         """
 
-        self.__init_registers_cb()
-
-        self.__generate_order()
-
         # Set default values for temperatures.
         self.temp_cold = ((self.__cold_max - self.__cold_min) / 2) + self.__cold_min
         self.temp_hot = ((self.__hot_max - self.__hot_min) / 2) + self.__hot_min
@@ -619,19 +617,25 @@ class HeatPumpControllGroup(BasePlugin):
         self.__cold_interval = (self.__cold_max - self.__cold_min) / self.__interval_step
         self.__hot_interval = (self.__hot_max - self.__hot_min) / self.__interval_step
 
-        # Valve Control Groups (RED, BLUE, PURPLE and GREEN)
-        self.__vcg_cold_buff.init()
-        self.__vcg_cold_geo.init()
-        self.__vcg_warm_geo.init()
-        self.__vcg_warm_floor.init()
+        # init the registers callbacks.
+        self.__init_registers_cb()
+
+        # Generate order.
+        self.__generate_order()
+
+        # Heat pump.
+        self.__heat_pump.init()
 
         # Thermal agents pumps.
         self.__cold_water_pump.init()
         self.__hot_water_pump.init()
         self.__warm_water_pump.init()
 
-        # Heat pump.
-        self.__heat_pump.init()
+        # Valve Control Groups (RED, BLUE, PURPLE and GREEN)
+        self.__vcg_cold_buff.init()
+        self.__vcg_cold_geo.init()
+        self.__vcg_warm_geo.init()
+        self.__vcg_warm_floor.init()
 
     def update(self):
         """Update control group.
@@ -649,6 +653,25 @@ class HeatPumpControllGroup(BasePlugin):
         self.__update_summer_power()
         self.__update_power_and_mode()
         self.__update_run_flag()
+
+        # ========================================================================
+
+        # -=== UNDER TEST ===-
+
+        output_power = self.__heat_pump_run * self.__heat_pump_power
+
+        # Open cold circuit.
+        self.__vcg_cold_buff.target_position = output_power
+        self.__cold_water_pump.set_debit(output_power)
+
+        # Open warm circuit.
+        self.__vcg_warm_geo.target_position = output_power
+        self.__warm_water_pump.set_debit(output_power)
+
+        # run pump for hot circuit.
+        self.__hot_water_pump.set_debit(output_power)
+
+        # ========================================================================
 
         # Valve Control Groups
         self.__vcg_cold_buff.update()

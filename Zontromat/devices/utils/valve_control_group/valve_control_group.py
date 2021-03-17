@@ -26,13 +26,14 @@ import time
 from enum import Enum
 
 from utils.logger import get_logger
+from utils.logic.functions import l_scale
 
 from plugins.base_plugin import BasePlugin
 
 from services.global_error_handler.global_error_handler import GlobalErrorHandler
 
 from devices.no_vendors.no_vendor_3.valve import Valve
-from devices.no_vendors.no_vendor_4.water_pump import WaterPump
+from devices.no_vendors.no_vendor_4.pump import Pump
 
 # (Request from mail: Eml6429)
 
@@ -94,10 +95,6 @@ class ValveControlGroup(BasePlugin):
     """Revers pumps control.
     """    
 
-    __target_position = 0
-    """Valve group target position.
-    """    
-
 #endregion
 
 #region Constructor / Destructor
@@ -140,51 +137,42 @@ class ValveControlGroup(BasePlugin):
     @property
     def target_position(self):
 
-        return self.__target_position
+        return 0
 
     @target_position.setter
     def target_position(self, position):
-        """Set the position of the valve.
+        """Set the position of the valve control group.
 
         Args:
-            position (int): Position of the valve.
+            position (int): Position of the valves.
         """
 
-        if position == self.__target_position:
-            return
+        if self.__fw_valves is not None:
+            for valve in self.__fw_valves:
+                valve.target_position = position
 
-        if position > 100:
-            position = 100
-
-        elif position < 0:
-            position = 0
-
-        self.__target_position = position
-
-        for valve in self.__v_hot:
-            value.target_position = self.__target_position
-
-
-        
+        if self.__rev_valves is not None:
+            for valve in self.__rev_valves:
+                valve.target_position = float(l_scale(position, [0, 100], [100, 0]))
 
 #endregion
 
 #region Public Methods
 
-    def set_position(self, position):
-        """Set position.
+    def set_debit(self, debit):
+        """Set debit.
 
         Args:
-            position (int): Position of the valve.
+            debit (int): Debit of the pump.
         """
 
-        if self.__fw_valves is not None:
-            for valve in self.__fw_valves:
-                valve.set_position(position)
+        if self.__fw_pumps is not None:
+            for pump in self.__fw_pumps:
+                pump.debit = debit
 
-        if self.__rev_valves is not None:
-            for valve in self.__rev_valves:
-                valve.set_position(-position)
+        if self.__rev_pumps is not None:
+            for pump in self.__rev_pumps:
+                pump.debit = float(l_scale(debit, [0, 100], [100, 0]))
 
     def init(self):
         """Init the group.
@@ -194,25 +182,17 @@ class ValveControlGroup(BasePlugin):
         self.__logger = get_logger(__name__)
         self.__logger.info("Starting up the: {}".format(self.name))
 
-        if "fw_valves" in self._config:
-            self.__fw_valves = self._config["fw_valves"]
-
-        if "rev_valves" in self._config:
-            self.__rev_valves = self._config["rev_valves"]
-
         if "fw_pumps" in self._config:
             self.__fw_pumps = self._config["fw_pumps"]
 
         if "rev_pumps" in self._config:
             self.__rev_pumps = self._config["rev_pumps"]
 
-        if self.__fw_valves is not None:
-            for valve in self.__fw_valves:
-                valve.init()
+        if "fw_valves" in self._config:
+            self.__fw_valves = self._config["fw_valves"]
 
-        if self.__rev_valves is not None:
-            for valve in self.__rev_valves:
-                valve.init()
+        if "rev_valves" in self._config:
+            self.__rev_valves = self._config["rev_valves"]
 
         if self.__fw_pumps is not None:
             for valve in self.__fw_pumps:
@@ -222,30 +202,26 @@ class ValveControlGroup(BasePlugin):
             for valve in self.__rev_pumps:
                 valve.init()
 
-    def shutdown(self):
-        """Shutdown the group.
-        """
-
         if self.__fw_valves is not None:
             for valve in self.__fw_valves:
-                valve.shutdown()
+                valve.init()
 
         if self.__rev_valves is not None:
             for valve in self.__rev_valves:
-                valve.shutdown()
-
-        if self.__fw_pumps is not None:
-            for valve in self.__fw_pumps:
-                valve.shutdown()
-
-        if self.__rev_pumps is not None:
-            for valve in self.__rev_pumps:
-                valve.shutdown()
+                valve.init()
 
     def update(self):
         """Update valve state.
         """
 
+        if self.__fw_pumps is not None:
+            for valve in self.__fw_pumps:
+                valve.update()
+
+        if self.__rev_pumps is not None:
+            for valve in self.__rev_pumps:
+                valve.update()
+
         if self.__fw_valves is not None:
             for valve in self.__fw_valves:
                 valve.update()
@@ -254,13 +230,25 @@ class ValveControlGroup(BasePlugin):
             for valve in self.__rev_valves:
                 valve.update()
 
+    def shutdown(self):
+        """Shutdown the group.
+        """
+
         if self.__fw_pumps is not None:
             for valve in self.__fw_pumps:
-                valve.update()
+                valve.shutdown()
 
         if self.__rev_pumps is not None:
             for valve in self.__rev_pumps:
-                valve.update()
+                valve.shutdown()
+
+        if self.__fw_valves is not None:
+            for valve in self.__fw_valves:
+                valve.shutdown()
+
+        if self.__rev_valves is not None:
+            for valve in self.__rev_valves:
+                valve.shutdown()
 
 #endregion
 
@@ -327,7 +315,7 @@ class ValveControlGroup(BasePlugin):
         f_pumps = []
         for name in fw_pumps:
             f_pumps.append(
-                WaterPump(
+                Pump(
                     name=name,
                     key="{}.{}".format(key, name),
                     controller=controller)) # TODO: Add settings to the water pump.
@@ -335,7 +323,7 @@ class ValveControlGroup(BasePlugin):
         r_pumps = []
         for name in rev_pumps:
             r_pumps.append(
-                WaterPump(
+                Pump(
                     name=name,
                     key="{}.{}".format(key, name),
                     controller=controller)) # TODO: Add settings to the water pump.

@@ -30,7 +30,7 @@ from enum import Enum
 from utils.logger import get_logger
 from utils.logic.state_machine import StateMachine
 from utils.logic.timer import Timer
-from utils.utils import to_rad, shadow_length
+from utils.logic.functions import to_rad, shadow_length
 
 from plugins.base_plugin import BasePlugin
 
@@ -286,7 +286,7 @@ class Blinds(BasePlugin):
         sun_elev_reg = self._registers.by_name(self.key + ".sun.elevation.value")
         if sun_elev_reg:
 
-            if not sun_elev_reg.is_int_or_float():
+            if not sun_elev_reg.data_type == "float":
                 GlobalErrorHandler.log_bad_register_value(self.__logger, sun_elev_reg)
                 return
 
@@ -295,7 +295,7 @@ class Blinds(BasePlugin):
         sun_azm_reg = self._registers.by_name(self.key + ".sun.azimuth.value")
         if sun_azm_reg:
 
-            if not sun_azm_reg.is_int_or_float():
+            if not sun_azm_reg.data_type == "float":
                 GlobalErrorHandler.log_bad_register_value(self.__logger, sun_azm_reg)
                 return
 

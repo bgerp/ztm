@@ -740,6 +740,137 @@ class AirConditioner(BasePlugin):
 
 #endregion
 
+#region Private Methods (Registers Interface)
+
+    def __init_registers_cb(self):
+        """Initialize the registers callbacks.
+        """
+
+        # Air temperatures.
+        air_temp_cent_enabled = self._registers.by_name("{}.air_temp_cent_{}.settings".format(self.key, self.__identifier))
+        if air_temp_cent_enabled is not None:
+            air_temp_cent_enabled.update_handlers = self.__air_temp_cent_settings_cb
+            air_temp_cent_enabled.update()
+
+        air_temp_lower_enabled = self._registers.by_name("{}.air_temp_lower_{}.settings".format(self.key, self.__identifier))
+        if air_temp_lower_enabled is not None:
+            air_temp_lower_enabled.update_handlers = self.__air_temp_lower_settings_cb
+            air_temp_lower_enabled.update()
+
+        air_temp_upper_enabled = self._registers.by_name("{}.air_temp_upper_{}.settings".format(self.key, self.__identifier))
+        if air_temp_upper_enabled is not None:
+            air_temp_upper_enabled.update_handlers = self.__air_temp_upper_settings_cb
+            air_temp_upper_enabled.update()
+
+        # Region parameters
+        update_rate = self._registers.by_name("{}.update_rate_{}".format(self.key, self.__identifier))
+        if update_rate is not None:
+            update_rate.update_handlers = self.__update_rate_cb
+            update_rate.update()
+
+        delta_time = self._registers.by_name("{}.delta_time_{}".format(self.key, self.__identifier))
+        if delta_time is not None:
+            delta_time.update_handlers = self.__delta_time_cb
+            delta_time.update()
+
+        thermal_mode = self._registers.by_name("{}.thermal_mode_{}".format(self.key, self.__identifier))
+        if thermal_mode is not None:
+            thermal_mode.update_handlers = self.__thermal_mode_cb
+            thermal_mode.update()
+
+        thermal_force_limit = self._registers.by_name("{}.thermal_force_limit_{}".format(self.key, self.__identifier))
+        if thermal_force_limit is not None:
+            thermal_force_limit.update_handlers = self.__thermal_force_limit_cb
+            thermal_force_limit.update()
+
+        adjust_temp = self._registers.by_name("{}.adjust_temp_{}".format(self.key, self.__identifier))
+        if adjust_temp is not None:
+            adjust_temp.update_handlers = self.__adjust_temp_cb
+            adjust_temp.update()
+
+        goal_building_temp = self._registers.by_name("{}.goal_building_temp".format(self.key))
+        if goal_building_temp is not None:
+            goal_building_temp.update_handlers = self.__goal_building_temp_cb
+            goal_building_temp.update()
+
+
+
+        # Convector
+        convector_enable = self._registers.by_name("{}.convector_{}.settings".format(self.key, self.__identifier))
+        if convector_enable is not None:
+            convector_enable.update_handlers = self.__convector_settings_cb
+            convector_enable.update()
+
+        # Loop 1
+        loop1_cnt_enabled = self._registers.by_name("{}.loop1_{}.cnt.input".format(self.key, self.__identifier))
+        if loop1_cnt_enabled is not None:
+            loop1_cnt_enabled.update_handlers = self.__loop1_cnt_input_cb
+            loop1_cnt_enabled.update()
+
+        loop1_fan_enabled = self._registers.by_name("{}.loop1_{}.fan.settings".format(self.key, self.__identifier))
+        if loop1_fan_enabled is not None:
+            loop1_fan_enabled.update_handlers = self.__loop1_fan_settings_cb
+            loop1_fan_enabled.update()
+
+        loop1_fan_min = self._registers.by_name("{}.loop1_{}.fan.min_speed".format(self.key, self.__identifier))
+        if loop1_fan_min is not None:
+            loop1_fan_min.update_handlers = self.__loop1_fan_min_cb
+            loop1_fan_min.update()
+
+        loop1_fan_max = self._registers.by_name("{}.loop1_{}.fan.max_speed".format(self.key, self.__identifier))
+        if loop1_fan_max is not None:
+            loop1_fan_max.update_handlers = self.__loop1_fan_max_cb
+            loop1_fan_max.update()
+
+        loop1_temp_enabled = self._registers.by_name("{}.loop1_{}.temp.settings".format(self.key, self.__identifier))
+        if loop1_temp_enabled is not None:
+            loop1_temp_enabled.update_handlers = self.__loop1_temp_settings_cb
+            loop1_temp_enabled.update()
+
+        loop1_valve_enabled = self._registers.by_name("{}.loop1_{}.valve.settings".format(self.key, self.__identifier))
+        if loop1_valve_enabled is not None:
+            loop1_valve_enabled.update_handlers = self.__loop1_valve_enabled_cb
+            loop1_valve_enabled.update()
+
+        # Loop 2
+        loop2_cnt_enabled = self._registers.by_name("{}.loop2_{}.cnt.input".format(self.key, self.__identifier))
+        if loop2_cnt_enabled is not None:
+            loop2_cnt_enabled.update_handlers = self.__loop2_cnt_input_cb
+            loop1_cnt_enabled.update()
+
+        loop2_fan_enabled = self._registers.by_name("{}.loop2_{}.fan.settings".format(self.key, self.__identifier))
+        if loop2_fan_enabled is not None:
+            loop2_fan_enabled.update_handlers = self.__loop2_fan_settings_cb
+            loop2_fan_enabled.update()
+
+        loop2_fan_min = self._registers.by_name("{}.loop2_{}.fan.min_speed".format(self.key, self.__identifier))
+        if loop2_fan_min is not None:
+            loop2_fan_min.update_handlers = self.__loop2_fan_min_cb
+            loop2_fan_min.update()
+
+        loop2_fan_max = self._registers.by_name("{}.loop2_{}.fan.max_speed".format(self.key, self.__identifier))
+        if loop2_fan_max is not None:
+            loop2_fan_max.update_handlers = self.__loop2_fan_max_cb
+            loop2_fan_max.update()
+
+        loop2_temp_enabled = self._registers.by_name("{}.loop2_{}.temp.settings".format(self.key, self.__identifier))
+        if loop2_temp_enabled is not None:
+            loop2_temp_enabled.update_handlers = self.__loop2_temp_settings_cb
+            loop2_temp_enabled.update()
+
+        loop2_valve_enabled = self._registers.by_name("{}.loop2_{}.valve.settings".format(self.key, self.__identifier))
+        if loop2_valve_enabled is not None:
+            loop2_valve_enabled.update_handlers = self.__loop2_valve_settings_cb
+            loop2_valve_enabled.update()
+
+        # Create window closed sensor.
+        window_closed_input = self._registers.by_name("{}.window_closed_{}.input".format("ac", 1))
+        if window_closed_input is not None:
+            window_closed_input.update_handlers = self.__window_closed_input_cb
+            window_closed_input.update()
+
+#endregion
+
 #region Private Methods (Leak tests)
 
     def __loop1_leaktest_result(self, leaked_liters):
@@ -915,7 +1046,8 @@ class AirConditioner(BasePlugin):
 #region Public Methods
 
     def init(self):
-        """Init the HVAC."""
+        """Init the module.
+        """
 
         self.__logger = get_logger(__name__)
         self.__logger.info("Starting up the {} {}".format(self.name, self.__identifier))
@@ -923,6 +1055,8 @@ class AirConditioner(BasePlugin):
         # Create thermal mode.
         self.__thermal_mode = StateMachine(ThermalMode.NONE)
         self.__thermal_mode.on_change(self.__thermal_mode_on_change)
+
+        # Create update timer.
         self.__update_timer = Timer(self.__update_rate)
         self.__stop_timer = Timer(10)
 
@@ -932,137 +1066,15 @@ class AirConditioner(BasePlugin):
         # Create temperature queue.
         self.__queue_temperatures = deque([], maxlen = 20)
 
-        # Air temperatures.
-        air_temp_cent_enabled = self._registers.by_name("{}.air_temp_cent_{}.settings".format(self.key, self.__identifier))
-        if air_temp_cent_enabled is not None:
-            air_temp_cent_enabled.update_handlers = self.__air_temp_cent_settings_cb
-            air_temp_cent_enabled.update()
-
-        air_temp_lower_enabled = self._registers.by_name("{}.air_temp_lower_{}.settings".format(self.key, self.__identifier))
-        if air_temp_lower_enabled is not None:
-            air_temp_lower_enabled.update_handlers = self.__air_temp_lower_settings_cb
-            air_temp_lower_enabled.update()
-
-        air_temp_upper_enabled = self._registers.by_name("{}.air_temp_upper_{}.settings".format(self.key, self.__identifier))
-        if air_temp_upper_enabled is not None:
-            air_temp_upper_enabled.update_handlers = self.__air_temp_upper_settings_cb
-            air_temp_upper_enabled.update()
-
-        # Region parameters
-        update_rate = self._registers.by_name("{}.update_rate_{}".format(self.key, self.__identifier))
-        if update_rate is not None:
-            update_rate.update_handlers = self.__update_rate_cb
-            update_rate.update()
-
-        delta_time = self._registers.by_name("{}.delta_time_{}".format(self.key, self.__identifier))
-        if delta_time is not None:
-            delta_time.update_handlers = self.__delta_time_cb
-            delta_time.update()
-
-        thermal_mode = self._registers.by_name("{}.thermal_mode_{}".format(self.key, self.__identifier))
-        if thermal_mode is not None:
-            thermal_mode.update_handlers = self.__thermal_mode_cb
-            thermal_mode.update()
-
-        thermal_force_limit = self._registers.by_name("{}.thermal_force_limit_{}".format(self.key, self.__identifier))
-        if thermal_force_limit is not None:
-            thermal_force_limit.update_handlers = self.__thermal_force_limit_cb
-            thermal_force_limit.update()
-
-        adjust_temp = self._registers.by_name("{}.adjust_temp_{}".format(self.key, self.__identifier))
-        if adjust_temp is not None:
-            adjust_temp.update_handlers = self.__adjust_temp_cb
-            adjust_temp.update()
-
-        goal_building_temp = self._registers.by_name("{}.goal_building_temp".format(self.key))
-        if goal_building_temp is not None:
-            goal_building_temp.update_handlers = self.__goal_building_temp_cb
-            goal_building_temp.update()
-
-
-
-        # Convector
-        convector_enable = self._registers.by_name("{}.convector_{}.settings".format(self.key, self.__identifier))
-        if convector_enable is not None:
-            convector_enable.update_handlers = self.__convector_settings_cb
-            convector_enable.update()
-
-        # Loop 1
-        loop1_cnt_enabled = self._registers.by_name("{}.loop1_{}.cnt.input".format(self.key, self.__identifier))
-        if loop1_cnt_enabled is not None:
-            loop1_cnt_enabled.update_handlers = self.__loop1_cnt_input_cb
-            loop1_cnt_enabled.update()
-
-        loop1_fan_enabled = self._registers.by_name("{}.loop1_{}.fan.settings".format(self.key, self.__identifier))
-        if loop1_fan_enabled is not None:
-            loop1_fan_enabled.update_handlers = self.__loop1_fan_settings_cb
-            loop1_fan_enabled.update()
-
-        loop1_fan_min = self._registers.by_name("{}.loop1_{}.fan.min_speed".format(self.key, self.__identifier))
-        if loop1_fan_min is not None:
-            loop1_fan_min.update_handlers = self.__loop1_fan_min_cb
-            loop1_fan_min.update()
-
-        loop1_fan_max = self._registers.by_name("{}.loop1_{}.fan.max_speed".format(self.key, self.__identifier))
-        if loop1_fan_max is not None:
-            loop1_fan_max.update_handlers = self.__loop1_fan_max_cb
-            loop1_fan_max.update()
-
-        loop1_temp_enabled = self._registers.by_name("{}.loop1_{}.temp.settings".format(self.key, self.__identifier))
-        if loop1_temp_enabled is not None:
-            loop1_temp_enabled.update_handlers = self.__loop1_temp_settings_cb
-            loop1_temp_enabled.update()
-
-        loop1_valve_enabled = self._registers.by_name("{}.loop1_{}.valve.settings".format(self.key, self.__identifier))
-        if loop1_valve_enabled is not None:
-            loop1_valve_enabled.update_handlers = self.__loop1_valve_enabled_cb
-            loop1_valve_enabled.update()
-
-        # Loop 2
-        loop2_cnt_enabled = self._registers.by_name("{}.loop2_{}.cnt.input".format(self.key, self.__identifier))
-        if loop2_cnt_enabled is not None:
-            loop2_cnt_enabled.update_handlers = self.__loop2_cnt_input_cb
-            loop1_cnt_enabled.update()
-
-        loop2_fan_enabled = self._registers.by_name("{}.loop2_{}.fan.settings".format(self.key, self.__identifier))
-        if loop2_fan_enabled is not None:
-            loop2_fan_enabled.update_handlers = self.__loop2_fan_settings_cb
-            loop2_fan_enabled.update()
-
-        loop2_fan_min = self._registers.by_name("{}.loop2_{}.fan.min_speed".format(self.key, self.__identifier))
-        if loop2_fan_min is not None:
-            loop2_fan_min.update_handlers = self.__loop2_fan_min_cb
-            loop2_fan_min.update()
-
-        loop2_fan_max = self._registers.by_name("{}.loop2_{}.fan.max_speed".format(self.key, self.__identifier))
-        if loop2_fan_max is not None:
-            loop2_fan_max.update_handlers = self.__loop2_fan_max_cb
-            loop2_fan_max.update()
-
-        loop2_temp_enabled = self._registers.by_name("{}.loop2_{}.temp.settings".format(self.key, self.__identifier))
-        if loop2_temp_enabled is not None:
-            loop2_temp_enabled.update_handlers = self.__loop2_temp_settings_cb
-            loop2_temp_enabled.update()
-
-        loop2_valve_enabled = self._registers.by_name("{}.loop2_{}.valve.settings".format(self.key, self.__identifier))
-        if loop2_valve_enabled is not None:
-            loop2_valve_enabled.update_handlers = self.__loop2_valve_settings_cb
-            loop2_valve_enabled.update()
-
-        # Create window closed sensor.
-        window_closed_input = self._registers.by_name("{}.window_closed_{}.input".format("ac", 1))
-        if window_closed_input is not None:
-            window_closed_input.update_handlers = self.__window_closed_input_cb
-            window_closed_input.update()
-
-
-
+        # Create registers callbacks.
+        self.__init_registers_cb()
 
         # Shutting down all the devices.
-        # self.__set_thermal_force(0)
+        self.__set_thermal_force(0)
 
     def update(self):
-        """ Update cycle. """
+        """ Update cycle.
+        """
 
         # Update thermometres values.
         self.__update_thermometers_values()
@@ -1159,7 +1171,8 @@ class AirConditioner(BasePlugin):
         #     self.__lastupdate_delta_time = time.time()
 
     def shutdown(self):
-        """Shutdown the tamper."""
+        """Shutdown the tamper.
+        """
 
         self.__logger.info("Shutting down the {} {}".format(self.name, self.__identifier))
         self.__set_thermal_force(0)

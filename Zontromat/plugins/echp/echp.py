@@ -93,6 +93,8 @@ class EnergyCenterHeatpump(BasePlugin):
         if self.__heat_pump_control_group is not None:
             del self.__heat_pump_control_group
 
+#endregion
+
 #region Public Methods
 
     def init(self):
@@ -105,9 +107,9 @@ class EnergyCenterHeatpump(BasePlugin):
 
         self.__heat_pump_control_group = HeatPumpControllGroup(
             name="HeatPumpControllGroup",
+            key="{}".format(self.key),
             controller=self._controller,
-            registers=self._registers,
-            key="{}".format(self.key)) # Add level down if more then one group is controlled.
+            registers=self._registers) # Add level down if more then one group is controlled.
 
         # Heat Pump Control Group
         self.__heat_pump_control_group.init()
