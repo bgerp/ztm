@@ -25,7 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import unittest
 import os
 
-from devices.no_vendors.no_vendor_3.valve import Valve
+from devices.no_vendors.no_vendor_4.pump import Pump
 
 from controllers.dummy.dummy import Dummy
 from data.registers import Registers
@@ -84,13 +84,13 @@ class TestStringMethods(unittest.TestCase):
 
         cases = {}
         plc_cfg = {"test": self, "cases": cases}
+
         controller = Dummy(plc_cfg)
         registers = self.__load_registers()
-        name = "vlv"
-        key = "ecd.pool_heating"
 
         # Create test object.
-        valve = Valve.create(name, key, registers, controller)
+        Pump.create()
+        valve = Pump(name="vlv", controller=controller, registers=registers)
 
         # Initialise the object.
         valve.init()
