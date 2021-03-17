@@ -1437,19 +1437,59 @@ def __add_registers():
     register.plugin_name = "Energy Center Common"
     register.description = "Plugin enabled"
     register.range = __range["BOOL"]
-    register.value = True
+    register.value = False
     __registers.append(register)
 
 #endregion
 
 #region Energy Center Distribution
 
+    register = Register("ecd.pool_heating.output_fw")
+    register.scope = Scope.System
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "Pool heating valve output."
+    register.range = ""
+    register.value = "U3.M4.DO0"
+    __registers.append(register)
+
+    register = Register("ecd.pool_heating.output_rev")
+    register.scope = Scope.System
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "Pool heating valve output."
+    register.range = ""
+    register.value = "U3.M4.DO1"
+    __registers.append(register)
+
+    register = Register("ecd.pool_heating.feedback")
+    register.scope = Scope.System
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "Pool heating valve feedback."
+    register.range = ""
+    register.value = "U3.M4.DI0"
+    __registers.append(register)
+
+    register = Register("ecd.pool_heating.max_pos")
+    register.scope = Scope.System
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "Pool heating valve max position."
+    register.range = "0/100"
+    register.value = 100
+    __registers.append(register)
+
+    register = Register("ecd.pool_heating.min_pos")
+    register.scope = Scope.System
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "Pool heating valve min position."
+    register.range = "0/100"
+    register.value = 0
+    __registers.append(register)
+
     register = Register("ecd.enabled")
     register.scope = Scope.System
     register.plugin_name = "Energy Center Distribution"
     register.description = "Plugin enabled"
     register.range = __range["BOOL"]
-    register.value = True
+    register.value = False
     __registers.append(register)
 
 #endregion
@@ -1543,7 +1583,7 @@ def __add_registers():
     register.plugin_name = "Energy Center Heat Pump"
     register.description = "Plugin enabled"
     register.range = __range["BOOL"]
-    register.value = True
+    register.value = False
     __registers.append(register)
 
 #endregion
