@@ -27,6 +27,8 @@ import time
 
 from enum import Enum
 
+from data import verbal_const
+
 from utils.logger import get_logger
 from utils.logic.state_machine import StateMachine
 from utils.logic.timer import Timer
@@ -118,10 +120,10 @@ class Blinds(BasePlugin):
     __input_fb = None
     """Input feedback."""
 
-    __output_ccw = None
+    __output_ccw = verbal_const.OFF
     """Output CCW"""
 
-    __output_cw = None
+    __output_cw = verbal_const.OFF
     """Output CW"""
 
     __current_position = 0
@@ -362,9 +364,9 @@ class Blinds(BasePlugin):
         """Update"""
 
         # TODO: Remove, DEMO purpose only.
-        if self._controller.digital_read("DI4"):
-            self.__blinds_state.set_state(BlindsState.Calibrate)
-            self.__calibration_state.set_state(CalibrationState.Stop)
+        # if self._controller.digital_read("DI4"):
+        #     self.__blinds_state.set_state(BlindsState.Calibrate)
+        #     self.__calibration_state.set_state(CalibrationState.Stop)
 
         self.__sun_spot_update_timer.update()
         if self.__sun_spot_update_timer.expired:
