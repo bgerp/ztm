@@ -158,5 +158,6 @@ settings*.yaml
 ### Evok Software
 # Evok Software application settings.
 evok.conf
+evok*.conf
 
 # End of https://www.gitignore.io/api/python,visualstudiocode
