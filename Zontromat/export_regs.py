@@ -1251,6 +1251,17 @@ def __add_registers():
     # register.value = "SEDtronic"
     # __registers.append(register)
 
+    
+
+    register = Register("light.target_illum")
+    register.scope = Scope.System
+    register.plugin_name = "Light"
+    register.description = "Target illumination"
+    register.range = "0.0/10000.0"
+    register.value = 0.0
+    __registers.append(register)
+
+
     register = Register("light.enabled")
     register.scope = Scope.System
     register.plugin_name = "Light"

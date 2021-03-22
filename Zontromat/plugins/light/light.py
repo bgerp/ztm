@@ -118,7 +118,16 @@ class Light(BasePlugin):
 
 #endregion
 
-#region Private Methods
+#region Private Methods Registers Interface
+
+    def __target_illum_cb(self, register):
+
+        # Check data type.
+        if not register.data_type == "float":
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
+            return
+
+        self.__target_illumination = register.value
 
     def __sensor_settings_cb(self, register):
 
@@ -177,40 +186,31 @@ class Light(BasePlugin):
 
         return state
 
-    def __calculate(self):
-        """ Apply thermal force to the devices. """
+    def __init_registers(self):
 
-        current_illumination = self.__light_sensor.get_value()
+        sensor_enabled = self._registers.by_name(self.key + ".sensor.settings")
+        if sensor_enabled is not None:
+            sensor_enabled.update_handlers = self.__sensor_settings_cb
+            sensor_enabled.update()
 
-        # Calculate the target error.
-        error = self.__target_illumination - current_illumination
+        v1_output = self._registers.by_name(self.key + ".v1.output")
+        if v1_output is not None:
+            v1_output.update_handlers = self.__v1_output_cb
+            v1_output.update()
 
-        # Integrate the delta to temporal output..
-        delta = error * self.__error_gain
-        self.__tmp_output += delta
+        v2_output = self._registers.by_name(self.key + ".v2.output")
+        if v2_output is not None:
+            v2_output.update_handlers = self.__v2_output_cb
+            v2_output.update()
 
-        # Limitate the output by target value.
-        if self.__tmp_output > abs(self.__output_limit):
-            self.__tmp_output = self.__output_limit
+        target_illum = self._registers.by_name(self.key + ".target_illum")
+        if target_illum is not None:
+            target_illum.update_handlers = self.__target_illum_cb
+            target_illum.update()
 
-        # Limitate by absolute maximum and minimum.
-        if self.__tmp_output < 0:
-            self.__tmp_output = 0
-        if self.__tmp_output > 10000:
-            self.__tmp_output = 10000
+#endregion
 
-        # Apply the output if it is different.
-        if self.__tmp_output != self.__output:
-            self.__output = self.__tmp_output
-
-            # TODO: Convert lux to voltage.
-            # Convert to volgate.
-            out_to_v = self.__output * 0.001
-
-            self.__set_voltages(out_to_v, out_to_v)
-
-            self.__logger.debug("TRG {:3.3f}\tINP {:3.3f}\tERR: {:3.3f}\tOUT: {:3.3f}"\
-                .format(self.__target_illumination, current_illumination, delta, out_to_v))
+#region Private Methods Controller Interface
 
     def __set_voltages(self, v1, v2):
         """Set the voltage outputs.
@@ -248,6 +248,45 @@ class Light(BasePlugin):
 
 #endregion
 
+#region Private Methods
+
+    def __calculate(self):
+        """ Apply thermal force to the devices. """
+
+        current_illumination = self.__light_sensor.get_value()
+
+        # Calculate the target error.
+        error = self.__target_illumination - current_illumination
+
+        # Integrate the delta to temporal output..
+        delta = error * self.__error_gain
+        self.__tmp_output += delta
+
+        # Limitate the output by target value.
+        if self.__tmp_output > abs(self.__output_limit):
+            self.__tmp_output = self.__output_limit
+
+        # Limitate by absolute maximum and minimum.
+        if self.__tmp_output < 0:
+            self.__tmp_output = 0
+        if self.__tmp_output > 10000:
+            self.__tmp_output = 10000
+
+        # Apply the output if it is different.
+        if self.__tmp_output != self.__output:
+            self.__output = self.__tmp_output
+
+            # TODO: Convert lux to voltage.
+            # Convert to volgate.
+            out_to_v = self.__output * 0.001
+
+            self.__set_voltages(out_to_v, out_to_v)
+
+            self.__logger.debug("TRG {:3.3f}\tINP {:3.3f}\tERR: {:3.3f}\tOUT: {:3.3f}"\
+                .format(self.__target_illumination, current_illumination, delta, out_to_v))
+
+#endregion
+
 #region Public Methods
 
     def init(self):
@@ -260,30 +299,7 @@ class Light(BasePlugin):
 
         self.__set_voltages(0, 0)
 
-        sensor_enabled = self._registers.by_name(self.key + ".sensor.settings")
-        if sensor_enabled is not None:
-            sensor_enabled.update_handlers = self.__sensor_settings_cb
-            sensor_enabled.update()
-
-        v1_output = self._registers.by_name(self.key + ".v1.output")
-        if v1_output is not None:
-            v1_output.update_handlers = self.__v1_output_cb
-            v1_output.update()
-
-        v2_output = self._registers.by_name(self.key + ".v2.output")
-        if v2_output is not None:
-            v2_output.update_handlers = self.__v2_output_cb
-            v2_output.update()
-
-        target_illum = self._registers.by_name(self.key + ".target_illum")
-        if target_illum is not None:
-            target_illum.update_handlers = self.__target_illum_cb
-            target_illum.update()
-
-        target_illum = self._registers.by_name(self.key + ".target_illum")
-        if target_illum is not None:
-            target_illum.update_handlers = self.__target_illum_cb
-            target_illum.update()
+        self.__init_registers()
 
     def update(self):
         """Update the lights state."""
