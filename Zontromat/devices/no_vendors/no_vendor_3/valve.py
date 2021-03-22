@@ -155,20 +155,25 @@ class Valve(BaseDevice):
         """Stop the valve motor.
         """
 
-        self._controller.digital_write(self.__output_fw, 0)
-        self._controller.digital_write(self.__output_rev, 0)
+        if self._controller.is_valid_gpio(self.__output_fw):
+            self._controller.digital_write(self.__output_fw, 0)
+
+        if self._controller.is_valid_gpio(self.__output_rev):
+            self._controller.digital_write(self.__output_rev, 0)
 
     def __turn_cw(self):
         """Turn to CW direction.
         """
         
-        self._controller.digital_write(self.__output_fw, 1)
+        if self._controller.is_valid_gpio(self.__output_fw):
+            self._controller.digital_write(self.__output_fw, 1)
 
     def __turn_ccw(self):
         """Turn to CCW direction.
         """
 
-        self._controller.digital_write(self.__output_rev, 1)
+        if self._controller.is_valid_gpio(self.__output_rev):
+            self._controller.digital_write(self.__output_rev, 1)
 
     def __reed_fb(self):
         """Feedback function from the valve.
