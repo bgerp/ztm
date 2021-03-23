@@ -25,9 +25,22 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import subprocess
 import os
 
+# Import MODBUS clients.
+# from pymodbus.client.sync import ModbusTcpClient as ModbusClient
+# from pymodbus.client.sync import ModbusUdpClient as ModbusClient
+from pymodbus.client.sync import ModbusSerialClient as ModbusClient
+
 from utils.logger import get_logger
 
 from controllers.base_controller import BaseController
+
+from controllers.zuljana.requests.read_device_coils import ReadDeviceCoils
+from controllers.zuljana.requests.read_device_discrete_inputs import ReadDeviceDiscreteInputs
+from controllers.zuljana.requests.read_device_holding_registers import ReadDeviceHoldingRegisters
+from controllers.zuljana.requests.read_device_input_registers import ReadDeviceInputRegisters
+
+from controllers.zuljana.requests.write_device_coils import WriteDeviceCoils
+from controllers.zuljana.requests.write_device_registers import WriteDeviceRegisters
 
 #region File Attributes
 
@@ -74,13 +87,66 @@ class ZL101PCC(BaseController):
     """Logger
     """
 
-    __instance = None
-    """Singelton instance.
-    """
-
     __modbus_rtu_port = None
     """MODBUS RTU RS485 port.
     """
+
+    __modbus_rtu_baud = 9600
+    """MODBUS serial port baudrate.
+    """
+
+    __modbus_rtu_client = None
+    """Modbus client.
+    """
+
+    __black_island_id = 1
+    """Black island ID.
+    """
+
+    __map = \
+    {\
+        "identification": {"vendor": "bao bao industries", "model": "zl101pcc"},\
+
+        "LED0": {"dev": "led", "major_index": 1, "minor_index": 1},\
+        "LED1": {"dev": "led", "major_index": 1, "minor_index": 2},\
+        "LED2": {"dev": "led", "major_index": 1, "minor_index": 3},\
+        "LED3": {"dev": "led", "major_index": 1, "minor_index": 4},\
+
+        "DI0": {"dev": "input", "major_index": 1, "minor_index": 1},\
+        "DI1": {"dev": "input", "major_index": 1, "minor_index": 2},\
+        "DI2": {"dev": "input", "major_index": 1, "minor_index": 3},\
+        "DI3": {"dev": "input", "major_index": 1, "minor_index": 4},\
+
+        "DI4": {"dev": "input", "major_index": 2, "minor_index": 1},\
+        "DI5": {"dev": "input", "major_index": 2, "minor_index": 2},\
+        "DI6": {"dev": "input", "major_index": 2, "minor_index": 3},\
+        "DI7": {"dev": "input", "major_index": 2, "minor_index": 4},\
+        "DI8": {"dev": "input", "major_index": 2, "minor_index": 5},\
+        "DI9": {"dev": "input", "major_index": 2, "minor_index": 6},\
+
+        "DO0": {"dev": "do", "major_index": 1, "minor_index": 1},\
+        "DO1": {"dev": "do", "major_index": 1, "minor_index": 2},\
+        "DO2": {"dev": "do", "major_index": 1, "minor_index": 3},\
+        "DO3": {"dev": "do", "major_index": 1, "minor_index": 4},\
+
+        "RO0": {"dev": "relay", "major_index": 2, "minor_index": 1},\
+        "RO1": {"dev": "relay", "major_index": 2, "minor_index": 2},\
+        "RO2": {"dev": "relay", "major_index": 2, "minor_index": 3},\
+        "RO3": {"dev": "relay", "major_index": 2, "minor_index": 4},\
+        "RO4": {"dev": "relay", "major_index": 2, "minor_index": 5},\
+
+        "AI0": {"dev": "ai", "major_index": 1, "minor_index": 1},\
+        "AI1": {"dev": "ai", "major_index": 2, "minor_index": 1},\
+        "AI2": {"dev": "ai", "major_index": 2, "minor_index": 2},\
+        "AI3": {"dev": "ai", "major_index": 2, "minor_index": 3},\
+        "AI4": {"dev": "ai", "major_index": 2, "minor_index": 4},\
+
+        "AO0": {"dev": "ao", "major_index": 1, "minor_index": 1},\
+        "AO1": {"dev": "ao", "major_index": 2, "minor_index": 1},\
+        "AO2": {"dev": "ao", "major_index": 2, "minor_index": 2},\
+        "AO3": {"dev": "ao", "major_index": 2, "minor_index": 3},\
+        "AO4": {"dev": "ao", "major_index": 2, "minor_index": 4},\
+    }
 
 #endregion
 
@@ -136,10 +202,22 @@ class ZL101PCC(BaseController):
 
         super().__init__(config)
 
+        self._gpio_map = self.__map
+
         self.__logger = get_logger(__name__)
 
         if "modbus_rtu_port" in config:
             self.__modbus_rtu_port = config["modbus_rtu_port"]
+
+        if "modbus_rtu_baud" in config:
+            self.__modbus_rtu_baud = config["modbus_rtu_baud"]
+
+        if self.__modbus_rtu_client is None:
+            self.__modbus_rtu_client = ModbusClient(
+            method="rtu",
+            port=self.__modbus_rtu_port,
+            timeout=5,
+            baudrate=self.__modbus_rtu_baud)
 
     def __del__(self):
         """Destructor
@@ -155,8 +233,8 @@ class ZL101PCC(BaseController):
 
         uuid = ""
 
-        if 'nt' in os.name:
-            result = subprocess.check_output('wmic csproduct get uuid')
+        if "nt" in os.name:
+            result = subprocess.check_output("wmic csproduct get uuid")
 
             if result is not None:
                 result = result.decode("utf-8")
@@ -179,6 +257,35 @@ class ZL101PCC(BaseController):
 
         return uuid
 
+    def __update_black_island(self):
+
+        # Read device coils.
+        cr_request = ReadDeviceCoils(self.__black_island_id)
+        cr_response = self.__modbus_rtu_client.execute(cr_request)
+        print(cr_response)
+
+        di_request = ReadDeviceDiscreteInputs(self.__black_island_id)
+        di_response = self.__modbus_rtu_client.execute(di_request)
+        print(di_response)
+
+        hrr_request = ReadDeviceHoldingRegisters(self.__black_island_id)
+        hrr_response = self.__modbus_rtu_client.execute(hrr_request)
+        print(hrr_response)
+
+        irr_request = ReadDeviceInputRegisters(self.__black_island_id)
+        irr_response = self.__modbus_rtu_client.execute(irr_request)
+        print(irr_response)
+
+        cw_request = WriteDeviceCoils(self.__black_island_id)
+        cw_response = self.__modbus_rtu_client.execute(cw_request)
+        print(cw_response)
+
+        hrw_request = WriteDeviceRegisters(self.__black_island_id)
+        hrw_response = self.__modbus_rtu_client.execute(hrw_request)
+        print(hrw_response)
+
+        return True
+
 #endregion
 
 #region Protected Methods
@@ -198,7 +305,14 @@ class ZL101PCC(BaseController):
     def update(self):
         """Update controller state."""
 
-        return True
+        state = False
+
+        if self.__modbus_rtu_client is None:
+            return False
+
+        state = self.__update_black_island()
+
+        return state
 
     def digital_read(self, pin):
         """Read the digital input pin.
