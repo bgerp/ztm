@@ -59,11 +59,11 @@ class WriteDeviceRegisters(WriteMultipleRegistersRequest):
     """[summary]
     """
 
-    def __init__(self, unit):
+    def __init__(self, unit, registers):
         """Constructor
 
         Args:
             unit (int): Unit ID.
         """
         # Address, Count, key word args.
-        WriteMultipleRegistersRequest.__init__(self, 1, [8]*8, unit=unit)
+        WriteMultipleRegistersRequest.__init__(self, 1, registers, unit=unit)

@@ -65,7 +65,7 @@ class Klimafan(BaseDevice):
     __logger = None
     """Logger"""
 
-    __state = 0
+    __state = -1
     """State of the convector."""
 
 #endregion

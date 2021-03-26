@@ -70,38 +70,119 @@ def main():
 
     unit = 1
 
-    with ModbusClient(
-        method="rtu",
-        port="COM13", 
-        timeout=1,
-        baudrate=19200,
-        rtscts=0,
-        dsrdtr=0) as client:
+    # Create client.
+    with ModbusClient(method="rtu", port="COM13", baudrate=9600, timeout=1,
+        xonxoff=False, rtscts=False, dsrdtr=False) as client:
 
-        # Read device coils.
+        #---------------------------------------------------------------------------#
+        # Read Coils.
+        #---------------------------------------------------------------------------#
         cr_request = ReadDeviceCoils(unit)
         cr_response = client.execute(cr_request)
-        print(cr_response)
+        
+        # Check the response.
+        assert(not cr_response.isError())
 
+        # Check the content.
+        is_ok = cr_response.bits == [True, False, True, False, True, False, True, False]
+        assert(is_ok)
+
+        print(cr_response)
+        print()
+
+        #---------------------------------------------------------------------------#
+        # Read Discrete Inputs.
+        #---------------------------------------------------------------------------#
         di_request = ReadDeviceDiscreteInputs(unit)
         di_response = client.execute(di_request)
+
+        # Check the response.
+        assert(not di_response.isError())
+
+        #Check the content.
+        is_ok = di_response.bits == [False, True, False, True, False, True, False, True]
+        assert(is_ok)
+
         print(di_response)
+        print()
+
+        #---------------------------------------------------------------------------#
+        # Read Holding Registers.
+        #---------------------------------------------------------------------------#
+        hrr_request = ReadDeviceHoldingRegisters(unit)
+        hrr_response = client.execute(hrr_request)
+
+        # Check the response.
+        assert(not hrr_response.isError())
+
+        #Check the content.
+        is_ok = hrr_response.registers == [0, 65535, 0, 65535, 0, 65535, 0, 65535]
+        assert(is_ok)
+
+        print(hrr_response)
+        print()
+
+        #---------------------------------------------------------------------------#
+        # Read Input Registers.
+        #---------------------------------------------------------------------------#
+        irr_request = ReadDeviceInputRegisters(unit)
+        irr_response = client.execute(irr_request)
+
+        # Check the response.
+        assert(not irr_response.isError())
+
+        #Check the content.
+        is_ok = irr_response.registers == [65535, 0, 65535, 0]
+        assert(is_ok)
+
+        print(irr_response)
+        print()
+
+        #---------------------------------------------------------------------------#
+        # Write Coils.
+        #---------------------------------------------------------------------------#
+        cw_request = WriteDeviceCoils(unit, [True]*8)
+        cw_response = client.execute(cw_request)
+
+        # Check the response.
+        assert(not cw_response.isError())
+        print(cw_response)
+
+        cr_request = ReadDeviceCoils(unit)
+        cr_response = client.execute(cr_request)
+
+        # Check the response.
+        assert(not cr_response.isError())
+
+        #Check the content.
+        is_ok = cr_response.bits == [True, True, True, True, True, True, True, True]
+        assert(is_ok)
+
+        print(cr_response)
+        print()
+
+        #---------------------------------------------------------------------------#
+        # Write Holding Registers.
+        #---------------------------------------------------------------------------#
+        hrw_request = WriteDeviceRegisters(unit, [8, 8, 8, 8, 8, 8, 8, 8])
+        hrw_response = client.execute(hrw_request)
+
+        # Check the response.
+        assert(not hrw_response.isError())
+        print(hrw_response)
 
         hrr_request = ReadDeviceHoldingRegisters(unit)
         hrr_response = client.execute(hrr_request)
+
+        # Check the response.
+        assert(not hrr_response.isError())
+
+        #Check the content.
+        is_ok = hrr_response.registers == [8, 8, 8, 8, 8, 8, 8, 8]
+        assert(is_ok)
+
         print(hrr_response)
-
-        irr_request = ReadDeviceInputRegisters(unit)
-        irr_response = client.execute(irr_request)
-        print(irr_response)
-
-        cw_request = WriteDeviceCoils(unit)
-        cw_response = client.execute(cw_request)
-        print(cw_response)
-
-        hrw_request = WriteDeviceRegisters(unit)
-        hrw_response = client.execute(hrw_request)
-        print(hrw_response)
+        print()
 
 if __name__ == "__main__":
     main()

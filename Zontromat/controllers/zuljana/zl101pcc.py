@@ -103,50 +103,53 @@ class ZL101PCC(BaseController):
     """Black island ID.
     """
 
+    __operations_count = 4
+    """Operations count.
+    """
+
     __map = \
     {\
         "identification": {"vendor": "bao bao industries", "model": "zl101pcc"},\
 
-        "LED0": {"dev": "led", "major_index": 1, "minor_index": 1},\
-        "LED1": {"dev": "led", "major_index": 1, "minor_index": 2},\
-        "LED2": {"dev": "led", "major_index": 1, "minor_index": 3},\
-        "LED3": {"dev": "led", "major_index": 1, "minor_index": 4},\
+        # LEDs
+        "LED0": 0, "LED1": 1, "LED2": 2, "LED3": 3,
 
-        "DI0": {"dev": "input", "major_index": 1, "minor_index": 1},\
-        "DI1": {"dev": "input", "major_index": 1, "minor_index": 2},\
-        "DI2": {"dev": "input", "major_index": 1, "minor_index": 3},\
-        "DI3": {"dev": "input", "major_index": 1, "minor_index": 4},\
+        # Digital Inputs
+        "DI0": 0, "DI1": 1, "DI2": 2, "DI3": 3,
+        "DI4": 4, "DI5": 5, "DI6": 6, "DI7": 7,
+        "DI8": 8, "DI9": 9,
 
-        "DI4": {"dev": "input", "major_index": 2, "minor_index": 1},\
-        "DI5": {"dev": "input", "major_index": 2, "minor_index": 2},\
-        "DI6": {"dev": "input", "major_index": 2, "minor_index": 3},\
-        "DI7": {"dev": "input", "major_index": 2, "minor_index": 4},\
-        "DI8": {"dev": "input", "major_index": 2, "minor_index": 5},\
-        "DI9": {"dev": "input", "major_index": 2, "minor_index": 6},\
+        # Digital Outputs
+        "DO0": 0, "DO1": 1, "DO2": 2, "DO3": 3,
+        "DO4": 0, "DO5": 1, "DO6": 2, "DO7": 3,
 
-        "DO0": {"dev": "do", "major_index": 1, "minor_index": 1},\
-        "DO1": {"dev": "do", "major_index": 1, "minor_index": 2},\
-        "DO2": {"dev": "do", "major_index": 1, "minor_index": 3},\
-        "DO3": {"dev": "do", "major_index": 1, "minor_index": 4},\
+        # Relay Outputs
+        "RO0": 0, "RO1": 1, "RO2": 2, "RO3": 3,
+        "RO4": 4, "RO4": 5, "RO4": 6, "RO4": 7,
 
-        "RO0": {"dev": "relay", "major_index": 2, "minor_index": 1},\
-        "RO1": {"dev": "relay", "major_index": 2, "minor_index": 2},\
-        "RO2": {"dev": "relay", "major_index": 2, "minor_index": 3},\
-        "RO3": {"dev": "relay", "major_index": 2, "minor_index": 4},\
-        "RO4": {"dev": "relay", "major_index": 2, "minor_index": 5},\
+        # Analog Inputs
+        "AI0": 0, "AI1": 1, "AI2": 2, "AI3": 3,
+        "AI4": 4, "AI4": 5, "AI4": 6, "AI4": 7,
 
-        "AI0": {"dev": "ai", "major_index": 1, "minor_index": 1},\
-        "AI1": {"dev": "ai", "major_index": 2, "minor_index": 1},\
-        "AI2": {"dev": "ai", "major_index": 2, "minor_index": 2},\
-        "AI3": {"dev": "ai", "major_index": 2, "minor_index": 3},\
-        "AI4": {"dev": "ai", "major_index": 2, "minor_index": 4},\
-
-        "AO0": {"dev": "ao", "major_index": 1, "minor_index": 1},\
-        "AO1": {"dev": "ao", "major_index": 2, "minor_index": 1},\
-        "AO2": {"dev": "ao", "major_index": 2, "minor_index": 2},\
-        "AO3": {"dev": "ao", "major_index": 2, "minor_index": 3},\
-        "AO4": {"dev": "ao", "major_index": 2, "minor_index": 4},\
+        # Analog Outputs
+        "AO0": 0, "AO1": 1, "AO2": 2, "AO3": 3,
     }
+
+    __DI = [False]*8
+    """Digital inputs.
+    """
+
+    __DORO = [False]*8
+    """Digital & Relay outputs.
+    """
+
+    __AI = [0]*8
+    """Analog inputs.
+    """
+
+    __AO = [0]*4
+    """Analog outputs.
+    """
 
 #endregion
 
@@ -259,32 +262,52 @@ class ZL101PCC(BaseController):
 
     def __update_black_island(self):
 
-        # Read device coils.
-        cr_request = ReadDeviceCoils(self.__black_island_id)
-        cr_response = self.__modbus_rtu_client.execute(cr_request)
-        print(cr_response)
+        control_counter = 0
 
+        # hrr_request = ReadDeviceHoldingRegisters(self.__black_island_id)
+        # hrr_response = self.__modbus_rtu_client.execute(hrr_request)
+        # print(hrr_response)
+
+        # Read device digital inputs.
         di_request = ReadDeviceDiscreteInputs(self.__black_island_id)
         di_response = self.__modbus_rtu_client.execute(di_request)
-        print(di_response)
+        if di_response is not None:
+            if not di_response.isError():
+                self.__DI = di_response.bits
+                control_counter += 1
 
-        hrr_request = ReadDeviceHoldingRegisters(self.__black_island_id)
-        hrr_response = self.__modbus_rtu_client.execute(hrr_request)
-        print(hrr_response)
-
+        # Read device analog inputs.
         irr_request = ReadDeviceInputRegisters(self.__black_island_id)
         irr_response = self.__modbus_rtu_client.execute(irr_request)
-        print(irr_response)
+        if irr_response is not None:
+            if not irr_response.isError():
+                self.__AI = irr_response.registers
+                control_counter += 1
 
-        cw_request = WriteDeviceCoils(self.__black_island_id)
+        # Write device digital & relay outputs.
+        cw_request = WriteDeviceCoils(self.__black_island_id, self.__DORO)
         cw_response = self.__modbus_rtu_client.execute(cw_request)
-        print(cw_response)
+        if cw_response is not None:
+            if not cw_response.isError():
+                control_counter += 1
 
-        hrw_request = WriteDeviceRegisters(self.__black_island_id)
+        # Write device analog outputs.
+        hrw_request = WriteDeviceRegisters(self.__black_island_id, self.__AO)
         hrw_response = self.__modbus_rtu_client.execute(hrw_request)
-        print(hrw_response)
+        if hrw_response is not None:
+            if not hrw_response.isError():
+                control_counter += 1
 
-        return True
+        # Read device coils.
+        # DEBUG PURPOSE ONLY
+        cr_request = ReadDeviceCoils(self.__black_island_id)
+        cr_response = self.__modbus_rtu_client.execute(cr_request)
+        if cr_response is not None:
+            if not cr_response.isError():
+                self.__logger.debug(str(cr_response))
+                self.__logger.debug(str(cr_response.bits))
+
+        return (control_counter == self.__operations_count)
 
 #endregion
 
@@ -324,9 +347,19 @@ class ZL101PCC(BaseController):
             int: State of the pin.
         """
 
+        state = False
+
+        if self.__map is None:
+            return state
+
+        if not pin in self.__map:
+            return state
+
+        state = self.__DI[self.__map[pin]]
+
         self.__logger.debug("digital_read({}, {})".format(self.model, pin))
 
-        return False
+        return state
 
     def digital_write(self, pin, value):
         """Write the digital output pin.
@@ -344,6 +377,32 @@ class ZL101PCC(BaseController):
         mixed
             State of the pin.
         """
+
+        l_pin = pin.replace("!", "")
+        response = False
+        state = 0
+
+        if self.is_off_gpio(l_pin):
+            return response
+
+        if not self.is_valid_gpio_type(l_pin):
+            raise ValueError("Pin can not be None or empty string.")
+
+        if not self.is_valid_gpio(l_pin):
+            raise ValueError("Pin does not exists in pin map.")
+
+        # Inversion
+        polarity = pin.startswith("!")
+
+        if polarity:
+            state = not value
+        else:
+            state = bool(value)
+
+
+        gpio = self.__map[pin]
+        
+        self.__DORO[gpio] = state
 
         self.__logger.debug("digital_write({}, {}, {})".format(self.model, pin, value))
 

@@ -59,7 +59,7 @@ class WriteDeviceCoils(WriteMultipleCoilsRequest):
     """Write device coils.
     """
 
-    def __init__(self, unit):
+    def __init__(self, unit, coils):
         """Constructor
 
         Args:
@@ -67,4 +67,4 @@ class WriteDeviceCoils(WriteMultipleCoilsRequest):
         """
 
         # Address, Count, key word args.
-        WriteMultipleCoilsRequest.__init__(self, 1, [8]*8, unit=unit)
+        WriteMultipleCoilsRequest.__init__(self, 1, coils, unit=unit)

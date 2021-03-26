@@ -956,6 +956,9 @@ class AirConditioner(BasePlugin):
         if self._controller.is_valid_gpio(self.__window_closed_input):
             state = self._controller.digital_read(self.__window_closed_input)
 
+        if self.__window_closed_input == verbal_const.OFF:
+            state = True
+
         return state
 
     def __is_hot_water(self):
