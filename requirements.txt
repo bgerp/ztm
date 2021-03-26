@@ -19,7 +19,7 @@ pyDes==2.0.1
 pylint==2.5.2
 pymodbus==2.5.0
 pyserial==3.4
-PyYAML==5.3.1
+PyYAML==5.4
 requests==2.23.0
 rope==0.17.0
 six==1.15.0
