@@ -3,7 +3,7 @@
 FILE=/var/log/firstboot
 #Check if booting for first time
 if [ ! -f "$FILE" ]; then
-  SERIAL_NUMBER=$(python3 /opt/Zontromat/info.py -s)
+  SERIAL_NUMBER=$(python3 /opt/Zontromat/Zontromat/controllers/unipi/evok/info.py -s)
   #clear the minion config
   cat /dev/null >/etc/salt/minion
 
