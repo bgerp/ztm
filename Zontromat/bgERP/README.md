@@ -318,7 +318,7 @@ The body of the POST request is formatted in JSON.
 
 Example: 
 ```json
-{"registers": ["sys.disc.free", "sys.disc.used"]}
+{"token": "8niQyw7vH82eWy5r", "registers": ["sys.disc.free", "sys.disc.used"]}
 ```
 
 The field registers holds the array of target names that should be returned from the WEB server. The response of te server is also formatted in JSON. Content type response header is added, **"Content-Type": "application/json; charset=utf-8"**.
@@ -332,7 +332,7 @@ A "curl" example is provided for better comprehension of the request.
 
 Example:
 ```sh
-curl -v -XPOST -H 'Content-type: application/json' -d '{"registers": ["sys.disc.free", "sys.disc.used"]}' 'http://192.168.0.52:8890/api/v1/bgerp/registers/get'
+curl -v -XPOST -H 'Content-type: application/json' -d '{"token": "8niQyw7vH82eWy5r", "registers": ["sys.disc.free", "sys.disc.used"], "token": "8niQyw7vH82eWy5r"}' 'http://192.168.0.52:8890/api/v1/bgerp/registers/get'
 ```
 
 ## Set register
@@ -345,7 +345,7 @@ The body of the POST request is formatted in JSON.
 
 Example: 
 ```json
-{"registers": {"hvac.loop2_1.fan.min_speed": 5, "ac.zone_1_occupied": 0}}
+{"token": "8niQyw7vH82eWy5r", "registers": {"hvac.loop2_1.fan.min_speed": 5, "ac.zone_1_occupied": 0}}
 ```
 
 The field registers holds the dict of target names that should be set to specified values. A response is expected from the WEB server as shown below. The response of te server is also formatted in JSON. Content type response header is added, **"Content-Type": "application/json; charset=utf-8"**.
@@ -359,5 +359,5 @@ A "curl" example is provided for better comprehension of the request.
 
 Example:
 ```sh
-curl -v -XPOST -H 'Content-type: application/json' -d '{"registers": {"hvac.loop2_1.fan.min_speed": 0, "ac.zone_1_occupied": 0}}' 'http://192.168.0.52:8890/api/v1/bgerp/registers/set'
+curl -v -XPOST -H 'Content-type: application/json' -d '{"token": "8niQyw7vH82eWy5r", "registers": {"hvac.loop2_1.fan.min_speed": 0, "ac.zone_1_occupied": 0}}' 'http://192.168.0.52:8890/api/v1/bgerp/registers/set'
 ```
