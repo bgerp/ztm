@@ -92,7 +92,7 @@ class Light(BasePlugin):
     """Analog voltage output 2
     """
 
-    __target_illumination = 700 # TODO: Move to register.
+    __target_illumination = 700
     """Target illumination. [Lux]
     """    
 
@@ -100,11 +100,11 @@ class Light(BasePlugin):
     """Delta illumination. [Lux]
     """
     
-    __error_gain = 0.1
+    __error_gain = 1 # TODO: Change it in order to change the sensitivity of the system.
     """Gain of the error. This parameter is the smoothness of the curve.
     """
 
-    __output_limit = 5000 # TODO: Move to register.
+    __output_limit = 10000 # TODO: Move to register.
     """Illumination force limit. [V]
     """   
 
@@ -123,7 +123,7 @@ class Light(BasePlugin):
     def __target_illum_cb(self, register):
 
         # Check data type.
-        if not register.data_type == "float":
+        if not (register.data_type == "float" or register.data_type == "int"):
             GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
 
@@ -297,9 +297,9 @@ class Light(BasePlugin):
 
         self.__update_timer = Timer(1)
 
-        self.__set_voltages(0, 0)
-
         self.__init_registers()
+
+        self.__set_voltages(0, 0)
 
     def update(self):
         """Update the lights state."""
