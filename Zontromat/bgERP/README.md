@@ -332,7 +332,7 @@ A "curl" example is provided for better comprehension of the request.
 
 Example:
 ```sh
-curl -v -XPOST -H 'Content-type: application/json' -d '{"token": "8niQyw7vH82eWy5r", "registers": ["sys.disc.free", "sys.disc.used"], "token": "8niQyw7vH82eWy5r"}' 'http://192.168.0.52:8890/api/v1/bgerp/registers/get'
+curl -v -XPOST -H 'Content-type: application/json' -d '{"token": "8niQyw7vH82eWy5r", "registers": ["sys.disc.free", "sys.disc.used"]}' 'http://192.168.0.52:8890/api/v1/bgerp/registers/get'
 ```
 
 ## Set register
