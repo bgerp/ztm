@@ -66,4 +66,4 @@ class WriteDeviceRegisters(WriteMultipleRegistersRequest):
             unit (int): Unit ID.
         """
         # Address, Count, key word args.
-        WriteMultipleRegistersRequest.__init__(self, 1, registers, unit=unit)
+        WriteMultipleRegistersRequest.__init__(self, 0, registers, unit=unit)

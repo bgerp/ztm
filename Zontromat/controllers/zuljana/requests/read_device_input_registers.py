@@ -67,4 +67,4 @@ class ReadDeviceInputRegisters(ReadInputRegistersRequest):
         """
 
         # Address, Count, key word args.
-        ReadInputRegistersRequest.__init__(self, 1, 4, unit=unit)
+        ReadInputRegistersRequest.__init__(self, 0, 4, unit=unit)

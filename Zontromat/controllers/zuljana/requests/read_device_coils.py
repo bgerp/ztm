@@ -67,4 +67,4 @@ class ReadDeviceCoils(ReadCoilsRequest):
         """
 
         # Address, Count, key word args.
-        ReadCoilsRequest.__init__(self, 1, 8, unit=unit)
+        ReadCoilsRequest.__init__(self, 0, 12, unit=unit)

@@ -67,4 +67,4 @@ class ReadDeviceHoldingRegisters(ReadHoldingRegistersRequest):
         """
 
         # Address, Count, key word args.
-        ReadHoldingRegistersRequest.__init__(self, 1, 8, unit=unit)
+        ReadHoldingRegistersRequest.__init__(self, 0, 8, unit=unit)

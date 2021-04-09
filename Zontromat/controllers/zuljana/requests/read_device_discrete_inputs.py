@@ -67,4 +67,4 @@ class ReadDeviceDiscreteInputs(ReadDiscreteInputsRequest):
         """
 
         # Address, Count, key word args.
-        ReadDiscreteInputsRequest.__init__(self, 1, 8, unit=unit)
+        ReadDiscreteInputsRequest.__init__(self, 0, 8, unit=unit)

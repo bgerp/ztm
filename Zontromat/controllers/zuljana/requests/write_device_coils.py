@@ -67,4 +67,4 @@ class WriteDeviceCoils(WriteMultipleCoilsRequest):
         """
 
         # Address, Count, key word args.
-        WriteMultipleCoilsRequest.__init__(self, 1, coils, unit=unit)
+        WriteMultipleCoilsRequest.__init__(self, 0, coils, unit=unit)
