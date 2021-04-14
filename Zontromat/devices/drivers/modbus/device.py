@@ -25,6 +25,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from struct import pack, unpack
 
 from devices.drivers.modbus.parameter_type import ParameterType
+from devices.drivers.modbus.register_type import RegisterType
+
+from devices.drivers.modbus.requests.read_device_coils import ReadDeviceCoils
+from devices.drivers.modbus.requests.read_device_discrete_inputs import ReadDeviceDiscreteInputs
+from devices.drivers.modbus.requests.read_device_holding_registers import ReadDeviceHoldingRegisters
+from devices.drivers.modbus.requests.read_device_input_registers import ReadDeviceInputRegisters
+from devices.drivers.modbus.requests.write_device_coils import WriteDeviceCoils
+from devices.drivers.modbus.requests.write_device_registers import WriteDeviceRegisters
+
 
 #region File Attributes
 
@@ -219,6 +228,66 @@ class Device():
             values[parameter] = self.get_parameter_value(parameter, registers)
 
         return values
+
+    def get_parameter_by_name(self, name):
+        """Return parameter from the list selected by name.
+
+        Args:
+            name (str): Name of the parameter.
+
+        Returns:
+            Parameter: Modbus parameter.
+        """
+
+        result = None
+
+        for parameter in self._parameters:
+            if parameter.parameter_name == name:
+                result = parameter
+
+        return result
+
+    def generate_requests(self, unit, **kwargs):
+
+        requests = {}
+        names = self.get_parameters_names()        
+
+        for name in names:
+            param = self.get_parameter_by_name(name)
+
+            if param.register_type == RegisterType.ReadCoil:
+                count = len(param.addresses)
+                address = min(param.addresses)
+                requests["ReadDeviceCoils"] = ReadDeviceCoils(unit, address, count)
+
+            elif param.register_type == RegisterType.ReadDiscreteInput:
+                count = len(param.addresses)
+                address = min(param.addresses)
+                requests["ReadDeviceDiscreteInputs"] = ReadDeviceDiscreteInputs(unit, address, count)
+
+            elif param.register_type == RegisterType.ReadHoldingRegisters:
+                count = len(param.addresses)
+                address = min(param.addresses)
+                requests["ReadDeviceHoldingRegisters"] = ReadDeviceHoldingRegisters(unit, address, count)
+
+            elif param.register_type == RegisterType.ReadInputRegisters:
+                count = len(param.addresses)
+                address = min(param.addresses)
+                requests["ReadDeviceInputRegisters"] = ReadDeviceInputRegisters(unit, address, count)
+
+            elif param.register_type == RegisterType.WriteMultipleCoils:
+                if "coils" in kwargs:
+                    values = kwargs["coils"]
+                    address = min(param.addresses)
+                    requests["WriteDeviceCoils"] = WriteDeviceCoils(unit, address, values)
+
+            elif param.register_type == RegisterType.WriteMultipleHoldingRegisters:
+                if "registers" in kwargs:
+                    values = kwargs["registers"]
+                    address = min(param.addresses)
+                    requests["WriteDeviceRegisters"] = WriteDeviceRegisters(unit, address, values)
+
+        return requests
 
     #endregion
 
