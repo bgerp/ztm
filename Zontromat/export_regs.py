@@ -131,7 +131,7 @@ def __add_registers():
     register.plugin_name = "Access Control"
     register.description = "Card reader enabled"
     register.range = ""
-    register.value = verbal_const.OFF # "TERACOM/act230/2911"
+    register.value = verbal_const.OFF # "Teracom/act230/2911"
     __registers.append(register)
 
     register = Register("ac.entry_reader_1.port.baudrate")
@@ -159,7 +159,7 @@ def __add_registers():
     register.plugin_name = "Access Control"
     register.description = "Card reader enabled"
     register.range = ""
-    register.value = verbal_const.OFF # "TERACOM/act230/2897"
+    register.value = verbal_const.OFF # "Teracom/act230/2897"
     __registers.append(register)
 
     register = Register("ac.exit_reader_1.port.baudrate")
@@ -229,7 +229,7 @@ def __add_registers():
     register.plugin_name = "Access Control"
     register.description = "Card reader settings"
     register.range = ""
-    register.value = verbal_const.OFF # "TERACOM/act230/2486"
+    register.value = verbal_const.OFF # "Teracom/act230/2486"
     __registers.append(register)
 
 
@@ -258,7 +258,7 @@ def __add_registers():
     register.plugin_name = "Access Control"
     register.description = "Card reader settings"
     register.range = ""
-    register.value = verbal_const.OFF # "TERACOM/act230/1208"
+    register.value = verbal_const.OFF # "Teracom/act230/1208"
     __registers.append(register)
 
     register = Register("ac.exit_reader_2.port.baudrate")
