@@ -258,34 +258,40 @@ class Device():
             if param.register_type == RegisterType.ReadCoil:
                 count = len(param.addresses)
                 address = min(param.addresses)
-                requests["ReadDeviceCoils"] = ReadDeviceCoils(unit, address, count)
+                requests[name] = ReadDeviceCoils(unit, address, count)
 
             elif param.register_type == RegisterType.ReadDiscreteInput:
                 count = len(param.addresses)
                 address = min(param.addresses)
-                requests["ReadDeviceDiscreteInputs"] = ReadDeviceDiscreteInputs(unit, address, count)
+                requests[name] = ReadDeviceDiscreteInputs(unit, address, count)
 
             elif param.register_type == RegisterType.ReadHoldingRegisters:
                 count = len(param.addresses)
                 address = min(param.addresses)
-                requests["ReadDeviceHoldingRegisters"] = ReadDeviceHoldingRegisters(unit, address, count)
+                requests[name] = ReadDeviceHoldingRegisters(unit, address, count)
 
             elif param.register_type == RegisterType.ReadInputRegisters:
                 count = len(param.addresses)
                 address = min(param.addresses)
-                requests["ReadDeviceInputRegisters"] = ReadDeviceInputRegisters(unit, address, count)
+                requests[name] = ReadDeviceInputRegisters(unit, address, count)
+
+            elif param.register_type == RegisterType.WriteSingleHoldingRegister:
+                if name in kwargs:
+                    values = kwargs[name]
+                    address = min(param.addresses)
+                    requests[name] = WriteDeviceRegisters(unit, address, [values])
 
             elif param.register_type == RegisterType.WriteMultipleCoils:
-                if "coils" in kwargs:
-                    values = kwargs["coils"]
+                if name in kwargs:
+                    values = kwargs[name]
                     address = min(param.addresses)
-                    requests["WriteDeviceCoils"] = WriteDeviceCoils(unit, address, values)
+                    requests[name] = WriteDeviceCoils(unit, address, values)
 
             elif param.register_type == RegisterType.WriteMultipleHoldingRegisters:
-                if "registers" in kwargs:
-                    values = kwargs["registers"]
+                if name in kwargs:
+                    values = kwargs[name]
                     address = min(param.addresses)
-                    requests["WriteDeviceRegisters"] = WriteDeviceRegisters(unit, address, values)
+                    requests[name] = WriteDeviceRegisters(unit, address, values)
 
         return requests
 
