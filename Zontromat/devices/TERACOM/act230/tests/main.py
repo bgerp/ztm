@@ -26,7 +26,7 @@ import argparse
 import signal
 import time
 
-from devices.TERACOM.act230.act230 import ACT230
+from devices.Teracom.act230.act230 import ACT230
 from devices.utils.card_readers.card_reader_state import CardReaderState
 
 #region File Attributes
@@ -67,7 +67,7 @@ def reader_read(card_id, reader_id):
 
     print("Card ID: {}; Reader ID: {}".format(card_id, reader_id))
 
-def stop():
+def shutdown():
     global __reader, __time_to_stop
 
     __time_to_stop = True
@@ -75,7 +75,7 @@ def stop():
     print("Stopping")
 
     if __reader is not None:
-        __reader.stop()
+        __reader.shutdown()
 
         while __reader.reader_state == CardReaderState.RUN:
             pass
@@ -84,26 +84,21 @@ def stop():
 
         print("Stopped")
 
-
-def start(port_name, sn):
+def init(port_name, sn):
     global __reader, __time_to_stop
 
     __time_to_stop = False
 
     print("Starting")
 
-    # Get card reader parameters.
-    reader_config = {
-        "port_name": port_name,
-        "baudrate": 9600,
-        "serial_number": sn,
-        "controller": None}
-
     # Create card reader.
-    __reader = ACT230(reader_config)
+    __reader = ACT230(port_name=port_name,
+        baudrate=9600,
+        serial_number=sn)
+
     if __reader.reader_state is CardReaderState.NONE:
         __reader.cb_read_card(reader_read)
-        __reader.start()
+        __reader.init()
 
         print("Started")
 
@@ -125,7 +120,7 @@ def update():
 
             print(message)
 
-            __reader.start()
+            __reader.init()
 
         if __reader.reader_state == CardReaderState.NONE:
 
@@ -134,7 +129,7 @@ def update():
 
             print(message)
 
-            __reader.start()
+            __reader.init()
 
 def interupt_handler(signum, frame):
     """Interupt handler."""
@@ -152,7 +147,7 @@ def interupt_handler(signum, frame):
     else:
         print("Signal handler called. Signal: {}; Frame: {}".format(signum, frame))
 
-    stop()
+    shutdown()
 
 def main():
     global __time_to_stop
@@ -166,13 +161,13 @@ def main():
     parser = argparse.ArgumentParser()
 
     # Add arguments.
-    parser.add_argument("--port", type=str, default="COM11", help="Serial port")
+    parser.add_argument("--port", type=str, default="COM5", help="Serial port")
     parser.add_argument("--sn", type=str, default="2911", help="Host of the robot.")
 
     # Take arguments.
     args = parser.parse_args()
 
-    start(args.port, args.sn)
+    init(args.port, args.sn)
 
     while not __time_to_stop:
         update()
