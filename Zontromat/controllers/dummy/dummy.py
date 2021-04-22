@@ -55,6 +55,10 @@ __email__ = "or.dimitrov@polygonteam.com"
 __status__ = "Debug"
 """File status."""
 
+__class_name__ = "Dummy"
+"""Controller target class.
+"""
+
 #endregion
 
 class Dummy(BaseController):
@@ -195,6 +199,8 @@ class Dummy(BaseController):
             State of the pin.
         """
 
+        self.__logger.debug("digital_write({}, {})".format(pin, value))
+
         return False
 
     def analog_write(self, pin, value):
@@ -214,6 +220,8 @@ class Dummy(BaseController):
             State of the pin.
         """
 
+        self.__logger.debug("analog_write({}, {})".format(pin, value))
+
         return 0
 
     def read_counter(self, pin):
@@ -230,6 +238,8 @@ class Dummy(BaseController):
             State of the pin.
         """
 
+        self.__logger.debug("read_counter({})".format(pin))
+
         return 0
 
     def analog_read(self, pin):
@@ -240,14 +250,13 @@ class Dummy(BaseController):
         pin : str
             Pin index.
 
-        value : int
-            Value for the output pin.
-
         Returns
         -------
         int
             State of the pin.
         """
+
+        self.__logger.debug("analog_read({})".format(pin))
 
         return 0
 
@@ -267,6 +276,8 @@ class Dummy(BaseController):
         int
             State of the pin.
         """
+    
+        self.__logger.debug("write_counter({}, {})".format(pin, value))
 
         return 0
 
