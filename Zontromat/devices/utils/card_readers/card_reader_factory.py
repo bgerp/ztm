@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 
-from devices.TERACOM.act230.act230 import ACT230
+from devices.Teracom.act230.act230 import ACT230
 
 from devices.ACS.acr122u.acr122u import ACR122U
 
@@ -99,7 +99,7 @@ class CardReaderFactory:
             raise ValueError("No \"serial_number\" argument has been passed.") 
 
         # Teracom - ACT230
-        if vendor == "TERACOM" and  model == "act230":
+        if vendor == "Teracom" and  model == "act230":
 
             # Port name
             baudrate = None

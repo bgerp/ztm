@@ -67,10 +67,10 @@ In this hedging we will describe all the register related to the work of the Zon
 | Plugin enabled | ac.enabled | str | true |
 | Allowed attendees | ac.allowed_attendees | json | [{'card_id': '445E6046010080FF', 'pin': '159753', 'valid_until': '1595322860'}] |
 |  | ac.nearby_attendees | json | [] |
-| Card reader - vendor/model/serial number | ac.entry_reader_1.enabled | str | TERACOM/act230/2897 |
+| Card reader - vendor/model/serial number | ac.entry_reader_1.enabled | str | Teracom/act230/2897 |
 | Card reader port baud rate | ac.entry_reader_1.port.baudrate | int | 9600 |
 | Card reader port name | ac.entry_reader_1.port.name | str | COM5 |
-| Card reader - vendor/model/serial number | ac.exit_reader_1.enabled | str | TERACOM/act230/2911 |
+| Card reader - vendor/model/serial number | ac.exit_reader_1.enabled | str | Teracom/act230/2911 |
 | Card reader port baud rate | ac.exit_reader_1.port.baudrate | int | 9600 |
 | Card reader port name | ac.exit_reader_1.port.name | str | COM11 |
 | Exit button input | ac.exit_button_1.input | str | DI8 |
@@ -79,10 +79,10 @@ In this hedging we will describe all the register related to the work of the Zon
 | Door closed input | ac.door_closed_1.input | str | DI2 |
 | PIR sensor input | ac.pir_1.input | str | DI0 |
 | Window closed input | ac.window_closed_1.input | str | DI3 |
-| Card reader - vendor/model/serial number | ac.entry_reader_2.enabled | str | TERACOM/act230/2897 |
+| Card reader - vendor/model/serial number | ac.entry_reader_2.enabled | str | Teracom/act230/2897 |
 | Card reader port baud rate | ac.entry_reader_2.port.baudrate | int | 9600 |
 | Card reader port name | ac.entry_reader_2.port.name | str | COM5 |
-| Card reader - vendor/model/serial number | ac.exit_reader_2.enabled | str | TERACOM/act230/2911 |
+| Card reader - vendor/model/serial number | ac.exit_reader_2.enabled | str | Teracom/act230/2911 |
 | Card reader port baud rate | ac.exit_reader_2.port.baudrate | int | 9600 |
 | Card reader port name | ac.exit_reader_2.port.name | str | COM11 |
 | Exit button input | ac.exit_button_2.input | str | off |
