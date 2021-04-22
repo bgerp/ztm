@@ -70,26 +70,42 @@ class XYMD02(Device):
 
         self._parameters.append(
             Parameter("Temperature", "C",\
-            ParameterType.INT16_T, [0x0000], RegisterType.ReadInputRegisters))
+            ParameterType.INT16_T, [0x0001], RegisterType.ReadInputRegisters))
 
         self._parameters.append(\
             Parameter("Humidity", "Rh%",\
             ParameterType.INT16_T, [0x0002], RegisterType.ReadInputRegisters))
 
         self._parameters.append(\
-            Parameter("DeviceAddress", "Data",\
+            Parameter("GetDeviceAddress", "Enum",\
+            ParameterType.INT16_T, [0x0101], RegisterType.ReadHoldingRegisters))
+
+        self._parameters.append(\
+            Parameter("GetBaudRate", "Enum",\
+            ParameterType.INT16_T, [0x0102], RegisterType.ReadHoldingRegisters))
+
+        self._parameters.append(\
+            Parameter("GetTemperatureCorrection", "C",\
+            ParameterType.INT16_T, [0x0103], RegisterType.ReadHoldingRegisters))
+
+        self._parameters.append(\
+            Parameter("GetHumidityCorrection", "Rh%",\
+            ParameterType.INT16_T, [0x0104], RegisterType.ReadHoldingRegisters))
+
+        self._parameters.append(\
+            Parameter("SetDeviceAddress", "Enum",\
             ParameterType.INT16_T, [0x0101], RegisterType.WriteSingleHoldingRegister))
 
         self._parameters.append(\
-            Parameter("BaudRate", "Data",\
+            Parameter("SetBaudRate", "Enum",\
             ParameterType.INT16_T, [0x0102], RegisterType.WriteSingleHoldingRegister))
 
         self._parameters.append(\
-            Parameter("TemperatureCorrection", "C",\
+            Parameter("SetTemperatureCorrection", "C",\
             ParameterType.INT16_T, [0x0103], RegisterType.WriteSingleHoldingRegister))
 
         self._parameters.append(\
-            Parameter("HumidityCorrection", "Rh%",\
+            Parameter("SetHumidityCorrection", "Rh%",\
             ParameterType.INT16_T, [0x0104], RegisterType.WriteSingleHoldingRegister))
 
 #endregion
