@@ -69,19 +69,33 @@ class HHC_R4I4D(Device):
         """Constructor"""
 
         self._parameters.append(
-            Parameter("DI0", "Bool",\
-            ParameterType.UINT16_T, [32], RegisterType.ReadDiscreteInput))
+            Parameter(
+                "GetRelays",
+                "Bits",
+                ParameterType.INT16_T,
+                [16, 17, 18, 19],
+                RegisterType.ReadCoil
+            )
+        )
 
         self._parameters.append(
-            Parameter("DI1", "Bool",\
-            ParameterType.UINT16_T, [33], RegisterType.ReadDiscreteInput))
+            Parameter(
+                "GetDigitalInputs",
+                "Bits",
+                ParameterType.INT16_T,
+                [32, 33, 34, 35],
+                RegisterType.ReadDiscreteInput
+            )
+        )
 
         self._parameters.append(
-            Parameter("DI2", "Bool",\
-            ParameterType.UINT16_T, [34], RegisterType.ReadDiscreteInput))
-
-        self._parameters.append(
-            Parameter("DI3", "Bool",\
-            ParameterType.UINT16_T, [35], RegisterType.ReadDiscreteInput))
+            Parameter(
+                "SetRelays",
+                "Bits",
+                ParameterType.INT16_T,
+                [16, 17, 18, 19],
+                RegisterType.WriteMultipleCoils
+            )
+        )
 
 #endregion

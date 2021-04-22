@@ -24,12 +24,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import argparse
 
+# from pymodbus.client.sync import ModbusTcpClient as ModbusClient
 from pymodbus.client.sync import ModbusSerialClient as ModbusClient
 
-from devices.Mainland.hhc_r4i4d.requests.read_device_coils import ReadDeviceCoils
-from devices.Mainland.hhc_r4i4d.requests.read_device_discrete_inputs import ReadDeviceDiscreteInputs
+from devices.drivers.modbus.requests.read_device_coils import ReadDeviceCoils
+from devices.drivers.modbus.requests.read_device_discrete_inputs import ReadDeviceDiscreteInputs
 
-from devices.Mainland.hhc_r4i4d.requests.write_device_coils import WriteDeviceCoils
+from devices.drivers.modbus.requests.write_device_coils import WriteDeviceCoils
+
+from devices.Mainland.hhc_r4i4d.hhc_r4i4d import HHC_R4I4D as Island
 
 #region File Attributes
 
@@ -70,7 +73,7 @@ def main():
     parser = argparse.ArgumentParser()
 
     # Add arguments.
-    parser.add_argument("--port", type=str, default="COM12", help="Serial port.")
+    parser.add_argument("--port", type=str, default="COM10", help="Serial port.")
     parser.add_argument("--unit", type=int, default=1, help="Unit ID.")
 
     # Take arguments.
@@ -80,86 +83,85 @@ def main():
     unit = args.unit
     port = args.port
 
+    # Island interface.
+    island = Island()
+
     # Create client.
     with ModbusClient(method="rtu", port=port, baudrate=9600, timeout=0.2,
         xonxoff=False, rtscts=False, dsrdtr=False) as client:
 
         #---------------------------------------------------------------------------#
-        # Read Coils.
+        # Generate request.
         #---------------------------------------------------------------------------#
-        cr_request = ReadDeviceCoils(unit)
-        cr_response = client.execute(cr_request)
-        
-        # Check the response.
-        assert(not cr_response.isError())
-
-        # Check the content.
-        is_ok = cr_response.bits == [False]*8
-        assert(is_ok)
-
-        print(cr_response)
-        print()
+        requests = island.generate_requests(unit, SetRelays=[False]*4)
 
         #---------------------------------------------------------------------------#
         # Read Discrete Inputs.
         #---------------------------------------------------------------------------#
-        di_request = ReadDeviceDiscreteInputs(unit)
-        di_response = client.execute(di_request)
+        response = client.execute(requests["GetDigitalInputs"])
 
         # Check the response.
-        assert(not di_response.isError())
+        assert(not response.isError(), "Device did not respond properly to the request.")
 
         #Check the content.
-        is_ok = di_response.bits == [False]*8
-        assert(is_ok)
+        is_ok = response.bits == [False]*4 + [False]*4
+        assert(is_ok, "Device did not respond with proper bit count.")
 
-        print(di_response)
+        print(response)
+        print(response.bits)
         print()
+
+        #---------------------------------------------------------------------------#
+        # Generate request.
+        #---------------------------------------------------------------------------#
+        requests = island.generate_requests(unit, SetRelays=[True]*4)
 
         #---------------------------------------------------------------------------#
         # Write Coils.
         #---------------------------------------------------------------------------#
-        cw_request = WriteDeviceCoils(unit, [True]*4)
-        cw_response = client.execute(cw_request)
+        response = client.execute(requests["SetRelays"])
 
         # Check the response.
-        assert(not cw_response.isError())
-        print(cw_response)
+        assert(not response.isError(), "Device did not respond properly to the request.")
+        print(response)
 
-        cr_request = ReadDeviceCoils(unit)
-        cr_response = client.execute(cr_request)
+        response = client.execute(requests["GetRelays"])
 
         # Check the response.
-        assert(not cr_response.isError())
+        assert(not response.isError(), "Device did not respond properly to the request.")
 
         #Check the content.
-        is_ok = cr_response.bits == [True]*4 + [False]*4
+        is_ok = response.bits == [True]*4 + [False]*4
         assert(is_ok)
 
-        print(cr_response)
+        print(response)
+        print(response.bits)
         print()
+
+        #---------------------------------------------------------------------------#
+        # Generate request.
+        #---------------------------------------------------------------------------#
+        requests = island.generate_requests(unit, SetRelays=[False]*4)
 
         #---------------------------------------------------------------------------#
         # Write Coils.
         #---------------------------------------------------------------------------#
-        cw_request = WriteDeviceCoils(unit, [False]*4)
-        cw_response = client.execute(cw_request)
+        response = client.execute(requests["SetRelays"])
 
         # Check the response.
-        assert(not cw_response.isError())
-        print(cw_response)
+        assert(not response.isError(), "Device did not respond properly to the request.")
+        print(response)
 
-        cr_request = ReadDeviceCoils(unit)
-        cr_response = client.execute(cr_request)
+        response = client.execute(requests["GetRelays"])
 
         # Check the response.
-        assert(not cr_response.isError())
+        assert(not response.isError(), "Device did not respond properly to the request.")
 
         #Check the content.
-        is_ok = cr_response.bits == [False]*8
+        is_ok = response.bits == [False]*4 + [False]*4
         assert(is_ok)
 
-        print(cr_response)
+        print(response)
         print()
 
 if __name__ == "__main__":
