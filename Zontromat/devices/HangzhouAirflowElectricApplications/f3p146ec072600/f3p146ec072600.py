@@ -59,7 +59,9 @@ __status__ = "Debug"
 #endregion
 
 class F3P146EC072600(BaseDevice):
-    """Model: F3P146-EC072-600"""
+    """Model: F3P146-EC072-600
+    
+    See http://www.shidaqian.com/Upload/SDQ_ECqqlxfj/F3P146-EC072-600.PDF"""
 
 #region Attributes
 
@@ -229,3 +231,5 @@ class F3P146EC072600(BaseDevice):
         return instance
 
 #endregion
+
+ # TODO: Create test.
