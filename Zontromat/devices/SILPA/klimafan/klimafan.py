@@ -100,6 +100,10 @@ class Klimafan(BaseDevice):
 
         self.__state = state
 
+        self._controller.digital_write(self._config["stage_1"], 0)
+        self._controller.digital_write(self._config["stage_2"], 0)
+        self._controller.digital_write(self._config["stage_3"], 0)
+
         if self.__state == 1:
             self._controller.digital_write(self._config["stage_1"], 1)
             self._controller.digital_write(self._config["stage_2"], 0)
@@ -114,11 +118,6 @@ class Klimafan(BaseDevice):
             self._controller.digital_write(self._config["stage_1"], 0)
             self._controller.digital_write(self._config["stage_2"], 0)
             self._controller.digital_write(self._config["stage_3"], 1)
-
-        else:
-            self._controller.digital_write(self._config["stage_1"], 0)
-            self._controller.digital_write(self._config["stage_2"], 0)
-            self._controller.digital_write(self._config["stage_3"], 0)
 
         self.__logger.debug("Name: {}; State: {}".format(self.name, self.__state))
 
