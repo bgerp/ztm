@@ -70,8 +70,8 @@ class S8_3CN(Device):
 
         self._parameters.append(
             Parameter(
-                "ReadRelayOutputs",
-                "RelayOutputs",
+                "GetRelays",
+                "Bits",
                 ParameterType.INT16_T,
                 [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
                 RegisterType.ReadCoil
@@ -80,8 +80,8 @@ class S8_3CN(Device):
 
         self._parameters.append(
             Parameter(
-                "ReadDigitalInputs",
-                "DigitalInputs",
+                "GetDigitalInputs",
+                "Bits",
                 ParameterType.INT16_T,
                 [0, 1, 2, 3, 4, 5, 6, 7],
                 RegisterType.ReadDiscreteInput
@@ -90,8 +90,8 @@ class S8_3CN(Device):
 
         self._parameters.append(
             Parameter(
-                "ReadAnalogOutputs",
-                "AnalogOutputs",
+                "GetAnalogOutputs",
+                "Registers",
                 ParameterType.INT16_T,
                 [0, 1, 2, 3],
                 RegisterType.ReadHoldingRegisters
@@ -100,19 +100,18 @@ class S8_3CN(Device):
 
         self._parameters.append(
             Parameter(
-                "ReadAnalogInputs",
-                "AnalogInputs",
+                "GetAnalogInputs",
+                "Registers",
                 ParameterType.INT16_T,
                 [0, 1, 2, 3, 4, 5, 6, 7],
                 RegisterType.ReadInputRegisters
             )
         )
 
-
         self._parameters.append(
             Parameter(
-                "WriteAnalogOutputs",
-                "AnalogOutputs",
+                "SetAnalogOutputs",
+                "Registers",
                 ParameterType.INT16_T,
                 [0, 1, 2, 3],
                 RegisterType.WriteMultipleHoldingRegisters
@@ -121,8 +120,8 @@ class S8_3CN(Device):
 
         self._parameters.append(
             Parameter(
-                "WriteRelayOutputs",
-                "RelayOutputs",
+                "SetRelays",
+                "Bits",
                 ParameterType.INT16_T,
                 [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
                 RegisterType.WriteMultipleCoils

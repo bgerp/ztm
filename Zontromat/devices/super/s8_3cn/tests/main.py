@@ -35,7 +35,7 @@ from devices.drivers.modbus.requests.read_device_input_registers import ReadDevi
 from devices.drivers.modbus.requests.write_device_coils import WriteDeviceCoils
 from devices.drivers.modbus.requests.write_device_registers import WriteDeviceRegisters
 
-from devices.super.s8_3cn.s8_3cn import S8_3CN as BlackIsland
+from devices.Super.s8_3cn.s8_3cn import S8_3CN as BlackIsland
 
 #region File Attributes
 
@@ -96,174 +96,181 @@ def main():
 
         #---------------------------------------------------------------------------#
         # Generate request.
-        requests = bi.generate_requests(1, coils=[False]*16, registers=[0]*4)
         #---------------------------------------------------------------------------#
+        requests = bi.generate_requests(unit, SetRelays=[False]*12 + [False]*4, SetAnalogOutputs=[0]*4)
 
         #---------------------------------------------------------------------------#
         # Read Coils.
         #---------------------------------------------------------------------------#
-        cr_request = requests["ReadDeviceCoils"]
-        cr_response = client.execute(cr_request)
+        response = client.execute(requests["GetRelays"])
         
         # Check the response.
-        assert not cr_response.isError(), "All relays should be OFF."
+        assert not response.isError(), "All relays should be OFF."
 
         # Check the content.
-        is_ok = cr_response.bits == [False]*12 + [False]*4
+        is_ok = response.bits == [False]*12 + [False]*4
         assert is_ok, "All the relays should be OFF."
 
-        print(cr_response)
+        print(response)
+        print(response.bits)
         print()
 
         #---------------------------------------------------------------------------#
         # Read Discrete Inputs.
         #---------------------------------------------------------------------------#
-        di_request = requests["ReadDeviceDiscreteInputs"]
-        di_response = client.execute(di_request)
+        response = client.execute(requests["GetDigitalInputs"])
 
         # Check the response.
-        assert(not di_response.isError())
+        assert not response.isError()
 
         #Check the content.
-        is_ok = di_response.bits == [False]*8
-        assert(is_ok)
+        is_ok = response.bits == [False]*8
+        assert is_ok
 
-        print(di_response)
+        print(response)
+        print(response.bits)
         print()
 
         #---------------------------------------------------------------------------#
         # Read Holding Registers.
         #---------------------------------------------------------------------------#
-        hrr_request = requests["ReadDeviceHoldingRegisters"]
-        hrr_response = client.execute(hrr_request)
+        response = client.execute(requests["GetAnalogOutputs"])
 
         # Check the response.
-        assert(not hrr_response.isError())
+        assert not response.isError()
 
         #Check the content.
-        is_ok = hrr_response.registers == [0]*4
-        assert(is_ok)
+        is_ok = response.registers == [0]*4
+        assert is_ok, "All analog outputs should ld be 0."
 
-        print(hrr_response)
+        print(response)
+        print(response.registers)
         print()
 
         #---------------------------------------------------------------------------#
         # Read Input Registers.
         #---------------------------------------------------------------------------#
-        irr_request = requests["ReadDeviceInputRegisters"]
-        irr_response = client.execute(irr_request)
+        response = client.execute(requests["GetAnalogInputs"])
 
         # Check the response.
-        assert(not irr_response.isError())
+        assert not response.isError()
 
         #Check the content.
-        is_ok = irr_response.registers == [0]*8
-        assert(is_ok)
+        is_ok = response.registers == [0]*8
+        assert is_ok, "All analog inputs should be 0."
 
-        print(irr_response)
+        print(response)
+        print(response.registers)
         print()
 
         #---------------------------------------------------------------------------#
         # Generate request.
-        requests = bi.generate_requests(1, coils=[True]*16, registers=[50000]*4)
         #---------------------------------------------------------------------------#
+        requests = bi.generate_requests(unit, SetRelays=[True]*12 + [False]*4, SetAnalogOutputs=[50000]*4)
 
         #---------------------------------------------------------------------------#
         # Write Coils.
         #---------------------------------------------------------------------------#
-        cw_request = requests["WriteDeviceCoils"]
-        cw_response = client.execute(cw_request)
+        response = client.execute(requests["SetRelays"])
 
         # Check the response.
-        assert(not cw_response.isError())
-        print(cw_response)
+        assert not response.isError()
+        print(response)
 
-        cr_request = requests["ReadDeviceCoils"]
-        cr_response = client.execute(cr_request)
+        response = client.execute(requests["GetRelays"])
 
         # Check the response.
-        assert(not cr_response.isError())
+        assert not response.isError()
 
         #Check the content.
-        is_ok = cr_response.bits == [True]*12 + [False]*4
-        assert(is_ok)
+        is_ok = response.bits == [True]*12 + [False]*4
+        assert is_ok
 
-        print(cr_response)
-        print()
-
-        #---------------------------------------------------------------------------#
-        # Write Holding Registers.
-        #---------------------------------------------------------------------------#
-        hrw_request = requests["WriteDeviceRegisters"]
-        hrw_response = client.execute(hrw_request)
-
-        # Check the response.
-        assert(not hrw_response.isError())
-        print(hrw_response)
-
-        hrr_request = requests["ReadDeviceHoldingRegisters"]
-        hrr_response = client.execute(hrr_request)
-
-        # Check the response.
-        assert(not hrr_response.isError())
-
-        #Check the content.
-        is_ok = hrr_response.registers == [50000]*4
-        assert(is_ok)
-
-        print(hrr_response)
+        print(response)
+        print(response.bits)
         print()
 
         #---------------------------------------------------------------------------#
         # Generate request.
-        requests = bi.generate_requests(1, coils=[False]*16, registers=[0]*4)
         #---------------------------------------------------------------------------#
+        requests = bi.generate_requests(unit, SetRelays=[False]*16)
 
         #---------------------------------------------------------------------------#
         # Write Coils.
         #---------------------------------------------------------------------------#
-        cw_request = requests["WriteDeviceCoils"]
-        cw_response = client.execute(cw_request)
+        response = client.execute(requests["SetRelays"])
 
         # Check the response.
-        assert(not cw_response.isError())
-        print(cw_response)
+        assert not response.isError()
+        print(response)
 
-        cr_request = requests["ReadDeviceCoils"]
-        cr_response = client.execute(cr_request)
+        response = client.execute(requests["GetRelays"])
 
         # Check the response.
-        assert(not cr_response.isError())
+        assert not response.isError()
 
-        #Check the content.
-        is_ok = cr_response.bits == [False]*12 + [False]*4
-        assert(is_ok)
+        # Check the content.
+        is_ok = response.bits == [False]*12 + [False]*4
+        assert is_ok
 
-        print(cr_response)
+        print(response)
+        print(response.bits)
         print()
+
+        #---------------------------------------------------------------------------#
+        # Generate request.
+        #---------------------------------------------------------------------------#
+        requests = bi.generate_requests(unit, SetAnalogOutputs=[50000]*4)
 
         #---------------------------------------------------------------------------#
         # Write Holding Registers.
         #---------------------------------------------------------------------------#
-        hrw_request = requests["WriteDeviceRegisters"]
-        hrw_response = client.execute(hrw_request)
+        response = client.execute(requests["SetAnalogOutputs"])
 
         # Check the response.
-        assert(not hrw_response.isError())
-        print(hrw_response)
+        assert not response.isError()
+        print(response)
 
-        hrr_request = requests["ReadDeviceHoldingRegisters"]
-        hrr_response = client.execute(hrr_request)
+        response = client.execute(requests["GetAnalogOutputs"])
 
         # Check the response.
-        assert(not hrr_response.isError())
+        assert not response.isError()
+
+        # Check the content.
+        is_ok = response.registers == [50000]*4
+        assert is_ok
+
+        print(response)
+        print(response.registers)
+        print()
+
+        #---------------------------------------------------------------------------#
+        # Generate request.
+        #---------------------------------------------------------------------------#
+        requests = bi.generate_requests(unit, SetAnalogOutputs=[0]*4)
+
+        #---------------------------------------------------------------------------#
+        # Write Holding Registers.
+        #---------------------------------------------------------------------------#
+        response = client.execute(requests["SetAnalogOutputs"])
+
+        # Check the response.
+        assert not response.isError()
+        print(response)
+
+        response = client.execute(requests["GetAnalogOutputs"])
+
+        # Check the response.
+        assert not response.isError()
 
         #Check the content.
-        is_ok = hrr_response.registers == [0]*4
-        assert(is_ok)
+        is_ok = response.registers == [0]*4
+        assert is_ok
 
-        print(hrr_response)
+        print(response)
+        print(response.registers)
         print()
+
 
 if __name__ == "__main__":
     main()
