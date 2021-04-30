@@ -111,10 +111,6 @@ class Evok(BaseController):
     __rest_watchdog = "/rest/watchdog/"
     """REST path to WD."""
 
-    __webhook_cb = None
-    """webhook callback function.
-    """    
-
     __web_service = None
     """EVOK web service.
     """    
@@ -1065,7 +1061,8 @@ class Evok(BaseController):
             callback (function): [description]
         """
 
-        self.__webhook_cb = callback
+        if self.__web_service is not None:
+            self.__web_service.set_cb(callback)
 
 #endregion
 
@@ -1524,36 +1521,3 @@ class Evok(BaseController):
         return self._get_1w_devices()
 
 #endregion
-
-    # def set_evok_cb(self, callback):
-    #     """Set update callback."""
-
-    #     self.__webhook_cb = callback
-
-    #     # Evok event handler.
-    #     @self._app.route("/api/evok-webhooks", methods=["POST"])
-    #     def evok_api_post():
-    #         """Evok WEB hooks for POST method."""
-
-    #         data = request.get_data(as_text=True)
-    #         if data is not None:
-    #             json_data = json.loads(data)
-    #             if json_data is not None:
-    #                 for item in json_data:
-    #                     if self.__webhook_cb is not None:
-    #                         self.__webhook_cb(item)
-
-    #         return ""
-
-
-    # __webhook_cb = None
-    # """EVOK Update callback handler."""
-
-
-    # def set_evok_cb(self, callback):
-    #     """Set EVOK service callback.
-
-    #     Args:
-    #         callback (function): EVOK service handler.
-    #     """
-    #     self.__server.set_evok_cb(callback)

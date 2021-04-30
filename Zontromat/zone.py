@@ -213,7 +213,7 @@ class Zone():
         """
 
         # Target inputs, by registers names.
-        names = ["ac.door_closed_1.input", "ac.door_closed_2.input",\
+        names = ["ac.door_closed_1.input","ac.door_closed_2.input",\
             "ac.pir_1.input", "ac.pir_2.input",\
             "ac.window_closed_1.input", "ac.window_closed_2.input",\
             "monitoring.cw.input", "monitoring.hw.input", "sys.at.input"]
