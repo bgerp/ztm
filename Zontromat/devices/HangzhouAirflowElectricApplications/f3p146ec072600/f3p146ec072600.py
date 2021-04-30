@@ -167,6 +167,14 @@ class F3P146EC072600(BaseDevice):
         if "output" in self._config:
             self.__output = self._config["output"]
 
+    def get_speed(self):
+        """Get speed of the fan.
+
+        Returns:
+            int: Output speed of the fan.
+        """
+        return self.__speed
+
     def set_speed(self, speed):
         """Set speed of the fan.
 
@@ -209,7 +217,17 @@ class F3P146EC072600(BaseDevice):
 
     @staticmethod
     def create(name, key, registers, controller):
-        """Value of the thermometer."""
+        """Create F3P146-EC072-600.
+
+        Args:
+            name (str): Name of the fan.
+            key (str): Kay that will be used for registers.
+            registers (Registers): Registers that hold the settings.
+            controller (mixed): PLC instance.
+
+        Returns:
+            F3P146EC072600: Instance of class.
+        """
 
         instance = None
 
