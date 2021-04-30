@@ -76,7 +76,7 @@ class Device():
 
     #endregion
 
-    #region Getters and Setters
+    #region Properties
 
     @property
     def parameters(self):
@@ -247,57 +247,69 @@ class Device():
 
         return result
 
+    def generate_request(self, unit, name, kwargs):
+        """[summary]
+
+        Args:
+            unit (int): Unit ID.
+            name (str): Parameter name.
+            kwargs (dict): Additional arguments values.
+        """
+
+        param = self.get_parameter_by_name(name)
+        request = None
+
+        if param.register_type == RegisterType.ReadCoil:
+            count = len(param.addresses)
+            address = min(param.addresses)
+            requests[name] = ReadDeviceCoils(unit, address, count)
+
+        elif param.register_type == RegisterType.ReadDiscreteInput:
+            count = len(param.addresses)
+            address = min(param.addresses)
+            requests[name] = ReadDeviceDiscreteInputs(unit, address, count)
+
+        elif param.register_type == RegisterType.ReadHoldingRegisters:
+            count = len(param.addresses)
+            address = min(param.addresses)
+            requests[name] = ReadDeviceHoldingRegisters(unit, address, count)
+
+        elif param.register_type == RegisterType.ReadInputRegisters:
+            count = len(param.addresses)
+            address = min(param.addresses)
+            requests[name] = ReadDeviceInputRegisters(unit, address, count)
+
+        elif param.register_type == RegisterType.WriteSingleHoldingRegister:
+            if name in kwargs:
+                values = kwargs[name]
+                address = min(param.addresses)
+                requests[name] = WriteDeviceRegisters(unit, address, [values])
+
+        elif param.register_type == RegisterType.WriteMultipleCoils:
+            if name in kwargs:
+                values = kwargs[name]
+                address = min(param.addresses)
+                requests[name] = WriteDeviceCoils(unit, address, values)
+
+        elif param.register_type == RegisterType.WriteMultipleHoldingRegisters:
+            if name in kwargs:
+                values = kwargs[name]
+                address = min(param.addresses)
+                requests[name] = WriteDeviceRegisters(unit, address, values)
+
     def generate_requests(self, unit, **kwargs):
 
         requests = {}
         names = self.get_parameters_names()        
 
         for name in names:
-            param = self.get_parameter_by_name(name)
-
-            if param.register_type == RegisterType.ReadCoil:
-                count = len(param.addresses)
-                address = min(param.addresses)
-                requests[name] = ReadDeviceCoils(unit, address, count)
-
-            elif param.register_type == RegisterType.ReadDiscreteInput:
-                count = len(param.addresses)
-                address = min(param.addresses)
-                requests[name] = ReadDeviceDiscreteInputs(unit, address, count)
-
-            elif param.register_type == RegisterType.ReadHoldingRegisters:
-                count = len(param.addresses)
-                address = min(param.addresses)
-                requests[name] = ReadDeviceHoldingRegisters(unit, address, count)
-
-            elif param.register_type == RegisterType.ReadInputRegisters:
-                count = len(param.addresses)
-                address = min(param.addresses)
-                requests[name] = ReadDeviceInputRegisters(unit, address, count)
-
-            elif param.register_type == RegisterType.WriteSingleHoldingRegister:
-                if name in kwargs:
-                    values = kwargs[name]
-                    address = min(param.addresses)
-                    requests[name] = WriteDeviceRegisters(unit, address, [values])
-
-            elif param.register_type == RegisterType.WriteMultipleCoils:
-                if name in kwargs:
-                    values = kwargs[name]
-                    address = min(param.addresses)
-                    requests[name] = WriteDeviceCoils(unit, address, values)
-
-            elif param.register_type == RegisterType.WriteMultipleHoldingRegisters:
-                if name in kwargs:
-                    values = kwargs[name]
-                    address = min(param.addresses)
-                    requests[name] = WriteDeviceRegisters(unit, address, values)
+            requests[name] = self.generate_request(unit, name, kwargs)
 
         return requests
 
     #endregion
 
-    #region Private Methods
+    #region Static Public Methods
 
     @staticmethod
     def converts_to_parameter(parameter_type, registers, registers_data):
