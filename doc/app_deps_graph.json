@@ -7,7 +7,7 @@
             "controllers.neuron.evok.evok",
             "controllers.picons.picons",
             "devices.ACS.acr122u.acr122u",
-            "devices.TERACOM.act230.act230",
+            "devices.Teracom.act230.act230",
             "main",
             "plugins.environment.sunposition",
             "plugins.hvac.air_conditioner",
@@ -394,8 +394,8 @@
             "devices.Eastron.sdm630.sdm630",
             "devices.HangzhouAirflowElectricApplications.f3p146ec072600.f3p146ec072600",
             "devices.SEDtronic.u1wtvs.u1wtvs",
-            "devices.SILPA.klimafan.klimafan",
-            "devices.TERACOM.act230.act230",
+            "devices.Silpa.klimafan.klimafan",
+            "devices.Teracom.act230.act230",
             "devices.TONHE.a20m15b2c.a20m15b2c",
             "devices.drivers.modbus.device",
             "devices.no_vendors.no_vendor_1.flowmeter",
@@ -592,23 +592,23 @@
         "name": "devices.SEDtronic.u1wtvs.u1wtvs",
         "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\devices\\SEDtronic\\u1wtvs\\u1wtvs.py"
     },
-    "devices.SILPA": {
+    "devices.Silpa": {
         "bacon": 2,
         "imported_by": [
             "plugins.hvac.air_conditioner"
         ],
-        "name": "devices.SILPA",
-        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\devices\\SILPA\\__init__.py"
+        "name": "devices.Silpa",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\devices\\Silpa\\__init__.py"
     },
-    "devices.SILPA.klimafan": {
+    "devices.Silpa.klimafan": {
         "bacon": 2,
         "imported_by": [
             "plugins.hvac.air_conditioner"
         ],
-        "name": "devices.SILPA.klimafan",
-        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\devices\\SILPA\\klimafan\\__init__.py"
+        "name": "devices.Silpa.klimafan",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\devices\\Silpa\\klimafan\\__init__.py"
     },
-    "devices.SILPA.klimafan.klimafan": {
+    "devices.Silpa.klimafan.klimafan": {
         "bacon": 2,
         "imported_by": [
             "plugins.hvac.air_conditioner"
@@ -619,26 +619,26 @@
             "utils",
             "utils.logger"
         ],
-        "name": "devices.SILPA.klimafan.klimafan",
-        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\devices\\SILPA\\klimafan\\klimafan.py"
+        "name": "devices.Silpa.klimafan.klimafan",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\devices\\Silpa\\klimafan\\klimafan.py"
     },
-    "devices.TERACOM": {
+    "devices.Teracom": {
         "bacon": 7,
         "imported_by": [
             "devices.utils.card_readers.card_reader_factory"
         ],
-        "name": "devices.TERACOM",
-        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\devices\\TERACOM\\__init__.py"
+        "name": "devices.Teracom",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\devices\\Teracom\\__init__.py"
     },
-    "devices.TERACOM.act230": {
+    "devices.Teracom.act230": {
         "bacon": 7,
         "imported_by": [
             "devices.utils.card_readers.card_reader_factory"
         ],
-        "name": "devices.TERACOM.act230",
-        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\devices\\TERACOM\\act230\\__init__.py"
+        "name": "devices.Teracom.act230",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\devices\\Teracom\\act230\\__init__.py"
     },
-    "devices.TERACOM.act230.act230": {
+    "devices.Teracom.act230.act230": {
         "bacon": 1,
         "imported_by": [
             "__main__",
@@ -654,8 +654,8 @@
             "utils",
             "utils.logger"
         ],
-        "name": "devices.TERACOM.act230.act230",
-        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\devices\\TERACOM\\act230\\act230.py"
+        "name": "devices.Teracom.act230.act230",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\devices\\Teracom\\act230\\act230.py"
     },
     "devices.TONHE": {
         "bacon": 2,
@@ -693,7 +693,7 @@
             "devices.Dallas.ds18b20.ds18b20",
             "devices.HangzhouAirflowElectricApplications.f3p146ec072600.f3p146ec072600",
             "devices.SEDtronic.u1wtvs.u1wtvs",
-            "devices.SILPA.klimafan.klimafan",
+            "devices.Silpa.klimafan.klimafan",
             "devices.TONHE.a20m15b2c.a20m15b2c",
             "devices.no_vendors.no_vendor_1.flowmeter",
             "devices.utils.card_readers.base_card_reader"
@@ -870,7 +870,7 @@
         "bacon": 2,
         "imported_by": [
             "devices.ACS.acr122u.acr122u",
-            "devices.TERACOM.act230.act230",
+            "devices.Teracom.act230.act230",
             "devices.utils.card_readers.base_card_reader",
             "plugins.access_control.security_zone"
         ],
@@ -881,7 +881,7 @@
         "bacon": 2,
         "imported_by": [
             "devices.ACS.acr122u.acr122u",
-            "devices.TERACOM.act230.act230",
+            "devices.Teracom.act230.act230",
             "devices.utils.card_readers.base_card_reader",
             "plugins.access_control.security_zone"
         ],
@@ -892,7 +892,7 @@
         "bacon": 2,
         "imported_by": [
             "devices.ACS.acr122u.acr122u",
-            "devices.TERACOM.act230.act230"
+            "devices.Teracom.act230.act230"
         ],
         "imports": [
             "devices",
@@ -916,9 +916,9 @@
             "devices.ACS",
             "devices.ACS.acr122u",
             "devices.ACS.acr122u.acr122u",
-            "devices.TERACOM",
-            "devices.TERACOM.act230",
-            "devices.TERACOM.act230.act230"
+            "devices.Teracom",
+            "devices.Teracom.act230",
+            "devices.Teracom.act230.act230"
         ],
         "name": "devices.utils.card_readers.card_reader_factory",
         "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\devices\\utils\\card_readers\\card_reader_factory.py"
@@ -927,7 +927,7 @@
         "bacon": 2,
         "imported_by": [
             "devices.ACS.acr122u.acr122u",
-            "devices.TERACOM.act230.act230",
+            "devices.Teracom.act230.act230",
             "devices.utils.card_readers.base_card_reader",
             "plugins.access_control.security_zone"
         ],
@@ -1176,9 +1176,9 @@
             "devices.HangzhouAirflowElectricApplications",
             "devices.HangzhouAirflowElectricApplications.f3p146ec072600",
             "devices.HangzhouAirflowElectricApplications.f3p146ec072600.f3p146ec072600",
-            "devices.SILPA",
-            "devices.SILPA.klimafan",
-            "devices.SILPA.klimafan.klimafan",
+            "devices.Silpa",
+            "devices.Silpa.klimafan",
+            "devices.Silpa.klimafan.klimafan",
             "devices.TONHE",
             "devices.TONHE.a20m15b2c",
             "devices.TONHE.a20m15b2c.a20m15b2c",
@@ -1415,7 +1415,7 @@
     "serial": {
         "bacon": 2,
         "imported_by": [
-            "devices.TERACOM.act230.act230"
+            "devices.Teracom.act230.act230"
         ],
         "name": "serial",
         "path": null
@@ -1552,8 +1552,8 @@
             "data.registers",
             "devices.ACS.acr122u.acr122u",
             "devices.HangzhouAirflowElectricApplications.f3p146ec072600.f3p146ec072600",
-            "devices.SILPA.klimafan.klimafan",
-            "devices.TERACOM.act230.act230",
+            "devices.Silpa.klimafan.klimafan",
+            "devices.Teracom.act230.act230",
             "devices.TONHE.a20m15b2c.a20m15b2c",
             "devices.base_device",
             "devices.tests.electrical_performance.electrical_performance",
@@ -1599,8 +1599,8 @@
             "data.registers",
             "devices.ACS.acr122u.acr122u",
             "devices.HangzhouAirflowElectricApplications.f3p146ec072600.f3p146ec072600",
-            "devices.SILPA.klimafan.klimafan",
-            "devices.TERACOM.act230.act230",
+            "devices.Silpa.klimafan.klimafan",
+            "devices.Teracom.act230.act230",
             "devices.TONHE.a20m15b2c.a20m15b2c",
             "main",
             "plugins.access_control.access_control",
@@ -1748,7 +1748,7 @@
             "controllers.neuron.evok.evok",
             "controllers.picons.picons",
             "devices.ACS.acr122u.acr122u",
-            "devices.TERACOM.act230.act230",
+            "devices.Teracom.act230.act230",
             "main",
             "plugins.environment.sunposition",
             "plugins.hvac.air_conditioner",
@@ -2135,8 +2135,8 @@
             "devices.Eastron.sdm630.sdm630",
             "devices.HangzhouAirflowElectricApplications.f3p146ec072600.f3p146ec072600",
             "devices.SEDtronic.u1wtvs.u1wtvs",
-            "devices.SILPA.klimafan.klimafan",
-            "devices.TERACOM.act230.act230",
+            "devices.Silpa.klimafan.klimafan",
+            "devices.Teracom.act230.act230",
             "devices.TONHE.a20m15b2c.a20m15b2c",
             "devices.drivers.modbus.device",
             "devices.no_vendors.no_vendor_1.flowmeter",
@@ -2333,23 +2333,23 @@
         "name": "devices.SEDtronic.u1wtvs.u1wtvs",
         "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\devices\\SEDtronic\\u1wtvs\\u1wtvs.py"
     },
-    "devices.SILPA": {
+    "devices.Silpa": {
         "bacon": 2,
         "imported_by": [
             "plugins.hvac.air_conditioner"
         ],
-        "name": "devices.SILPA",
-        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\devices\\SILPA\\__init__.py"
+        "name": "devices.Silpa",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\devices\\Silpa\\__init__.py"
     },
-    "devices.SILPA.klimafan": {
+    "devices.Silpa.klimafan": {
         "bacon": 2,
         "imported_by": [
             "plugins.hvac.air_conditioner"
         ],
-        "name": "devices.SILPA.klimafan",
-        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\devices\\SILPA\\klimafan\\__init__.py"
+        "name": "devices.Silpa.klimafan",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\devices\\Silpa\\klimafan\\__init__.py"
     },
-    "devices.SILPA.klimafan.klimafan": {
+    "devices.Silpa.klimafan.klimafan": {
         "bacon": 2,
         "imported_by": [
             "plugins.hvac.air_conditioner"
@@ -2360,26 +2360,26 @@
             "utils",
             "utils.logger"
         ],
-        "name": "devices.SILPA.klimafan.klimafan",
-        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\devices\\SILPA\\klimafan\\klimafan.py"
+        "name": "devices.Silpa.klimafan.klimafan",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\devices\\Silpa\\klimafan\\klimafan.py"
     },
-    "devices.TERACOM": {
+    "devices.Teracom": {
         "bacon": 7,
         "imported_by": [
             "devices.utils.card_readers.card_reader_factory"
         ],
-        "name": "devices.TERACOM",
-        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\devices\\TERACOM\\__init__.py"
+        "name": "devices.Teracom",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\devices\\Teracom\\__init__.py"
     },
-    "devices.TERACOM.act230": {
+    "devices.Teracom.act230": {
         "bacon": 7,
         "imported_by": [
             "devices.utils.card_readers.card_reader_factory"
         ],
-        "name": "devices.TERACOM.act230",
-        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\devices\\TERACOM\\act230\\__init__.py"
+        "name": "devices.Teracom.act230",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\devices\\Teracom\\act230\\__init__.py"
     },
-    "devices.TERACOM.act230.act230": {
+    "devices.Teracom.act230.act230": {
         "bacon": 1,
         "imported_by": [
             "__main__",
@@ -2395,8 +2395,8 @@
             "utils",
             "utils.logger"
         ],
-        "name": "devices.TERACOM.act230.act230",
-        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\devices\\TERACOM\\act230\\act230.py"
+        "name": "devices.Teracom.act230.act230",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\devices\\Teracom\\act230\\act230.py"
     },
     "devices.TONHE": {
         "bacon": 2,
@@ -2434,7 +2434,7 @@
             "devices.Dallas.ds18b20.ds18b20",
             "devices.HangzhouAirflowElectricApplications.f3p146ec072600.f3p146ec072600",
             "devices.SEDtronic.u1wtvs.u1wtvs",
-            "devices.SILPA.klimafan.klimafan",
+            "devices.Silpa.klimafan.klimafan",
             "devices.TONHE.a20m15b2c.a20m15b2c",
             "devices.no_vendors.no_vendor_1.flowmeter",
             "devices.utils.card_readers.base_card_reader"
@@ -2611,7 +2611,7 @@
         "bacon": 2,
         "imported_by": [
             "devices.ACS.acr122u.acr122u",
-            "devices.TERACOM.act230.act230",
+            "devices.Teracom.act230.act230",
             "devices.utils.card_readers.base_card_reader",
             "plugins.access_control.security_zone"
         ],
@@ -2622,7 +2622,7 @@
         "bacon": 2,
         "imported_by": [
             "devices.ACS.acr122u.acr122u",
-            "devices.TERACOM.act230.act230",
+            "devices.Teracom.act230.act230",
             "devices.utils.card_readers.base_card_reader",
             "plugins.access_control.security_zone"
         ],
@@ -2633,7 +2633,7 @@
         "bacon": 2,
         "imported_by": [
             "devices.ACS.acr122u.acr122u",
-            "devices.TERACOM.act230.act230"
+            "devices.Teracom.act230.act230"
         ],
         "imports": [
             "devices",
@@ -2657,9 +2657,9 @@
             "devices.ACS",
             "devices.ACS.acr122u",
             "devices.ACS.acr122u.acr122u",
-            "devices.TERACOM",
-            "devices.TERACOM.act230",
-            "devices.TERACOM.act230.act230"
+            "devices.Teracom",
+            "devices.Teracom.act230",
+            "devices.Teracom.act230.act230"
         ],
         "name": "devices.utils.card_readers.card_reader_factory",
         "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\devices\\utils\\card_readers\\card_reader_factory.py"
@@ -2668,7 +2668,7 @@
         "bacon": 2,
         "imported_by": [
             "devices.ACS.acr122u.acr122u",
-            "devices.TERACOM.act230.act230",
+            "devices.Teracom.act230.act230",
             "devices.utils.card_readers.base_card_reader",
             "plugins.access_control.security_zone"
         ],
@@ -2917,9 +2917,9 @@
             "devices.HangzhouAirflowElectricApplications",
             "devices.HangzhouAirflowElectricApplications.f3p146ec072600",
             "devices.HangzhouAirflowElectricApplications.f3p146ec072600.f3p146ec072600",
-            "devices.SILPA",
-            "devices.SILPA.klimafan",
-            "devices.SILPA.klimafan.klimafan",
+            "devices.Silpa",
+            "devices.Silpa.klimafan",
+            "devices.Silpa.klimafan.klimafan",
             "devices.TONHE",
             "devices.TONHE.a20m15b2c",
             "devices.TONHE.a20m15b2c.a20m15b2c",
@@ -3156,7 +3156,7 @@
     "serial": {
         "bacon": 2,
         "imported_by": [
-            "devices.TERACOM.act230.act230"
+            "devices.Teracom.act230.act230"
         ],
         "name": "serial",
         "path": null
@@ -3293,8 +3293,8 @@
             "data.registers",
             "devices.ACS.acr122u.acr122u",
             "devices.HangzhouAirflowElectricApplications.f3p146ec072600.f3p146ec072600",
-            "devices.SILPA.klimafan.klimafan",
-            "devices.TERACOM.act230.act230",
+            "devices.Silpa.klimafan.klimafan",
+            "devices.Teracom.act230.act230",
             "devices.TONHE.a20m15b2c.a20m15b2c",
             "devices.base_device",
             "devices.tests.electrical_performance.electrical_performance",
@@ -3340,8 +3340,8 @@
             "data.registers",
             "devices.ACS.acr122u.acr122u",
             "devices.HangzhouAirflowElectricApplications.f3p146ec072600.f3p146ec072600",
-            "devices.SILPA.klimafan.klimafan",
-            "devices.TERACOM.act230.act230",
+            "devices.Silpa.klimafan.klimafan",
+            "devices.Teracom.act230.act230",
             "devices.TONHE.a20m15b2c.a20m15b2c",
             "main",
             "plugins.access_control.access_control",
@@ -3489,7 +3489,7 @@
             "controllers.neuron.evok.evok",
             "controllers.picons.picons",
             "devices.ACS.acr122u.acr122u",
-            "devices.TERACOM.act230.act230",
+            "devices.Teracom.act230.act230",
             "main",
             "plugins.environment.sunposition",
             "plugins.hvac.air_conditioner",
@@ -3876,8 +3876,8 @@
             "devices.Eastron.sdm630.sdm630",
             "devices.HangzhouAirflowElectricApplications.f3p146ec072600.f3p146ec072600",
             "devices.SEDtronic.u1wtvs.u1wtvs",
-            "devices.SILPA.klimafan.klimafan",
-            "devices.TERACOM.act230.act230",
+            "devices.Silpa.klimafan.klimafan",
+            "devices.Teracom.act230.act230",
             "devices.TONHE.a20m15b2c.a20m15b2c",
             "devices.drivers.modbus.device",
             "devices.no_vendors.no_vendor_1.flowmeter",
@@ -4074,23 +4074,23 @@
         "name": "devices.SEDtronic.u1wtvs.u1wtvs",
         "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\devices\\SEDtronic\\u1wtvs\\u1wtvs.py"
     },
-    "devices.SILPA": {
+    "devices.Silpa": {
         "bacon": 2,
         "imported_by": [
             "plugins.hvac.air_conditioner"
         ],
-        "name": "devices.SILPA",
-        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\devices\\SILPA\\__init__.py"
+        "name": "devices.Silpa",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\devices\\Silpa\\__init__.py"
     },
-    "devices.SILPA.klimafan": {
+    "devices.Silpa.klimafan": {
         "bacon": 2,
         "imported_by": [
             "plugins.hvac.air_conditioner"
         ],
-        "name": "devices.SILPA.klimafan",
-        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\devices\\SILPA\\klimafan\\__init__.py"
+        "name": "devices.Silpa.klimafan",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\devices\\Silpa\\klimafan\\__init__.py"
     },
-    "devices.SILPA.klimafan.klimafan": {
+    "devices.Silpa.klimafan.klimafan": {
         "bacon": 2,
         "imported_by": [
             "plugins.hvac.air_conditioner"
@@ -4101,26 +4101,26 @@
             "utils",
             "utils.logger"
         ],
-        "name": "devices.SILPA.klimafan.klimafan",
-        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\devices\\SILPA\\klimafan\\klimafan.py"
+        "name": "devices.Silpa.klimafan.klimafan",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\devices\\Silpa\\klimafan\\klimafan.py"
     },
-    "devices.TERACOM": {
+    "devices.Teracom": {
         "bacon": 7,
         "imported_by": [
             "devices.utils.card_readers.card_reader_factory"
         ],
-        "name": "devices.TERACOM",
-        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\devices\\TERACOM\\__init__.py"
+        "name": "devices.Teracom",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\devices\\Teracom\\__init__.py"
     },
-    "devices.TERACOM.act230": {
+    "devices.Teracom.act230": {
         "bacon": 7,
         "imported_by": [
             "devices.utils.card_readers.card_reader_factory"
         ],
-        "name": "devices.TERACOM.act230",
-        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\devices\\TERACOM\\act230\\__init__.py"
+        "name": "devices.Teracom.act230",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\devices\\Teracom\\act230\\__init__.py"
     },
-    "devices.TERACOM.act230.act230": {
+    "devices.Teracom.act230.act230": {
         "bacon": 1,
         "imported_by": [
             "__main__",
@@ -4136,8 +4136,8 @@
             "utils",
             "utils.logger"
         ],
-        "name": "devices.TERACOM.act230.act230",
-        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\devices\\TERACOM\\act230\\act230.py"
+        "name": "devices.Teracom.act230.act230",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\devices\\Teracom\\act230\\act230.py"
     },
     "devices.TONHE": {
         "bacon": 2,
@@ -4175,7 +4175,7 @@
             "devices.Dallas.ds18b20.ds18b20",
             "devices.HangzhouAirflowElectricApplications.f3p146ec072600.f3p146ec072600",
             "devices.SEDtronic.u1wtvs.u1wtvs",
-            "devices.SILPA.klimafan.klimafan",
+            "devices.Silpa.klimafan.klimafan",
             "devices.TONHE.a20m15b2c.a20m15b2c",
             "devices.no_vendors.no_vendor_1.flowmeter",
             "devices.utils.card_readers.base_card_reader"
@@ -4352,7 +4352,7 @@
         "bacon": 2,
         "imported_by": [
             "devices.ACS.acr122u.acr122u",
-            "devices.TERACOM.act230.act230",
+            "devices.Teracom.act230.act230",
             "devices.utils.card_readers.base_card_reader",
             "plugins.access_control.security_zone"
         ],
@@ -4363,7 +4363,7 @@
         "bacon": 2,
         "imported_by": [
             "devices.ACS.acr122u.acr122u",
-            "devices.TERACOM.act230.act230",
+            "devices.Teracom.act230.act230",
             "devices.utils.card_readers.base_card_reader",
             "plugins.access_control.security_zone"
         ],
@@ -4374,7 +4374,7 @@
         "bacon": 2,
         "imported_by": [
             "devices.ACS.acr122u.acr122u",
-            "devices.TERACOM.act230.act230"
+            "devices.Teracom.act230.act230"
         ],
         "imports": [
             "devices",
@@ -4398,9 +4398,9 @@
             "devices.ACS",
             "devices.ACS.acr122u",
             "devices.ACS.acr122u.acr122u",
-            "devices.TERACOM",
-            "devices.TERACOM.act230",
-            "devices.TERACOM.act230.act230"
+            "devices.Teracom",
+            "devices.Teracom.act230",
+            "devices.Teracom.act230.act230"
         ],
         "name": "devices.utils.card_readers.card_reader_factory",
         "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\devices\\utils\\card_readers\\card_reader_factory.py"
@@ -4409,7 +4409,7 @@
         "bacon": 2,
         "imported_by": [
             "devices.ACS.acr122u.acr122u",
-            "devices.TERACOM.act230.act230",
+            "devices.Teracom.act230.act230",
             "devices.utils.card_readers.base_card_reader",
             "plugins.access_control.security_zone"
         ],
@@ -4658,9 +4658,9 @@
             "devices.HangzhouAirflowElectricApplications",
             "devices.HangzhouAirflowElectricApplications.f3p146ec072600",
             "devices.HangzhouAirflowElectricApplications.f3p146ec072600.f3p146ec072600",
-            "devices.SILPA",
-            "devices.SILPA.klimafan",
-            "devices.SILPA.klimafan.klimafan",
+            "devices.Silpa",
+            "devices.Silpa.klimafan",
+            "devices.Silpa.klimafan.klimafan",
             "devices.TONHE",
             "devices.TONHE.a20m15b2c",
             "devices.TONHE.a20m15b2c.a20m15b2c",
@@ -4897,7 +4897,7 @@
     "serial": {
         "bacon": 2,
         "imported_by": [
-            "devices.TERACOM.act230.act230"
+            "devices.Teracom.act230.act230"
         ],
         "name": "serial",
         "path": null
@@ -5034,8 +5034,8 @@
             "data.registers",
             "devices.ACS.acr122u.acr122u",
             "devices.HangzhouAirflowElectricApplications.f3p146ec072600.f3p146ec072600",
-            "devices.SILPA.klimafan.klimafan",
-            "devices.TERACOM.act230.act230",
+            "devices.Silpa.klimafan.klimafan",
+            "devices.Teracom.act230.act230",
             "devices.TONHE.a20m15b2c.a20m15b2c",
             "devices.base_device",
             "devices.tests.electrical_performance.electrical_performance",
@@ -5081,8 +5081,8 @@
             "data.registers",
             "devices.ACS.acr122u.acr122u",
             "devices.HangzhouAirflowElectricApplications.f3p146ec072600.f3p146ec072600",
-            "devices.SILPA.klimafan.klimafan",
-            "devices.TERACOM.act230.act230",
+            "devices.Silpa.klimafan.klimafan",
+            "devices.Teracom.act230.act230",
             "devices.TONHE.a20m15b2c.a20m15b2c",
             "main",
             "plugins.access_control.access_control",
@@ -6640,6 +6640,423 @@
             "utils.settings",
             "utils.state_machine",
             "utils.timer"
+        ],
+        "name": "zone",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\zone.py"
+    }
+}
+{
+    "__main__": {
+        "bacon": 0,
+        "imports": [
+            "bgERP.client",
+            "bgERP.server",
+            "main",
+            "services.http.server",
+            "utils.settings"
+        ],
+        "name": "__main__",
+        "path": null
+    },
+    "bgERP": {
+        "bacon": 2,
+        "imported_by": [
+            "bgERP.bgERP",
+            "bgERP.client",
+            "bgERP.server",
+            "zone"
+        ],
+        "name": "bgERP",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\bgERP\\__init__.py"
+    },
+    "bgERP.bgERP": {
+        "bacon": 3,
+        "imported_by": [
+            "zone"
+        ],
+        "imports": [
+            "bgERP",
+            "bgERP.client",
+            "bgERP.server",
+            "utils",
+            "utils.logger"
+        ],
+        "name": "bgERP.bgERP",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\bgERP\\bgERP.py"
+    },
+    "bgERP.client": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "bgERP.bgERP"
+        ],
+        "imports": [
+            "bgERP",
+            "bgERP.session",
+            "requests",
+            "utils",
+            "utils.logger"
+        ],
+        "name": "bgERP.client",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\bgERP\\client.py"
+    },
+    "bgERP.server": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "bgERP.bgERP"
+        ],
+        "imports": [
+            "bgERP",
+            "bgERP.session",
+            "flask",
+            "services",
+            "services.http",
+            "services.http.server",
+            "utils",
+            "utils.logger"
+        ],
+        "name": "bgERP.server",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\bgERP\\server.py"
+    },
+    "bgERP.session": {
+        "bacon": 2,
+        "imported_by": [
+            "bgERP.client",
+            "bgERP.server"
+        ],
+        "imports": [
+            "utils",
+            "utils.logger"
+        ],
+        "name": "bgERP.session",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\bgERP\\session.py"
+    },
+    "controllers": {
+        "bacon": 3,
+        "imported_by": [
+            "zone"
+        ],
+        "name": "controllers",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\controllers\\__init__.py"
+    },
+    "controllers.controller_factory": {
+        "bacon": 3,
+        "imported_by": [
+            "zone"
+        ],
+        "name": "controllers.controller_factory",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\controllers\\controller_factory.py"
+    },
+    "data": {
+        "bacon": 3,
+        "imported_by": [
+            "data.registers",
+            "services.global_error_handler.global_error_handler",
+            "zone"
+        ],
+        "name": "data",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\data\\__init__.py"
+    },
+    "data.register": {
+        "bacon": 3,
+        "imported_by": [
+            "data.registers",
+            "services.global_error_handler.global_error_handler",
+            "zone"
+        ],
+        "name": "data.register",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\data\\register.py"
+    },
+    "data.registers": {
+        "bacon": 3,
+        "imported_by": [
+            "zone"
+        ],
+        "imports": [
+            "data",
+            "data.register",
+            "services",
+            "services.global_error_handler",
+            "services.global_error_handler.global_error_handler",
+            "utils",
+            "utils.logger"
+        ],
+        "name": "data.registers",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\data\\registers.py"
+    },
+    "flask": {
+        "bacon": 2,
+        "imported_by": [
+            "bgERP.server",
+            "services.http.server"
+        ],
+        "name": "flask",
+        "path": null
+    },
+    "main": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__"
+        ],
+        "imports": [
+            "setproctitle",
+            "utils",
+            "utils.logger",
+            "utils.settings",
+            "zone"
+        ],
+        "name": "main",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\main.py"
+    },
+    "plugins": {
+        "bacon": 3,
+        "imported_by": [
+            "zone"
+        ],
+        "name": "plugins",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\plugins\\__init__.py"
+    },
+    "plugins.plugins_manager": {
+        "bacon": 3,
+        "imported_by": [
+            "zone"
+        ],
+        "imports": [
+            "services",
+            "services.global_error_handler",
+            "services.global_error_handler.global_error_handler",
+            "utils",
+            "utils.logger"
+        ],
+        "name": "plugins.plugins_manager",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\plugins\\plugins_manager.py"
+    },
+    "requests": {
+        "bacon": 2,
+        "imported_by": [
+            "bgERP.client"
+        ],
+        "name": "requests",
+        "path": null
+    },
+    "services": {
+        "bacon": 2,
+        "imported_by": [
+            "bgERP.server",
+            "data.registers",
+            "plugins.plugins_manager",
+            "services.global_error_handler.global_error_handler",
+            "zone"
+        ],
+        "name": "services",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\services\\__init__.py"
+    },
+    "services.evok": {
+        "bacon": 3,
+        "imported_by": [
+            "zone"
+        ],
+        "name": "services.evok",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\services\\evok\\__init__.py"
+    },
+    "services.evok.settings": {
+        "bacon": 3,
+        "imported_by": [
+            "zone"
+        ],
+        "name": "services.evok.settings",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\services\\evok\\settings.py"
+    },
+    "services.global_error_handler": {
+        "bacon": 3,
+        "imported_by": [
+            "data.registers",
+            "plugins.plugins_manager",
+            "services.global_error_handler.global_error_handler",
+            "zone"
+        ],
+        "name": "services.global_error_handler",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\services\\global_error_handler\\__init__.py"
+    },
+    "services.global_error_handler.error_codes": {
+        "bacon": 4,
+        "imported_by": [
+            "services.global_error_handler.global_error_handler"
+        ],
+        "name": "services.global_error_handler.error_codes",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\services\\global_error_handler\\error_codes.py"
+    },
+    "services.global_error_handler.global_error_handler": {
+        "bacon": 3,
+        "imported_by": [
+            "data.registers",
+            "plugins.plugins_manager",
+            "zone"
+        ],
+        "imports": [
+            "data",
+            "data.register",
+            "services",
+            "services.global_error_handler",
+            "services.global_error_handler.error_codes"
+        ],
+        "name": "services.global_error_handler.global_error_handler",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\services\\global_error_handler\\global_error_handler.py"
+    },
+    "services.http": {
+        "bacon": 2,
+        "imported_by": [
+            "bgERP.server"
+        ],
+        "name": "services.http",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\services\\http\\__init__.py"
+    },
+    "services.http.server": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "bgERP.server"
+        ],
+        "imports": [
+            "flask",
+            "werkzeug.serving"
+        ],
+        "name": "services.http.server",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\services\\http\\server.py"
+    },
+    "setproctitle": {
+        "bacon": 2,
+        "imported_by": [
+            "main"
+        ],
+        "name": "setproctitle",
+        "path": null
+    },
+    "utils": {
+        "bacon": 2,
+        "imported_by": [
+            "bgERP.bgERP",
+            "bgERP.client",
+            "bgERP.server",
+            "bgERP.session",
+            "data.registers",
+            "main",
+            "plugins.plugins_manager",
+            "utils.logger",
+            "zone"
+        ],
+        "name": "utils",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\utils\\__init__.py"
+    },
+    "utils.logger": {
+        "bacon": 2,
+        "imported_by": [
+            "bgERP.bgERP",
+            "bgERP.client",
+            "bgERP.server",
+            "bgERP.session",
+            "data.registers",
+            "main",
+            "plugins.plugins_manager",
+            "zone"
+        ],
+        "imports": [
+            "utils",
+            "utils.settings"
+        ],
+        "name": "utils.logger",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\utils\\logger.py"
+    },
+    "utils.logic": {
+        "bacon": 3,
+        "imported_by": [
+            "zone"
+        ],
+        "name": "utils.logic",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\utils\\logic\\__init__.py"
+    },
+    "utils.logic.state_machine": {
+        "bacon": 3,
+        "imported_by": [
+            "zone"
+        ],
+        "name": "utils.logic.state_machine",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\utils\\logic\\state_machine.py"
+    },
+    "utils.logic.timer": {
+        "bacon": 3,
+        "imported_by": [
+            "zone"
+        ],
+        "name": "utils.logic.timer",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\utils\\logic\\timer.py"
+    },
+    "utils.performance_profiler": {
+        "bacon": 3,
+        "imported_by": [
+            "zone"
+        ],
+        "name": "utils.performance_profiler",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\utils\\performance_profiler.py"
+    },
+    "utils.settings": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "main",
+            "utils.logger",
+            "zone"
+        ],
+        "imports": [
+            "yaml"
+        ],
+        "name": "utils.settings",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\utils\\settings.py"
+    },
+    "werkzeug.serving": {
+        "bacon": 2,
+        "imported_by": [
+            "services.http.server"
+        ],
+        "name": "werkzeug.serving",
+        "path": null
+    },
+    "yaml": {
+        "bacon": 2,
+        "imported_by": [
+            "utils.settings"
+        ],
+        "name": "yaml",
+        "path": null
+    },
+    "zone": {
+        "bacon": 2,
+        "imported_by": [
+            "main"
+        ],
+        "imports": [
+            "bgERP",
+            "bgERP.bgERP",
+            "controllers",
+            "controllers.controller_factory",
+            "data",
+            "data.register",
+            "data.registers",
+            "plugins",
+            "plugins.plugins_manager",
+            "services",
+            "services.evok",
+            "services.evok.settings",
+            "services.global_error_handler",
+            "services.global_error_handler.global_error_handler",
+            "utils",
+            "utils.logger",
+            "utils.logic",
+            "utils.logic.state_machine",
+            "utils.logic.timer",
+            "utils.performance_profiler",
+            "utils.settings"
         ],
         "name": "zone",
         "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\zone.py"
