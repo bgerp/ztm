@@ -110,6 +110,16 @@ class S8_3CN(Device):
 
         self._parameters.append(
             Parameter(
+                "SetRelays",
+                "Bits",
+                ParameterType.INT16_T,
+                [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+                RegisterType.WriteMultipleCoils
+            )
+        )
+
+        self._parameters.append(
+            Parameter(
                 "SetAnalogOutputs",
                 "Registers",
                 ParameterType.INT16_T,
@@ -118,14 +128,6 @@ class S8_3CN(Device):
             )
         )
 
-        self._parameters.append(
-            Parameter(
-                "SetRelays",
-                "Bits",
-                ParameterType.INT16_T,
-                [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
-                RegisterType.WriteMultipleCoils
-            )
-        )
+
 
 #endregion
