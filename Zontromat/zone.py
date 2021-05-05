@@ -240,6 +240,9 @@ class Zone():
         if self.__controller is None:
             raise ValueError("Controller is not created.")
 
+        # Print out the vendor and model of the controller.
+        self.__logger.info(self.__controller)
+
         if self.__controller.vendor == "unipi":
 
             self.__controller.set_webhook(self.__evok_cb)

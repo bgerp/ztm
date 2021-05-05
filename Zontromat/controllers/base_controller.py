@@ -79,6 +79,16 @@ class BaseController(Configuarable):
 
         super().__init__(config)
 
+    def __str__(self):
+        """Returns controller vendor and model as string.
+
+        Returns:
+            str: Short description.
+        """
+        return "Controller vendor({}) / model({}) ".format(self.vendor, self.model)
+
+    __repr__ = __str__
+
 #endregion
 
 #region Properties
