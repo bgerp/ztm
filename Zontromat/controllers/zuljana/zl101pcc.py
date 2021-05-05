@@ -34,13 +34,7 @@ from utils.logger import get_logger
 
 from controllers.base_controller import BaseController
 
-from controllers.zuljana.requests.read_device_coils import ReadDeviceCoils
-from controllers.zuljana.requests.read_device_discrete_inputs import ReadDeviceDiscreteInputs
-from controllers.zuljana.requests.read_device_holding_registers import ReadDeviceHoldingRegisters
-from controllers.zuljana.requests.read_device_input_registers import ReadDeviceInputRegisters
-
-from controllers.zuljana.requests.write_device_coils import WriteDeviceCoils
-from controllers.zuljana.requests.write_device_registers import WriteDeviceRegisters
+from devices.Super.s8_3cn.s8_3cn import S8_3CN as BlackIsland
 
 #region File Attributes
 
@@ -101,6 +95,10 @@ class ZL101PCC(BaseController):
 
     __black_island_id = 1
     """Black island ID.
+    """
+
+    __black_island = None
+    """IO
     """
 
     __operations_count = 4
@@ -222,6 +220,8 @@ class ZL101PCC(BaseController):
             timeout=5,
             baudrate=self.__modbus_rtu_baud)
 
+        self.__black_island = BlackIsland()
+
     def __del__(self):
         """Destructor
         """
@@ -264,48 +264,44 @@ class ZL101PCC(BaseController):
 
         control_counter = 0
 
-        # hrr_request = ReadDeviceHoldingRegisters(self.__black_island_id)
-        # hrr_response = self.__modbus_rtu_client.execute(hrr_request)
-        # print(hrr_response)
-
         # Read device digital inputs.
-        di_request = ReadDeviceDiscreteInputs(self.__black_island_id)
-        di_response = self.__modbus_rtu_client.execute(di_request)
+        request = self.__black_island.generate_request(self.__black_island_id, "GetDigitalInputs")
+        di_response = self.__modbus_rtu_client.execute(request)
         if di_response is not None:
             if not di_response.isError():
                 self.__DI = di_response.bits
                 control_counter += 1
 
         # Read device analog inputs.
-        irr_request = ReadDeviceInputRegisters(self.__black_island_id)
-        irr_response = self.__modbus_rtu_client.execute(irr_request)
+        request = self.__black_island.generate_request(self.__black_island_id, "GetAnalogInputs")
+        irr_response = self.__modbus_rtu_client.execute(request)
         if irr_response is not None:
             if not irr_response.isError():
                 self.__AI = irr_response.registers
                 control_counter += 1
 
         # Write device digital & relay outputs.
-        cw_request = WriteDeviceCoils(self.__black_island_id, self.__DORO)
-        cw_response = self.__modbus_rtu_client.execute(cw_request)
+        request = self.__black_island.generate_request(self.__black_island_id, "SetRelays", SetRelays=self.__DORO)
+        cw_response = self.__modbus_rtu_client.execute(request)
         if cw_response is not None:
             if not cw_response.isError():
                 control_counter += 1
 
         # Write device analog outputs.
-        hrw_request = WriteDeviceRegisters(self.__black_island_id, self.__AO)
-        hrw_response = self.__modbus_rtu_client.execute(hrw_request)
+        request = self.__black_island.generate_request(self.__black_island_id, "SetAnalogOutputs", SetAnalogOutputs=self.__AO)
+        hrw_response = self.__modbus_rtu_client.execute(request)
         if hrw_response is not None:
             if not hrw_response.isError():
                 control_counter += 1
 
         # Read device coils.
         # DEBUG PURPOSE ONLY
-        cr_request = ReadDeviceCoils(self.__black_island_id)
-        cr_response = self.__modbus_rtu_client.execute(cr_request)
-        if cr_response is not None:
-            if not cr_response.isError():
-                self.__logger.debug(str(cr_response))
-                self.__logger.debug(str(cr_response.bits))
+        # request = self.__black_island.generate_request(self.__black_island_id, "GetRelays")
+        # cr_response = self.__modbus_rtu_client.execute(request)
+        # if cr_response is not None:
+        #     if not cr_response.isError():
+        #         self.__logger.debug(str(cr_response))
+        #         self.__logger.debug(str(cr_response.bits))
 
         return (control_counter == self.__operations_count)
 

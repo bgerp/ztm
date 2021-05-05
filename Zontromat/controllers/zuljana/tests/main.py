@@ -27,13 +27,7 @@ import argparse
 # from pymodbus.client.sync import ModbusTcpClient as ModbusClient
 from pymodbus.client.sync import ModbusSerialClient as ModbusClient
 
-from controllers.zuljana.requests.read_device_coils import ReadDeviceCoils
-from controllers.zuljana.requests.read_device_discrete_inputs import ReadDeviceDiscreteInputs
-from controllers.zuljana.requests.read_device_holding_registers import ReadDeviceHoldingRegisters
-from controllers.zuljana.requests.read_device_input_registers import ReadDeviceInputRegisters
-
-from controllers.zuljana.requests.write_device_coils import WriteDeviceCoils
-from controllers.zuljana.requests.write_device_registers import WriteDeviceRegisters
+from devices.Super.s8_3cn.s8_3cn import S8_3CN as BlackIsland
 
 #region File Attributes
 
@@ -74,174 +68,178 @@ def main():
     parser = argparse.ArgumentParser()
 
     # Add arguments.
-    parser.add_argument("--port", type=str, default="COM10", help="Serial port.")
+    parser.add_argument("--port", type=str, default="COM12", help="Serial port.")
+    parser.add_argument("--baudrate", type=int, default=9600, help="Serial port.")
     parser.add_argument("--unit", type=int, default=1, help="Unit ID.")
 
     # Take arguments.
     args = parser.parse_args()
 
     # Get args.
-    unit = args.unit
     port = args.port
+    baudrate=args.baudrate
+    unit = args.unit
+
+    black_island = BlackIsland()
 
     # Create client.
-    with ModbusClient(method="rtu", port=port, baudrate=9600, timeout=1,
+    with ModbusClient(method="rtu", port=port, baudrate=baudrate, timeout=1,
         xonxoff=False, rtscts=False, dsrdtr=False) as client:
 
         #---------------------------------------------------------------------------#
         # Read Coils.
         #---------------------------------------------------------------------------#
-        cr_request = ReadDeviceCoils(unit)
-        cr_response = client.execute(cr_request)
+        request = black_island.generate_request(unit, "GetRelays")
+        response = client.execute(request)
         
         # Check the response.
-        assert(not cr_response.isError())
+        assert(not response.isError())
 
         # Check the content.
-        is_ok = cr_response.bits == [False]*16
+        is_ok = response.bits == [False]*12 + [False]*4
         assert(is_ok)
 
-        print(cr_response)
+        print(response)
         print()
 
         #---------------------------------------------------------------------------#
         # Read Discrete Inputs.
         #---------------------------------------------------------------------------#
-        di_request = ReadDeviceDiscreteInputs(unit)
-        di_response = client.execute(di_request)
+        request = black_island.generate_request(unit, "GetDigitalInputs")
+        response = client.execute(request)
 
         # Check the response.
-        assert(not di_response.isError())
+        assert(not response.isError())
 
         #Check the content.
-        is_ok = di_response.bits == [False]*8
+        is_ok = response.bits == [False]*8
         assert(is_ok)
 
-        print(di_response)
+        print(response)
         print()
 
         #---------------------------------------------------------------------------#
         # Read Holding Registers.
         #---------------------------------------------------------------------------#
-        hrr_request = ReadDeviceHoldingRegisters(unit)
-        hrr_response = client.execute(hrr_request)
+        request = black_island.generate_request(unit, "GetAnalogOutputs")
+        response = client.execute(request)
 
         # Check the response.
-        assert(not hrr_response.isError())
+        assert(not response.isError())
 
         #Check the content.
-        is_ok = hrr_response.registers == [0]*8
+        is_ok = response.registers == [0]*4
         assert(is_ok)
 
-        print(hrr_response)
+        print(response)
         print()
 
         #---------------------------------------------------------------------------#
         # Read Input Registers.
         #---------------------------------------------------------------------------#
-        irr_request = ReadDeviceInputRegisters(unit)
-        irr_response = client.execute(irr_request)
+        request = black_island.generate_request(unit, "GetAnalogInputs")
+        response = client.execute(request)
 
         # Check the response.
-        assert(not irr_response.isError())
+        assert(not response.isError())
 
         #Check the content.
-        is_ok = irr_response.registers == [0]*4
+        is_ok = response.registers == [0]*8
         assert(is_ok)
 
-        print(irr_response)
+        print(response)
         print()
 
         #---------------------------------------------------------------------------#
         # Write Coils.
         #---------------------------------------------------------------------------#
-        cw_request = WriteDeviceCoils(unit, [True]*12 + [False]*4)
-        cw_response = client.execute(cw_request)
+        request = black_island.generate_request(unit, "SetRelays", SetRelays=[True]*12 + [False]*4)
+        response = client.execute(request)
 
         # Check the response.
-        assert(not cw_response.isError())
-        print(cw_response)
+        assert(not response.isError())
+        print(response)
 
-        cr_request = ReadDeviceCoils(unit)
-        cr_response = client.execute(cr_request)
+        request = black_island.generate_request(unit, "GetRelays")
+        response = client.execute(request)
 
         # Check the response.
-        assert(not cr_response.isError())
+        assert(not response.isError())
 
         #Check the content.
-        is_ok = cr_response.bits == [True]*12 + [False]*4
+        is_ok = response.bits == [True]*12 + [False]*4
         assert(is_ok)
 
-        print(cr_response)
+        print(response)
         print()
 
         #---------------------------------------------------------------------------#
         # Write Holding Registers.
         #---------------------------------------------------------------------------#
-        hrw_request = WriteDeviceRegisters(unit, [10000]*8)
-        hrw_response = client.execute(hrw_request)
+        request = black_island.generate_request(unit, "SetAnalogOutputs", SetAnalogOutputs=[10000]*8)
+        hrw_response = client.execute(request)
 
         # Check the response.
         assert(not hrw_response.isError())
         print(hrw_response)
 
-        hrr_request = ReadDeviceHoldingRegisters(unit)
-        hrr_response = client.execute(hrr_request)
+        request = black_island.generate_request(unit, "GetAnalogOutputs")
+        response = client.execute(request)
 
         # Check the response.
-        assert(not hrr_response.isError())
+        assert(not response.isError())
 
         #Check the content.
-        is_ok = hrr_response.registers == [10000]*8
+        is_ok = response.registers == [10000]*4
         assert(is_ok)
 
-        print(hrr_response)
+        print(response)
         print()
 
         #---------------------------------------------------------------------------#
         # Write Coils.
         #---------------------------------------------------------------------------#
-        cw_request = WriteDeviceCoils(unit, [False]*12 + [False]*4)
-        cw_response = client.execute(cw_request)
+        request = black_island.generate_request(unit, "SetRelays", SetRelays=[False]*12 + [False]*4)
+        response = client.execute(request)
 
         # Check the response.
-        assert(not cw_response.isError())
-        print(cw_response)
+        assert(not response.isError())
+        print(response)
 
-        cr_request = ReadDeviceCoils(unit)
-        cr_response = client.execute(cr_request)
+        request = black_island.generate_request(unit, "GetRelays")
+        response = client.execute(request)
 
         # Check the response.
-        assert(not cr_response.isError())
+        assert(not response.isError())
 
         #Check the content.
-        is_ok = cr_response.bits == [False]*12 + [False]*4
+        is_ok = response.bits == [False]*12 + [False]*4
         assert(is_ok)
 
-        print(cr_response)
+        print(response)
         print()
 
         #---------------------------------------------------------------------------#
         # Write Holding Registers.
         #---------------------------------------------------------------------------#
-        hrw_request = WriteDeviceRegisters(unit, [0]*8)
-        hrw_response = client.execute(hrw_request)
+        request = black_island.generate_request(unit, "SetAnalogOutputs", SetAnalogOutputs=[0]*8)
+        hrw_response = client.execute(request)
 
         # Check the response.
         assert(not hrw_response.isError())
         print(hrw_response)
 
-        hrr_request = ReadDeviceHoldingRegisters(unit)
-        hrr_response = client.execute(hrr_request)
+        request = black_island.generate_request(unit, "GetAnalogOutputs")
+        response = client.execute(request)
 
         # Check the response.
-        assert(not hrr_response.isError())
+        assert(not response.isError())
 
         #Check the content.
-        is_ok = hrr_response.registers == [0]*8
+        is_ok = response.registers == [0]*4
         assert(is_ok)
 
-        print(hrr_response)
+        print(response)
         print()
 
 if __name__ == "__main__":
