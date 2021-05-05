@@ -32,7 +32,7 @@ from utils.logger import get_logger
 #from utils.logic.state_machine import StateMachine
 
 from plugins.base_plugin import BasePlugin
-from devices.no_vendors.no_vendor_3.valve import Valve
+from devices.Flowx.valve import Valve
 from devices.utils.valve_control_group.valve_control_group import ValveControlGroup
 
 from services.global_error_handler.global_error_handler import GlobalErrorHandler
@@ -166,18 +166,15 @@ class EnergyCenterDistribution(BasePlugin):
         # Valve group. (PURPLE)
         self.__v_foyer = Valve(\
             name="v_foyer",
-            controller=self._controller,
-            registers=self._registers)
+            controller=self._controller)
 
         self.__v_underfloor_heating_trestle  = Valve(
             name="v_underfloor_heating_trestle",
-            controller=self._controller,
-            registers=self._registers)
+            controller=self._controller)
 
         self.__v_underfloor_heating_pool  = Valve(
             name="v_underfloor_heating_pool",
-            controller=self._controller,
-            registers=self._registers)
+            controller=self._controller)
 
         # Consumers (RED)
         self.__v_pool_heating = ValveControlGroup.create(\

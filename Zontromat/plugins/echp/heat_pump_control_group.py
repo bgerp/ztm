@@ -34,7 +34,7 @@ from utils.logic.functions import rotate_list
 from plugins.base_plugin import BasePlugin
 
 from devices.no_vendors.no_vendor_5.heat_pump import HeatPump, HeatPumpMode
-from devices.no_vendors.no_vendor_4.pump import Pump
+from devices.Grundfos.pump import Pump
 from devices.utils.valve_control_group.valve_control_group import ValveControlGroup
 
 from services.global_error_handler.global_error_handler import GlobalErrorHandler

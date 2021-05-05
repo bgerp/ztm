@@ -34,7 +34,7 @@ from plugins.base_plugin import BasePlugin
 from plugins.hvac.thermal_mode import ThermalMode
 
 from devices.HangzhouAirflowElectricApplications.f3p146ec072600.f3p146ec072600 import F3P146EC072600
-from devices.TONHE.a20m15b2c.a20m15b2c import A20M15B2C
+from devices.Tonhe.a20m15b2c.a20m15b2c import A20M15B2C
 from devices.Silpa.klimafan.klimafan import Klimafan
 from devices.no_vendors.no_vendor_1.flowmeter import Flowmeter
 from devices.Dallas.ds18b20.ds18b20 import DS18B20
