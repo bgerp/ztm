@@ -228,14 +228,14 @@ class PluginsManager:
             self.__plugins[name].shutdown()
             del self.__plugins[name]
 
-    def __env_enabled(self, register):
+    def __envm_enabled(self, register):
 
         # Check data type.
         if not register.data_type == "bool":
             GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
             return
 
-        name = "envm"
+        name = register.base_name
         if register.value and name not in self.__plugins:
             self.__plugins[name] = self.__load_plugin(name)
             self.__plugins[name].init()
@@ -362,9 +362,9 @@ class PluginsManager:
         if register is not None:
             register.update_handlers = self.__monitoring_enabled
 
-        register = self.__registers.by_name("env.enabled")
+        register = self.__registers.by_name("envm.enabled")
         if register is not None:
-            register.update_handlers = self.__env_enabled
+            register.update_handlers = self.__envm_enabled
 
         register = self.__registers.by_name("hvac.enabled")
         if register is not None:
