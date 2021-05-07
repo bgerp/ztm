@@ -101,6 +101,14 @@ def __add_registers():
     register.value = [] # {"card_id": "445E6046010080FF", "pin": "159753", "valid_until": "1595322860"}
     __registers.append(register)
 
+    register = Register("ac.zones_count")
+    register.scope = Scope.System
+    register.plugin_name = "Access Control"
+    register.description = "Number of security zones"
+    register.range = "1/"
+    register.value = 2
+    __registers.append(register)
+
     register = Register("ac.nearby_attendees")
     register.scope = Scope.System
     register.plugin_name = "Access Control"
@@ -443,38 +451,6 @@ def __add_registers():
 
 #region Blinds (blinds)
 
-    register = Register("blinds.sun.azimuth.value")
-    register.scope = Scope.System
-    register.plugin_name = "Blinds"
-    register.description = "Sun azimuth value"
-    register.range = "0.0/180.0"
-    register.value = 0.0
-    __registers.append(register)
-
-    register = Register("blinds.sun.azimuth.mou")
-    register.scope = Scope.System
-    register.plugin_name = "Blinds"
-    register.description = "MOU"
-    register.range = "deg|rad"
-    register.value = "deg"
-    __registers.append(register)
-
-    register = Register("blinds.sun.elevation.value")
-    register.scope = Scope.System
-    register.plugin_name = "Blinds"
-    register.description = "Sun elevation value"
-    register.range = "0.0/180.0"
-    register.value = 0.0
-    __registers.append(register)
-
-    register = Register("blinds.sun.elevation.mou")
-    register.scope = Scope.System
-    register.plugin_name = "Blinds"
-    register.description = "MOU"
-    register.range = "deg|rad"
-    register.value = "deg"
-    __registers.append(register)
-
     register = Register("blinds.input_fb")
     register.scope = Scope.System
     register.plugin_name = "Blinds"
@@ -502,9 +478,41 @@ def __add_registers():
     register = Register("blinds.position")
     register.scope = Scope.System
     register.plugin_name = "Blinds"
-    register.description = "Position"
+    register.description = "Position [deg]"
     register.range = "0.0/180.0"
     register.value = 0.0
+    __registers.append(register)
+
+    register = Register("blinds.deg_per_sec")
+    register.scope = Scope.System
+    register.plugin_name = "Blinds"
+    register.description = "Degrees pre seconds ratio."
+    register.range = "0.0/"
+    register.value = 10.0
+    __registers.append(register)
+
+    register = Register("blinds.feedback_treshold")
+    register.scope = Scope.System
+    register.plugin_name = "Blinds"
+    register.description = "Feedback treshold level in [V]."
+    register.range = "0.0/"
+    register.value = 0.093
+    __registers.append(register)
+
+    register = Register("blinds.sunspot_limit")
+    register.scope = Scope.System
+    register.plugin_name = "Blinds"
+    register.description = "Sun spot limit [m]."
+    register.range = "0.0/"
+    register.value = 1.0
+    __registers.append(register)
+
+    register = Register("blinds.object_height")
+    register.scope = Scope.System
+    register.plugin_name = "Blinds"
+    register.description = "Object height [m]."
+    register.range = "0.0/"
+    register.value = 2.0
     __registers.append(register)
 
     register = Register("blinds.enabled")
@@ -654,7 +662,7 @@ def __add_registers():
     register.plugin_name = "Environment"
     register.description = "Actual outside temperature [C]"
     register.range = "-50/50"
-    register.value = 29.0
+    register.value = 20.0
     __registers.append(register)
 
     register = Register("env.temp.a6")
@@ -777,6 +785,38 @@ def __add_registers():
     register.value = False
     __registers.append(register)
 
+    register = Register("env.building.location.lat")
+    register.scope = Scope.System
+    register.plugin_name = "Environment"
+    register.description = "Latitude of the target building."
+    register.range = "0.0/360.0"
+    register.value = 43.07779
+    __registers.append(register)
+
+    register = Register("env.building.location.lon")
+    register.scope = Scope.System
+    register.plugin_name = "Environment"
+    register.description = "Longitude of the target building."
+    register.range = "0.0/360.0"
+    register.value = 25.59549
+    __registers.append(register)
+
+    register = Register("env.building.location.elv")
+    register.scope = Scope.System
+    register.plugin_name = "Environment"
+    register.description = "Longitude of the target building."
+    register.range = "/"
+    register.value = 210
+    __registers.append(register)
+
+    register = Register("env.building.location.time_zone")
+    register.scope = Scope.System
+    register.plugin_name = "Environment"
+    register.description = "Longitude of the target building."
+    register.range = "0/23"
+    register.value = 2
+    __registers.append(register)
+
     register = Register("env.enabled")
     register.scope = Scope.System
     # register.update_handlers = self.__env_enabled
@@ -786,9 +826,33 @@ def __add_registers():
     register.value = False
     __registers.append(register)
 
+    register = Register("env.sun.azimuth")
+    register.scope = Scope.System
+    register.plugin_name = "Blinds"
+    register.description = "Sun azimuth value"
+    register.range = "0.0/360.0"
+    register.value = 0.0
+    __registers.append(register)
+
+    register = Register("env.sun.elevation")
+    register.scope = Scope.System
+    register.plugin_name = "Blinds"
+    register.description = "Sun elevation value"
+    register.range = "0.0/360.0"
+    register.value = 0.0
+    __registers.append(register)
+
 #endregion
 
 #region HVAC (hvac)
+
+    register = Register("hvac.zones_count")
+    register.scope = Scope.System
+    register.plugin_name = "HVAC"
+    register.description = "Count of the HVAC zones."
+    register.range = "0/"
+    register.value = 1
+    __registers.append(register)
 
     register = Register("hvac.adjust_temp_1")
     register.scope = Scope.System
