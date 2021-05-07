@@ -742,7 +742,7 @@ class AirConditioner(BasePlugin):
 
 #region Private Methods (Registers Interface)
 
-    def __init_registers_cb(self):
+    def __init_registers(self):
         """Initialize the registers callbacks.
         """
 
@@ -869,6 +869,16 @@ class AirConditioner(BasePlugin):
             window_closed_input.update_handlers = self.__window_closed_input_cb
             window_closed_input.update()
 
+    def __is_occupied(self):
+
+        is_occupied = False
+
+        is_empty = self._registers.by_name("env.is_empty")
+        if is_empty is not None':
+            is_occupied = not is_empty.value:
+
+        return is_occupied
+
 #endregion
 
 #region Private Methods (Leak tests)
@@ -938,16 +948,6 @@ class AirConditioner(BasePlugin):
         loop2_temp = self._registers.by_name("{}.loop2_{}.temp.value".format(self.key, self.__identifier))
         if loop2_temp is not None:
             loop2_temp.value = loop2_temp_value
-
-    def __read_zoneoccupied_flag(self):
-
-        state = False
-
-        ac_zone_occupied = self._registers.by_name("ac.zone_1_occupied")
-        if ac_zone_occupied is not None:
-            state = ac_zone_occupied.value
-
-        return state
 
     def __read_window_closed_sensor(self):
 
@@ -1070,7 +1070,7 @@ class AirConditioner(BasePlugin):
         self.__queue_temperatures = deque([], maxlen = 20)
 
         # Create registers callbacks.
-        self.__init_registers_cb()
+        self.__init_registers()
 
         # Shutting down all the devices.
         self.__set_thermal_force(0)
@@ -1082,8 +1082,8 @@ class AirConditioner(BasePlugin):
         # Update thermometres values.
         self.__update_thermometers_values()
 
-        # If there is no one at the zone, just turn off the lights.
-        ac_zone_occupied_flag = self.__read_zoneoccupied_flag()
+        # Update occupation flags.
+        is_occupied = self.__is_occupied()
 
         # If the window is opened, just turn off the HVAC.
         window_closed_1_state = self.__read_window_closed_sensor()
@@ -1092,7 +1092,7 @@ class AirConditioner(BasePlugin):
         hot_water = self.__is_hot_water()
 
         # Take all necessary condition for normal operation of the HVAC.
-        stop_flag = (not ac_zone_occupied_flag or not window_closed_1_state or not hot_water)
+        stop_flag = (not is_occupied or not window_closed_1_state or not hot_water)
 
         if stop_flag:
             self.__stop_timer.update()

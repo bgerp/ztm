@@ -175,7 +175,7 @@ class Monitoring(BasePlugin):
         is_empty = self._registers.by_name("env.is_empty")
         if self.__cw_flowmetter_dev is not None and\
             is_empty is not None and\
-            is_empty.value == 1:
+            is_empty.value:
 
             self.__cw_leak_test.run()
 
@@ -239,9 +239,9 @@ class Monitoring(BasePlugin):
 
         # If the zone is empty check for leaks.
         is_empty = self._registers.by_name("env.is_empty")
-        if self.__cw_flowmetter_dev is not None and\
+        if self.__hw_flowmetter_dev is not None and\
             is_empty is not None and\
-            is_empty.value == 1:
+            is_empty.value:
 
             self.__hw_leak_test.run()
 
@@ -256,7 +256,7 @@ class Monitoring(BasePlugin):
 
         if register.value != verbal_const.OFF and self.__power_analyser is None:
 
-            # TODO: Make this action only iv EVOK is loaded.
+            # TODO: Make this action only if EVOK is loaded.
             # Load EVOK settings.
             if os.name == "posix":
                 self.__evok_setting = EvokSettings("/etc/evok.conf")

@@ -100,11 +100,11 @@ class Light(BasePlugin):
     """Delta illumination. [Lux]
     """
     
-    __error_gain = 1 # TODO: Change it in order to change the sensitivity of the system.
+    __error_gain = 1 # TODO: Move to register.
     """Gain of the error. This parameter is the smoothness of the curve.
     """
 
-    __output_limit = 10000 # TODO: Move to register.
+    __output_limit = 10000 
     """Illumination force limit. [V]
     """   
 
@@ -175,16 +175,6 @@ class Light(BasePlugin):
             return
 
         self.__v2_output = register.value
-
-    def __read_zoneoccupied_flag(self):
-
-        state = False
-
-        ac_zone_occupied = self._registers.by_name("ac.zone_1_occupied")
-        if ac_zone_occupied is not None:
-            state = ac_zone_occupied.value
-
-        return state
 
     def __init_registers(self):
 
@@ -276,7 +266,6 @@ class Light(BasePlugin):
         if self.__tmp_output != self.__output:
             self.__output = self.__tmp_output
 
-            # TODO: Convert lux to voltage.
             # Convert to volgate.
             out_to_v = self.__output * 0.001
 
@@ -302,16 +291,15 @@ class Light(BasePlugin):
         self.__set_voltages(0, 0)
 
     def update(self):
-        """Update the lights state."""
+        """Update the lights state.
+        """
 
         # If there is no one at the zone, just turn off the lights.
-        ac_zone_occupied = self.__read_zoneoccupied_flag()
-        if ac_zone_occupied:
-            pass
-            # self.__logger.debug("Just turn off the light in the zone.")
-        else:
-            # TODO: Pass, but when activity has turnback return to normal state.
-            pass
+        is_empty = self._registers.by_name("env.is_empty")
+        if is_empty is not None':
+            if is_empty.value:
+                pass
+                # TODO: Turn off the lights.
 
         # Update sensor data.
         self.__light_sensor.update()

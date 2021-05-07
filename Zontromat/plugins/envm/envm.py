@@ -85,46 +85,194 @@ class Environment(BasePlugin):
     __sunpos_enabled_value = False
     """Sun position local calculation enabled."""
 
+    __location_lat = 0.0
+    """Location latitude.
+    """    
+
+    __location_lon = 0.0
+    """Location longitude.
+    """
+
+    __location_elv = 0.0
+    """Location elevation.
+    """
+
+    __time_zone = 0
+    """Location time zone.
+    """
+
+    __temperature = 0
+    """Temperature
+    """
+
 #endregion
 
-#region Private Methods
-
-    def __sunpos_enabled(self):
-
-        return (self.__sunpos_enabled_value != False and self.__sunpos_enabled_value != "")
+#region Private Methods (Registers)
 
     def __sunpos_enabled_cb(self, register):
+        """Sun position calculation enable flag handler.
+
+        Args:
+            register (Register): The register.
+        """
 
         # Check data type.
-        if not register.data_type == "str":
+        if not register.data_type == "bool":
             GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
 
         if self.__sunpos_enabled_value != register.value:
             self.__sunpos_enabled_value = register.value
 
-    def __calculate_position(self):
+    def __location_lat_cb(self, register):
+        """Get latitude of the building.
 
-        # TODO: To add registers for current position and parameters of the building
+        Args:
+            register (Register): The register.
+        """
+
+        # Check data type.
+        if not ((register.data_type == "float") or (register.data_type == "int")):
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
+            return
+
+        if self.__location_lat != register.value:
+            self.__location_lat = register.value
+
+    def __location_lon_cb(self, register):
+        """Get longitude of the building.
+
+        Args:
+            register (Register): The register.
+        """
+
+        # Check data type.
+        if not ((register.data_type == "float") or (register.data_type == "int")):
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
+            return
+
+        if self.__location_lon != register.value:
+            self.__location_lon = register.value
+
+    def __location_elv_cb(self, register):
+        """Get elevation of the building.
+
+        Args:
+            register (Register): The register.
+        """
+
+        # Check data type.
+        if not ((register.data_type == "float") or (register.data_type == "int")):
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
+            return
+
+        if self.__location_elv != register.value:
+            self.__location_elv = register.value
+
+    def __time_zone_cb(self, register):
+        """Get time zone.
+
+        Args:
+            register (Register): The register.
+        """
+
+        # Check data type.
+        if not ((register.data_type == "float") or (register.data_type == "int")):
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
+            return
+
+        if self.__time_zone != register.value:
+            self.__time_zone = register.value
+
+    def __temperature_cb(self, register):
+        """Get environment temperature.
+
+        Args:
+            register (Register): The register.
+        """
+
+        # Check data type.
+        if not ((register.data_type == "float") or (register.data_type == "int")):
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
+            return
+
+        if self.__temperature != register.value:
+            self.__temperature = register.value
+
+    def __init_registers(self):
+
+        # Software sun position enabled.
+        # sunpos_enabled = self._registers.by_name(self.key + ".sunpos.enabled")
+        sunpos_enabled = self._registers.by_name("envm.sunpos.enabled")
+        if sunpos_enabled is not None:
+            sunpos_enabled.update_handlers = self.__sunpos_enabled_cb
+            sunpos_enabled.update()
+
+        location_lat = self._registers.by_name("envm.building.location.lat")
+        if location_lat is not None:
+            location_lat.update_handlers = self.__location_lat_cb
+            location_lat.update()
+
+        location_lon = self._registers.by_name("envm.building.location.lon")
+        if location_lon is not None:
+            location_lon.update_handlers = self.__location_lon_cb
+            location_lon.update()
+
+        location_elv = self._registers.by_name("envm.building.location.elv")
+        if location_elv is not None:
+            location_elv.update_handlers = self.__location_elv_cb
+            location_elv.update()
+
+        time_zone = self._registers.by_name("envm.building.location.time_zone")
+        if time_zone is not None:
+            time_zone.update_handlers = self.__time_zone_cb
+            time_zone.update()
+
+        temperature = self._registers.by_name("envm.temp.actual")
+        if temperature is not None:
+            temperature.update_handlers = self.__temperature_cb
+            temperature.update()
+
+    def __set_sunpos(self):
+        """Set sun position.
+        """
+
+        sun_elevation = self._registers.by_name("envm.sun.elevation")
+        if sun_elevation is not None:
+            sun_elevation.value = self.__elevation
+
+        sun_azimuth = self._registers.by_name("envm.sun.azimuth")
+        if sun_azimuth is not None:
+            sun_azimuth.value = self.__azimuth
+
+#endregion
+
+#region Private Methods
+
+    def __calculate_position(self):
+        """Calculate sun position.
+        """
+        
+        # https://www.suncalc.org/#/43.0781,25.5955,17/2021.05.07/11:09/1/1
 
         # Latitude of the target.
-        lat = 43.07779
+        lat = self.__location_lat
 
-        # Longtitude of the target.
-        lon = 25.59549
+        # Longitude of the target.
+        lon = self.__location_lon
 
         # Elevation, in meters.
-        # It is formed by the sum of altitude in [m] + heightof the object (building) in [m]
-        elev = 210
+        # It is formed by the sum of altitude in [m] + height of the object (building) in [m]
+        elv = self.__location_elv
 
-        # Temperature, in degrees celcius.
-        temp = 20
+        # Temperature, in degrees celsius.
+        temp = self.__temperature
 
         # Atmospheric pressure, in millibar.
         presure = 1013.0
 
         # Difference between earth\'s rotation time (TT) and universal time (UT1).
-        diff_time = 3600 * 2
+        diff_time = 3600 * self.__time_zone
 
         # Output in radians instead of degrees.
         mou = False
@@ -132,15 +280,16 @@ class Environment(BasePlugin):
         # Get sun position.
         time_now = datetime.now()
 
-        azm, zen, ra, dec, h = sunpos(time_now, lat, lon, elev, temp, presure, diff_time, mou)
-        elev = 90 - zen - 2
-        azm = azm - 39
+        azm, zen, ra, dec, h = sunpos(time_now, lat, lon, elv, temp, presure, diff_time, mou)
+        elv_out = 90 - zen - 2
+        azm_out = azm
 
-        # self.__logger.info(f"Azimuth: {azm:.2f}; Elevation: {elev:.2f}")
-        # print(f"SunPos -> Azm: {azm:.2f}; Elev: {elev:.2f}")
+        # self.__logger.info(f"Azimuth: {azm:.2f}; Elevation: {elv:.2f}")
+        # print(f"SunPos -> Azm: {azm_out:.2f}; Elev: {elv_out:.2f}")
 
-        self._registers.by_name("blinds.sun.elevation.value").value = elev
-        self._registers.by_name("blinds.sun.azimuth.value").value = azm
+        # Update sun location.
+        self.__azimuth = azm_out
+        self.__elevation = elv_out
 
 #endregion
 
@@ -153,21 +302,19 @@ class Environment(BasePlugin):
 
         self.__update_timer = Timer(2)
 
-        # Software sun position enabled.
-        sunpos_enabled = self._registers.by_name(self.key + ".sunpos.enabled")
-        if sunpos_enabled is not None:
-            sunpos_enabled.update_handlers = self.__sunpos_enabled_cb
+        self.__init_registers()
 
     def update(self):
+        """Update plugin logic.
+        """
 
         self.__update_timer.update()
         if self.__update_timer.expired:
             self.__update_timer.clear()
 
-            if self.__sunpos_enabled():
+            if self.__sunpos_enabled_value:
                 self.__calculate_position()
-
-            # TODO: Software update weathercast.
+                self.__set_sunpos()
 
     def shutdown(self):
         """Shutdown the tamper."""

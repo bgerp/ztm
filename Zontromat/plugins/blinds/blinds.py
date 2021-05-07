@@ -132,29 +132,14 @@ class Blinds(BasePlugin):
     __new_position = 0
     """New position of the blinds."""
 
-    __deg_per_sec = 1
-    """Degreases per sec."""
-
     __sun_spot_update_timer = None
     """Sun spot update timer."""
-
-    __sun_azm = 0
-    """Sun azimuth."""
-
-    __sun_elev = 0
-    """Sun elevation."""
-
-    __sun_spot_limit = 1
-    """Sun spot limit."""
 
     __calibration_state = None
     """"Calibration state."""
 
     __feedback_type = FeedbackType.NONE
     """Feedback type."""
-
-    __feedback_treshold = 0.093
-    """Feedback threshold."""
 
     __timout_counter = 0
     """Timeout counter."""
@@ -165,9 +150,68 @@ class Blinds(BasePlugin):
     __t2 = 0
     """T2 moment of second limit."""
 
+    __deg_per_sec = 0
+    """Degreases per sec."""
+
+    __feedback_treshold = 0
+    """Feedback threshold."""
+
+    __sun_azm = 0
+    """Sun azimuth."""
+
+    __sun_elev = 0
+    """Sun elevation."""
+
+    __sun_spot_limit = 0
+    """Sun spot limit."""
+
+    __object_height = 0
+    """Object height [m]
+    """    
+
 #endregion
 
-#region Private Methods
+#region Private Methods (registers)
+
+    def __object_height_cb(self, register):
+
+        # Check data type.
+        if not ((register.data_type == "float") or (register.data_type == "int")):
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
+            return
+
+        if self.__object_height != register.value:
+            self.__object_height = register.value
+
+    def __sunspot_limit_cb(self, register):
+
+        # Check data type.
+        if not ((register.data_type == "float") or (register.data_type == "int")):
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
+            return
+
+        if self.__sun_spot_limit != register.value:
+            self.__sun_spot_limit = register.value    
+
+    def __feedback_treshold_cb(self, register):
+
+        # Check data type.
+        if not ((register.data_type == "float") or (register.data_type == "int")):
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
+            return
+
+        if self.__feedback_treshold != register.value:
+            self.__feedback_treshold = register.value      
+
+    def __deg_per_sec_cb(self, register):
+
+        # Check data type.
+        if not ((register.data_type == "float") or (register.data_type == "int")):
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
+            return
+
+        if self.__deg_per_sec != register.value:
+            self.__deg_per_sec = register.value  
 
     def __input_fb_cb(self, register):
 
@@ -205,6 +249,104 @@ class Blinds(BasePlugin):
         if self.__output_ccw != register.value:
             self.__output_ccw = register.value
 
+    def __new_pos_cb(self, register):
+        """Callback function that sets new position."""
+
+        # Check data type.
+        if not ((register.data_type == "float") or (register.data_type == "int")):
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
+            return
+
+        self.__set_position(register.value)
+
+    def __init_registers(self):
+
+        input_fb = self._registers.by_name(self.key + ".input_fb")
+        if input_fb is not None:
+            input_fb.update_handlers = self.__input_fb_cb
+            input_fb.update()
+
+        output_cw = self._registers.by_name(self.key + ".output_cw")
+        if output_cw is not None:
+            output_cw.update_handlers = self.__output_cw_cb
+            output_cw.update()
+
+        output_ccw = self._registers.by_name(self.key + ".output_ccw")
+        if output_ccw is not None:
+            output_ccw.update_handlers = self.__output_ccw_cb
+            output_ccw.update()
+
+        position = self._registers.by_name(self.key + ".position")
+        if position is not None:
+            position.update_handlers = self.__new_pos_cb
+            position.update()
+
+        object_height = self._registers.by_name(self.key + ".object_height")
+        if object_height is not None:
+            object_height.update_handlers = self.__object_height_cb
+            object_height.update()
+
+        sunspot_limit = self._registers.by_name(self.key + ".sunspot_limit")
+        if sunspot_limit is not None:
+            sunspot_limit.update_handlers = self.__sunspot_limit_cb
+            sunspot_limit.update()
+
+        feedback_treshold = self._registers.by_name(self.key + ".feedback_treshold")
+        if feedback_treshold is not None:
+            feedback_treshold.update_handlers = self.__feedback_treshold_cb
+            feedback_treshold.update()
+
+        deg_per_sec = self._registers.by_name(self.key + ".deg_per_sec")
+        if deg_per_sec is not None:
+            deg_per_sec.update_handlers = self.__deg_per_sec_cb
+            deg_per_sec.update()
+
+    def __get_sun_pos(self):
+
+        sun_elev_reg = self._registers.by_name("envm.sun.elevation")
+        if sun_elev_reg:
+            if not ((sun_elev_reg.data_type == "float") or (sun_elev_reg.data_type == "int")):
+                GlobalErrorHandler.log_bad_register_value(self.__logger, sun_elev_reg)
+                return
+
+            if self.__sun_elev != sun_elev_reg.value:
+                self.__sun_elev = sun_elev_reg.value
+
+        sun_azm_reg = self._registers.by_name("envm.sun.azimuth")
+        if sun_azm_reg:
+            if not ((sun_azm_reg.data_type == "float") or (sun_azm_reg.data_type == "int")):
+                GlobalErrorHandler.log_bad_register_value(self.__logger, sun_azm_reg)
+                return
+
+            if self.__sun_azm != sun_azm_reg.value:
+                self.__sun_azm = sun_azm_reg.value
+
+    def __get_occupation_flags(self):
+
+        zones_count = 0
+        reg_zones_count = self._registers.by_name("ac.zones_count")
+        if reg_zones_count is not None:
+            zones_count = reg_zones_count.value
+
+        zones_occupation_flags = []
+        for index in range(zones_count):
+
+            # To human readable registers index.
+            index += 1
+
+            # Sinthesize the name of the occupation flag.
+            register_name = "ac.zone_{}_occupied".format(index)
+
+            # If there is no one at the zone, just turn off the lights.
+            ac_zone_occupied = self._registers.by_name(register_name)
+            if ac_zone_occupied is not None:
+                zones_occupation_flags.append(ac_zone_occupied.value)
+
+        return zones_occupation_flags
+
+#endregion
+
+#region Private Methods
 
     def __stop(self):
         """Stop the engine."""
@@ -256,16 +398,6 @@ class Blinds(BasePlugin):
 
         return fb_value
 
-    def __on_new_pos(self, register):
-        """Callback function that sets new position."""
-
-        # Check data type.
-        if not register.data_type == "float":
-            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
-            return
-
-        self.__set_position(register.value)
-
     def __set_position(self, position):
 
         if position == self.__new_position:
@@ -285,37 +417,19 @@ class Blinds(BasePlugin):
 
     def __calc_sun_spot(self):
 
-        sun_elev_reg = self._registers.by_name(self.key + ".sun.elevation.value")
-        if sun_elev_reg:
-
-            if not sun_elev_reg.data_type == "float":
-                GlobalErrorHandler.log_bad_register_value(self.__logger, sun_elev_reg)
-                return
-
-            self.__sun_elev = sun_elev_reg.value
-
-        sun_azm_reg = self._registers.by_name(self.key + ".sun.azimuth.value")
-        if sun_azm_reg:
-
-            if not sun_azm_reg.data_type == "float":
-                GlobalErrorHandler.log_bad_register_value(self.__logger, sun_azm_reg)
-                return
-
-            self.__sun_azm = sun_azm_reg.value
-
         if (self.__sun_azm > 0) and (self.__sun_elev > 0):
             # print(f"Blinds -> Azm: {self.__sun_azm:03.2f}; Elev: {self.__sun_elev:03.2f}")
 
             # Calculate the shadow length.
-            shadow_l = shadow_length(1, to_rad(self.__sun_elev))
+            shadow_l = shadow_length(self.__object_height, to_rad(self.__sun_elev))
             # print(f"Blinds -> Shadow: {shadow_l:03.2f}")
 
             theta = 360 - (self.__sun_azm + 180)
             # print(f"Blinds -> Theta: {theta:03.2f}")
 
             # Calculate cartesian
-            x = shadow_l * math.cos(to_rad(theta))
-            y = shadow_l * math.sin(to_rad(theta))
+            x = shadow_l * math.cos(to_rad(abs(theta)))
+            y = shadow_l * math.sin(to_rad(abs(theta)))
             # print(f"Blinds -> X: {x:03.2f}; Y: {y:03.2f}")
 
             is_cloudy = False
@@ -342,37 +456,27 @@ class Blinds(BasePlugin):
 
         self.__calibration_state = StateMachine(CalibrationState.NONE)
 
-        input_fb = self._registers.by_name(self.key + ".input_fb")
-        if input_fb is not None:
-            input_fb.update_handlers = self.__input_fb_cb
-
-        output_cw = self._registers.by_name(self.key + ".output_cw")
-        if output_cw is not None:
-            output_cw.update_handlers = self.__output_cw_cb
-
-        output_ccw = self._registers.by_name(self.key + ".output_ccw")
-        if output_ccw is not None:
-            output_ccw.update_handlers = self.__output_ccw_cb
-
-        # position = self._registers.by_name(self.key + ".position")
-        # if position is not None:
-        #     position.update_handlers = self.__on_new_pos
+        self.__init_registers()
 
         self.__stop()
 
     def update(self):
-        """Update"""
+        """Update plugin logic.
+        """
 
-        # TODO: Remove, DEMO purpose only.
-        # if self._controller.digital_read("DI4"):
-        #     self.__blinds_state.set_state(BlindsState.Calibrate)
-        #     self.__calibration_state.set_state(CalibrationState.Stop)
+        # Update occupation flags.
+        occupation_flags = self.__get_occupation_flags()
+        is_occupied = False
+        for flag in occupation_flags:
+            is_occupied = flag or is_occupied
+            # TODO: Close the blinds.
 
         self.__sun_spot_update_timer.update()
         if self.__sun_spot_update_timer.expired:
             self.__sun_spot_update_timer.clear()
 
             if self.__blinds_state.is_state(BlindsState.Wait):
+                self.__get_sun_pos()
                 self.__calc_sun_spot()
 
         if self.__blinds_state.is_state(BlindsState.Prepare):
@@ -506,16 +610,7 @@ class Blinds(BasePlugin):
 
                 return
 
-        # If there is no one at the zone, just turn off the lights.
-        ac_zone_occupied = self._registers.by_name("ac.zone_occupied_1")
-        if ac_zone_occupied is not None:
 
-            if ac_zone_occupied.value == 1:
-                self.__logger.debug("Just close the blinds in the zone.")
-
-            if ac_zone_occupied.value == 0:
-                # TODO: Pass, but when activity has turnback return to normal state.
-                pass
 
     def shutdown(self):
         """Shutting down the blinds."""
