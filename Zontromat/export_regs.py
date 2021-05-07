@@ -639,9 +639,9 @@ def __add_registers():
 
 #endregion
 
-#region Environment (env)
+#region Environment (envm)
 
-    register = Register("env.is_empty")
+    register = Register("envm.is_empty")
     register.scope = Scope.Device
     register.plugin_name = "Environment"
     register.description = "Is empty flag"
@@ -649,7 +649,7 @@ def __add_registers():
     register.value = 1
     __registers.append(register)
 
-    register = Register("env.is_empty_timeout")
+    register = Register("envm.is_empty_timeout")
     register.scope = Scope.System
     register.plugin_name = "Environment"
     register.description = "Is empty time out [s]"
@@ -657,7 +657,7 @@ def __add_registers():
     register.value = 3600
     __registers.append(register)
 
-    register = Register("env.temp.actual")
+    register = Register("envm.temp.actual")
     register.scope = Scope.System
     register.plugin_name = "Environment"
     register.description = "Actual outside temperature [C]"
@@ -665,7 +665,7 @@ def __add_registers():
     register.value = 20.0
     __registers.append(register)
 
-    register = Register("env.temp.a6")
+    register = Register("envm.temp.a6")
     register.scope = Scope.System
     register.plugin_name = "Environment"
     register.description = "Actual outside temperature for 6 hours [C]"
@@ -673,7 +673,7 @@ def __add_registers():
     register.value = 30.0
     __registers.append(register)
 
-    register = Register("env.temp.min24")
+    register = Register("envm.temp.min24")
     register.scope = Scope.System
     register.plugin_name = "Environment"
     register.description = "Minimum outside temperature for 24 hours [C]"
@@ -681,7 +681,7 @@ def __add_registers():
     register.value = 20.0
     __registers.append(register)
 
-    register = Register("env.temp.max24")
+    register = Register("envm.temp.max24")
     register.scope = Scope.System
     register.plugin_name = "Environment"
     register.description = "Maximum outside temperature for 24 hours [C]"
@@ -689,7 +689,7 @@ def __add_registers():
     register.value = 36.0
     __registers.append(register)
 
-    register = Register("env.rh")
+    register = Register("envm.rh")
     register.scope = Scope.System
     register.plugin_name = "Environment"
     register.description = "Actual outside relative humidity [%]"
@@ -697,7 +697,7 @@ def __add_registers():
     register.value = 60.0
     __registers.append(register)
 
-    register = Register("env.wind.actual")
+    register = Register("envm.wind.actual")
     register.scope = Scope.System
     register.plugin_name = "Environment"
     register.description = "Actual wind [m/sec]"
@@ -705,7 +705,7 @@ def __add_registers():
     register.value = 3.0
     __registers.append(register)
 
-    register = Register("env.wind.max12")
+    register = Register("envm.wind.max12")
     register.scope = Scope.System
     register.plugin_name = "Environment"
     register.description = "Maximum wind for 12 hours [m/sec]"
@@ -713,7 +713,7 @@ def __add_registers():
     register.value = 6.0
     __registers.append(register)
 
-    register = Register("env.light")
+    register = Register("envm.light")
     register.scope = Scope.System
     register.plugin_name = "Environment"
     register.description = "Outside light [lux]"
@@ -721,7 +721,7 @@ def __add_registers():
     register.value = 1000.0
     __registers.append(register)
 
-    register = Register("env.energy") # Energy mode of the building.
+    register = Register("envm.energy") # Energy mode of the building.
     register.scope = Scope.System
     register.plugin_name = "Environment"
     register.description = "Energy mode of the building"
@@ -729,7 +729,7 @@ def __add_registers():
     register.value = 0
     __registers.append(register)
 
-    register = Register("env.flag_fire")
+    register = Register("envm.flag_fire")
     register.scope = Scope.System
     register.plugin_name = "Environment"
     register.description = "Emergency index for the fire."
@@ -737,7 +737,7 @@ def __add_registers():
     register.value = 0
     __registers.append(register)
 
-    register = Register("env.flag_storm")
+    register = Register("envm.flag_storm")
     register.scope = Scope.System
     register.plugin_name = "Environment"
     register.description = "Emergency index for the storm."
@@ -745,7 +745,7 @@ def __add_registers():
     register.value = 0
     __registers.append(register)
 
-    register = Register("env.flag_earthquake")
+    register = Register("envm.flag_earthquake")
     register.scope = Scope.System
     register.plugin_name = "Environment"
     register.description = "Emergency index for the earthquake."
@@ -753,7 +753,7 @@ def __add_registers():
     register.value = 0
     __registers.append(register)
 
-    register = Register("env.flag_gassing")
+    register = Register("envm.flag_gassing")
     register.scope = Scope.System
     register.plugin_name = "Environment"
     register.description = "Emergency index for the gassing."
@@ -761,7 +761,7 @@ def __add_registers():
     register.value = 0
     __registers.append(register)
 
-    register = Register("env.flag_flooding")
+    register = Register("envm.flag_flooding")
     register.scope = Scope.System
     register.plugin_name = "Environment"
     register.description = "Emergency index for the flooding."
@@ -769,7 +769,7 @@ def __add_registers():
     register.value = 0
     __registers.append(register)
 
-    register = Register("env.flag_blocked")
+    register = Register("envm.flag_blocked")
     register.scope = Scope.System
     register.plugin_name = "Environment"
     register.description = "Emergency index for the blocking."
@@ -777,7 +777,7 @@ def __add_registers():
     register.value = 0
     __registers.append(register)
 
-    register = Register("env.sunpos.enabled")
+    register = Register("envm.sunpos.enabled")
     register.scope = Scope.System
     register.plugin_name = "Environment"
     register.description = "Enable software calculation of the sun position"
@@ -785,7 +785,7 @@ def __add_registers():
     register.value = False
     __registers.append(register)
 
-    register = Register("env.building.location.lat")
+    register = Register("envm.building.location.lat")
     register.scope = Scope.System
     register.plugin_name = "Environment"
     register.description = "Latitude of the target building."
@@ -793,7 +793,7 @@ def __add_registers():
     register.value = 43.07779
     __registers.append(register)
 
-    register = Register("env.building.location.lon")
+    register = Register("envm.building.location.lon")
     register.scope = Scope.System
     register.plugin_name = "Environment"
     register.description = "Longitude of the target building."
@@ -801,7 +801,7 @@ def __add_registers():
     register.value = 25.59549
     __registers.append(register)
 
-    register = Register("env.building.location.elv")
+    register = Register("envm.building.location.elv")
     register.scope = Scope.System
     register.plugin_name = "Environment"
     register.description = "Longitude of the target building."
@@ -809,7 +809,7 @@ def __add_registers():
     register.value = 210
     __registers.append(register)
 
-    register = Register("env.building.location.time_zone")
+    register = Register("envm.building.location.time_zone")
     register.scope = Scope.System
     register.plugin_name = "Environment"
     register.description = "Longitude of the target building."
@@ -817,7 +817,7 @@ def __add_registers():
     register.value = 2
     __registers.append(register)
 
-    register = Register("env.enabled")
+    register = Register("envm.enabled")
     register.scope = Scope.System
     # register.update_handlers = self.__env_enabled
     register.plugin_name = "Environment"
@@ -826,7 +826,7 @@ def __add_registers():
     register.value = False
     __registers.append(register)
 
-    register = Register("env.sun.azimuth")
+    register = Register("envm.sun.azimuth")
     register.scope = Scope.System
     register.plugin_name = "Blinds"
     register.description = "Sun azimuth value"
@@ -834,7 +834,7 @@ def __add_registers():
     register.value = 0.0
     __registers.append(register)
 
-    register = Register("env.sun.elevation")
+    register = Register("envm.sun.elevation")
     register.scope = Scope.System
     register.plugin_name = "Blinds"
     register.description = "Sun elevation value"
