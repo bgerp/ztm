@@ -165,30 +165,30 @@ None
 
 | Purpose | Register | Type | Value |
 |----------|:-------------|:------|:------|
-| Is empty time out [s] | env.is_empty_timeout | int/float | 3600 |
-| Actual outside temperature [C] | env.temp.actual | int/float | 29 |
-| Actual outside temperature for 6 hours [C] | env.temp.a6 | int/float | 30 |
-| Minimum outside temperature for 24 hours [C] | env.temp.min24 | int/float | 27 |
-| Maximum outside temperature for 24 hours [C] | env.temp.max24 | int/float | 36 |
-| Actual outside relative humidity [%] | env.rh | int/float | 60 |
-| Actual wind [m/sec] | env.wind.actual | int/float | 3 |
-| Maximum wind for 12 hours [m/sec] | env.wind.max12 | int/float | 6 |
-| Outside light [lux] | env.light | int/float | 1000 |
-| Enabled | env.enabled | str | false |
-| Energy mode of the building | env.energy | float | 0 |
-| Emergency index for the fire. | env.flag_fire | int | 0 |
-| Emergency index for the storm. | env.flag_storm | int | 0 |
-| Emergency index for the earthquake. | env.flag_earthquake | Int | 0 |
-| Emergency index for the gassing. | env.flag_gassing | int | 0 |
-| Emergency index for the flooding. | env.flag_flooding | int | 0 |
-| Emergency index for the blocking. | env.flag_blocked | int | 0 |
-| Enable software calculation of the sun position | env.sunpos.enabled | str | false |
+| Is empty time out [s] | envm.is_empty_timeout | int/float | 3600 |
+| Actual outside temperature [C] | envm.temp.actual | int/float | 29 |
+| Actual outside temperature for 6 hours [C] | envm.temp.a6 | int/float | 30 |
+| Minimum outside temperature for 24 hours [C] | envm.temp.min24 | int/float | 27 |
+| Maximum outside temperature for 24 hours [C] | envm.temp.max24 | int/float | 36 |
+| Actual outside relative humidity [%] | envm.rh | int/float | 60 |
+| Actual wind [m/sec] | envm.wind.actual | int/float | 3 |
+| Maximum wind for 12 hours [m/sec] | envm.wind.max12 | int/float | 6 |
+| Outside light [lux] | envm.light | int/float | 1000 |
+| Enabled | envm.enabled | str | false |
+| Energy mode of the building | envm.energy | float | 0 |
+| Emergency index for the fire. | envm.flag_fire | int | 0 |
+| Emergency index for the storm. | envm.flag_storm | int | 0 |
+| Emergency index for the earthquake. | envm.flag_earthquake | Int | 0 |
+| Emergency index for the gassing. | envm.flag_gassing | int | 0 |
+| Emergency index for the flooding. | envm.flag_flooding | int | 0 |
+| Emergency index for the blocking. | envm.flag_blocked | int | 0 |
+| Enable software calculation of the sun position | envm.sunpos.enabled | str | false |
 
  - From **Zontromat** to **bgERP**
 
 | Purpose | Register | Type | Value |
 |----------|:-------------|:------|:------|
-| Is empty flag. | env.is_empty | int/float | 0 |
+| Is empty flag. | envm.is_empty | int/float | 0 |
 
 ## Heating Ventilation and Air Conditioning (HVAC)
 
