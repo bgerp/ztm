@@ -645,8 +645,8 @@ def __add_registers():
     register.scope = Scope.Device
     register.plugin_name = "Environment"
     register.description = "Is empty flag"
-    register.range = "0/1"
-    register.value = 1
+    register.range = __range["BOOL"]
+    register.value = True
     __registers.append(register)
 
     register = Register("envm.is_empty_timeout")
