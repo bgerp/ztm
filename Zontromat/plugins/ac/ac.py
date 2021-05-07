@@ -79,11 +79,8 @@ class AccessControl(BasePlugin):
     __last_update_cycle_attendees = []
     """Last update cycle attendees"""
 
-    __security_zone_1 = None
-    """Security zone 1"""
-
-    __security_zone_2 = None
-    """Security zone 2"""
+    __security_zones = {}
+    """Security zones."""
 
 #endregion
 
@@ -93,22 +90,62 @@ class AccessControl(BasePlugin):
         """Destructor"""
 
         del self.__logger
-        del self.__security_zone_1
-        del self.__security_zone_2
+        del self.__security_zones
 
 #endregion
 
-#region Private Methods
+#region Private Methods (Registers)
 
     def __allowed_attendees_cb(self, register):
 
         # Check data type.
-        if not register.data_type == "json":
+        if not ((register.data_type == "json") or (register.data_type == "str")):
             GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
             return
 
-        self.__security_zone_1.add_allowed_attendees(register.value)
-        self.__security_zone_2.add_allowed_attendees(register.value)
+        # If the register is str convert it to JSON. (This is fix.)
+        content = []
+        if register.data_type == "str":
+            content = json.loads(register.value)
+        else:
+            content = register.value
+
+        # Add allowed attendees.
+        for key in self.__security_zones:
+            self.__security_zones[key].add_allowed_attendees(content)
+
+    def __get_occupation_flags(self):
+
+        zones_count = 0
+        reg_zones_count = self._registers.by_name("ac.zones_count")
+        if reg_zones_count is not None:
+            zones_count = reg_zones_count.value
+
+        zones_occupation_flags = []
+        for index in range(zones_count):
+
+            # To human readable registers index.
+            index += 1
+
+            # Sinthesize the name of the occupation flag.
+            register_name = "ac.zone_{}_occupied".format(index)
+
+            # If there is no one at the zone, just turn off the lights.
+            ac_zone_occupied = self._registers.by_name(register_name)
+            if ac_zone_occupied is not None:
+                zones_occupation_flags.append(ac_zone_occupied.value)
+
+        return zones_occupation_flags
+
+    def __set_envm_is_empty(self, flag):
+
+        is_empty = self._registers.by_name("envm.is_empty")
+        if is_empty is not None:
+            is_empty.value = flag
+
+#endregion
+
+#region Private Methods
 
     def __filter_atendee_by_time(self, time_sec):
 
@@ -142,7 +179,7 @@ class AccessControl(BasePlugin):
             for atendee in filtered_atendees:
                 self.__last_update_cycle_attendees.append(atendee)
 
-    def __reader_read(self, card_id, reader_id, card_state):
+    def __on_card_cb(self, card_id, reader_id, card_state):
 
         # Create a record.
         record = { \
@@ -163,10 +200,15 @@ class AccessControl(BasePlugin):
         # Update last 60 seconds attendee list.
         last_minute_attendees = self._registers.by_name(self.key + ".last_update_attendees")
         if last_minute_attendees is not None:
-            obj = json.loads(last_minute_attendees.value)
-            for attendee in self.__last_update_cycle_attendees:
-                obj.append(attendee)
-            last_minute_attendees.value = json.dumps(obj)
+            
+            if last_minute_attendees.data_type == "str":
+
+                obj = json.loads(last_minute_attendees.value)
+
+                for attendee in self.__last_update_cycle_attendees:
+                    obj.append(attendee)
+
+                last_minute_attendees.value = json.dumps(obj)
 
 #endregion
 
@@ -179,37 +221,58 @@ class AccessControl(BasePlugin):
         self.__logger.info("Starting up the {}".format(self.name))
 
         # Card reader allowed IDs.
+        zones_count = 0
+        reg_zones_count = self._registers.by_name(self.key + ".zones_count")
+        if reg_zones_count is not None:
+            zones_count = reg_zones_count.value
+
+        # Security zones.
+        prototype = "AC_{}"
+        zones_count += 1
+        for index in range(1, zones_count):
+
+            # Create name.
+            name = prototype.format(index)
+
+            # Register the zone.
+            self.__security_zones[name] = SecurityZone(\
+                registers=self._registers, controller=self._controller,\
+                identifier=index, key=self.key, name="Security Zone")
+
+            # Add on card callback. 
+            self.__security_zones[name].on_card(self.__on_card_cb)
+
+            # Initialize the module.
+            self.__security_zones[name].init()
+
+
+        # Card reader allowed IDs.
         allowed_attendees = self._registers.by_name(self.key + ".allowed_attendees")
         if allowed_attendees is not None:
             allowed_attendees.update_handlers = self.__allowed_attendees_cb
-
-        # Security zone 1.
-        self.__security_zone_1 = SecurityZone(\
-            registers=self._registers, controller=self._controller,\
-            identifier=1, key=self.key, name="Security Zone")
-
-        self.__security_zone_1.set_reader_read(self.__reader_read)
-        self.__security_zone_1.init()
-
-        # Security zone 2.
-        self.__security_zone_2 = SecurityZone(\
-            registers=self._registers, controller=self._controller,\
-            identifier=2, key=self.key, name="Security Zone")
-        
-        self.__security_zone_2.set_reader_read(self.__reader_read)
-        self.__security_zone_2.init()
+            allowed_attendees.update()
 
     def update(self):
         """Update"""
 
-        self.__security_zone_1.update()
-        self.__security_zone_2.update()
+        for key in self.__security_zones:
+            self.__security_zones[key].update()
+
+        # Update occupation flags.
+        occupation_flags = self.__get_occupation_flags()
+        is_occupied = False
+        for flag in occupation_flags:
+            is_occupied = flag or is_occupied
+
+        is_empty = not is_occupied
+
+        self.__set_envm_is_empty(is_empty)
 
     def shutdown(self):
         """Shutting down the reader."""
 
         self.__logger.info("Shutting down the {}".format(self.name))
-        self.__security_zone_1.shutdown()
-        self.__security_zone_2.shutdown()
+        for key in self.__security_zones:
+            self.__security_zones[key].shutdown()
 
 #endregion
