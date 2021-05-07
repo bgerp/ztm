@@ -36,6 +36,8 @@ from controllers.base_controller import BaseController
 
 from devices.Super.s8_3cn.s8_3cn import S8_3CN as BlackIsland
 
+from utils.logic.functions import l_scale
+
 #region File Attributes
 
 __author__ = "Orlin Dimitrov"
@@ -460,9 +462,24 @@ class ZL101PCC(BaseController):
             State of the pin.
         """
 
+        value = 0.0
+        state = {"value": value}
+
+        if self.__map is None:
+            return state
+
+        if not pin in self.__map:
+            return state
+
+        value = self.__AI[self.__map[pin]]
+
+        value = l_scale(value, [0, 50000], [0, 10])
+
+        state["value"] = value
+
         self.__logger.debug("analog_read({}, {})".format(self.model, pin))
 
-        return 0
+        return state
 
     def write_counter(self, pin, value):
         """Write the digital counter value.
@@ -502,7 +519,7 @@ class ZL101PCC(BaseController):
             State of the pin.
         """
 
-        self.__logger.debug("set_led({}, {}, {})".format(self.model, pin, value))
+        # self.__logger.debug("set_led({}, {}, {})".format(self.model, pin, value))
 
         return 0
 
