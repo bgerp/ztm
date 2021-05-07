@@ -70,7 +70,7 @@ class HVAC(BasePlugin):
     """Logger
     """
 
-    __thermal_zones = []
+    __thermal_zones = {}
     """Thermal zones.
     """
 
@@ -97,21 +97,31 @@ class HVAC(BasePlugin):
         self.__logger = get_logger(__name__)
         self.__logger.info("Starting up the {}".format(self.name))
 
-        self.__thermal_zones.clear()
+        zones_count = 0
+        reg_zones_count = self._registers.by_name(self.key + ".zones_count")
+        if reg_zones_count is not None:
+            zones_count = reg_zones_count.value
 
-        ac1 = AirConditioner(\
-            registers=self._registers, controller=self._controller,\
-            identifier=1, key=self.key, name="AC")
-        self.__thermal_zones.append(ac1)
+        # Security zones.
+        prototype = "AC_{}"
+        zones_count += 1
+        for index in range(1, zones_count):
 
-        for ac in self.__thermal_zones:
-            ac.init()
+            # Create name.
+            name = prototype.format(index)
+
+            self.__thermal_zones[name] = AirConditioner(\
+                registers=self._registers, controller=self._controller,\
+                identifier=index, key=self.key, name="AC")
+
+            # Initialize the module.
+            self.__thermal_zones[name].init()
 
     def update(self):
         """ Update cycle. """
 
-        for ac in self.__thermal_zones:
-            ac.update()
+        for key in self.__thermal_zones:
+            self.__thermal_zones[key].update()
 
     def shutdown(self):
         """Shutdown the tamper."""
