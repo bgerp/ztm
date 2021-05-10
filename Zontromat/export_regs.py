@@ -122,7 +122,7 @@ def __add_registers():
     register.plugin_name = "Access Control"
     register.description = "Last update attendee"
     register.range = ""
-    register.value = []
+    register.value = [] # {"card_id": "445E6046010080FF", "ts":"1595322860"}
     __registers.append(register)
 
     register = Register("ac.next_attendance")
@@ -1292,7 +1292,9 @@ def __add_registers():
     register.plugin_name = "Light"
     register.description = "Sensor settings"
     register.range = ""
-    register.value = "1wdevice/26607314020000F8"
+    register.value = "SEDtronic/u1wtvs/1wdevice/26607314020000F8"
+    # SEDtronic/u1wtvs/1wdevice/26607314020000F8	
+    # PT/light_sensor/AI0
     __registers.append(register)
 
     # register = Register("light.sensor.model")
