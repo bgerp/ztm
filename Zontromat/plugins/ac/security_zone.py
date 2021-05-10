@@ -154,93 +154,6 @@ class SecurityZone(BasePlugin):
 
 #region Private Methods (Registers)
 
-    def __init_registers(self):
-
-        # Get time to open the latch.
-        time_to_open = self._registers.by_name("{}.time_to_open_{}".format(self.key, self.__identifier))
-        if time_to_open is not None:
-            time_to_open.update_handlers = self.__time_to_open_cb
-            time_to_open.update()
-    
-        # Is empty timeout.
-        is_empty_timeout = self._registers.by_name("envm.is_empty_timeout")
-        if is_empty_timeout is not None:
-            is_empty_timeout.update_handlers = self.__is_empty_timeout_cb
-
-        # Entry reader.
-        entry_reader_enabled = self._registers.by_name("{}.entry_reader_{}.enabled".format(self.key, self.__identifier))
-        if entry_reader_enabled is not None:
-            entry_reader_enabled.update_handlers = self.__entry_reader_cb
-
-        entry_reader_port_baudrate = self._registers.by_name("{}.entry_reader_{}.port.baudrate".format(self.key, self.__identifier))
-        if entry_reader_port_baudrate is not None:
-            entry_reader_port_baudrate.update_handlers = self.__entry_reader_cb
-
-        entry_reader_port_name = self._registers.by_name("{}.entry_reader_{}.port.name".format(self.key, self.__identifier))
-        if entry_reader_port_name is not None:
-            entry_reader_port_name.update_handlers = self.__entry_reader_cb
-            entry_reader_port_name.update()
-
-
-        # Exit reader.
-        exit_reader = self._registers.by_name("{}.exit_reader_{}.enabled".format(self.key, self.__identifier))
-        if exit_reader is not None:
-            exit_reader.update_handlers = self.__exit_reader_cb
-
-        exit_reader_port_baudrate = self._registers.by_name("{}.exit_reader_{}.port.baudrate".format(self.key, self.__identifier))
-        if exit_reader_port_baudrate is not None:
-            exit_reader_port_baudrate.update_handlers = self.__exit_reader_cb
-
-        exit_reader_port_name = self._registers.by_name("{}.exit_reader_{}.port.name".format(self.key, self.__identifier))
-        if exit_reader_port_name is not None:
-            exit_reader_port_name.update_handlers = self.__exit_reader_cb
-            exit_reader_port_name.update()
-
-
-        # Create exit button.
-        exit_button_input = self._registers.by_name("{}.exit_button_{}.input".format(self.key, self.__identifier))
-        if exit_button_input is not None:
-            exit_button_input.update_handlers = self.__exit_btn_input_cb
-            exit_button_input.update()
-
-        # Create window closed sensor.
-        window_closed_input = self._registers.by_name("{}.window_closed_{}.input".format(self.key, self.__identifier))
-        if window_closed_input is not None:
-            window_closed_input.update_handlers = self.__window_closed_input_cb
-            window_closed_input.update()
-
-        # Create door closed sensor.
-        door_closed_input = self._registers.by_name("{}.door_closed_{}.input".format(self.key, self.__identifier))
-        if door_closed_input is not None:
-            door_closed_input.update_handlers = self.__door_closed_input_cb
-            door_closed_input.update()
-
-        # Create PIR sensor.
-        pir_input = self._registers.by_name("{}.pir_{}.input".format(self.key, self.__identifier))
-        if pir_input is not None:
-            pir_input.update_handlers = self.__pir_input_cb
-            pir_input.update()
-
-
-        # Create locking mechanism.
-        lock_mechanism_output = self._registers.by_name("{}.lock_mechanism_{}.output".format(self.key, self.__identifier))
-        if lock_mechanism_output is not None:
-            lock_mechanism_output.update_handlers = self.__lock_mechanism_output_cb
-            lock_mechanism_output.update()
-
-        # Door window blind.
-        door_window_blind_output = self._registers.by_name("{}.door_window_blind_{}.output".format(self.key, self.__identifier))
-        if door_window_blind_output is not None:
-            door_window_blind_output.update_handlers = self.__door_window_blind_output_cb
-            door_window_blind_output.update()
-
-        # Door window blind.
-        door_window_blind_value = self._registers.by_name("{}.door_window_blind_{}.value".format(self.key, self.__identifier))
-        if door_window_blind_value is not None:
-            door_window_blind_value.update_handlers = self.__door_window_blind_value_cb
-            door_window_blind_value.update()
-
-
     def __entry_reader_cb(self, register):
 
         # 1. Get data.
@@ -514,9 +427,103 @@ class SecurityZone(BasePlugin):
 
         self.__set_door_window_blind(register.value)
 
+    def __init_registers(self):
+
+        # Get time to open the latch.
+        time_to_open = self._registers.by_name("{}.time_to_open_{}".format(self.key, self.__identifier))
+        if time_to_open is not None:
+            time_to_open.update_handlers = self.__time_to_open_cb
+            time_to_open.update()
+    
+        # Is empty timeout.
+        is_empty_timeout = self._registers.by_name("envm.is_empty_timeout")
+        if is_empty_timeout is not None:
+            is_empty_timeout.update_handlers = self.__is_empty_timeout_cb
+
+        # Entry reader.
+        entry_reader_enabled = self._registers.by_name("{}.entry_reader_{}.enabled".format(self.key, self.__identifier))
+        if entry_reader_enabled is not None:
+            entry_reader_enabled.update_handlers = self.__entry_reader_cb
+
+        entry_reader_port_baudrate = self._registers.by_name("{}.entry_reader_{}.port.baudrate".format(self.key, self.__identifier))
+        if entry_reader_port_baudrate is not None:
+            entry_reader_port_baudrate.update_handlers = self.__entry_reader_cb
+
+        entry_reader_port_name = self._registers.by_name("{}.entry_reader_{}.port.name".format(self.key, self.__identifier))
+        if entry_reader_port_name is not None:
+            entry_reader_port_name.update_handlers = self.__entry_reader_cb
+            entry_reader_port_name.update()
+
+
+        # Exit reader.
+        exit_reader = self._registers.by_name("{}.exit_reader_{}.enabled".format(self.key, self.__identifier))
+        if exit_reader is not None:
+            exit_reader.update_handlers = self.__exit_reader_cb
+
+        exit_reader_port_baudrate = self._registers.by_name("{}.exit_reader_{}.port.baudrate".format(self.key, self.__identifier))
+        if exit_reader_port_baudrate is not None:
+            exit_reader_port_baudrate.update_handlers = self.__exit_reader_cb
+
+        exit_reader_port_name = self._registers.by_name("{}.exit_reader_{}.port.name".format(self.key, self.__identifier))
+        if exit_reader_port_name is not None:
+            exit_reader_port_name.update_handlers = self.__exit_reader_cb
+            exit_reader_port_name.update()
+
+
+        # Create exit button.
+        exit_button_input = self._registers.by_name("{}.exit_button_{}.input".format(self.key, self.__identifier))
+        if exit_button_input is not None:
+            exit_button_input.update_handlers = self.__exit_btn_input_cb
+            exit_button_input.update()
+
+        # Create window closed sensor.
+        window_closed_input = self._registers.by_name("{}.window_closed_{}.input".format(self.key, self.__identifier))
+        if window_closed_input is not None:
+            window_closed_input.update_handlers = self.__window_closed_input_cb
+            window_closed_input.update()
+
+        # Create door closed sensor.
+        door_closed_input = self._registers.by_name("{}.door_closed_{}.input".format(self.key, self.__identifier))
+        if door_closed_input is not None:
+            door_closed_input.update_handlers = self.__door_closed_input_cb
+            door_closed_input.update()
+
+        # Create PIR sensor.
+        pir_input = self._registers.by_name("{}.pir_{}.input".format(self.key, self.__identifier))
+        if pir_input is not None:
+            pir_input.update_handlers = self.__pir_input_cb
+            pir_input.update()
+
+
+        # Create locking mechanism.
+        lock_mechanism_output = self._registers.by_name("{}.lock_mechanism_{}.output".format(self.key, self.__identifier))
+        if lock_mechanism_output is not None:
+            lock_mechanism_output.update_handlers = self.__lock_mechanism_output_cb
+            lock_mechanism_output.update()
+
+        # Door window blind.
+        door_window_blind_output = self._registers.by_name("{}.door_window_blind_{}.output".format(self.key, self.__identifier))
+        if door_window_blind_output is not None:
+            door_window_blind_output.update_handlers = self.__door_window_blind_output_cb
+            door_window_blind_output.update()
+
+        # Door window blind.
+        door_window_blind_value = self._registers.by_name("{}.door_window_blind_{}.value".format(self.key, self.__identifier))
+        if door_window_blind_value is not None:
+            door_window_blind_value.update_handlers = self.__door_window_blind_value_cb
+            door_window_blind_value.update()
+
+    def __set_zone_occupied(self, value):
+
+        reg_occupation = self._registers.by_name("{}.zone_{}_occupied".format(self.key, self.__identifier))
+        if reg_occupation is not None:
+            if reg_occupation.value != value:
+                print(value)
+                reg_occupation.value = value
+
 #endregion
 
-#region Private Methods (I/O Signals)
+#region Private Methods (Card Reader)
 
     def __check_card_state(self, card_id):
 
@@ -621,6 +628,9 @@ class SecurityZone(BasePlugin):
 
                 self.__exit_reader.init()
 
+#endregion
+
+#region (PLC)
 
     def __read_exit_button(self):
 
@@ -631,7 +641,7 @@ class SecurityZone(BasePlugin):
 
         return state
 
-    def __read_window_closed_sensor(self):
+    def __read_window_tamper(self):
 
         state = False
 
@@ -640,7 +650,7 @@ class SecurityZone(BasePlugin):
 
         return state
 
-    def __read_door_sensor(self):
+    def __read_door_tamper(self):
 
         state = False
 
@@ -658,7 +668,6 @@ class SecurityZone(BasePlugin):
 
         return state
 
-
     def __set_lock_mechanism(self, value=0):
 
         if self._controller.is_valid_gpio(self.__lock_mechanism_output):
@@ -668,12 +677,6 @@ class SecurityZone(BasePlugin):
 
         if self._controller.is_valid_gpio(self.__door_window_blind_output):
             self._controller.digital_write(self.__door_window_blind_output, value)
-
-    def __set_zone_occupied(self, flag):
-
-        reg_occupation = self._registers.by_name("{}.zone_{}_occupied".format(self.key, self.__identifier))
-        if reg_occupation is not None:
-            reg_occupation.value = flag
 
 #endregion
 
@@ -698,10 +701,10 @@ class SecurityZone(BasePlugin):
         """Update"""
 
         # Update inputs.
-        door_sensor_state = self.__read_door_sensor()
         btn_state = self.__read_exit_button()
+        door_tamper_state = self.__read_door_tamper()
         pir_sensor_state = self.__read_pir_sensor()
-        window_sensor_state = self.__read_window_closed_sensor()
+        window_tamper_state = self.__read_window_tamper()
 
         self.__update_entry_reader()
         self.__update_exit_reader()
@@ -720,7 +723,7 @@ class SecurityZone(BasePlugin):
             self.__free_to_lock = 1
 
         # Lock the door after when it is closed.
-        if door_sensor_state:
+        if door_tamper_state:
             if self.__free_to_lock == 1:
                 self.__set_lock_mechanism(0)
                 self.__set_door_window_blind(0)
@@ -738,16 +741,17 @@ class SecurityZone(BasePlugin):
                     self.__set_door_window_blind(0)
                     self.__free_to_lock = 0
 
-        if door_sensor_state and not pir_sensor_state:
+        # If one of the sensor are activated, set occupation flag to true.
+        if door_tamper_state or pir_sensor_state or window_tamper_state:
+            self.__presence_timer.update_last_time()
+            self.__set_zone_occupied(True)
+
+        # Else, run the expiration timer.
+        else:
             self.__presence_timer.update()
             if self.__presence_timer.expired:
                 self.__presence_timer.clear()
-
                 self.__set_zone_occupied(False)
-
-        if door_sensor_state or pir_sensor_state or window_sensor_state:
-            self.__presence_timer.update_last_time()
-            self.__set_zone_occupied(True)
 
     def shutdown(self):
         """Shutdown"""

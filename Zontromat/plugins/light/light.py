@@ -27,7 +27,7 @@ from utils.logic.timer import Timer
 
 from plugins.base_plugin import BasePlugin
 
-from devices.SEDtronic.u1wtvs.u1wtvs import U1WTVS
+from devices.utils.light_sensor.light_sensor_factory import LightSensorFactory
 
 from data import verbal_const
 
@@ -80,6 +80,9 @@ class Light(BasePlugin):
     """Update timer.
     """
 
+    __last_target_illum = None
+
+
     __light_sensor = None
     """Light sensor.
     """
@@ -127,7 +130,8 @@ class Light(BasePlugin):
             GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
 
-        self.__target_illumination = register.value
+        if self.__target_illumination != register.value:
+            self.__target_illumination = register.value
 
     def __sensor_settings_cb(self, register):
 
@@ -136,25 +140,22 @@ class Light(BasePlugin):
             GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
 
-        if register.value != False and self.__light_sensor is None:
+        if register.value != verbal_const.OFF and self.__light_sensor is None:
 
             params = register.value.split("/")
 
-            sensor_dev = params[0]
-            sensor_circuit = params[1]
+            if len(params) < 2:                
+                raise ValueError("Not enough parameters.")
 
-            config = \
-            {\
-                "name": "Room light sensor.",
-                "dev": sensor_dev,
-                "circuit": sensor_circuit,
-                "controller": self._controller
-            }
+            self.__light_sensor = LightSensorFactory.create(
+                controller=self._controller,
+                name="Room light sensor.",
+                params=params)
 
-            self.__light_sensor = U1WTVS(config)
-            self.__light_sensor.init()
+            if self.__light_sensor is not None:
+                self.__light_sensor.init()
 
-        elif register.value == False and self.__light_sensor is not None:
+        elif register.value == verbal_const.OFF and self.__light_sensor is not None:
             self.__light_sensor.shutdown()
             del self.__light_sensor
 
@@ -197,6 +198,16 @@ class Light(BasePlugin):
         if target_illum is not None:
             target_illum.update_handlers = self.__target_illum_cb
             target_illum.update()
+
+    def __is_empty(self):
+
+        value = False
+
+        is_empty = self._registers.by_name("envm.is_empty")
+        if is_empty is not None:
+            value = is_empty.value
+
+        return value
 
 #endregion
 
@@ -288,6 +299,8 @@ class Light(BasePlugin):
 
         self.__init_registers()
 
+        self.__target_illum = 0
+
         self.__set_voltages(0, 0)
 
     def update(self):
@@ -295,11 +308,15 @@ class Light(BasePlugin):
         """
 
         # If there is no one at the zone, just turn off the lights.
-        is_empty = self._registers.by_name("env.is_empty")
-        if is_empty is not None':
-            if is_empty.value:
-                pass
-                # TODO: Turn off the lights.
+        is_empty = self.__is_empty()
+        
+        # If the zone is empty, turn the lights off.
+        if is_empty:
+            self.__last_target_illum = self.__target_illum
+            self.__target_illum = 0
+
+        else:
+            self.__target_illum = self.__last_target_illum
 
         # Update sensor data.
         self.__light_sensor.update()

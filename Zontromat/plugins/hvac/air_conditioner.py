@@ -869,15 +869,15 @@ class AirConditioner(BasePlugin):
             window_closed_input.update_handlers = self.__window_closed_input_cb
             window_closed_input.update()
 
-    def __is_occupied(self):
+    def __is_empty(self):
 
-        is_occupied = False
+        value = False
 
-        is_empty = self._registers.by_name("env.is_empty")
-        if is_empty is not None':
-            is_occupied = not is_empty.value:
+        is_empty = self._registers.by_name("envm.is_empty")
+        if is_empty is not None:
+            value = is_empty.value
 
-        return is_occupied
+        return value
 
 #endregion
 
@@ -1083,7 +1083,7 @@ class AirConditioner(BasePlugin):
         self.__update_thermometers_values()
 
         # Update occupation flags.
-        is_occupied = self.__is_occupied()
+        is_empty = self.__is_empty()
 
         # If the window is opened, just turn off the HVAC.
         window_closed_1_state = self.__read_window_closed_sensor()
@@ -1092,7 +1092,7 @@ class AirConditioner(BasePlugin):
         hot_water = self.__is_hot_water()
 
         # Take all necessary condition for normal operation of the HVAC.
-        stop_flag = (not is_occupied or not window_closed_1_state or not hot_water)
+        stop_flag = (not is_empty or not window_closed_1_state or not hot_water)
 
         if stop_flag:
             self.__stop_timer.update()
