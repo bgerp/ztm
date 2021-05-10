@@ -172,7 +172,7 @@ class Monitoring(BasePlugin):
             fm_state.value = self.__cw_flowmetter_dev.get_liters()
 
         # If the zone is empty check for leaks.
-        is_empty = self._registers.by_name("env.is_empty")
+        is_empty = self._registers.by_name("envm.is_empty")
         if self.__cw_flowmetter_dev is not None and\
             is_empty is not None and\
             is_empty.value:
@@ -238,7 +238,7 @@ class Monitoring(BasePlugin):
             fm_state.value = self.__hw_flowmetter_dev.get_liters()
 
         # If the zone is empty check for leaks.
-        is_empty = self._registers.by_name("env.is_empty")
+        is_empty = self._registers.by_name("envm.is_empty")
         if self.__hw_flowmetter_dev is not None and\
             is_empty is not None and\
             is_empty.value:
