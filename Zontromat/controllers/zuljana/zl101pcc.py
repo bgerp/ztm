@@ -355,7 +355,7 @@ class ZL101PCC(BaseController):
 
         state = self.__DI[self.__map[pin]]
 
-        self.__logger.debug("digital_read({}, {})".format(self.model, pin))
+        # self.__logger.debug("digital_read({}, {})".format(self.model, pin))
 
         return state
 
@@ -402,7 +402,7 @@ class ZL101PCC(BaseController):
         
         self.__DORO[gpio] = state
 
-        self.__logger.debug("digital_write({}, {}, {})".format(self.model, pin, value))
+        # self.__logger.debug("digital_write({}, {}, {})".format(self.model, pin, value))
 
         return False
 
@@ -423,9 +423,23 @@ class ZL101PCC(BaseController):
             State of the pin.
         """
 
-        self.__logger.debug("analog_write({}, {}, {})".format(self.model, pin, value))
+        state = {"value": value}
 
-        return 0
+        if self.__map is None:
+            return state
+
+        if not pin in self.__map:
+            return state
+
+        value = l_scale(value, [0, 10], [0, 50000])
+
+        value = int(value)
+
+        self.__AO[self.__map[pin]] = value
+
+        # self.__logger.debug("analog_write({}, {}, {})".format(self.model, pin, value))
+
+        return state
 
     def read_counter(self, pin):
         """Read the digital counter input.
@@ -477,7 +491,7 @@ class ZL101PCC(BaseController):
 
         state["value"] = value
 
-        self.__logger.debug("analog_read({}, {})".format(self.model, pin))
+        # self.__logger.debug("analog_read({}, {})".format(self.model, pin))
 
         return state
 
@@ -601,7 +615,7 @@ class ZL101PCC(BaseController):
             1W devices.
         """
 
-        self.__logger.debug("get_1w_devices({})".format(self.model))
+        # self.__logger.debug("get_1w_devices({})".format(self.model))
 
         return []
 
@@ -612,7 +626,7 @@ class ZL101PCC(BaseController):
             [type]: [description]
         """
 
-        self.__logger.debug("get_device({}, {}, {})".format(self.model, dev, circuit))
+        # self.__logger.debug("get_device({}, {}, {})".format(self.model, dev, circuit))
 
         device = None
 
