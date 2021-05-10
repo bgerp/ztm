@@ -22,7 +22,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 
+from devices.utils.light_sensor.base_light_sensor import BaseLightSensor
+
 from devices.base_device import BaseDevice
+
+
 
 #region File Attributes
 
@@ -55,8 +59,8 @@ __status__ = "Debug"
 
 #endregion
 
-class U1WTVS(BaseDevice):
-    """Tamper input device."""
+class U1WTVS(BaseLightSensor):
+    """1W light sensor."""
 
 #region Attributes
 
