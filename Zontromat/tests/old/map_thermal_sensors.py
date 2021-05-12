@@ -71,19 +71,10 @@ __neuron = None
 __table_data = None
 """Table data."""
 
-__test_cases = \
-"""Test cases"""
-[\
-    {\
-        "dev": "relay",\
-        "major_index": 2,\
-        "minor_index": 4\
-    }\
-]
 
 #endregion
 
-def get_value(device):
+def get_temp(device):
     """Returns the actual temperature of the device."""
 
     value = 0
@@ -110,7 +101,7 @@ def get_temp_by_circuit(devices, circuit):
     if device is None:
         temp = None
     else:
-        temp = get_value(device)
+        temp = get_temp(device)
 
     return temp
 

@@ -134,7 +134,7 @@ class TemperatureProcessor():
 
         for thermometer in self.__thermometers:
             if thermometer is not None:
-                temperatures.append(thermometer.value())
+                temperatures.append(thermometer.get_temp())
 
         temps = len(temperatures)
         if temps <= 0:

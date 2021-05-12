@@ -77,7 +77,7 @@ class U1WTVS(BaseLightSensor):
 
         self.__device = self._controller.get_device(self._config["dev"], self._config["circuit"])
 
-    def get_value(self):
+    def get_temp(self):
         """Get value.
         """
 

@@ -33,11 +33,13 @@ from utils.logic.temp_processor import TemperatureProcessor
 from plugins.base_plugin import BasePlugin
 from plugins.hvac.thermal_mode import ThermalMode
 
+from devices.utils.thermal_sensor.thermal_sensor_factory import ThermalSensorFactory
+
 from devices.HangzhouAirflowElectricApplications.f3p146ec072600.f3p146ec072600 import F3P146EC072600
 from devices.Tonhe.a20m15b2c.a20m15b2c import A20M15B2C
 from devices.Silpa.klimafan.klimafan import Klimafan
 from devices.no_vendors.no_vendor_1.flowmeter import Flowmeter
-from devices.Dallas.ds18b20.ds18b20 import DS18B20
+
 from devices.tests.leak_test.leak_test import LeakTest
 from devices.tests.electrical_performance.electrical_performance import ElectricalPerformance
 
@@ -175,10 +177,7 @@ class AirConditioner(BasePlugin):
     """Каква топлинна сила трябва да приложим към системата
     (-100% означава максимално да охлаждаме, +100% - максимално да отопляваме)"""
 
-    __update_rate = 5
-    """Update rate in seconds."""
-
-    __stop_flag = 0
+    __stop_flag = False
     """HVAC Stop flag."""
 
     __window_closed_input = verbal_const.OFF
@@ -188,13 +187,13 @@ class AirConditioner(BasePlugin):
 
 #region Constructor / Destructor
 
-    def __init__(self, **kwargs):
+    def __init__(self, **config):
         """Constructor"""
 
-        super().__init__(kwargs)
+        super().__init__(config)
 
-        if "identifier" in kwargs:
-            self.__identifier = kwargs["identifier"]
+        if "identifier" in config:
+            self.__identifier = config["identifier"]
 
     def __del__(self):
         """Destructor"""
@@ -269,7 +268,7 @@ class AirConditioner(BasePlugin):
 
 #endregion
 
-#region Private Methods (Parameters callbacks)
+#region Private Methods (Registers Parameters)
 
     def __update_rate_cb(self, register):
 
@@ -283,7 +282,8 @@ class AirConditioner(BasePlugin):
             GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
 
-        self.__update_rate = register.value
+        if self.__update_timer.expiration_time != register.value:
+            self.__update_timer.expiration_time = register.value
 
     def __delta_time_cb(self, register):
 
@@ -297,7 +297,8 @@ class AirConditioner(BasePlugin):
             GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
 
-        self.__delta_time = register.value
+        if self.__delta_time != register.value:
+            self.__delta_time = register.value
 
     def __thermal_mode_cb(self, register):
 
@@ -380,7 +381,8 @@ class AirConditioner(BasePlugin):
         if actual_temp > max_temp:
             actual_temp = max_temp
 
-        self.__goal_building_temp = actual_temp
+        if self.__goal_building_temp != actual_temp:
+            self.__goal_building_temp = actual_temp
 
     def __window_closed_input_cb(self, register):
 
@@ -393,7 +395,7 @@ class AirConditioner(BasePlugin):
 
 #endregion
 
-#region Private Methods (Thermometers callbacks)
+#region Private Methods (Registers Thermometers)
 
     def __air_temp_cent_settings_cb(self, register):
 
@@ -404,11 +406,15 @@ class AirConditioner(BasePlugin):
 
         if register.value != verbal_const.OFF and self.__air_temp_cent_dev is None:
 
-            self.__air_temp_cent_dev = DS18B20.create(\
-                "Air temperature lower",\
-                self.key + ".air_temp_cent",\
-                register.value,\
-                self._controller)
+            params = register.value.split("/")
+
+            if len(params) < 2:                
+                raise ValueError("Not enough parameters.")
+
+            self.__air_temp_cent_dev = ThermalSensorFactory.create(
+                controller=self._controller,
+                name="Air temperature center",
+                params=params)
 
             if self.__air_temp_cent_dev is not None:
                 self.__air_temp_cent_dev.init()
@@ -428,11 +434,16 @@ class AirConditioner(BasePlugin):
             return
 
         if register.value != verbal_const.OFF and self.__air_temp_lower_dev is None:
-            self.__air_temp_lower_dev = DS18B20.create(\
-                "Air temperature lower",\
-                self.key + ".air_temp_lower",\
-                register.value,\
-                self._controller)
+
+            params = register.value.split("/")
+
+            if len(params) < 2:                
+                raise ValueError("Not enough parameters.")
+
+            self.__air_temp_lower_dev = ThermalSensorFactory.create(
+                controller=self._controller,
+                name="Air temperature lower",
+                params=params)
 
             if self.__air_temp_lower_dev is not None:
                 self.__air_temp_lower_dev.init()
@@ -452,11 +463,16 @@ class AirConditioner(BasePlugin):
             return
 
         if register.value != verbal_const.OFF and self.__air_temp_upper_dev is None:
-            self.__air_temp_upper_dev = DS18B20.create(\
-                "Air temperature upper",\
-                self.key + ".air_temp_upper",\
-                register.value,\
-                self._controller)
+
+            params = register.value.split("/")
+
+            if len(params) < 2:                
+                raise ValueError("Not enough parameters.")
+
+            self.__air_temp_upper_dev = ThermalSensorFactory.create(
+                controller=self._controller,
+                name="Air temperature upper",
+                params=params)
 
             if self.__air_temp_upper_dev is not None:
                 self.__air_temp_upper_dev.init()
@@ -470,7 +486,7 @@ class AirConditioner(BasePlugin):
 
 #endregion
 
-#region Private Methods (Convector callbacks)
+#region Private Methods (Registers Convector)
 
     def __convector_settings_cb(self, register):
 
@@ -495,7 +511,7 @@ class AirConditioner(BasePlugin):
 
 #endregion
 
-#region Private Methods (Loop 1 callbacks)
+#region Private Methods (Registers Loop 1)
 
     def __loop1_cnt_input_cb(self, register):
 
@@ -532,7 +548,7 @@ class AirConditioner(BasePlugin):
 
         if register.value != verbal_const.OFF and self.__loop1_fan_dev is None:
             # Filter by model.
-            if "f3p146ec072600" in register.value:
+            if "f3p146ec072600" in register.value: # TODO: Create factory for fans.
                 self.__loop1_fan_dev = F3P146EC072600.create(\
                     "Loop 1 fan",\
                     "{}.loop1_{}.fan".format(self.key, self.__identifier),\
@@ -582,11 +598,16 @@ class AirConditioner(BasePlugin):
             return
 
         if register.value != verbal_const.OFF and self.__loop1_temp_dev is None:
-            self.__loop1_temp_dev = DS18B20.create(\
-                "Loop 1 temperature",\
-                "{}.loop1_{}.temp".format(self.key, self.__identifier),\
-                register.value,\
-                self._controller)
+
+            params = register.value.split("/")
+
+            if len(params) < 2:                
+                raise ValueError("Not enough parameters.")
+
+            self.__loop1_temp_dev = ThermalSensorFactory.create(
+                controller=self._controller,
+                name="Loop 1 temperature",
+                params=params)
 
             if self.__loop1_temp_dev is not None:
                 self.__loop1_temp_dev.init()
@@ -618,7 +639,7 @@ class AirConditioner(BasePlugin):
 
 #endregion
 
-#region Private Methods (Loop 2 callbacks)
+#region Private Methods (Registers Loop 2)
 
     def __loop2_cnt_input_cb(self, register):
 
@@ -704,11 +725,16 @@ class AirConditioner(BasePlugin):
             return
 
         if register.value != verbal_const.OFF and self.__loop2_temp_dev is None:
-            self.__loop2_temp_dev = DS18B20.create(\
-                "Loop 2 temperature",\
-                "{}.loop2_{}.temp".format(self.key, self.__identifier),\
-                register.value,\
-                self._controller)
+
+            params = register.value.split("/")
+
+            if len(params) < 2:                
+                raise ValueError("Not enough parameters.")
+
+            self.__loop2_temp_dev = ThermalSensorFactory.create(
+                controller=self._controller,
+                name="Loop 2 temperature",
+                params=params)
 
             if self.__loop2_temp_dev is not None:
                 self.__loop2_temp_dev.init()
@@ -864,65 +890,37 @@ class AirConditioner(BasePlugin):
             loop2_valve_enabled.update()
 
         # Create window closed sensor.
-        window_closed_input = self._registers.by_name("{}.window_closed_{}.input".format("ac", 1))
+        window_closed_input = self._registers.by_name("{}.window_closed_{}.input".format("ac", self.__identifier))
         if window_closed_input is not None:
             window_closed_input.update_handlers = self.__window_closed_input_cb
             window_closed_input.update()
 
-    def __is_empty(self):
-
-        value = False
-
-        is_empty = self._registers.by_name("envm.is_empty")
-        if is_empty is not None:
-            value = is_empty.value
-
-        return value
-
-#endregion
-
-#region Private Methods (Leak tests)
-
-    def __loop1_leaktest_result(self, leaked_liters):
-        if leaked_liters > 0:
-            self.__logger.error("Loop 1 leak detected liters: {}".format(leaked_liters))
-
-    def __loop2_leaktest_result(self, leaked_liters):
-        if leaked_liters > 0:
-            self.__logger.error("Loop 2 leak detected liters: {}".format(leaked_liters))
-
-#endregion
-
-#region Private Methods
-
     def __update_thermometers_values(self):
-
-        # TODO: Get all thermometers and load its values to the folowing registers.
 
         # 1. If thermometer is available, gets its value.
         air_temp_lower_value = 0
         if self.__air_temp_lower_dev is not None:
-            air_temp_lower_value = self.__air_temp_lower_dev.value()
+            air_temp_lower_value = self.__air_temp_lower_dev.get_temp()
 
         # 1. If thermometer is available, gets its value.
         air_temp_cent_value = 0
         if self.__air_temp_cent_dev is not None:
-            air_temp_cent_value = self.__air_temp_cent_dev.value()
+            air_temp_cent_value = self.__air_temp_cent_dev.get_temp()
 
         # 1. If thermometer is available, gets its value.
         air_temp_upper_value = 0
         if self.__air_temp_upper_dev is not None:
-            air_temp_upper_value = self.__air_temp_upper_dev.value()
+            air_temp_upper_value = self.__air_temp_upper_dev.get_temp()
 
         # 1. If thermometer is available, gets its value.
         loop1_temp_value = 0
         if self.__loop1_temp_dev is not None:
-            loop1_temp_value = self.__loop1_temp_dev.value()
+            loop1_temp_value = self.__loop1_temp_dev.get_temp()
 
         # 1. If thermometer is available, gets its value.
         loop2_temp_value = 0
         if self.__loop2_temp_dev is not None:
-            loop2_temp_value = self.__loop2_temp_dev.value()
+            loop2_temp_value = self.__loop2_temp_dev.get_temp()
 
         # 2. If the folowing register is available then set ist value to the thermometers value.
         air_temp_lower = self._registers.by_name("{}.air_temp_lower_{}.value".format(self.key, self.__identifier))
@@ -949,7 +947,32 @@ class AirConditioner(BasePlugin):
         if loop2_temp is not None:
             loop2_temp.value = loop2_temp_value
 
-    def __read_window_closed_sensor(self):
+    def __is_empty(self):
+
+        value = False
+
+        is_empty = self._registers.by_name("envm.is_empty")
+        if is_empty is not None:
+            value = is_empty.value
+
+        return value
+
+    def __get_down_limit_temp(self):
+
+        # Request: Eml6419
+        value = 10
+
+        down_limit = self._registers.by_name("{}.loop1_{}.temp.down_limit".format(self.key, self.__identifier))
+        if down_limit is not None:
+            down_limit_value = down_limit.value
+
+        return value
+
+#endregion
+
+#region Private Methods (PLC)
+
+    def __read_window_tamper(self):
 
         state = False
 
@@ -961,18 +984,29 @@ class AirConditioner(BasePlugin):
 
         return state
 
+#endregion
+
+#region Private Methods (Leak tests)
+
+    def __loop1_leaktest_result(self, leaked_liters):
+        if leaked_liters > 0:
+            self.__logger.error("Loop 1 leak detected liters: {}".format(leaked_liters))
+
+    def __loop2_leaktest_result(self, leaked_liters):
+        if leaked_liters > 0:
+            self.__logger.error("Loop 2 leak detected liters: {}".format(leaked_liters))
+
+#endregion
+
+#region Private Methods
+
     def __is_hot_water(self):
 
-        # Request: Eml6419
-        down_limit_value = 10
-
-        down_limit = self._registers.by_name("{}.loop1_{}.temp.down_limit".format(self.key, self.__identifier))
-        if down_limit is not None:
-            down_limit_value = down_limit.value
+        down_limit_value = self.__get_down_limit_temp()
 
         temperature = 0
         if self.__loop1_temp_dev is not None:
-            temperature = self.__loop1_temp_dev.value()
+            temperature = self.__loop1_temp_dev.get_temp()
 
         return temperature >= down_limit_value
 
@@ -1042,7 +1076,8 @@ class AirConditioner(BasePlugin):
             # Set convector fan.
             conv_tf = l_scale(thermal_force, [0, 100], [0, 3])
             conv_tf = int(conv_tf)
-            self.__convector_dev.set_state(abs(conv_tf))
+            conv_tf = abs(conv_tf)
+            self.__convector_dev.set_state(conv_tf)
 
 #endregion
 
@@ -1060,7 +1095,9 @@ class AirConditioner(BasePlugin):
         self.__thermal_mode.on_change(self.__thermal_mode_on_change)
 
         # Create update timer.
-        self.__update_timer = Timer(self.__update_rate)
+        self.__update_timer = Timer(5)
+
+        # Stop timer.
         self.__stop_timer = Timer(10)
 
         # Create temperature processor.
@@ -1086,13 +1123,14 @@ class AirConditioner(BasePlugin):
         is_empty = self.__is_empty()
 
         # If the window is opened, just turn off the HVAC.
-        window_closed_1_state = self.__read_window_closed_sensor()
+        window_tamper_state = self.__read_window_tamper()
 
         # If temperature is less then 10 deg on loop 1.
-        hot_water = self.__is_hot_water()
+        is_hot_water = self.__is_hot_water()
 
         # Take all necessary condition for normal operation of the HVAC.
-        stop_flag = (not is_empty or not window_closed_1_state or not hot_water)
+        # stop_flag = (not is_empty or not window_tamper_state or not is_hot_water)
+        stop_flag = False
 
         if stop_flag:
             self.__stop_timer.update()
