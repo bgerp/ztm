@@ -74,7 +74,7 @@ class F3P146EC072600(BaseDevice):
     __max_speed = 100
     """Minimum speed limit."""
 
-    __speed = 0
+    __speed = -1
     """Speed"""
 
     __output = "AO0"
@@ -181,6 +181,8 @@ class F3P146EC072600(BaseDevice):
         Args:
             speed (int): Output speed of the fan.
         """
+
+
 
         in_value = speed
 

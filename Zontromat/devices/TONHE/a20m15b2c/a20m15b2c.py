@@ -66,7 +66,7 @@ class A20M15B2C(BaseDevice):
     __logger = None
     """Logger"""
 
-    __position = 0
+    __position = -1
     """Position of the valve."""
 
     __min_pos = 0
