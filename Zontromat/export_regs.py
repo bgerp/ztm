@@ -868,7 +868,7 @@ def __add_registers():
     register.plugin_name = "HVAC"
     register.description = "Air temperature sensor center settings"
     register.range = ""
-    register.value = "temp/DS18B20/28FFFCD0001703AE"
+    register.value = "Dallas/DS18B20/28FFFCD0001703AE" # temp/DS18B20/28FFFCD0001703AE
     __registers.append(register)
 
     register = Register("hvac.air_temp_cent_1.value")
@@ -885,7 +885,7 @@ def __add_registers():
     register.plugin_name = "HVAC"
     register.description = "Air temperature sensor lower settings"
     register.range = ""
-    register.value = "temp/DS18B20/28FFC4EE00170349"
+    register.value = "Donkger/XY-MD02/2" # "Dallas/DS18B20/28FFC4EE00170349" # temp/DS18B20/28FFC4EE00170349
     __registers.append(register)
 
     register = Register("hvac.air_temp_lower_1.value")
@@ -902,7 +902,7 @@ def __add_registers():
     register.plugin_name = "HVAC"
     register.description = "Air temperature sensor upper settings"
     register.range = ""
-    register.value = "temp/DS18B20/28FF2B70C11604B7"
+    register.value = "Dallas/DS18B20/28FF2B70C11604B7" # "Donkger/XY-MD02/2" # "Dallas/DS18B20/28FF2B70C11604B7" # "temp/DS18B20/28FF2B70C11604B7"
     __registers.append(register)
 
     register = Register("hvac.air_temp_upper_1.value")
@@ -1030,7 +1030,7 @@ def __add_registers():
     register.plugin_name = "HVAC"
     register.description = "Loop 1 temperature sensor settings"
     register.range = ""
-    register.value = "temp/DS18B20/28FF2B70C11604B7"
+    register.value = "Dallas/DS18B20/28FF2B70C11604B7" # temp/DS18B20/28FF2B70C11604B7
     __registers.append(register)
 
     register = Register("hvac.loop1_1.temp.value")
@@ -1147,7 +1147,7 @@ def __add_registers():
     register.plugin_name = "HVAC"
     register.description = "Loop 2 temperature sensor settings"
     register.range = ""
-    register.value = "temp/DS18B20/28FFC4EE00170349"
+    register.value = "Dallas/DS18B20/28FFC4EE00170349" # temp/DS18B20/28FFC4EE00170349
     __registers.append(register)
 
     register = Register("hvac.loop2_1.temp.value")
@@ -1248,7 +1248,7 @@ def __add_registers():
     register.plugin_name = "HVAC"
     register.description = "Update rate of the plugin [s]"
     register.range = "0.0/"
-    register.value = 3.0
+    register.value = 5.0
     __registers.append(register)
 
 #endregion
