@@ -91,13 +91,13 @@ class Server(HTTPServer):
 
 #region Constructor
 
-    def __init__(self, **kwargs):
+    def __init__(self, **config):
         """Constructor
         """
 
         port = 8890
-        if "port" in kwargs:
-            port = kwargs["port"]
+        if "port" in config:
+            port = config["port"]
 
         super().__init__(target=self, name=__name__, port=port)
 
@@ -214,15 +214,15 @@ class Server(HTTPServer):
 
         self.__sync_cb = callback
 
-    def set_registers_cb(self, **kwargs):
+    def set_registers_cb(self, **config):
         """Set callbacks for the handlers.
         """
         # (Request to have WEB API for work with registers. MG @ 15.01.2021)
 
-        if "get_cb" in kwargs:
-            self.__get_registers = kwargs["get_cb"]
+        if "get_cb" in config:
+            self.__get_registers = config["get_cb"]
 
-        if "set_cb" in kwargs:
-            self.__set_registers = kwargs["set_cb"]
+        if "set_cb" in config:
+            self.__set_registers = config["set_cb"]
 
 #endregion

@@ -179,20 +179,20 @@ class Client:
 
 #region Constructor
 
-    def __init__(self, **kwargs):
+    def __init__(self, **config):
         """Constructor
 
         Parameters
         ----------
-        kwargs : dict
+        config : dict
             Dictionary of arguments.
         """
 
-        if "host" in kwargs:
-            self.host = kwargs["host"]
+        if "host" in config:
+            self.host = config["host"]
 
-        if "timeout" in kwargs:
-            self.timeout = kwargs["timeout"]
+        if "timeout" in config:
+            self.timeout = config["timeout"]
 
         self.__logger = get_logger(__name__)
         self.__session = Session()

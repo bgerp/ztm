@@ -69,10 +69,10 @@ def mem_time_usage(function):
     """
 
     @wraps(function)
-    def function_timer(*args, **kwargs):
+    def function_timer(*args, **config):
         tracemalloc.start()
         t0 = time.time()
-        result = function(*args, **kwargs)
+        result = function(*args, **config)
         t1 = time.time()
         passed_time = t1-t0
         current, peak = tracemalloc.get_traced_memory()
@@ -95,9 +95,9 @@ def mem_usage(function):
     """
 
     @wraps(function)
-    def function_timer(*args, **kwargs):
+    def function_timer(*args, **config):
         tracemalloc.start()
-        result = function(*args, **kwargs)
+        result = function(*args, **config)
         current, peak = tracemalloc.get_traced_memory()
         print("Current memory usage is {}MB; Peak was {}MB".format(current / 10**6, peak / 10**6))
         tracemalloc.stop()
@@ -117,9 +117,9 @@ def time_usage(function):
     """
 
     @wraps(function)
-    def function_timer(*args, **kwargs):
+    def function_timer(*args, **config):
         t0 = time.time()
-        result = function(*args, **kwargs)
+        result = function(*args, **config)
         t1 = time.time()
         passed_time = t1-t0
         print("Total time: {0:.3f} sec".format(passed_time))

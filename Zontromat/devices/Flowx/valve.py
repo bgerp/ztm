@@ -114,17 +114,17 @@ class Valve(BaseDevice):
 
 #region Constructor / Destructor
 
-    def __init__(self, **kwargs):
+    def __init__(self, **config):
         """Constructor
         """
 
-        super().__init__(kwargs)
+        super().__init__(config)
 
-        if "output_fw" in kwargs:
-            self.__output_fw = kwargs["output_fw"]
+        if "output_fw" in config:
+            self.__output_fw = config["output_fw"]
 
-        if "output_rev" in kwargs:
-            self.__output_rev = kwargs["output_rev"]
+        if "output_rev" in config:
+            self.__output_rev = config["output_rev"]
 
     def __del__(self):
         """Destructor

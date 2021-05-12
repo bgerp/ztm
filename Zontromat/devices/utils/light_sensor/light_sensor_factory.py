@@ -60,7 +60,7 @@ __status__ = "Debug"
 class LightSensorFactory:
 
     @staticmethod
-    def create(**kwargs):
+    def create(**config):
         """Create card reader instace."""
 
         # The sensor.
@@ -68,53 +68,52 @@ class LightSensorFactory:
 
         # Vendor
         vendor = None
-        if "params" in kwargs:
-            vendor = kwargs["params"][0]
+        if "params" in config:
+            vendor = config["params"][0]
 
         else:
             raise ValueError("No \"vendor\" argument has been passed.") 
 
         # Model
         model = None
-        if "params" in kwargs:
-            model = kwargs["params"][1]
+        if "params" in config:
+            model = config["params"][1]
 
         else:
             raise ValueError("No \"model\" argument has been passed.") 
 
         # Controller
         controller = None
-        if "controller" in kwargs:
-            controller = kwargs["controller"]
+        if "controller" in config:
+            controller = config["controller"]
 
         else:
             raise ValueError("No \"controller\" argument has been passed.") 
 
-        # 
+        # POLYGON Team / light_sensor
         if vendor == "PT" and  model == "light_sensor":
 
-            config = \
-            {\
-                "name": kwargs["name"],
-                "analog_input": kwargs["params"][2],
+            l_config = {
+                "name": config["name"],
+                "analog_input": config["params"][2],
                 "controller": controller
             }
 
-            sensor = LightSensor(config)
+            sensor = LightSensor(l_config)
 
-        # 
+        # SEDtronic / u1wtvs
         elif vendor == "SEDtronic" and model == "u1wtvs":
 
-            config = \
-            {\
-                "name": kwargs["name"],
-                "dev": kwargs["params"][3],
-                "circuit": kwargs["params"][4],
+            l_config = {
+                "name": config["name"],
+                "dev": config["params"][3],
+                "circuit": config["params"][4],
                 "controller": controller
             }
 
-            sensor = U1WTVS(config)
+            sensor = U1WTVS(l_config)
 
+        # Not implemented device.
         else:
             raise NotImplementedError("The {} and {}, is not supported.".format(vendor,model))
 

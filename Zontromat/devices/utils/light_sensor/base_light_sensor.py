@@ -65,9 +65,9 @@ class BaseLightSensor(BaseDevice):
 
 #region Constructor
 
-    def __init__(self, kwargs):
+    def __init__(self, config):
 
-        super().__init__(kwargs)
+        super().__init__(config)
 
 #endregion
 

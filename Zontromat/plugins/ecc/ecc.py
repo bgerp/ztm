@@ -94,7 +94,7 @@ class EnergyCenterCommon(BasePlugin):
         """Constructor
 
         Args:
-            config (kwargs): Configuration of the object.
+            config (config): Configuration of the object.
         """
 
         super().__init__(config)

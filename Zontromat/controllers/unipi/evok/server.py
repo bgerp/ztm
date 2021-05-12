@@ -76,13 +76,13 @@ class Server(HTTPServer):
 
 #region Constructor
 
-    def __init__(self, **kwargs):
+    def __init__(self, **config):
         """Constructor
         """
 
         port = 8889
-        if "port" in kwargs:
-            port = kwargs["port"]
+        if "port" in config:
+            port = config["port"]
 
         super().__init__(target=self, name=__name__, port=port)
 

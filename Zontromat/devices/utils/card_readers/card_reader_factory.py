@@ -60,7 +60,7 @@ __status__ = "Debug"
 class CardReaderFactory:
 
     @staticmethod
-    def create(**kwargs):
+    def create(**config):
         """Create card reader instace."""
 
         # The card reader.
@@ -68,43 +68,43 @@ class CardReaderFactory:
 
         # Vendor
         vendor = None
-        if "vendor" in kwargs:
-            vendor = kwargs["vendor"]
+        if "vendor" in config:
+            vendor = config["vendor"]
 
         else:
             raise ValueError("No \"vendor\" argument has been passed.") 
 
         # Model
         model = None
-        if "model" in kwargs:
-            model = kwargs["model"]
+        if "model" in config:
+            model = config["model"]
 
         else:
             raise ValueError("No \"model\" argument has been passed.") 
 
         # Port name
         port_name = None
-        if "port_name" in kwargs:
-            port_name = kwargs["port_name"]
+        if "port_name" in config:
+            port_name = config["port_name"]
 
         else:
             raise ValueError("No \"port_name\" argument has been passed.") 
 
         # Serial number
         serial_number = None
-        if "serial_number" in kwargs:
-            serial_number = kwargs["serial_number"]
+        if "serial_number" in config:
+            serial_number = config["serial_number"]
 
         else:
             raise ValueError("No \"serial_number\" argument has been passed.") 
 
-        # Teracom - ACT230
+        # Teracom / ACT230
         if vendor == "Teracom" and  model == "act230":
 
             # Port name
             baudrate = None
-            if "baudrate" in kwargs:
-                baudrate = kwargs["baudrate"]
+            if "baudrate" in config:
+                baudrate = config["baudrate"]
 
             else:
                 raise ValueError("No \"baudrate\" argument has been passed.") 
@@ -113,7 +113,7 @@ class CardReaderFactory:
                             baudrate=baudrate,\
                             serial_number=serial_number)
 
-        # ACS - ACR122
+        # ACS / ACR122
         elif vendor == "ACS" and model == "acr122u":
             reader = ACR122U(port_name=port_name,\
                             serial_number=serial_number)

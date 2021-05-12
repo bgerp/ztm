@@ -179,17 +179,17 @@ class bgERP:
 
 #region Constructor \ Destructor
 
-    def __init__(self, **kwargs):
+    def __init__(self, **config):
         """Constructor
         """
 
         host = "127.0.0.1"
-        if "host" in kwargs:
-            host = kwargs.get("host")
+        if "host" in config:
+            host = config.get("host")
 
         timeout = 5
-        if "timeout" in kwargs:
-            timeout = kwargs.get("timeout")
+        if "timeout" in config:
+            timeout = config.get("timeout")
 
         self.__logger = get_logger(__name__)
 
@@ -242,14 +242,14 @@ class bgERP:
 
         return self.__client.sync(registers)
 
-    def set_registers_cb(self, **kwargs):
+    def set_registers_cb(self, **config):
         """Set callback for get/set registers.
         """
 
-        if "get_cb" in kwargs:
-            self.__get_registers = kwargs["get_cb"]
+        if "get_cb" in config:
+            self.__get_registers = config["get_cb"]
 
-        if "set_cb" in kwargs:
-            self.__set_registers = kwargs["set_cb"]
+        if "set_cb" in config:
+            self.__set_registers = config["set_cb"]
 
 #endregion

@@ -99,11 +99,11 @@ class ValveControlGroup(BasePlugin):
 
 #region Constructor / Destructor
 
-    def __init__(self, **kwargs):
+    def __init__(self, **config):
         """Constructor
         """
 
-        super().__init__(kwargs) 
+        super().__init__(config) 
 
     def __del__(self):
         """Destructor
@@ -255,7 +255,7 @@ class ValveControlGroup(BasePlugin):
 #region Public Static Methods
 
     @staticmethod
-    def create(**kwargs):
+    def create(**config):
         """Create the group by given settings.
 
         Returns:
@@ -263,37 +263,37 @@ class ValveControlGroup(BasePlugin):
         """
 
         group_name = ""
-        if "name" in kwargs:
-            group_name = kwargs["name"]
+        if "name" in config:
+            group_name = config["name"]
 
         key = None
-        if "key" in kwargs:
-            key = kwargs["key"]
+        if "key" in config:
+            key = config["key"]
 
         controller = None
-        if "controller" in kwargs:
-            controller = kwargs["controller"]
+        if "controller" in config:
+            controller = config["controller"]
 
         registers = None
-        if "registers" in kwargs:
-            registers = kwargs["registers"]
+        if "registers" in config:
+            registers = config["registers"]
 
 
         fw_valves = []
-        if "fw_valves" in kwargs:
-            fw_valves = kwargs["fw_valves"]
+        if "fw_valves" in config:
+            fw_valves = config["fw_valves"]
 
         rev_valves = []
-        if "rev_valves" in kwargs:
-            rev_valves = kwargs["rev_valves"]
+        if "rev_valves" in config:
+            rev_valves = config["rev_valves"]
 
         fw_pumps = []
-        if "fw_pumps" in kwargs:
-            fw_pumps = kwargs["fw_pumps"]
+        if "fw_pumps" in config:
+            fw_pumps = config["fw_pumps"]
 
         rev_pumps = []
-        if "rev_pumps" in kwargs:
-            rev_pumps = kwargs["rev_pumps"]
+        if "rev_pumps" in config:
+            rev_pumps = config["rev_pumps"]
 
 
         f_valves = []

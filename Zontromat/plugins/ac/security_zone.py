@@ -128,13 +128,13 @@ class SecurityZone(BasePlugin):
 
 #region Constructor / Destructor
 
-    def __init__(self, **kwargs):
+    def __init__(self, **config):
         """Constructor"""
 
-        super().__init__(kwargs)
+        super().__init__(config)
 
-        if "identifier" in kwargs:
-            self.__identifier = kwargs["identifier"]
+        if "identifier" in config:
+            self.__identifier = config["identifier"]
 
     def __del__(self):
         """Destructor"""

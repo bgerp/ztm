@@ -87,19 +87,19 @@ class Server(Thread):
 
 #region Constructor
 
-    def __init__(self, **kwargs):
+    def __init__(self, **config):
         """Constructor"""
 
-        super().__init__(target=kwargs["target"])
+        super().__init__(target=config["target"])
         self.setDaemon(True)
 
-        if "port" in kwargs:
-            self.__port = kwargs["port"]
+        if "port" in config:
+            self.__port = config["port"]
 
-        if "host" in kwargs:
-            self.__host = kwargs["host"]
+        if "host" in config:
+            self.__host = config["host"]
 
-        self._app = Flask(kwargs["name"])
+        self._app = Flask(config["name"])
 
 #endregion
 

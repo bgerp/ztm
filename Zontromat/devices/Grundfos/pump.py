@@ -87,11 +87,10 @@ class Pump(BaseDevice):
 
 #region Constructor / Destructor
 
-    def __init__(self, **kwargs):
-        """Constructor
-        """
+    def __init__(self, **config):
+        """Constructor"""
 
-        super().__init__(kwargs) 
+        super().__init__(config)
 
     def __del__(self):
         """Destructor

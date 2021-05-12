@@ -81,17 +81,17 @@ class BaseCardReader(BaseDevice):
 
 #region Constructor
 
-    def __init__(self, kwargs):
+    def __init__(self, config):
 
-        super().__init__(kwargs)
+        super().__init__(config)
 
         self._state = StateMachine(CardReaderState.NONE)
 
-        if "port_name" in kwargs:
-            self._port_name = kwargs["port_name"]
+        if "port_name" in config:
+            self._port_name = config["port_name"]
 
-        if "serial_number" in kwargs:
-            self._serial_number = kwargs["serial_number"]
+        if "serial_number" in config:
+            self._serial_number = config["serial_number"]
 
 #endregion
 

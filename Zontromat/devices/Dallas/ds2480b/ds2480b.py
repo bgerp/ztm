@@ -289,15 +289,15 @@ class DS2480B(BaseDevice):
 
         self.reset_the_bus()
 
-    def reset_the_bus(self, **kwargs):
+    def reset_the_bus(self, **config):
         """Reset the bus.
         """
 
         request = []
 
         mode = Commands.CommandResetAtFlexSpeed.value
-        if "mode" in kwargs:
-            mode = kwargs["mode"].value
+        if "mode" in config:
+            mode = config["mode"].value
 
         request.append(Commands.SwitchToCommandMode.value)
         request.append(mode)
@@ -306,23 +306,23 @@ class DS2480B(BaseDevice):
 
         return response
 
-    def configure_the_bus(self, **kwargs):
+    def configure_the_bus(self, **config):
         """Configure the bus.
         """
 
         request = []
 
         slew_rate = PulldownSlewRateControl.V1p37.value
-        if "slew_rate" in kwargs:
-            slew_rate = kwargs["slew_rate"].value
+        if "slew_rate" in config:
+            slew_rate = config["slew_rate"].value
 
         low_time = Write1LowTime.US11.value
-        if "low_time" in kwargs:
-            low_time = kwargs["low_time"].value
+        if "low_time" in config:
+            low_time = config["low_time"].value
 
         sample_offset = DataSampleOffsetAndWrite0RecoveryTime.US10.value
-        if "sample_offset" in kwargs:
-            sample_offset = kwargs["sample_offset"].value
+        if "sample_offset" in config:
+            sample_offset = config["sample_offset"].value
 
         request.append(slew_rate)
         request.append(low_time)
@@ -332,7 +332,7 @@ class DS2480B(BaseDevice):
 
         return response
 
-    def search_the_bus(self, **kwargs):
+    def search_the_bus(self, **config):
         """Search the 1W bus.
         """
 
@@ -341,8 +341,8 @@ class DS2480B(BaseDevice):
         request.append(Commands.SwitchToDataMode.value)
 
         commands = []
-        if "commands" in kwargs:
-            commands = kwargs["commands"]
+        if "commands" in config:
+            commands = config["commands"]
         for command in commands:
             request.append(command)
 
@@ -360,7 +360,7 @@ class DS2480B(BaseDevice):
 
         return decoded_response
 
-    def read_device(self, **kwargs):
+    def read_device(self, **config):
         """Read device.
         """
 
@@ -369,8 +369,8 @@ class DS2480B(BaseDevice):
         request.append(Commands.SwitchToDataMode.value)
 
         commands = []
-        if "commands" in kwargs:
-            commands = kwargs["commands"]
+        if "commands" in config:
+            commands = config["commands"]
         for command in commands:
             request.append(command)
 
@@ -381,7 +381,7 @@ class DS2480B(BaseDevice):
 
         return response
 
-    def read_device_param(self, **kwargs):
+    def read_device_param(self, **config):
         """[summary]
         """
 
@@ -390,8 +390,8 @@ class DS2480B(BaseDevice):
         request.append(Commands.SwitchToDataMode.value)
 
         commands = []
-        if "commands" in kwargs:
-            commands = kwargs["commands"]
+        if "commands" in config:
+            commands = config["commands"]
         for command in commands:
             request.append(command)
 
@@ -399,7 +399,7 @@ class DS2480B(BaseDevice):
 
         return response
 
-    def read_scratchpad(self, **kwargs):
+    def read_scratchpad(self, **config):
         """[summary]
         """
 
@@ -408,8 +408,8 @@ class DS2480B(BaseDevice):
         request.append(Commands.SwitchToDataMode.value)
 
         commands = []
-        if "commands" in kwargs:
-            commands = kwargs["commands"]
+        if "commands" in config:
+            commands = config["commands"]
         for command in commands:
             request.append(command)
 

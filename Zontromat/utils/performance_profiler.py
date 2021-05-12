@@ -193,7 +193,7 @@ class PerformanceProfiler:
         """
 
         @wraps(function)
-        def fn_measure(*args, **kwargs):
+        def fn_measure(*args, **config):
 
             current = 0
             peak = 0
@@ -205,7 +205,7 @@ class PerformanceProfiler:
             if self.__enable_time_profile and self.__enable:
                 t0 = time.time()
 
-            result = function(*args, **kwargs)
+            result = function(*args, **config)
 
             if self.__enable_time_profile and self.__enable:
                 t1 = time.time()
