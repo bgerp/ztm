@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 
-from devices.drivers.modbus.device import Device
+from devices.drivers.modbus.device import ModbusDevice
 from devices.drivers.modbus.parameter import Parameter
 from devices.drivers.modbus.parameter_type import ParameterType
 from devices.drivers.modbus.register_type import RegisterType
@@ -58,15 +58,17 @@ __status__ = "Debug"
 
 #endregion
 
-class XYMD02(Device):
+class XYMD02(ModbusDevice):
     """This class is dedicated to read data from XY-MD02 high precision humidity and temperature sensor.
 
     See: http://sahel.rs/media/sah/techdocs/xy-md02-manual.pdf"""
 
 #region Constructor
 
-    def __init__(self):
+    def __init__(self, config):
         """Constructor"""
+
+        super().__init__(config)
 
         self._parameters.append(
             Parameter("Temperature", "C",\
@@ -109,3 +111,12 @@ class XYMD02(Device):
             ParameterType.INT16_T, [0x0104], RegisterType.WriteSingleHoldingRegister))
 
 #endregion
+
+    def get_temp(self):
+
+        value = 0.0
+
+        request = self.generate_request("Temperature")
+        value = self._controller.execute_mb_request(request)
+
+        return value

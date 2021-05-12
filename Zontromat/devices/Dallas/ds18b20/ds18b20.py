@@ -23,7 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 
-from devices.base_device import BaseDevice
+from devices.utils.thermal_sensor.base_thermal_sensor import BaseThermalSensor
 
 #region File Attributes
 
@@ -56,47 +56,22 @@ __status__ = "Debug"
 
 #endregion
 
-class DS18B20(BaseDevice):
+class DS18B20(BaseThermalSensor):
     """Digital thermometer by Dallas."""
 
-#region Public Methods
+#region Constructor
 
-    def value(self):
-        """Value of the thermometer."""
+    def __init__(self, config):
 
-        return self._controller.read_temperature(self._config["dev"], self._config["circuit"])
+        super().__init__(config)
 
 #endregion
 
-#region Public Static Methods
+#region Public Methods
 
-    @staticmethod
-    def create(name, key, register, controller):
+    def get_temp(self):
         """Value of the thermometer."""
 
-        instance = None
-
-        params = register.split("/")
-
-        circuit = params[2]
-        dev = params[0]
-        typ = params[1]
-
-        if circuit is not None and\
-            dev is not None and\
-            typ is not None:
-
-            config = \
-            {\
-                "name": name, 
-                "dev": dev,
-                "circuit": circuit, 
-                "typ": typ,
-                "controller": controller
-            }
-
-            instance = DS18B20(config)
-
-        return instance
+        return self._controller.read_temperature(self._config["dev"], self._config["circuit"])
 
 #endregion
