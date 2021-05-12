@@ -95,10 +95,6 @@ class ZL101PCC(BaseController):
     """Modbus client.
     """
 
-    __black_island_id = 1
-    """Black island ID.
-    """
-
     __black_island = None
     """IO
     """
@@ -222,7 +218,7 @@ class ZL101PCC(BaseController):
             timeout=5,
             baudrate=self.__modbus_rtu_baud)
 
-        self.__black_island = BlackIsland()
+        self.__black_island = BlackIsland(unit=1)
 
     def __del__(self):
         """Destructor
@@ -267,7 +263,7 @@ class ZL101PCC(BaseController):
         control_counter = 0
 
         # Read device digital inputs.
-        request = self.__black_island.generate_request(self.__black_island_id, "GetDigitalInputs")
+        request = self.__black_island.generate_request("GetDigitalInputs")
         di_response = self.__modbus_rtu_client.execute(request)
         if di_response is not None:
             if not di_response.isError():
@@ -275,7 +271,7 @@ class ZL101PCC(BaseController):
                 control_counter += 1
 
         # Read device analog inputs.
-        request = self.__black_island.generate_request(self.__black_island_id, "GetAnalogInputs")
+        request = self.__black_island.generate_request("GetAnalogInputs")
         irr_response = self.__modbus_rtu_client.execute(request)
         if irr_response is not None:
             if not irr_response.isError():
@@ -283,14 +279,14 @@ class ZL101PCC(BaseController):
                 control_counter += 1
 
         # Write device digital & relay outputs.
-        request = self.__black_island.generate_request(self.__black_island_id, "SetRelays", SetRelays=self.__DORO)
+        request = self.__black_island.generate_request("SetRelays", SetRelays=self.__DORO)
         cw_response = self.__modbus_rtu_client.execute(request)
         if cw_response is not None:
             if not cw_response.isError():
                 control_counter += 1
 
         # Write device analog outputs.
-        request = self.__black_island.generate_request(self.__black_island_id, "SetAnalogOutputs", SetAnalogOutputs=self.__AO)
+        request = self.__black_island.generate_request("SetAnalogOutputs", SetAnalogOutputs=self.__AO)
         hrw_response = self.__modbus_rtu_client.execute(request)
         if hrw_response is not None:
             if not hrw_response.isError():
@@ -298,7 +294,7 @@ class ZL101PCC(BaseController):
 
         # Read device coils.
         # DEBUG PURPOSE ONLY
-        # request = self.__black_island.generate_request(self.__black_island_id, "GetRelays")
+        # request = self.__black_island.generate_request("GetRelays")
         # cr_response = self.__modbus_rtu_client.execute(request)
         # if cr_response is not None:
         #     if not cr_response.isError():
@@ -554,7 +550,7 @@ class ZL101PCC(BaseController):
             State of the device.
         """
 
-        self.__logger.debug("read_temperature({}, {}, {})".format(self.model, dev, circuit))
+        # self.__logger.debug("read_temperature({}, {}, {})".format(self.model, dev, circuit))
 
         return 0
 
@@ -634,3 +630,15 @@ class ZL101PCC(BaseController):
             device = {"vis": 0.0}
 
         return device
+
+    def execute_mb_request(self, request):
+
+        value = 0.0
+
+        # Read device digital inputs.
+        response = self.__modbus_rtu_client.execute(request)
+        if response is not None:
+            if not response.isError():
+                value = response.registers[0] / 10
+
+        return value
