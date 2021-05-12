@@ -24,6 +24,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from struct import pack, unpack
 
+from devices.base_device import BaseDevice
+
 from devices.drivers.modbus.parameter_type import ParameterType
 from devices.drivers.modbus.register_type import RegisterType
 
@@ -66,13 +68,18 @@ __status__ = "Debug"
 
 #endregion
 
-class Device():
+class ModbusDevice(BaseDevice):
     """Base class MODBUS devices."""
 
     #region Attributes
 
     _parameters = []
-    """Device parameters."""
+    """Device parameters.
+    """
+
+    _unit = 0
+    """Unit ID (MODBUS ID)
+    """
 
     #endregion
 
@@ -101,6 +108,41 @@ class Device():
         """
 
         self._parameters = parameters
+
+    @property
+    def unit(self):
+        """Unit ID (MODBUS ID)
+
+        Returns:
+            int: Value of the unit.
+        """
+
+        return self._unit
+
+    @unit.setter
+    def unit(self, value):
+        """Unit ID (MODBUS ID)
+
+        Args:
+            value (int): Value of the unit.
+        """
+
+        self._unit = value
+
+    #endregion
+
+    #region Constructor
+
+    def __init__(self, config):
+        """Constructor
+
+        Args:
+            config (dict): Configuration.
+        """
+        super().__init__(config)
+
+        if "unit" in config:
+            self._unit = config["unit"]
 
     #endregion
 
@@ -177,7 +219,7 @@ class Device():
             if parameter == parameter_name:
                 parameter_type = self._parameters[reg_index].data_type
                 addresses = self._parameters[reg_index].addresses
-                value = Device.converts_to_parameter(parameter_type, addresses, registers)
+                value = ModbusDevice.converts_to_parameter(parameter_type, addresses, registers)
                 break
 
         return value
@@ -248,13 +290,12 @@ class Device():
 
         return result
 
-    def generate_request(self, unit, name, **kwargs):
+    def generate_request(self, name, **config):
         """[summary]
 
         Args:
-            unit (int): Unit ID.
             name (str): Parameter name.
-            kwargs (dict): Additional arguments values.
+            config (dict): Additional arguments values.
         """
 
         param = self.get_parameter_by_name(name)
@@ -263,50 +304,50 @@ class Device():
         if param.register_type == RegisterType.ReadCoil:
             count = len(param.addresses)
             address = min(param.addresses)
-            request = ReadDeviceCoils(unit, address, count)
+            request = ReadDeviceCoils(self.unit, address, count)
 
         elif param.register_type == RegisterType.ReadDiscreteInput:
             count = len(param.addresses)
             address = min(param.addresses)
-            request = ReadDeviceDiscreteInputs(unit, address, count)
+            request = ReadDeviceDiscreteInputs(self.unit, address, count)
 
         elif param.register_type == RegisterType.ReadHoldingRegisters:
             count = len(param.addresses)
             address = min(param.addresses)
-            request = ReadDeviceHoldingRegisters(unit, address, count)
+            request = ReadDeviceHoldingRegisters(self.unit, address, count)
 
         elif param.register_type == RegisterType.ReadInputRegisters:
             count = len(param.addresses)
             address = min(param.addresses)
-            request = ReadDeviceInputRegisters(unit, address, count)
+            request = ReadDeviceInputRegisters(self.unit, address, count)
 
         elif param.register_type == RegisterType.WriteSingleHoldingRegister:
-            if name in kwargs:
-                values = kwargs[name]
+            if name in config:
+                values = config[name]
                 address = min(param.addresses)
-                request = WriteDeviceRegisters(unit, address, [values])
+                request = WriteDeviceRegisters(self.unit, address, [values])
 
         elif param.register_type == RegisterType.WriteMultipleCoils:
-            if name in kwargs:
-                values = kwargs[name]
+            if name in config:
+                values = config[name]
                 address = min(param.addresses)
-                request = WriteDeviceCoils(unit, address, values)
+                request = WriteDeviceCoils(self.unit, address, values)
 
         elif param.register_type == RegisterType.WriteMultipleHoldingRegisters:
-            if name in kwargs:
-                values = kwargs[name]
+            if name in config:
+                values = config[name]
                 address = min(param.addresses)
-                request = WriteDeviceRegisters(unit, address, values)
+                request = WriteDeviceRegisters(self.unit, address, values)
 
         return request
 
-    def generate_requests(self, unit, **kwargs):
+    def generate_requests(self, **config):
 
         requests = {}
         names = self.get_parameters_names()        
 
         for name in names:
-            requests[name] = self.generate_request(unit, name, kwargs)
+            requests[name] = self.generate_request(name, config)
 
         return requests
 

@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 
-from devices.drivers.modbus.device import Device
+from devices.drivers.modbus.device import ModbusDevice
 from devices.drivers.modbus.parameter import Parameter
 from devices.drivers.modbus.parameter_type import ParameterType
 from devices.drivers.modbus.register_type import RegisterType
@@ -58,15 +58,17 @@ __status__ = "Debug"
 
 #endregion
 
-class SDM630(Device):
+class SDM630(ModbusDevice):
     """This class is dedicated to read data from SDM630 energy meter.
 
     See https://bg-etech.de/download/manual/SDM630Register1-5.pdf"""
 
 #region Constructor
 
-    def __init__(self):
+    def __init__(self, **config):
         """Constructor"""
+
+        super().__init__(config)
 
         self._parameters.append(\
             Parameter("Phase1LineToNeutralVolts", "V",\

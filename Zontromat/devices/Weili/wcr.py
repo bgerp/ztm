@@ -23,7 +23,7 @@ from utils.logger import get_logger
 from utils.logic.timer import Timer
 from utils.logic.state_machine import StateMachine
 
-from devices.drivers.modbus.device import Device
+from devices.drivers.modbus.device import ModbusDevice
 from devices.drivers.modbus.parameter import Parameter
 from devices.drivers.modbus.parameter_type import ParameterType
 from devices.drivers.modbus.register_type import RegisterType
@@ -61,7 +61,7 @@ __status__ = "Debug"
 
 #endregion
 
-class WCR(Device):
+class WCR(ModbusDevice):
     """Boiler.
     """
 

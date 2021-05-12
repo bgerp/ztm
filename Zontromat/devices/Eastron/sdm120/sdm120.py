@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 
-from devices.drivers.modbus.device import Device
+from devices.drivers.modbus.device import ModbusDevice
 from devices.drivers.modbus.parameter import Parameter
 from devices.drivers.modbus.parameter_type import ParameterType
 from devices.drivers.modbus.register_type import RegisterType
@@ -58,15 +58,17 @@ __status__ = "Debug"
 
 #endregion
 
-class SDM120(Device):
+class SDM120(ModbusDevice):
     """This class is dedicated to read data from SDM120 energy meter.
 
-    See: http://www.eastrongroup.com/data/uploads/Eastron_SDM120-Modbus_protocol_V2_3_(1).pdf"""
+    See: https://www.eastroneurope.com/images/uploads/products/protocol/SDM120-MODBUS_Protocol.pdf"""
 
 #region Constructor
 
-    def __init__(self):
+    def __init__(self, **config):
         """Constructor"""
+
+        super().__init__(config)
 
         self._parameters.append(
             Parameter("Voltage", "V",\
