@@ -199,9 +199,9 @@ None
 | Purpose | Register | Type | Value |
 |----------|:-------------|:------|:------|
 | Adjust temperature. | hvac.adjust_temp | int | 0 |
-| Air temp sensor central - device/type/circuit | hvac.air_temp_cent.settings | str | temp/DS18B20/28FFFCD0001703AE |
-| Air temp sensor lower - device/type/circuit | hvac.air_temp_lower.settings | str | temp/DS18B20/28FFC4EE00170349 |
-| Air temp sensor upper - device/type/circuit | hvac.air_temp_upper.settings | str | temp/DS18B20/28FF2B70C11604B7 |
+| Air temp sensor central - device/type/circuit | hvac.air_temp_cent.settings | str | Dallas/DS18B20/28FFFCD0001703AE |
+| Air temp sensor lower - device/type/circuit | hvac.air_temp_lower.settings | str | Dallas/DS18B20/28FFC4EE00170349 |
+| Air temp sensor upper - device/type/circuit | hvac.air_temp_upper.settings | str | Dallas/DS18B20/28FF2B70C11604B7 |
 | Convector - vendor/model | hvac.convector.settings | str | silpa/klimafan |
 | Convector stage 1 output | hvac.convector.stage_1.output | str | RO0 |
 | Convector stage 2 output | hvac.convector.stage_2.output | str | RO1 |
@@ -215,7 +215,7 @@ None
 | Loop 1, fan analog output | hvac.loop1.fan.output | str | AO3 |
 | Loop 1, fan maximum speed [%] | hvac.loop1.fan.max_speed | int | 30 |
 | Loop 1, fan minimum speed [%] | hvac.loop1.fan.min_speed | int | 0 |
-| Loop 1, temperature sensor - device/type/circuit | hvac.air_temp_cent.settings | str | temp/DS18B20/28FF2B70C11604B7 |
+| Loop 1, temperature sensor - device/type/circuit | hvac.air_temp_cent.settings | str | Dallas/DS18B20/28FF2B70C11604B7 |
 | Loop 1, valve - vendor/model | hvac.loop1.valve.settings | str | TONHE/a20m15b2c |
 | Loop 1, valve output | hvac.loop1.valve.output | str | RO4 |
 | Loop 1, valve feed back input | hvac.loop1.valve.feedback | str | AI1 |
@@ -227,7 +227,7 @@ None
 | Loop 2, fan analog output | hvac.loop2.fan.output | str | AO4 |
 | Loop 2, fan maximum speed [%] | hvac.loop2.fan.min_speed | int | 0 |
 | Loop 2, fan minimum speed [%] | hvac.loop2.fan.max_speed | int | 30 |
-| Loop 2, temperature sensor - device/type/circuit | hvac.loop2.temp.settings | str | temp/DS18B20/28FFC4EE00170349 |
+| Loop 2, temperature sensor - device/type/circuit | hvac.loop2.temp.settings | str | Dallas/DS18B20/28FFC4EE00170349 |
 | Loop 2, valve - vendor/model | hvac.loop2.valve.settings | str | TONHE/a20m15b2c |
 | Loop 2, valve output | hvac.loop2.valve.output | str | RO3 |
 | Loop 2, valve feed back input | hvac.loop2.valve.feedback | str | AI2 |
