@@ -128,7 +128,7 @@ class HVAC(BasePlugin):
 
         self.__logger.info("Shutting down the {}".format(self.name))
         
-        for ac in self.__thermal_zones:
-            ac.shutdown()
+        for key in self.__thermal_zones:
+            self.__thermal_zones[key].shutdown()
 
 #endregion
