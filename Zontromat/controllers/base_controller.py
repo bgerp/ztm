@@ -541,4 +541,14 @@ class BaseController(Configuarable):
             All 1W devices connected to the controller.
         """
 
+    def execute_mb_request(self, request):
+        """Execute modbus request.
+
+        Args:
+            request (ModbusRequest): PyMODBUS request instance.
+
+        Returns:
+            ModbusResponse: PyMODBUS response instance.
+        """
+
 #endregion
