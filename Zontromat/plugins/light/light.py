@@ -27,7 +27,7 @@ from utils.logic.timer import Timer
 
 from plugins.base_plugin import BasePlugin
 
-from devices.utils.light_sensor.light_sensor_factory import LightSensorFactory
+from devices.factories.light_sensor.light_sensor_factory import LightSensorFactory
 
 from data import verbal_const
 

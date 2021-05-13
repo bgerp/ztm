@@ -25,7 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import unittest
 import os
 
-from devices.no_vendors.no_vendor_4.pump import Pump
+from devices.vendors.no_vendor_4.pump import Pump
 
 from controllers.dummy.dummy import Dummy
 from data.registers import Registers

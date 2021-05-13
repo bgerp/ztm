@@ -33,7 +33,7 @@ from utils.logger import get_logger
 
 from plugins.base_plugin import BasePlugin
 
-from devices.no_vendors.no_vendor_6.boiler import Boiler
+from devices.vendors.no_vendor_6.boiler import Boiler
 
 from services.global_error_handler.global_error_handler import GlobalErrorHandler
 

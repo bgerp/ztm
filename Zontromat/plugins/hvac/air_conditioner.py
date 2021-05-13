@@ -33,12 +33,12 @@ from utils.logic.temp_processor import TemperatureProcessor
 from plugins.base_plugin import BasePlugin
 from plugins.hvac.thermal_mode import ThermalMode
 
-from devices.utils.thermal_sensor.thermal_sensor_factory import ThermalSensorFactory
+from devices.factories.thermal_sensor.thermal_sensor_factory import ThermalSensorFactory
 
-from devices.HangzhouAirflowElectricApplications.f3p146ec072600.f3p146ec072600 import F3P146EC072600
-from devices.Tonhe.a20m15b2c.a20m15b2c import A20M15B2C
-from devices.Silpa.klimafan.klimafan import Klimafan
-from devices.no_vendors.no_vendor_1.flowmeter import Flowmeter
+from devices.vendors.HangzhouAirflowElectricApplications.f3p146ec072600.f3p146ec072600 import F3P146EC072600
+from devices.vendors.Tonhe.a20m15b2c.a20m15b2c import A20M15B2C
+from devices.vendors.Silpa.klimafan.klimafan import Klimafan
+from devices.vendors.no_vendor_1.flowmeter import Flowmeter
 
 from devices.tests.leak_test.leak_test import LeakTest
 from devices.tests.electrical_performance.electrical_performance import ElectricalPerformance

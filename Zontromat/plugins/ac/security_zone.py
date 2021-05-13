@@ -32,8 +32,8 @@ from utils.logic.timer import Timer
 
 from data import verbal_const
 
-from devices.utils.card_readers.card_reader_factory import CardReaderFactory
-from devices.utils.card_readers.card_reader_state import CardReaderState
+from devices.factories.card_readers.card_reader_factory import CardReaderFactory
+from devices.factories.card_readers.card_reader_state import CardReaderState
 
 from services.global_error_handler.global_error_handler import GlobalErrorHandler
 

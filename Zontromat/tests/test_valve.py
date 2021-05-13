@@ -25,7 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import unittest
 import os
 
-from devices.no_vendors.no_vendor_3.valve import Valve
+from devices.vendors.no_vendor_3.valve import Valve
 
 from controllers.dummy.dummy import Dummy
 from data.registers import Registers

@@ -32,7 +32,7 @@ from utils.logger import get_logger
 #from utils.logic.state_machine import StateMachine
 
 from plugins.base_plugin import BasePlugin
-from devices.Flowx.valve import Valve
+from devices.vendors.Flowx.valve import Valve
 from devices.utils.valve_control_group.valve_control_group import ValveControlGroup
 
 from services.global_error_handler.global_error_handler import GlobalErrorHandler

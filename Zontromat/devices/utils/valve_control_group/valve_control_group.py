@@ -32,8 +32,8 @@ from plugins.base_plugin import BasePlugin
 
 from services.global_error_handler.global_error_handler import GlobalErrorHandler
 
-from devices.Flowx.valve import Valve
-from devices.Grundfos.pump import Pump
+from devices.vendors.Flowx.valve import Valve
+from devices.vendors.Grundfos.pump import Pump
 
 # (Request from mail: Eml6429)
 

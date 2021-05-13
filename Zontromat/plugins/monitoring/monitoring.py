@@ -29,11 +29,10 @@ from utils.logger import get_logger
 
 from plugins.base_plugin import BasePlugin
 
-from devices.no_vendors.no_vendor_1.flowmeter import Flowmeter
+from devices.vendors.no_vendor_1.flowmeter import Flowmeter
 from devices.tests.leak_test.leak_test import LeakTest
-from devices.Eastron.sdm120.sdm120 import SDM120
-from devices.Eastron.sdm630.sdm630 import SDM630
-from devices.drivers.modbus.register_type import RegisterType
+
+from devices.factories.power_analysers.power_analyser_factory import PowerAnalyserFactory
 
 from data import verbal_const
 
@@ -97,15 +96,6 @@ class Monitoring(BasePlugin):
 
     __power_analyser = None
     """Power analyser."""
-
-    __uart = 2
-    """UART device index."""
-
-    __dev_id = 3
-    """EVOK device index."""
-
-    __register_type = ""
-    """Register type."""
 
     __parameters_values = []
     """Parameters values."""
@@ -267,57 +257,54 @@ class Monitoring(BasePlugin):
             # Split parammeters
             params = register.value.split("/")
 
-            # Set device ID.
-            self.__dev_id = params[4]
+            if len(params) < 2:                
+                raise ValueError("Not enough parameters.")
 
-            # modbus type.
-            if params[0] == "mb-rtu":
-                self.__uart = params[3]
+            self.__power_analyser = PowerAnalyserFactory.create(
+                                        controller=self._controller,
+                                        name="Zone Power analyser",
+                                        params=params)
 
-            baudrate = 9600
+            return
 
             # Vendor
-            vendor = params[1]
-            if vendor == "Eastron":
+            vendor = params[0]
 
-                # Model
-                model = params[2]
-                if model == "SDM120":
-                    self.__power_analyser = SDM120()
-                    self.__register_type = RegisterType.ReadInputRegisters #"inp"
-                    baudrate = 2400
+            # Model
+            model = params[1]
 
-                elif model == "SDM630":
-                    self.__power_analyser = SDM630()
-                    self.__register_type = RegisterType.ReadInputRegisters #"inp"
-                    baudrate = 9600
+            # UART
+            uart = params[2]
 
-                if not self.__evok_setting.device_exists("EXTENTION_1"):
+            # Unit
+            unit = params[3]
 
-                    # Add extention 1.
-                    extention_1 = \
-                        {
-                            "global_id": self.__dev_id,
-                            "device_name": model,
-                            "modbus_uart_port": "/dev/extcomm/0/0",
-                            "allow_register_access": True,
-                            "address": self.__uart,
-                            "scan_frequency": 10,
-                            "scan_enabled": True,
-                            "baud_rate": baudrate,
-                            "parity": "N",
-                            "stop_bits": 1
-                        }
+            if not self.__evok_setting.device_exists("EXTENTION_1"):
 
-                    # Add the configuration.
-                    self.__evok_setting.add_named_device(extention_1, "EXTENTION_1")
-                    self.__evok_setting.save()
-                    self.__logger.debug("Enable the Power Analyser.")
+                # Add extention 1.
+                extention_1 = \
+                    {
+                        "global_id": unit,
+                        "device_name": model,
+                        "modbus_uart_port": "/dev/extcomm/0/0",
+                        "allow_register_access": True,
+                        "address": uart,
+                        "scan_frequency": 10,
+                        "scan_enabled": True,
+                        "baud_rate": 9600,
+                        "parity": "N",
+                        "stop_bits": 1
+                    }
 
-                    # Restart the service.
-                    if os.name == "posix":
-                        EvokSettings.restart()
-                        self.__logger.debug("Restart the EVOK service.")
+                # Add the configuration.
+                self.__evok_setting.add_named_device(extention_1, "EXTENTION_1")
+                self.__evok_setting.save()
+                self.__logger.debug("Enable the Power Analyser.")
+
+                # Restart the service.
+                if os.name == "posix":
+                    EvokSettings.restart()
+                    self.__logger.debug("Restart the EVOK service.")
 
         elif register.value == verbal_const.OFF and self.__power_analyser is not None:
             self.__power_analyser = None
@@ -339,35 +326,41 @@ class Monitoring(BasePlugin):
         pa_enabled = self._registers.by_name(self.key + ".pa.settings")
         if pa_enabled is not None:
             pa_enabled.update_handlers = self.__pa_enabled_cb
+            pa_enabled.update()
 
     def __update_pa(self):
 
         if self.__power_analyser is None:
             return
 
-        # Get structure data.
-        registers_ids = self.__power_analyser.get_registers_ids()
+        if self._controller.vendor == "UniPi":
+            print("OK")
 
-        # Get values by the structure.
-        registers_values = self._controller.read_mb_registers(\
-            self.__uart, \
-            self.__dev_id, \
-            registers_ids, \
-            self.__register_type)
+            # Get structure data.
+            registers_ids = self.__power_analyser.get_registers_ids()
 
-        # Convert values to human readable.
-        parameters_values = self.__power_analyser.get_parameters_values(registers_values)
+            # Get values by the structure.
+            registers_values = self._controller.read_mb_registers(\
+                self.__uart, \
+                self.__dev_id, \
+                registers_ids, \
+                RegisterType.ReadInputRegisters)
 
-        # Format the floating points.
-        for parameter_value in parameters_values:
-            try:
-                parameters_values[parameter_value] = \
-                    float("{:06.3f}".format(float(parameters_values[parameter_value])))
+            # Convert values to human readable.
+            parameters_values = self.__power_analyser.get_parameters_values(registers_values)
 
-            except ValueError:
-                parameters_values[parameter_value] = float("{:06.3f}".format(000.0))
+            # Format the floating points.
+            for parameter_value in parameters_values:
+                try:
+                    parameters_values[parameter_value] = \
+                        float("{:06.3f}".format(float(parameters_values[parameter_value])))
 
-        self.__parameters_values = parameters_values
+                except ValueError:
+                    parameters_values[parameter_value] = float("{:06.3f}".format(000.0))
+
+            self.__parameters_values = parameters_values
+
+        print(type(self.__power_analyser))
 
         if  isinstance(self.__power_analyser, SDM120):
 
