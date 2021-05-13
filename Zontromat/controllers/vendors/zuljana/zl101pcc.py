@@ -34,7 +34,7 @@ from utils.logger import get_logger
 
 from controllers.base_controller import BaseController
 
-from devices.Super.s8_3cn.s8_3cn import S8_3CN as BlackIsland
+from devices.vendors.Super.s8_3cn.s8_3cn import S8_3CN as BlackIsland
 
 from utils.logic.functions import l_scale
 
@@ -632,13 +632,16 @@ class ZL101PCC(BaseController):
         return device
 
     def execute_mb_request(self, request):
+        """Execute modbus request.
 
-        value = 0.0
+        Args:
+            request (ModbusRequest): PyMODBUS request instance.
 
-        # Read device digital inputs.
+        Returns:
+            ModbusResponse: PyMODBUS response instance.
+        """
+        response = None
+
         response = self.__modbus_rtu_client.execute(request)
-        if response is not None:
-            if not response.isError():
-                value = response.registers[0] / 10
 
-        return value
+        return response

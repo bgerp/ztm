@@ -27,7 +27,7 @@ import argparse
 # from pymodbus.client.sync import ModbusTcpClient as ModbusClient
 from pymodbus.client.sync import ModbusSerialClient as ModbusClient
 
-from devices.Super.s8_3cn.s8_3cn import S8_3CN as BlackIsland
+from devices.vendors.Super.s8_3cn.s8_3cn import S8_3CN as BlackIsland
 
 #region File Attributes
 
