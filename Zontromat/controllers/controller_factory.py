@@ -80,12 +80,12 @@ class ControllerFactory():
             mixed: Instance of the class module.
         """
 
-        module_path = "controllers.{}.{}".format(vendor, model)
+        module_path = "controllers.vendors.{}.{}".format(vendor, model)
 
         module_path = module_path.lower()
 
         current_directory = os.path.dirname(os.path.realpath(__file__))
-        module_file_path = os.path.join(current_directory, vendor, model) + ".py"
+        module_file_path = os.path.join(current_directory, "vendors", vendor, model) + ".py"
         exists = path.exists(module_file_path)
         if not exists:
             raise FileNotFoundError("Controller file \"{}\" does not exit.".format(module_path))
@@ -114,7 +114,6 @@ class ControllerFactory():
     def create(config):
         """Create controller."""
 
-        # TODO: If the serial is not in the controller load it from file, if not create it and save it.
         controller = None
 
         if "vendor" not in config:
