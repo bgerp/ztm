@@ -1123,7 +1123,7 @@ class Evok(BaseController):
                     # Comments are from date 15.01.2021 y., meeting with M.G.
  
                     # 1. Create remote module.
-                    from devices.Mainland.hhc_r4i4d.hhc_r4i4d import HHC_R4I4D
+                    from devices.vendors.Mainland.hhc_r4i4d.hhc_r4i4d import HHC_R4I4D
                     remote_module = HHC_R4I4D()
 
                     # 2. Get registers IDs.
