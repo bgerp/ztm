@@ -22,9 +22,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 
-from devices.Dallas.ds18b20.ds18b20 import DS18B20
-from devices.SEDtronic.u1wtvs.u1wtvs import U1WTVS
-from devices.Donkger.xy_md02.xy_md02 import XYMD02
+from devices.vendors.Dallas.ds18b20.ds18b20 import DS18B20
+from devices.vendors.SEDtronic.u1wtvs.u1wtvs import U1WTVS
+from devices.vendors.Donkger.xy_md02.xy_md02 import XYMD02
 
 
 #region File Attributes
@@ -67,6 +67,11 @@ class ThermalSensorFactory:
         # The sensor.
         sensor = None
 
+        # Name
+        name = ""
+        if "name" in config:
+            name = config["name"]
+
         # Vendor
         vendor = None
         if "params" in config:
@@ -95,7 +100,7 @@ class ThermalSensorFactory:
         if vendor == "Dallas" and  model == "DS18B20":
 
             l_config = {
-                "name": config["name"],
+                "name": name,
                 "controller": controller,
                 "dev": "temp",
                 "circuit": config["params"][2]
@@ -107,7 +112,7 @@ class ThermalSensorFactory:
         elif vendor == "SEDtronic" and model == "u1wtvs":
 
             l_config = {
-                "name": config["name"],
+                "name": name,
                 "controller": controller,
                 "dev": config["params"][3],
                 "circuit": config["params"][4]
@@ -119,7 +124,7 @@ class ThermalSensorFactory:
         elif vendor == "Donkger" and model == "XY-MD02":
 
             l_config = {
-                "name": config["name"],
+                "name": name,
                 "controller": controller,
                 "unit": int(config["params"][2]),
             }

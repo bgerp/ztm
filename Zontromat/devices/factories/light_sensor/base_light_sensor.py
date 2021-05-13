@@ -57,7 +57,7 @@ __status__ = "Debug"
 #endregion
 
 class BaseLightSensor(BaseDevice):
-    """Card reader base class."""
+    """Light sensor base class."""
 
 #region Attributes
 

@@ -22,9 +22,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 
-from devices.SEDtronic.u1wtvs.u1wtvs import U1WTVS
+from devices.vendors.Teracom.act230.act230 import ACT230
 
-from devices.PT.light_sensor.light_sensor import LightSensor
+from devices.vendors.ACS.acr122u.acr122u import ACR122U
 
 #region File Attributes
 
@@ -57,65 +57,69 @@ __status__ = "Debug"
 
 #endregion
 
-class LightSensorFactory:
+class CardReaderFactory:
 
     @staticmethod
     def create(**config):
         """Create card reader instace."""
 
-        # The sensor.
-        sensor = None
+        # The card device.
+        device = None
 
         # Vendor
         vendor = None
-        if "params" in config:
-            vendor = config["params"][0]
+        if "vendor" in config:
+            vendor = config["vendor"]
 
         else:
             raise ValueError("No \"vendor\" argument has been passed.") 
 
         # Model
         model = None
-        if "params" in config:
-            model = config["params"][1]
+        if "model" in config:
+            model = config["model"]
 
         else:
             raise ValueError("No \"model\" argument has been passed.") 
 
-        # Controller
-        controller = None
-        if "controller" in config:
-            controller = config["controller"]
+        # Port name
+        port_name = None
+        if "port_name" in config:
+            port_name = config["port_name"]
 
         else:
-            raise ValueError("No \"controller\" argument has been passed.") 
+            raise ValueError("No \"port_name\" argument has been passed.") 
 
-        # POLYGON Team / light_sensor
-        if vendor == "PT" and  model == "light_sensor":
+        # Serial number
+        serial_number = None
+        if "serial_number" in config:
+            serial_number = config["serial_number"]
 
-            l_config = {
-                "name": config["name"],
-                "analog_input": config["params"][2],
-                "controller": controller
-            }
+        else:
+            raise ValueError("No \"serial_number\" argument has been passed.") 
 
-            sensor = LightSensor(l_config)
+        # Teracom / ACT230
+        if vendor == "Teracom" and  model == "act230":
 
-        # SEDtronic / u1wtvs
-        elif vendor == "SEDtronic" and model == "u1wtvs":
+            # Port name
+            baudrate = None
+            if "baudrate" in config:
+                baudrate = config["baudrate"]
 
-            l_config = {
-                "name": config["name"],
-                "dev": config["params"][3],
-                "circuit": config["params"][4],
-                "controller": controller
-            }
+            else:
+                raise ValueError("No \"baudrate\" argument has been passed.") 
 
-            sensor = U1WTVS(l_config)
+            device = ACT230(port_name=port_name,\
+                            baudrate=baudrate,\
+                            serial_number=serial_number)
 
-        # Not implemented device.
+        # ACS / ACR122
+        elif vendor == "ACS" and model == "acr122u":
+            device = ACR122U(port_name=port_name,\
+                            serial_number=serial_number)
+
         else:
             raise NotImplementedError("The {} and {}, is not supported.".format(vendor,model))
 
         # Return the reader.
-        return sensor
+        return device

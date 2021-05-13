@@ -25,7 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from devices.base_device import BaseDevice
 
-from devices.utils.card_readers.card_reader_state import CardReaderState
+from devices.factories.card_readers.card_reader_state import CardReaderState
 
 from utils.logic.state_machine import StateMachine
 
