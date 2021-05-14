@@ -34,9 +34,9 @@ from plugins.base_plugin import BasePlugin
 from plugins.hvac.thermal_mode import ThermalMode
 
 from devices.factories.thermal_sensor.thermal_sensor_factory import ThermalSensorFactory
+from devices.factories.valve.valve_factory import ValveFactory
 
 from devices.vendors.HangzhouAirflowElectricApplications.f3p146ec072600.f3p146ec072600 import F3P146EC072600
-from devices.vendors.Tonhe.a20m15b2c.a20m15b2c import A20M15B2C
 from devices.vendors.Silpa.klimafan.klimafan import Klimafan
 from devices.vendors.no_vendor_1.flowmeter import Flowmeter
 
@@ -283,7 +283,7 @@ class AirConditioner(BasePlugin):
             return
 
         if self.__update_timer.expiration_time != register.value:
-            self.__update_timer.expiration_time = register.value
+            self.__update_timer.expiration_time = register.value # TODO: Repair the update.
 
     def __delta_time_cb(self, register):
 
@@ -624,11 +624,16 @@ class AirConditioner(BasePlugin):
             return
 
         if register.value != verbal_const.OFF and self.__loop1_valve_dev is None:
-            self.__loop1_valve_dev = A20M15B2C.create(\
-                "Loop 1 valve",\
-                "{}.loop1_{}.valve".format(self.key, self.__identifier),\
-                self._registers,\
-                self._controller)
+
+            params = register.value.split("/")
+
+            if len(params) < 2:                
+                raise ValueError("Not enough parameters.")
+
+            self.__loop1_valve_dev = ValveFactory.create(
+                name="Loop 1 valve", 
+                controller=self._controller,
+                params=params)
 
             if self.__loop1_valve_dev is not None:
                 self.__loop1_valve_dev.init()
@@ -751,11 +756,16 @@ class AirConditioner(BasePlugin):
             return
 
         if register.value != verbal_const.OFF and self.__loop2_valve_dev is None:
-            self.__loop2_valve_dev = A20M15B2C.create(\
-                "Loop 2 valve",\
-                "{}.loop2_{}.valve".format(self.key, self.__identifier),\
-                self._registers,\
-                self._controller)
+
+            params = register.value.split("/")
+
+            if len(params) < 2:                
+                raise ValueError("Not enough parameters.")
+
+            self.__loop2_valve_dev = ValveFactory.create(
+                name="Loop 2 valve", 
+                controller=self._controller,
+                params=params)
 
             if self.__loop2_valve_dev is not None:
                 self.__loop2_valve_dev.init()

@@ -33,7 +33,7 @@ from utils.logic.functions import rotate_list
 
 from plugins.base_plugin import BasePlugin
 
-from devices.vendors.no_vendor_5.heat_pump import HeatPump, HeatPumpMode
+from devices.vendors.HstarsGuangzhouRefrigeratingEquipmentGroup.heat_pump import HeatPump, HeatPumpMode
 from devices.vendors.Grundfos.pump import Pump
 from devices.utils.valve_control_group.valve_control_group import ValveControlGroup
 
