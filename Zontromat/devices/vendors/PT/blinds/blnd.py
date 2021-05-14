@@ -66,6 +66,10 @@ class BLND(ModbusDevice):
 
         super().__init__(config)
 
+        self._vendor = "POLYGONTeam"
+
+        self._model = "Blend"
+
         self._parameters.append(\
             Parameter("Position", "Increments",\
                 ParameterType.UINT16_T, [0], RegisterType.ReadHoldingRegisters))

@@ -80,6 +80,10 @@ class LightSensor(BaseLightSensor):
         """Init the sensor.
         """
 
+        self._vendor = "POLYGONTeam"
+
+        self._model = "MI"
+
         self.__analog_input = self._config["analog_input"]
 
     def update(self):

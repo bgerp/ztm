@@ -70,6 +70,10 @@ class HHC_R4I4D(ModbusDevice):
 
         super().__init__(config)
 
+        self._vendor = "Mainland"
+
+        self._model = "HHC R4I4D"
+
         self._parameters.append(
             Parameter(
                 "GetRelays",

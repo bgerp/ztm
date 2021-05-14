@@ -70,6 +70,10 @@ class SDM630(ModbusDevice):
 
         super().__init__(config)
 
+        self._vendor = "Eastron"
+
+        self._model = "SDM630"
+
         self._parameters.append(\
             Parameter("Phase1LineToNeutralVolts", "V",\
             ParameterType.FLOAT, [0, 1], RegisterType.ReadInputRegisters))

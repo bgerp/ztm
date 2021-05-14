@@ -70,6 +70,10 @@ class S8_3CN(ModbusDevice):
 
         super().__init__(config)
 
+        self._vendor = "Super"
+
+        self._model = "S8_3CN"
+
         self._parameters.append(
             Parameter(
                 "GetRelays",

@@ -70,6 +70,10 @@ class SDM120(ModbusDevice):
 
         super().__init__(config)
 
+        self._vendor = "Eastron"
+
+        self._model = "SDM120"
+
         self._parameters.append(
             Parameter("Voltage", "V",\
             ParameterType.FLOAT, [0, 1], RegisterType.ReadInputRegisters))

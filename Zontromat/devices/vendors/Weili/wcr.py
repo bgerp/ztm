@@ -72,7 +72,12 @@ class WCR(ModbusDevice):
 #region Constructor / Destructor
 
     def __init__(self):
-        """Constructor"""
+        """Constructor
+        """
+
+        self._vendor = "Weili"
+
+        self._model = "WCR"
 
         self._parameters.append(
             Parameter(

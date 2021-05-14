@@ -75,6 +75,10 @@ class Klimafan(BaseDevice):
     def init(self):
         """Init the convector."""
 
+        self._vendor = "Silpa"
+
+        self._model = "Klimafan"
+
         self.__logger = get_logger(__name__)
 
     def get_state(self):

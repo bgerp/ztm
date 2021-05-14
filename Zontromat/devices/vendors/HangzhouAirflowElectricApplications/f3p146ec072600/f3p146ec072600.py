@@ -156,6 +156,10 @@ class F3P146EC072600(BaseDevice):
             neuron (Neuron): Neuron instance.
         """
 
+        self._vendor = "HangzhouAirflowElectricApplications"
+
+        self._model = "F3P146EC072600"
+
         self.__logger = get_logger(__name__)
 
         if "max_speed" in self._config:

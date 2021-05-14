@@ -71,6 +71,14 @@ class U1WTVS(BaseLightSensor):
 
 #region Public Methods
 
+    def init(self):
+        """Init the device.
+        """
+
+        self._vendor = "SEDtronic"
+
+        self._model = "u1wtvs"
+
     def update(self):
         """Update sensor data.
         """

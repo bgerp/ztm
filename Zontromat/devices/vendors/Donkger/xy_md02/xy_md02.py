@@ -70,6 +70,10 @@ class XYMD02(ModbusDevice):
 
         super().__init__(config)
 
+        self._vendor = "Donkger"
+
+        self._model = "XYMD02"
+
         self._parameters.append(
             Parameter("Temperature", "C",\
             ParameterType.INT16_T, [0x0001], RegisterType.ReadInputRegisters))

@@ -65,6 +65,10 @@ class DS18B20(BaseThermalSensor):
 
         super().__init__(config)
 
+        self._vendor = "Dallas"
+
+        self._model = "DS18B20"
+
 #endregion
 
 #region Public Methods

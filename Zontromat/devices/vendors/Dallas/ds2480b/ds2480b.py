@@ -95,6 +95,10 @@ class DS2480B(BaseDevice):
 
         super().__init__(config)
 
+        self._vendor = "Dallas"
+
+        self._model = "DS2480B"
+
         self.__logger = get_logger(__name__)
 
         # Create port.

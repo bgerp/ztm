@@ -85,6 +85,10 @@ class ACT230(BaseCardReader):
 
         super().__init__(config)
 
+        self._vendor = "Teracom"
+
+        self._model = "ACT230"
+
         self.__logger = get_logger(__name__)
 
 #endregion

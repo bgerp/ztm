@@ -84,7 +84,7 @@ def main():
     port = args.port
 
     # Modbus thermometer.
-    term = Thermometer()
+    term = Thermometer(unit=unit)
 
     # Create client.
     with ModbusClient(method="rtu", port=port, baudrate=9600, timeout=1,
@@ -93,7 +93,7 @@ def main():
         #---------------------------------------------------------------------------#
         # Generate request.
         #---------------------------------------------------------------------------#
-        requests = term.generate_requests(unit, DeviceAddress=1, BaudRate=0)
+        requests = term.generate_requests(DeviceAddress=1, BaudRate=0)
 
         #---------------------------------------------------------------------------#
         # Read device ID.
