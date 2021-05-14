@@ -73,6 +73,8 @@ class HeatPumpMode(Enum):
     Winter = 2
 
 class HeatPump(BaseDevice):
+    """Heat pump description. (40STD-N420WHSB4)
+    """
 
 #region Attributes
 
@@ -97,6 +99,10 @@ class HeatPump(BaseDevice):
         """
 
         super().__init__(config) 
+
+        self._vendor = "Hstars Guangzhou Refrigerating Equipment Group.Co.,Ltd"
+
+        self._model = "40STD-N420WHSB4"
 
     def __del__(self):
         """Destructor
