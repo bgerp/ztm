@@ -301,6 +301,9 @@ class ModbusDevice(BaseDevice):
         param = self.get_parameter_by_name(name)
         request = None
 
+        if param is None:
+            return param
+
         if param.register_type == RegisterType.ReadCoil:
             count = len(param.addresses)
             address = min(param.addresses)
