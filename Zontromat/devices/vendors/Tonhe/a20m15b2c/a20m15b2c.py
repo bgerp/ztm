@@ -25,7 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from utils.logger import get_logger
 
-from devices.base_device import BaseDevice
+from devices.factories.valve.base_valve import BaseValve
 
 #region File Attributes
 
@@ -58,7 +58,7 @@ __status__ = "Debug"
 
 #endregion
 
-class A20M15B2C(BaseDevice):
+class A20M15B2C(BaseValve):
     """Hydro Valve. Model: A20-M15-B2-C"""
 
 #region Attributes
@@ -156,7 +156,12 @@ class A20M15B2C(BaseDevice):
 #region Public Methods
 
     def init(self):
-        """Init the module."""
+        """Init the module.
+        """
+
+        self._vendor = "Tonhe"
+
+        self._model = "A20M15B2C"
 
         self.__logger = get_logger(__name__)
 
@@ -222,18 +227,18 @@ class A20M15B2C(BaseDevice):
         if "D" in self.__output:
 
             if self.__position > 50:
-                self._controller.digital_write(self.__output, 1)
+                self._controller.digital_write(self.__output, True)
 
             else:
-                self._controller.digital_write(self.__output, 0)
+                self._controller.digital_write(self.__output, False)
 
         if "R" in self.__output:
 
             if self.__position > 50:
-                self._controller.digital_write(self.__output, 1)
+                self._controller.digital_write(self.__output, True)
 
             else:
-                self._controller.digital_write(self.__output, 0)
+                self._controller.digital_write(self.__output, False)
 
         elif "A" in self.__output:
             value_pos = self.__position / 10
@@ -260,35 +265,6 @@ class A20M15B2C(BaseDevice):
         """Shutdown"""
 
         self.min_pos = 0
-        self.set_pos(0)
-
-#endregion
-
-#region Public Static Methods
-
-    @staticmethod
-    def create(name, key, registers, controller):
-        """Create instance of the class."""
-
-        instance = None
-
-        valve_output = registers.by_name(key + ".output").value
-        valve_fb = registers.by_name(key + ".feedback").value
-        max_pos = registers.by_name(key + ".max_pos").value
-        min_pos = registers.by_name(key + ".min_pos").value
-
-        config = \
-        {\
-            "name": name,
-            "output": valve_output,
-            "feedback": valve_fb,
-            "min_pos": min_pos,
-            "max_pos": max_pos,
-            "controller": controller
-        }
-
-        instance = A20M15B2C(config)
-
-        return instance
+        self.set_pos(False)
 
 #endregion
