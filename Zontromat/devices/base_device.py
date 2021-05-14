@@ -63,7 +63,39 @@ class BaseDevice(Configuarable):
     _controller = None
     """Controller"""
 
+    _vendor = ""
+    """Vendor
+    """
+
+    _model = ""
+    """Model
+    """
+
 #endregion
+
+    @property
+    def vendor(self):
+        """Get device vendor.
+
+        Returns
+        -------
+        str
+            Vendor
+        """
+
+        return self._vendor
+
+    @property
+    def model(self):
+        """Get device model.
+
+        Returns
+        -------
+        str
+            Model
+        """
+
+        return self._model
 
 #region Constructor / Destructor
 
@@ -77,13 +109,23 @@ class BaseDevice(Configuarable):
         super().__init__(config)
 
         if "controller" in config:
-            self._controller = self._config["controller"]
+            self._controller = self._config["controller"]        
 
     def __del__(self):
         """Destructor
         """
 
         super().__del__()
+
+    def __str__(self):
+        """Returns device vendor and model as string.
+
+        Returns:
+            str: Short description.
+        """
+        return "Device vendor({}) / model({}) ".format(self.vendor, self.model)
+
+    __repr__ = __str__
 
 #endregion
 
