@@ -30,9 +30,7 @@ from utils.logger import get_logger
 from utils.logic.timer import Timer
 from utils.logic.state_machine import StateMachine
 
-from devices.base_device import BaseDevice
-
-from services.global_error_handler.global_error_handler import GlobalErrorHandler
+from devices.factories.valve.base_valve import BaseValve
 
 from data import verbal_const
 
@@ -84,7 +82,7 @@ class ValveState(Enum):
     Calibrate = 4
 
 
-class Valve(BaseDevice):
+class FLX05F(BaseValve):
 
 #region Attributes
 
@@ -119,6 +117,10 @@ class Valve(BaseDevice):
         """
 
         super().__init__(config)
+
+        self._vendor = "Flowx"
+
+        self._model = "Valve"
 
         if "output_fw" in config:
             self.__output_fw = config["output_fw"]
@@ -297,43 +299,5 @@ class Valve(BaseDevice):
             # TODO: Calibration sequence.
 
             self.__valve_state.set_state(ValveState.Wait)
-
-#endregion
-
-#region Public Static Methods
-
-    @staticmethod
-    def create(name, key, registers, controller):
-        """Create instance of the class.
-
-        Args:
-            name (str): Name of the object.
-            key (str): Key used for registers base path.
-            registers (Registers): System registers.
-            controller (BaseController): Controller instance.
-
-        Returns:
-            Valve: Valve control instance.
-        """
-
-        instance = None
-
-        output_fw = registers.by_name("{}.output_fw".format(key)).value
-        output_rev = registers.by_name("{}.output_rev".format(key)).value
-        valve_fb = registers.by_name("{}.feedback".format(key)).value
-        max_pos = registers.by_name("{}.max_pos".format(key)).value
-        min_pos = registers.by_name("{}.min_pos".format(key)).value
-
-        instance = Valve(
-            name=name,
-            key=key,
-            controller=controller,
-            output_fw=output_fw,
-            output_rev=output_rev,
-            feedback=valve_fb,
-            min_pos=min_pos,
-            max_pos=max_pos)
-
-        return instance
 
 #endregion
