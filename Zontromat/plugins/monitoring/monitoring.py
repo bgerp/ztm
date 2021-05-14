@@ -239,19 +239,53 @@ class Monitoring(BasePlugin):
 
 #region Private Methods (Power Analyser)
 
+    def __read_local_parameter(self, name):
+
+        value = 0.0
+
+        request = self.__power_analyser.generate_request(name)
+        if request is not None:
+            response = self._controller.execute_mb_request(request)
+            if not response.isError():
+                registers = {}
+                for index in range(request.address, request.address + request.count):
+                    registers[index] = response.registers[index - request.address]
+                value = self.__power_analyser.get_parameter_value(name, registers)
+
+        return value
+
+    def __read_unipi_mb_master(self):
+
+        # Get structure data.
+        registers_ids = self.__power_analyser.get_registers_ids()
+
+        # Get values by the structure.
+        registers_values = self._controller.read_mb_registers(\
+            self.__uart, \
+            self.__dev_id, \
+            registers_ids, \
+            RegisterType.ReadInputRegisters)
+
+        # Convert values to human readable.
+        parameters_values = self.__power_analyser.get_parameters_values(registers_values)
+
+        # Format the floating points.
+        for parameter_value in parameters_values:
+            try:
+                parameters_values[parameter_value] = \
+                    float("{:06.3f}".format(float(parameters_values[parameter_value])))
+
+            except ValueError:
+                parameters_values[parameter_value] = float("{:06.3f}".format(000.0))
+
+        return parameters_values
+
     def __pa_enabled_cb(self, register):
 
         if not register.data_type == "str":
             return
 
         if register.value != verbal_const.OFF and self.__power_analyser is None:
-
-            # TODO: Make this action only if EVOK is loaded.
-            # Load EVOK settings.
-            if os.name == "posix":
-                self.__evok_setting = EvokSettings("/etc/evok.conf")
-            if os.name == "nt":
-                self.__evok_setting = EvokSettings("evok.conf")
 
             # mb-rtu/Eastron/SDM630/2/3
             # Split parammeters
@@ -265,25 +299,31 @@ class Monitoring(BasePlugin):
                                         name="Zone Power analyser",
                                         params=params)
 
-            return
+            if self._controller.vendor == "UniPi":
 
-            # Vendor
-            vendor = params[0]
+                # Load EVOK settings.
+                if os.name == "posix":
+                    self.__evok_setting = EvokSettings("/etc/evok.conf")
+                if os.name == "nt":
+                    self.__evok_setting = EvokSettings("evok.conf")
 
-            # Model
-            model = params[1]
+                # Save settings to the EVOK software.
+                if not self.__evok_setting.device_exists("EXTENTION_1"):
 
-            # UART
-            uart = params[2]
+                    # Vendor
+                    vendor = params[0]
 
-            # Unit
-            unit = params[3]
+                    # Model
+                    model = params[1]
 
-            if not self.__evok_setting.device_exists("EXTENTION_1"):
+                    # UART
+                    uart = params[2]
 
-                # Add extention 1.
-                extention_1 = \
-                    {
+                    # Unit
+                    unit = params[3]
+
+                    # Add extention 1.
+                    extention_1 = {
                         "global_id": unit,
                         "device_name": model,
                         "modbus_uart_port": "/dev/extcomm/0/0",
@@ -296,30 +336,32 @@ class Monitoring(BasePlugin):
                         "stop_bits": 1
                     }
 
-                # Add the configuration.
-                self.__evok_setting.add_named_device(extention_1, "EXTENTION_1")
-                self.__evok_setting.save()
-                self.__logger.debug("Enable the Power Analyser.")
+                    # Add the configuration.
+                    self.__evok_setting.add_named_device(extention_1, "EXTENTION_1")
+                    self.__evok_setting.save()
+                    self.__logger.debug("Enable the Power Analyser.")
 
-                # Restart the service.
-                if os.name == "posix":
-                    EvokSettings.restart()
-                    self.__logger.debug("Restart the EVOK service.")
+                    # Restart the service.
+                    if os.name == "posix":
+                        EvokSettings.restart()
+                        self.__logger.debug("Restart the EVOK service.")
 
         elif register.value == verbal_const.OFF and self.__power_analyser is not None:
             self.__power_analyser = None
 
-            if self.__evok_setting.device_exists("EXTENTION_1"):
+            if self._controller.vendor == "UniPi":
 
-                # Remove the settings.
-                self.__evok_setting.remove_device("EXTENTION_1")
-                self.__evok_setting.save()
-                self.__logger.debug("Disable the Power Analyser.")
+                if self.__evok_setting.device_exists("EXTENTION_1"):
 
-                # Restart the service.
-                if os.name == "posix":
-                    EvokSettings.restart()
-                    self.__logger.debug("Restart the EVOK service.")
+                    # Remove the settings.
+                    self.__evok_setting.remove_device("EXTENTION_1")
+                    self.__evok_setting.save()
+                    self.__logger.debug("Disable the Power Analyser.")
+
+                    # Restart the service.
+                    if os.name == "posix":
+                        EvokSettings.restart()
+                        self.__logger.debug("Restart the EVOK service.")
 
     def __init_pa(self):
 
@@ -333,66 +375,81 @@ class Monitoring(BasePlugin):
         if self.__power_analyser is None:
             return
 
-        if self._controller.vendor == "UniPi":
-            print("OK")
+        if self.__power_analyser.model == "SDM120":
 
-            # Get structure data.
-            registers_ids = self.__power_analyser.get_registers_ids()
+            l1_data = {
+                "Current": 0.0,
+                "ExportActiveEnergy": 0.0,
+                "ApparentPower": 0.0
+            }
 
-            # Get values by the structure.
-            registers_values = self._controller.read_mb_registers(\
-                self.__uart, \
-                self.__dev_id, \
-                registers_ids, \
-                RegisterType.ReadInputRegisters)
+            if self._controller.vendor == "UniPi":
+                values = self.__read_unipi_mb_master()
 
-            # Convert values to human readable.
-            parameters_values = self.__power_analyser.get_parameters_values(registers_values)
+                l1_data["Current"] = values["Current"]
+                l1_data["ExportActiveEnergy"] = values["ExportActiveEnergy"]
+                l1_data["ApparentPower"] = values["ApparentPower"]
 
-            # Format the floating points.
-            for parameter_value in parameters_values:
-                try:
-                    parameters_values[parameter_value] = \
-                        float("{:06.3f}".format(float(parameters_values[parameter_value])))
+            else:
 
-                except ValueError:
-                    parameters_values[parameter_value] = float("{:06.3f}".format(000.0))
-
-            self.__parameters_values = parameters_values
-
-        print(type(self.__power_analyser))
-
-        if  isinstance(self.__power_analyser, SDM120):
-
-            l1_data = {\
-                "Current":self.__parameters_values["Current"],\
-                "ExportActiveEnergy":self.__parameters_values["ExportActiveEnergy"],\
-                "ApparentPower": self.__parameters_values["ApparentPower"]\
-                }
+                l1_data["Current"] = self.__read_local_parameter("Current")
+                l1_data["ExportActiveEnergy"] = self.__read_local_parameter("ExportActiveEnergy")
+                l1_data["ApparentPower"] = self.__read_local_parameter("ApparentPower")
 
             reg_l1 = self._registers.by_name(self.key + ".pa.l1")
             if reg_l1 is not None:
                 reg_l1.value = json.dumps(l1_data)
 
-        elif  isinstance(self.__power_analyser, SDM630):
+        elif self.__power_analyser.model == "SDM630":
 
-            l1_data = {\
-                "Current":self.__parameters_values["Phase1Current"],\
-                "ExportActiveEnergy":self.__parameters_values["L1ExportkVArh"],\
-                "ApparentPower": self.__parameters_values["L1TotalkWh"]\
-                }
+            l1_data = {
+                "Phase1Current": 0.0,
+                "L1ExportkVArh": 0.0,
+                "L1TotalkWh": 0.0
+            }
 
-            l2_data = {\
-                "Current":self.__parameters_values["Phase2Current"],\
-                "ExportActiveEnergy":self.__parameters_values["L2ExportkVArh"],\
-                "ApparentPower": self.__parameters_values["L2TotalkWh"]\
-                }
+            l2_data = {
+                "Phase2Current": 0.0,
+                "L2ExportkVArh": 0.0,
+                "L2TotalkWh": 0.0
+            }
 
-            l3_data = {\
-                "Current":self.__parameters_values["Phase3Current"],\
-                "ExportActiveEnergy":self.__parameters_values["L3ExportkVArh"],\
-                "ApparentPower": self.__parameters_values["L3TotalkWh"]\
-                }
+            l3_data = {
+                "Phase3Current": 0.0,
+                "L3ExportkVArh": 0.0,
+                "L3TotalkWh": 0.0
+            }
+
+
+            if self._controller.vendor == "UniPi":
+                values = self.__read_unipi_mb_master()
+
+                l1_data["Phase1Current"] = values["Phase1Current"]
+                l1_data["L1ExportkVArh"] = values["L1ExportkVArh"]
+                l1_data["L1TotalkWh"] = values["L1TotalkWh"]
+
+                l2_data["Phase2Current"] = values["Phase2Current"]
+                l2_data["L2ExportkVArh"] = values["L2ExportkVArh"]
+                l2_data["L2TotalkWh"] = values["L2TotalkWh"]
+
+                l3_data["Phase3Current"] = values["Phase3Current"]
+                l3_data["L3ExportkVArh"] = values["L3ExportkVArh"]
+                l3_data["L3TotalkWh"] = values["L3TotalkWh"]
+
+            else:
+
+                l1_data["Phase1Current"] = self.__read_local_parameter("Phase1Current")
+                l1_data["L1ExportkVArh"] = self.__read_local_parameter("L1ExportkVArh")
+                l1_data["L1TotalkWh"] = self.__read_local_parameter("L1TotalkWh")
+
+                l2_data["Phase2Current"] = self.__read_local_parameter("Phase2Current")
+                l2_data["L2ExportkVArh"] = self.__read_local_parameter("L2ExportkVArh")
+                l2_data["L2TotalkWh"] = self.__read_local_parameter("L2TotalkWh")
+
+                l3_data["Phase3Current"] = self.__read_local_parameter("Phase3Current")
+                l3_data["L3ExportkVArh"] = self.__read_local_parameter("L3ExportkVArh")
+                l3_data["L3TotalkWh"] = self.__read_local_parameter("L3TotalkWh")
+
 
             # Update parameters in the registers.
             reg_l1 = self._registers.by_name(self.key + ".pa.l1")
