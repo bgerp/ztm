@@ -29,9 +29,10 @@ from utils.logger import get_logger
 from utils.logic.timer import Timer
 from utils.logic.state_machine import StateMachine
 
-from devices.base_device import BaseDevice
-
-from services.global_error_handler.global_error_handler import GlobalErrorHandler
+from devices.drivers.modbus.device import ModbusDevice
+from devices.drivers.modbus.parameter import Parameter
+from devices.drivers.modbus.parameter_type import ParameterType
+from devices.drivers.modbus.register_type import RegisterType
 
 # (Request from mail: Eml6429)
 
@@ -69,7 +70,7 @@ __class_name__ = "EnergyCenter"
 
 #endregion
 
-class Pump(BaseDevice):
+class Pump(ModbusDevice):
     """Fluid pump.
     """
 
@@ -91,6 +92,10 @@ class Pump(BaseDevice):
         """Constructor"""
 
         super().__init__(config)
+
+        self._vendor = "Grundfos"
+
+        self._model = "Pump"
 
     def __del__(self):
         """Destructor
