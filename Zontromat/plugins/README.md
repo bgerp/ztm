@@ -216,7 +216,7 @@ None
 | Loop 1, fan maximum speed [%] | hvac.loop1.fan.max_speed | int | 30 |
 | Loop 1, fan minimum speed [%] | hvac.loop1.fan.min_speed | int | 0 |
 | Loop 1, temperature sensor - device/type/circuit | hvac.air_temp_cent.settings | str | Dallas/DS18B20/28FF2B70C11604B7 |
-| Loop 1, valve - vendor/model | hvac.loop1.valve.settings | str | TONHE/a20m15b2c |
+| Loop 1, valve - vendor/model | hvac.loop1.valve.settings | str | Tonhe/a20m15b2c |
 | Loop 1, valve output | hvac.loop1.valve.output | str | RO4 |
 | Loop 1, valve feed back input | hvac.loop1.valve.feedback | str | AI1 |
 | Loop 1, valve maximum position [%] | hvac.loop1.valve.max_pos | int | 100 |
@@ -228,7 +228,7 @@ None
 | Loop 2, fan maximum speed [%] | hvac.loop2.fan.min_speed | int | 0 |
 | Loop 2, fan minimum speed [%] | hvac.loop2.fan.max_speed | int | 30 |
 | Loop 2, temperature sensor - device/type/circuit | hvac.loop2.temp.settings | str | Dallas/DS18B20/28FFC4EE00170349 |
-| Loop 2, valve - vendor/model | hvac.loop2.valve.settings | str | TONHE/a20m15b2c |
+| Loop 2, valve - vendor/model | hvac.loop2.valve.settings | str | Tonhe/a20m15b2c |
 | Loop 2, valve output | hvac.loop2.valve.output | str | RO3 |
 | Loop 2, valve feed back input | hvac.loop2.valve.feedback | str | AI2 |
 | Loop 2, valve maximum position | hvac.loop2.valve.max_pos | int | 100 |
