@@ -59,9 +59,9 @@ monitoring.hw.tpl,float,0.0/,Monitoring,system,1.0,Hot water tics per liter
 monitoring.hw.value,float,0.0/,Monitoring,device,0.0,Hot water liters
 monitoring.hw.leak,float,0.0/,Monitoring,device,1.0,Hot water leaked liters
 monitoring.pa.settings,str,,Monitoring,system,off,Power analyser settings
-monitoring.pa.l1,json,,Monitoring,device,"""[]""",Power analyser L1 parameters
-monitoring.pa.l2,json,,Monitoring,device,"""[]""",Power analyser L2 parameters
-monitoring.pa.l3,json,,Monitoring,device,"""[]""",Power analyser L3 parameters
+monitoring.pa.l1,json,,Monitoring,device,"""{}""",Power analyser L1 parameters
+monitoring.pa.l2,json,,Monitoring,device,"""{}""",Power analyser L2 parameters
+monitoring.pa.l3,json,,Monitoring,device,"""{}""",Power analyser L3 parameters
 monitoring.enabled,bool,true|false,Monitoring,system,false,Plugin enabled
 envm.is_empty,bool,true|false,Environment,device,true,Is empty flag
 envm.is_empty_timeout,int,0/,Environment,system,3600,Is empty time out [s]
@@ -112,7 +112,7 @@ hvac.loop1_1.fan.max_speed,float,0.0/100.0,HVAC,system,30.0,Loop 1 fan maximum s
 hvac.loop1_1.temp.settings,str,,HVAC,system,Dallas/DS18B20/28FF2B70C11604B7,Loop 1 temperature sensor settings
 hvac.loop1_1.temp.value,float,/,HVAC,system,0.0,Loop 1 temperature sensor value
 hvac.loop1_1.temp.down_limit,int,0.0/,HVAC,system,15,Loop 1 temperature down limit
-hvac.loop1_1.valve.settings,str,,HVAC,system,TONHE/a20m15b2c,Loop 1 valve settings
+hvac.loop1_1.valve.settings,str,,HVAC,system,Tonhe/a20m15b2c/RO4/off/0/100,Loop 1 valve settings
 hvac.loop1_1.valve.output,str,off|RO0|RO1|RO2|RO3|RO4|RO5|RO6|RO7|RO8|!RO0|!RO1|!RO2|!RO3|!RO4|!RO5|!RO6|!RO7|!RO8,HVAC,system,RO4,Loop 1 valve output
 hvac.loop1_1.valve.feedback,str,off|AI0|AI1|AI2|AI3|AI4|AI5|AI6|AI7|AI8,HVAC,system,AI1,Loop 1 valve feedback
 hvac.loop1_1.valve.max_pos,float,0.0/100.0,HVAC,system,100.0,Loop 1 valve maximum position
@@ -125,7 +125,7 @@ hvac.loop2_1.fan.min_speed,float,0.0/100.0,HVAC,system,0.0,Loop 2 fan minimum sp
 hvac.loop2_1.fan.max_speed,float,0.0/100.0,HVAC,system,30.0,Loop 2 fan maximum speed [%]
 hvac.loop2_1.temp.settings,str,,HVAC,system,Dallas/DS18B20/28FFC4EE00170349,Loop 2 temperature sensor settings
 hvac.loop2_1.temp.value,float,/,HVAC,system,0.0,Loop 1 temperature sensor value
-hvac.loop2_1.valve.settings,str,,HVAC,system,TONHE/a20m15b2c,Loop 2 valve settings
+hvac.loop2_1.valve.settings,str,,HVAC,system,Tonhe/a20m15b2c/RO3/off/0/100,Loop 2 valve settings
 hvac.loop2_1.valve.output,str,off|RO0|RO1|RO2|RO3|RO4|RO5|RO6|RO7|RO8|!RO0|!RO1|!RO2|!RO3|!RO4|!RO5|!RO6|!RO7|!RO8,HVAC,system,RO3,Loop 2 valve output
 hvac.loop2_1.valve.feedback,str,off|AI0|AI1|AI2|AI3|AI4|AI5|AI6|AI7|AI8,HVAC,system,AI2,Loop 2 valve feedback
 hvac.loop2_1.valve.max_pos,float,0.0/100.0,HVAC,system,100.0,Loop 2 valve maximum position

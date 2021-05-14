@@ -600,7 +600,7 @@ def __add_registers():
     register.plugin_name = "Monitoring"
     register.description = "Power analyser settings"
     register.range = ""
-    register.value = verbal_const.OFF # "mb-rtu/Eastron/SDM630/2/3"
+    register.value = verbal_const.OFF # "Eastron/SDM630/2/3" # "Eastron/SDM120/2/3"
     __registers.append(register)
 
     register = Register("monitoring.pa.l1")
@@ -608,7 +608,7 @@ def __add_registers():
     register.plugin_name = "Monitoring"
     register.description = "Power analyser L1 parameters"
     register.range = ""
-    register.value = []
+    register.value = {}
     __registers.append(register)
 
     register = Register("monitoring.pa.l2")
@@ -616,7 +616,7 @@ def __add_registers():
     register.plugin_name = "Monitoring"
     register.description = "Power analyser L2 parameters"
     register.range = ""
-    register.value = []
+    register.value = {}
     __registers.append(register)
 
     register = Register("monitoring.pa.l3")
@@ -624,7 +624,7 @@ def __add_registers():
     register.plugin_name = "Monitoring"
     register.description = "Power analyser L3 parameters"
     register.range = ""
-    register.value = []
+    register.value = {}
     __registers.append(register)
 
     # Enable flag.
@@ -1056,7 +1056,7 @@ def __add_registers():
     register.plugin_name = "HVAC"
     register.description = "Loop 1 valve settings"
     register.range = ""
-    register.value = "TONHE/a20m15b2c"
+    register.value = "Tonhe/a20m15b2c/RO4/off/0/100"
     __registers.append(register)
 
     register = Register("hvac.loop1_1.valve.output")
@@ -1164,7 +1164,7 @@ def __add_registers():
     register.plugin_name = "HVAC"
     register.description = "Loop 2 valve settings"
     register.range = ""
-    register.value = "TONHE/a20m15b2c"
+    register.value = "Tonhe/a20m15b2c/RO3/off/0/100"
     __registers.append(register)
 
     register = Register("hvac.loop2_1.valve.output")
