@@ -322,12 +322,12 @@ class ZL101PCC(BaseController):
     def update(self):
         """Update controller state."""
 
-        state = False
+        state = True
 
         if self.__modbus_rtu_client is None:
             return False
 
-        state = self.__update_black_island()
+        # state = self.__update_black_island()
 
         return state
 
@@ -348,6 +348,13 @@ class ZL101PCC(BaseController):
 
         if not pin in self.__map:
             return state
+
+        # Read device digital inputs.
+        request = self.__black_island.generate_request("GetDigitalInputs")
+        di_response = self.__modbus_rtu_client.execute(request)
+        if di_response is not None:
+            if not di_response.isError():
+                self.__DI = di_response.bits
 
         state = self.__DI[self.__map[pin]]
 
@@ -374,7 +381,7 @@ class ZL101PCC(BaseController):
 
         l_pin = pin.replace("!", "")
         response = False
-        state = 0
+        state = False
 
         if self.is_off_gpio(l_pin):
             return response
@@ -398,9 +405,16 @@ class ZL101PCC(BaseController):
         
         self.__DORO[gpio] = state
 
+        # Write device digital & relay outputs.
+        request = self.__black_island.generate_request("SetRelays", SetRelays=self.__DORO)
+        cw_response = self.__modbus_rtu_client.execute(request)
+        if cw_response is not None:
+            if not cw_response.isError():
+                state = True
+
         # self.__logger.debug("digital_write({}, {}, {})".format(self.model, pin, value))
 
-        return False
+        return state
 
     def analog_write(self, pin, value):
         """Write the analog input pin.
@@ -433,6 +447,12 @@ class ZL101PCC(BaseController):
 
         self.__AO[self.__map[pin]] = value
 
+        # Write device analog outputs.
+        request = self.__black_island.generate_request("SetAnalogOutputs", SetAnalogOutputs=self.__AO)
+        hrw_response = self.__modbus_rtu_client.execute(request)
+        if hrw_response is not None:
+            if not hrw_response.isError():
+                pass
         # self.__logger.debug("analog_write({}, {}, {})".format(self.model, pin, value))
 
         return state
@@ -473,13 +493,20 @@ class ZL101PCC(BaseController):
         """
 
         value = 0.0
-        state = {"value": value}
+        state = {"value": value, "min": 0.0, "max": 10.0}
 
         if self.__map is None:
             return state
 
         if not pin in self.__map:
             return state
+
+        # Read device analog inputs.
+        request = self.__black_island.generate_request("GetAnalogInputs")
+        irr_response = self.__modbus_rtu_client.execute(request)
+        if irr_response is not None:
+            if not irr_response.isError():
+                self.__AI = irr_response.registers
 
         value = self.__AI[self.__map[pin]]
 
@@ -642,6 +669,7 @@ class ZL101PCC(BaseController):
         """
         response = None
 
-        response = self.__modbus_rtu_client.execute(request)
+        if self.__modbus_rtu_client is not None:
+            response = self.__modbus_rtu_client.execute(request)
 
         return response
