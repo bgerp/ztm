@@ -96,7 +96,7 @@ class LightSensor(BaseLightSensor):
         """Get value.
         """
 
-        # Add scaling coefficient.
+        # TODO: Add scaling coefficient.
         raw = l_scale(self.__state["value"], [0, 10], [0, 15000])
 
         return raw
