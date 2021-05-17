@@ -502,6 +502,7 @@ class Zone():
         elif self.__zone_state.is_state(ZoneState.Shutdown):
             # Shutdown the devices.
             self.__shutdown()
+            self.__stop_flag = True
 
         elif self.__zone_state.is_state(ZoneState.Test):
             self.__test()
@@ -587,8 +588,8 @@ class Zone():
         """Shutdown the process."""
 
         self.__zone_state.set_state(ZoneState.Shutdown)
-        self.__stop_flag = True
-        self.__plugin_manager.shutdown()
+        # self.__stop_flag = True
+        # self.__plugin_manager.shutdown()
 
 
 #endregion
