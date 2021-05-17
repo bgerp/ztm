@@ -997,15 +997,7 @@ def __add_registers():
     register.plugin_name = "HVAC"
     register.description = "Loop 1 fan settings"
     register.range = ""
-    register.value = "HangzhouAirflowElectricApplications/f3p146ec072600"
-    __registers.append(register)
-
-    register = Register("hvac.loop1_1.fan.output")
-    register.scope = Scope.System
-    register.plugin_name = "HVAC"
-    register.description = "Loop 1 fan output"
-    register.range = __range["AO"]
-    register.value = "AO3"
+    register.value = "HangzhouAirflowElectricApplications/f3p146ec072600/AO3"
     __registers.append(register)
 
     register = Register("hvac.loop1_1.fan.min_speed")
@@ -1114,15 +1106,7 @@ def __add_registers():
     register.plugin_name = "HVAC"
     register.description = "Loop 2 fan settings"
     register.range = ""
-    register.value = "HangzhouAirflowElectricApplications/f3p146ec072600"
-    __registers.append(register)
-
-    register = Register("hvac.loop2_1.fan.output")
-    register.scope = Scope.System
-    register.plugin_name = "HVAC"
-    register.description = "Loop 2 fan output"
-    register.range = __range["AO"]
-    register.value = "AO4"
+    register.value = "HangzhouAirflowElectricApplications/f3p146ec072600/AO0"
     __registers.append(register)
 
     register = Register("hvac.loop2_1.fan.min_speed")

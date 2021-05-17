@@ -105,8 +105,7 @@ hvac.enabled,bool,true|false,HVAC,system,false,Plugin enabled
 hvac.goal_building_temp,float,-50.0/50.0,HVAC,system,20.0,Goal of the building temperature
 hvac.loop1_1.cnt.tpl,float,0.0/,HVAC,system,1.0,Loop 1 water flow meter ticks per liter scale
 hvac.loop1_1.cnt.input,str,off|DI0|DI1|DI2|DI3|DI4|DI5|DI6|DI7|DI8|!DI0|!DI1|!DI2|!DI3|!DI4|!DI5|!DI6|!DI7|!DI8,HVAC,system,off,Loop 1 water flow meter signal input
-hvac.loop1_1.fan.settings,str,,HVAC,system,HangzhouAirflowElectricApplications/f3p146ec072600,Loop 1 fan settings
-hvac.loop1_1.fan.output,str,off|AO0|AO1|AO2|AO3|AO4|AO5|AO6|AO7|AO8,HVAC,system,AO3,Loop 1 fan output
+hvac.loop1_1.fan.settings,str,,HVAC,system,HangzhouAirflowElectricApplications/f3p146ec072600/AO3,Loop 1 fan settings
 hvac.loop1_1.fan.min_speed,float,0.0/100.0,HVAC,system,0.0,Loop 1 fan minimum speed [%]
 hvac.loop1_1.fan.max_speed,float,0.0/100.0,HVAC,system,30.0,Loop 1 fan maximum speed [%]
 hvac.loop1_1.temp.settings,str,,HVAC,system,Dallas/DS18B20/28FF2B70C11604B7,Loop 1 temperature sensor settings
@@ -119,8 +118,7 @@ hvac.loop1_1.valve.max_pos,float,0.0/100.0,HVAC,system,100.0,Loop 1 valve maximu
 hvac.loop1_1.valve.min_pos,float,0.0/100.0,HVAC,system,0.0,Loop 1 valve minimum position
 hvac.loop2_1.cnt.tpl,float,0.0/,HVAC,system,1.0,Loop 2 water flow meter ticks per liter scale
 hvac.loop2_1.cnt.input,str,off|DI0|DI1|DI2|DI3|DI4|DI5|DI6|DI7|DI8|!DI0|!DI1|!DI2|!DI3|!DI4|!DI5|!DI6|!DI7|!DI8,HVAC,system,off,Loop 1 water flow meter signal input
-hvac.loop2_1.fan.settings,str,,HVAC,system,HangzhouAirflowElectricApplications/f3p146ec072600,Loop 2 fan settings
-hvac.loop2_1.fan.output,str,off|AO0|AO1|AO2|AO3|AO4|AO5|AO6|AO7|AO8,HVAC,system,AO4,Loop 2 fan output
+hvac.loop2_1.fan.settings,str,,HVAC,system,HangzhouAirflowElectricApplications/f3p146ec072600/AO0,Loop 2 fan settings
 hvac.loop2_1.fan.min_speed,float,0.0/100.0,HVAC,system,0.0,Loop 2 fan minimum speed [%]
 hvac.loop2_1.fan.max_speed,float,0.0/100.0,HVAC,system,30.0,Loop 2 fan maximum speed [%]
 hvac.loop2_1.temp.settings,str,,HVAC,system,Dallas/DS18B20/28FFC4EE00170349,Loop 2 temperature sensor settings
