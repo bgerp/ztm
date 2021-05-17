@@ -35,8 +35,9 @@ from plugins.hvac.thermal_mode import ThermalMode
 
 from devices.factories.thermal_sensor.thermal_sensor_factory import ThermalSensorFactory
 from devices.factories.valve.valve_factory import ValveFactory
+from devices.factories.fan.fan_factory import FanFactory
 
-from devices.vendors.HangzhouAirflowElectricApplications.f3p146ec072600.f3p146ec072600 import F3P146EC072600
+
 from devices.vendors.Silpa.klimafan.klimafan import Klimafan
 from devices.vendors.no_vendor_1.flowmeter import Flowmeter
 
@@ -547,13 +548,16 @@ class AirConditioner(BasePlugin):
             return
 
         if register.value != verbal_const.OFF and self.__loop1_fan_dev is None:
-            # Filter by model.
-            if "f3p146ec072600" in register.value: # TODO: Create factory for fans.
-                self.__loop1_fan_dev = F3P146EC072600.create(\
-                    "Loop 1 fan",\
-                    "{}.loop1_{}.fan".format(self.key, self.__identifier),\
-                    self._registers,\
-                    self._controller)
+
+            params = register.value.split("/")
+
+            if len(params) < 2:                
+                raise ValueError("Not enough parameters.")
+
+            self.__loop1_fan_dev = FanFactory.create(
+                controller=self._controller,
+                name="Loop 1 fan",
+                params=params)
 
             if self.__loop1_fan_dev is not None:
                 self.__loop1_fan_dev.init()
@@ -679,13 +683,16 @@ class AirConditioner(BasePlugin):
             return
 
         if register.value != verbal_const.OFF and self.__loop2_fan_dev is None:
-            # Filter by model.
-            if "f3p146ec072600" in register.value:
-                self.__loop2_fan_dev = F3P146EC072600.create(\
-                    "Loop 2 fan",\
-                    "{}.loop2_{}.fan".format(self.key, self.__identifier),\
-                    self._registers,\
-                    self._controller)
+
+            params = register.value.split("/")
+
+            if len(params) < 2:                
+                raise ValueError("Not enough parameters.")
+
+            self.__loop2_fan_dev = FanFactory.create(
+                controller=self._controller,
+                name="Loop 2 fan",
+                params=params)
 
             if self.__loop2_fan_dev is not None:
                 self.__loop2_fan_dev.init()
@@ -1073,15 +1080,15 @@ class AirConditioner(BasePlugin):
         if not self.__thermal_mode.is_state(ThermalMode.NONE):
             # Set upper fan.
             if thermal_force < 0:
-                self.__loop1_fan_dev.set_speed(abs(thermal_force))
+                self.__loop1_fan_dev.speed = abs(thermal_force)
             else:
-                self.__loop1_fan_dev.set_speed(0)
+                self.__loop1_fan_dev.speed = 0
 
             # Set lowe fan.
             if thermal_force > 0:
-                self.__loop2_fan_dev.set_speed(abs(thermal_force))
+                self.__loop2_fan_dev.speed = abs(thermal_force)
             else:
-                self.__loop2_fan_dev.set_speed(0)
+                self.__loop2_fan_dev.speed = 0
 
             # Set convector fan.
             conv_tf = l_scale(thermal_force, [0, 100], [0, 3])
@@ -1121,6 +1128,7 @@ class AirConditioner(BasePlugin):
 
         # Shutting down all the devices.
         self.__set_thermal_force(0)
+
 
     def update(self):
         """ Update cycle.
@@ -1221,11 +1229,17 @@ class AirConditioner(BasePlugin):
         #     # Update current time.
         #     self.__lastupdate_delta_time = time.time()
 
+        self.__loop1_fan_dev.update()
+        self.__loop2_fan_dev.update()
+
     def shutdown(self):
         """Shutdown the tamper.
         """
 
         self.__logger.info("Shutting down the {} {}".format(self.name, self.__identifier))
         self.__set_thermal_force(0)
+
+        self.__loop1_fan_dev.shutdown()
+        self.__loop2_fan_dev.shutdown()
 
 #endregion
