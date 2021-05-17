@@ -25,7 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from utils.logger import get_logger
 
-from devices.base_device import BaseDevice
+from devices.factories.fan.base_fan import BaseFan
 
 #region File Attributes
 
@@ -58,7 +58,7 @@ __status__ = "Debug"
 
 #endregion
 
-class F3P146EC072600(BaseDevice):
+class F3P146EC072600(BaseFan):
     """Model: F3P146-EC072-600
     
     See http://www.shidaqian.com/Upload/SDQ_ECqqlxfj/F3P146-EC072-600.PDF"""
@@ -68,81 +68,14 @@ class F3P146EC072600(BaseDevice):
     __logger = None
     """Logger"""
 
-    __min_speed = 0
-    """Minimum speed limit."""
-
-    __max_speed = 100
-    """Minimum speed limit."""
-
-    __speed = -1
-    """Speed"""
-
     __output = "AO0"
     """Output physical signal."""
+
+    __speed = -1
 
 #endregion
 
 #region Properties
-
-    @property
-    def min_speed(self):
-        """Minimum speed limit.
-
-        Returns:
-            float: Minimum speed limit.
-        """
-        return self.__min_speed
-
-    @min_speed.setter
-    def min_speed(self, value):
-        """Minimum speed limit.
-
-        Args:
-            value (float): Minimum speed limit.
-        """
-
-        in_value = value
-
-        if value > 100:
-            in_value = 100
-
-        if value < 0:
-            in_value = 0
-
-        if in_value > self.max_speed:
-            in_value = self.max_speed
-
-        self.__min_speed = in_value
-
-    @property
-    def max_speed(self):
-        """Maximum speed limit.
-
-        Returns:
-            float: Maximum speed limit.
-        """
-        return self.__max_speed
-
-    @max_speed.setter
-    def max_speed(self, value):
-        """Maximum speed limit.
-
-        Args:
-            value (float): Speed limit.
-        """
-
-        in_value = value
-
-        if value > 100:
-            in_value = 100
-
-        if value < 0:
-            in_value = 0
-
-        if value < self.min_speed:
-            in_value = self.min_speed
-
-        self.__max_speed = in_value
 
 #endregion
 
@@ -162,97 +95,29 @@ class F3P146EC072600(BaseDevice):
 
         self.__logger = get_logger(__name__)
 
-        if "max_speed" in self._config:
-            self.max_speed = self._config["max_speed"]
-
-        if "min_speed" in self._config:
-            self.min_speed = self._config["min_speed"]
-
         if "output" in self._config:
             self.__output = self._config["output"]
 
-    def get_speed(self):
-        """Get speed of the fan.
+        self.shutdown()
 
-        Returns:
-            int: Output speed of the fan.
-        """
-        return self.__speed
-
-    def set_speed(self, speed):
-        """Set speed of the fan.
-
-        Args:
-            speed (int): Output speed of the fan.
+    def update(self):
+        """Update device.
         """
 
-
-
-        in_value = speed
-
-        if speed > 100:
-            in_value = 100
-
-        if speed > self.max_speed:
-            in_value = self.max_speed
-
-        if speed < 0:
-            in_value = 0
-
-        if speed < self.min_speed:
-            in_value = self.min_speed
-
-        if self.__speed == in_value:
+        if self.__speed == self.speed:
             return
-        
-        self.__speed = in_value
 
-        value_speed = self.__speed / 10
+        self.__speed = self.speed
+        value_speed = self.speed / 10
         self._controller.analog_write(self.__output, value_speed)
-        self.__logger.debug("Name: {}; Speed {:3.3f}".format(self.name, self.__speed))
+        self.__logger.debug(self)
 
     def shutdown(self):
         """Shutdown"""
 
         self.min_speed = 0
-        self.set_speed(0)
-
-#endregion
-
-#region Public Static Methods
-
-    @staticmethod
-    def create(name, key, registers, controller):
-        """Create F3P146-EC072-600.
-
-        Args:
-            name (str): Name of the fan.
-            key (str): Kay that will be used for registers.
-            registers (Registers): Registers that hold the settings.
-            controller (mixed): PLC instance.
-
-        Returns:
-            F3P146EC072600: Instance of class.
-        """
-
-        instance = None
-
-        output = registers.by_name(key + ".output").value
-        min_speed = registers.by_name(key + ".min_speed").value
-        max_speed = registers.by_name(key + ".max_speed").value
-
-        config = \
-        {\
-            "name": name,
-            "output": output,
-            "min_speed": min_speed,
-            "max_speed": max_speed,
-            "controller": controller
-        }
-
-        instance = F3P146EC072600(config)
-
-        return instance
+        self.speed = 0
+        self.update()
 
 #endregion
 
