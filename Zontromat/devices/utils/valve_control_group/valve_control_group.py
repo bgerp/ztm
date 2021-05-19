@@ -30,10 +30,8 @@ from utils.logic.functions import l_scale
 
 from plugins.base_plugin import BasePlugin
 
-from services.global_error_handler.global_error_handler import GlobalErrorHandler
-
-from devices.vendors.Flowx.valve import Valve
-from devices.vendors.Grundfos.pump import Pump
+from devices.factories.valve.valve_factory import ValveFactory
+from devices.factories.pump.pump_factory import PumpFactory
 
 # (Request from mail: Eml6429)
 
@@ -105,6 +103,22 @@ class ValveControlGroup(BasePlugin):
 
         super().__init__(config) 
 
+        # Create logger.
+        self.__logger = get_logger(__name__)
+        self.__logger.info("Starting up the: {}".format(self.name))
+
+        if "fw_pumps" in self._config:
+            self.__fw_pumps = self._config["fw_pumps"]
+
+        if "rev_pumps" in self._config:
+            self.__rev_pumps = self._config["rev_pumps"]
+
+        if "fw_valves" in self._config:
+            self.__fw_valves = self._config["fw_valves"]
+
+        if "rev_valves" in self._config:
+            self.__rev_valves = self._config["rev_valves"]
+
     def __del__(self):
         """Destructor
         """
@@ -129,6 +143,12 @@ class ValveControlGroup(BasePlugin):
         if self.__rev_pumps is not None:
             for valve in self.__rev_pumps:
                 del valve
+
+    def __str__(self):
+
+        return self._config["name"]
+
+    __repr__ = __str__
 
 #endregion
 
@@ -177,22 +197,6 @@ class ValveControlGroup(BasePlugin):
     def init(self):
         """Init the group.
         """
-
-        # Create logger.
-        self.__logger = get_logger(__name__)
-        self.__logger.info("Starting up the: {}".format(self.name))
-
-        if "fw_pumps" in self._config:
-            self.__fw_pumps = self._config["fw_pumps"]
-
-        if "rev_pumps" in self._config:
-            self.__rev_pumps = self._config["rev_pumps"]
-
-        if "fw_valves" in self._config:
-            self.__fw_valves = self._config["fw_valves"]
-
-        if "rev_valves" in self._config:
-            self.__rev_valves = self._config["rev_valves"]
 
         if self.__fw_pumps is not None:
             for valve in self.__fw_pumps:
@@ -278,7 +282,6 @@ class ValveControlGroup(BasePlugin):
         if "registers" in config:
             registers = config["registers"]
 
-
         fw_valves = []
         if "fw_valves" in config:
             fw_valves = config["fw_valves"]
@@ -287,46 +290,41 @@ class ValveControlGroup(BasePlugin):
         if "rev_valves" in config:
             rev_valves = config["rev_valves"]
 
-        fw_pumps = []
-        if "fw_pumps" in config:
-            fw_pumps = config["fw_pumps"]
 
-        rev_pumps = []
-        if "rev_pumps" in config:
-            rev_pumps = config["rev_pumps"]
-
+        registers = config["registers"]
 
         f_valves = []
         for name in fw_valves:
-            f_valves.append(
-                Valve(
-                    name=name,
-                    key="{}.{}".format(key, name),
-                    controller=controller)) # TODO: Add settings to the valve.
+            reg_name = "{}.{}".format(config["key"], name)
+            register = registers.by_name(reg_name)
+            if register is not None:
+
+                params = register.value.split("/")
+
+                if len(params) < 2:                
+                    raise ValueError("Not enough parameters.")
+
+                f_valves.append(ValveFactory.create(
+                    name="{} {}".format(config["name"], name),
+                    controller=controller,
+                    params=params))
 
         r_valves = []
         for name in rev_valves:
-            r_valves.append(
-                Valve(
-                    name=name,
-                    key="{}.{}".format(key, name),
-                    controller=controller)) # TODO: Add settings to the valve.
+            reg_name = "{}.{}".format(config["key"], name)
+            register = registers.by_name(reg_name)
+            if register is not None:
 
-        f_pumps = []
-        for name in fw_pumps:
-            f_pumps.append(
-                Pump(
-                    name=name,
-                    key="{}.{}".format(key, name),
-                    controller=controller)) # TODO: Add settings to the water pump.
+                params = register.value.split("/")
 
-        r_pumps = []
-        for name in rev_pumps:
-            r_pumps.append(
-                Pump(
-                    name=name,
-                    key="{}.{}".format(key, name),
-                    controller=controller)) # TODO: Add settings to the water pump.
+                if len(params) < 2:                
+                    raise ValueError("Not enough parameters.")
+
+                r_valves.append(ValveFactory.create(
+                    name="{} {}".format(config["name"], name),
+                    controller=controller,
+                    params=params))
+
 
         control_group = ValveControlGroup(
             name=group_name,
@@ -334,9 +332,7 @@ class ValveControlGroup(BasePlugin):
             registers=registers,
             controller=controller,
             fw_valves=f_valves,
-            rev_valves=r_valves,
-            fw_pumps=f_pumps,
-            rev_pumps=r_pumps)
+            rev_valves=r_valves)
 
         return control_group
 
