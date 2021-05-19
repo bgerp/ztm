@@ -284,7 +284,7 @@ class AirConditioner(BasePlugin):
             return
 
         if self.__update_timer.expiration_time != register.value:
-            self.__update_timer.expiration_time = register.value # TODO: Repair the update.
+            self.__update_timer.expiration_time = register.value
 
     def __delta_time_cb(self, register):
 
