@@ -105,13 +105,18 @@ class EnergyCenterHeatpump(BasePlugin):
         self.__logger = get_logger(__name__)
         self.__logger.info("Starting up the: {}".format(self.name))
 
+        # Card reader allowed IDs.
+        hp_count = 0
+        reg_hp_count = self._registers.by_name(self.key + ".hp.count")
+        if reg_hp_count is not None:
+            hp_count = reg_hp_count.value
+
         self.__heat_pump_control_group = HeatPumpControllGroup(
-            name="HeatPumpControllGroup",
-            key="{}".format(self.key),
+            name="Heat Pump Controll Group",
+            key="{}.hpcg".format(self.key),
             controller=self._controller,
             registers=self._registers) # Add level down if more then one group is controlled.
 
-        # Heat Pump Control Group
         self.__heat_pump_control_group.init()
 
     def update(self):
@@ -126,7 +131,7 @@ class EnergyCenterHeatpump(BasePlugin):
 
         self.__logger.info("Shutting down the {}".format(self.name))
 
-        # Shutdown in order the heatpumps.
+        # Shutdown in order the heatpump.
         self.__heat_pump_control_group.shutdown()
 
 #endregion
