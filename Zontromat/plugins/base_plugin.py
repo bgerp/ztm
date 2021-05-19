@@ -78,8 +78,11 @@ class BasePlugin(Configuarable):
 
         super().__init__(config)
 
-        self._controller = config["controller"]
-        self._registers = config["registers"]
+        if "controller" in config:
+            self._controller = config["controller"]
+
+        if "registers" in config:
+            self._registers = config["registers"]
 
     def __del__(self):
         """Destructor
