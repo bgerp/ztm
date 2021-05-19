@@ -23,7 +23,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 import time
-from enum import Enum
 
 from utils.logger import get_logger
 
@@ -31,6 +30,7 @@ from utils.logic.timer import Timer
 from utils.logic.state_machine import StateMachine
 
 from devices.factories.valve.base_valve import BaseValve
+from devices.factories.valve.valve_state import ValveState
 
 from data import verbal_const
 
@@ -70,18 +70,6 @@ __class_name__ = "EnergyCenter"
 
 #endregion
 
-
-class ValveState(Enum):
-    """Valve states.
-    """
-
-    NONE = 0
-    Wait = 1
-    Prepare = 2
-    Execute = 3
-    Calibrate = 4
-
-
 class FLX05F(BaseValve):
 
 #region Attributes
@@ -90,29 +78,23 @@ class FLX05F(BaseValve):
     """Logger
     """
 
-    __target_position = 0
-
-    __current_position = 0
-
-    __valve_state = None
-
     __scale_per_sec = 1.111
 
     __move_timer = None
 
-    __output_fw = verbal_const.OFF
-    """Valve output forward GPIO.
+    __output_cw = verbal_const.OFF
+    """Valve output CW GPIO.
     """    
 
-    __output_rev = verbal_const.OFF
-    """Valve output revers GPIO.
+    __output_ccw = verbal_const.OFF
+    """Valve output CCW GPIO.
     """    
 
 #endregion
 
 #region Constructor / Destructor
 
-    def __init__(self, **config):
+    def __init__(self, config):
         """Constructor
         """
 
@@ -122,11 +104,11 @@ class FLX05F(BaseValve):
 
         self._model = "Valve"
 
-        if "output_fw" in config:
-            self.__output_fw = config["output_fw"]
+        if "output_cw" in config:
+            self.__output_cw = config["output_cw"]
 
-        if "output_rev" in config:
-            self.__output_rev = config["output_rev"]
+        if "output_ccw" in config:
+            self.__output_ccw = config["output_ccw"]
 
     def __del__(self):
         """Destructor
@@ -157,25 +139,25 @@ class FLX05F(BaseValve):
         """Stop the valve motor.
         """
 
-        if self._controller.is_valid_gpio(self.__output_fw):
-            self._controller.digital_write(self.__output_fw, 0)
+        if self._controller.is_valid_gpio(self.__output_cw):
+            self._controller.digital_write(self.__output_cw, 0)
 
-        if self._controller.is_valid_gpio(self.__output_rev):
-            self._controller.digital_write(self.__output_rev, 0)
+        if self._controller.is_valid_gpio(self.__output_ccw):
+            self._controller.digital_write(self.__output_ccw, 0)
 
     def __turn_cw(self):
         """Turn to CW direction.
         """
         
-        if self._controller.is_valid_gpio(self.__output_fw):
-            self._controller.digital_write(self.__output_fw, 1)
+        if self._controller.is_valid_gpio(self.__output_cw):
+            self._controller.digital_write(self.__output_cw, 1)
 
     def __turn_ccw(self):
         """Turn to CCW direction.
         """
 
-        if self._controller.is_valid_gpio(self.__output_rev):
-            self._controller.digital_write(self.__output_rev, 1)
+        if self._controller.is_valid_gpio(self.__output_ccw):
+            self._controller.digital_write(self.__output_ccw, 1)
 
     def __reed_fb(self):
         """Feedback function from the valve.
@@ -190,38 +172,6 @@ class FLX05F(BaseValve):
 
 #region Properties
 
-    @property
-    def current_position(self):
-
-        return self.__current_position
-
-    @property
-    def target_position(self):
-
-        return self.__target_position
-
-    @target_position.setter
-    def target_position(self, position):
-        """Set the position of the valve.
-
-        Args:
-            position (int): Position of the valve.
-        """
-
-        if position == self.__target_position:
-            return
-
-        if position > 100:
-            position = 100
-
-        elif position < 0:
-            position = 0
-
-        self.__target_position = position
-        self.__valve_state.set_state(ValveState.Prepare)
-
-        self.__logger.debug("Set position of {} to {}".format(self.name, self.__target_position))
-
 #endregion
 
 #region Public Methods
@@ -234,8 +184,8 @@ class FLX05F(BaseValve):
         self.__logger = get_logger(__name__)
         self.__logger.info("Starting up the: {}".format(self.name))
 
-        self.__valve_state = StateMachine(ValveState.Wait)
-        self.__valve_state.set_state(ValveState.Wait)
+        self._valve_state = StateMachine(ValveState.Wait)
+        self._valve_state.set_state(ValveState.Wait)
 
         self.__move_timer = Timer()
 
@@ -255,13 +205,13 @@ class FLX05F(BaseValve):
         """Update the valve state.
         """
 
-        if self.__valve_state.is_state(ValveState.Prepare):
+        if self._valve_state.is_state(ValveState.Prepare):
 
-            delta_pos = self.__target_position - self.__current_position
+            delta_pos = self.target_position - self.current_position
 
             if delta_pos == 0:
                 self.__stop()
-                self.__valve_state.set_state(ValveState.Wait)
+                self._valve_state.set_state(ValveState.Wait)
                 return
 
             time_to_move = self.__to_time(abs(delta_pos))
@@ -276,28 +226,28 @@ class FLX05F(BaseValve):
             elif delta_pos < 0:
                 self.__turn_ccw()
 
-            self.__valve_state.set_state(ValveState.Execute)
+            self._valve_state.set_state(ValveState.Execute)
 
-        elif self.__valve_state.is_state(ValveState.Execute):
+        elif self._valve_state.is_state(ValveState.Execute):
 
             self.__move_timer.update()
             if self.__move_timer.expired:
                 self.__move_timer.clear()
                 self.__stop()
                 self.__current_position = self.__target_position
-                self.__valve_state.set_state(ValveState.Wait)
+                self._valve_state.set_state(ValveState.Wait)
 
             input_fb = self.__reed_fb()
             if input_fb:
                 self.__stop()
                 self.__logger.warning("{} has raised end position.".format(self.name))
                 self.__current_position = self.__target_position
-                self.__valve_state.set_state(ValveState.Wait)
+                self._valve_state.set_state(ValveState.Wait)
 
-        elif self.__valve_state.is_state(ValveState.Calibrate):
+        elif self._valve_state.is_state(ValveState.Calibrate):
 
             # TODO: Calibration sequence.
 
-            self.__valve_state.set_state(ValveState.Wait)
+            self._valve_state.set_state(ValveState.Wait)
 
 #endregion
