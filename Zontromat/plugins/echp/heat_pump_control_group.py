@@ -34,9 +34,10 @@ from utils.logic.functions import rotate_list
 from plugins.base_plugin import BasePlugin
 
 from devices.vendors.HstarsGuangzhouRefrigeratingEquipmentGroup.heat_pump import HeatPump, HeatPumpMode
-from devices.vendors.Grundfos.pump import Pump
 from devices.utils.valve_control_group.valve_control_group import ValveControlGroup
 
+from devices.factories.pump.pump_factory import PumpFactory
+from devices.factories.heat_pump.heat_pump_factory import HeatPumpFactory
 from services.global_error_handler.global_error_handler import GlobalErrorHandler
 
 # (Request from mail: Eml6429)
@@ -116,7 +117,9 @@ class HeatPumpControllGroup(BasePlugin):
 
     __hot_water_pump = None
 
-    __warm_water_pump = None
+    __warm_g_water_pump = None
+
+    __warm_p_water_pump = None
 
 #endregion
 
@@ -188,7 +191,7 @@ class HeatPumpControllGroup(BasePlugin):
 
         # Valve group cold buffer. (BLUE)
         self.__vcg_cold_buff = ValveControlGroup.create(
-            name="vcg_cold_buff",
+            name="VCG Cold Buffer",
             key="{}.vcg_cold_buf".format(self.key),
             controller=self._controller,
             registers=self._registers,
@@ -197,16 +200,15 @@ class HeatPumpControllGroup(BasePlugin):
 
         # Valve group cold geo. (GREEN)
         self.__vcg_cold_geo = ValveControlGroup.create(
-            name="vcg_cold_geo",
+            name="VCG Cold Geo",
             key="{}.vcg_cold_geo".format(self.key),
             controller=self._controller,
             registers=self._registers,
-            fw_valves=["input", "output"],
-            rev_valves=["short"])
+            fw_valves=["input", "output"])
 
         # Valve group warm geo. (GREEN)
         self.__vcg_warm_geo = ValveControlGroup.create(
-            name="vcg_warm_geo",
+            name="VCG Warm Geo",
             key="{}.vcg_warm_geo".format(self.key),
             controller=self._controller,
             registers=self._registers,
@@ -215,32 +217,70 @@ class HeatPumpControllGroup(BasePlugin):
 
         # Valve group warm floor. (PURPLE)
         self.__vcg_warm_floor = ValveControlGroup.create(
-            name="vcg_warm_floor",
+            name="VCG Warm floor",
             key="{}.vcg_warm_floor".format(self.key),
             controller=self._controller,
             registers=self._registers,
             fw_valves=["input", "output"],
             rev_valves=["short"])
 
-        self.__cold_water_pump = Pump(
-            name="wp_cold",
-            key="{}.wp_cold".format(self.key),
-            controller=self._controller) # TODO: Add settings to the water pump.
+        registers = config["registers"]
+
+        register = registers.by_name("{}.wp_cold.settings".format(self.key))
+        if register is not None:
+            wp_setting = register.value
+
+            params = register.value.split("/")
+
+            if len(params) < 2:                
+                raise ValueError("Not enough parameters.")
+
+            self.__cold_water_pump = PumpFactory.create(name="WP Cold", controller=self._controller, params=params)
+
+        register = registers.by_name("{}.wp_hot.settings".format(self.key))
+        if register is not None:
+            wp_setting = register.value
+
+            params = register.value.split("/")
+
+            if len(params) < 2:                
+                raise ValueError("Not enough parameters.")
+
+            self.__hot_water_pump = PumpFactory.create(name="WP Hot", controller=self._controller, params=params)
+
         
-        self.__hot_water_pump = Pump(
-            name="wp_hot",
-            key="{}.hot_water_pump".format(self.key),
-            controller=self._controller) # TODO: Add settings to the water pump.
+        register = registers.by_name("{}.wp_warm_g.settings".format(self.key))
+        if register is not None:
+            wp_setting = register.value
 
-        self.__warm_water_pump = Pump(
-            name="wp_warm",
-            key="{}.warm_water_pump".format(self.key),
-            controller=self._controller) # TODO: Add settings to the water pump.
+            params = register.value.split("/")
 
-        self.__heat_pump = HeatPump(
-            name="heat_pump",
-            key="{}.heat_pump".format(self.key),
-            controller=self._controller) # TODO: Add settings to the heat pump.
+            if len(params) < 2:                
+                raise ValueError("Not enough parameters.")
+
+            self.__warm_g_water_pump = PumpFactory.create(name="WP Warm G", controller=self._controller, params=params)
+
+        register = registers.by_name("{}.wp_warm_p.settings".format(self.key))
+        if register is not None:
+            wp_setting = register.value
+
+            params = register.value.split("/")
+
+            if len(params) < 2:                
+                raise ValueError("Not enough parameters.")
+
+            self.__warm_p_water_pump = PumpFactory.create(name="WP Warm P", controller=self._controller, params=params)
+
+        register = registers.by_name("{}.hp.settings".format(self.key))
+        if register is not None:
+            wp_setting = register.value
+
+            params = register.value.split("/")
+
+            if len(params) < 2:                
+                raise ValueError("Not enough parameters.")
+
+            self.__heat_pump = HeatPumpFactory.create(name="Heat Pump", controller=self._controller, params=params)
 
     def __del__(self):
         """Destructor
@@ -258,7 +298,8 @@ class HeatPumpControllGroup(BasePlugin):
         # Thermal agents pumps.
         del self.__cold_water_pump
         del self.__hot_water_pump
-        del self.__warm_water_pump
+        del self.__warm_g_water_pump
+        del self.__warm_p_water_pump
 
         # Heat pump.
         del self.__heat_pump
@@ -629,7 +670,8 @@ class HeatPumpControllGroup(BasePlugin):
         # Thermal agents pumps.
         self.__cold_water_pump.init()
         self.__hot_water_pump.init()
-        self.__warm_water_pump.init()
+        self.__warm_p_water_pump.init()
+        self.__warm_g_water_pump.init()
 
         # Valve Control Groups (RED, BLUE, PURPLE and GREEN)
         self.__vcg_cold_buff.init()
@@ -666,7 +708,7 @@ class HeatPumpControllGroup(BasePlugin):
 
         # Open warm circuit.
         self.__vcg_warm_geo.target_position = output_power
-        self.__warm_water_pump.set_debit(output_power)
+        self.__warm_p_water_pump.set_debit(output_power)
 
         # run pump for hot circuit.
         self.__hot_water_pump.set_debit(output_power)
@@ -682,7 +724,8 @@ class HeatPumpControllGroup(BasePlugin):
         # Thermal agents pumps.
         self.__cold_water_pump.update()
         self.__hot_water_pump.update()
-        self.__warm_water_pump.update()
+        self.__warm_g_water_pump.update()
+        self.__warm_p_water_pump.update()
 
         # Heat pump.
         self.__heat_pump.set_mode(self.__heat_pump_mode)
@@ -702,7 +745,8 @@ class HeatPumpControllGroup(BasePlugin):
         # Thermal agents pumps.
         self.__cold_water_pump.shutdown()
         self.__hot_water_pump.shutdown()
-        self.__warm_water_pump.shutdown()
+        self.__warm_g_water_pump.shutdown()
+        self.__warm_p_water_pump.shutdown()
 
         # Heat pump.
         self.__heat_pump.shutdown()
