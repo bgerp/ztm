@@ -133,7 +133,6 @@ class Server(HTTPServer):
         @self._app.route("/api/v1/bgerp/sync", methods=["POST"])
         def sync_post():
             """bgERP registers update callback."""
-            # TODO: Add authentication when requesting information.
 
             if self.__sync_cb is not None:
                 self.__sync_cb()
@@ -147,15 +146,16 @@ class Server(HTTPServer):
         def get_register_post():
             """Callback that set the register.
             """
-            # TODO: Add authentication when requesting information.
+
             # (Request to have WEB API for work with registers. MG @ 15.01.2021)
 
             json_data = {}
             response = "{}", 200
             token = ""
-                        
-            if request.data is not None and request.data != "":
-                json_data = json.loads(request.data)
+
+            if request.data is not None:
+                content = request.data.decode('UTF-8')
+                json_data = json.loads(content)
 
             if "token" in json_data:
                 token = json_data["token"]
@@ -178,7 +178,7 @@ class Server(HTTPServer):
         def set_register_post():
             """Callback that get the register.
             """
-            # TODO: Add authentication when requesting information.
+
             # (Request to have WEB API for work with registers. MG @ 15.01.2021)
 
             json_data = {}
