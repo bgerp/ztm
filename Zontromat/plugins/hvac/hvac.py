@@ -81,11 +81,14 @@ class HVAC(BasePlugin):
     def __del__(self):
         """Destructor"""
 
+        for zone in self.__thermal_zones:
+            if zone is not None:
+                del zone
+
+        super().__del__()
+
         if self.__logger is not None:
             del self.__logger
-
-        if self.__thermal_zones is not None:
-            del self.__thermal_zones
 
 #endregion
 
@@ -117,18 +120,31 @@ class HVAC(BasePlugin):
             # Initialize the module.
             self.__thermal_zones[name].init()
 
+        self.ready(True)
+
     def update(self):
         """ Update cycle. """
+
+        if not self.is_ready():
+            return
+
+        self.in_cycle(True)
 
         for key in self.__thermal_zones:
             self.__thermal_zones[key].update()
 
+        self.in_cycle(False)
+
     def shutdown(self):
         """Shutdown the tamper."""
 
+        self.ready(False)
+        self.wait()
+
         self.__logger.info("Shutting down the {}".format(self.name))
-        
+
         for key in self.__thermal_zones:
             self.__thermal_zones[key].shutdown()
+
 
 #endregion
