@@ -63,12 +63,6 @@ class BaseValve(BaseDevice):
 
 #region Attributes
 
-    _valve_state = ValveState.NONE
-
-    __target_position = 0
-
-    __current_position = 0
-
 #endregion
 
 #region Constructor
@@ -81,65 +75,10 @@ class BaseValve(BaseDevice):
 
 #region Properties
 
-    @property
-    def current_position(self):
-
-        return self.__current_position
-
-    @property
-    def target_position(self):
-
-        return self.__target_position
-
-    @target_position.setter
-    def target_position(self, position):
-        """Set the position of the valve.
-
-        Args:
-            position (int): Position of the valve.
-        """
-
-        if position == self.__target_position:
-            return
-
-        if position > 100:
-            position = 100
-
-        elif position < 0:
-            position = 0
-
-        self.__target_position = position
-        self._valve_state.set_state(ValveState.Prepare)
-
-        self.__logger.debug("Set position of {} to {}".format(self.name, self.__target_position))
-
 #endregion
 
 #region Protected Methods
 
 #region Public Methods
-
-    def get_pos(self):
-        """Set position of the output.
-
-        Args:
-            position (int): Output position.
-        """
-
-        return 0
-
-    def set_pos(self, position):
-        """Set position of the output.
-
-        Args:
-            position (int): Output position.
-        """
-
-        return 0
-
-    def in_place(self):
-        """Returns if the valve is in place."""
-
-        return 0
 
 #endregion
