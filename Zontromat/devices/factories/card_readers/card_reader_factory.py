@@ -61,9 +61,10 @@ class CardReaderFactory:
 
     @staticmethod
     def create(**config):
-        """Create card reader instace."""
+        """Create device instace.
+        """
 
-        # The card device.
+        # The device instance.
         device = None
 
         # Vendor
@@ -109,17 +110,21 @@ class CardReaderFactory:
             else:
                 raise ValueError("No \"baudrate\" argument has been passed.") 
 
-            device = ACT230(port_name=port_name,\
-                            baudrate=baudrate,\
-                            serial_number=serial_number)
+            device = ACT230(
+                port_name=port_name,
+                baudrate=baudrate,
+                serial_number=serial_number
+            )
 
         # ACS / ACR122
         elif vendor == "ACS" and model == "acr122u":
-            device = ACR122U(port_name=port_name,\
-                            serial_number=serial_number)
+            device = ACR122U(
+                port_name=port_name,
+                serial_number=serial_number
+            )
 
         else:
             raise NotImplementedError("The {} and {}, is not supported.".format(vendor,model))
 
-        # Return the reader.
+        # Return the instance.
         return device

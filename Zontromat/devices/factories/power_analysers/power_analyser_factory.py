@@ -60,9 +60,10 @@ class PowerAnalyserFactory:
 
     @staticmethod
     def create(**config):
-        """Create card reader instace."""
+        """Create device instace.
+        """
 
-        # The card device.
+        # The device instance.
         device = None
 
         # Name
@@ -107,19 +108,23 @@ class PowerAnalyserFactory:
         # Eastron / SDM120
         if vendor == "Eastron" and  model == "SDM120":
 
-            device = SDM120(controller=controller,
+            device = SDM120(
+                controller=controller,
                 name=name,
-                unit=unit)
+                unit=unit
+            )
 
         # Eastron / ACR122
         elif vendor == "Eastron" and model == "SDM630":
             
-            device = SDM630(controller=controller,
+            device = SDM630(
+                controller=controller,
                 name=name,
-                unit=unit)
+                unit=unit
+            )
 
         else:
             raise NotImplementedError("The {} and {}, is not supported.".format(vendor,model))
 
-        # Return the device.
+        # Return the instance.
         return device

@@ -97,16 +97,14 @@ class PumpFactory:
         # Grundfos / Pump / 0
         if vendor == "Grundfos" and  model == "Pump":
 
-            l_config = {
-                "name": name,
-                "controller": controller,
-                "unit": int(config["params"][2]),
-            }
-
-            device = Pump(l_config)
+            device = Pump(
+                name=name,
+                controller=controller,
+                unit=int(config["params"][2])
+            )
 
         else:
             raise NotImplementedError("The {} and {}, is not supported.".format(vendor,model))
 
-        # Return the device.
+        # Return the instance.
         return device

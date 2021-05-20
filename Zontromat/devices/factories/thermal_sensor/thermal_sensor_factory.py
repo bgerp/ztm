@@ -62,10 +62,10 @@ class ThermalSensorFactory:
 
     @staticmethod
     def create(**config):
-        """Create thermal sensor factory instace."""
+        """Create thermal device factory instace."""
 
-        # The sensor.
-        sensor = None
+        # The device.
+        device = None
 
         # Name
         name = ""
@@ -99,40 +99,34 @@ class ThermalSensorFactory:
         # Dallas / DS18B20
         if vendor == "Dallas" and  model == "DS18B20":
 
-            l_config = {
-                "name": name,
-                "controller": controller,
-                "dev": "temp",
-                "circuit": config["params"][2]
-            }
-
-            sensor = DS18B20(l_config)
+            device = DS18B20(
+                name=name,
+                controller=controller,
+                dev="temp",
+                circuit=config["params"][2]
+            )
 
         # SEDtronic / u1wtvs
         elif vendor == "SEDtronic" and model == "u1wtvs":
 
-            l_config = {
-                "name": name,
-                "controller": controller,
-                "dev": config["params"][3],
-                "circuit": config["params"][4]
-            }
-
-            sensor = U1WTVS(l_config)
+            device = U1WTVS(
+                name=name,
+                controller=controller,
+                dev=config["params"][3],
+                circuit=config["params"][4]
+            )
 
         # Donkger / u1wtvs
         elif vendor == "Donkger" and model == "XY-MD02":
 
-            l_config = {
-                "name": name,
-                "controller": controller,
-                "unit": int(config["params"][2]),
-            }
-
-            sensor = XYMD02(l_config)
+            device = XYMD02(
+                name=name,
+                controller=controller,
+                unit=int(config["params"][2])
+            )
 
         else:
             raise NotImplementedError("The {} and {}, is not supported.".format(vendor,model))
 
-        # Return the reader.
-        return sensor
+        # Return the instance.
+        return device

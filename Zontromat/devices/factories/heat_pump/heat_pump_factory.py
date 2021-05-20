@@ -59,10 +59,10 @@ class HeatPumpFactory:
 
     @staticmethod
     def create(**config):
-        """Create heat pump device instace.
+        """Create device instace.
         """
 
-        # The device.
+        # The device instance.
         device = None
 
         # Name
@@ -97,10 +97,14 @@ class HeatPumpFactory:
         # HstarsGuangzhouRefrigeratingEquipmentGroup / HeatPump / 0
         if vendor == "HstarsGuangzhouRefrigeratingEquipmentGroup" and  model == "HeatPump":
 
-            device = HeatPump(name=name, controller=controller, unit=int(config["params"][2]))
+            device = HeatPump(
+                name=name,
+                controller=controller,
+                unit=int(config["params"][2])
+            )
 
         else:
             raise NotImplementedError("The {} and {}, is not supported.".format(vendor,model))
 
-        # Return the device.
+        # Return the instance.
         return device

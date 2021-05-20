@@ -97,34 +97,29 @@ class ValveFactory:
         # Flowx / FLX-05F / (DO0,R0) / (DO1,R1) / DI0 / DI1
         if vendor == "Flowx" and  model == "FLX-05F":
 
-            l_config = {
-                "name": name,
-                "controller": controller,
-                "output_cw": config["params"][2],
-                "output_ccw": config["params"][3],
-                "limit_cw": config["params"][4],
-                "limit_ccw": config["params"][5],
-            }
-
-            device = FLX05F(l_config)
+            device = FLX05F(
+                name=name,
+                controller=controller,
+                output_cw=config["params"][2],
+                output_ccw=config["params"][3],
+                limit_cw=config["params"][4],
+                limit_ccw=config["params"][5],
+            )
 
         # Tonhe / a20m15b2c / (RO0/AO0) / AI0
         elif vendor == "Tonhe" and model == "a20m15b2c":
 
-            l_config = {
-                "name": name,
-                "controller": controller,
-                "output": config["params"][2],
-                "feedback": config["params"][3],
-                "min_pos": int(config["params"][4]),
-                "max_pos": int(config["params"][5]),
-            }
-
-            device = A20M15B2C(l_config)
+            device = A20M15B2C(
+                name=name,
+                controller=controller,
+                output=config["params"][2],
+                feedback=config["params"][3],
+                min_pos=int(config["params"][4]),
+                max_pos=int(config["params"][5])
+            )
 
         else:
             raise NotImplementedError("The {} and {}, is not supported.".format(vendor,model))
 
-        # Return the reader.
-
+        # Return the instance.
         return device

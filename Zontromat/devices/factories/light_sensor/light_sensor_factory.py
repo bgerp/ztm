@@ -24,7 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from devices.vendors.SEDtronic.u1wtvs.u1wtvs import U1WTVS
 
-from devices.vendors.PT.light_sensor.light_sensor import LightSensor
+from devices.vendors.PT.light_device.light_device import LightSensor
 
 #region File Attributes
 
@@ -61,10 +61,11 @@ class LightSensorFactory:
 
     @staticmethod
     def create(**config):
-        """Create card reader instace."""
+        """Create device instace.
+        """
 
-        # The sensor.
-        sensor = None
+        # The device instance.
+        device = None
 
         # Name
         name = ""
@@ -95,32 +96,28 @@ class LightSensorFactory:
         else:
             raise ValueError("No \"controller\" argument has been passed.") 
 
-        # POLYGON Team / light_sensor
-        if vendor == "PT" and  model == "light_sensor":
+        # POLYGON Team / light_device
+        if vendor == "PT" and  model == "light_device":
 
-            l_config = {
-                "name": name,
-                "analog_input": config["params"][2],
-                "controller": controller
-            }
-
-            sensor = LightSensor(l_config)
+            device = LightSensor(
+                name=name,
+                controller=controller,
+                analog_input=config["params"][2]
+            )
 
         # SEDtronic / u1wtvs
         elif vendor == "SEDtronic" and model == "u1wtvs":
 
-            l_config = {
-                "name": name,
-                "dev": config["params"][3],
-                "circuit": config["params"][4],
-                "controller": controller
-            }
-
-            sensor = U1WTVS(l_config)
+            device = U1WTVS(
+                name=name,
+                controller=controller,
+                dev=config["params"][3],
+                circuit=config["params"][4],
+            )
 
         # Not implemented device.
         else:
             raise NotImplementedError("The {} and {}, is not supported.".format(vendor,model))
 
-        # Return the reader.
-        return sensor
+        # Return the instance.
+        return device

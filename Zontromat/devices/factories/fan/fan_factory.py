@@ -61,9 +61,10 @@ class FanFactory:
 
     @staticmethod
     def create(**config):
-        """Create thermal device factory instace."""
+        """Create device instace.
+        """
 
-        # The device.
+        # The device instance.
         device = None
 
         # Name
@@ -98,16 +99,14 @@ class FanFactory:
         # HangzhouAirflowElectricApplications / f3p146ec072600 / AO0
         if vendor == "HangzhouAirflowElectricApplications" and  model == "f3p146ec072600":
 
-            l_config = {
-                "name": name,
-                "controller": controller,
-                "output": config["params"][2]
-            }
-
-            device = F3P146EC072600(l_config)
+            device = F3P146EC072600(
+                name=name,
+                controller=controller,
+                output=config["params"][2]
+            )
 
         else:
             raise NotImplementedError("The {} and {}, is not supported.".format(vendor,model))
 
-        # Return the reader.
+        # Return the instance.
         return device
