@@ -26,6 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from utils.logger import get_logger
 
 from devices.factories.valve.base_valve import BaseValve
+from devices.factories.valve.valve_state import ValveState
 
 #region File Attributes
 
@@ -69,12 +70,6 @@ class A20M15B2C(BaseValve):
     __position = -1
     """Position of the valve."""
 
-    __min_pos = 0
-    """Minimum allowed position."""
-
-    __max_pos = 100
-    """Maximum allowed position."""
-
     __feedback = None
     """Feedback of the valve position."""
 
@@ -85,79 +80,13 @@ class A20M15B2C(BaseValve):
 
 #region Properties
 
-    @property
-    def min_pos(self):
-        """Minimum position.
-
-        Returns:
-            float: Minimum position.
-        """
-        return self.__min_pos
-
-    @min_pos.setter
-    def min_pos(self, value):
-        """Minimum position.
-
-        Args:
-            value (float): Minimum position.
-        """
-
-        in_value = value
-
-        if value > 100:
-            in_value = 100
-
-        if value < 0:
-            in_value = 0
-
-        if in_value > self.max_pos:
-            in_value = self.max_pos
-
-        self.__min_pos = value
-
-    @property
-    def max_pos(self):
-        """Maximum position.
-
-        Returns:
-            float: Maximum position.
-        """
-        return self.__max_pos
-
-    @max_pos.setter
-    def max_pos(self, value):
-        """Maximum position.
-
-        Args:
-            value (float): Maximum position.
-        """
-
-        in_value = value
-
-        if value > 100:
-            in_value = 100
-
-        if value < 0:
-            in_value = 0
-
-        if value < self.min_pos:
-            in_value = self.min_pos
-
-        self.__max_pos = in_value
-
-    @property
-    def set_point(self):
-        """Set point."""
-
-        return self.__position
-
 #endregion
 
-#region Public Methods
+#region Constructor
 
-    def init(self):
-        """Init the module.
-        """
+    def __init__(self, **config):
+
+        super().__init__(config)
 
         self._vendor = "Tonhe"
 
@@ -177,14 +106,18 @@ class A20M15B2C(BaseValve):
         if "output" in self._config:
             self.__output = self._config["output"]
 
-    def get_pos(self):
-        """Set position of the output.
+#endregion
 
-        Args:
-            position (int): Output position.
+#region Private Methods
+
+    def __reed_fb(self):
+        """Feedback function from the valve.
+
+        Returns:
+            float: State of the feedback.
         """
 
-        position = 0
+        position = 0.0
 
         # Determin is it analog or digital output.
         if "D" in self.__feedback:
@@ -193,40 +126,14 @@ class A20M15B2C(BaseValve):
         elif "A" in self.__feedback:
             position = self._controller.analog_read(self.__feedback)
 
-        self.__logger.debug("Name: {}; Position: {:3.3f}".format(self.name, position))
-
         return position * 10.0
 
-    def set_pos(self, position):
-        """Set position of the output.
-
-        Args:
-            position (int): Output position.
-        """
-
-        if self.__position == position:
-            return
-
-        in_position = position
-
-        if position > 100:
-            in_position = 100
-
-        if position > self.__max_pos:
-            in_position = self.__max_pos
-
-        if position < 0:
-            in_position = 0
-
-        if position < self.__min_pos:
-            in_position = self.__min_pos
-
-        self.__position = in_position
+    def __set_postion(self, position):
 
         # Determin is it analog or digital output.
         if "D" in self.__output:
 
-            if self.__position > 50:
+            if position > 50:
                 self._controller.digital_write(self.__output, True)
 
             else:
@@ -234,37 +141,56 @@ class A20M15B2C(BaseValve):
 
         if "R" in self.__output:
 
-            if self.__position > 50:
+            if position > 50:
                 self._controller.digital_write(self.__output, True)
 
             else:
                 self._controller.digital_write(self.__output, False)
 
         elif "A" in self.__output:
-            value_pos = self.__position / 10
+            value_pos = position / 10
             self._controller.analog_write(self.__output, value_pos)
 
-        self.__logger.debug("Name: {}; Position: {}".format(self.name, self.__position))
+#endregion
 
-    def in_place(self):
-        """Returns if the valve is in place."""
+#region Public Methods
 
-        in_place = False
+    def init(self):
+        """Init the module.
+        """
 
-        actual_pos = self.get_pos()
-        target_pos = self.set_point
+        self.shutdown()
 
-        delta = abs(actual_pos - target_pos)
+    def update(self):
 
-        if delta < 0.1:
-            in_place = True
+        # Update current position.
+        position = self.__reed_fb()
 
-        return in_place
+        if self._current_position != position:
+            self._current_position = position
+
+            self.__logger.debug("{} valve @ {:3.3f}".format(self.name, self.current_position))
+
+
+        # If it is time then move the valve.
+        if self._state.is_state(ValveState.Prepare):
+
+            if self.__position == self.target_position:
+                return
+
+            self.__set_postion(self.target_position)
+
+            self.__position = self.target_position
+
+            self.__logger.debug("{} @ {}".format(self.name, self.__position))
+
+            self._state.set_state(ValveState.Wait) 
 
     def shutdown(self):
         """Shutdown"""
 
         self.min_pos = 0
-        self.set_pos(False)
+        self.target_position = 0
+        self.update()
 
 #endregion
