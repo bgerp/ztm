@@ -123,11 +123,6 @@ class ValveControlGroup(BasePlugin):
         """Destructor
         """
 
-        super().__del__()
-
-        if self.__logger is not None:
-            del self.__logger
-
         if self.__fw_valves is not None:
             for valve in self.__fw_valves:
                 del valve
@@ -143,6 +138,11 @@ class ValveControlGroup(BasePlugin):
         if self.__rev_pumps is not None:
             for valve in self.__rev_pumps:
                 del valve
+
+        super().__del__()
+
+        if self.__logger is not None:
+            del self.__logger
 
     def __str__(self):
 

@@ -65,7 +65,7 @@ class XYMD02(ModbusDevice):
 
 #region Constructor
 
-    def __init__(self, config):
+    def __init__(self, **config):
         """Constructor"""
 
         super().__init__(config)

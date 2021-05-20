@@ -94,7 +94,7 @@ class FLX05F(BaseValve):
 
 #region Constructor / Destructor
 
-    def __init__(self, config):
+    def __init__(self, **config):
         """Constructor
         """
 
@@ -104,11 +104,19 @@ class FLX05F(BaseValve):
 
         self._model = "Valve"
 
+        # Create logger.
+        self.__logger = get_logger(__name__)
+        self.__logger.info("Starting up the: {}".format(self.name))
+
+        self.__move_timer = Timer()
+
         if "output_cw" in config:
             self.__output_cw = config["output_cw"]
 
         if "output_ccw" in config:
             self.__output_ccw = config["output_ccw"]
+
+        self.target_position = 0
 
     def __del__(self):
         """Destructor
@@ -170,26 +178,13 @@ class FLX05F(BaseValve):
 
 #endregion
 
-#region Properties
-
-#endregion
-
 #region Public Methods
 
     def init(self):
         """Init the valve.
         """
 
-        # Create logger.
-        self.__logger = get_logger(__name__)
-        self.__logger.info("Starting up the: {}".format(self.name))
-
-        self._valve_state = StateMachine(ValveState.Wait)
-        self._valve_state.set_state(ValveState.Wait)
-
-        self.__move_timer = Timer()
-
-        self.target_position = 0
+        self.shutdown()
 
     def shutdown(self):
         """Shutdown the valve.

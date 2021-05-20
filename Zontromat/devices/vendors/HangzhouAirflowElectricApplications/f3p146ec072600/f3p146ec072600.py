@@ -79,15 +79,13 @@ class F3P146EC072600(BaseFan):
 
 #endregion
 
-#region Public Methods
+#region Constructor
 
-    def init(self):
+    def __init__(self, **config):
         """Constructor
-
-        Args:
-            config (mixed): Device configuration.
-            neuron (Neuron): Neuron instance.
         """
+
+        super().__init__(config)
 
         self._vendor = "HangzhouAirflowElectricApplications"
 
@@ -97,6 +95,14 @@ class F3P146EC072600(BaseFan):
 
         if "output" in self._config:
             self.__output = self._config["output"]
+
+#endregion
+
+#region Public Methods
+
+    def init(self):
+        """Init
+        """
 
         self.shutdown()
 

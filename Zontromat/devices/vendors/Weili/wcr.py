@@ -71,9 +71,11 @@ class WCR(ModbusDevice):
 
 #region Constructor / Destructor
 
-    def __init__(self):
+    def __init__(self, **config):
         """Constructor
         """
+
+        super().__init__(config)
 
         self._vendor = "Weili"
 

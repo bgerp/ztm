@@ -70,16 +70,26 @@ class Klimafan(BaseDevice):
 
 #endregion
 
-#region Public Methods
+#region Constructor
 
-    def init(self):
-        """Init the convector."""
+    def __init__(self, **config):
+        """Constructor
+        """
+
+        super().__init__(config)
 
         self._vendor = "Silpa"
 
         self._model = "Klimafan"
 
         self.__logger = get_logger(__name__)
+
+#region Public Methods
+
+    def init(self):
+        """Init the convector."""
+
+        self.shutdown()
 
     def get_state(self):
         """Return value of the output.
@@ -123,7 +133,7 @@ class Klimafan(BaseDevice):
             self._controller.digital_write(self._config["stage_2"], 0)
             self._controller.digital_write(self._config["stage_3"], 1)
 
-        self.__logger.debug("Name: {}; State: {}".format(self.name, self.__state))
+        self.__logger.debug("{} @ {}".format(self.name, self.__state))
 
 #endregion
 
@@ -143,16 +153,13 @@ class Klimafan(BaseDevice):
             stage_2 is not None and\
             stage_3 is not None:
 
-            config = \
-            {\
-                "name": name,\
-                "stage_1": stage_1,\
-                "stage_2": stage_2,\
-                "stage_3": stage_3,\
-                "controller": controller\
-            }
-
-            instance = Klimafan(config)
+            instance = Klimafan(
+                name=name,
+                stage_1=stage_1,
+                stage_2=stage_2,
+                stage_3=stage_3,
+                controller=controller
+            )
 
         return instance
 
