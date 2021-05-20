@@ -318,7 +318,7 @@ The body of the POST request is formatted in JSON.
 
 Example: 
 ```json
-{"token": "8niQyw7vH82eWy5r", "registers": ["sys.disc.free", "sys.disc.used"]}
+{"token": "bFpZryM8eUwksmAi", "registers": ["sys.disc.free", "sys.disc.used"]}
 ```
 
 The field registers holds the array of target names that should be returned from the WEB server. The response of te server is also formatted in JSON. Content type response header is added, **"Content-Type": "application/json; charset=utf-8"**.
@@ -331,8 +331,9 @@ Example:
 A "curl" example is provided for better comprehension of the request.
 
 Example:
+
 ```sh
-curl -v -XPOST -H 'Content-type: application/json' -d '{"token": "8niQyw7vH82eWy5r", "registers": ["sys.disc.free", "sys.disc.used"]}' 'http://192.168.0.52:8890/api/v1/bgerp/registers/get'
+curl -v -XPOST -H "Content-type: application/json" -d "{\"token\": \"bFpZryM8eUwksmAi\", \"registers\": [\"sys.disc.free\", \"sys.disc.used\"]}" "http://192.168.0.53:8890/api/v1/bgerp/registers/get"
 ```
 
 ## Set register
@@ -345,19 +346,46 @@ The body of the POST request is formatted in JSON.
 
 Example: 
 ```json
-{"token": "8niQyw7vH82eWy5r", "registers": {"hvac.loop2_1.fan.min_speed": 5, "ac.zone_1_occupied": 0}}
+{"token": "bFpZryM8eUwksmAi", "registers": {"hvac.loop2_1.fan.max_speed": 30}}
+```
+```json
+{"token": "bFpZryM8eUwksmAi", "registers": {"hvac.loop2_1.fan.max_speed": 100}}
+```
+```json
+{"token": "bFpZryM8eUwksmAi", "registers": {"hvac.enabled": true}}
+```
+```json
+{"token": "bFpZryM8eUwksmAi", "registers": {"hvac.enabled": false}}
 ```
 
 The field registers holds the dict of target names that should be set to specified values. A response is expected from the WEB server as shown below. The response of te server is also formatted in JSON. Content type response header is added, **"Content-Type": "application/json; charset=utf-8"**.
 
 Example:
 ```json
-{"hvac.loop2_1.fan.min_speed": 5, "ac.zone_1_occupied": 0}
+{"token": "bFpZryM8eUwksmAi", "registers": {"hvac.loop2_1.fan.max_speed": 30}}
+```
+```json
+{"token": "bFpZryM8eUwksmAi", "registers": {"hvac.loop2_1.fan.max_speed": 100}}
+```
+```json
+{"token": "bFpZryM8eUwksmAi", "registers": {"hvac.enabled": true}}
+```
+```json
+{"token": "bFpZryM8eUwksmAi", "registers": {"hvac.enabled": false}}
 ```
 
 A "curl" example is provided for better comprehension of the request.
 
 Example:
 ```sh
-curl -v -XPOST -H 'Content-type: application/json' -d '{"token": "8niQyw7vH82eWy5r", "registers": {"hvac.loop2_1.fan.min_speed": 0, "ac.zone_1_occupied": 0}}' 'http://192.168.0.52:8890/api/v1/bgerp/registers/set'
+curl -v -XPOST -H "Content-type: application/json" -d "{\"token\": \"bFpZryM8eUwksmAi\", \"registers\": {\"hvac.loop2_1.fan.max_speed\": 100}}" "http://192.168.0.53:8890/api/v1/bgerp/registers/set"
+```
+```sh
+curl -v -XPOST -H "Content-type: application/json" -d "{\"token\": \"bFpZryM8eUwksmAi\", \"registers\": {\"hvac.loop2_1.fan.max_speed\": 30}}" "http://192.168.0.53:8890/api/v1/bgerp/registers/set"
+```
+```sh
+curl -v -XPOST -H "Content-type: application/json" -d "{\"token\": \"bFpZryM8eUwksmAi\", \"registers\": {\"hvac.enabled\": false}}" "http://192.168.0.53:8890/api/v1/bgerp/registers/set"
+```
+```sh
+curl -v -XPOST -H "Content-type: application/json" -d "{\"token\": \"bFpZryM8eUwksmAi\", \"registers\": {\"hvac.enabled\": true}}" "http://192.168.0.53:8890/api/v1/bgerp/registers/set"
 ```
