@@ -23,6 +23,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 
+from utils.logic.state_machine import StateMachine
+
 from devices.base_device import BaseDevice
 
 from devices.factories.valve.valve_state import ValveState
@@ -63,11 +65,17 @@ class BaseValve(BaseDevice):
 
 #region Attributes
 
-    _valve_state = ValveState.NONE
+    _state = None
 
     __target_position = 0
 
-    __current_position = 0
+    _current_position = 0
+
+    _min_pos = 0
+    """Minimum allowed position."""
+
+    _max_pos = 100
+    """Maximum allowed position."""
 
 #endregion
 
@@ -77,19 +85,94 @@ class BaseValve(BaseDevice):
 
         super().__init__(config)
 
+        self._state = StateMachine(ValveState.NONE)
+
 #endregion
 
 #region Properties
 
     @property
+    def min_pos(self):
+        """Minimum position.
+
+        Returns:
+            float: Minimum position.
+        """
+        return self._min_pos
+
+    @min_pos.setter
+    def min_pos(self, value):
+        """Minimum position.
+
+        Args:
+            value (float): Minimum position.
+        """
+
+        in_value = value
+
+        if value > 100:
+            in_value = 100
+
+        if value < 0:
+            in_value = 0
+
+        if in_value > self.max_pos:
+            in_value = self.max_pos
+
+        self._min_pos = value
+
+    @property
+    def max_pos(self):
+        """Maximum position.
+
+        Returns:
+            float: Maximum position.
+        """
+        return self._max_pos
+
+    @max_pos.setter
+    def max_pos(self, value):
+        """Maximum position.
+
+        Args:
+            value (float): Maximum position.
+        """
+
+        in_value = value
+
+        if value > 100:
+            in_value = 100
+
+        if value < 0:
+            in_value = 0
+
+        if value < self.min_pos:
+            in_value = self.min_pos
+
+        self._max_pos = in_value
+
+
+    @property
     def current_position(self):
 
-        return self.__current_position
+        return self._current_position
 
     @property
     def target_position(self):
 
         return self.__target_position
+
+    def in_place(self):
+        """Returns if the valve is in place."""
+
+        in_place = False
+
+        delta = abs(self.current_position - self.target_position)
+
+        if delta < 0.1:
+            in_place = True
+
+        return in_place
 
     @target_position.setter
     def target_position(self, position):
@@ -102,16 +185,20 @@ class BaseValve(BaseDevice):
         if position == self.__target_position:
             return
 
-        if position > 100:
+        if self.target_position > 100:
             position = 100
 
-        elif position < 0:
+        if self.target_position > self.max_pos:
+            position = self.max_pos
+
+        if self.target_position < 0:
             position = 0
 
-        self.__target_position = position
-        self._valve_state.set_state(ValveState.Prepare)
+        if self.target_position < self.min_pos:
+            position = self.min_pos
 
-        # self.__logger.debug("Set position of {} to {}".format(self.name, self.__target_position))
+        self.__target_position = position
+        self._state.set_state(ValveState.Prepare)
 
 #endregion
 
@@ -119,27 +206,5 @@ class BaseValve(BaseDevice):
 
 #region Public Methods
 
-    def get_pos(self):
-        """Set position of the output.
-
-        Args:
-            position (int): Output position.
-        """
-
-        return 0
-
-    def set_pos(self, position):
-        """Set position of the output.
-
-        Args:
-            position (int): Output position.
-        """
-
-        return 0
-
-    def in_place(self):
-        """Returns if the valve is in place."""
-
-        return 0
 
 #endregion
