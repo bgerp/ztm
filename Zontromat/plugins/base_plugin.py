@@ -68,6 +68,10 @@ class BasePlugin(Configuarable):
     """Registers
     """
 
+    __ready_flag = False
+
+    __in_cycle_flag = False
+
 #endregion
 
 #region Constructor / Destructor
@@ -97,6 +101,24 @@ class BasePlugin(Configuarable):
 #endregion
 
 #region Public Methods
+
+    def ready(self, value):
+
+        self.__ready_flag = value
+
+    def is_ready(self):
+
+        return self.__ready_flag
+
+    def in_cycle(self, value):
+
+        self.__in_cycle_flag = value
+
+    def wait(self):
+
+        while self.__in_cycle_flag == True:
+            pass
+
 
     def init(self):
         """Initialize the device."""
