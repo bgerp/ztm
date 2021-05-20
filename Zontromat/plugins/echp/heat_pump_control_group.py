@@ -286,27 +286,43 @@ class HeatPumpControllGroup(BasePlugin):
         """Destructor
         """
 
-        super().__del__()
-
         # Valve Control Groups
-        del self.__vcg_cold_buff
-        del self.__vcg_cold_geo
-        # del self.__v_warm_geo
-        # del self.__v_warm_floor
-        # del self.__v_hot
+        if self.__vcg_cold_buff is not None:
+            del self.__vcg_cold_buff
+
+        if self.__vcg_cold_geo is not None:
+            del self.__vcg_cold_geo
+
+        if self.__v_warm_geo is not None:
+            del self.__v_warm_geo
+
+        if self.__v_warm_floor is not None:
+            del self.__v_warm_floor
+
+        if self.__v_hot is not None:
+            del self.__v_hot
 
         # Thermal agents pumps.
-        del self.__cold_water_pump
-        del self.__hot_water_pump
-        del self.__warm_g_water_pump
-        del self.__warm_p_water_pump
+        if self.__cold_water_pump is not None:
+            del self.__cold_water_pump
+        
+        if self.__hot_water_pump is not None:
+            del self.__hot_water_pump
+        
+        if self.__warm_g_water_pump is not None:
+            del self.__warm_g_water_pump
+        
+        if self.__warm_p_water_pump is not None:
+            del self.__warm_p_water_pump
 
         # Heat pump.
-        del self.__heat_pump
+        if self.__heat_pump is not None:
+            del self.__heat_pump
+
+        super().__del__()
 
         if self.__logger is not None:
             del self.__logger
-
 #endregion
 
 #region Private Methods

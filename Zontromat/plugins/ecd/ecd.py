@@ -288,11 +288,6 @@ class EnergyCenterDistribution(BasePlugin):
         """Destructor
         """
 
-        super().__del__()
-
-        if self.__logger is not None:
-            del self.__logger
-
         # Worm circle (PURPLE)
         if self.__v_foyer is not None:
             del self.__v_foyer
@@ -339,6 +334,11 @@ class EnergyCenterDistribution(BasePlugin):
 
         if self.__v_short_green_purple is not None:
             del self.__v_short_green_purple
+
+        super().__del__()
+
+        if self.__logger is not None:
+            del self.__logger
 
 #region Private Methods
 

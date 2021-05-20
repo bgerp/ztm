@@ -199,11 +199,6 @@ class AirConditioner(BasePlugin):
     def __del__(self):
         """Destructor"""
 
-        super().__del__()
-
-        if self.__logger is not None:
-            del self.__logger
-
         if self.__loop1_fan_dev is not None:
             del self.__loop1_fan_dev
 
@@ -245,6 +240,11 @@ class AirConditioner(BasePlugin):
 
         if self.__queue_temperatures is not None:
             del self.__queue_temperatures
+
+        super().__del__()
+
+        if self.__logger is not None:
+            del self.__logger
 
 #endregion
 
@@ -1051,30 +1051,30 @@ class AirConditioner(BasePlugin):
 
         if self.__thermal_mode.is_state(ThermalMode.COLD_SEASON):
             if thermal_force > 0:
-                self.__loop1_valve_dev.set_pos(0)
-                self.__loop2_valve_dev.set_pos(0)
+                self.__loop1_valve_dev.target_position = 0
+                self.__loop2_valve_dev.target_position = 0
             elif thermal_force <= 0:
-                self.__loop1_valve_dev.set_pos(100)
-                self.__loop2_valve_dev.set_pos(100)
+                self.__loop1_valve_dev.target_position = 100
+                self.__loop2_valve_dev.target_position = 100
 
         elif self.__thermal_mode.is_state(ThermalMode.TRANSISION_SEASON):
             if thermal_force < 0:
-                self.__loop1_valve_dev.set_pos(100)
-                self.__loop2_valve_dev.set_pos(0)
+                self.__loop1_valve_dev.target_position = 100
+                self.__loop2_valve_dev.target_position = 0
             elif thermal_force > 0:
-                self.__loop1_valve_dev.set_pos(0)
-                self.__loop2_valve_dev.set_pos(100)
+                self.__loop1_valve_dev.target_position = 0
+                self.__loop2_valve_dev.target_position = 100
             else:
-                self.__loop1_valve_dev.set_pos(0)
-                self.__loop2_valve_dev.set_pos(0)
+                self.__loop1_valve_dev.target_position = 0
+                self.__loop2_valve_dev.target_position = 0
 
         elif self.__thermal_mode.is_state(ThermalMode.WARM_SEASON):
             if thermal_force < 0:
-                self.__loop1_valve_dev.set_pos(100)
-                self.__loop2_valve_dev.set_pos(100)
+                self.__loop1_valve_dev.target_position = 100
+                self.__loop2_valve_dev.target_position = 100
             elif thermal_force > 0:
-                self.__loop1_valve_dev.set_pos(0)
-                self.__loop2_valve_dev.set_pos(0)
+                self.__loop1_valve_dev.target_position = 0
+                self.__loop2_valve_dev.target_position = 0
 
         # If thermal mode set properly apply thermal force
         if not self.__thermal_mode.is_state(ThermalMode.NONE):
@@ -1128,7 +1128,6 @@ class AirConditioner(BasePlugin):
 
         # Shutting down all the devices.
         self.__set_thermal_force(0)
-
 
     def update(self):
         """ Update cycle.
@@ -1207,12 +1206,12 @@ class AirConditioner(BasePlugin):
             self.__set_thermal_force(self.__thermal_force)
 
             if self.__loop1_valve_dev is not None:
-                if self.__loop1_valve_dev.set_point <= 0:
+                if self.__loop1_valve_dev.current_position <= 0:
                     if self.__loop1_leak_test is not None: 
                         self.__loop1_leak_test.run()
 
             if self.__loop2_valve_dev is not None:
-                if self.__loop2_valve_dev.set_point <= 0:
+                if self.__loop2_valve_dev.current_position <= 0:
                     if self.__loop2_leak_teat is not None: 
                         self.__loop2_leak_teat.run()
 
@@ -1229,6 +1228,8 @@ class AirConditioner(BasePlugin):
         #     # Update current time.
         #     self.__lastupdate_delta_time = time.time()
 
+        self.__loop1_valve_dev.update()
+        self.__loop2_valve_dev.update()
         self.__loop1_fan_dev.update()
         self.__loop2_fan_dev.update()
 
@@ -1239,6 +1240,8 @@ class AirConditioner(BasePlugin):
         self.__logger.info("Shutting down the {} {}".format(self.name, self.__identifier))
         self.__set_thermal_force(0)
 
+        self.__loop1_valve_dev.shutdown()
+        self.__loop2_valve_dev.shutdown()
         self.__loop1_fan_dev.shutdown()
         self.__loop2_fan_dev.shutdown()
 

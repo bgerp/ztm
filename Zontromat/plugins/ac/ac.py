@@ -89,8 +89,14 @@ class AccessControl(BasePlugin):
     def __del__(self):
         """Destructor"""
 
-        del self.__logger
-        del self.__security_zones
+        if self.__security_zones is not None:
+            del self.__security_zones
+
+
+        super().__del__()
+
+        if self.__logger is not None:
+            del self.__logger
 
 #endregion
 

@@ -84,14 +84,14 @@ class EnergyCenterHeatpump(BasePlugin):
         """Destructor
         """
 
+        # Heat pump
+        if self.__heat_pump_control_group is not None:
+            del self.__heat_pump_control_group
+
         super().__del__()
 
         if self.__logger is not None:
             del self.__logger
-
-        # Heat pump
-        if self.__heat_pump_control_group is not None:
-            del self.__heat_pump_control_group
 
 #endregion
 
@@ -115,9 +115,10 @@ class EnergyCenterHeatpump(BasePlugin):
             name="Heat Pump Controll Group",
             key="{}.hpcg".format(self.key),
             controller=self._controller,
-            registers=self._registers) # Add level down if more then one group is controlled.
+            registers=self._registers)
 
-        self.__heat_pump_control_group.init()
+        if self.__heat_pump_control_group is not None:
+            self.__heat_pump_control_group.init()
 
     def update(self):
         """Update the plugin state.

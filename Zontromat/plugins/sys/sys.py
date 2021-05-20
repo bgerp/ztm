@@ -111,8 +111,14 @@ class Sys(BasePlugin):
 #region Destructor
 
     def __del__(self):
-        del self.__logger
-        del self.__blink_timer
+
+        if self.__blink_timer is not None:
+            del self.__blink_timer
+
+        super().__del__()
+
+        if self.__logger is not None:
+            del self.__logger
 
 #endregion
 

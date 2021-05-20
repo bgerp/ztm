@@ -111,15 +111,15 @@ class EnergyCenterCommon(BasePlugin):
         """Destructor
         """
 
-        super().__del__()
-
-        if self.__logger is not None:
-            del self.__logger
-
         # Boilers (RED)
         for boiler in self.__boilers:
             if boiler is not None:
                 del boiler
+
+        super().__del__()
+
+        if self.__logger is not None:
+            del self.__logger
 
 #region Private Methods
 

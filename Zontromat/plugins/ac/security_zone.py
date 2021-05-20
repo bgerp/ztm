@@ -139,8 +139,6 @@ class SecurityZone(BasePlugin):
     def __del__(self):
         """Destructor"""
 
-        del self.__logger
-
         if self.__entry_reader is not None:
             del self.__entry_reader
 
@@ -149,6 +147,11 @@ class SecurityZone(BasePlugin):
 
         if self.__open_timer is not None:
             del self.__open_timer
+
+        super().__del__()
+
+        if self.__logger is not None:
+            del self.__logger
 
 #endregion
 
