@@ -340,6 +340,22 @@ class PluginsManager:
             self.__plugins[name].shutdown()
             del self.__plugins[name]
 
+    def __vent_enabled(self, register):
+
+        # Check data type.
+        if not register.data_type == "bool":
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        name = register.base_name
+        if register.value and name not in self.__plugins:
+            self.__plugins[name] = self.__load_plugin(name)
+            self.__plugins[name].init()
+
+        elif not register.value and name in self.__plugins:
+            self.__plugins[name].shutdown()
+            del self.__plugins[name]
+
 #endregion
 
 #region Private Methods
@@ -398,7 +414,14 @@ class PluginsManager:
         if register is not None:
             register.update_handlers = self.__echp_enabled
             # only for test purposes.
+            # register.update()
+
+        register = self.__registers.by_name("vent.enabled")
+        if register is not None:
+            register.update_handlers = self.__vent_enabled
+            # only for test purposes.
             register.update()
+
 
 #endregion
 
