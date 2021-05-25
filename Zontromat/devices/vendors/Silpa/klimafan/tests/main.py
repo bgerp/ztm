@@ -92,9 +92,9 @@ def main():
     # Convector interface.
     convector_config = {
             "name": "Test convector",
-            "stage_1": "RO0",
-            "stage_2": "RO1",
-            "stage_3": "RO2",
+            "stage1": "RO0",
+            "stage2": "RO1",
+            "stage3": "RO2",
             "controller": controller
         }
     convector = Convector(convector_config)
