@@ -106,7 +106,6 @@ class FLX05F(BaseValve):
 
         # Create logger.
         self.__logger = get_logger(__name__)
-        self.__logger.info("Starting up the: {}".format(self.name))
 
         self.__move_timer = Timer()
 
@@ -115,8 +114,6 @@ class FLX05F(BaseValve):
 
         if "output_ccw" in config:
             self.__output_ccw = config["output_ccw"]
-
-        self.target_position = 0
 
     def __del__(self):
         """Destructor
@@ -184,7 +181,11 @@ class FLX05F(BaseValve):
         """Init the valve.
         """
 
-        self.shutdown()
+        self.target_position = 0
+        while self.current_position != self.target_position:
+            self.update()
+
+        self.__logger.debug("Starting up the: {}".format(self.name))
 
     def shutdown(self):
         """Shutdown the valve.
@@ -200,13 +201,13 @@ class FLX05F(BaseValve):
         """Update the valve state.
         """
 
-        if self._valve_state.is_state(ValveState.Prepare):
+        if self._state.is_state(ValveState.Prepare):
 
             delta_pos = self.target_position - self.current_position
 
             if delta_pos == 0:
                 self.__stop()
-                self._valve_state.set_state(ValveState.Wait)
+                self._state.set_state(ValveState.Wait)
                 return
 
             time_to_move = self.__to_time(abs(delta_pos))
@@ -221,28 +222,28 @@ class FLX05F(BaseValve):
             elif delta_pos < 0:
                 self.__turn_ccw()
 
-            self._valve_state.set_state(ValveState.Execute)
+            self._state.set_state(ValveState.Execute)
 
-        elif self._valve_state.is_state(ValveState.Execute):
+        elif self._state.is_state(ValveState.Execute):
 
             self.__move_timer.update()
             if self.__move_timer.expired:
                 self.__move_timer.clear()
                 self.__stop()
                 self.__current_position = self.__target_position
-                self._valve_state.set_state(ValveState.Wait)
+                self._state.set_state(ValveState.Wait)
 
             input_fb = self.__reed_fb()
             if input_fb:
                 self.__stop()
                 self.__logger.warning("{} has raised end position.".format(self.name))
                 self.__current_position = self.__target_position
-                self._valve_state.set_state(ValveState.Wait)
+                self._state.set_state(ValveState.Wait)
 
-        elif self._valve_state.is_state(ValveState.Calibrate):
+        elif self._state.is_state(ValveState.Calibrate):
 
             # TODO: Calibration sequence.
 
-            self._valve_state.set_state(ValveState.Wait)
+            self._state.set_state(ValveState.Wait)
 
 #endregion

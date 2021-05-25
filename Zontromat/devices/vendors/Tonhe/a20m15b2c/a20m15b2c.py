@@ -159,7 +159,9 @@ class A20M15B2C(BaseValve):
         """Init the module.
         """
 
-        self.shutdown()
+        self.min_pos = 0
+        self.target_position = 0
+        self.update()
 
     def update(self):
 
