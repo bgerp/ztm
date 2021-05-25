@@ -400,6 +400,25 @@ class ZL101PCC(BaseController):
         else:
             state = bool(value)
 
+        # Branch if it is remote GPIO.
+        if self.is_valid_remote_gpio(l_pin):
+            data = self.parse_remote_gpio(l_pin)
+
+            # Read the device.
+            read_response = self.__modbus_rtu_client.read_coils(
+                address=data["io_reg"],
+                count=data["io_index"]+1,
+                unit=data["mb_id"])
+
+            # Get the bunch of the bits.
+            bits = read_response.bits
+
+            # Set target bit.
+            bits[data["io_index"]] = state
+
+            write_response = self.__modbus_rtu_client.write_coils(data["io_reg"], bits, unit=data["mb_id"])
+
+            return state
 
         gpio = self.__map[pin]
         
