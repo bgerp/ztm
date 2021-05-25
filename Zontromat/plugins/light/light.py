@@ -144,7 +144,7 @@ class Light(BasePlugin):
 
             params = register.value.split("/")
 
-            if len(params) < 2:                
+            if len(params) <= 2:                
                 raise ValueError("Not enough parameters.")
 
             self.__light_sensor = LightSensorFactory.create(

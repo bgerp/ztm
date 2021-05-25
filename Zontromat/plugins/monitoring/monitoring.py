@@ -291,7 +291,7 @@ class Monitoring(BasePlugin):
             # Split parammeters
             params = register.value.split("/")
 
-            if len(params) < 2:                
+            if len(params) <= 2:                
                 raise ValueError("Not enough parameters.")
 
             self.__power_analyser = PowerAnalyserFactory.create(

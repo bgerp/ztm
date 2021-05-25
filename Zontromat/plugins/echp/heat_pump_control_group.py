@@ -232,7 +232,7 @@ class HeatPumpControllGroup(BasePlugin):
 
             params = register.value.split("/")
 
-            if len(params) < 2:                
+            if len(params) <= 2:                
                 raise ValueError("Not enough parameters.")
 
             self.__cold_water_pump = PumpFactory.create(name="WP Cold", controller=self._controller, params=params)
@@ -243,7 +243,7 @@ class HeatPumpControllGroup(BasePlugin):
 
             params = register.value.split("/")
 
-            if len(params) < 2:                
+            if len(params) <= 2:                
                 raise ValueError("Not enough parameters.")
 
             self.__hot_water_pump = PumpFactory.create(name="WP Hot", controller=self._controller, params=params)
@@ -255,7 +255,7 @@ class HeatPumpControllGroup(BasePlugin):
 
             params = register.value.split("/")
 
-            if len(params) < 2:                
+            if len(params) <= 2:                
                 raise ValueError("Not enough parameters.")
 
             self.__warm_g_water_pump = PumpFactory.create(name="WP Warm G", controller=self._controller, params=params)
@@ -266,7 +266,7 @@ class HeatPumpControllGroup(BasePlugin):
 
             params = register.value.split("/")
 
-            if len(params) < 2:                
+            if len(params) <= 2:                
                 raise ValueError("Not enough parameters.")
 
             self.__warm_p_water_pump = PumpFactory.create(name="WP Warm P", controller=self._controller, params=params)
@@ -277,7 +277,7 @@ class HeatPumpControllGroup(BasePlugin):
 
             params = register.value.split("/")
 
-            if len(params) < 2:                
+            if len(params) <= 2:                
                 raise ValueError("Not enough parameters.")
 
             self.__heat_pump = HeatPumpFactory.create(name="Heat Pump", controller=self._controller, params=params)
