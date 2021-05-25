@@ -1105,7 +1105,7 @@ class Evok(BaseController):
 
         is_remote = False
         try:
-            is_remote = self.is_remote_gpio(pin)
+            is_remote = self.is_valid_remote_gpio(pin)
         except Exception as exception:
             pass
 
