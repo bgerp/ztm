@@ -203,9 +203,9 @@ None
 | Air temp sensor lower - device/type/circuit | hvac.air_temp_lower.settings | str | Dallas/DS18B20/28FFC4EE00170349 |
 | Air temp sensor upper - device/type/circuit | hvac.air_temp_upper.settings | str | Dallas/DS18B20/28FF2B70C11604B7 |
 | Convector - vendor/model | hvac.convector.settings | str | silpa/klimafan |
-| Convector stage 1 output | hvac.convector.stage_1.output | str | RO0 |
-| Convector stage 2 output | hvac.convector.stage_2.output | str | RO1 |
-| Convector stage 3 output | hvac.convector.stage_3.output | str | RO2 |
+| Convector stage 1 output | hvac.convector.stage1.output | str | RO0 |
+| Convector stage 2 output | hvac.convector.stage2.output | str | RO1 |
+| Convector stage 3 output | hvac.convector.stage3.output | str | RO2 |
 | Measuring delta time | hvac.delta_time | int | 5 |
 | Enabled | hvac.enabled | int | false |
 | Goal of the building temperature | hvac.goal_building_temp | int | 20 |
