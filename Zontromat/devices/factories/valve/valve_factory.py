@@ -60,7 +60,7 @@ class ValveFactory:
 
     @staticmethod
     def create(**config):
-        """Create valve device instace."""
+        """Create device instace."""
 
         # The device.
         device = None
