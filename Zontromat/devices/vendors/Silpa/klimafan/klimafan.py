@@ -89,7 +89,7 @@ class Klimafan(BaseDevice):
     def init(self):
         """Init the convector."""
 
-        self.shutdown()
+        self.set_state(0)
 
     def get_state(self):
         """Return value of the output.
@@ -114,53 +114,29 @@ class Klimafan(BaseDevice):
 
         self.__state = state
 
-        self._controller.digital_write(self._config["stage_1"], 0)
-        self._controller.digital_write(self._config["stage_2"], 0)
-        self._controller.digital_write(self._config["stage_3"], 0)
+        self._controller.digital_write(self._config["stage1"], 0)
+        self._controller.digital_write(self._config["stage2"], 0)
+        self._controller.digital_write(self._config["stage3"], 0)
 
         if self.__state == 1:
-            self._controller.digital_write(self._config["stage_1"], 1)
-            self._controller.digital_write(self._config["stage_2"], 0)
-            self._controller.digital_write(self._config["stage_3"], 0)
+            self._controller.digital_write(self._config["stage1"], 1)
+            self._controller.digital_write(self._config["stage2"], 0)
+            self._controller.digital_write(self._config["stage3"], 0)
 
         elif self.__state == 2:
-            self._controller.digital_write(self._config["stage_1"], 0)
-            self._controller.digital_write(self._config["stage_2"], 1)
-            self._controller.digital_write(self._config["stage_3"], 0)
+            self._controller.digital_write(self._config["stage1"], 0)
+            self._controller.digital_write(self._config["stage2"], 1)
+            self._controller.digital_write(self._config["stage3"], 0)
 
         elif self.__state == 3:
-            self._controller.digital_write(self._config["stage_1"], 0)
-            self._controller.digital_write(self._config["stage_2"], 0)
-            self._controller.digital_write(self._config["stage_3"], 1)
+            self._controller.digital_write(self._config["stage1"], 0)
+            self._controller.digital_write(self._config["stage2"], 0)
+            self._controller.digital_write(self._config["stage3"], 1)
 
         self.__logger.debug("{} @ {}".format(self.name, self.__state))
 
-#endregion
+    def shutdown(self):
 
-#region Public Static Methods
-
-    @staticmethod
-    def create(name, key, registers, controller):
-        """Value of the thermometer."""
-
-        instance = None
-
-        stage_1 = registers.by_name(key + ".stage_1.output").value
-        stage_2 = registers.by_name(key + ".stage_2.output").value
-        stage_3 = registers.by_name(key + ".stage_3.output").value
-
-        if stage_1 is not None and\
-            stage_2 is not None and\
-            stage_3 is not None:
-
-            instance = Klimafan(
-                name=name,
-                stage_1=stage_1,
-                stage_2=stage_2,
-                stage_3=stage_3,
-                controller=controller
-            )
-
-        return instance
+        self.set_state(0)
 
 #endregion
