@@ -36,9 +36,8 @@ from plugins.hvac.thermal_mode import ThermalMode
 from devices.factories.thermal_sensor.thermal_sensor_factory import ThermalSensorFactory
 from devices.factories.valve.valve_factory import ValveFactory
 from devices.factories.fan.fan_factory import FanFactory
+from devices.factories.convector.convector_factory import ConvectorFactory
 
-
-from devices.vendors.Silpa.klimafan.klimafan import Klimafan
 from devices.vendors.no_vendor_1.flowmeter import Flowmeter
 
 from devices.tests.leak_test.leak_test import LeakTest
@@ -87,7 +86,7 @@ class AirConditioner(BasePlugin):
     """Logger"""
 
     __identifier = 0
-    """Air conditioner identifier."""
+    """Number identifier."""
 
 
     __temp_proc = None
@@ -110,9 +109,6 @@ class AirConditioner(BasePlugin):
     """Convector device."""
 
 
-    __loop1_fan_dev = None
-    """Loop 3 fan device."""
-
     __loop1_temp_dev = None
     """Loop 2 thermometer."""
 
@@ -125,9 +121,6 @@ class AirConditioner(BasePlugin):
     __loop1_leak_test = None
     """Loop 1 leak test."""
 
-
-    __loop2_fan_dev = None
-    """Loop 1 fan device."""
 
     __loop2_temp_dev = None
     """Loop 2 thermometer."""
@@ -199,9 +192,6 @@ class AirConditioner(BasePlugin):
     def __del__(self):
         """Destructor"""
 
-        if self.__loop1_fan_dev is not None:
-            del self.__loop1_fan_dev
-
         if self.__loop1_temp_dev is not None:
             del self.__loop1_temp_dev
 
@@ -210,9 +200,6 @@ class AirConditioner(BasePlugin):
 
         if self.__loop1_cnt_dev is not None:
             del self.__loop1_cnt_dev
-
-        if self.__loop2_fan_dev is not None:
-            del self.__loop2_fan_dev
 
         if self.__loop2_temp_dev is not None:
             del self.__loop2_temp_dev
@@ -409,7 +396,7 @@ class AirConditioner(BasePlugin):
 
             params = register.value.split("/")
 
-            if len(params) < 2:                
+            if len(params) <= 2:                
                 raise ValueError("Not enough parameters.")
 
             self.__air_temp_cent_dev = ThermalSensorFactory.create(
@@ -438,7 +425,7 @@ class AirConditioner(BasePlugin):
 
             params = register.value.split("/")
 
-            if len(params) < 2:                
+            if len(params) <= 2:                
                 raise ValueError("Not enough parameters.")
 
             self.__air_temp_lower_dev = ThermalSensorFactory.create(
@@ -467,7 +454,7 @@ class AirConditioner(BasePlugin):
 
             params = register.value.split("/")
 
-            if len(params) < 2:                
+            if len(params) <= 2:                
                 raise ValueError("Not enough parameters.")
 
             self.__air_temp_upper_dev = ThermalSensorFactory.create(
@@ -497,11 +484,17 @@ class AirConditioner(BasePlugin):
             return
 
         if register.value != verbal_const.OFF and self.__convector_dev is None:
-            self.__convector_dev = Klimafan.create(\
-                "Convector 1",\
-                "{}.convector_{}".format(self.key, self.__identifier),\
-                self._registers,\
-                self._controller)
+
+            params = register.value.split("/")
+
+            if len(params) <= 2:                
+                raise ValueError("Not enough parameters.")
+
+            self.__convector_dev = ConvectorFactory.create(
+                name="Convector_{}".format(self.__identifier),
+                controller=self._controller,
+                params=params
+            )
 
             if self.__convector_dev is not None:
                 self.__convector_dev.init()
@@ -540,60 +533,6 @@ class AirConditioner(BasePlugin):
             del self.__loop1_cnt_dev
             del self.__loop1_leak_test
 
-    def __loop1_fan_settings_cb(self, register):
-
-        # Check data type.
-        if not register.data_type == "str":
-            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
-            return
-
-        if register.value != verbal_const.OFF and self.__loop1_fan_dev is None:
-
-            params = register.value.split("/")
-
-            if len(params) < 2:                
-                raise ValueError("Not enough parameters.")
-
-            self.__loop1_fan_dev = FanFactory.create(
-                controller=self._controller,
-                name="Loop 1 fan",
-                params=params)
-
-            if self.__loop1_fan_dev is not None:
-                self.__loop1_fan_dev.init()
-
-        elif register.value == verbal_const.OFF and self.__loop1_fan_dev is not None:
-            self.__loop1_fan_dev.shutdown()
-            del self.__loop1_fan_dev
-
-    def __loop1_fan_min_cb(self, register):
-
-        # Check data type.
-        if not (register.data_type == "float" or register.data_type == "int"):
-            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
-            return
-
-        if register.value < 0:
-            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
-            return
-
-        if self.__loop1_fan_dev is not None:
-            self.__loop1_fan_dev.min_speed = register.value
-
-    def __loop1_fan_max_cb(self, register):
-
-        # Check data type.
-        if not (register.data_type == "float" or register.data_type == "int"):
-            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
-            return
-
-        if register.value > 100:
-            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
-            return
-
-        if self.__loop1_fan_dev is not None:
-            self.__loop1_fan_dev.max_speed = register.value
-
     def __loop1_temp_settings_cb(self, register):
 
         # Check data type.
@@ -605,7 +544,7 @@ class AirConditioner(BasePlugin):
 
             params = register.value.split("/")
 
-            if len(params) < 2:                
+            if len(params) <= 2:                
                 raise ValueError("Not enough parameters.")
 
             self.__loop1_temp_dev = ThermalSensorFactory.create(
@@ -631,7 +570,7 @@ class AirConditioner(BasePlugin):
 
             params = register.value.split("/")
 
-            if len(params) < 2:                
+            if len(params) <= 2:                
                 raise ValueError("Not enough parameters.")
 
             self.__loop1_valve_dev = ValveFactory.create(
@@ -675,60 +614,6 @@ class AirConditioner(BasePlugin):
             del self.__loop2_cnt_dev
             del self.__loop2_leak_teat
 
-    def __loop2_fan_settings_cb(self, register):
-
-        # Check data type.
-        if not register.data_type == "str":
-            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
-            return
-
-        if register.value != verbal_const.OFF and self.__loop2_fan_dev is None:
-
-            params = register.value.split("/")
-
-            if len(params) < 2:                
-                raise ValueError("Not enough parameters.")
-
-            self.__loop2_fan_dev = FanFactory.create(
-                controller=self._controller,
-                name="Loop 2 fan",
-                params=params)
-
-            if self.__loop2_fan_dev is not None:
-                self.__loop2_fan_dev.init()
-
-        elif register.value == verbal_const.OFF and self.__loop2_fan_dev is not None:
-            self.__loop2_fan_dev.shutdown()
-            del self.__loop2_fan_dev
-
-    def __loop2_fan_min_cb(self, register):
-
-        # Check data type.
-        if not (register.data_type == "float" or register.data_type == "int"):
-            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
-            return
-
-        if register.value < 0:
-            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
-            return
-
-        if self.__loop2_fan_dev is not None:
-            self.__loop2_fan_dev.min_speed = register.value
-
-    def __loop2_fan_max_cb(self, register):
-
-        # Check data type.
-        if not (register.data_type == "float" or register.data_type == "int"):
-            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
-            return
-
-        if register.value > 100:
-            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
-            return
-
-        if self.__loop2_fan_dev is not None:
-            self.__loop2_fan_dev.max_speed = register.value
-
     def __loop2_temp_settings_cb(self, register):
 
         # Check data type.
@@ -740,7 +625,7 @@ class AirConditioner(BasePlugin):
 
             params = register.value.split("/")
 
-            if len(params) < 2:                
+            if len(params) <= 2:                
                 raise ValueError("Not enough parameters.")
 
             self.__loop2_temp_dev = ThermalSensorFactory.create(
@@ -766,7 +651,7 @@ class AirConditioner(BasePlugin):
 
             params = register.value.split("/")
 
-            if len(params) < 2:                
+            if len(params) <= 2:                
                 raise ValueError("Not enough parameters.")
 
             self.__loop2_valve_dev = ValveFactory.create(
@@ -780,6 +665,38 @@ class AirConditioner(BasePlugin):
         elif register.value == verbal_const.OFF and self.__loop2_valve_dev is not None:
             self.__loop2_valve_dev.shutdown()
             del self.__loop2_valve_dev
+
+#endregion
+
+#region Private Methods (Registers envm)
+
+    def __envm_energy_cb(self, register):
+
+        # Check data type.
+        if not ((register.data_type == "int") or (register.data_type == "float")):
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        # TODO: Get energy mode for the building.
+        pass
+
+#endregion
+
+#region Private Methods (Fan Interface)
+
+    def __set_upper_fan(self, value):
+
+        # Air temperatures.
+        upper_fan = self._registers.by_name("vent.upper_{}.fan.speed".format(self.__identifier))
+        if upper_fan is not None:
+            upper_fan.value = value
+
+    def __set_lower_fan(self, value):
+
+        # Air temperatures.
+        lower_fan = self._registers.by_name("vent.upper_{}.fan.speed".format(self.__identifier))
+        if lower_fan is not None:
+            lower_fan.value = value
 
 #endregion
 
@@ -850,21 +767,6 @@ class AirConditioner(BasePlugin):
             loop1_cnt_enabled.update_handlers = self.__loop1_cnt_input_cb
             loop1_cnt_enabled.update()
 
-        loop1_fan_enabled = self._registers.by_name("{}.loop1_{}.fan.settings".format(self.key, self.__identifier))
-        if loop1_fan_enabled is not None:
-            loop1_fan_enabled.update_handlers = self.__loop1_fan_settings_cb
-            loop1_fan_enabled.update()
-
-        loop1_fan_min = self._registers.by_name("{}.loop1_{}.fan.min_speed".format(self.key, self.__identifier))
-        if loop1_fan_min is not None:
-            loop1_fan_min.update_handlers = self.__loop1_fan_min_cb
-            loop1_fan_min.update()
-
-        loop1_fan_max = self._registers.by_name("{}.loop1_{}.fan.max_speed".format(self.key, self.__identifier))
-        if loop1_fan_max is not None:
-            loop1_fan_max.update_handlers = self.__loop1_fan_max_cb
-            loop1_fan_max.update()
-
         loop1_temp_enabled = self._registers.by_name("{}.loop1_{}.temp.settings".format(self.key, self.__identifier))
         if loop1_temp_enabled is not None:
             loop1_temp_enabled.update_handlers = self.__loop1_temp_settings_cb
@@ -881,21 +783,6 @@ class AirConditioner(BasePlugin):
             loop2_cnt_enabled.update_handlers = self.__loop2_cnt_input_cb
             loop1_cnt_enabled.update()
 
-        loop2_fan_enabled = self._registers.by_name("{}.loop2_{}.fan.settings".format(self.key, self.__identifier))
-        if loop2_fan_enabled is not None:
-            loop2_fan_enabled.update_handlers = self.__loop2_fan_settings_cb
-            loop2_fan_enabled.update()
-
-        loop2_fan_min = self._registers.by_name("{}.loop2_{}.fan.min_speed".format(self.key, self.__identifier))
-        if loop2_fan_min is not None:
-            loop2_fan_min.update_handlers = self.__loop2_fan_min_cb
-            loop2_fan_min.update()
-
-        loop2_fan_max = self._registers.by_name("{}.loop2_{}.fan.max_speed".format(self.key, self.__identifier))
-        if loop2_fan_max is not None:
-            loop2_fan_max.update_handlers = self.__loop2_fan_max_cb
-            loop2_fan_max.update()
-
         loop2_temp_enabled = self._registers.by_name("{}.loop2_{}.temp.settings".format(self.key, self.__identifier))
         if loop2_temp_enabled is not None:
             loop2_temp_enabled.update_handlers = self.__loop2_temp_settings_cb
@@ -911,6 +798,12 @@ class AirConditioner(BasePlugin):
         if window_closed_input is not None:
             window_closed_input.update_handlers = self.__window_closed_input_cb
             window_closed_input.update()
+
+        # Get the power mode of the building.
+        envm_energy = self._registers.by_name("envm.energy")
+        if envm_energy is not None:
+            envm_energy.update_handlers = self.__envm_energy_cb
+            envm_energy.update()
 
     def __update_thermometers_values(self):
 
@@ -1080,20 +973,20 @@ class AirConditioner(BasePlugin):
         if not self.__thermal_mode.is_state(ThermalMode.NONE):
             # Set upper fan.
             if thermal_force < 0:
-                self.__loop1_fan_dev.speed = abs(thermal_force)
+                self.__set_upper_fan(abs(thermal_force))
             else:
-                self.__loop1_fan_dev.speed = 0
+                self.__set_upper_fan(0)
 
             # Set lowe fan.
             if thermal_force > 0:
-                self.__loop2_fan_dev.speed = abs(thermal_force)
+                self.__set_lower_fan(abs(thermal_force))
             else:
-                self.__loop2_fan_dev.speed = 0
+                self.__set_lower_fan(0)
 
             # Set convector fan.
             conv_tf = l_scale(thermal_force, [0, 100], [0, 3])
-            conv_tf = int(conv_tf)
             conv_tf = abs(conv_tf)
+            conv_tf = int(conv_tf)
             self.__convector_dev.set_state(conv_tf)
 
 #endregion
@@ -1230,8 +1123,6 @@ class AirConditioner(BasePlugin):
 
         self.__loop1_valve_dev.update()
         self.__loop2_valve_dev.update()
-        self.__loop1_fan_dev.update()
-        self.__loop2_fan_dev.update()
 
     def shutdown(self):
         """Shutdown the tamper.
@@ -1242,7 +1133,5 @@ class AirConditioner(BasePlugin):
 
         self.__loop1_valve_dev.shutdown()
         self.__loop2_valve_dev.shutdown()
-        self.__loop1_fan_dev.shutdown()
-        self.__loop2_fan_dev.shutdown()
 
 #endregion
