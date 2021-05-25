@@ -115,6 +115,8 @@ class FLX05F(BaseValve):
         if "output_ccw" in config:
             self.__output_ccw = config["output_ccw"]
 
+        # TODO: Add config flags for the feedback GPIOs.
+
     def __del__(self):
         """Destructor
         """
@@ -243,6 +245,15 @@ class FLX05F(BaseValve):
         elif self._state.is_state(ValveState.Calibrate):
 
             # TODO: Calibration sequence.
+
+            # - Close the valve.
+            # - Ensure that the valve is closed 0deg.
+            # - Record the time in T0.
+            # - Open the valve.
+            # - Ensure the the valve is opened 90deg.
+            # - Record the time in T1.
+            # - Store (T0 - T1) in dT
+            # - Use dT and end position contacts to ensure that the valve is closed and opened. 
 
             self._state.set_state(ValveState.Wait)
 
