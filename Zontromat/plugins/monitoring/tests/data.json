@@ -122,9 +122,9 @@
     "ac2.time_to_open": 10,
     "cc.tank_temp.circuit": "28FFFCD0001703AE",
     "cc.tank_temp.enabled": 1,
-    "hvac.convector.stage_1.output": "RO0",
-    "hvac.convector.stage_2.output": "RO1",
-    "hvac.convector.stage_3.output": "RO2",
+    "hvac.convector.stage1.output": "RO0",
+    "hvac.convector.stage2.output": "RO1",
+    "hvac.convector.stage3.output": "RO2",
     "hc.electric_boiler.power": 1,
     "ac1.allowed_attendees": [
       "445E6046010080FF"
