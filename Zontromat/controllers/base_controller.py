@@ -223,7 +223,7 @@ class BaseController(Configuarable):
         mb_identifier = int(mb_identifier)
 
         # Validate the MODBUS range.
-        valid_mb_identifier = (mb_identifier > 0) and (mb_identifier < 255)
+        valid_mb_identifier = (mb_identifier > 0) and (mb_identifier < 247)
 
         if not valid_mb_identifier:
         #     raise ValueError("MODBUS identifier should be M1 to M254.")
