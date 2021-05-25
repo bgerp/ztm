@@ -28,6 +28,8 @@ from utils.logger import get_logger
 from devices.factories.valve.base_valve import BaseValve
 from devices.factories.valve.valve_state import ValveState
 
+from data import verbal_const
+
 #region File Attributes
 
 __author__ = "Orlin Dimitrov"
@@ -66,9 +68,6 @@ class A20M15B2C(BaseValve):
 
     __logger = None
     """Logger"""
-
-    __position = -1
-    """Position of the valve."""
 
     __feedback = None
     """Feedback of the valve position."""
@@ -164,27 +163,24 @@ class A20M15B2C(BaseValve):
         self.update()
 
     def update(self):
+        """Update the valve.
+        """
 
-        # Update current position.
-        position = self.__reed_fb()
+        # If the feedback is not switched off then read it.
+        if self.__feedback != verbal_const.OFF:
+            self._current_position = self.__reed_fb()
 
-        if self._current_position != position:
-            self._current_position = position
-
-            self.__logger.debug("{} valve @ {:3.3f}".format(self.name, self.current_position))
-
+        # Else just update the current position.
+        else:
+            if self._current_position != self.target_position:
+                self._current_position = self.target_position
 
         # If it is time then move the valve.
         if self._state.is_state(ValveState.Prepare):
 
-            if self.__position == self.target_position:
-                return
-
             self.__set_postion(self.target_position)
 
-            self.__position = self.target_position
-
-            self.__logger.debug("{} @ {}".format(self.name, self.__position))
+            self.__logger.debug("{} @ {}".format(self.name, self.target_position))
 
             self._state.set_state(ValveState.Wait) 
 
