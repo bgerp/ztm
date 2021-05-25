@@ -341,12 +341,22 @@ class ZL101PCC(BaseController):
             int: State of the pin.
         """
 
+        l_pin = pin.replace("!", "")
+        response = False
         state = False
 
         if self.__map is None:
             return state
 
         if not pin in self.__map:
+            return state
+
+        # Branch if it is remote GPIO.
+        if self.is_valid_remote_gpio(l_pin):
+            data = self.parse_remote_gpio(l_pin)
+
+            read_response = self.__modbus_rtu_client.read_discrete_inputs(data["io_reg"], data["io_index"], unit=data["mb_id"])
+
             return state
 
         # Read device digital inputs.
