@@ -70,8 +70,8 @@ class HVAC(BasePlugin):
     """Logger
     """
 
-    __thermal_zones = {}
-    """Thermal zones.
+    __zones = {}
+    """Zones.
     """
 
 #endregion
@@ -81,7 +81,7 @@ class HVAC(BasePlugin):
     def __del__(self):
         """Destructor"""
 
-        for zone in self.__thermal_zones:
+        for zone in self.__zones:
             if zone is not None:
                 del zone
 
@@ -95,7 +95,8 @@ class HVAC(BasePlugin):
 #region Public Methods
 
     def init(self):
-        """Init the HVACs."""
+        """Init the zones.
+        """
 
         self.__logger = get_logger(__name__)
         self.__logger.info("Starting up the {}".format(self.name))
@@ -105,7 +106,7 @@ class HVAC(BasePlugin):
         if reg_zones_count is not None:
             zones_count = reg_zones_count.value
 
-        # Security zones.
+        # Name the zones.
         prototype = "AC_{}"
         zones_count += 1
         for index in range(1, zones_count):
@@ -113,38 +114,40 @@ class HVAC(BasePlugin):
             # Create name.
             name = prototype.format(index)
 
-            self.__thermal_zones[name] = AirConditioner(\
+            self.__zones[name] = AirConditioner(\
                 registers=self._registers, controller=self._controller,\
                 identifier=index, key=self.key, name="AC")
 
             # Initialize the module.
-            self.__thermal_zones[name].init()
+            self.__zones[name].init()
 
         self.ready(True)
 
     def update(self):
-        """ Update cycle. """
+        """Update the zones.
+        """
 
         if not self.is_ready():
             return
 
         self.in_cycle(True)
 
-        for key in self.__thermal_zones:
-            self.__thermal_zones[key].update()
+        for key in self.__zones:
+            self.__zones[key].update()
 
         self.in_cycle(False)
 
     def shutdown(self):
-        """Shutdown the tamper."""
+        """Shutdown the zones.
+        """
 
         self.ready(False)
         self.wait()
 
         self.__logger.info("Shutting down the {}".format(self.name))
 
-        for key in self.__thermal_zones:
-            self.__thermal_zones[key].shutdown()
+        for key in self.__zones:
+            self.__zones[key].shutdown()
 
 
 #endregion

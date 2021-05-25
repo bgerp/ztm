@@ -79,7 +79,7 @@ class AccessControl(BasePlugin):
     __last_update_cycle_attendees = []
     """Last update cycle attendees"""
 
-    __security_zones = {}
+    __zones = {}
     """Security zones."""
 
 #endregion
@@ -89,9 +89,9 @@ class AccessControl(BasePlugin):
     def __del__(self):
         """Destructor"""
 
-        if self.__security_zones is not None:
-            del self.__security_zones
-
+        for zone in self.__zones:
+            if zone is not None:
+                del zone
 
         super().__del__()
 
@@ -117,8 +117,8 @@ class AccessControl(BasePlugin):
             content = register.value
 
         # Add allowed attendees.
-        for key in self.__security_zones:
-            self.__security_zones[key].add_allowed_attendees(content)
+        for key in self.__zones:
+            self.__zones[key].add_allowed_attendees(content)
 
     def __get_occupation_flags(self):
 
@@ -232,7 +232,7 @@ class AccessControl(BasePlugin):
         if reg_zones_count is not None:
             zones_count = reg_zones_count.value
 
-        # Security zones.
+        # Name the zones.
         prototype = "AC_{}"
         zones_count += 1
         for index in range(1, zones_count):
@@ -241,15 +241,15 @@ class AccessControl(BasePlugin):
             name = prototype.format(index)
 
             # Register the zone.
-            self.__security_zones[name] = SecurityZone(\
+            self.__zones[name] = SecurityZone(\
                 registers=self._registers, controller=self._controller,\
                 identifier=index, key=self.key, name="Security Zone")
 
             # Add on card callback. 
-            self.__security_zones[name].on_card(self.__on_card_cb)
+            self.__zones[name].on_card(self.__on_card_cb)
 
             # Initialize the module.
-            self.__security_zones[name].init()
+            self.__zones[name].init()
 
 
         # Card reader allowed IDs.
@@ -261,8 +261,8 @@ class AccessControl(BasePlugin):
     def update(self):
         """Update"""
 
-        for key in self.__security_zones:
-            self.__security_zones[key].update()
+        for key in self.__zones:
+            self.__zones[key].update()
 
         # Update occupation flags.
         occupation_flags = self.__get_occupation_flags()
@@ -278,7 +278,7 @@ class AccessControl(BasePlugin):
         """Shutting down the reader."""
 
         self.__logger.info("Shutting down the {}".format(self.name))
-        for key in self.__security_zones:
-            self.__security_zones[key].shutdown()
+        for key in self.__zones:
+            self.__zones[key].shutdown()
 
 #endregion
