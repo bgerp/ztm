@@ -68,7 +68,7 @@ class BaseController(Configuarable):
     _gpio_map = {}
     """GPIO map"""
 
-    _delimiter = "."
+    _delimiter = ":"
 
 #endregion
 
@@ -171,7 +171,8 @@ class BaseController(Configuarable):
         has_delimiter = (self._delimiter in io_name)
 
         if not has_delimiter:
-            raise SyntaxError("No delimiter symbol included.") 
+        #     raise SyntaxError("No delimiter symbol included.") 
+            return False
 
         # Split the target in to chunks.
         chunks = io_name.split(self._delimiter)
@@ -179,39 +180,45 @@ class BaseController(Configuarable):
         # Get the chunks length.
         chunks_count = len(chunks)
 
-        if chunks_count != 3:
-            raise SyntaxError("Invalid chunks count must be 3. OR Invalid place of the delimiter.")
+        if chunks_count != 4:
+            # raise SyntaxError("Invalid chunks count must be 3. OR Invalid place of the delimiter.")
+            return False
 
         # Check for UART identifier.
         has_uart_identifier = "U" in chunks[Identifiers.UART.value]
         if not has_uart_identifier:
-            raise SyntaxError("UART identifier should be provided. (U1)")
+            # raise SyntaxError("UART identifier should be provided. (U1)")
+            return False
 
         # Get the UART identifier.
         uart_identifier = chunks[Identifiers.UART.value].replace("U", "")
 
         if uart_identifier == "":
-            raise ValueError("UART identifier should be U0 to U255.")
+            # raise ValueError("UART identifier should be U0 to U255.")
+            return False
 
         uart_identifier = int(uart_identifier)
 
         # Validate the MODBUS range.
-        valid_uart_identifier = (uart_identifier > -1) and (uart_identifier < 256)
+        valid_uart_identifier = (uart_identifier > -1) and (uart_identifier <= 247)
 
         if not valid_uart_identifier:
-            raise ValueError("MODBUS identifier should be M1 to M254.")
+        #     raise ValueError("MODBUS identifier should be M1 to M247.")
+            return False
 
         # Check for MODBUS identifier.
         has_mb_identifier = "M" in chunks[Identifiers.MODBUS.value]
 
         if not has_mb_identifier:
-            raise SyntaxError("MODBUS identifier should be provided. (M1)")
+        #     raise SyntaxError("MODBUS identifier should be provided. (M1)")
+            return False
 
         # Get the MODBUS identifier.
         mb_identifier = chunks[Identifiers.MODBUS.value].replace("M", "")
 
         if mb_identifier == "":
-            raise ValueError("MODBUS identifier should be M1 to M254.")
+        #     raise ValueError("MODBUS identifier should be M1 to M254.")
+            return False
 
         mb_identifier = int(mb_identifier)
 
@@ -219,7 +226,8 @@ class BaseController(Configuarable):
         valid_mb_identifier = (mb_identifier > 0) and (mb_identifier < 255)
 
         if not valid_mb_identifier:
-            raise ValueError("MODBUS identifier should be M1 to M254.")
+        #     raise ValueError("MODBUS identifier should be M1 to M254.")
+            return False
 
         # Disable mapping check.
         disable_mapping = True
@@ -232,10 +240,11 @@ class BaseController(Configuarable):
                 break
 
         if not (has_io_identifier or disable_mapping):
-            raise ValueError("Target IO is not part of the mapping.")
+        #     raise ValueError("Target IO is not part of the mapping.")
+            return False
 
         # Combine all requirements to one expresion.
-        valid = has_delimiter and (chunks_count == 3) and \
+        valid = has_delimiter and (chunks_count == 4) and \
             has_uart_identifier and valid_uart_identifier and \
             has_mb_identifier and valid_mb_identifier and (has_io_identifier or disable_mapping)
 
@@ -258,41 +267,13 @@ class BaseController(Configuarable):
         is_off_gpio = not self.is_off_gpio(gpio)
         is_existing_gpio = self.is_existing_gpio(gpio)
         is_valid_gpio_type = self.is_valid_gpio_type(gpio)
-
-        is_valid_remote_gpio = False
-        try:
-            is_valid_remote_gpio = self.is_valid_remote_gpio(gpio)
-        except Exception as exception:
-            pass
+        valid_remote_gpio = self.is_valid_remote_gpio(gpio)
 
         result = (is_off_gpio\
             and is_existing_gpio\
-            and is_valid_gpio_type) or is_valid_remote_gpio
+            and is_valid_gpio_type) or valid_remote_gpio
 
         return result
-
-    def is_remote_gpio(self, gpio):
-
-        # Capitalize the target.
-        io_name = gpio.upper()
-
-        # Chaeck for splitter symbiol.
-        has_delimiter = (self._delimiter in io_name)
-
-        if not has_delimiter:
-            raise SyntaxError("No delimiter symbol included.") 
-
-        # Split the target in to chunks.
-        chunks = io_name.split(self._delimiter)
-
-        # Get the chunks length.
-        chunks_count = len(chunks)
-
-        # Combine all requirements to one expresion.
-        valid = has_delimiter and (chunks_count == 3)
-
-        # Return the result.
-        return valid
 
     def parse_remote_gpio(self, gpio):
 
@@ -306,9 +287,15 @@ class BaseController(Configuarable):
 
         # Get UART identifier.
         uart = chunks[Identifiers.UART.value].replace("U", "") 
+        uart = int(uart)
 
         # Get MODBUS identifier.
         mb_id = chunks[Identifiers.MODBUS.value].replace("M", "")
+        mb_id = int(mb_id)
+
+        # Get MODBUS register.
+        io_reg = chunks[Identifiers.Register.value].replace("R", "")
+        io_reg = int(io_reg)
 
         # Get io type.
         io_type = verbal_const.OFF
@@ -329,7 +316,7 @@ class BaseController(Configuarable):
         io_index = int(''.join(filter(str.isdigit, io_identifier)))
 
         # Create data structure that holds the MODBUS identifier, IO type and IO index.
-        identifier = {"uart": uart, "mb_id": mb_id, "io_type": io_type, "io_index": io_index}
+        identifier = {"uart": uart, "mb_id": mb_id, "io_reg": io_reg, "io_type": io_type, "io_index": io_index}
 
         return identifier
 
