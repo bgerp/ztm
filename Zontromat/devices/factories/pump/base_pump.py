@@ -58,8 +58,8 @@ __status__ = "Debug"
 
 #endregion
 
-class BaseValve(BaseDevice):
-    """Card reader base class."""
+class BasePump(BaseDevice):
+    """Pump base class."""
 
 #region Attributes
 
