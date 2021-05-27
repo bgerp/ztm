@@ -167,7 +167,7 @@ class ApplicationSettings:
         """Read YAML file."""
 
         if self.exists:
-            with open(self.__file_name, 'w') as stream:
+            with open(self.__file_name, "w") as stream:
                 yaml.dump(self.__settings, stream, default_flow_style=False)
                 stream.close()
 

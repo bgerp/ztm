@@ -154,7 +154,7 @@ class Server(HTTPServer):
             token = ""
 
             if request.data is not None:
-                content = request.data.decode('UTF-8')
+                content = request.data.decode("UTF-8")
                 json_data = json.loads(content)
 
             if "token" in json_data:

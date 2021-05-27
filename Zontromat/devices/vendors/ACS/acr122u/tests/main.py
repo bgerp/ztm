@@ -109,8 +109,8 @@ def run():
     __clf = nfc.ContactlessFrontend("usb:072f:2200")
     # clf = nfc.ContactlessFrontend("usb")
     # clf = nfc.ContactlessFrontend("udp")
-    state = __clf.connect(rdwr={'on-startup': on_startup, "on-connect": on_connected})
-    # state = __clf.connect(llcp={'on-startup': on_startup, "on-connect": on_connected})
+    state = __clf.connect(rdwr={"on-startup": on_startup, "on-connect": on_connected})
+    # state = __clf.connect(llcp={"on-startup": on_startup, "on-connect": on_connected})
 
 def interupt_handler(signum, frame):
     """Interupt handler."""

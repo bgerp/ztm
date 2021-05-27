@@ -544,7 +544,7 @@ class Registers(list):
 
         import csv
 
-        with open(file_path, newline='') as csv_file:
+        with open(file_path, newline="") as csv_file:
 
             rows = csv.DictReader(csv_file)
             for row in rows:

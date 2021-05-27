@@ -205,10 +205,10 @@ class ModbusDevice(BaseDevice):
         """
 
         if parameter is None:
-            raise Exception('Invalid parameter name.')
+            raise Exception("Invalid parameter name.")
 
         if not self._parameters:
-            raise Exception('Missing parameter.')
+            raise Exception("Missing parameter.")
 
         reg_count = len(self._parameters)
         value = None
@@ -258,7 +258,7 @@ class ModbusDevice(BaseDevice):
         """
 
         if registers is None:
-            raise Exception('Invalid registers.')
+            raise Exception("Invalid registers.")
 
         #/** @var array Parameters parameters */
         parameters = self.get_parameters_names()
@@ -378,10 +378,10 @@ class ModbusDevice(BaseDevice):
         """
 
         if ParameterType.is_valid_type(parameter_type) is not True:
-            raise Exception('Modbus data type missmatch.')
+            raise Exception("Modbus data type missmatch.")
 
         if not registers:
-            raise Exception('Invalid registers length.')
+            raise Exception("Invalid registers length.")
 
         #/** @var object Unpacked float value. value */
         value = None
@@ -393,19 +393,19 @@ class ModbusDevice(BaseDevice):
             value = registers_data[registers[0]]
 
         elif parameter_type == ParameterType.INT32_T:
-            raise Exception('Not implemented')
+            raise Exception("Not implemented")
 
         elif parameter_type == ParameterType.UINT32_T:
-            raise Exception('Not implemented')
+            raise Exception("Not implemented")
 
         elif parameter_type == ParameterType.FLOAT:
             #/** @var array Packet binary data. bin_data */
             bin_data = None
             bin_data = pack(
-                '<HH',
+                "<HH",
                 registers_data[registers[1]],
                 registers_data[registers[0]])
-            value = unpack('f', bin_data)[0]
+            value = unpack("f", bin_data)[0]
 
         return value
 

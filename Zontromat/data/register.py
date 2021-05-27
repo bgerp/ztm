@@ -162,7 +162,7 @@ class Register:
         """
         value = ""
 
-        split = self.name.split('.')
+        split = self.name.split(".")
         if split:
             value = split[0]
 

@@ -246,7 +246,7 @@ class DS2480B(BaseDevice):
 
                 last_zero = (index + 1)
 
-        '''
+        """
         for (byte i = 0; i < 64; i++)
         {
             BitUtility.WriteBit(this.romCodeTempBuffer, i, BitUtility.ReadBit(this.receiveBuffer, i * 2 + 1 + 8 + 8));
@@ -256,7 +256,7 @@ class DS2480B(BaseDevice):
                 lastZero = (byte)(i + 1);
             }
         }
-        '''
+        """
 
         print(response)
 

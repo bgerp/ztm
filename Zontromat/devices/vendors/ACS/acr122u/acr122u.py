@@ -138,7 +138,7 @@ class ACR122U(BaseCardReader):
             self.__clf = nfc.ContactlessFrontend(self.port_name)
 
             # Connect to the WFE.
-            self.__clf.connect(rdwr={'on-startup': self.__on_startup, "on-connect": self.__on_connected})
+            self.__clf.connect(rdwr={"on-startup": self.__on_startup, "on-connect": self.__on_connected})
 
             if self.__clf is not None:
 
