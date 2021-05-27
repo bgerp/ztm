@@ -94,7 +94,7 @@ class ConvectorFactory:
         else:
             raise ValueError("No \"controller\" argument has been passed.") 
 
-        # Silpa / Klimafan / (DO0,R0,U1:M1:R0:DO0) / (DO1,R1,U1:M1:R0:DO1) / (DO2,R2,U1:M1:R0:DO2)
+        # Silpa / Klimafan / (DO0,R0,U1:ID1:R0:DO0) / (DO1,R1,U1:ID1:R0:DO1) / (DO2,R2,U1:ID1:R0:DO2)
         if vendor == "Silpa" and  model == "Klimafan":
 
             device = Klimafan(
