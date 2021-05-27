@@ -129,7 +129,6 @@ class BaseController(Configuarable):
 
         return None
 
-
 #endregion
 
 #region Public Methods
@@ -207,14 +206,14 @@ class BaseController(Configuarable):
             return False
 
         # Check for MODBUS identifier.
-        has_mb_identifier = "M" in chunks[Identifiers.MODBUS.value]
+        has_mb_identifier = "ID" in chunks[Identifiers.ID.value]
 
         if not has_mb_identifier:
         #     raise SyntaxError("MODBUS identifier should be provided. (M1)")
             return False
 
         # Get the MODBUS identifier.
-        mb_identifier = chunks[Identifiers.MODBUS.value].replace("M", "")
+        mb_identifier = chunks[Identifiers.ID.value].replace("ID", "")
 
         if mb_identifier == "":
         #     raise ValueError("MODBUS identifier should be M1 to M254.")
@@ -223,7 +222,7 @@ class BaseController(Configuarable):
         mb_identifier = int(mb_identifier)
 
         # Validate the MODBUS range.
-        valid_mb_identifier = (mb_identifier > 0) and (mb_identifier < 247)
+        valid_mb_identifier = (mb_identifier > 0) and (mb_identifier <= 247)
 
         if not valid_mb_identifier:
         #     raise ValueError("MODBUS identifier should be M1 to M254.")
@@ -290,17 +289,18 @@ class BaseController(Configuarable):
         uart = int(uart)
 
         # Get MODBUS identifier.
-        mb_id = chunks[Identifiers.MODBUS.value].replace("M", "")
+        mb_id = chunks[Identifiers.ID.value].replace("ID", "")
         mb_id = int(mb_id)
 
         # Get MODBUS register.
-        io_reg = chunks[Identifiers.Register.value].replace("R", "")
+        io_reg = chunks[Identifiers.REG.value].replace("R", "")
         io_reg = int(io_reg)
 
-        # Get io type.
-        io_type = verbal_const.OFF
+        # Get IO identifier.
         io_identifier = chunks[Identifiers.IO.value]
-        io_type = ''.join([i for i in io_identifier if not i.isdigit()])
+
+        # Get IO type.
+        io_type = "".join([i for i in io_identifier if not i.isdigit()])
 
         # Validate IO type.
         valid_io_type = False
@@ -313,7 +313,7 @@ class BaseController(Configuarable):
             raise TypeError("Invalid IO type.")
 
         # Get IO index.
-        io_index = int(''.join(filter(str.isdigit, io_identifier)))
+        io_index = int("".join(filter(str.isdigit, io_identifier)))
 
         # Create data structure that holds the MODBUS identifier, IO type and IO index.
         identifier = {"uart": uart, "mb_id": mb_id, "io_reg": io_reg, "io_type": io_type, "io_index": io_index}

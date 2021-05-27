@@ -60,6 +60,6 @@ class Identifiers(Enum):
     """
 
     UART = 0
-    MODBUS = 1
-    Register = 2
+    ID = 1
+    REG = 2
     IO = 3
