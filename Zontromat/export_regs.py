@@ -1507,7 +1507,7 @@ def __add_registers():
     register.plugin_name = "ECHP"
     register.description = "Heat Pump Control Group / Valve Controll Group / Cold Buffer / Input"
     register.range = ""
-    register.value = "Flowx/FLX-05F/U1:M1:R0:DO0/DO1/DI0/DI1"
+    register.value = "Flowx/FLX-05F/U1:ID1:R0:DO0/U1:ID1:R0:DO1/U1:ID1:R0:DI0/U1:ID1:R0:DI1"
     __registers.append(register)
 
     # Heat Pump Control Group / Valve Controll Group / Cold Buffer / Output
@@ -1516,7 +1516,7 @@ def __add_registers():
     register.plugin_name = "ECHP"
     register.description = "Heat Pump Control Group / Valve Controll Group / Cold Buffer / Output"
     register.range = ""
-    register.value = "Flowx/FLX-05F/DO2/DO3/DI2/DI3"
+    register.value = "Flowx/FLX-05F/U1:ID6:R16:DO0/U1:ID6:R16:DO1/U1:ID6:R16:DI0/U1:ID6:R16:DO1"
     __registers.append(register)
 
     # Heat Pump Control Group / Valve Controll Group / Cold Buffer / Short
@@ -1525,7 +1525,7 @@ def __add_registers():
     register.plugin_name = "ECHP"
     register.description = "Heat Pump Control Group / Valve Controll Group / Cold Buffer / Short"
     register.range = ""
-    register.value = "Flowx/FLX-05F/DO4/DO5/DI4/DI5"
+    register.value = "Flowx/FLX-05F/U1:ID6:R16:DO2/U1:ID6:R16:DO3/U1:ID6:R16:DI2/U1:ID6:R16:DO3"
     __registers.append(register)
 
     # -================================================================================-
@@ -1536,7 +1536,7 @@ def __add_registers():
     register.plugin_name = "ECHP"
     register.description = "Heat Pump Control Group / Valve Controll Group / Cold Geo / Input"
     register.range = ""
-    register.value = "Flowx/FLX-05F/U1:M5:DO0/U1:M5:DO1/U1:M5:DI0/U1:M5:DI1"
+    register.value = "Flowx/FLX-05F/off/off/off/off"
     __registers.append(register)
 
     # Heat Pump Control Group / Valve Controll Group / Cold Geo / Output
@@ -1545,7 +1545,7 @@ def __add_registers():
     register.plugin_name = "ECHP"
     register.description = "Heat Pump Control Group / Valve Controll Group / Cold Geo / Output"
     register.range = ""
-    register.value = "Flowx/FLX-05F/U1:M5:DO2/U1:M5:DO3/U1:M5:DI2/U1:M5:DI3"
+    register.value = "Flowx/FLX-05F/off/off/off/off"
     __registers.append(register)
 
     # Heat Pump Control Group / Valve Controll Group / Cold Geo / Short
@@ -1554,7 +1554,7 @@ def __add_registers():
     register.plugin_name = "ECHP"
     register.description = "Heat Pump Control Group / Valve Controll Group / Cold Geo / Short"
     register.range = ""
-    register.value = "Flowx/FLX-05F/U1:M5:DO4/U1:M5:DO5/U1:M5:DI4/U1:M5:DI5"
+    register.value = "Flowx/FLX-05F/off/off/off/off"
     __registers.append(register)
 
     # -================================================================================-
@@ -1565,7 +1565,7 @@ def __add_registers():
     register.plugin_name = "ECHP"
     register.description = "Heat Pump Control Group / Valve Controll Group / Warm Geo / Input"
     register.range = ""
-    register.value = "Flowx/FLX-05F/U1:M6:DO0/U1:M6:DO1/U1:M6:DI0/U1:M6:DI1"
+    register.value = "Flowx/FLX-05F/off/off/off/off"
     __registers.append(register)
 
     # Heat Pump Control Group / Valve Controll Group / Warm Geo / Output
@@ -1574,7 +1574,7 @@ def __add_registers():
     register.plugin_name = "ECHP"
     register.description = "Heat Pump Control Group / Valve Controll Group / Warm Geo / Output"
     register.range = ""
-    register.value = "Flowx/FLX-05F/U1:M6:DO2/U1:M6:DO3/U1:M6:DI2/U1:M6:DI3"
+    register.value = "Flowx/FLX-05F/off/off/off/off"
     __registers.append(register)
 
     # Heat Pump Control Group / Valve Controll Group / Warm Geo / Short
@@ -1583,7 +1583,7 @@ def __add_registers():
     register.plugin_name = "ECHP"
     register.description = "Heat Pump Control Group / Valve Controll Group / Warm Geo / Short"
     register.range = ""
-    register.value = "Flowx/FLX-05F/U1:M6:DO4/U1:M6:DO5/U1:M6:DI4/U1:M6:DI5"
+    register.value = "Flowx/FLX-05F/off/off/off/off"
     __registers.append(register)
 
     # -================================================================================-
@@ -1594,7 +1594,7 @@ def __add_registers():
     register.plugin_name = "ECHP"
     register.description = "Heat Pump Control Group / Valve Controll Group / Warm Geo / Input"
     register.range = ""
-    register.value = "Flowx/FLX-05F/U1:M7:DO0/U1:M6:DO1/U1:M7:DI0/U1:M7:DI1"
+    register.value = "Flowx/FLX-05F/off/off/off/off"
     __registers.append(register)
 
     # Heat Pump Control Group / Valve Controll Group / Warm Geo / Output
@@ -1603,7 +1603,7 @@ def __add_registers():
     register.plugin_name = "ECHP"
     register.description = "Heat Pump Control Group / Valve Controll Group / Warm Geo / Output"
     register.range = ""
-    register.value = "Flowx/FLX-05F/U1:M7:DO2/U1:M6:DO3/U1:M7:DI2/U1:M7:DI3"
+    register.value = "Flowx/FLX-05F/off/off/off/off"
     __registers.append(register)
 
     # Heat Pump Control Group / Valve Controll Group / Warm Geo / Short
@@ -1612,7 +1612,7 @@ def __add_registers():
     register.plugin_name = "ECHP"
     register.description = "Heat Pump Control Group / Valve Controll Group / Warm Geo / Output"
     register.range = ""
-    register.value = "Flowx/FLX-05F/U1:M7:DO4/U1:M6:DO5/U1:M7:DI4/U1:M7:DI5"
+    register.value = "Flowx/FLX-05F/off/off/off/off"
     __registers.append(register)
 
     # -================================================================================-
