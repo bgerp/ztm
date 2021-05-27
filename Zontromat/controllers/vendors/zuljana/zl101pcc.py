@@ -246,7 +246,7 @@ class ZL101PCC(BaseController):
                 uuid = split_result[2]
 
         else:
-            uuid = subprocess.check_output('dmidecode -s system-uuid')
+            uuid = subprocess.check_output("dmidecode -s system-uuid")
 
             if result is not None:
                 result = result.decode("utf-8")
@@ -343,34 +343,40 @@ class ZL101PCC(BaseController):
 
         l_pin = pin.replace("!", "")
         response = False
-        state = False
 
         if self.__map is None:
-            return state
+            return response
 
-        if not pin in self.__map:
-            return state
-
-        # Branch if it is remote GPIO.
+        # Remote GPIO.
         if self.is_valid_remote_gpio(l_pin):
+
             data = self.parse_remote_gpio(l_pin)
 
-            read_response = self.__modbus_rtu_client.read_discrete_inputs(data["io_reg"], data["io_index"], unit=data["mb_id"])
+            read_response = self.__modbus_rtu_client.read_discrete_inputs(
+                data["io_reg"],
+                data["io_index"]+1,
+                unit=data["mb_id"])
 
-            return state
+            if not read_response.isError():
+                response = read_response.bits[data["io_index"]]
 
-        # Read device digital inputs.
-        request = self.__black_island.generate_request("GetDigitalInputs")
-        di_response = self.__modbus_rtu_client.execute(request)
-        if di_response is not None:
-            if not di_response.isError():
-                self.__DI = di_response.bits
+        # Non remote GPIO.
+        else:
 
-        state = self.__DI[self.__map[pin]]
+            # If the pin does not exists then exit.
+            if not pin in self.__map:
+                return response
 
-        # self.__logger.debug("digital_read({}, {})".format(self.model, pin))
+            # Read device digital inputs.
+            request = self.__black_island.generate_request("GetDigitalInputs")
+            di_response = self.__modbus_rtu_client.execute(request)
+            if di_response is not None:
+                if not di_response.isError():
+                    self.__DI = di_response.bits
 
-        return state
+            response = self.__DI[self.__map[pin]]
+
+        return response
 
     def digital_write(self, pin, value):
         """Write the digital output pin.
@@ -394,7 +400,7 @@ class ZL101PCC(BaseController):
         state = False
 
         if self.is_off_gpio(l_pin):
-            return response
+            return state
 
         if not self.is_valid_gpio_type(l_pin):
             raise ValueError("Pin can not be None or empty string.")
@@ -410,40 +416,35 @@ class ZL101PCC(BaseController):
         else:
             state = bool(value)
 
-        # Branch if it is remote GPIO.
+        # Remote GPIO.
         if self.is_valid_remote_gpio(l_pin):
             data = self.parse_remote_gpio(l_pin)
 
-            # Read the device.
-            read_response = self.__modbus_rtu_client.read_coils(
-                address=data["io_reg"],
-                count=data["io_index"]+1,
+            write_response = self.__modbus_rtu_client.write_coil(
+                data["io_reg"]+data["io_index"],
+                state,
                 unit=data["mb_id"])
 
-            # Get the bunch of the bits.
-            bits = read_response.bits
+            if not write_response.isError():
 
-            # Set target bit.
-            bits[data["io_index"]] = state
+                response = True
 
-            write_response = self.__modbus_rtu_client.write_coils(data["io_reg"], bits, unit=data["mb_id"])
+        # Non remote GPIO.
+        else:
+            gpio = self.__map[pin]
+            
+            self.__DORO[gpio] = state
 
-            return state
+            # Write device digital & relay outputs.
+            request = self.__black_island.generate_request("SetRelays", SetRelays=self.__DORO)
+            cw_response = self.__modbus_rtu_client.execute(request)
+            if cw_response is not None:
+                if not cw_response.isError():
+                    response = True
 
-        gpio = self.__map[pin]
-        
-        self.__DORO[gpio] = state
+            # self.__logger.debug("digital_write({}, {}, {})".format(self.model, pin, value))
 
-        # Write device digital & relay outputs.
-        request = self.__black_island.generate_request("SetRelays", SetRelays=self.__DORO)
-        cw_response = self.__modbus_rtu_client.execute(request)
-        if cw_response is not None:
-            if not cw_response.isError():
-                state = True
-
-        # self.__logger.debug("digital_write({}, {}, {})".format(self.model, pin, value))
-
-        return state
+        return response
 
     def analog_write(self, pin, value):
         """Write the analog input pin.
