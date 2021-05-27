@@ -61,27 +61,44 @@ __status__ = "Debug"
 #endregion
 
 class BaseValve(BaseDevice):
-    """Card reader base class."""
+    """Valve base class."""
 
 #region Attributes
 
     _state = None
-
-    __target_position = 0
-
-    _current_position = 0
+    """Valve state.
+    """
 
     _min_pos = 0
-    """Minimum allowed position."""
+    """Minimum allowed position.
+    """
 
     _max_pos = 100
-    """Maximum allowed position."""
+    """Maximum allowed position.
+    """
+
+    __target_position = 0
+    """Target position.
+    """
+
+    _current_position = 0
+    """Current position.
+    """
+
+    _in_place_err = 0.1
+    """In place error.
+    """
 
 #endregion
 
 #region Constructor
 
     def __init__(self, config):
+        """Convector
+
+        Args:
+            config (dict): Configuration
+        """
 
         super().__init__(config)
 
@@ -151,28 +168,24 @@ class BaseValve(BaseDevice):
 
         self._max_pos = in_value
 
-
     @property
     def current_position(self):
+        """Current position.
+
+        Returns:
+            float: Current position [%]
+        """
 
         return self._current_position
 
     @property
     def target_position(self):
+        """Target postion.
 
+        Returns:
+            float: Target position [%]
+        """
         return self.__target_position
-
-    def in_place(self):
-        """Returns if the valve is in place."""
-
-        in_place = False
-
-        delta = abs(self.current_position - self.target_position)
-
-        if delta < 0.1:
-            in_place = True
-
-        return in_place
 
     @target_position.setter
     def target_position(self, position):
@@ -200,11 +213,24 @@ class BaseValve(BaseDevice):
         self.__target_position = position
         self._state.set_state(ValveState.Prepare)
 
+    @property
+    def in_place(self):
+        """Returns if the valve is in place.
+
+        Returns:
+            bool: In place flag.
+        """
+
+        # Calculate the delta between target and current positions.
+        delta = abs(self.current_position - self.target_position)
+
+        # If the delta is less then in place error we acpt that the valve is in position.
+        return delta < self._in_place_err
+
 #endregion
 
 #region Protected Methods
 
 #region Public Methods
-
 
 #endregion
