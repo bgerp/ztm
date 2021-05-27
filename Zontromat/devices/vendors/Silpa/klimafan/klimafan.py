@@ -24,7 +24,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 from utils.logger import get_logger
-from devices.base_device import BaseDevice
+
+from devices.factories.convector.convector_base import BaseConvector
 
 #region File Attributes
 
@@ -57,8 +58,8 @@ __status__ = "Debug"
 
 #endregion
 
-class Klimafan(BaseDevice):
-    """Convector"""
+class Klimafan(BaseConvector):
+    """Convector Manufacturer: Silpa; Model: Klimafan"""
 
 #region Attributes
 
