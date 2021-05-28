@@ -290,8 +290,13 @@ class ValveControlGroup(BasePlugin):
         if "rev_valves" in config:
             rev_valves = config["rev_valves"]
 
+        fw_pumps = []
+        if "fw_pumps" in config:
+            fw_pumps = config["fw_pumps"]
 
-        registers = config["registers"]
+        rev_pumps = []
+        if "rev_pumps" in config:
+            rev_pumps = config["rev_pumps"]
 
         f_valves = []
         for name in fw_valves:
@@ -325,6 +330,37 @@ class ValveControlGroup(BasePlugin):
                     controller=controller,
                     params=params))
 
+        f_pumps = []
+        for name in fw_pumps:
+            reg_name = "{}.{}".format(config["key"], name)
+            register = registers.by_name(reg_name)
+            if register is not None:
+
+                params = register.value.split("/")
+
+                if len(params) <= 2:                
+                    raise ValueError("Not enough parameters.")
+
+                f_pumps.append(PumpFactory.create(
+                    name="{} {}".format(config["name"], name),
+                    controller=controller,
+                    params=params))
+
+        r_pumps = []
+        for name in rev_pumps:
+            reg_name = "{}.{}".format(config["key"], name)
+            register = registers.by_name(reg_name)
+            if register is not None:
+
+                params = register.value.split("/")
+
+                if len(params) <= 2:                
+                    raise ValueError("Not enough parameters.")
+
+                r_pumps.append(PumpFactory.create(
+                    name="{} {}".format(config["name"], name),
+                    controller=controller,
+                    params=params))
 
         control_group = ValveControlGroup(
             name=group_name,
@@ -332,7 +368,9 @@ class ValveControlGroup(BasePlugin):
             registers=registers,
             controller=controller,
             fw_valves=f_valves,
-            rev_valves=r_valves)
+            rev_valves=r_valves,
+            fw_pumps=f_pumps,
+            rev_pumps=r_pumps)
 
         return control_group
 
