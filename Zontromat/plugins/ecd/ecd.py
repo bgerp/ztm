@@ -27,12 +27,15 @@ import json
 from datetime import date
 from enum import Enum
 
+from data import verbal_const
+
 from utils.logger import get_logger
 #from utils.logic.timer import Timer
 #from utils.logic.state_machine import StateMachine
 
 from plugins.base_plugin import BasePlugin
-from devices.vendors.Flowx.valve import Valve
+
+from devices.factories.valve.valve_factory import ValveFactory
 from devices.utils.valve_control_group.valve_control_group import ValveControlGroup
 
 from services.global_error_handler.global_error_handler import GlobalErrorHandler
@@ -94,7 +97,7 @@ class EnergyCenterDistribution(BasePlugin):
     """Underfloor heating pool.
     """
 
-    __v_pool_heating = None
+    __vcg_pool_heating = None
     """Pool heating.
     """
 
@@ -163,35 +166,26 @@ class EnergyCenterDistribution(BasePlugin):
         self.__logger = get_logger(__name__)
         self.__logger.info("Starting up the: {}".format(self.name))
 
-        # Valve group. (PURPLE)
-        self.__v_foyer = Valve(\
-            name="v_foyer",
-            controller=self._controller)
-
-        self.__v_underfloor_heating_trestle  = Valve(
-            name="v_underfloor_heating_trestle",
-            controller=self._controller)
-
-        self.__v_underfloor_heating_pool  = Valve(
-            name="v_underfloor_heating_pool",
-            controller=self._controller)
-
         # Consumers (RED)
-        self.__v_pool_heating = ValveControlGroup.create(\
-            name="v_pool_heating",
-            fw_valves=["v_hot_pool_heating"],
-            fw_pumps=["p_pool_heating"],
+        self.__vcg_pool_heating = ValveControlGroup.create(
+            name="VCG Pool Heating",
+            key="{}.vcg_pool_heating".format(self.key),
             controller=self._controller,
-            registers=self._registers)
+            registers=self._registers,
+            fw_valves=["valve"],
+            fw_pumps=["pump"])
 
         # TVA Pool (RED and BLUE)
         self.__vcg_tva_pool = ValveControlGroup.create(\
-            name="v_tva_pool",
-            fw_valves=["v_cold_tva_pool"],
-            rev_valves=["v_hot_tva_pool"],
-            fw_pumps=["p_tva_pool"],
+            name="TVA Pool",
+            key="{}.vcg_tva_pool".format(self.key),
             controller=self._controller,
-            registers=self._registers)
+            registers=self._registers,
+            fw_valves=["cold"],
+            rev_valves=["hot"],
+            fw_pumps=["pump"])
+
+        return
 
         # Convectors East (RED and BLUE)
         self.__vcg_convectors_east = ValveControlGroup.create(\
@@ -299,8 +293,8 @@ class EnergyCenterDistribution(BasePlugin):
             del self.__v_underfloor_heating_pool
 
         # Thermal consumers.
-        if self.__v_pool_heating is not None:
-            del self.__v_pool_heating
+        if self.__vcg_pool_heating is not None:
+            del self.__vcg_pool_heating
 
         if self.__vcg_tva_pool is not None:
             del self.__vcg_tva_pool
@@ -342,6 +336,104 @@ class EnergyCenterDistribution(BasePlugin):
 
 #region Private Methods
 
+    def __underfloor_heating_foyer_enabled_cb(self, register):
+
+        # Check data type.
+        if not register.data_type == "str":
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        if register.value != verbal_const.OFF and self.__v_foyer is None:
+
+            params = register.value.split("/")
+
+            if len(params) <= 2:                
+                raise ValueError("Not enough parameters.")
+
+            self.__v_foyer = ValveFactory.create(
+                name="Valve Underfloor Heating Foyer", 
+                controller=self._controller,
+                params=params)
+
+            if self.__v_foyer is not None:
+                self.__v_foyer.init()
+
+        elif register.value == verbal_const.OFF and self.__v_foyer is not None:
+            self.__v_foyer.shutdown()
+            del self.__v_foyer
+
+    def __underfloor_heating_trestle_enabled_cb(self, register):
+
+        # Check data type.
+        if not register.data_type == "str":
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        if register.value != verbal_const.OFF and self.__v_underfloor_heating_trestle is None:
+
+            params = register.value.split("/")
+
+            if len(params) <= 2:                
+                raise ValueError("Not enough parameters.")
+
+            self.__v_underfloor_heating_trestle = ValveFactory.create(
+                name="Valve Underfloor Heating Trestle", 
+                controller=self._controller,
+                params=params)
+
+            if self.__v_underfloor_heating_trestle is not None:
+                self.__v_underfloor_heating_trestle.init()
+
+        elif register.value == verbal_const.OFF and self.__v_foyer is not None:
+            self.__v_underfloor_heating_trestle.shutdown()
+            del self.__v_underfloor_heating_trestle
+
+    def __underfloor_heating_pool_enabled_cb(self, register):
+
+        # Check data type.
+        if not register.data_type == "str":
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        if register.value != verbal_const.OFF and self.__v_underfloor_heating_pool is None:
+
+            params = register.value.split("/")
+
+            if len(params) <= 2:                
+                raise ValueError("Not enough parameters.")
+
+            self.__v_underfloor_heating_pool = ValveFactory.create(
+                name="Valve Underfloor Heating Trestle", 
+                controller=self._controller,
+                params=params)
+
+            if self.__v_underfloor_heating_pool is not None:
+                self.__v_underfloor_heating_pool.init()
+
+        elif register.value == verbal_const.OFF and self.__v_foyer is not None:
+            self.__v_underfloor_heating_pool.shutdown()
+            del self.__v_underfloor_heating_pool
+
+    def __init_registers(self):
+
+        # === Valve group. (PURPLE) ===
+
+        underfloor_heating_foyer = self._registers.by_name("{}.underfloor_heating_foyer.valve.enabled".format(self.key))
+        if underfloor_heating_foyer is not None:
+                underfloor_heating_foyer.update_handlers = self.__underfloor_heating_foyer_enabled_cb
+                underfloor_heating_foyer.update()
+
+        underfloor_heating_trestle = self._registers.by_name("{}.underfloor_heating_trestle.valve.enabled".format(self.key))
+        if underfloor_heating_trestle is not None:
+                underfloor_heating_trestle.update_handlers = self.__underfloor_heating_trestle_enabled_cb
+                underfloor_heating_trestle.update()
+
+        underfloor_heating_pool = self._registers.by_name("{}.underfloor_heating_pool.valve.enabled".format(self.key))
+        if underfloor_heating_pool is not None:
+                underfloor_heating_pool.update_handlers = self.__underfloor_heating_pool_enabled_cb
+                underfloor_heating_pool.update()
+
+
 #endregion
 
 #region Properties
@@ -354,13 +446,10 @@ class EnergyCenterDistribution(BasePlugin):
         """Init the plugin.
         """
 
-        # Warm (PURPLE)
-        self.__v_foyer.init()
-        self.__v_underfloor_heating_trestle.init()
-        self.__v_underfloor_heating_pool.init()
+        self.__init_registers()
 
         # Valve Control Groups (RED and BLUE)
-        self.__v_pool_heating.init()
+        self.__vcg_pool_heating.init()
         self.__vcg_tva_pool.init()
         self.__vcg_convectors_east.init()
         self.__vcg_floor_east.init()
@@ -387,7 +476,7 @@ class EnergyCenterDistribution(BasePlugin):
         self.__v_underfloor_heating_pool.update()
 
         # Valve Control Groups
-        self.__v_pool_heating.update()
+        self.__vcg_pool_heating.update()
         self.__vcg_tva_pool.update()
         self.__vcg_convectors_east.update()
         self.__vcg_floor_east.update()
@@ -417,7 +506,7 @@ class EnergyCenterDistribution(BasePlugin):
         self.__v_underfloor_heating_pool.shutdown()
 
         # Valve Control Groups
-        self.__v_pool_heating.shutdown()
+        self.__vcg_pool_heating.shutdown()
         self.__vcg_tva_pool.shutdown()
         self.__vcg_convectors_east.shutdown()
         self.__vcg_floor_east.shutdown()
