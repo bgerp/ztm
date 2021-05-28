@@ -1367,44 +1367,77 @@ def __add_registers():
 
 #region Energy Center Distribution (ecd)
 
-    register = Register("ecd.pool_heating.output_fw")
+    # Energy Distribution Controll / Foyer Floor Heating
+    register = Register("ecd.underfloor_heating_foyer.valve.enabled")
     register.scope = Scope.System
-    register.plugin_name = "Energy Center Distribution"
-    register.description = "Pool heating valve output."
+    register.plugin_name = "ECD"
+    register.description = "Energy Distribution Controll / Foyer Floor Heating"
     register.range = ""
-    register.value = "U3.M4.DO0"
+    register.value = "Flowx/FLX-05F/U1:ID1:R0:DO0/U1:ID1:R0:DO1/U1:ID1:R0:DI0/U1:ID1:R0:DI1"
     __registers.append(register)
 
-    register = Register("ecd.pool_heating.output_rev")
+    # Energy Distribution Controll / Underfloor Heating Trestle
+    register = Register("ecd.underfloor_heating_trestle.valve.enabled")
     register.scope = Scope.System
-    register.plugin_name = "Energy Center Distribution"
-    register.description = "Pool heating valve output."
+    register.plugin_name = "ECD"
+    register.description = "Energy Distribution Controll / Underfloor Heating Trestle"
     register.range = ""
-    register.value = "U3.M4.DO1"
+    register.value = "Flowx/FLX-05F/U1:ID1:R0:DO2/U1:ID1:R0:DO3/U1:ID1:R0:DI2/U1:ID1:R0:DI3"
     __registers.append(register)
 
-    register = Register("ecd.pool_heating.feedback")
+    # Energy Distribution Controll / Underfloor Heating Pool
+    register = Register("ecd.underfloor_heating_pool.valve.enabled")
     register.scope = Scope.System
-    register.plugin_name = "Energy Center Distribution"
-    register.description = "Pool heating valve feedback."
+    register.plugin_name = "ECD"
+    register.description = "Energy Distribution Controll / Underfloor Heating Pool"
     register.range = ""
-    register.value = "U3.M4.DI0"
+    register.value = "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5"
     __registers.append(register)
 
-    register = Register("ecd.pool_heating.max_pos")
+    # Energy Distribution Controll / Valve Controll Group / Pool Heating Valve
+    register = Register("ecd.vcg_pool_heating.valve")
     register.scope = Scope.System
-    register.plugin_name = "Energy Center Distribution"
-    register.description = "Pool heating valve max position."
-    register.range = "0/100"
-    register.value = 100
+    register.plugin_name = "ECD"
+    register.description = "Energy Distribution Controll / UValve Controll Group / Pool Heating"
+    register.range = ""
+    register.value = "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5"
     __registers.append(register)
 
-    register = Register("ecd.pool_heating.min_pos")
+    # Energy Distribution Controll / Valve Controll Group / Pool Heating Valve
+    register = Register("ecd.vcg_pool_heating.pump")
     register.scope = Scope.System
-    register.plugin_name = "Energy Center Distribution"
-    register.description = "Pool heating valve min position."
-    register.range = "0/100"
-    register.value = 0
+    register.plugin_name = "ECD"
+    register.description = "Energy Distribution Controll / UValve Controll Group / Pool Heating"
+    register.range = ""
+    register.value = "Grundfos/Pump/5"
+    __registers.append(register)
+
+
+    # Energy Distribution Controll / Valve Controll Group / Pool Cooling
+    register = Register("ecd.vcg_tva_pool.cold")
+    register.scope = Scope.System
+    register.plugin_name = "ECD"
+    register.description = "Energy Distribution Controll / Valve Controll Group / Pool Cooling"
+    register.range = ""
+    register.value = "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5"
+    __registers.append(register)
+
+    # Energy Distribution Controll / Valve Controll Group / Pool Heating
+    register = Register("ecd.vcg_tva_pool.hot")
+    register.scope = Scope.System
+    register.plugin_name = "ECD"
+    register.description = "Energy Distribution Controll / Valve Controll Group / Pool Heating"
+    register.range = ""
+    register.value = "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5"
+    __registers.append(register)
+
+    # Energy Distribution Controll / UValve Controll Group / Pump
+    register = Register("ecd.vcg_tva_pool.pump")
+    register.scope = Scope.System
+    register.plugin_name = "ECD"
+    register.description = "Energy Distribution Controll / UValve Controll Group / Pump"
+    register.range = ""
+    register.value = "Grundfos/Pump/5"
     __registers.append(register)
 
     register = Register("ecd.enabled")
