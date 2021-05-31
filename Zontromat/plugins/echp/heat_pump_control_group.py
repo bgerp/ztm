@@ -35,6 +35,7 @@ from plugins.base_plugin import BasePlugin
 
 from devices.vendors.HstarsGuangzhouRefrigeratingEquipmentGroup.heat_pump import HeatPump, HeatPumpMode
 from devices.utils.valve_control_group.valve_control_group import ValveControlGroup
+from devices.utils.valve_control_group.valve_control_group_mode import ValveControlGroupMode
 
 from devices.factories.pump.pump_factory import PumpFactory
 from devices.factories.heat_pump.heat_pump_factory import HeatPumpFactory
@@ -197,6 +198,7 @@ class HeatPumpControllGroup(BasePlugin):
             registers=self._registers,
             fw_valves=["input", "output"],
             rev_valves=["short"])
+        self.__vcg_cold_buff.mode = ValveControlGroupMode.Proportional
 
         # Valve group cold geo. (GREEN)
         self.__vcg_cold_geo = ValveControlGroup.create(
@@ -205,6 +207,7 @@ class HeatPumpControllGroup(BasePlugin):
             controller=self._controller,
             registers=self._registers,
             fw_valves=["input", "output"])
+        self.__vcg_cold_geo.mode = ValveControlGroupMode.Proportional
 
         # Valve group warm geo. (GREEN)
         self.__vcg_warm_geo = ValveControlGroup.create(
@@ -214,6 +217,7 @@ class HeatPumpControllGroup(BasePlugin):
             registers=self._registers,
             fw_valves=["input", "output"],
             rev_valves=["short"])
+        self.__vcg_warm_geo.mode = ValveControlGroupMode.Proportional
 
         # Valve group warm floor. (PURPLE)
         self.__vcg_warm_floor = ValveControlGroup.create(
@@ -223,10 +227,9 @@ class HeatPumpControllGroup(BasePlugin):
             registers=self._registers,
             fw_valves=["input", "output"],
             rev_valves=["short"])
+        self.__vcg_warm_floor.mode = ValveControlGroupMode.Proportional
 
-        registers = config["registers"]
-
-        register = registers.by_name("{}.wp_cold.settings".format(self.key))
+        register = self._registers.by_name("{}.wp_cold.settings".format(self.key))
         if register is not None:
             wp_setting = register.value
 
@@ -237,7 +240,7 @@ class HeatPumpControllGroup(BasePlugin):
 
             self.__cold_water_pump = PumpFactory.create(name="WP Cold", controller=self._controller, params=params)
 
-        register = registers.by_name("{}.wp_hot.settings".format(self.key))
+        register = self._registers.by_name("{}.wp_hot.settings".format(self.key))
         if register is not None:
             wp_setting = register.value
 
@@ -249,7 +252,7 @@ class HeatPumpControllGroup(BasePlugin):
             self.__hot_water_pump = PumpFactory.create(name="WP Hot", controller=self._controller, params=params)
 
         
-        register = registers.by_name("{}.wp_warm_g.settings".format(self.key))
+        register = self._registers.by_name("{}.wp_warm_g.settings".format(self.key))
         if register is not None:
             wp_setting = register.value
 
@@ -260,7 +263,7 @@ class HeatPumpControllGroup(BasePlugin):
 
             self.__warm_g_water_pump = PumpFactory.create(name="WP Warm G", controller=self._controller, params=params)
 
-        register = registers.by_name("{}.wp_warm_p.settings".format(self.key))
+        register = self._registers.by_name("{}.wp_warm_p.settings".format(self.key))
         if register is not None:
             wp_setting = register.value
 
@@ -271,7 +274,7 @@ class HeatPumpControllGroup(BasePlugin):
 
             self.__warm_p_water_pump = PumpFactory.create(name="WP Warm P", controller=self._controller, params=params)
 
-        register = registers.by_name("{}.hp.settings".format(self.key))
+        register = self._registers.by_name("{}.hp.settings".format(self.key))
         if register is not None:
             wp_setting = register.value
 

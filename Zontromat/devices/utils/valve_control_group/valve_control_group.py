@@ -32,6 +32,7 @@ from plugins.base_plugin import BasePlugin
 
 from devices.factories.valve.valve_factory import ValveFactory
 from devices.factories.pump.pump_factory import PumpFactory
+from devices.utils.valve_control_group.valve_control_group_mode import ValveControlGroupMode
 
 # (Request from mail: Eml6429)
 
@@ -77,6 +78,8 @@ class ValveControlGroup(BasePlugin):
     """Logger
     """
 
+    __mode = ValveControlGroupMode.NONE
+
     __fw_valves = []
     """Forward valves.
     """
@@ -118,6 +121,8 @@ class ValveControlGroup(BasePlugin):
 
         if "rev_valves" in self._config:
             self.__rev_valves = self._config["rev_valves"]
+
+        self.mode = ValveControlGroupMode.NONE
 
     def __del__(self):
         """Destructor
@@ -167,13 +172,66 @@ class ValveControlGroup(BasePlugin):
             position (int): Position of the valves.
         """
 
-        if self.__fw_valves is not None:
-            for valve in self.__fw_valves:
-                valve.target_position = position
+        # In this mode we controll proportional all the forward vales.
+        # And invers proportional all revers valves.
+        if self.mode == ValveControlGroupMode.Proportional:
 
-        if self.__rev_valves is not None:
-            for valve in self.__rev_valves:
-                valve.target_position = float(l_scale(position, [0, 100], [100, 0]))
+            if self.__fw_valves is not None:
+                for valve in self.__fw_valves:
+                    valve.target_position = position
+
+            if self.__rev_valves is not None:
+                for valve in self.__rev_valves:
+                    valve.target_position = float(l_scale(position, [0, 100], [100, 0]))
+
+        # In this mode we controll proportional all the forward vales.
+        # And invers proportional all revers valves.
+        # But when the value of the 
+        elif self.mode == ValveControlGroupMode.DualSide:
+
+            if position > 100.0:
+                position = 100.0
+
+            if position < -100.0:
+                position = -100.0
+
+            if position > 0:
+                if self.__fw_valves is not None:
+                    for valve in self.__fw_valves:
+                        valve.target_position = position
+
+                if self.__rev_valves is not None:
+                    for valve in self.__rev_valves:
+                        valve.target_position = 0
+
+            elif position < 0:
+                if self.__rev_valves is not None:
+                    for valve in self.__rev_valves:
+                        valve.target_position = float(l_scale(position, [0, -100], [0, 100]))
+
+                if self.__fw_valves is not None:
+                    for valve in self.__fw_valves:
+                        valve.target_position = 0
+
+            else:
+                if self.__fw_valves is not None:
+                    for valve in self.__fw_valves:
+                        valve.target_position = 0
+
+                if self.__rev_valves is not None:
+                    for valve in self.__rev_valves:
+                        valve.target_position = 0
+
+    @property
+    def mode(self):
+
+        return self.__mode
+
+    @mode.setter
+    def mode(self, mode):
+
+        if ValveControlGroupMode.is_valid(mode):
+            self.__mode = mode
 
 #endregion
 
