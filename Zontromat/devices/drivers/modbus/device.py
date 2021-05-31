@@ -377,7 +377,7 @@ class ModbusDevice(BaseDevice):
             Parameter value.
         """
 
-        if ParameterType.is_valid_type(parameter_type) is not True:
+        if ParameterType.is_valid(parameter_type) is not True:
             raise Exception("Modbus data type missmatch.")
 
         if not registers:

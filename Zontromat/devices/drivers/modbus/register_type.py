@@ -68,7 +68,7 @@ class RegisterType(Enum):
     WriteMultipleHoldingRegisters = 16
 
     @staticmethod
-    def is_valid_type(data_type):
+    def is_valid(data_type):
         """Checks is the data type is valid."""
 
         state = False

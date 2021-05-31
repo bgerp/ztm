@@ -70,17 +70,17 @@ class ParameterType(Enum):
 #region Public static Methods
 
     @staticmethod
-    def is_valid_type(data_type):
+    def is_valid(value):
         """Data type
 
         Return:
-            (bool: Valid data type.
+            bool: Valid data type.
         """
 
         state = False
 
-        for parameter_type in ParameterType:
-            if data_type == parameter_type:
+        for item in ParameterType:
+            if value == item:
                 state = True
                 break
 
