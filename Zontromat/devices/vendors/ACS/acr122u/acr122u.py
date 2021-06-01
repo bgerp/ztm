@@ -158,6 +158,7 @@ class ACR122U(BaseCardReader):
 
         try:
             self.__worker_thread = Thread(target=self.__run, args=())
+            self.__worker_thread.setDaemon(True)
             self.__worker_thread.start()
 
             self._state.set_state(CardReaderState.RUN)

@@ -140,7 +140,7 @@ def main():
     signal.signal(signal.SIGTERM, interupt_handler)
 
     try:
-        Thread(target=run, args=()).start()
+        Thread(target=run, args=(), daemon=True).start()
     except:
         pass
 
