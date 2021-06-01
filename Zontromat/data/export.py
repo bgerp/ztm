@@ -76,12 +76,14 @@ __range = {
     "BAUD": "300|600|1200|2400|4800|9600|19200|38400|57600|115200",
     "BOOL": "true|false",
     "PERCENTAGE_F": "0.0/100.0",
+    "PERCENTAGE_I": "0/100",
     "PERCENTAGE_0_100": "0.0|100.0",
 }
 
 #endregion
 
 def __add_registers():
+
     global __registers, __range
 
 #region Access Control (ac)
@@ -605,28 +607,12 @@ def __add_registers():
     register.value = verbal_const.OFF # "Eastron/SDM630/2/3" # "Eastron/SDM120/2/3"
     __registers.append(register)
 
-    register = Register("monitoring.pa.l1")
+    register = Register("monitoring.pa.measurements")
     register.scope = Scope.Device
     register.plugin_name = "Monitoring"
-    register.description = "Power analyser L1 parameters"
+    register.description = "Power analyser measurements"
     register.range = ""
-    register.value = {}
-    __registers.append(register)
-
-    register = Register("monitoring.pa.l2")
-    register.scope = Scope.Device
-    register.plugin_name = "Monitoring"
-    register.description = "Power analyser L2 parameters"
-    register.range = ""
-    register.value = {}
-    __registers.append(register)
-
-    register = Register("monitoring.pa.l3")
-    register.scope = Scope.Device
-    register.plugin_name = "Monitoring"
-    register.description = "Power analyser L3 parameters"
-    register.range = ""
-    register.value = {}
+    register.value = []
     __registers.append(register)
 
     # Enable flag.
@@ -1388,7 +1374,7 @@ def __add_registers():
     __registers.append(register)
 
 
-    # Energy Distribution Controll / Underfloor Heating Trestle
+    # Energy Distribution Controll / Underfloor Heating Trestle Settings
     register = Register("ecd.underfloor_heating_trestle.valve.enabled")
     register.scope = Scope.System
     register.plugin_name = "ECD"
@@ -1407,7 +1393,7 @@ def __add_registers():
     __registers.append(register)
 
 
-    # Energy Distribution Controll / Underfloor Heating Pool
+    # Energy Distribution Controll / Underfloor Heating Pool Settings
     register = Register("ecd.underfloor_heating_pool.valve.enabled")
     register.scope = Scope.System
     register.plugin_name = "ECD"
@@ -1445,7 +1431,7 @@ def __add_registers():
     __registers.append(register)
 
 
-    # Energy Distribution Controll / Ground Drilling Valve
+    # Energy Distribution Controll / Ground Drilling Valve Settings
     register = Register("ecd.ground_drill.valve.enabled")
     register.scope = Scope.System
     register.plugin_name = "ECD"
@@ -1502,6 +1488,44 @@ def __add_registers():
     __registers.append(register)
 
 
+    # Energy Distribution Controll / Underfloor West Bypass Valve Settings
+    register = Register("ecd.underfloor_west_bypass.valve.enabled")
+    register.scope = Scope.System
+    register.plugin_name = "ECD"
+    register.description = "Energy Distribution Controll / Underfloor West Bypass Valve Settings"
+    register.range = ""
+    register.value = "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5"
+    __registers.append(register)
+
+    # Energy Distribution Controll / Underfloor West Bypass Valve Position
+    register = Register("ecd.underfloor_west_bypass.valve.position")
+    register.scope = Scope.System
+    register.plugin_name = "ECD"
+    register.description = "Energy Distribution Controll / Underfloor West Bypass Valve Position"
+    register.range = __range["PERCENTAGE_F"]
+    register.value = 0.0
+    __registers.append(register)
+
+
+    # Energy Distribution Controll / Underfloor East Bypass Valve Settings
+    register = Register("ecd.underfloor_east_bypass.valve.enabled")
+    register.scope = Scope.System
+    register.plugin_name = "ECD"
+    register.description = "Energy Distribution Controll / Underfloor East Bypass Valve Settings"
+    register.range = ""
+    register.value = "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5"
+    __registers.append(register)
+
+    # Energy Distribution Controll / Underfloor East Bypass Valve Position
+    register = Register("ecd.underfloor_east_bypass.valve.position")
+    register.scope = Scope.System
+    register.plugin_name = "ECD"
+    register.description = "Energy Distribution Controll / Underfloor East Bypass Valve Position"
+    register.range = __range["PERCENTAGE_F"]
+    register.value = 0.0
+    __registers.append(register)
+
+
     # Energy Distribution Controll / Valve Controll Group / Pool Heating Valve
     register = Register("ecd.vcg_pool_heating.valve")
     register.scope = Scope.System
@@ -1511,7 +1535,7 @@ def __add_registers():
     register.value = "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5"
     __registers.append(register)
 
-    # Energy Distribution Controll / Valve Controll Group / Pool Heating Valve
+    # Energy Distribution Controll / Valve Controll Group / Pool Heating Valve Pump
     register = Register("ecd.vcg_pool_heating.pump")
     register.scope = Scope.System
     register.plugin_name = "ECD"
@@ -1741,7 +1765,7 @@ def __add_registers():
     __registers.append(register)
 
 
-    # Energy Distribution Controll / Valve Controll Group / TVA Roof Floor
+    # Energy Distribution Controll / Valve Controll Group / TVA Roof Floor Pump
     register = Register("ecd.tva_roof_floor.pump")
     register.scope = Scope.System
     register.plugin_name = "ECD"
@@ -1921,7 +1945,7 @@ def __add_registers():
     register.value = "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5"
     __registers.append(register)
 
-    # Energy Distribution Controll / Valve Controll Group / TVA Conference Center
+    # Energy Distribution Controll / Valve Controll Group / TVA Conference Center Pump
     register = Register("ecd.tva_conference_center.pump")
     register.scope = Scope.System
     register.plugin_name = "ECD"
@@ -2012,7 +2036,7 @@ def __add_registers():
     register.value = "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5"
     __registers.append(register)
 
-    # Energy Distribution Controll / Valve Controll Group / TVA Wearhouse
+    # Energy Distribution Controll / Valve Controll Group / TVA Wearhouse Pump
     register = Register("ecd.tva_warehouse.pump")
     register.scope = Scope.System
     register.plugin_name = "ECD"
@@ -2389,18 +2413,18 @@ def main():
     parser = argparse.ArgumentParser()
 
     # Add arguments.
-    parser.add_argument("--typ", type=str, default="csv", help="Export type.")
+    parser.add_argument("--action", type=str, default="w_csv", help="Export type.")
 
     # Take arguments.
     args = parser.parse_args()
 
-    if args.typ == "json":
+    if args.action == "w_json":
         Registers.to_JSON(__registers, "registers.json")
 
-    elif args.typ == "csv":
+    elif args.action == "w_csv":
         Registers.to_CSV(__registers, "registers.csv")
 
-    elif args.typ == "read":
+    elif args.action == "r_csv":
         registers = Registers.from_CSV("registers.csv")
 
         for register in registers:
