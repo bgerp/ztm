@@ -105,12 +105,6 @@ class EnergyCenterHeatpump(BasePlugin):
         self.__logger = get_logger(__name__)
         self.__logger.info("Starting up the: {}".format(self.name))
 
-        # Card reader allowed IDs.
-        hp_count = 0
-        reg_hp_count = self._registers.by_name(self.key + ".hp.count")
-        if reg_hp_count is not None:
-            hp_count = reg_hp_count.value
-
         self.__heat_pump_control_group = HeatPumpControllGroup(
             name="Heat Pump Controll Group",
             key="{}.hpcg".format(self.key),
