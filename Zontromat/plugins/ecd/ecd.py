@@ -115,49 +115,56 @@ class EnergyCenterDistribution(BasePlugin):
     """Short valve between green and purple pipes.
     """
 
+    __v_underfloor_west_bypass = None
+    """Valve underfloor west bypass.
+    """    
+
+    __v_underfloor_east_bypass = None
+    """Valve underfloor east bypass.
+    """
 
     __vcg_pool_heating = None
-    """Pool heating.
+    """VCG Pool heating.
     """
 
     __vcg_tva_pool = None
-    """TVA pool.
+    """VCG TVA pool.
     """
 
     __vcg_convectors_east = None
-    """Convectors east.
+    """VCG Convectors east.
     """
 
-    __vcg_floor_east = None
-    """Floor east.
+    __vcg_underfloor_east = None
+    """VCG Underfloor east.
     """
 
     __vcg_convectors_west = None
-    """Convectors west.
+    """VCG Convectors west.
     """
 
     __vcg_tva_fitness = None
-    """TVA fitness.
+    """VCG TVA fitness.
     """
 
     __vcg_tva_roof_floor = None
-    """TVA roof floor.
+    """VCG TVA roof floor.
     """
 
-    __vcg_floor_west = None
-    """Floor west.
+    __vcg_underfloor_west = None
+    """VCG Underfloor west.
     """
 
     __vcg_tva_conference_center = None
-    """TVA conference centre.
+    """VCG TVA conference centre.
     """
 
     __vcg_convectors_kitchen = None
-    """Convectors kitchen.
+    """VCG Convectors kitchen.
     """
 
     __vcg_tva_warehouse = None
-    """TVA wearhouse.
+    """VCG TVA wearhouse.
     """
 
 #endregion
@@ -210,15 +217,15 @@ class EnergyCenterDistribution(BasePlugin):
         self.__vcg_convectors_east.mode = ValveControlGroupMode.DualSide
 
         # Floor East (RED and BLUE)
-        self.__vcg_floor_east = ValveControlGroup.create(\
-            name="Floor east",
+        self.__vcg_underfloor_east = ValveControlGroup.create(\
+            name="Underfloor east",
             key="{}.floor_east".format(self.key),
             controller=self._controller,
             registers=self._registers,
             fw_valves=["cold_in", "cold_out"],
             rev_valves=["hot_in", "hot_out"],
             fw_pumps=["pump"])
-        self.__vcg_floor_east.mode = ValveControlGroupMode.DualSide
+        self.__vcg_underfloor_east.mode = ValveControlGroupMode.DualSide
 
         # Convectors West (RED and BLUE)
         self.__vcg_convectors_west = ValveControlGroup.create(\
@@ -254,7 +261,7 @@ class EnergyCenterDistribution(BasePlugin):
         self.__vcg_tva_roof_floor.mode = ValveControlGroupMode.DualSide
 
         # Floor West (RED and BLUE)
-        self.__vcg_floor_west = ValveControlGroup.create(\
+        self.__vcg_underfloor_west = ValveControlGroup.create(\
             name="Floor west",
             key="{}.floor_west".format(self.key),
             controller=self._controller,
@@ -262,7 +269,7 @@ class EnergyCenterDistribution(BasePlugin):
             fw_valves=["cold_in", "cold_out"],
             rev_valves=["hot_in", "hot_out"],
             fw_pumps=["pump"])
-        self.__vcg_floor_west.mode = ValveControlGroupMode.DualSide
+        self.__vcg_underfloor_west.mode = ValveControlGroupMode.DualSide
 
         # TVA Conference (RED and BLUE)
         self.__vcg_tva_conference_center = ValveControlGroup.create(\
@@ -321,8 +328,8 @@ class EnergyCenterDistribution(BasePlugin):
         if self.__vcg_convectors_east is not None:
             del self.__vcg_convectors_east
 
-        if self.__vcg_floor_east is not None:
-            del self.__vcg_floor_east
+        if self.__vcg_underfloor_east is not None:
+            del self.__vcg_underfloor_east
 
         if self.__vcg_convectors_west is not None:
             del self.__vcg_convectors_west
@@ -333,8 +340,8 @@ class EnergyCenterDistribution(BasePlugin):
         if self.__vcg_tva_roof_floor is not None:
             del self.__vcg_tva_roof_floor
 
-        if self.__vcg_floor_west is not None:
-            del self.__vcg_floor_west
+        if self.__vcg_underfloor_west is not None:
+            del self.__vcg_underfloor_west
 
         if self.__vcg_tva_conference_center is not None:
             del self.__vcg_tva_conference_center
@@ -537,6 +544,58 @@ class EnergyCenterDistribution(BasePlugin):
             self.__v_short_green_purple.shutdown()
             del self.__v_short_green_purple
 
+    def __underfloor_west_bypass_enabled_cb(self, register):
+
+        # Check data type.
+        if not register.data_type == "str":
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        if register.value != verbal_const.OFF and self.__v_underfloor_west_bypass is None:
+
+            params = register.value.split("/")
+
+            if len(params) <= 2:
+                raise ValueError("Not enough parameters.")
+
+            self.__v_underfloor_west_bypass = ValveFactory.create(
+                name="Valve Underfloor West Bypass",
+                controller=self._controller,
+                params=params)
+
+            if self.__v_underfloor_west_bypass is not None:
+                self.__v_underfloor_west_bypass.init()
+
+        elif register.value == verbal_const.OFF and self.__v_underfloor_west_bypass is not None:
+            self.__v_underfloor_west_bypass.shutdown()
+            del self.__v_underfloor_west_bypass   
+
+    def __underfloor_east_bypass_enabled_cb(self, register):
+
+        # Check data type.
+        if not register.data_type == "str":
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        if register.value != verbal_const.OFF and self.__v_underfloor_east_bypass is None:
+
+            params = register.value.split("/")
+
+            if len(params) <= 2:
+                raise ValueError("Not enough parameters.")
+
+            self.__v_underfloor_east_bypass = ValveFactory.create(
+                name="Valve Underfloor East Bypass",
+                controller=self._controller,
+                params=params)
+
+            if self.__v_underfloor_east_bypass is not None:
+                self.__v_underfloor_east_bypass.init()
+
+        elif register.value == verbal_const.OFF and self.__v_underfloor_east_bypass is not None:
+            self.__v_underfloor_east_bypass.shutdown()
+            del self.__v_underfloor_east_bypass   
+
 
     def __underfloor_heating_foyer_pos_cb(self, register):
 
@@ -636,6 +695,33 @@ class EnergyCenterDistribution(BasePlugin):
         if self.__v_short_green_purple is not None:
             self.__v_short_green_purple.target_position = register.value
 
+    def __underfloor_west_bypass_pos_cb(self, register):
+
+        # Check data type.
+        if not (register.data_type == "float" or register.data_type == "int"):
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        if register.value < 0 or register.value > 100:
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
+            return
+
+        if self.__v_underfloor_west_bypass is not None:
+            self.__v_underfloor_west_bypass.target_position = register.value
+
+    def __underfloor_east_bypass_pos_cb(self, register):
+
+        # Check data type.
+        if not (register.data_type == "float" or register.data_type == "int"):
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        if register.value < 0 or register.value > 100:
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
+            return
+
+        if self.__v_underfloor_east_bypass is not None:
+            self.__v_underfloor_east_bypass.target_position = register.value
 
     def __init_registers(self):
 
@@ -683,6 +769,20 @@ class EnergyCenterDistribution(BasePlugin):
         if short_green_purple is not None:
                 short_green_purple.update_handlers = self.__short_green_purple_enabled_cb
                 short_green_purple.update()
+
+        # Short valve between green and purple pipes.
+        reg_name = "{}.underfloor_west_bypass.valve.enabled".format(self.key)
+        underfloor_west_bypass = self._registers.by_name(reg_name)
+        if underfloor_west_bypass is not None:
+                underfloor_west_bypass.update_handlers = self.__underfloor_west_bypass_enabled_cb
+                underfloor_west_bypass.update()
+
+        # Short valve between green and purple pipes.
+        reg_name = "{}.underfloor_east_bypass.valve.enabled".format(self.key)
+        underfloor_east_bypass = self._registers.by_name(reg_name)
+        if underfloor_east_bypass is not None:
+                underfloor_east_bypass.update_handlers = self.__underfloor_east_bypass_enabled_cb
+                underfloor_east_bypass.update()
 
         # ====================================================================================
 
@@ -735,6 +835,20 @@ class EnergyCenterDistribution(BasePlugin):
                 short_green_purple.update_handlers = self.__short_green_purple_pos_cb
                 short_green_purple.update()
 
+        # Underfloor west bypass valve postition.
+        reg_name = "{}.underfloor_west_bypass.valve.position".format(self.key)
+        underfloor_west_bypass = self._registers.by_name(reg_name)
+        if underfloor_west_bypass is not None:
+                underfloor_west_bypass.update_handlers = self.__underfloor_west_bypass_pos_cb
+                underfloor_west_bypass.update()
+
+        # Underfloor east bypass valve postition
+        reg_name = "{}.underfloor_west_bypass.valve.position".format(self.key)
+        underfloor_west_bypass = self._registers.by_name(reg_name)
+        if underfloor_west_bypass is not None:
+                underfloor_west_bypass.update_handlers = self.__underfloor_east_bypass_pos_cb
+                underfloor_west_bypass.update()
+
 #endregion
 
 #region Properties
@@ -752,18 +866,25 @@ class EnergyCenterDistribution(BasePlugin):
         self.__vcg_pool_heating.init()
         self.__vcg_tva_pool.init()
         self.__vcg_convectors_east.init()
-        self.__vcg_floor_east.init()
+        self.__vcg_underfloor_east.init()
         self.__vcg_convectors_west.init()
         self.__vcg_tva_fitness.init()
         self.__vcg_tva_roof_floor.init()
-        self.__vcg_floor_west.init()
+        self.__vcg_underfloor_west.init()
         self.__vcg_tva_conference_center.init()
         self.__vcg_convectors_kitchen.init()
         self.__vcg_tva_warehouse.init()
 
+        self.ready(True)
+
     def update(self):
         """Update the plugin state.
         """
+
+        if not self.is_ready():
+            return
+
+        self.in_cycle(True)
 
         self.__v_underfloor_heating_foyer.update()
         self.__v_underfloor_heating_trestle.update()
@@ -772,22 +893,30 @@ class EnergyCenterDistribution(BasePlugin):
         self.__v_ground_drill.update()
         self.__v_generators_cooling.update()
         self.__v_short_green_purple.update()
+        self.__v_underfloor_west_bypass.update()
+        self.__v_underfloor_east_bypass.update()
+
 
         self.__vcg_pool_heating.update()
         self.__vcg_tva_pool.update()
         self.__vcg_convectors_east.update()
-        self.__vcg_floor_east.update()
+        self.__vcg_underfloor_east.update()
         self.__vcg_convectors_west.update()
         self.__vcg_tva_fitness.update()
         self.__vcg_tva_roof_floor.update()
-        self.__vcg_floor_west.update()
+        self.__vcg_underfloor_west.update()
         self.__vcg_tva_conference_center.update()
         self.__vcg_convectors_kitchen.update()
         self.__vcg_tva_warehouse.update()
 
+        self.in_cycle(False)
+
     def shutdown(self):
         """Shutting down the plugin.
         """
+
+        self.ready(False)
+        self.wait()
 
         self.__logger.info("Shutting down the {}".format(self.name))
 
@@ -798,15 +927,17 @@ class EnergyCenterDistribution(BasePlugin):
         self.__v_ground_drill.shutdown()
         self.__v_generators_cooling.shutdown()
         self.__v_short_green_purple.shutdown()
+        self.__v_underfloor_west_bypass.shutdown()
+        self.__v_underfloor_east_bypass.shutdown()
 
         self.__vcg_pool_heating.shutdown()
         self.__vcg_tva_pool.shutdown()
         self.__vcg_convectors_east.shutdown()
-        self.__vcg_floor_east.shutdown()
+        self.__vcg_underfloor_east.shutdown()
         self.__vcg_convectors_west.shutdown()
         self.__vcg_tva_fitness.shutdown()
         self.__vcg_tva_roof_floor.shutdown()
-        self.__vcg_floor_west.shutdown()
+        self.__vcg_underfloor_west.shutdown()
         self.__vcg_tva_conference_center.shutdown()
         self.__vcg_convectors_kitchen.shutdown()
         self.__vcg_tva_warehouse.shutdown()
