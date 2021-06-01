@@ -262,7 +262,6 @@ class Ventilation(BasePlugin):
             GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
             return
 
-
         # TODO: Do we have to know how much people are there.
         if register.value == True:
 

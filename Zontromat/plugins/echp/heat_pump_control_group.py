@@ -82,6 +82,10 @@ class HeatPumpControllGroup(BasePlugin):
     """Logger
     """
 
+    __heat_pumps_count = 0
+    """[summary]
+    """
+
     __heat_pump_orders = []
     """Het pump priority order.
     """
@@ -326,9 +330,12 @@ class HeatPumpControllGroup(BasePlugin):
 
         if self.__logger is not None:
             del self.__logger
+
 #endregion
 
 #region Private Methods
+
+    # TODO: How every individual machine to know which number is for today?
 
     def __generate_order(self):
 
@@ -385,6 +392,13 @@ class HeatPumpControllGroup(BasePlugin):
         """Update cold temperature.
         """
 
+        # TODO: How to verify that the registers is out of date?
+
+        # Take information from register.
+        # If there is no connection with bgERP, take this information from zontromat sensors.
+        # If there is no sensor connected to the zontromat.
+        # Or no connection to the sensor, take the information from machines. 
+
         # Тези температури ще се вземат:
         # или от bgERP
         # или от директно свързаните датчици към Зонтромат
@@ -396,6 +410,13 @@ class HeatPumpControllGroup(BasePlugin):
         """Update hotwater temperature.
         """
 
+        # TODO: How to verify that the registers is out of date?
+
+        # Take information from register.
+        # If there is no connection with bgERP, take this information from zontromat sensors.
+        # If there is no sensor connected to the zontromat.
+        # Or no connection to the sensor, take the information from machines. 
+
         # Тези температури ще се вземат
         # или от bgERP
         # или от директно свързаните датчици към Зонтромат
@@ -406,6 +427,9 @@ class HeatPumpControllGroup(BasePlugin):
     def __update_winter_power(self):
         """Update winter power.
         """
+
+        # TODO: Add schema how to wor if the device is 0, 1 or 2
+        # It will be better to be done with formula for smooth controll.
 
         if self.temp_cold < self.__cold_min:
             self.__winter_power = 0
@@ -422,6 +446,9 @@ class HeatPumpControllGroup(BasePlugin):
     def __update_summer_power(self):
         """Update summer power.
         """
+
+        # TODO: Add schema how to wor if the device is 0, 1 or 2
+        # It will be better to be done with formula for smooth controll.
 
         if self.temp_hot > self.__hot_max:
             self.__summer_power = 0
