@@ -59,9 +59,7 @@ monitoring.hw.tpl,float,0.0/,Monitoring,system,1.0,Hot water tics per liter
 monitoring.hw.value,float,0.0/,Monitoring,device,0.0,Hot water liters
 monitoring.hw.leak,float,0.0/,Monitoring,device,1.0,Hot water leaked liters
 monitoring.pa.settings,str,,Monitoring,system,off,Power analyser settings
-monitoring.pa.l1,json,,Monitoring,device,"""{}""",Power analyser L1 parameters
-monitoring.pa.l2,json,,Monitoring,device,"""{}""",Power analyser L2 parameters
-monitoring.pa.l3,json,,Monitoring,device,"""{}""",Power analyser L3 parameters
+monitoring.pa.measurements,json,,Monitoring,device,"""[]""",Power analyser measurements
 monitoring.enabled,bool,true|false,Monitoring,system,false,Plugin enabled
 envm.is_empty,bool,true|false,Environment,device,true,Is empty flag
 envm.is_empty_timeout,int,0/,Environment,system,3600,Is empty time out [s]
@@ -158,6 +156,10 @@ ecd.generators_cooling.valve.enabled,str,,ECD,system,Flowx/FLX-05F/U1:ID1:R0:DO4
 ecd.generators_cooling.valve.position,float,0.0/100.0,ECD,system,0.0,Energy Distribution Controll / Generators Cooling Valve / Position
 ecd.short_green_purple.valve.enabled,str,,ECD,system,Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5,Energy Distribution Controll / Short Green/Purple Valve Settings
 ecd.short_green_purple.valve.position,float,0.0/100.0,ECD,system,0.0,Energy Distribution Controll / Short Green/Purple Valve Position
+ecd.underfloor_west_bypass.valve.enabled,str,,ECD,system,Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5,Energy Distribution Controll / Underfloor West Bypass Valve Settings
+ecd.underfloor_west_bypass.valve.position,float,0.0/100.0,ECD,system,0.0,Energy Distribution Controll / Underfloor West Bypass Valve Position
+ecd.underfloor_east_bypass.valve.enabled,str,,ECD,system,Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5,Energy Distribution Controll / Underfloor East Bypass Valve Settings
+ecd.underfloor_east_bypass.valve.position,float,0.0/100.0,ECD,system,0.0,Energy Distribution Controll / Underfloor East Bypass Valve Position
 ecd.vcg_pool_heating.valve,str,,ECD,system,Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5,Energy Distribution Controll / Valve Controll Group / Pool Heating
 ecd.vcg_pool_heating.pump,str,,ECD,system,Grundfos/Pump/5,Energy Distribution Controll / Valve Controll Group / Pool Heating
 ecd.vcg_tva_pool.cold_in,str,,ECD,system,Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5,Energy Distribution Controll / Valve Controll Group / Pool Cooling In
