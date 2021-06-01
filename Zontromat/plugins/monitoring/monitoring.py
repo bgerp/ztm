@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import json
 import os
+import time
 
 from utils.logger import get_logger
 
@@ -103,8 +104,14 @@ class Monitoring(BasePlugin):
     __evok_setting = None
     """EVOK settings."""
 
-#endregion
+    __measurements = []
+    """Power analyser measurements.
+    """
 
+    # TODO: Add measuring timer to one hour.
+
+#endregion
+    
 #region Private Methods (Cold Water Flowmeter)
 
     def __cw_input_cb(self, register):
@@ -238,6 +245,28 @@ class Monitoring(BasePlugin):
 #endregion
 
 #region Private Methods (Power Analyser)
+
+    def __read_all_parameters(self):
+
+        black_list = [
+            "GetRelays",
+            "GetDigitalInputs",
+            "GetAnalogOutputs",
+            "GetAnalogInputs",
+            "SetRelays",
+            "SetAnalogOutputs",
+        ]
+
+        for parameter in self.__power_analyser.parameters:
+
+            name = parameter.parameter_name
+
+            if name in black_list:
+                continue
+            
+            value = self.__read_local_parameter(name)
+
+            print("{}: {}".format(name, value))        
 
     def __read_local_parameter(self, name):
 
@@ -373,99 +402,76 @@ class Monitoring(BasePlugin):
     def __update_pa(self):
 
         if self.__power_analyser is None:
-            return
+            return         
+
+        # TODO: Ask is it necessary to have active and reactive energy.
+        # self.__read_all_parameters()
+
+        measurement = {
+            "ImportActiveEnergy": 0.0,
+            "ExportActiveEnergy": 0.0,
+            "ImportReactiveEnergy": 0.0,
+            "ExportReactiveEnergy": 0.0,
+            "Phase1Current": 0.0,
+            "Phase2Current": 0.0,
+            "Phase3Current": 0.0,
+            "ts": 0,
+        }
 
         if self.__power_analyser.model == "SDM120":
 
-            l1_data = {
-                "Current": 0.0,
-                "ExportActiveEnergy": 0.0,
-                "ApparentPower": 0.0
-            }
-
             if self._controller.vendor == "UniPi":
+
                 values = self.__read_unipi_mb_master()
 
-                l1_data["Current"] = values["Current"]
-                l1_data["ExportActiveEnergy"] = values["ExportActiveEnergy"]
-                l1_data["ApparentPower"] = values["ApparentPower"]
+                measurement["ImportActiveEnergy"] = values["ImportActiveEnergy"]
+                measurement["ExportActiveEnergy"] = values["ExportActiveEnergy"]
+                measurement["ImportReactiveEnergy"] = values["ImportReactiveEnergy"]
+                measurement["ExportReactiveEnergy"] = values["ExportReactiveEnergy"]
+                measurement["Phase1Current"] = values["Current"]
 
             else:
-
-                l1_data["Current"] = self.__read_local_parameter("Current")
-                l1_data["ExportActiveEnergy"] = self.__read_local_parameter("ExportActiveEnergy")
-                l1_data["ApparentPower"] = self.__read_local_parameter("ApparentPower")
-
-            reg_l1 = self._registers.by_name(self.key + ".pa.l1")
-            if reg_l1 is not None:
-                reg_l1.value = json.dumps(l1_data)
+                measurement["ImportActiveEnergy"] = self.__read_local_parameter("ImportActiveEnergy")
+                measurement["ExportActiveEnergy"] = self.__read_local_parameter("ExportActiveEnergy")
+                measurement["ImportReactiveEnergy"] = self.__read_local_parameter("ImportReactiveEnergy")
+                measurement["ExportReactiveEnergy"] = self.__read_local_parameter("ExportReactiveEnergy")
+                measurement["Phase1Current"] = self.__read_local_parameter("Current")
 
         elif self.__power_analyser.model == "SDM630":
 
-            l1_data = {
-                "Phase1Current": 0.0,
-                "L1ExportkVArh": 0.0,
-                "L1TotalkWh": 0.0
-            }
-
-            l2_data = {
-                "Phase2Current": 0.0,
-                "L2ExportkVArh": 0.0,
-                "L2TotalkWh": 0.0
-            }
-
-            l3_data = {
-                "Phase3Current": 0.0,
-                "L3ExportkVArh": 0.0,
-                "L3TotalkWh": 0.0
-            }
-
-
             if self._controller.vendor == "UniPi":
                 values = self.__read_unipi_mb_master()
-
-                l1_data["Phase1Current"] = values["Phase1Current"]
-                l1_data["L1ExportkVArh"] = values["L1ExportkVArh"]
-                l1_data["L1TotalkWh"] = values["L1TotalkWh"]
-
-                l2_data["Phase2Current"] = values["Phase2Current"]
-                l2_data["L2ExportkVArh"] = values["L2ExportkVArh"]
-                l2_data["L2TotalkWh"] = values["L2TotalkWh"]
-
-                l3_data["Phase3Current"] = values["Phase3Current"]
-                l3_data["L3ExportkVArh"] = values["L3ExportkVArh"]
-                l3_data["L3TotalkWh"] = values["L3TotalkWh"]
+                measurement["ImportActiveEnergy"] = values["TotalImportkWh"]
+                measurement["ExportActiveEnergy"] = values["TotalExportkWh"]
+                measurement["ImportReactiveEnergy"] = values["TotalImportkVArh"]
+                measurement["ExportReactiveEnergy"] = values["TotalExportkVArh"]
+                measurement["Phase1Current"] = values["Phase1Current"]
+                measurement["Phase2Current"] = values["Phase2Current"]
+                measurement["Phase3Current"] = values["Phase3Current"]
 
             else:
-
-                l1_data["Phase1Current"] = self.__read_local_parameter("Phase1Current")
-                l1_data["L1ExportkVArh"] = self.__read_local_parameter("L1ExportkVArh")
-                l1_data["L1TotalkWh"] = self.__read_local_parameter("L1TotalkWh")
-
-                l2_data["Phase2Current"] = self.__read_local_parameter("Phase2Current")
-                l2_data["L2ExportkVArh"] = self.__read_local_parameter("L2ExportkVArh")
-                l2_data["L2TotalkWh"] = self.__read_local_parameter("L2TotalkWh")
-
-                l3_data["Phase3Current"] = self.__read_local_parameter("Phase3Current")
-                l3_data["L3ExportkVArh"] = self.__read_local_parameter("L3ExportkVArh")
-                l3_data["L3TotalkWh"] = self.__read_local_parameter("L3TotalkWh")
-
-
-            # Update parameters in the registers.
-            reg_l1 = self._registers.by_name(self.key + ".pa.l1")
-            if reg_l1 is not None:
-                reg_l1.value = json.dumps(l1_data)
-
-            reg_l2 = self._registers.by_name(self.key + ".pa.l2")
-            if reg_l2 is not None:
-                reg_l2.value = json.dumps(l2_data)
-
-            reg_l3 = self._registers.by_name(self.key + ".pa.l3")
-            if reg_l3 is not None:
-                reg_l3.value = json.dumps(l3_data)
+                measurement["ImportActiveEnergy"] = self.__read_local_parameter("TotalImportkWh")
+                measurement["ExportActiveEnergy"] = self.__read_local_parameter("TotalExportkWh")
+                measurement["ImportReactiveEnergy"] = self.__read_local_parameter("TotalImportkVArh")
+                measurement["ExportReactiveEnergy"] = self.__read_local_parameter("TotalExportkVArh")
+                measurement["Phase1Current"] = self.__read_local_parameter("Phase1Current")
+                measurement["Phase2Current"] = self.__read_local_parameter("Phase2Current")
+                measurement["Phase3Current"] = self.__read_local_parameter("Phase3Current")
 
         else:
             self.__logger.error("Unknown power analyser")
+
+        # Set the time of the measurement.
+        measurement["ts"] = time.time()
+
+        # Add measuremtn to the tail.
+        self.__measurements.append(measurement)
+
+        # Update parameters in the registers.
+        measurements_reg = self._registers.by_name(self.key + ".pa.measurements")
+        if measurements_reg is not None:
+            measurements_reg.value = json.dumps(self.__measurements)
+
 
 #endregion
 
