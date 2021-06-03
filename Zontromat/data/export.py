@@ -615,6 +615,14 @@ def __add_registers():
     register.value = []
     __registers.append(register)
 
+    register = Register("monitoring.pa.demand_time")
+    register.scope = Scope.Device
+    register.plugin_name = "Monitoring"
+    register.description = "Power analyser measuring demand"
+    register.range = "0.0/"
+    register.value = 3600.0 # Every hour to measure the consumed electricity.
+    __registers.append(register)
+
     # Enable flag.
     register = Register("monitoring.enabled")
     register.scope = Scope.System
@@ -1355,692 +1363,756 @@ def __add_registers():
 
 #region Energy Center Distribution (ecd)
 
-    # Energy Distribution Controll / Foyer Floor Heating Settings
+    # ECD / Foyer Floor Heating Settings
     register = Register("ecd.underfloor_heating_foyer.valve.enabled")
     register.scope = Scope.System
     register.plugin_name = "ECD"
-    register.description = "Energy Distribution Controll / Foyer Floor Heating Settings"
+    register.description = "ECD / Foyer Floor Heating Settings"
     register.range = ""
     register.value = "Flowx/FLX-05F/U1:ID1:R0:DO0/U1:ID1:R0:DO1/U1:ID1:R0:DI0/U1:ID1:R0:DI1"
     __registers.append(register)
 
-    # Energy Distribution Controll / Foyer Floor Heating Position
+    # ECD / Foyer Floor Heating Position
     register = Register("ecd.underfloor_heating_foyer.valve.position")
     register.scope = Scope.System
     register.plugin_name = "ECD"
-    register.description = "Energy Distribution Controll / Foyer Floor Heating Position"
+    register.description = "ECD / Foyer Floor Heating Position"
     register.range = __range["PERCENTAGE_F"]
     register.value = 0.0
     __registers.append(register)
 
+    # ECD / Foyer Floor Heating Position
+    register = Register("ecd.underfloor_heating_foyer.valve.calibrate")
+    register.scope = Scope.System
+    register.plugin_name = "ECD"
+    register.description = "ECD / Foyer Floor Heating Calibration"
+    register.range = __range["BOOL"]
+    register.value = False
+    __registers.append(register)
 
-    # Energy Distribution Controll / Underfloor Heating Trestle Settings
+
+    # ECD / Underfloor Heating Trestle Settings
     register = Register("ecd.underfloor_heating_trestle.valve.enabled")
     register.scope = Scope.System
     register.plugin_name = "ECD"
-    register.description = "Energy Distribution Controll / Underfloor Heating Trestle"
+    register.description = "ECD / Underfloor Heating Trestle"
     register.range = ""
     register.value = "Flowx/FLX-05F/U1:ID1:R0:DO2/U1:ID1:R0:DO3/U1:ID1:R0:DI2/U1:ID1:R0:DI3"
     __registers.append(register)
 
-    # Energy Distribution Controll / Underfloor Heating Trestle Position
+    # ECD / Underfloor Heating Trestle Position
     register = Register("ecd.underfloor_heating_trestle.valve.position")
     register.scope = Scope.System
     register.plugin_name = "ECD"
-    register.description = "Energy Distribution Controll / Underfloor Heating Trestle Position"
+    register.description = "ECD / Underfloor Heating Trestle Position"
     register.range = __range["PERCENTAGE_F"]
     register.value = 0.0
     __registers.append(register)
 
+    # ECD / Underfloor Heating Trestle Calibration
+    register = Register("ecd.underfloor_heating_trestle.valve.calibration")
+    register.scope = Scope.System
+    register.plugin_name = "ECD"
+    register.description = "ECD / Underfloor Heating Trestle Calibration"
+    register.range = __range["BOOL"]
+    register.value = False
+    __registers.append(register)
 
-    # Energy Distribution Controll / Underfloor Heating Pool Settings
+
+    # ECD / Underfloor Heating Pool Settings
     register = Register("ecd.underfloor_heating_pool.valve.enabled")
     register.scope = Scope.System
     register.plugin_name = "ECD"
-    register.description = "Energy Distribution Controll / Underfloor Heating Pool"
+    register.description = "ECD / Underfloor Heating Pool"
     register.range = ""
     register.value = "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5"
     __registers.append(register)
 
-    # Energy Distribution Controll / Underfloor Heating Pool Position
+    # ECD / Underfloor Heating Pool Position
     register = Register("ecd.underfloor_heating_pool.valve.position")
     register.scope = Scope.System
     register.plugin_name = "ECD"
-    register.description = "Energy Distribution Controll / Underfloor Heating Pool Position"
+    register.description = "ECD / Underfloor Heating Pool Position"
     register.range = __range["PERCENTAGE_F"]
     register.value = 0.0
     __registers.append(register)
 
+    # ECD / Underfloor Heating Pool Calibration
+    register = Register("ecd.underfloor_heating_pool.valve.calibration")
+    register.scope = Scope.System
+    register.plugin_name = "ECD"
+    register.description = "ECD / Underfloor Heating Pool Calibration"
+    register.range = __range["BOOL"]
+    register.value = False
+    __registers.append(register)
 
-    # Energy Distribution Controll / Air Cooling Valve Settings
+
+    # ECD / Air Cooling Valve Settings
     register = Register("ecd.air_cooling.valve.enabled")
     register.scope = Scope.System
     register.plugin_name = "ECD"
-    register.description = "Energy Distribution Controll / Air Cooling Valve Settings"
+    register.description = "ECD / Air Cooling Valve Settings"
     register.range = ""
     register.value = "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5"
     __registers.append(register)
 
-    # Energy Distribution Controll / Air Cooling Valve Position
+    # ECD / Air Cooling Valve Position
     register = Register("ecd.air_cooling.valve.position")
     register.scope = Scope.System
     register.plugin_name = "ECD"
-    register.description = "Energy Distribution Controll / Air Cooling Valve Position"
+    register.description = "ECD / Air Cooling Valve Position"
     register.range = __range["PERCENTAGE_F"]
     register.value = 0.0
     __registers.append(register)
 
+    # ECD / Air Cooling Valve Calibration
+    register = Register("ecd.air_cooling.valve.calibration")
+    register.scope = Scope.System
+    register.plugin_name = "ECD"
+    register.description = "ECD / Air Cooling Valve Calibration"
+    register.range = __range["BOOL"]
+    register.value = False
+    __registers.append(register)
 
-    # Energy Distribution Controll / Ground Drilling Valve Settings
+
+    # ECD / Ground Drilling Valve Settings
     register = Register("ecd.ground_drill.valve.enabled")
     register.scope = Scope.System
     register.plugin_name = "ECD"
-    register.description = "Energy Distribution Controll / Ground Drilling Valve"
+    register.description = "ECD / Ground Drilling Valve"
     register.range = ""
     register.value = "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5"
     __registers.append(register)
 
-    # Energy Distribution Controll / Ground Drill Valve Position
+    # ECD / Ground Drill Valve Position
     register = Register("ecd.ground_drill.valve.position")
     register.scope = Scope.System
     register.plugin_name = "ECD"
-    register.description = "Energy Distribution Controll / Ground Drill Valve Position"
+    register.description = "ECD / Ground Drill Valve Position"
     register.range = __range["PERCENTAGE_F"]
     register.value = 0.0
     __registers.append(register)
 
+    # ECD / Ground Drill Valve Calibration
+    register = Register("ecd.ground_drill.valve.calibration")
+    register.scope = Scope.System
+    register.plugin_name = "ECD"
+    register.description = "ECD / Ground Drill Valve Calibration"
+    register.range = __range["BOOL"]
+    register.value = False
+    __registers.append(register)
 
-    # Energy Distribution Controll / Generators Cooling Valve Settings
+
+    # ECD / Generators Cooling Valve Settings
     register = Register("ecd.generators_cooling.valve.enabled")
     register.scope = Scope.System
     register.plugin_name = "ECD"
-    register.description = "Energy Distribution Controll / Generators Cooling Valve / Settings"
+    register.description = "ECD / Generators Cooling Valve / Settings"
     register.range = ""
     register.value = "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5"
     __registers.append(register)
 
-    # Energy Distribution Controll / Generators Cooling Valve Position
+    # ECD / Generators Cooling Valve Position
     register = Register("ecd.generators_cooling.valve.position")
     register.scope = Scope.System
     register.plugin_name = "ECD"
-    register.description = "Energy Distribution Controll / Generators Cooling Valve / Position"
+    register.description = "ECD / Generators Cooling Valve / Position"
     register.range = __range["PERCENTAGE_F"]
     register.value = 0.0
     __registers.append(register)
 
+    # ECD / Generators Cooling Valve Calibration
+    register = Register("ecd.generators_cooling.valve.calibration")
+    register.scope = Scope.System
+    register.plugin_name = "ECD"
+    register.description = "ECD / Generators Cooling Valve Calibration"
+    register.range = __range["BOOL"]
+    register.value = False
+    __registers.append(register)
 
-    # Energy Distribution Controll / Short Green/Purple Valve Settings
+
+    # ECD / Short Green/Purple Valve Settings
     register = Register("ecd.short_green_purple.valve.enabled")
     register.scope = Scope.System
     register.plugin_name = "ECD"
-    register.description = "Energy Distribution Controll / Short Green/Purple Valve Settings"
+    register.description = "ECD / Short Green/Purple Valve Settings"
     register.range = ""
     register.value = "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5"
     __registers.append(register)
 
-    # Energy Distribution Controll / Short Green/Purple Valve Position
+    # ECD / Short Green/Purple Valve Position
     register = Register("ecd.short_green_purple.valve.position")
     register.scope = Scope.System
     register.plugin_name = "ECD"
-    register.description = "Energy Distribution Controll / Short Green/Purple Valve Position"
+    register.description = "ECD / Short Green/Purple Valve Position"
     register.range = __range["PERCENTAGE_F"]
     register.value = 0.0
     __registers.append(register)
 
+    # ECD / Generators Cooling Valve Calibration
+    register = Register("ecd.short_green_purple.valve.calibration")
+    register.scope = Scope.System
+    register.plugin_name = "ECD"
+    register.description = "ECD / Generators Cooling Valve Calibration"
+    register.range = __range["BOOL"]
+    register.value = False
+    __registers.append(register)
 
-    # Energy Distribution Controll / Underfloor West Bypass Valve Settings
+
+    # ECD / Underfloor West Bypass Valve Settings
     register = Register("ecd.underfloor_west_bypass.valve.enabled")
     register.scope = Scope.System
     register.plugin_name = "ECD"
-    register.description = "Energy Distribution Controll / Underfloor West Bypass Valve Settings"
+    register.description = "ECD / Underfloor West Bypass Valve Settings"
     register.range = ""
     register.value = "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5"
     __registers.append(register)
 
-    # Energy Distribution Controll / Underfloor West Bypass Valve Position
+    # ECD / Underfloor West Bypass Valve Position
     register = Register("ecd.underfloor_west_bypass.valve.position")
     register.scope = Scope.System
     register.plugin_name = "ECD"
-    register.description = "Energy Distribution Controll / Underfloor West Bypass Valve Position"
+    register.description = "ECD / Underfloor West Bypass Valve Position"
     register.range = __range["PERCENTAGE_F"]
     register.value = 0.0
     __registers.append(register)
 
+    # ECD / Underfloor West Bypass Valve Calibration
+    register = Register("ecd.underfloor_west_bypass.valve.calibration")
+    register.scope = Scope.System
+    register.plugin_name = "ECD"
+    register.description = "ECD / Underfloor West Bypass Valve Calibration"
+    register.range = __range["BOOL"]
+    register.value = False
+    __registers.append(register)
 
-    # Energy Distribution Controll / Underfloor East Bypass Valve Settings
+
+    # ECD / Underfloor East Bypass Valve Settings
     register = Register("ecd.underfloor_east_bypass.valve.enabled")
     register.scope = Scope.System
     register.plugin_name = "ECD"
-    register.description = "Energy Distribution Controll / Underfloor East Bypass Valve Settings"
+    register.description = "ECD / Underfloor East Bypass Valve Settings"
     register.range = ""
     register.value = "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5"
     __registers.append(register)
 
-    # Energy Distribution Controll / Underfloor East Bypass Valve Position
+    # ECD / Underfloor East Bypass Valve Position
     register = Register("ecd.underfloor_east_bypass.valve.position")
     register.scope = Scope.System
     register.plugin_name = "ECD"
-    register.description = "Energy Distribution Controll / Underfloor East Bypass Valve Position"
+    register.description = "ECD / Underfloor East Bypass Valve Position"
     register.range = __range["PERCENTAGE_F"]
     register.value = 0.0
     __registers.append(register)
 
+    # ECD / Underfloor East Bypass Valve Calibration
+    register = Register("ecd.underfloor_east_bypass.valve.calibration")
+    register.scope = Scope.System
+    register.plugin_name = "ECD"
+    register.description = "ECD / Underfloor East Bypass Valve Calibration"
+    register.range = __range["BOOL"]
+    register.value = False
+    __registers.append(register)
 
-    # Energy Distribution Controll / Valve Controll Group / Pool Heating Valve
+
+    # ECD / VCG / Pool Heating Valve
     register = Register("ecd.vcg_pool_heating.valve")
     register.scope = Scope.System
     register.plugin_name = "ECD"
-    register.description = "Energy Distribution Controll / Valve Controll Group / Pool Heating"
+    register.description = "ECD / VCG / Pool Heating"
     register.range = ""
     register.value = "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5"
     __registers.append(register)
 
-    # Energy Distribution Controll / Valve Controll Group / Pool Heating Valve Pump
+    # ECD / VCG / Pool Heating Valve Pump
     register = Register("ecd.vcg_pool_heating.pump")
     register.scope = Scope.System
     register.plugin_name = "ECD"
-    register.description = "Energy Distribution Controll / Valve Controll Group / Pool Heating"
+    register.description = "ECD / VCG / Pool Heating"
     register.range = ""
     register.value = "Grundfos/Pump/5"
     __registers.append(register)
 
+    # ECD / VCG / Pool Heating Valve Pump
+    register = Register("ecd.vcg_pool_heating.enable")
+    register.scope = Scope.System
+    register.plugin_name = "ECD"
+    register.description = "ECD / VCG / Pool Heating"
+    register.range = __range["BOOL"]
+    register.value = True
+    __registers.append(register)
 
-    # Energy Distribution Controll / Valve Controll Group / Pool Cooling In
+
+    # ECD / VCG / Pool Cooling In
     register = Register("ecd.vcg_tva_pool.cold_in")
     register.scope = Scope.System
     register.plugin_name = "ECD"
-    register.description = "Energy Distribution Controll / Valve Controll Group / Pool Cooling In"
+    register.description = "ECD / VCG / Pool Cooling In"
     register.range = ""
     register.value = "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5"
     __registers.append(register)
 
-    # Energy Distribution Controll / Valve Controll Group / Pool Cooling Out
+    # ECD / VCG / Pool Cooling Out
     register = Register("ecd.vcg_tva_pool.cold_out")
     register.scope = Scope.System
     register.plugin_name = "ECD"
-    register.description = "Energy Distribution Controll / Valve Controll Group / Pool Cooling In"
+    register.description = "ECD / VCG / Pool Cooling In"
     register.range = ""
     register.value = "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5"
     __registers.append(register)
 
 
-    # Energy Distribution Controll / Valve Controll Group / Pool Heating In
+    # ECD / VCG / Pool Heating In
     register = Register("ecd.vcg_tva_pool.hot_in")
     register.scope = Scope.System
     register.plugin_name = "ECD"
-    register.description = "Energy Distribution Controll / Valve Controll Group / Pool Heating In"
+    register.description = "ECD / VCG / Pool Heating In"
     register.range = ""
     register.value = "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5"
     __registers.append(register)
 
-    # Energy Distribution Controll / Valve Controll Group / Pool Heating Out
+    # ECD / VCG / Pool Heating Out
     register = Register("ecd.vcg_tva_pool.hot_out")
     register.scope = Scope.System
     register.plugin_name = "ECD"
-    register.description = "Energy Distribution Controll / Valve Controll Group / Pool Heating Out"
+    register.description = "ECD / VCG / Pool Heating Out"
     register.range = ""
     register.value = "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5"
     __registers.append(register)
 
-    # Energy Distribution Controll / Valve Controll Group / Pump
+    # ECD / VCG / Pump
     register = Register("ecd.vcg_tva_pool.pump")
     register.scope = Scope.System
     register.plugin_name = "ECD"
-    register.description = "Energy Distribution Controll / Valve Controll Group / Pump"
+    register.description = "ECD / VCG / Pump"
     register.range = ""
     register.value = "Grundfos/Pump/5"
     __registers.append(register)
 
-    # Energy Distribution Controll / Valve Controll Group / Convectors East Cooling In
+    # ECD / VCG / Enable
+    register = Register("ecd.vcg_tva_pool.enable")
+    register.scope = Scope.System
+    register.plugin_name = "ECD"
+    register.description = "ECD / VCG / Enable"
+    register.range = __range["BOOL"]
+    register.value = True
+    __registers.append(register)
+
+    # ECD / VCG / Convectors East Cooling In
     register = Register("ecd.convectors_east.cold_in")
     register.scope = Scope.System
     register.plugin_name = "ECD"
-    register.description = "Energy Distribution Controll / Valve Controll Group / Convectors East Cooling In"
+    register.description = "ECD / VCG / Convectors East Cooling In"
     register.range = ""
     register.value = "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5"
     __registers.append(register)
 
-    # Energy Distribution Controll / Valve Controll Group / Convectors East Cooling Out
+    # ECD / VCG / Convectors East Cooling Out
     register = Register("ecd.convectors_east.cold_out")
     register.scope = Scope.System
     register.plugin_name = "ECD"
-    register.description = "Energy Distribution Controll / Valve Controll Group / Convectors East Cooling Out"
+    register.description = "ECD / VCG / Convectors East Cooling Out"
     register.range = ""
     register.value = "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5"
     __registers.append(register)
 
 
-    # Energy Distribution Controll / Valve Controll Group / Convectors East Hot In
+    # ECD / VCG / Convectors East Hot In
     register = Register("ecd.convectors_east.hot_in")
     register.scope = Scope.System
     register.plugin_name = "ECD"
-    register.description = "Energy Distribution Controll / Valve Controll Group / Convectors East Hot In"
+    register.description = "ECD / VCG / Convectors East Hot In"
     register.range = ""
     register.value = "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5"
     __registers.append(register)
 
-    # Energy Distribution Controll / Valve Controll Group / Convectors East Hot Out
+    # ECD / VCG / Convectors East Hot Out
     register = Register("ecd.convectors_east.hot_out")
     register.scope = Scope.System
     register.plugin_name = "ECD"
-    register.description = "Energy Distribution Controll / Valve Controll Group / Convectors East Hot Out"
+    register.description = "ECD / VCG / Convectors East Hot Out"
     register.range = ""
     register.value = "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5"
     __registers.append(register)
 
-    # Energy Distribution Controll / Valve Controll Group / Convectors East Pump
+    # ECD / VCG / Convectors East Pump
     register = Register("ecd.convectors_east.pump")
     register.scope = Scope.System
     register.plugin_name = "ECD"
-    register.description = "Energy Distribution Controll / Valve Controll Group / Convectors East Pump"
+    register.description = "ECD / VCG / Convectors East Pump"
     register.range = ""
     register.value = "Grundfos/Pump/5"
     __registers.append(register)
 
-    # Energy Distribution Controll / Valve Controll Group / Floor East Cooling In
+    # ECD / VCG / Convectors East Enable
+    register = Register("ecd.convectors_east.enable")
+    register.scope = Scope.System
+    register.plugin_name = "ECD"
+    register.description = "ECD / VCG / Convectors East Enable"
+    register.range = __range["BOOL"]
+    register.value = True
+    __registers.append(register)
+
+
+    # ECD / VCG / Floor East Cooling In
     register = Register("ecd.floor_east.cold_in")
     register.scope = Scope.System
     register.plugin_name = "ECD"
-    register.description = "Energy Distribution Controll / Valve Controll Group / Floor East Cooling In"
+    register.description = "ECD / VCG / Floor East Cooling In"
     register.range = ""
     register.value = "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5"
     __registers.append(register)
 
-    # Energy Distribution Controll / Valve Controll Group / Floor East Cooling Out
+    # ECD / VCG / Floor East Cooling Out
     register = Register("ecd.floor_east.cold_out")
     register.scope = Scope.System
     register.plugin_name = "ECD"
-    register.description = "Energy Distribution Controll / Valve Controll Group / Floor East Cooling Out"
+    register.description = "ECD / VCG / Floor East Cooling Out"
     register.range = ""
     register.value = "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5"
     __registers.append(register)
 
-    # Energy Distribution Controll / Valve Controll Group / Floor East Hot In
+    # ECD / VCG / Floor East Hot In
     register = Register("ecd.floor_east.hot_in")
     register.scope = Scope.System
     register.plugin_name = "ECD"
-    register.description = "Energy Distribution Controll / Valve Controll Group / Floor East Hot In"
+    register.description = "ECD / VCG / Floor East Hot In"
     register.range = ""
     register.value = "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5"
     __registers.append(register)
 
-    # Energy Distribution Controll / Valve Controll Group / Floor East Hot Out
+    # ECD / VCG / Floor East Hot Out
     register = Register("ecd.floor_east.hot_out")
     register.scope = Scope.System
     register.plugin_name = "ECD"
-    register.description = "Energy Distribution Controll / Valve Controll Group / Floor East Hot Out"
+    register.description = "ECD / VCG / Floor East Hot Out"
     register.range = ""
     register.value = "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5"
     __registers.append(register)
 
-    # Energy Distribution Controll / Valve Controll Group / Floor East Pump
+    # ECD / VCG / Floor East Pump
     register = Register("ecd.floor_east.pump")
     register.scope = Scope.System
     register.plugin_name = "ECD"
-    register.description = "Energy Distribution Controll / Valve Controll Group / Floor East Pump"
+    register.description = "ECD / VCG / Floor East Pump"
     register.range = ""
     register.value = "Grundfos/Pump/5"
     __registers.append(register)
 
-    # Energy Distribution Controll / Valve Controll Group / Convectors West Cooling In
+    # ECD / VCG / Convectors West Cooling In
     register = Register("ecd.convectors_west.cold_in")
     register.scope = Scope.System
     register.plugin_name = "ECD"
-    register.description = "Energy Distribution Controll / Valve Controll Group / Convectors West Cooling In"
+    register.description = "ECD / VCG / Convectors West Cooling In"
     register.range = ""
     register.value = "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5"
     __registers.append(register)
 
-    # Energy Distribution Controll / Valve Controll Group / Convectors West Cooling Out
+    # ECD / VCG / Convectors West Cooling Out
     register = Register("ecd.convectors_west.cold_out")
     register.scope = Scope.System
     register.plugin_name = "ECD"
-    register.description = "Energy Distribution Controll / Valve Controll Group / Convectors West Cooling Out"
+    register.description = "ECD / VCG / Convectors West Cooling Out"
     register.range = ""
     register.value = "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5"
     __registers.append(register)
 
 
-    # Energy Distribution Controll / Valve Controll Group / Convectors West Hot In
+    # ECD / VCG / Convectors West Hot In
     register = Register("ecd.convectors_west.hot_in")
     register.scope = Scope.System
     register.plugin_name = "ECD"
-    register.description = "Energy Distribution Controll / Valve Controll Group / Convectors West Hot In"
+    register.description = "ECD / VCG / Convectors West Hot In"
     register.range = ""
     register.value = "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5"
     __registers.append(register)
 
-    # Energy Distribution Controll / Valve Controll Group / Convectors West Hot Out
+    # ECD / VCG / Convectors West Hot Out
     register = Register("ecd.convectors_west.hot_out")
     register.scope = Scope.System
     register.plugin_name = "ECD"
-    register.description = "Energy Distribution Controll / Valve Controll Group / Convectors West Hot Out"
+    register.description = "ECD / VCG / Convectors West Hot Out"
     register.range = ""
     register.value = "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5"
     __registers.append(register)
 
-    # Energy Distribution Controll / Valve Controll Group / Convectors West Pump
+    # ECD / VCG / Convectors West Pump
     register = Register("ecd.convectors_west.pump")
     register.scope = Scope.System
     register.plugin_name = "ECD"
-    register.description = "Energy Distribution Controll / Valve Controll Group / Convectors West Pump"
+    register.description = "ECD / VCG / Convectors West Pump"
     register.range = ""
     register.value = "Grundfos/Pump/5"
     __registers.append(register)
 
-    # Energy Distribution Controll / Valve Controll Group / TVA Roof Floor In
+    # ECD / VCG / TVA Roof Floor In
     register = Register("ecd.tva_roof_floor.cold_in")
     register.scope = Scope.System
     register.plugin_name = "ECD"
-    register.description = "Energy Distribution Controll / Valve Controll Group / TVA Roof Floor In"
+    register.description = "ECD / VCG / TVA Roof Floor In"
     register.range = ""
     register.value = "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5"
     __registers.append(register)
 
-    # Energy Distribution Controll / Valve Controll Group / TVA Roof Floor Out
+    # ECD / VCG / TVA Roof Floor Out
     register = Register("ecd.tva_roof_floor.cold_out")
     register.scope = Scope.System
     register.plugin_name = "ECD"
-    register.description = "Energy Distribution Controll / Valve Controll Group / TVA Roof Floor Out"
+    register.description = "ECD / VCG / TVA Roof Floor Out"
     register.range = ""
     register.value = "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5"
     __registers.append(register)
     
-    # Energy Distribution Controll / Valve Controll Group / TVA Roof Floor In
+    # ECD / VCG / TVA Roof Floor In
     register = Register("ecd.tva_roof_floor.hot_in")
     register.scope = Scope.System
     register.plugin_name = "ECD"
-    register.description = "Energy Distribution Controll / Valve Controll Group / TVA Roof Floor In"
+    register.description = "ECD / VCG / TVA Roof Floor In"
     register.range = ""
     register.value = "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5"
     __registers.append(register)
 
-    # Energy Distribution Controll / Valve Controll Group / TVA Roof Floor Out
+    # ECD / VCG / TVA Roof Floor Out
     register = Register("ecd.tva_roof_floor.hot_out")
     register.scope = Scope.System
     register.plugin_name = "ECD"
-    register.description = "Energy Distribution Controll / Valve Controll Group / TVA Roof Floor Out"
+    register.description = "ECD / VCG / TVA Roof Floor Out"
     register.range = ""
     register.value = "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5"
     __registers.append(register)
 
 
-    # Energy Distribution Controll / Valve Controll Group / TVA Roof Floor Pump
+    # ECD / VCG / TVA Roof Floor Pump
     register = Register("ecd.tva_roof_floor.pump")
     register.scope = Scope.System
     register.plugin_name = "ECD"
-    register.description = "Energy Distribution Controll / Valve Controll Group / TVA Roof Floor"
+    register.description = "ECD / VCG / TVA Roof Floor"
     register.range = ""
     register.value = "Grundfos/Pump/5"
     __registers.append(register)
 
-    # Energy Distribution Controll / Valve Controll Group / TVA Fitness In
+    # ECD / VCG / TVA Fitness In
     register = Register("ecd.tva_fitness.cold_in")
     register.scope = Scope.System
     register.plugin_name = "ECD"
-    register.description = "Energy Distribution Controll / Valve Controll Group / TVA Fitness In"
+    register.description = "ECD / VCG / TVA Fitness In"
     register.range = ""
     register.value = "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5"
     __registers.append(register)
 
-    # Energy Distribution Controll / Valve Controll Group / TVA Fitness Out
+    # ECD / VCG / TVA Fitness Out
     register = Register("ecd.tva_fitness.cold_out")
     register.scope = Scope.System
     register.plugin_name = "ECD"
-    register.description = "Energy Distribution Controll / Valve Controll Group / TVA Fitness Out"
+    register.description = "ECD / VCG / TVA Fitness Out"
     register.range = ""
     register.value = "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5"
     __registers.append(register)
 
-    # Energy Distribution Controll / Valve Controll Group / TVA Fitness In
+    # ECD / VCG / TVA Fitness In
     register = Register("ecd.tva_fitness.hot_in")
     register.scope = Scope.System
     register.plugin_name = "ECD"
-    register.description = "Energy Distribution Controll / Valve Controll Group / TVA Fitness In"
+    register.description = "ECD / VCG / TVA Fitness In"
     register.range = ""
     register.value = "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5"
     __registers.append(register)
 
-    # Energy Distribution Controll / Valve Controll Group / TVA Fitness Out
+    # ECD / VCG / TVA Fitness Out
     register = Register("ecd.tva_fitness.hot_out")
     register.scope = Scope.System
     register.plugin_name = "ECD"
-    register.description = "Energy Distribution Controll / Valve Controll Group / TVA Fitness Out"
+    register.description = "ECD / VCG / TVA Fitness Out"
     register.range = ""
     register.value = "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5"
     __registers.append(register)
 
-    # Energy Distribution Controll / Valve Controll Group / TVA Fitness
+    # ECD / VCG / TVA Fitness
     register = Register("ecd.tva_fitness.pump")
     register.scope = Scope.System
     register.plugin_name = "ECD"
-    register.description = "Energy Distribution Controll / Valve Controll Group / TVA Fitness"
+    register.description = "ECD / VCG / TVA Fitness"
     register.range = ""
     register.value = "Grundfos/Pump/5"
     __registers.append(register)
 
-    # Energy Distribution Controll / Valve Controll Group / TVA Roof Floor In
-    register = Register("ecd.tva_roof_floor.cold_in")
-    register.scope = Scope.System
-    register.plugin_name = "ECD"
-    register.description = "Energy Distribution Controll / Valve Controll Group / TVA Roof Floor In"
-    register.range = ""
-    register.value = "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5"
-    __registers.append(register)
-
-    # Energy Distribution Controll / Valve Controll Group / TVA Roof Floor Out
-    register = Register("ecd.tva_roof_floor.cold_out")
-    register.scope = Scope.System
-    register.plugin_name = "ECD"
-    register.description = "Energy Distribution Controll / Valve Controll Group / TVA Roof Floor Out"
-    register.range = ""
-    register.value = "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5"
-    __registers.append(register)
-
-    # Energy Distribution Controll / Valve Controll Group / TVA Roof Floor In
-    register = Register("ecd.tva_roof_floor.hot_in")
-    register.scope = Scope.System
-    register.plugin_name = "ECD"
-    register.description = "Energy Distribution Controll / Valve Controll Group / TVA Roof Floor In"
-    register.range = ""
-    register.value = "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5"
-    __registers.append(register)
-
-    # Energy Distribution Controll / Valve Controll Group / TVA Roof Floor Out
-    register = Register("ecd.tva_roof_floor.hot_out")
-    register.scope = Scope.System
-    register.plugin_name = "ECD"
-    register.description = "Energy Distribution Controll / Valve Controll Group / TVA Roof Floor Out"
-    register.range = ""
-    register.value = "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5"
-    __registers.append(register)
-
-    # Energy Distribution Controll / Valve Controll Group / TVA Roof Floor
-    register = Register("ecd.tva_roof_floor.pump")
-    register.scope = Scope.System
-    register.plugin_name = "ECD"
-    register.description = "Energy Distribution Controll / Valve Controll Group / TVA Roof Floor"
-    register.range = ""
-    register.value = "Grundfos/Pump/5"
-    __registers.append(register)
-
-    # Energy Distribution Controll / Valve Controll Group / Floor West Cooling In
+    # ECD / VCG / Floor West Cooling In
     register = Register("ecd.floor_west.cold_in")
     register.scope = Scope.System
     register.plugin_name = "ECD"
-    register.description = "Energy Distribution Controll / Valve Controll Group / Floor West Cooling In"
+    register.description = "ECD / VCG / Floor West Cooling In"
     register.range = ""
     register.value = "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5"
     __registers.append(register)
 
-    # Energy Distribution Controll / Valve Controll Group / Floor West Cooling Out
+    # ECD / VCG / Floor West Cooling Out
     register = Register("ecd.floor_west.cold_out")
     register.scope = Scope.System
     register.plugin_name = "ECD"
-    register.description = "Energy Distribution Controll / Valve Controll Group / Floor West Cooling Out"
+    register.description = "ECD / VCG / Floor West Cooling Out"
     register.range = ""
     register.value = "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5"
     __registers.append(register)
 
-    # Energy Distribution Controll / Valve Controll Group / Floor West Hot In
+    # ECD / VCG / Floor West Hot In
     register = Register("ecd.floor_west.hot_in")
     register.scope = Scope.System
     register.plugin_name = "ECD"
-    register.description = "Energy Distribution Controll / Valve Controll Group / Floor West Hot In"
+    register.description = "ECD / VCG / Floor West Hot In"
     register.range = ""
     register.value = "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5"
     __registers.append(register)
 
-    # Energy Distribution Controll / Valve Controll Group / Floor West Hot Out
+    # ECD / VCG / Floor West Hot Out
     register = Register("ecd.floor_west.hot_out")
     register.scope = Scope.System
     register.plugin_name = "ECD"
-    register.description = "Energy Distribution Controll / Valve Controll Group / Floor West Hot Out"
+    register.description = "ECD / VCG / Floor West Hot Out"
     register.range = ""
     register.value = "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5"
     __registers.append(register)
 
-    # Energy Distribution Controll / Valve Controll Group / Floor West Pump
+    # ECD / VCG / Floor West Pump
     register = Register("ecd.floor_west.pump")
     register.scope = Scope.System
     register.plugin_name = "ECD"
-    register.description = "Energy Distribution Controll / Valve Controll Group / Floor West Pump"
+    register.description = "ECD / VCG / Floor West Pump"
     register.range = ""
     register.value = "Grundfos/Pump/5"
     __registers.append(register)
 
-    # Energy Distribution Controll / Valve Controll Group / TVA Conference Center In
+    # ECD / VCG / TVA Conference Center In
     register = Register("ecd.tva_conference_center.cold_in")
     register.scope = Scope.System
     register.plugin_name = "ECD"
-    register.description = "Energy Distribution Controll / Valve Controll Group / TVA Conference Center In"
+    register.description = "ECD / VCG / TVA Conference Center In"
     register.range = ""
     register.value = "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5"
     __registers.append(register)
 
-    # Energy Distribution Controll / Valve Controll Group / TVA Conference Center Out
+    # ECD / VCG / TVA Conference Center Out
     register = Register("ecd.tva_conference_center.cold_out")
     register.scope = Scope.System
     register.plugin_name = "ECD"
-    register.description = "Energy Distribution Controll / Valve Controll Group / TVA Conference Center Out"
+    register.description = "ECD / VCG / TVA Conference Center Out"
     register.range = ""
     register.value = "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5"
     __registers.append(register)
 
-    # Energy Distribution Controll / Valve Controll Group / TVA Conference Center In
+    # ECD / VCG / TVA Conference Center In
     register = Register("ecd.tva_conference_center.hot_in")
     register.scope = Scope.System
     register.plugin_name = "ECD"
-    register.description = "Energy Distribution Controll / Valve Controll Group / TVA Conference Center In"
+    register.description = "ECD / VCG / TVA Conference Center In"
     register.range = ""
     register.value = "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5"
     __registers.append(register)
 
-    # Energy Distribution Controll / Valve Controll Group / TVA Conference Center Out
+    # ECD / VCG / TVA Conference Center Out
     register = Register("ecd.tva_conference_center.hot_out")
     register.scope = Scope.System
     register.plugin_name = "ECD"
-    register.description = "Energy Distribution Controll / Valve Controll Group / TVA Conference Center Out"
+    register.description = "ECD / VCG / TVA Conference Center Out"
     register.range = ""
     register.value = "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5"
     __registers.append(register)
 
-    # Energy Distribution Controll / Valve Controll Group / TVA Conference Center Pump
+    # ECD / VCG / TVA Conference Center Pump
     register = Register("ecd.tva_conference_center.pump")
     register.scope = Scope.System
     register.plugin_name = "ECD"
-    register.description = "Energy Distribution Controll / Valve Controll Group / TVA Conference Center"
+    register.description = "ECD / VCG / TVA Conference Center"
     register.range = ""
     register.value = "Grundfos/Pump/5"
     __registers.append(register)
 
-    # Energy Distribution Controll / Valve Controll Group / Convectors Kitchen Cold In
+    # ECD / VCG / Convectors Kitchen Cold In
     register = Register("ecd.convectors_kitchen.cold_in")
     register.scope = Scope.System
     register.plugin_name = "ECD"
-    register.description = "Energy Distribution Controll / Valve Controll Group / Convectors Kitchen Cold In"
+    register.description = "ECD / VCG / Convectors Kitchen Cold In"
     register.range = ""
     register.value = "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5"
     __registers.append(register)
 
-    # Energy Distribution Controll / Valve Controll Group / Convectors Kitchen Cold Out
+    # ECD / VCG / Convectors Kitchen Cold Out
     register = Register("ecd.convectors_kitchen.cold_out")
     register.scope = Scope.System
     register.plugin_name = "ECD"
-    register.description = "Energy Distribution Controll / Valve Controll Group / Convectors Kitchen Cold Out"
+    register.description = "ECD / VCG / Convectors Kitchen Cold Out"
     register.range = ""
     register.value = "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5"
     __registers.append(register)
     
-    # Energy Distribution Controll / Valve Controll Group / Convectors Kitchen Hot In
+    # ECD / VCG / Convectors Kitchen Hot In
     register = Register("ecd.convectors_kitchen.hot_in")
     register.scope = Scope.System
     register.plugin_name = "ECD"
-    register.description = "Energy Distribution Controll / Valve Controll Group / Convectors Kitchen Hot In"
+    register.description = "ECD / VCG / Convectors Kitchen Hot In"
     register.range = ""
     register.value = "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5"
     __registers.append(register)
 
-    # Energy Distribution Controll / Valve Controll Group / Convectors Kitchen Hot Out
+    # ECD / VCG / Convectors Kitchen Hot Out
     register = Register("ecd.convectors_kitchen.hot_out")
     register.scope = Scope.System
     register.plugin_name = "ECD"
-    register.description = "Energy Distribution Controll / Valve Controll Group / Convectors Kitchen Hot Out"
+    register.description = "ECD / VCG / Convectors Kitchen Hot Out"
     register.range = ""
     register.value = "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5"
     __registers.append(register)
 
 
-    # Energy Distribution Controll / Valve Controll Group / Convectors Kitchen Pump
+    # ECD / VCG / Convectors Kitchen Pump
     register = Register("ecd.convectors_kitchen.pump")
     register.scope = Scope.System
     register.plugin_name = "ECD"
-    register.description = "Energy Distribution Controll / Valve Controll Group / Convectors Kitchen Pump"
+    register.description = "ECD / VCG / Convectors Kitchen Pump"
     register.range = ""
     register.value = "Grundfos/Pump/5"
     __registers.append(register)
 
-    # Energy Distribution Controll / Valve Controll Group / TVA Wearhouse Cold In
+    # ECD / VCG / TVA Wearhouse Cold In
     register = Register("ecd.tva_warehouse.cold_in")
     register.scope = Scope.System
     register.plugin_name = "ECD"
-    register.description = "Energy Distribution Controll / Valve Controll Group / TVA Wearhouse Cold In"
+    register.description = "ECD / VCG / TVA Wearhouse Cold In"
     register.range = ""
     register.value = "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5"
     __registers.append(register)
     
-    # Energy Distribution Controll / Valve Controll Group / TVA Wearhouse Cold Out
+    # ECD / VCG / TVA Wearhouse Cold Out
     register = Register("ecd.tva_warehouse.cold_out")
     register.scope = Scope.System
     register.plugin_name = "ECD"
-    register.description = "Energy Distribution Controll / Valve Controll Group / TVA Wearhouse Cold Out"
+    register.description = "ECD / VCG / TVA Wearhouse Cold Out"
     register.range = ""
     register.value = "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5"
     __registers.append(register)
 
-    # Energy Distribution Controll / Valve Controll Group / TVA Wearhouse Hot In
+    # ECD / VCG / TVA Wearhouse Hot In
     register = Register("ecd.tva_warehouse.hot_in")
     register.scope = Scope.System
     register.plugin_name = "ECD"
-    register.description = "Energy Distribution Controll / Valve Controll Group / TVA Wearhouse Hot In"
+    register.description = "ECD / VCG / TVA Wearhouse Hot In"
     register.range = ""
     register.value = "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5"
     __registers.append(register)
 
-    # Energy Distribution Controll / Valve Controll Group / TVA Wearhouse Hot Out
+    # ECD / VCG / TVA Wearhouse Hot Out
     register = Register("ecd.tva_warehouse.hot_out")
     register.scope = Scope.System
     register.plugin_name = "ECD"
-    register.description = "Energy Distribution Controll / Valve Controll Group / TVA Wearhouse Hot Out"
+    register.description = "ECD / VCG / TVA Wearhouse Hot Out"
     register.range = ""
     register.value = "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5"
     __registers.append(register)
 
-    # Energy Distribution Controll / Valve Controll Group / TVA Wearhouse Pump
+    # ECD / VCG / TVA Wearhouse Pump
     register = Register("ecd.tva_warehouse.pump")
     register.scope = Scope.System
     register.plugin_name = "ECD"
-    register.description = "Energy Distribution Controll / Valve Controll Group / TVA Wearhouse"
+    register.description = "ECD / VCG / TVA Wearhouse"
     register.range = ""
     register.value = "Grundfos/Pump/5"
     __registers.append(register)
@@ -2139,116 +2211,116 @@ def __add_registers():
 
     # -================================================================================-
 
-    # Heat Pump Control Group / Valve Controll Group / Cold Buffer / Input
+    # Heat Pump Control Group / VCG / Cold Buffer / Input
     register = Register("echp.hpcg.vcg_cold_buf.input")
     register.scope = Scope.System
     register.plugin_name = "ECHP"
-    register.description = "Heat Pump Control Group / Valve Controll Group / Cold Buffer / Input"
+    register.description = "Heat Pump Control Group / VCG / Cold Buffer / Input"
     register.range = ""
     register.value = "Flowx/FLX-05F/U1:ID1:R0:DO0/U1:ID1:R0:DO1/U1:ID1:R0:DI0/U1:ID1:R0:DI1"
     __registers.append(register)
 
-    # Heat Pump Control Group / Valve Controll Group / Cold Buffer / Output
+    # Heat Pump Control Group / VCG / Cold Buffer / Output
     register = Register("echp.hpcg.vcg_cold_buf.output")
     register.scope = Scope.System
     register.plugin_name = "ECHP"
-    register.description = "Heat Pump Control Group / Valve Controll Group / Cold Buffer / Output"
+    register.description = "Heat Pump Control Group / VCG / Cold Buffer / Output"
     register.range = ""
     register.value = "Flowx/FLX-05F/U1:ID6:R16:DO0/U1:ID6:R16:DO1/U1:ID6:R16:DI0/U1:ID6:R16:DO1"
     __registers.append(register)
 
-    # Heat Pump Control Group / Valve Controll Group / Cold Buffer / Short
+    # Heat Pump Control Group / VCG / Cold Buffer / Short
     register = Register("echp.hpcg.vcg_cold_buf.short")
     register.scope = Scope.System
     register.plugin_name = "ECHP"
-    register.description = "Heat Pump Control Group / Valve Controll Group / Cold Buffer / Short"
+    register.description = "Heat Pump Control Group / VCG / Cold Buffer / Short"
     register.range = ""
     register.value = "Flowx/FLX-05F/U1:ID6:R16:DO2/U1:ID6:R16:DO3/U1:ID6:R16:DI2/U1:ID6:R16:DO3"
     __registers.append(register)
 
     # -================================================================================-
 
-    # Heat Pump Control Group / Valve Controll Group / Cold Geo / Input
+    # Heat Pump Control Group / VCG / Cold Geo / Input
     register = Register("echp.hpcg.vcg_cold_geo.input")
     register.scope = Scope.System
     register.plugin_name = "ECHP"
-    register.description = "Heat Pump Control Group / Valve Controll Group / Cold Geo / Input"
+    register.description = "Heat Pump Control Group / VCG / Cold Geo / Input"
     register.range = ""
     register.value = "Flowx/FLX-05F/off/off/off/off"
     __registers.append(register)
 
-    # Heat Pump Control Group / Valve Controll Group / Cold Geo / Output
+    # Heat Pump Control Group / VCG / Cold Geo / Output
     register = Register("echp.hpcg.vcg_cold_geo.output")
     register.scope = Scope.System
     register.plugin_name = "ECHP"
-    register.description = "Heat Pump Control Group / Valve Controll Group / Cold Geo / Output"
+    register.description = "Heat Pump Control Group / VCG / Cold Geo / Output"
     register.range = ""
     register.value = "Flowx/FLX-05F/off/off/off/off"
     __registers.append(register)
 
-    # Heat Pump Control Group / Valve Controll Group / Cold Geo / Short
+    # Heat Pump Control Group / VCG / Cold Geo / Short
     register = Register("echp.hpcg.vcg_cold_geo.short")
     register.scope = Scope.System
     register.plugin_name = "ECHP"
-    register.description = "Heat Pump Control Group / Valve Controll Group / Cold Geo / Short"
+    register.description = "Heat Pump Control Group / VCG / Cold Geo / Short"
     register.range = ""
     register.value = "Flowx/FLX-05F/off/off/off/off"
     __registers.append(register)
 
     # -================================================================================-
 
-    # Heat Pump Control Group / Valve Controll Group / Warm Geo / Input
+    # Heat Pump Control Group / VCG / Warm Geo / Input
     register = Register("echp.hpcg.vcg_warm_geo.input")
     register.scope = Scope.System
     register.plugin_name = "ECHP"
-    register.description = "Heat Pump Control Group / Valve Controll Group / Warm Geo / Input"
+    register.description = "Heat Pump Control Group / VCG / Warm Geo / Input"
     register.range = ""
     register.value = "Flowx/FLX-05F/off/off/off/off"
     __registers.append(register)
 
-    # Heat Pump Control Group / Valve Controll Group / Warm Geo / Output
+    # Heat Pump Control Group / VCG / Warm Geo / Output
     register = Register("echp.hpcg.vcg_warm_geo.output")
     register.scope = Scope.System
     register.plugin_name = "ECHP"
-    register.description = "Heat Pump Control Group / Valve Controll Group / Warm Geo / Output"
+    register.description = "Heat Pump Control Group / VCG / Warm Geo / Output"
     register.range = ""
     register.value = "Flowx/FLX-05F/off/off/off/off"
     __registers.append(register)
 
-    # Heat Pump Control Group / Valve Controll Group / Warm Geo / Short
+    # Heat Pump Control Group / VCG / Warm Geo / Short
     register = Register("echp.hpcg.vcg_warm_geo.short")
     register.scope = Scope.System
     register.plugin_name = "ECHP"
-    register.description = "Heat Pump Control Group / Valve Controll Group / Warm Geo / Short"
+    register.description = "Heat Pump Control Group / VCG / Warm Geo / Short"
     register.range = ""
     register.value = "Flowx/FLX-05F/off/off/off/off"
     __registers.append(register)
 
     # -================================================================================-
 
-    # Heat Pump Control Group / Valve Controll Group / Warm Geo / Input
+    # Heat Pump Control Group / VCG / Warm Geo / Input
     register = Register("echp.hpcg.vcg_warm_floor.input")
     register.scope = Scope.System
     register.plugin_name = "ECHP"
-    register.description = "Heat Pump Control Group / Valve Controll Group / Warm Geo / Input"
+    register.description = "Heat Pump Control Group / VCG / Warm Geo / Input"
     register.range = ""
     register.value = "Flowx/FLX-05F/off/off/off/off"
     __registers.append(register)
 
-    # Heat Pump Control Group / Valve Controll Group / Warm Geo / Output
+    # Heat Pump Control Group / VCG / Warm Geo / Output
     register = Register("echp.hpcg.vcg_warm_floor.output")
     register.scope = Scope.System
     register.plugin_name = "ECHP"
-    register.description = "Heat Pump Control Group / Valve Controll Group / Warm Geo / Output"
+    register.description = "Heat Pump Control Group / VCG / Warm Geo / Output"
     register.range = ""
     register.value = "Flowx/FLX-05F/off/off/off/off"
     __registers.append(register)
 
-    # Heat Pump Control Group / Valve Controll Group / Warm Geo / Short
+    # Heat Pump Control Group / VCG / Warm Geo / Short
     register = Register("echp.hpcg.vcg_warm_floor.short")
     register.scope = Scope.System
     register.plugin_name = "ECHP"
-    register.description = "Heat Pump Control Group / Valve Controll Group / Warm Geo / Output"
+    register.description = "Heat Pump Control Group / VCG / Warm Geo / Output"
     register.range = ""
     register.value = "Flowx/FLX-05F/off/off/off/off"
     __registers.append(register)
