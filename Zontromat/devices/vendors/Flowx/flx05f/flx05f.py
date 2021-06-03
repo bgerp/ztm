@@ -383,4 +383,8 @@ class FLX05F(BaseValve):
             # - Store (T0 - T1) in dT
             # - Use dT and end position contacts to ensure that the valve is closed and opened. 
 
+    def calibrate(self):
+
+        self._state.set_state(ValveState.Calibrate)
+
 #endregion
