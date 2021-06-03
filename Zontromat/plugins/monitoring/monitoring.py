@@ -27,13 +27,14 @@ import os
 import time
 
 from utils.logger import get_logger
+from utils.logic.timer import Timer
 
 from plugins.base_plugin import BasePlugin
 
 from devices.vendors.no_vendor_1.flowmeter import Flowmeter
 from devices.tests.leak_test.leak_test import LeakTest
 
-from devices.factories.power_analysers.power_analyser_factory import PowerAnalyserFactory
+from devices.factories.power_analyzers.power_analyser_factory import PowerAnalyserFactory
 
 from data import verbal_const
 
@@ -98,14 +99,15 @@ class Monitoring(BasePlugin):
     __power_analyser = None
     """Power analyser."""
 
-    __parameters_values = []
-    """Parameters values."""
-
     __evok_setting = None
     """EVOK settings."""
 
     __measurements = []
     """Power analyser measurements.
+    """
+
+    __demand_timer = None
+    """Demand measuring timer.
     """
 
     # TODO: Add measuring timer to one hour.
@@ -392,12 +394,31 @@ class Monitoring(BasePlugin):
                         EvokSettings.restart()
                         self.__logger.debug("Restart the EVOK service.")
 
+    def __pa_demand_time_cb(self, register):
+
+        # Check data type.
+        if not (register.data_type == "float" or register.data_type == "int"):
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        if register.value < 0.0:
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
+            return
+
+        if self.__demand_timer is not None:
+            self.__demand_timer.expiration_time = register.value
+
     def __init_pa(self):
 
         pa_enabled = self._registers.by_name(self.key + ".pa.settings")
         if pa_enabled is not None:
             pa_enabled.update_handlers = self.__pa_enabled_cb
             pa_enabled.update()
+
+        demand_time = self._registers.by_name(self.key + ".pa.demand_time")
+        if demand_time is not None:
+            demand_time.update_handlers = self.__pa_demand_time_cb
+            demand_time.update()
 
     def __update_pa(self):
 
@@ -472,6 +493,7 @@ class Monitoring(BasePlugin):
         if measurements_reg is not None:
             measurements_reg.value = json.dumps(self.__measurements)
 
+        # TODO: The tail will become longer and longer, what to to?
 
 #endregion
 
@@ -482,6 +504,8 @@ class Monitoring(BasePlugin):
 
         self.__logger = get_logger(__name__)
         self.__logger.info("Starting up the {}".format(self.name))
+
+        self.__demand_timer = Timer(3600)
 
         # Init cold water flow meter.
         self.__init_cw()
@@ -501,8 +525,15 @@ class Monitoring(BasePlugin):
         # Update hot water flow meter.
         self.__update_hw()
 
-        # Update power analyser.
-        self.__update_pa()
+        # Check is it time to measure.
+        self.__demand_timer.update()
+        if self.__demand_timer.expired:
+
+            # Clear the timer.
+            self.__demand_timer.clear()
+
+            # Update power analyser.
+            self.__update_pa()
 
     def shutdown(self):
         """Shutting down the blinds."""
