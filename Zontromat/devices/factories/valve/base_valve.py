@@ -231,6 +231,14 @@ class BaseValve(BaseDevice):
 
 #region Protected Methods
 
+#endregion
+
 #region Public Methods
+
+    def calibrate(self):
+        """Calibrate the valve.
+        """
+
+        pass
 
 #endregion
