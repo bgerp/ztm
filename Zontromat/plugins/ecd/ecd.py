@@ -184,41 +184,11 @@ class EnergyCenterDistribution(BasePlugin):
         self.__logger = get_logger(__name__)
         self.__logger.info("Starting up the: {}".format(self.name))
 
-        # Consumers (RED)
-        self.__vcg_pool_heating = ValveControlGroup.create(
-            name="VCG Pool Heating",
-            key="{}.vcg_pool_heating".format(self.key),
-            controller=self._controller,
-            registers=self._registers,
-            fw_valves=["valve"],
-            fw_pumps=["pump"])
-        self.__vcg_pool_heating.mode = ValveControlGroupMode.Proportional
-
-        # TVA Pool (RED and BLUE)
-        self.__vcg_tva_pool = ValveControlGroup.create(\
-            name="TVA Pool",
-            key="{}.vcg_tva_pool".format(self.key),
-            controller=self._controller,
-            registers=self._registers,
-            fw_valves=["cold_in", "cold_out"],
-            rev_valves=["hot_in", "hot_out"],
-            fw_pumps=["pump"])
-        self.__vcg_tva_pool.mode = ValveControlGroupMode.DualSide
-
-        # Convectors East (RED and BLUE)
-        self.__vcg_convectors_east = ValveControlGroup.create(\
-            name="Convectors east",
-            key="{}.convectors_east".format(self.key),
-            controller=self._controller,
-            registers=self._registers,
-            fw_valves=["cold_in", "cold_out"],
-            rev_valves=["hot_in", "hot_out"],
-            fw_pumps=["pump"])
-        self.__vcg_convectors_east.mode = ValveControlGroupMode.DualSide
+        return
 
         # Floor East (RED and BLUE)
-        self.__vcg_underfloor_east = ValveControlGroup.create(\
-            name="Underfloor east",
+        self.__vcg_underfloor_east = ValveControlGroup(\
+            name="VCG Underfloor east",
             key="{}.floor_east".format(self.key),
             controller=self._controller,
             registers=self._registers,
@@ -228,8 +198,8 @@ class EnergyCenterDistribution(BasePlugin):
         self.__vcg_underfloor_east.mode = ValveControlGroupMode.DualSide
 
         # Convectors West (RED and BLUE)
-        self.__vcg_convectors_west = ValveControlGroup.create(\
-            name="Convectors west",
+        self.__vcg_convectors_west = ValveControlGroup(\
+            name="VCG Convectors west",
             key="{}.convectors_west".format(self.key),
             controller=self._controller,
             registers=self._registers,
@@ -239,8 +209,8 @@ class EnergyCenterDistribution(BasePlugin):
         self.__vcg_convectors_west.mode = ValveControlGroupMode.DualSide
 
         # TVA Fitness (RED and BLUE)
-        self.__vcg_tva_fitness = ValveControlGroup.create(\
-            name="TVA fitness",
+        self.__vcg_tva_fitness = ValveControlGroup(\
+            name="VCG TVA fitness",
             key="{}.tva_fitness".format(self.key),
             controller=self._controller,
             registers=self._registers,
@@ -250,8 +220,8 @@ class EnergyCenterDistribution(BasePlugin):
         self.__vcg_tva_fitness.mode = ValveControlGroupMode.DualSide
 
         # TVA Roof Floor (RED and BLUE)
-        self.__vcg_tva_roof_floor = ValveControlGroup.create(\
-            name="TVA roof floor",
+        self.__vcg_tva_roof_floor = ValveControlGroup(\
+            name="VCG TVA roof floor",
             key="{}.tva_roof_floor".format(self.key),
             controller=self._controller,
             registers=self._registers,
@@ -261,8 +231,8 @@ class EnergyCenterDistribution(BasePlugin):
         self.__vcg_tva_roof_floor.mode = ValveControlGroupMode.DualSide
 
         # Floor West (RED and BLUE)
-        self.__vcg_underfloor_west = ValveControlGroup.create(\
-            name="Floor west",
+        self.__vcg_underfloor_west = ValveControlGroup(\
+            name="VCG Floor west",
             key="{}.floor_west".format(self.key),
             controller=self._controller,
             registers=self._registers,
@@ -272,8 +242,8 @@ class EnergyCenterDistribution(BasePlugin):
         self.__vcg_underfloor_west.mode = ValveControlGroupMode.DualSide
 
         # TVA Conference (RED and BLUE)
-        self.__vcg_tva_conference_center = ValveControlGroup.create(\
-            name="TVA conference center",
+        self.__vcg_tva_conference_center = ValveControlGroup(\
+            name="VCG TVA conference center",
             key="{}.tva_conference_center".format(self.key),
             controller=self._controller,
             registers=self._registers,
@@ -283,8 +253,8 @@ class EnergyCenterDistribution(BasePlugin):
         self.__vcg_tva_conference_center.mode = ValveControlGroupMode.DualSide
 
         # Convectors Kitchen (RED and BLUE)
-        self.__vcg_convectors_kitchen = ValveControlGroup.create(\
-            name="Convectors kitchen",
+        self.__vcg_convectors_kitchen = ValveControlGroup(\
+            name="VCG Convectors kitchen",
             key="{}.convectors_kitchen".format(self.key),
             controller=self._controller,
             registers=self._registers,
@@ -294,8 +264,8 @@ class EnergyCenterDistribution(BasePlugin):
         self.__vcg_convectors_kitchen.mode = ValveControlGroupMode.DualSide
 
         # TVA Wearhouse (RED and BLUE)
-        self.__vcg_tva_warehouse = ValveControlGroup.create(\
-            name="TVA warehouse",
+        self.__vcg_tva_warehouse = ValveControlGroup(\
+            name="VCG TVA warehouse",
             key="{}.tva_warehouse".format(self.key),
             controller=self._controller,
             registers=self._registers,
@@ -362,6 +332,30 @@ class EnergyCenterDistribution(BasePlugin):
 
 #region Private Methods (Registers)
 
+    def __attach_single_valve(self, valve_name, enable_cb, position_cb, calibration_cb):
+
+        # Generators cooling valve enabled.
+        reg_name = "{}.{}.valve.enabled".format(self.key, valve_name)
+        enable = self._registers.by_name(reg_name)
+        if enable is not None:
+                enable.update_handlers = enable_cb
+                enable.update()
+
+        # Generators cooling valve postition.
+        reg_name = "{}.{}.valve.position".format(self.key, valve_name)
+        position = self._registers.by_name(reg_name)
+        if position is not None:
+                position.update_handlers = position_cb
+                position.update()
+
+        # Generators cooling valve calibrate.
+        reg_name = "{}.{}.valve.calibrate".format(self.key, valve_name)
+        calibration = self._registers.by_name(reg_name)
+        if calibration is not None:
+                calibration.update_handlers = calibration_cb
+                calibration.update()
+
+
     def __underfloor_heating_foyer_enabled_cb(self, register):
 
         # Check data type.
@@ -387,6 +381,32 @@ class EnergyCenterDistribution(BasePlugin):
         elif register.value == verbal_const.OFF and self.__v_underfloor_heating_foyer is not None:
             self.__v_underfloor_heating_foyer.shutdown()
             del self.__v_underfloor_heating_foyer
+
+    def __underfloor_heating_foyer_pos_cb(self, register):
+
+        # Check data type.
+        if not (register.data_type == "float" or register.data_type == "int"):
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        if register.value < 0 or register.value > 100:
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
+            return
+
+        if self.__v_underfloor_heating_foyer is not None:
+            self.__v_underfloor_heating_foyer.target_position = register.value
+
+    def __underfloor_heating_foyer_calib_cb(self, register):
+
+        # Check data type.
+        if not register.data_type == "bool":
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        if register.value:
+            if self.__v_underfloor_heating_foyer is not None:
+                self.__v_underfloor_heating_foyer.calibrate()
+
 
     def __underfloor_heating_trestle_enabled_cb(self, register):
 
@@ -414,6 +434,32 @@ class EnergyCenterDistribution(BasePlugin):
             self.__v_underfloor_heating_trestle.shutdown()
             del self.__v_underfloor_heating_trestle
 
+    def __underfloor_heating_trestle_pos_cb(self, register):
+
+        # Check data type.
+        if not (register.data_type == "float" or register.data_type == "int"):
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        if register.value < 0 or register.value > 100:
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
+            return
+
+        if self.__v_underfloor_heating_trestle is not None:
+            self.__v_underfloor_heating_trestle.target_position = register.value
+
+    def __underfloor_heating_trestle_calib_cb(self, register):
+
+        # Check data type.
+        if not register.data_type == "bool":
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        if register.value:
+            if self.__v_underfloor_heating_trestle is not None:
+                self.__v_underfloor_heating_trestle.calibrate()
+
+
     def __underfloor_heating_pool_enabled_cb(self, register):
 
         # Check data type.
@@ -440,57 +486,31 @@ class EnergyCenterDistribution(BasePlugin):
             self.__v_underfloor_heating_pool.shutdown()
             del self.__v_underfloor_heating_pool
 
-    def __generators_cooling_enabled_cb(self, register):
+    def __underfloor_heating_pool_pos_cb(self, register):
 
-        # Check data type.
-        if not register.data_type == "str":
+          # Check data type.
+        if not (register.data_type == "float" or register.data_type == "int"):
             GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
             return
 
-        if register.value != verbal_const.OFF and self.__v_generators_cooling is None:
+        if register.value < 0 or register.value > 100:
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
+            return
 
-            params = register.value.split("/")
+        if self.__v_underfloor_heating_pool is not None:
+            self.__v_underfloor_heating_pool.target_position = register.value
 
-            if len(params) <= 2:
-                raise ValueError("Not enough parameters.")
-
-            self.__v_generators_cooling = ValveFactory.create(
-                name="Valve Generators Cooling",
-                controller=self._controller,
-                params=params)
-
-            if self.__v_generators_cooling is not None:
-                self.__v_generators_cooling.init()
-
-        elif register.value == verbal_const.OFF and self.__v_generators_cooling is not None:
-            self.__v_generators_cooling.shutdown()
-            del self.__v_generators_cooling
-
-    def __ground_drill_enabled_cb(self, register):
+    def __underfloor_heating_pool_calib_cb(self, register):
 
         # Check data type.
-        if not register.data_type == "str":
+        if not register.data_type == "bool":
             GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
             return
 
-        if register.value != verbal_const.OFF and self.__v_ground_drill is None:
+        if register.value:
+            if self.__v_underfloor_heating_pool is not None:
+                self.__v_underfloor_heating_pool.calibrate()
 
-            params = register.value.split("/")
-
-            if len(params) <= 2:
-                raise ValueError("Not enough parameters.")
-
-            self.__v_ground_drill = ValveFactory.create(
-                name="Valve Ground Drilling",
-                controller=self._controller,
-                params=params)
-
-            if self.__v_ground_drill is not None:
-                self.__v_ground_drill.init()
-
-        elif register.value == verbal_const.OFF and self.__v_ground_drill is not None:
-            self.__v_ground_drill.shutdown()
-            del self.__v_ground_drill
 
     def __air_cooling_enabled_cb(self, register):
 
@@ -518,6 +538,136 @@ class EnergyCenterDistribution(BasePlugin):
             self.__v_air_cooling.shutdown()
             del self.__v_air_cooling
 
+    def __air_cooling_pos_cb(self, register):
+
+          # Check data type.
+        if not (register.data_type == "float" or register.data_type == "int"):
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        if register.value < 0 or register.value > 100:
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
+            return
+
+        if self.__v_air_cooling is not None:
+            self.__v_air_cooling.target_position = register.value    
+
+    def __air_cooling_calib_cb(self, register):
+
+        # Check data type.
+        if not register.data_type == "bool":
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        if register.value:
+            if self.__v_air_cooling is not None:
+                self.__v_air_cooling.calibrate()
+
+
+    def __ground_drill_enabled_cb(self, register):
+
+        # Check data type.
+        if not register.data_type == "str":
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        if register.value != verbal_const.OFF and self.__v_ground_drill is None:
+
+            params = register.value.split("/")
+
+            if len(params) <= 2:
+                raise ValueError("Not enough parameters.")
+
+            self.__v_ground_drill = ValveFactory.create(
+                name="Valve Ground Drilling",
+                controller=self._controller,
+                params=params)
+
+            if self.__v_ground_drill is not None:
+                self.__v_ground_drill.init()
+
+        elif register.value == verbal_const.OFF and self.__v_ground_drill is not None:
+            self.__v_ground_drill.shutdown()
+            del self.__v_ground_drill
+
+    def __ground_drill_pos_cb(self, register):
+
+          # Check data type.
+        if not (register.data_type == "float" or register.data_type == "int"):
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        if register.value < 0 or register.value > 100:
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
+            return
+
+        if self.__v_ground_drill is not None:
+            self.__v_ground_drill.target_position = register.value 
+
+    def __ground_drill_calib_cb(self, register):
+
+        # Check data type.
+        if not register.data_type == "bool":
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        if register.value:
+            if self.__v_ground_drill is not None:
+                self.__v_ground_drill.calibrate()  
+
+
+    def __generators_cooling_enabled_cb(self, register):
+
+        # Check data type.
+        if not register.data_type == "str":
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        if register.value != verbal_const.OFF and self.__v_generators_cooling is None:
+
+            params = register.value.split("/")
+
+            if len(params) <= 2:
+                raise ValueError("Not enough parameters.")
+
+            self.__v_generators_cooling = ValveFactory.create(
+                name="Valve Generators Cooling",
+                controller=self._controller,
+                params=params)
+
+            if self.__v_generators_cooling is not None:
+                self.__v_generators_cooling.init()
+
+        elif register.value == verbal_const.OFF and self.__v_generators_cooling is not None:
+            self.__v_generators_cooling.shutdown()
+            del self.__v_generators_cooling
+
+    def __generators_cooling_pos_cb(self, register):
+
+        # Check data type.
+        if not (register.data_type == "float" or register.data_type == "int"):
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        if register.value < 0 or register.value > 100:
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
+            return
+
+        if self.__v_generators_cooling is not None:
+            self.__v_generators_cooling.target_position = register.value
+
+    def __generators_cooling_calib_cb(self, register):
+
+        # Check data type.
+        if not register.data_type == "bool":
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        if register.value:
+            if self.__v_generators_cooling is not None:
+                self.__v_generators_cooling.calibrate()  
+
+
     def __short_green_purple_enabled_cb(self, register):
 
         # Check data type.
@@ -543,6 +693,32 @@ class EnergyCenterDistribution(BasePlugin):
         elif register.value == verbal_const.OFF and self.__v_short_green_purple is not None:
             self.__v_short_green_purple.shutdown()
             del self.__v_short_green_purple
+
+    def __short_green_purple_pos_cb(self, register):
+
+        # Check data type.
+        if not (register.data_type == "float" or register.data_type == "int"):
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        if register.value < 0 or register.value > 100:
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
+            return
+
+        if self.__v_short_green_purple is not None:
+            self.__v_short_green_purple.target_position = register.value
+
+    def __short_green_purple_calib_cb(self, register):
+
+        # Check data type.
+        if not register.data_type == "bool":
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        if register.value:
+            if self.__v_short_green_purple is not None:
+                self.__v_short_green_purple.calibrate() 
+
 
     def __underfloor_west_bypass_enabled_cb(self, register):
 
@@ -570,6 +746,32 @@ class EnergyCenterDistribution(BasePlugin):
             self.__v_underfloor_west_bypass.shutdown()
             del self.__v_underfloor_west_bypass   
 
+    def __underfloor_west_bypass_pos_cb(self, register):
+
+        # Check data type.
+        if not (register.data_type == "float" or register.data_type == "int"):
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        if register.value < 0 or register.value > 100:
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
+            return
+
+        if self.__v_underfloor_west_bypass is not None:
+            self.__v_underfloor_west_bypass.target_position = register.value
+
+    def __underfloor_west_bypass_calib_cb(self, register):
+
+        # Check data type.
+        if not register.data_type == "bool":
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        if register.value:
+            if self.__v_underfloor_west_bypass is not None:
+                self.__v_underfloor_west_bypass.calibrate()  
+
+
     def __underfloor_east_bypass_enabled_cb(self, register):
 
         # Check data type.
@@ -596,119 +798,6 @@ class EnergyCenterDistribution(BasePlugin):
             self.__v_underfloor_east_bypass.shutdown()
             del self.__v_underfloor_east_bypass   
 
-
-    def __underfloor_heating_foyer_pos_cb(self, register):
-
-        # Check data type.
-        if not (register.data_type == "float" or register.data_type == "int"):
-            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
-            return
-
-        if register.value < 0 or register.value > 100:
-            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
-            return
-
-        if self.__v_underfloor_heating_foyer is not None:
-            self.__v_underfloor_heating_foyer.target_position = register.value
-
-    def __underfloor_heating_trestle_pos_cb(self, register):
-
-        # Check data type.
-        if not (register.data_type == "float" or register.data_type == "int"):
-            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
-            return
-
-        if register.value < 0 or register.value > 100:
-            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
-            return
-
-        if self.__v_underfloor_heating_trestle is not None:
-            self.__v_underfloor_heating_trestle.target_position = register.value
-
-    def __underfloor_heating_pool_pos_cb(self, register):
-
-          # Check data type.
-        if not (register.data_type == "float" or register.data_type == "int"):
-            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
-            return
-
-        if register.value < 0 or register.value > 100:
-            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
-            return
-
-        if self.__v_underfloor_heating_pool is not None:
-            self.__v_underfloor_heating_pool.target_position = register.value
-
-    def __air_cooling_pos_cb(self, register):
-
-          # Check data type.
-        if not (register.data_type == "float" or register.data_type == "int"):
-            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
-            return
-
-        if register.value < 0 or register.value > 100:
-            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
-            return
-
-        if self.__v_air_cooling is not None:
-            self.__v_air_cooling.target_position = register.value      
-
-    def __ground_drill_pos_cb(self, register):
-
-          # Check data type.
-        if not (register.data_type == "float" or register.data_type == "int"):
-            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
-            return
-
-        if register.value < 0 or register.value > 100:
-            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
-            return
-
-        if self.__v_ground_drill is not None:
-            self.__v_ground_drill.target_position = register.value  
-
-    def __generators_cooling_pos_cb(self, register):
-
-        # Check data type.
-        if not (register.data_type == "float" or register.data_type == "int"):
-            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
-            return
-
-        if register.value < 0 or register.value > 100:
-            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
-            return
-
-        if self.__v_generators_cooling is not None:
-            self.__v_generators_cooling.target_position = register.value
-
-    def __short_green_purple_pos_cb(self, register):
-
-        # Check data type.
-        if not (register.data_type == "float" or register.data_type == "int"):
-            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
-            return
-
-        if register.value < 0 or register.value > 100:
-            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
-            return
-
-        if self.__v_short_green_purple is not None:
-            self.__v_short_green_purple.target_position = register.value
-
-    def __underfloor_west_bypass_pos_cb(self, register):
-
-        # Check data type.
-        if not (register.data_type == "float" or register.data_type == "int"):
-            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
-            return
-
-        if register.value < 0 or register.value > 100:
-            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
-            return
-
-        if self.__v_underfloor_west_bypass is not None:
-            self.__v_underfloor_west_bypass.target_position = register.value
-
     def __underfloor_east_bypass_pos_cb(self, register):
 
         # Check data type.
@@ -723,131 +812,175 @@ class EnergyCenterDistribution(BasePlugin):
         if self.__v_underfloor_east_bypass is not None:
             self.__v_underfloor_east_bypass.target_position = register.value
 
+    def __underfloor_east_bypass_calib_cb(self, register):
+
+        # Check data type.
+        if not register.data_type == "bool":
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        if register.value:
+            if self.__v_underfloor_east_bypass is not None:
+                self.__v_underfloor_east_bypass.calibrate() 
+
+
+    def __vcg_pool_heating_enable_cb(self, register):
+
+        # Check data type.
+        if not register.data_type == "bool":
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        if register.value and self.__vcg_pool_heating is None:
+
+            # Consumers (RED)
+            self.__vcg_pool_heating = ValveControlGroup(
+                name="VCG Pool Heating",
+                key="{}.vcg_pool_heating".format(self.key),
+                controller=self._controller,
+                registers=self._registers,
+                fw_valves=["valve"],
+                fw_pumps=["pump"])
+            self.__vcg_pool_heating.mode = ValveControlGroupMode.Proportional
+
+            if self.__vcg_pool_heating is not None:
+                self.__vcg_pool_heating.init()
+
+        elif register.value == False and self.__vcg_pool_heating is not None:
+            self.__vcg_pool_heating.shutdown()
+            del self.__vcg_pool_heating 
+
+    def __vcg_tva_pool_enable_cb(self, register):
+
+        # Check data type.
+        if not register.data_type == "bool":
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        if register.value and self.__vcg_tva_pool is None:
+
+            # Consumers (RED)
+            self.__vcg_tva_pool = ValveControlGroup(
+                name="VCG TVA Pool",
+                key="{}.vcg_tva_pool".format(self.key),
+                controller=self._controller,
+                registers=self._registers,
+                fw_valves=["cold_in", "cold_out"],
+                rev_valves=["hot_in", "hot_out"],
+                fw_pumps=["pump"])
+
+            self.__vcg_tva_pool.mode = ValveControlGroupMode.Proportional
+
+            if self.__vcg_tva_pool is not None:
+                self.__vcg_tva_pool.init()
+
+        elif register.value == False and self.__vcg_tva_pool is not None:
+            self.__vcg_tva_pool.shutdown()
+            del self.__vcg_tva_pool 
+
+    def __convectors_east_enable_cb(self, register):
+
+        if not register.data_type == "bool":
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        if register.value and self.__vcg_convectors_east is None:
+
+            # Consumers (RED)
+            self.__vcg_convectors_east = ValveControlGroup(
+                name="VCG Convectors east",
+                key="{}.convectors_east".format(self.key),
+                controller=self._controller,
+                registers=self._registers,
+                fw_valves=["cold_in", "cold_out"],
+                rev_valves=["hot_in", "hot_out"],
+                fw_pumps=["pump"])
+
+            self.__vcg_convectors_east.mode = ValveControlGroupMode.Proportional
+
+            if self.__vcg_convectors_east is not None:
+                self.__vcg_convectors_east.init()
+
+        elif register.value == False and self.__vcg_convectors_east is not None:
+            self.__vcg_convectors_east.shutdown()
+            del self.__vcg_convectors_east       
+
+
     def __init_registers(self):
 
-        # === Valve group. (PURPLE) ===
-        reg_name = "{}.underfloor_heating_foyer.valve.enabled".format(self.key)
-        underfloor_heating_foyer = self._registers.by_name(reg_name)
-        if underfloor_heating_foyer is not None:
-                underfloor_heating_foyer.update_handlers = self.__underfloor_heating_foyer_enabled_cb
-                underfloor_heating_foyer.update()
+        # =========================== Valve group. (PURPLE) ===========================
+        # Generators cooling valve.
+        self.__attach_single_valve("underfloor_heating_foyer",
+                                    self.__underfloor_heating_foyer_enabled_cb,
+                                    self.__underfloor_heating_foyer_pos_cb,
+                                    self.__underfloor_heating_foyer_calib_cb)
 
-        reg_name = "{}.underfloor_heating_trestle.valve.enabled".format(self.key)
-        underfloor_heating_trestle = self._registers.by_name(reg_name)
-        if underfloor_heating_trestle is not None:
-                underfloor_heating_trestle.update_handlers = self.__underfloor_heating_trestle_enabled_cb
-                underfloor_heating_trestle.update()
+        # Underfloor heating trestle valve.
+        self.__attach_single_valve("underfloor_heating_trestle",
+                                    self.__underfloor_heating_trestle_enabled_cb,
+                                    self.__underfloor_heating_trestle_pos_cb,
+                                    self.__underfloor_heating_trestle_calib_cb)                
 
-        reg_name = "{}.underfloor_heating_pool.valve.enabled".format(self.key)
-        underfloor_heating_pool = self._registers.by_name(reg_name)
-        if underfloor_heating_pool is not None:
-                underfloor_heating_pool.update_handlers = self.__underfloor_heating_pool_enabled_cb
-                underfloor_heating_pool.update()
+        self.__attach_single_valve("underfloor_heating_pool",
+                                    self.__underfloor_heating_pool_enabled_cb,
+                                    self.__underfloor_heating_pool_pos_cb,
+                                    self.__underfloor_heating_pool_calib_cb)   
 
-        reg_name = "{}.air_cooling.valve.enabled".format(self.key)
-        air_cooling = self._registers.by_name(reg_name)
-        if air_cooling is not None:
-                air_cooling.update_handlers = self.__air_cooling_enabled_cb
-                air_cooling.update()
+        # Air cooling valve.
+        self.__attach_single_valve("air_cooling",
+                                    self.__air_cooling_enabled_cb,
+                                    self.__air_cooling_pos_cb,
+                                    self.__air_cooling_calib_cb) 
 
-        reg_name = "{}.ground_drill.valve.enabled".format(self.key)
-        ground_drill = self._registers.by_name(reg_name)
-        if ground_drill is not None:
-                ground_drill.update_handlers = self.__ground_drill_enabled_cb
-                ground_drill.update()
+        # Ground drill valve.
+        self.__attach_single_valve("ground_drill",
+                                    self.__ground_drill_enabled_cb,
+                                    self.__ground_drill_pos_cb,
+                                    self.__ground_drill_calib_cb) 
 
-        # === Generators Cooling (GREEN) ===
-        reg_name = "{}.generators_cooling.valve.enabled".format(self.key)
-        generators_cooling = self._registers.by_name(reg_name)
-        if generators_cooling is not None:
-                generators_cooling.update_handlers = self.__generators_cooling_enabled_cb
-                generators_cooling.update()
-
-        # Short valve between green and purple pipes.
-        reg_name = "{}.short_green_purple.valve.enabled".format(self.key)
-        short_green_purple = self._registers.by_name(reg_name)
-        if short_green_purple is not None:
-                short_green_purple.update_handlers = self.__short_green_purple_enabled_cb
-                short_green_purple.update()
+        # =========================== Generators Cooling (GREEN) ===========================
+        # Generators Cooling valve.
+        self.__attach_single_valve("generators_cooling",
+                                    self.__generators_cooling_enabled_cb,
+                                    self.__generators_cooling_pos_cb,
+                                    self.__generators_cooling_calib_cb) 
 
         # Short valve between green and purple pipes.
-        reg_name = "{}.underfloor_west_bypass.valve.enabled".format(self.key)
-        underfloor_west_bypass = self._registers.by_name(reg_name)
-        if underfloor_west_bypass is not None:
-                underfloor_west_bypass.update_handlers = self.__underfloor_west_bypass_enabled_cb
-                underfloor_west_bypass.update()
+        self.__attach_single_valve("short_green_purple",
+                                    self.__short_green_purple_enabled_cb,
+                                    self.__short_green_purple_pos_cb,
+                                    self.__short_green_purple_calib_cb) 
+        
+        # Underfloor west bypass valve.
+        self.__attach_single_valve("underfloor_west_bypass",
+                                    self.__underfloor_west_bypass_enabled_cb,
+                                    self.__underfloor_west_bypass_pos_cb,
+                                    self.__underfloor_west_bypass_calib_cb) 
 
-        # Short valve between green and purple pipes.
-        reg_name = "{}.underfloor_east_bypass.valve.enabled".format(self.key)
-        underfloor_east_bypass = self._registers.by_name(reg_name)
-        if underfloor_east_bypass is not None:
-                underfloor_east_bypass.update_handlers = self.__underfloor_east_bypass_enabled_cb
-                underfloor_east_bypass.update()
+        # Underfloor east bypass valve.
+        self.__attach_single_valve("air_cooling",
+                                    self.__underfloor_east_bypass_enabled_cb,
+                                    self.__underfloor_east_bypass_pos_cb,
+                                    self.__underfloor_east_bypass_calib_cb) 
 
-        # ====================================================================================
+        # =========================== Valve Controll Groups ===========================
+        reg_name = "{}.vcg_pool_heating.enable".format(self.key)
+        vcg_pool_heating = self._registers.by_name(reg_name)
+        if vcg_pool_heating is not None:
+                vcg_pool_heating.update_handlers = self.__vcg_pool_heating_enable_cb
+                vcg_pool_heating.update()
 
-        # Generators cooling valve postition.
-        reg_name = "{}.underfloor_heating_foyer.valve.position".format(self.key)
-        underfloor_heating_foyer_pos = self._registers.by_name(reg_name)
-        if underfloor_heating_foyer_pos is not None:
-                underfloor_heating_foyer_pos.update_handlers = self.__underfloor_heating_foyer_pos_cb
-                underfloor_heating_foyer_pos.update()
+        reg_name = "{}.vcg_tva_pool.enable".format(self.key)
+        vcg_tva_pool = self._registers.by_name(reg_name)
+        if vcg_tva_pool is not None:
+                vcg_tva_pool.update_handlers = self.__vcg_tva_pool_enable_cb
+                vcg_tva_pool.update()
 
-        # Underfloor heating trestle valve postition.
-        reg_name = "{}.underfloor_heating_trestle.valve.position".format(self.key)
-        underfloor_heating_trestle = self._registers.by_name(reg_name)
-        if underfloor_heating_trestle is not None:
-                underfloor_heating_trestle.update_handlers = self.__underfloor_heating_trestle_pos_cb
-                underfloor_heating_trestle.update()
-
-        # Underfloor heating pool valve postition.
-        reg_name = "{}.underfloor_heating_pool.valve.position".format(self.key)
-        underfloor_heating_pool = self._registers.by_name(reg_name)
-        if underfloor_heating_pool is not None:
-                underfloor_heating_pool.update_handlers = self.__underfloor_heating_pool_pos_cb
-                underfloor_heating_pool.update()
-
-        # Air cooling valve postition.
-        reg_name = "{}.air_cooling.valve.position".format(self.key)
-        air_cooling = self._registers.by_name(reg_name)
-        if air_cooling is not None:
-                air_cooling.update_handlers = self.__air_cooling_pos_cb
-                air_cooling.update()
-
-        # Ground drill valve postition.
-        reg_name = "{}.ground_drill.valve.position".format(self.key)
-        ground_drill = self._registers.by_name(reg_name)
-        if ground_drill is not None:
-                ground_drill.update_handlers = self.__ground_drill_pos_cb
-                ground_drill.update()
-
-        # Generators cooling valve postition.
-        reg_name = "{}.generators_cooling.valve.position".format(self.key)
-        generators_cooling_pos = self._registers.by_name(reg_name)
-        if generators_cooling_pos is not None:
-                generators_cooling_pos.update_handlers = self.__generators_cooling_pos_cb
-                generators_cooling_pos.update()
-
-        # Generators cooling valve postition.
-        reg_name = "{}.short_green_purple.valve.position".format(self.key)
-        short_green_purple = self._registers.by_name(reg_name)
-        if short_green_purple is not None:
-                short_green_purple.update_handlers = self.__short_green_purple_pos_cb
-                short_green_purple.update()
-
-        # Underfloor west bypass valve postition.
-        reg_name = "{}.underfloor_west_bypass.valve.position".format(self.key)
-        underfloor_west_bypass = self._registers.by_name(reg_name)
-        if underfloor_west_bypass is not None:
-                underfloor_west_bypass.update_handlers = self.__underfloor_west_bypass_pos_cb
-                underfloor_west_bypass.update()
-
-        # Underfloor east bypass valve postition
-        reg_name = "{}.underfloor_west_bypass.valve.position".format(self.key)
-        underfloor_west_bypass = self._registers.by_name(reg_name)
-        if underfloor_west_bypass is not None:
-                underfloor_west_bypass.update_handlers = self.__underfloor_east_bypass_pos_cb
-                underfloor_west_bypass.update()
+        reg_name = "{}.convectors_east.enable".format(self.key)
+        convectors_east = self._registers.by_name(reg_name)
+        if convectors_east is not None:
+                convectors_east.update_handlers = self.__convectors_east_enable_cb
+                convectors_east.update()
 
 #endregion
 
@@ -862,18 +995,26 @@ class EnergyCenterDistribution(BasePlugin):
         """
 
         self.__init_registers()
-
-        self.__vcg_pool_heating.init()
-        self.__vcg_tva_pool.init()
-        self.__vcg_convectors_east.init()
+        self.ready(True)
+        return
+        print("1")
+        print("2")
         self.__vcg_underfloor_east.init()
+        print("3")
         self.__vcg_convectors_west.init()
+        print("4")
         self.__vcg_tva_fitness.init()
+        print("5")
         self.__vcg_tva_roof_floor.init()
+        print("6")
         self.__vcg_underfloor_west.init()
+        print("7")
         self.__vcg_tva_conference_center.init()
+        print("8")
         self.__vcg_convectors_kitchen.init()
+        print("9")
         self.__vcg_tva_warehouse.init()
+        print("10")
 
         self.ready(True)
 
