@@ -915,7 +915,7 @@ def __add_registers():
     register.plugin_name = "HVAC"
     register.description = "Convector settings"
     register.range = ""
-    register.value = "Silpa/Klimafan/RO0/RO1/RO2"
+    register.value = "Silpa/Klimafan/RO4/RO5/RO6"
     __registers.append(register)
 
     # Delta time.
@@ -995,7 +995,7 @@ def __add_registers():
     register.plugin_name = "HVAC"
     register.description = "Loop 1 valve settings"
     register.range = ""
-    register.value = "Tonhe/a20m15b2c/RO4/off/0/100"
+    register.value = "Tonhe/a20m15b2c/RO2/off/0/100"
     __registers.append(register)
 
     # Loop 2 flowmeter
@@ -1118,7 +1118,7 @@ def __add_registers():
     register.plugin_name = "Light"
     register.description = "Analog output 1"
     register.range = __range["AO"]
-    register.value = "AO1"
+    register.value = "AO2"
     __registers.append(register)
 
     register = Register("light.v2.output")
@@ -1126,7 +1126,7 @@ def __add_registers():
     register.plugin_name = "Light"
     register.description = "Analog output 2"
     register.range = __range["AO"]
-    register.value = "AO2"
+    register.value = "AO3"
     __registers.append(register)
 
     register = Register("light.sensor.settings")
@@ -1134,9 +1134,10 @@ def __add_registers():
     register.plugin_name = "Light"
     register.description = "Sensor settings"
     register.range = ""
-    register.value = "SEDtronic/u1wtvs/1wdevice/26607314020000F8"
+    register.value = "PT/light_sensor/AI2"
+    # ""SEDtronic/u1wtvs/1wdevice/26607314020000F8"
     # SEDtronic/u1wtvs/1wdevice/26607314020000F8
-    # PT/light_sensor/AI0
+    # PT/light_sensor/AI2
     __registers.append(register)
 
     # register = Register("light.sensor.model")
@@ -1634,7 +1635,7 @@ def __add_registers():
     __registers.append(register)
 
     # ECD / VCG / Pool Heating Valve Pump
-    register = Register("ecd.vcg_pool_heating.enable")
+    register = Register("ecd.vcg_pool_heating.enabled")
     register.scope = Scope.System
     register.plugin_name = "ECD"
     register.description = "ECD / VCG / Pool Heating"
@@ -1690,7 +1691,7 @@ def __add_registers():
     __registers.append(register)
 
     # ECD / VCG / Enable
-    register = Register("ecd.vcg_tva_pool.enable")
+    register = Register("ecd.vcg_tva_pool.enabled")
     register.scope = Scope.System
     register.plugin_name = "ECD"
     register.description = "ECD / VCG / Enable"
@@ -1745,7 +1746,7 @@ def __add_registers():
     __registers.append(register)
 
     # ECD / VCG / Convectors East Enable
-    register = Register("ecd.convectors_east.enable")
+    register = Register("ecd.convectors_east.enabled")
     register.scope = Scope.System
     register.plugin_name = "ECD"
     register.description = "ECD / VCG / Convectors East Enable"
@@ -1755,7 +1756,7 @@ def __add_registers():
 
 
     # ECD / VCG / Floor East Cooling In
-    register = Register("ecd.floor_east.cold_in")
+    register = Register("ecd.underfloor_east.cold_in")
     register.scope = Scope.System
     register.plugin_name = "ECD"
     register.description = "ECD / VCG / Floor East Cooling In"
@@ -1764,7 +1765,7 @@ def __add_registers():
     __registers.append(register)
 
     # ECD / VCG / Floor East Cooling Out
-    register = Register("ecd.floor_east.cold_out")
+    register = Register("ecd.underfloor_east.cold_out")
     register.scope = Scope.System
     register.plugin_name = "ECD"
     register.description = "ECD / VCG / Floor East Cooling Out"
@@ -1773,7 +1774,7 @@ def __add_registers():
     __registers.append(register)
 
     # ECD / VCG / Floor East Hot In
-    register = Register("ecd.floor_east.hot_in")
+    register = Register("ecd.underfloor_east.hot_in")
     register.scope = Scope.System
     register.plugin_name = "ECD"
     register.description = "ECD / VCG / Floor East Hot In"
@@ -1782,7 +1783,7 @@ def __add_registers():
     __registers.append(register)
 
     # ECD / VCG / Floor East Hot Out
-    register = Register("ecd.floor_east.hot_out")
+    register = Register("ecd.underfloor_east.hot_out")
     register.scope = Scope.System
     register.plugin_name = "ECD"
     register.description = "ECD / VCG / Floor East Hot Out"
@@ -1791,13 +1792,23 @@ def __add_registers():
     __registers.append(register)
 
     # ECD / VCG / Floor East Pump
-    register = Register("ecd.floor_east.pump")
+    register = Register("ecd.underfloor_east.pump")
     register.scope = Scope.System
     register.plugin_name = "ECD"
     register.description = "ECD / VCG / Floor East Pump"
     register.range = ""
     register.value = "Grundfos/Pump/5"
     __registers.append(register)
+
+    # ECD / VCG / Underfloor East Enable
+    register = Register("ecd.underfloor_east.enabled")
+    register.scope = Scope.System
+    register.plugin_name = "ECD"
+    register.description = "ECD / VCG / Floor East Enable"
+    register.range = __range["BOOL"]
+    register.value = True
+    __registers.append(register)
+
 
     # ECD / VCG / Convectors West Cooling In
     register = Register("ecd.convectors_west.cold_in")
@@ -1843,6 +1854,15 @@ def __add_registers():
     register.description = "ECD / VCG / Convectors West Pump"
     register.range = ""
     register.value = "Grundfos/Pump/5"
+    __registers.append(register)
+
+    # ECD / VCG / Convectors West Enable
+    register = Register("ecd.convectors_west.enabled")
+    register.scope = Scope.System
+    register.plugin_name = "ECD"
+    register.description = "ECD / VCG / Convectors West Enable"
+    register.range = __range["BOOL"]
+    register.value = True
     __registers.append(register)
 
     # ECD / VCG / TVA Roof Floor In
@@ -2394,7 +2414,7 @@ def __add_registers():
     register.plugin_name = "HVAC"
     register.description = "Lower fan settings"
     register.range = ""
-    register.value = "HangzhouAirflowElectricApplications/f3p146ec072600/AO3"
+    register.value = "HangzhouAirflowElectricApplications/f3p146ec072600/AO1"
     __registers.append(register)
 
     register = Register("vent.lower_1.fan.min_speed")
