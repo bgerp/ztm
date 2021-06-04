@@ -117,11 +117,13 @@ class ZL101PCC(BaseController):
 
         # Digital Outputs
         "DO0": 0, "DO1": 1, "DO2": 2, "DO3": 3,
-        "DO4": 0, "DO5": 1, "DO6": 2, "DO7": 3,
+        "DO4": 4, "DO5": 5, "DO6": 6, "DO7": 7,
+        "DO8": 8, "DO9": 9, "DO10": 10, "DO11": 11,
 
         # Relay Outputs
         "RO0": 0, "RO1": 1, "RO2": 2, "RO3": 3,
-        "RO4": 4, "RO4": 5, "RO4": 6, "RO4": 7,
+        "RO4": 4, "RO5": 5, "RO6": 6, "RO7": 7,
+        "RO8": 8, "RO9": 9, "RO10": 10, "RO11": 11,
 
         # Analog Inputs
         "AI0": 0, "AI1": 1, "AI2": 2, "AI3": 3,
