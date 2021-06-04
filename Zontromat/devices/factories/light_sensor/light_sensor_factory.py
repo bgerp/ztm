@@ -24,7 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from devices.vendors.SEDtronic.u1wtvs.u1wtvs import U1WTVS
 
-from devices.vendors.PT.light_device.light_device import LightSensor
+from devices.vendors.PT.light_sensor.light_sensor import LightSensor
 
 #region File Attributes
 
@@ -96,8 +96,8 @@ class LightSensorFactory:
         else:
             raise ValueError("No \"controller\" argument has been passed.") 
 
-        # POLYGON Team / light_device
-        if vendor == "PT" and  model == "light_device":
+        # POLYGON Team / light_sensor
+        if vendor == "PT" and  model == "light_sensor":
 
             device = LightSensor(
                 name=name,
@@ -111,8 +111,8 @@ class LightSensorFactory:
             device = U1WTVS(
                 name=name,
                 controller=controller,
-                dev=config["params"][3],
-                circuit=config["params"][4],
+                dev=config["params"][2],
+                circuit=config["params"][3],
             )
 
         # Not implemented device.
