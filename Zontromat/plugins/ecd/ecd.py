@@ -186,16 +186,7 @@ class EnergyCenterDistribution(BasePlugin):
 
         return
 
-        # Floor East (RED and BLUE)
-        self.__vcg_underfloor_east = ValveControlGroup(\
-            name="VCG Underfloor east",
-            key="{}.floor_east".format(self.key),
-            controller=self._controller,
-            registers=self._registers,
-            fw_valves=["cold_in", "cold_out"],
-            rev_valves=["hot_in", "hot_out"],
-            fw_pumps=["pump"])
-        self.__vcg_underfloor_east.mode = ValveControlGroupMode.DualSide
+
 
         # Convectors West (RED and BLUE)
         self.__vcg_convectors_west = ValveControlGroup(\
@@ -336,10 +327,10 @@ class EnergyCenterDistribution(BasePlugin):
 
         # Generators cooling valve enabled.
         reg_name = "{}.{}.valve.enabled".format(self.key, valve_name)
-        enable = self._registers.by_name(reg_name)
-        if enable is not None:
-                enable.update_handlers = enable_cb
-                enable.update()
+        enabled = self._registers.by_name(reg_name)
+        if enabled is not None:
+                enabled.update_handlers = enable_cb
+                enabled.update()
 
         # Generators cooling valve postition.
         reg_name = "{}.{}.valve.position".format(self.key, valve_name)
@@ -905,6 +896,58 @@ class EnergyCenterDistribution(BasePlugin):
             self.__vcg_convectors_east.shutdown()
             del self.__vcg_convectors_east       
 
+    def __underfloor_east_enable_cb(self, register):
+
+        if not register.data_type == "bool":
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        if register.value and self.__vcg_underfloor_east is None:
+
+            # Floor East (RED and BLUE)
+            self.__vcg_underfloor_east = ValveControlGroup(\
+                name="VCG Underfloor east",
+                key="{}.underfloor_east".format(self.key),
+                controller=self._controller,
+                registers=self._registers,
+                fw_valves=["cold_in", "cold_out"],
+                rev_valves=["hot_in", "hot_out"],
+                fw_pumps=["pump"])
+            self.__vcg_underfloor_east.mode = ValveControlGroupMode.DualSide
+
+            if self.__vcg_underfloor_east is not None:
+                self.__vcg_underfloor_east.init()
+
+        elif register.value == False and self.__vcg_underfloor_east is not None:
+            self.__vcg_underfloor_east.shutdown()
+            del self.__vcg_underfloor_east  
+
+    def __convectors_west_enable_cb(self, register):
+
+        if not register.data_type == "bool":
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        if register.value and self.__vcg_convectors_west is None:
+
+            # Floor East (RED and BLUE)
+            self.__vcg_convectors_west = ValveControlGroup(\
+                name="VCG Convectors west",
+                key="{}.convectors_west".format(self.key),
+                controller=self._controller,
+                registers=self._registers,
+                fw_valves=["cold_in", "cold_out"],
+                rev_valves=["hot_in", "hot_out"],
+                fw_pumps=["pump"])
+            self.__vcg_convectors_west.mode = ValveControlGroupMode.DualSide
+
+            if self.__vcg_convectors_west is not None:
+                self.__vcg_convectors_west.init()
+
+        elif register.value == False and self.__vcg_convectors_west is not None:
+            self.__vcg_convectors_west.shutdown()
+            del self.__vcg_convectors_west  
+
 
     def __init_registers(self):
 
@@ -964,23 +1007,35 @@ class EnergyCenterDistribution(BasePlugin):
                                     self.__underfloor_east_bypass_calib_cb) 
 
         # =========================== Valve Controll Groups ===========================
-        reg_name = "{}.vcg_pool_heating.enable".format(self.key)
+        reg_name = "{}.vcg_pool_heating.enabled".format(self.key)
         vcg_pool_heating = self._registers.by_name(reg_name)
         if vcg_pool_heating is not None:
                 vcg_pool_heating.update_handlers = self.__vcg_pool_heating_enable_cb
                 vcg_pool_heating.update()
 
-        reg_name = "{}.vcg_tva_pool.enable".format(self.key)
+        reg_name = "{}.vcg_tva_pool.enabled".format(self.key)
         vcg_tva_pool = self._registers.by_name(reg_name)
         if vcg_tva_pool is not None:
                 vcg_tva_pool.update_handlers = self.__vcg_tva_pool_enable_cb
                 vcg_tva_pool.update()
 
-        reg_name = "{}.convectors_east.enable".format(self.key)
+        reg_name = "{}.convectors_east.enabled".format(self.key)
         convectors_east = self._registers.by_name(reg_name)
         if convectors_east is not None:
                 convectors_east.update_handlers = self.__convectors_east_enable_cb
                 convectors_east.update()
+
+        reg_name = "{}.underfloor_east.enabled".format(self.key)
+        underfloor_east = self._registers.by_name(reg_name)
+        if underfloor_east is not None:
+                underfloor_east.update_handlers = self.__underfloor_east_enable_cb
+                underfloor_east.update()
+
+        reg_name = "{}.convectors_west.enabled".format(self.key)
+        convectors_west = self._registers.by_name(reg_name)
+        if convectors_west is not None:
+                convectors_west.update_handlers = self.__convectors_west_enable_cb
+                convectors_west.update()
 
 #endregion
 
@@ -999,7 +1054,6 @@ class EnergyCenterDistribution(BasePlugin):
         return
         print("1")
         print("2")
-        self.__vcg_underfloor_east.init()
         print("3")
         self.__vcg_convectors_west.init()
         print("4")
@@ -1027,6 +1081,7 @@ class EnergyCenterDistribution(BasePlugin):
 
         self.in_cycle(True)
 
+        # TODO: Finish all registers callbacks.
         self.__v_underfloor_heating_foyer.update()
         self.__v_underfloor_heating_trestle.update()
         self.__v_underfloor_heating_pool.update()
