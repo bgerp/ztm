@@ -74,17 +74,23 @@ class LightSensor(BaseLightSensor):
 
 #endregion
 
-#region Public Methods
+    def __init__(self, **config):
 
-    def init(self):
-        """Init the sensor.
-        """
+        super().__init__(config)
 
         self._vendor = "POLYGONTeam"
 
         self._model = "MI"
 
         self.__analog_input = self._config["analog_input"]
+
+#region Public Methods
+
+    def init(self):
+        """Init the sensor.
+        """
+
+        pass
 
     def update(self):
         """Update sensor data.

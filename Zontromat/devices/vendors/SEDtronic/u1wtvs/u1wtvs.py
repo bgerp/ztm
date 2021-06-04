@@ -69,15 +69,25 @@ class U1WTVS(BaseLightSensor):
 
 #endregion
 
+#region Constructor
+
+    def __init__(self, **config):
+
+        super().__init__(config)
+
+        self._vendor = "SEDtronic"
+
+        self._model = "u1wtvs"
+
+#endregion
+
 #region Public Methods
 
     def init(self):
         """Init the device.
         """
 
-        self._vendor = "SEDtronic"
-
-        self._model = "u1wtvs"
+        pass
 
     def update(self):
         """Update sensor data.
@@ -85,7 +95,7 @@ class U1WTVS(BaseLightSensor):
 
         self.__device = self._controller.get_device(self._config["dev"], self._config["circuit"])
 
-    def get_temp(self):
+    def get_value(self):
         """Get value.
         """
 
