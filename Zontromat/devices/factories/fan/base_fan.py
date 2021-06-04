@@ -154,7 +154,7 @@ class BaseFan(BaseDevice):
         if self._speed == value:
             return
 
-        in_value = 0
+        in_value = value
 
         if value > 100:
             in_value = 100
@@ -167,7 +167,7 @@ class BaseFan(BaseDevice):
 
         if value < self.min_speed:
             in_value = self.min_speed
-        
+
         self._speed = in_value
 
 #endregion
