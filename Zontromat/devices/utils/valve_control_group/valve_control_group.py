@@ -318,15 +318,24 @@ class ValveControlGroup(BasePlugin):
         if ValveControlGroupMode.is_valid(mode):
             self.__mode = mode
 
-#endregion
+        # TODO: Change this method to property.
 
-#region Public Methods
+    @property
+    def debit(self):
+        """Get debit.
 
-    def set_debit(self, debit):
+        Returns:
+            float: Debit of the group.
+        """
+        
+        return 0
+
+    @debit.setter
+    def debit(self, debit):
         """Set debit.
 
         Args:
-            debit (int): Debit of the pump.
+            debit (float): Debit of the pump.
         """
 
         if self.__fw_pumps is not None:
@@ -336,6 +345,10 @@ class ValveControlGroup(BasePlugin):
         if self.__rev_pumps is not None:
             for pump in self.__rev_pumps:
                 pump.debit = float(l_scale(debit, [0, 100], [100, 0]))
+
+#endregion
+
+#region Public Methods
 
     def init(self):
         """Init the group.
