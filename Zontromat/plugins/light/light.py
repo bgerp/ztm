@@ -80,9 +80,6 @@ class Light(BasePlugin):
     """Update timer.
     """
 
-    __last_target_illum = None
-
-
     __light_sensor = None
     """Light sensor.
     """
@@ -92,18 +89,18 @@ class Light(BasePlugin):
     """
 
     __v2_output = verbal_const.OFF
-    """Analog voltage output 2
+    """Analog voltage output 2.
+    """
+
+    __last_target_illum = 0
+    """Last target illumination.
     """
 
     __target_illumination = 700
     """Target illumination. [Lux]
     """    
 
-    __delta_illumination = 0
-    """Delta illumination. [Lux]
-    """
-    
-    __error_gain = 1 # TODO: Move to register.
+    __error_gain = 0.01
     """Gain of the error. This parameter is the smoothness of the curve.
     """
 
@@ -117,11 +114,21 @@ class Light(BasePlugin):
 
     __output = 0
     """Main output. [V]
-    """    
+    """
 
 #endregion
 
 #region Private Methods Registers Interface
+
+    def __error_gain_cb(self, register):
+        
+        # Check data type.
+        if not (register.data_type == "float" or register.data_type == "int"):
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
+            return
+
+        if self.__error_gain != register.value:
+            self.__error_gain = register.value  
 
     def __target_illum_cb(self, register):
 
@@ -199,6 +206,11 @@ class Light(BasePlugin):
             target_illum.update_handlers = self.__target_illum_cb
             target_illum.update()
 
+        error_gain = self._registers.by_name(self.key + ".error_gain")
+        if error_gain is not None:
+            error_gain.update_handler = self.__error_gain_cb
+            error_gain.update()
+
     def __is_empty(self):
 
         value = False
@@ -254,12 +266,17 @@ class Light(BasePlugin):
     def __calculate(self):
         """ Apply thermal force to the devices. """
 
+        current_illumination = 0
+        delta = 0
+        error = 0
+
+        # Read sensor.
         current_illumination = self.__light_sensor.get_value()
 
         # Calculate the target error.
         error = self.__target_illumination - current_illumination
 
-        # Integrate the delta to temporal output..
+        # Integrate the delta to temporal output.
         delta = error * self.__error_gain
         self.__tmp_output += delta
 
