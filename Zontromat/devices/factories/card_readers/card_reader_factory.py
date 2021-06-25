@@ -22,9 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 
-from devices.vendors.Teracom.act230.act230 import ACT230
 
-from devices.vendors.ACS.acr122u.acr122u import ACR122U
 
 #region File Attributes
 
@@ -102,6 +100,8 @@ class CardReaderFactory:
         # Teracom / ACT230
         if vendor == "Teracom" and  model == "act230":
 
+            from devices.vendors.Teracom.act230.act230 import ACT230
+
             # Port name
             baudrate = None
             if "baudrate" in config:
@@ -118,6 +118,9 @@ class CardReaderFactory:
 
         # ACS / ACR122
         elif vendor == "ACS" and model == "acr122u":
+
+            from devices.vendors.ACS.acr122u.acr122u import ACR122U
+
             device = ACR122U(
                 port_name=port_name,
                 serial_number=serial_number
