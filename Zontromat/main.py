@@ -80,7 +80,12 @@ __time_to_stop = False
 #endregion
 
 def interupt_handler(signum, frame):
-    """Interupt handler."""
+    """Interupt handler.
+
+    Args:
+        signum (int): Interupt signal type (number).
+        frame (frame): Frame when this is happend.
+    """
 
     global __zone, __logger, __time_to_stop
 
