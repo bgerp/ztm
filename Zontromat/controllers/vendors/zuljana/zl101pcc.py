@@ -211,7 +211,7 @@ class ZL101PCC(BaseController):
             self.__modbus_rtu_port = config["modbus_rtu_port"]
 
         if "modbus_rtu_baud" in config:
-            self.__modbus_rtu_baud = config["modbus_rtu_baud"]
+            self.__modbus_rtu_baud = int(config["modbus_rtu_baud"])
 
         if self.__modbus_rtu_client is None:
             self.__modbus_rtu_client = ModbusClient(

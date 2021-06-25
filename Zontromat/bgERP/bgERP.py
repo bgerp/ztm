@@ -189,7 +189,7 @@ class bgERP:
 
         timeout = 5
         if "timeout" in config:
-            timeout = config.get("timeout")
+            timeout = int(config.get("timeout"))
 
         self.__logger = get_logger(__name__)
 

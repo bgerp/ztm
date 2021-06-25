@@ -23,8 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 import os
-
-import yaml
+import configparser
 
 #region File Attributes
 
@@ -65,11 +64,11 @@ class ApplicationSettings:
     __file_name = ""
     """File name"""
 
-    __settings = None
-    """Actual settings."""
-
     __instance = None
     """Singelton instance object."""
+
+    __config = None
+    """Actual settings."""
 
 #endregion
 
@@ -97,8 +96,8 @@ class ApplicationSettings:
             Debug level.
         """
 
-        if self.__settings is not None:
-            return self.__settings["application"]["debug_level"]
+        if self.__config is not None:
+            return int(self.__config["APPLICATION"]["debug_level"])
 
         return 0
 
@@ -111,7 +110,7 @@ class ApplicationSettings:
         str
             Host name of the Neuron.
         """
-        return self.__settings["controller"]
+        return self.__config["CONTROLLER"]
 
     @property
     def get_erp_service(self):
@@ -123,7 +122,7 @@ class ApplicationSettings:
             ERP service domain.
         """
 
-        return self.__settings["erp_service"]
+        return self.__config["ERP_SERVICE"]
 
 #endregion
 
@@ -146,7 +145,9 @@ class ApplicationSettings:
 
         if file_name is None:
             cwd = os.getcwd()
-            self.__file_name = os.path.join(cwd, "settings.yaml")
+            self.__file_name = os.path.join(cwd, "settings.ini")
+            self.__config = configparser.ConfigParser()
+            self.read()
 
         else:
             self.__file_name = file_name
@@ -159,17 +160,15 @@ class ApplicationSettings:
         """Read YAML file."""
 
         if self.exists:
-            with open(self.__file_name, "r") as stream:
-                self.__settings = yaml.safe_load(stream)
-                stream.close()
+            self.__config.read(self.__file_name)
 
     def save(self):
         """Read YAML file."""
 
         if self.exists:
             with open(self.__file_name, "w") as stream:
-                yaml.dump(self.__settings, stream, default_flow_style=False)
-                stream.close()
+                self.__config.write(stream)
+                stream.close()  
 
 #endregion
 
