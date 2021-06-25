@@ -31,7 +31,7 @@ import queue
 from enum import Enum
 
 from utils.settings import ApplicationSettings
-from utils.logger import get_logger
+from utils.logger import get_logger, crate_log_file
 from utils.performance_profiler import PerformanceProfiler
 
 from utils.logic.state_machine import StateMachine
@@ -393,6 +393,9 @@ class Zone():
             self.__zone_state.set_state(ZoneState.Init)
 
     def __run(self):
+
+        # Create log if if it does not.
+        crate_log_file()
 
         # Update the neuron.
         state = self.__controller.update()
