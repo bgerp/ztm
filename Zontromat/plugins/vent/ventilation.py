@@ -32,6 +32,7 @@ from plugins.base_plugin import BasePlugin
 from devices.factories.fan.fan_factory import FanFactory
 
 from data import verbal_const
+from data.register import Register
 
 from services.global_error_handler.global_error_handler import GlobalErrorHandler
 
@@ -123,7 +124,7 @@ class Ventilation(BasePlugin):
 #region Private Methods (Colision Detection)
 
     # Upper fan
-    def __upper_fan_settings_cb(self, register):
+    def __upper_fan_settings_cb(self, register: Register):
 
         # Check data type.
         if not register.data_type == "str":
@@ -149,7 +150,7 @@ class Ventilation(BasePlugin):
             self.__upper_fan_dev.shutdown()
             del self.__upper_fan_dev
 
-    def __upper_fan_min_cb(self, register):
+    def __upper_fan_min_cb(self, register: Register):
 
         # Check data type.
         if not (register.data_type == "float" or register.data_type == "int"):
@@ -163,7 +164,7 @@ class Ventilation(BasePlugin):
         if self.__upper_fan_dev is not None:
             self.__upper_fan_dev.min_speed = register.value
 
-    def __upper_fan_max_cb(self, register):
+    def __upper_fan_max_cb(self, register: Register):
 
         # Check data type.
         if not (register.data_type == "float" or register.data_type == "int"):
@@ -177,7 +178,7 @@ class Ventilation(BasePlugin):
         if self.__upper_fan_dev is not None:
             self.__upper_fan_dev.max_speed = register.value
 
-    def __upper_fan_speed_cb(self, register):
+    def __upper_fan_speed_cb(self, register: Register):
 
         # Check data type.
         if not (register.data_type == "float" or register.data_type == "int"):
@@ -189,7 +190,7 @@ class Ventilation(BasePlugin):
 
 
     # Lower fan
-    def __lower_fan_settings_cb(self, register):
+    def __lower_fan_settings_cb(self, register: Register):
 
         # Check data type.
         if not register.data_type == "str":
@@ -215,7 +216,7 @@ class Ventilation(BasePlugin):
             self.__lower_fan_dev.shutdown()
             del self.__lower_fan_dev
 
-    def __lower_fan_min_cb(self, register):
+    def __lower_fan_min_cb(self, register: Register):
 
         # Check data type.
         if not (register.data_type == "float" or register.data_type == "int"):
@@ -229,7 +230,7 @@ class Ventilation(BasePlugin):
         if self.__lower_fan_dev is not None:
             self.__lower_fan_dev.min_speed = register.value
 
-    def __lower_fan_max_cb(self, register):
+    def __lower_fan_max_cb(self, register: Register):
 
         # Check data type.
         if not (register.data_type == "float" or register.data_type == "int"):
@@ -243,7 +244,7 @@ class Ventilation(BasePlugin):
         if self.__lower_fan_dev is not None:
             self.__lower_fan_dev.max_speed = register.value
 
-    def __lower_fan_speed_cb(self, register):
+    def __lower_fan_speed_cb(self, register: Register):
 
         # Check data type.
         if not (register.data_type == "float" or register.data_type == "int"):
@@ -252,32 +253,6 @@ class Ventilation(BasePlugin):
 
         if self.__lower_fan_dev is not None:
             self.__lower_fan_dev.speed = register.value
-
-
-    # Occupied flag
-    def __zone_occupied_cb(self, register):
-
-        # Check data type.
-        if not register.data_type == "bool":
-            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
-            return
-
-        # TODO: Do we have to know how much people are there.
-        if register.value == True:
-
-            if self.__upper_fan_dev is not None:
-                self.__upper_fan_dev.speed = 50
-
-            if self.__lower_fan_dev is not None:
-                self.__lower_fan_dev.speed = 50
-
-        else:
-
-            if self.__upper_fan_dev is not None:
-                self.__upper_fan_dev.speed = 0
-
-            if self.__lower_fan_dev is not None:
-                self.__lower_fan_dev.speed = 0
 
 
     def __init_registers(self):
@@ -324,33 +299,45 @@ class Ventilation(BasePlugin):
             lower_fan_speed.update_handlers = self.__lower_fan_speed_cb
             lower_fan_speed.update()
 
-        # Occupied flag
-        zone_occupied = self._registers.by_name("ac.zone_{}_occupied".format(self.__identifier))
-        if zone_occupied is not None:
-            zone_occupied.update_handlers = self.__zone_occupied_cb
-            zone_occupied.update()
+        # # Occupied flag
+        # zone_occupied = self._registers.by_name("ac.zone_{}_occupied".format(self.__identifier))
+        # if zone_occupied is not None:
+        #     zone_occupied.update_handlers = self.__zone_occupied_cb
+        #     zone_occupied.update()
 
 #endregion
 
 #region Public Methods
 
-    def init(self):
+    def _init(self):
         """Initialize the plugin."""
 
         # Create logger.
         self.__logger = get_logger(__name__)
         self.__logger.info("Starting up the {}".format(self.name))
 
-        # Init the registers.
+        # Initialize the registers.
         self.__init_registers()
 
-    def update(self):
+    def _update(self):
         """Runtime of the plugin."""
+
+        occupied_flag = False
+        zone_occupied = self._registers.by_name("ac.zone_{}_occupied".format(self.__identifier))
+        if zone_occupied is not None:
+            occupied_flag = zone_occupied.value
+
+        if occupied_flag:
+            # TODO: We know that we will increse the ventilation whitin every entered man.
+            # В един момент ще стане на макс
+            # Ще се изключи само ако няма никой в стаята и накрая пак отначало.
+            # Да се достави нформация за това, коклко души има
+            pass
 
         self.__upper_fan_dev.update()
         self.__lower_fan_dev.update()
 
-    def shutdown(self):
+    def _shutdown(self):
         """Shutting down the blinds."""
 
         self.__logger.info("Shutting down the {}".format(self.name))
