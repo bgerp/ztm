@@ -126,5 +126,3 @@ class F3P146EC072600(BaseFan):
         self.update()
 
 #endregion
-
- # TODO: Create test.

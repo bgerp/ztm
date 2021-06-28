@@ -307,7 +307,7 @@ class Light(BasePlugin):
 #region Public Methods
 
     def _init(self):
-        """Init the plugin.
+        """Initialize the plugin.
         """
 
         self.__logger = get_logger(__name__)
@@ -315,9 +315,9 @@ class Light(BasePlugin):
 
         self.__update_timer = Timer(1)
 
-        self.__init_registers()
-
         self.__target_illum = 0
+
+        self.__init_registers()
 
         self.__set_voltages(0, 0)
 

@@ -991,10 +991,10 @@ class AirConditioner(BasePlugin):
 
 #endregion
 
-#region Public Methods
+#region Protected Methods
 
-    def init(self):
-        """Init the module.
+    def _init(self):
+        """Initialize the module.
         """
 
         self.__logger = get_logger(__name__)
@@ -1022,7 +1022,7 @@ class AirConditioner(BasePlugin):
         # Shutting down all the devices.
         self.__set_thermal_force(0)
 
-    def update(self):
+    def _update(self):
         """ Update cycle.
         """
 
@@ -1124,7 +1124,7 @@ class AirConditioner(BasePlugin):
         self.__loop1_valve_dev.update()
         self.__loop2_valve_dev.update()
 
-    def shutdown(self):
+    def _shutdown(self):
         """Shutdown the tamper.
         """
 

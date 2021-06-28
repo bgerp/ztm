@@ -146,7 +146,7 @@ class HeatPump(BaseDevice):
         self.__logger.debug(self.__power)
 
     def init(self):
-        """Init the heat pump.
+        """Initialize the heat pump.
         """
 
         # Create logger.

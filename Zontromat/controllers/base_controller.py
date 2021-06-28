@@ -321,7 +321,8 @@ class BaseController(Configuarable):
         return identifier
 
     def get_gpio_map(self):
-        """Return GPIO map."""
+        """Return GPIO map.
+        """
 
         return self._gpio_map
 
@@ -330,10 +331,12 @@ class BaseController(Configuarable):
 #region Public Virtual Methods
 
     def init(self):
-        """Init the controller."""
+        """Initialize the controller.
+        """
 
     def update(self):
-        """Update controller state."""
+        """Update controller state.
+        """
 
     def pin_mode(self, pin, mode):
         """Set the pin mode.

@@ -84,7 +84,7 @@ class U1WTVS(BaseLightSensor):
 #region Public Methods
 
     def init(self):
-        """Init the device.
+        """Initialize the device.
         """
 
         pass

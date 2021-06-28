@@ -428,7 +428,7 @@ class HeatPumpControllGroup(BasePlugin):
         """Update winter power.
         """
 
-        # TODO: Add schema how to wor if the device is 0, 1 or 2
+        # TODO: Add schema how to work if the device is 0, 1 or 2
         # It will be better to be done with formula for smooth controll.
 
         if self.temp_cold < self.__cold_min:
@@ -447,7 +447,7 @@ class HeatPumpControllGroup(BasePlugin):
         """Update summer power.
         """
 
-        # TODO: Add schema how to wor if the device is 0, 1 or 2
+        # TODO: Add schema how to work if the device is 0, 1 or 2
         # It will be better to be done with formula for smooth controll.
 
         if self.temp_hot > self.__hot_max:
@@ -693,7 +693,7 @@ class HeatPumpControllGroup(BasePlugin):
 #region Public Methods
 
     def init(self):
-        """Init the group.
+        """Initialize the group.
         """
 
         # Set default values for temperatures.
@@ -704,7 +704,7 @@ class HeatPumpControllGroup(BasePlugin):
         self.__cold_interval = (self.__cold_max - self.__cold_min) / self.__interval_step
         self.__hot_interval = (self.__hot_max - self.__hot_min) / self.__interval_step
 
-        # init the registers callbacks.
+        # Initialize the registers callbacks.
         self.__init_registers_cb()
 
         # Generate order.

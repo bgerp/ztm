@@ -95,7 +95,7 @@ class HVAC(BasePlugin):
 #region Public Methods
 
     def _init(self):
-        """Init the plugin.
+        """Initialize the plugin.
         """
 
         self.__logger = get_logger(__name__)

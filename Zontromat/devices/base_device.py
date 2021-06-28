@@ -132,19 +132,19 @@ class BaseDevice(Configuarable):
 #region Public Methods
 
     def init(self):
-        """Init the device.
+        """Initialize the device.
         """
 
         pass
 
     def update(self):
-        """Update the device logic.
+        """Update the device.
         """
 
         pass
 
     def shutdown(self):
-        """Shutdown procedure of the device.
+        """Shutdown the device.
         """
 
         pass

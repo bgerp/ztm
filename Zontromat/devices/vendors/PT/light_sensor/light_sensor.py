@@ -87,7 +87,7 @@ class LightSensor(BaseLightSensor):
 #region Public Methods
 
     def init(self):
-        """Init the sensor.
+        """Initialize the sensor.
         """
 
         pass
@@ -102,7 +102,6 @@ class LightSensor(BaseLightSensor):
         """Get value.
         """
 
-        # TODO: Add scaling coefficient.
         raw = l_scale(self.__state["value"], [0, 10], [0, 15000])
 
         return raw

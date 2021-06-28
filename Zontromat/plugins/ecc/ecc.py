@@ -132,7 +132,7 @@ class EnergyCenterCommon(BasePlugin):
 #region Public Methods
 
     def _init(self):
-        """Init the plugin.
+        """Initialize the plugin.
         """
 
         # Boilers (RED)

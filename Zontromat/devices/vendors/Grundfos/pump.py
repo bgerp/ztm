@@ -128,7 +128,7 @@ class Pump(ModbusDevice):
         self.__logger.debug("Set debit of {} to {}".format(self.name, self.__debit))
 
     def init(self):
-        """Init the pump.
+        """Initialize the pump.
         """
 
         # Create logger.

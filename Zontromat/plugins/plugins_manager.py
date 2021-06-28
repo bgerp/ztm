@@ -420,8 +420,7 @@ class PluginsManager:
         if register is not None:
             register.update_handlers = self.__vent_enabled
             # only for test purposes.
-            register.update()
-
+            # register.update()
 
 #endregion
 

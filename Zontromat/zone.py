@@ -158,7 +158,7 @@ class Zone():
 #region Constructor
 
     def __init__(self):
-        """Init the zone."""
+        """Initialize the zone."""
 
         pass
 
@@ -231,7 +231,7 @@ class Zone():
                         target_reg.value = device["value"]
 
     def __init_controller(self):
-        """Init the controller.
+        """Initialize the controller.
         """
 
         # Create PLC.
@@ -352,7 +352,7 @@ class Zone():
         self.__logger.info("Zone state: {}".format(machine.get_state()))
 
     def __init(self):
-        """Init the zone."""
+        """Initialize the zone."""
 
         # Update the neuron.
         state = self.__controller.update()
@@ -515,7 +515,7 @@ class Zone():
 #region Public Methods
 
     def init(self):
-        """Init the process."""
+        """Initialize the process."""
 
         try:
             # Application settings.
@@ -536,7 +536,7 @@ class Zone():
             # Setup the ERP.
             self.__init_erp()
 
-            # Init the runtime.
+            # Initialize the runtime.
             self.__init_runtime()
 
             # # (Request to stop the queue from MG @ 15.01.2021)

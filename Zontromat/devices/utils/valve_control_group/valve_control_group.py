@@ -318,8 +318,6 @@ class ValveControlGroup(BasePlugin):
         if ValveControlGroupMode.is_valid(mode):
             self.__mode = mode
 
-        # TODO: Change this method to property.
-
     @property
     def debit(self):
         """Get debit.
@@ -351,7 +349,7 @@ class ValveControlGroup(BasePlugin):
 #region Public Methods
 
     def init(self):
-        """Init the group.
+        """Initialize the group.
         """
 
         # Create logger.
@@ -433,8 +431,6 @@ class ValveControlGroup(BasePlugin):
         if self.__rev_valves is not None:
             for valve in self.__rev_valves:
                 valve.calibrate()
-
-    # TODO: Calibrations of the groups are made automatically valve, by valve. It is important all pumps to be stopped.
 
 #endregion
 

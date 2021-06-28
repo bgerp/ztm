@@ -137,7 +137,7 @@ class BasePlugin(Configuarable):
 #region Protected Methods (Plugin protected interface)
 
     def _init(self):
-        """init the plugin.
+        """Initialize the plugin.
         """
 
         pass
@@ -162,6 +162,7 @@ class BasePlugin(Configuarable):
         """Initialize the plugin.
         """
 
+        # Initialize the plugin.
         self._init()
 
         # Tell the system that initialization is ready.
@@ -194,8 +195,7 @@ class BasePlugin(Configuarable):
         # Wait to release the process.
         self.__wait()
 
-        self.__logger.info("Shutting down the {}".format(self.name))
-
+        # Shutdown the plugin.
         self._shutdown()
 
 #endregion

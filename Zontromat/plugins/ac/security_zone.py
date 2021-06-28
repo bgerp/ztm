@@ -683,10 +683,11 @@ class SecurityZone(BasePlugin):
 
 #endregion
 
-#region Public Methods
+#region Protected Methods
 
-    def init(self):
-        """Init"""
+    def _init(self):
+        """Initialize the plugin.
+        """
 
         # Create logger.
         self.__logger = get_logger(__name__)
@@ -700,8 +701,9 @@ class SecurityZone(BasePlugin):
 
         self.__init_registers()
 
-    def update(self):
-        """Update"""
+    def _update(self):
+        """Update the plugin.
+        """
 
         # Update inputs.
         btn_state = self.__read_exit_button()
@@ -756,14 +758,19 @@ class SecurityZone(BasePlugin):
                 self.__presence_timer.clear()
                 self.__set_zone_occupied(False)
 
-    def shutdown(self):
-        """Shutdown"""
+    def _shutdown(self):
+        """Shutting down the plugin.
+        """
 
         self.__logger.info("Shutting down the {} {}".format(self.name, self.__identifier))
         self.__set_lock_mechanism(0)
         self.__set_door_window_blind(0)
         self.__delete_reader(self.__entry_reader)
         self.__delete_reader(self.__exit_reader)
+
+#endregion
+
+#region Public Methods
 
     def on_card(self, callback):
         """Set reader read calback."""

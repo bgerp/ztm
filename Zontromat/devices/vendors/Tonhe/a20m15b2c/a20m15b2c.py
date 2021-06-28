@@ -155,7 +155,7 @@ class A20M15B2C(BaseValve):
 #region Public Methods
 
     def init(self):
-        """Init the module.
+        """Initialize the module.
         """
 
         self.min_pos = 0

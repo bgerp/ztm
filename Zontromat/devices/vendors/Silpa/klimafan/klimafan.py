@@ -88,7 +88,7 @@ class Klimafan(BaseConvector):
 #region Public Methods
 
     def init(self):
-        """Init the convector."""
+        """Initialize the convector."""
 
         self.set_state(0)
 

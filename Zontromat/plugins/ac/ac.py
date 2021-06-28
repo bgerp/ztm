@@ -216,12 +216,14 @@ class AccessControl(BasePlugin):
 
                 last_minute_attendees.value = json.dumps(obj)
 
+        # TODO: Separate the security zones from one device in to the ERP.
+
 #endregion
 
 #region Public Methods
 
     def _init(self):
-        """Init the plugin.
+        """Initialize the plugin.
         """
 
         # Create logger.

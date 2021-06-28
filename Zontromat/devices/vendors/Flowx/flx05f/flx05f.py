@@ -248,7 +248,7 @@ class FLX05F(BaseValve):
 #region Public Methods
 
     def init(self):
-        """Init the valve.
+        """Initialize the device.
         """
 
         self.target_position = 0
