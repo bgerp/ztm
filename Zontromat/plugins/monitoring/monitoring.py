@@ -110,10 +110,44 @@ class Monitoring(BasePlugin):
     """Demand measuring timer.
     """
 
-    # TODO: Add measuring timer to one hour.
+#endregion
+
+#region Private Methods
+
+    def __filter_measurements_by_time(self, measurements, time_sec: int):
+
+        # Create filter list.
+        filtered_measurements = measurements.copy()
+        filtered_measurements.clear()
+
+        # Reset delete flag.
+        delete_flag = False
+
+        # Now!
+        time_now = time.time()
+
+        # Filter all records.
+        for attendee in measurements:
+
+            # Calculate delta time.
+            delta_t = time_now - attendee["ts"]
+
+            # Filter
+            if delta_t < time_sec:
+                filtered_measurements.append(attendee)
+
+            # Else mark for deletion.
+            else:
+                delete_flag = True
+
+        # Execute the flag.
+        if delete_flag:
+            self.measurements.clear()
+            for atendee in filtered_measurements:
+                self.measurements.append(atendee)
 
 #endregion
-    
+
 #region Private Methods (Cold Water Flowmeter)
 
     def __cw_input_cb(self, register):
@@ -425,7 +459,6 @@ class Monitoring(BasePlugin):
         if self.__power_analyser is None:
             return         
 
-        # TODO: Ask is it necessary to have active and reactive energy.
         # self.__read_all_parameters()
 
         measurement = {
@@ -485,22 +518,23 @@ class Monitoring(BasePlugin):
         # Set the time of the measurement.
         measurement["ts"] = time.time()
 
-        # Add measuremtn to the tail.
+        # Add measurement to the tail.
         self.__measurements.append(measurement)
+
+        # This magical number represents seconds for 24 hours.
+        self.__filter_measurements_by_time(self.__measurements, 86400)
 
         # Update parameters in the registers.
         measurements_reg = self._registers.by_name(self.key + ".pa.measurements")
         if measurements_reg is not None:
             measurements_reg.value = json.dumps(self.__measurements)
 
-        # TODO: The tail will become longer and longer, what to to?
-
 #endregion
 
 #region Public Methods
 
     def _init(self):
-        """Init the plugin.
+        """Initialize the plugin.
         """
 
         self.__logger = get_logger(__name__)
