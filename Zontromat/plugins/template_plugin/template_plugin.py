@@ -85,17 +85,18 @@ class TemplatePlugin(BasePlugin):
 
 #region Public Methods
 
-    def init(self):
-        """Initialize the plugin."""
+    def _init(self):
+        """Init the plugin.
+        """
 
         self.__logger = get_logger(__name__)
         self.__logger.info("Starting up the {}".format(self.name))
 
         self.__update_timer = Timer(1)
 
-    def update(self):
-        """Runtime of the plugin."""
-
+    def _update(self):
+        """Update the plugin.
+        """
         # Update the timer.
         self.__update_timer.update()
 
@@ -105,8 +106,9 @@ class TemplatePlugin(BasePlugin):
         
             self.__do_job()
 
-    def shutdown(self):
-        """Shutting down the blinds."""
+    def _shutdown(self):
+        """Shutting down the plugin.
+        """
 
         self.__logger.info("Shutting down the {}".format(self.name))
 

@@ -97,7 +97,7 @@ class EnergyCenterHeatpump(BasePlugin):
 
 #region Public Methods
 
-    def init(self):
+    def _init(self):
         """Init the plugin.
         """
 
@@ -114,13 +114,13 @@ class EnergyCenterHeatpump(BasePlugin):
         if self.__heat_pump_control_group is not None:
             self.__heat_pump_control_group.init()
 
-    def update(self):
-        """Update the plugin state.
+    def _update(self):
+        """Update the plugin.
         """
 
         self.__heat_pump_control_group.update()
 
-    def shutdown(self):
+    def _shutdown(self):
         """Shutting down the plugin.
         """
 

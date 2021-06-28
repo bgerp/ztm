@@ -442,8 +442,9 @@ class Blinds(BasePlugin):
 
 #region Public Methods
 
-    def init(self):
-        """Ïnit"""
+    def _init(self):
+        """Init the plugin.
+        """
 
         self.__logger = get_logger(__name__)
         self.__logger.info("Starting up the {}".format(self.name))
@@ -460,8 +461,8 @@ class Blinds(BasePlugin):
 
         self.__stop()
 
-    def update(self):
-        """Update plugin logic.
+    def _update(self):
+        """Update the plugin.
         """
 
         # Update occupation flags.
@@ -610,10 +611,9 @@ class Blinds(BasePlugin):
 
                 return
 
-
-
-    def shutdown(self):
-        """Shutting down the blinds."""
+    def _shutdown(self):
+        """Shutting down the plugin.
+        """
 
         self.__logger.info("Shutting down the {}".format(self.name))
         self.__stop()

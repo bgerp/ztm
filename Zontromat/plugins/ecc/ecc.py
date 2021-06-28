@@ -131,7 +131,7 @@ class EnergyCenterCommon(BasePlugin):
 
 #region Public Methods
 
-    def init(self):
+    def _init(self):
         """Init the plugin.
         """
 
@@ -140,8 +140,8 @@ class EnergyCenterCommon(BasePlugin):
             if boiler is not None:
                 boiler.init()
 
-    def update(self):
-        """Update the plugin state.
+    def _update(self):
+        """Update the plugin.
         """
 
         # Boilers (RED)
@@ -149,7 +149,7 @@ class EnergyCenterCommon(BasePlugin):
             if boiler is not None:
                 boiler.update()
 
-    def shutdown(self):
+    def _shutdown(self):
         """Shutting down the plugin.
         """
 

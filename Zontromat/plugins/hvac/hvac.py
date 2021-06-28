@@ -94,8 +94,8 @@ class HVAC(BasePlugin):
 
 #region Public Methods
 
-    def init(self):
-        """Init the zones.
+    def _init(self):
+        """Init the plugin.
         """
 
         self.__logger = get_logger(__name__)
@@ -121,28 +121,16 @@ class HVAC(BasePlugin):
             # Initialize the module.
             self.__zones[name].init()
 
-        self.ready(True)
-
-    def update(self):
-        """Update the zones.
+    def _update(self):
+        """Update the plugin.
         """
-
-        if not self.is_ready():
-            return
-
-        self.in_cycle(True)
 
         for key in self.__zones:
             self.__zones[key].update()
 
-        self.in_cycle(False)
-
-    def shutdown(self):
-        """Shutdown the zones.
+    def _shutdown(self):
+        """Shutting down the plugin.
         """
-
-        self.ready(False)
-        self.wait()
 
         self.__logger.info("Shutting down the {}".format(self.name))
 

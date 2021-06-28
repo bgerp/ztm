@@ -306,8 +306,9 @@ class Light(BasePlugin):
 
 #region Public Methods
 
-    def init(self):
-        """Init the Lighting."""
+    def _init(self):
+        """Init the plugin.
+        """
 
         self.__logger = get_logger(__name__)
         self.__logger.info("Starting up the {}".format(self.name))
@@ -320,8 +321,8 @@ class Light(BasePlugin):
 
         self.__set_voltages(0, 0)
 
-    def update(self):
-        """Update the lights state.
+    def _update(self):
+        """Update the plugin.
         """
 
         # If there is no one at the zone, just turn off the lights.
@@ -344,8 +345,9 @@ class Light(BasePlugin):
 
             self.__calculate()
 
-    def shutdown(self):
-        """Shutting down the lights."""
+    def _shutdown(self):
+        """Shutting down the plugin.
+        """
 
         self.__logger.info("Shutting down the {}".format(self.name))
         self.__set_voltages(0, 0)

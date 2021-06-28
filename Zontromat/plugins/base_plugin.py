@@ -96,40 +96,106 @@ class BasePlugin(Configuarable):
 
 #endregion
 
-#region Protected Methods
+#region Private Methods (Thread safe routines)
+
+    def __ready(self, value: bool):
+        """Set the ready flag state.
+
+        Args:
+            value (bool): Flag state.
+        """
+        
+        self.__ready_flag = value
+
+    def __is_ready(self):
+        """Returns the ready flag state.
+
+        Returns:
+            bool: Ready flag state.
+        """
+
+        return self.__ready_flag
+
+    def __in_cycle(self, value: bool):
+        """Set the in cycle flag state.
+
+        Args:
+            value (bool): Flag state.
+        """
+
+        self.__in_cycle_flag = value
+
+    def __wait(self):
+        """Wait until in cycle flag is true.
+        """
+
+        while self.__in_cycle_flag == True:
+            pass
+
+#endregion
+
+#region Protected Methods (Plugin protected interface)
+
+    def _init(self):
+        """init the plugin.
+        """
+
+        pass
+
+    def _update(self):
+        """Update the plugin.
+        """
+
+        pass
+
+    def _shutdown(self):
+        """Shutdown the plugin.
+        """
+
+        pass
 
 #endregion
 
 #region Public Methods
 
-    def ready(self, value):
-
-        self.__ready_flag = value
-
-    def is_ready(self):
-
-        return self.__ready_flag
-
-    def in_cycle(self, value):
-
-        self.__in_cycle_flag = value
-
-    def wait(self):
-
-        while self.__in_cycle_flag == True:
-            pass
-
-
     def init(self):
-        """Initialize the device."""
+        """Initialize the plugin.
+        """
+
+        self._init()
+
+        # Tell the system that initialization is ready.
+        self.__ready(True)
 
     def update(self):
-        """Update the device."""
+        """Update the plugin.
+        """
+
+        # Ask the runtime engine is it possible to update the logic.
+        if not self.__is_ready():
+            return
+
+        # Tell the runtime engine that it is entering in cycle.
+        self.__in_cycle(True)
+
+        # Update the plugin.
+        self._update()
+
+        # Tell the runtime engine that it is exiting from cycle.
+        self.__in_cycle(False)
 
     def shutdown(self):
-        """Shutdown the device."""
+        """Shutdown the plugin.
+        """
 
-    def test(self):
-        """Test the device."""
+        # Tell the runtime engine that it if de initialize and shutdown.
+        self.__ready(False)
+
+        # Wait to release the process.
+        self.__wait()
+
+        self.__logger.info("Shutting down the {}".format(self.name))
+
+        self._shutdown()
 
 #endregion

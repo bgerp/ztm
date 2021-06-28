@@ -295,7 +295,9 @@ class Environment(BasePlugin):
 
 #region Public Methods
 
-    def init(self):
+    def _init(self):
+        """Init the plugin.
+        """
 
         self.__logger = get_logger(__name__)
         self.__logger.info("Starting up the {}".format(self.name))
@@ -304,8 +306,8 @@ class Environment(BasePlugin):
 
         self.__init_registers()
 
-    def update(self):
-        """Update plugin logic.
+    def _update(self):
+        """Update the plugin.
         """
 
         self.__update_timer.update()
@@ -316,8 +318,9 @@ class Environment(BasePlugin):
                 self.__calculate_position()
                 self.__set_sunpos()
 
-    def shutdown(self):
-        """Shutdown the tamper."""
+    def _shutdown(self):
+        """Shutting down the plugin.
+        """
 
         self.__logger.info("Shutting down the {}".format(self.name))
 

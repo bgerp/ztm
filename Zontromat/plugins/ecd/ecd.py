@@ -86,7 +86,6 @@ class EnergyCenterDistribution(BasePlugin):
     """Logger
     """
 
-
     __v_underfloor_heating_foyer = None
     """Valve foyer.
     """
@@ -1045,12 +1044,12 @@ class EnergyCenterDistribution(BasePlugin):
 
 #region Public Methods
 
-    def init(self):
+    def _init(self):
         """Init the plugin.
         """
 
         self.__init_registers()
-        self.ready(True)
+
         return
         print("1")
         print("2")
@@ -1070,16 +1069,9 @@ class EnergyCenterDistribution(BasePlugin):
         self.__vcg_tva_warehouse.init()
         print("10")
 
-        self.ready(True)
-
-    def update(self):
-        """Update the plugin state.
+    def _update(self):
+        """Update the plugin.
         """
-
-        if not self.is_ready():
-            return
-
-        self.in_cycle(True)
 
         # TODO: Finish all registers callbacks.
         self.__v_underfloor_heating_foyer.update()
@@ -1105,14 +1097,9 @@ class EnergyCenterDistribution(BasePlugin):
         self.__vcg_convectors_kitchen.update()
         self.__vcg_tva_warehouse.update()
 
-        self.in_cycle(False)
-
-    def shutdown(self):
+    def _shutdown(self):
         """Shutting down the plugin.
         """
-
-        self.ready(False)
-        self.wait()
 
         self.__logger.info("Shutting down the {}".format(self.name))
 

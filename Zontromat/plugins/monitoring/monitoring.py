@@ -499,8 +499,9 @@ class Monitoring(BasePlugin):
 
 #region Public Methods
 
-    def init(self):
-        """Initialize the plugin."""
+    def _init(self):
+        """Init the plugin.
+        """
 
         self.__logger = get_logger(__name__)
         self.__logger.info("Starting up the {}".format(self.name))
@@ -516,8 +517,9 @@ class Monitoring(BasePlugin):
         # Init power analyser.
         self.__init_pa()
 
-    def update(self):
-        """Runtime of the plugin."""
+    def _update(self):
+        """Update the plugin.
+        """
 
         # Update cold water flow meter.
         self.__update_cw()
@@ -535,8 +537,9 @@ class Monitoring(BasePlugin):
             # Update power analyser.
             self.__update_pa()
 
-    def shutdown(self):
-        """Shutting down the blinds."""
+    def _shutdown(self):
+        """Shutting down the plugin.
+        """
 
         self.__logger.info("Shutting down the {}".format(self.name))
 

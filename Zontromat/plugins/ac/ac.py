@@ -220,7 +220,9 @@ class AccessControl(BasePlugin):
 
 #region Public Methods
 
-    def init(self):
+    def _init(self):
+        """Init the plugin.
+        """
 
         # Create logger.
         self.__logger = get_logger(__name__)
@@ -258,8 +260,9 @@ class AccessControl(BasePlugin):
             allowed_attendees.update_handlers = self.__allowed_attendees_cb
             allowed_attendees.update()
 
-    def update(self):
-        """Update"""
+    def _update(self):
+        """Update the plugin.
+        """
 
         for key in self.__zones:
             self.__zones[key].update()
@@ -274,8 +277,9 @@ class AccessControl(BasePlugin):
 
         self.__set_envm_is_empty(is_empty)
 
-    def shutdown(self):
-        """Shutting down the reader."""
+    def _shutdown(self):
+        """Shutting down the plugin.
+        """
 
         self.__logger.info("Shutting down the {}".format(self.name))
         for key in self.__zones:
