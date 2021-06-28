@@ -124,24 +124,6 @@ class Sys(BasePlugin):
 
 #region Private Methods (Status LED)
 
-    def __blink_time_cb(self, register):
-
-        # Check data type.
-        if not (register.data_type == "int" or register.data_type == "float"):
-            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
-            return
-
-        self.__blink_timer.expiration_time = register.value
-
-    def __led_out_cb(self, register):
-
-        # Check data type.
-        if not register.data_type == "str":
-            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
-            return
-
-        self.__led_out = register.value
-
     def __set_led(self, state):
 
         if self._controller.is_valid_gpio(self.__led_out):
@@ -215,6 +197,28 @@ class Sys(BasePlugin):
             if error_message is not None:
                 error_message.value = intersections
 
+#endregion
+
+#region Private Methods (Registers Interface)
+
+    def __blink_time_cb(self, register):
+
+        # Check data type.
+        if not (register.data_type == "int" or register.data_type == "float"):
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        self.__blink_timer.expiration_time = register.value
+
+    def __led_out_cb(self, register):
+
+        # Check data type.
+        if not register.data_type == "str":
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        self.__led_out = register.value
+
     def __clear_errors_cb(self, register):
         """Clear errors callback."""
 
@@ -264,39 +268,7 @@ class Sys(BasePlugin):
 
         self.__enable_err_msg = register.value
 
-#endregion
-
-#region Private Methods (Disc Status)
-
-    def __update_disc_space(self):
-
-        total, used, free = disk_size()
-
-        sys_disc_total = self._registers.by_name("sys.disc.total")
-        if sys_disc_total is not None:
-            sys_disc_total.value = total
-
-        sys_disc_used = self._registers.by_name("sys.disc.used")
-        if sys_disc_used is not None:
-            sys_disc_used.value = used
-
-        sys_disc_free = self._registers.by_name("sys.disc.free")
-        if sys_disc_free is not None:
-            sys_disc_free.value = free
-
-#endregion
-
-#region Public Methods
-
-    def init(self):
-        """Initialize the plugin."""
-
-        # Create logger.
-        self.__logger = get_logger(__name__)
-        self.__logger.info("Starting up the {}".format(self.name))
-
-        # Status LED blink timer.
-        self.__blink_timer = Timer(1)
+    def __init_registers(self):
 
         # Status LED blink time.
         blink_time = self._registers.by_name(self.key + ".sl.blink_time")
@@ -309,11 +281,6 @@ class Sys(BasePlugin):
         if output is not None:
             output.update_handlers = self.__led_out_cb
             output.update()
-
-        # Colission detection.
-        self.__collission_timer = Timer(1)
-
-        self.__setup_rules()
 
         clear_errors = self._registers.by_name(self.key + ".col.clear_errors")
         if clear_errors is not None:
@@ -338,13 +305,52 @@ class Sys(BasePlugin):
             enable_err_msg.update_handlers = self.__enable_err_msg_cb
             enable_err_msg.update()
 
+    def __update_disc_space(self):
+
+        total, used, free = disk_size()
+
+        sys_disc_total = self._registers.by_name("sys.disc.total")
+        if sys_disc_total is not None:
+            sys_disc_total.value = total
+
+        sys_disc_used = self._registers.by_name("sys.disc.used")
+        if sys_disc_used is not None:
+            sys_disc_used.value = used
+
+        sys_disc_free = self._registers.by_name("sys.disc.free")
+        if sys_disc_free is not None:
+            sys_disc_free.value = free
+
+#endregion
+
+#region Public Methods
+
+    def _init(self):
+        """Init the plugin.
+        """
+
+        # Create logger.
+        self.__logger = get_logger(__name__)
+        self.__logger.info("Starting up the {}".format(self.name))
+
+        # Status LED blink timer.
+        self.__blink_timer = Timer(1)
+
+        # Colission detection.
+        self.__collission_timer = Timer(1)
+
         # Create disc check timer.
         self.__disc_status_timer = Timer(10)
 
-    def update(self):
-        """Runtime of the plugin."""
+        self.__init_registers()
 
-        # Update LED blink process.
+        self.__setup_rules()
+
+    def _update(self):
+        """Update the plugin.
+        """
+
+        # Update the Blink LED timer.
         self.__blink_timer.update()
         if self.__blink_timer.expired:
             self.__blink_timer.clear()
@@ -354,13 +360,15 @@ class Sys(BasePlugin):
             else:
                 self.__led_state = 1
 
+            # update the LED state.
             self.__set_led(self.__led_state)
 
-        # Update the timer.
+        # Update the collision timer.
         self.__collission_timer.update()
         if self.__collission_timer.expired:
             self.__collission_timer.clear()
 
+             # Check for collision.
             self.__rules.check(self._registers)
 
         # Update disc space.
@@ -368,10 +376,12 @@ class Sys(BasePlugin):
         if self.__disc_status_timer.expired:
             self.__disc_status_timer.clear()
 
+            # Update the disck space registers.
             self.__update_disc_space()
 
-    def shutdown(self):
-        """Shutting down the blinds."""
+    def _shutdown(self):
+        """Shutting down the plugin.
+        """
 
         self.__logger.info("Shutting down the {}".format(self.name))
         self.__set_led(0)
