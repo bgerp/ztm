@@ -1917,6 +1917,15 @@ def __add_registers():
     register.value = "Grundfos/Pump/5"
     __registers.append(register)
 
+    # ECD / VCG / TVA Roof Floor Pump
+    register = Register("ecd.tva_roof_floor.enabled")
+    register.scope = Scope.System
+    register.plugin_name = "ECD"
+    register.description = "ECD / VCG / TVA Roof Floor"
+    register.range = __range["BOOL"]
+    register.value = True
+    __registers.append(register)
+
     # ECD / VCG / TVA Fitness In
     register = Register("ecd.tva_fitness.cold_in")
     register.scope = Scope.System
@@ -1960,6 +1969,15 @@ def __add_registers():
     register.description = "ECD / VCG / TVA Fitness"
     register.range = ""
     register.value = "Grundfos/Pump/5"
+    __registers.append(register)
+
+    # ECD / VCG / TVA Fitness
+    register = Register("ecd.tva_fitness.enabled")
+    register.scope = Scope.System
+    register.plugin_name = "ECD"
+    register.description = "ECD / VCG / TVA Fitness"
+    register.range = __range["BOOL"]
+    register.value = True
     __registers.append(register)
 
     # ECD / VCG / Floor West Cooling In
@@ -2007,6 +2025,15 @@ def __add_registers():
     register.value = "Grundfos/Pump/5"
     __registers.append(register)
 
+    # ECD / VCG / Floor West Pump
+    register = Register("ecd.floor_west.enabled")
+    register.scope = Scope.System
+    register.plugin_name = "ECD"
+    register.description = "ECD / VCG / Floor West Pump"
+    register.range = __range["BOOL"]
+    register.value = True
+    __registers.append(register)
+
     # ECD / VCG / TVA Conference Center In
     register = Register("ecd.tva_conference_center.cold_in")
     register.scope = Scope.System
@@ -2050,6 +2077,15 @@ def __add_registers():
     register.description = "ECD / VCG / TVA Conference Center"
     register.range = ""
     register.value = "Grundfos/Pump/5"
+    __registers.append(register)
+
+    # ECD / VCG / TVA Conference Center Pump
+    register = Register("ecd.tva_conference_center.enabled")
+    register.scope = Scope.System
+    register.plugin_name = "ECD"
+    register.description = "ECD / VCG / TVA Conference Center"
+    register.range = __range["BOOL"]
+    register.value = True
     __registers.append(register)
 
     # ECD / VCG / Convectors Kitchen Cold In
@@ -2098,6 +2134,15 @@ def __add_registers():
     register.value = "Grundfos/Pump/5"
     __registers.append(register)
 
+    # ECD / VCG / Convectors Kitchen Pump
+    register = Register("ecd.convectors_kitchen.enabled")
+    register.scope = Scope.System
+    register.plugin_name = "ECD"
+    register.description = "ECD / VCG / Convectors Kitchen Pump"
+    register.range = __range["BOOL"]
+    register.value = True
+    __registers.append(register)
+
     # ECD / VCG / TVA Wearhouse Cold In
     register = Register("ecd.tva_warehouse.cold_in")
     register.scope = Scope.System
@@ -2141,6 +2186,15 @@ def __add_registers():
     register.description = "ECD / VCG / TVA Wearhouse"
     register.range = ""
     register.value = "Grundfos/Pump/5"
+    __registers.append(register)
+
+    # ECD / VCG / TVA Wearhouse Pump
+    register = Register("ecd.tva_warehouse.enabled")
+    register.scope = Scope.System
+    register.plugin_name = "ECD"
+    register.description = "ECD / VCG / TVA Wearhouse"
+    register.range = __range
+    register.value = True
     __registers.append(register)
 
     register = Register("ecd.enabled")
