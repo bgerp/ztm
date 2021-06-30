@@ -215,7 +215,7 @@ def __add_registers():
     register.plugin_name = "Access Control"
     register.description = "Lock mechanism time to open [s]"
     register.range = "0/60"
-    register.value = 10
+    register.value = 3
     __registers.append(register)
 
     register = Register("ac.door_closed_1.input")
@@ -314,7 +314,7 @@ def __add_registers():
     register.plugin_name = "Access Control"
     register.description = "Lock 2 mechanism time to open"
     register.range = "0/60"
-    register.value = 10
+    register.value = 3
     __registers.append(register)
 
     register = Register("ac.door_closed_2.input")
