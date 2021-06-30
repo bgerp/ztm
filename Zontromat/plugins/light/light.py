@@ -118,7 +118,7 @@ class Light(BasePlugin):
 
 #endregion
 
-#region Private Methods Registers Interface
+#region Private Methods (Registers Interface)
 
     def __error_gain_cb(self, register):
         
@@ -128,17 +128,7 @@ class Light(BasePlugin):
             return
 
         if self.__error_gain != register.value:
-            self.__error_gain = register.value  
-
-    def __target_illum_cb(self, register):
-
-        # Check data type.
-        if not (register.data_type == "float" or register.data_type == "int"):
-            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
-            return
-
-        if self.__target_illumination != register.value:
-            self.__target_illumination = register.value
+            self.__error_gain = register.value
 
     def __sensor_settings_cb(self, register):
 
@@ -201,15 +191,20 @@ class Light(BasePlugin):
             v2_output.update_handlers = self.__v2_output_cb
             v2_output.update()
 
-        target_illum = self._registers.by_name(self.key + ".target_illum")
-        if target_illum is not None:
-            target_illum.update_handlers = self.__target_illum_cb
-            target_illum.update()
-
         error_gain = self._registers.by_name(self.key + ".error_gain")
         if error_gain is not None:
             error_gain.update_handler = self.__error_gain_cb
             error_gain.update()
+
+    def __read_target_ilum(self):
+
+        value = 0
+
+        target_illum = self._registers.by_name(self.key + ".target_illum")
+        if target_illum is not None:
+            value = target_illum.value
+
+        return value
 
     def __is_empty(self):
 
@@ -223,7 +218,7 @@ class Light(BasePlugin):
 
 #endregion
 
-#region Private Methods Controller Interface
+#region Private Methods (Controller Interface)
 
     def __set_voltages(self, v1, v2):
         """Set the voltage outputs.
@@ -270,6 +265,19 @@ class Light(BasePlugin):
         delta = 0
         error = 0
 
+        self.__target_illumination = self.__read_target_ilum()
+
+        # If there is no one at the zone, just turn off the lights.
+        is_empty = self.__is_empty()
+        
+        # If the zone is empty, turn the lights off.
+        if is_empty:
+            self.__last_target_illum = self.__target_illumination
+            self.__target_illumination = 0
+
+        else:
+            self.__target_illumination = self.__last_target_illum
+
         # Read sensor.
         current_illumination = self.__light_sensor.get_value()
 
@@ -291,16 +299,15 @@ class Light(BasePlugin):
             self.__tmp_output = 10000
 
         # Apply the output if it is different.
-        if self.__tmp_output != self.__output:
-            self.__output = self.__tmp_output
+        self.__output = self.__tmp_output
 
-            # Convert to volgate.
-            out_to_v = self.__output * 0.001
+        # Convert to volgate.
+        out_to_v = self.__output * 0.001
 
-            self.__set_voltages(out_to_v, out_to_v)
+        self.__set_voltages(out_to_v, out_to_v)
 
-            self.__logger.debug("TRG {:3.3f}\tINP {:3.3f}\tERR: {:3.3f}\tOUT: {:3.3f}"\
-                .format(self.__target_illumination, current_illumination, delta, out_to_v))
+        self.__logger.debug("TRG {:3.3f}\tINP {:3.3f}\tERR: {:3.3f}\tOUT: {:3.3f}"\
+            .format(self.__target_illumination, current_illumination, delta, out_to_v))
 
 #endregion
 
@@ -315,8 +322,6 @@ class Light(BasePlugin):
 
         self.__update_timer = Timer(1)
 
-        self.__target_illum = 0
-
         self.__init_registers()
 
         self.__set_voltages(0, 0)
@@ -324,17 +329,6 @@ class Light(BasePlugin):
     def _update(self):
         """Update the plugin.
         """
-
-        # If there is no one at the zone, just turn off the lights.
-        is_empty = self.__is_empty()
-        
-        # If the zone is empty, turn the lights off.
-        if is_empty:
-            self.__last_target_illum = self.__target_illum
-            self.__target_illum = 0
-
-        else:
-            self.__target_illum = self.__last_target_illum
 
         # Update sensor data.
         self.__light_sensor.update()
