@@ -515,7 +515,7 @@ class Blinds(BasePlugin):
             input_fb = self.__reed_fb()
             if input_fb:
                 self.__stop()
-                self.__logger.warning("{} has raised end position.".format(self.name, ))
+                GlobalErrorHandler.log_hardware_limit(self.__logger, "{} has raised end position.".format(self.name))
                 self.__current_position = self.__new_position
                 self.__blinds_state.set_state(BlindsState.Wait)
 

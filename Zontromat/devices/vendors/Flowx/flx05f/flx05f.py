@@ -35,6 +35,8 @@ from devices.factories.valve.valve_state import ValveState
 
 from data import verbal_const
 
+from services.global_error_handler.global_error_handler import GlobalErrorHandler
+
 # (Request from mail: Eml6429)
 
 #region File Attributes
@@ -307,7 +309,7 @@ class FLX05F(BaseValve):
             ccw_limit_state = self.__get_ccw_limit()
             if cw_limit_state or ccw_limit_state:
                 self.__stop()
-                self.__logger.warning("{} has raised end position.".format(self.name))
+                GlobalErrorHandler.log_hardware_limit(self.__logger, "{} has raised end position.".format(self.name))
                 self._current_position = self.target_position
                 self._state.set_state(ValveState.Wait)
 
@@ -370,7 +372,7 @@ class FLX05F(BaseValve):
             # Close the valve.            
             if self.__calibration_state.is_state(CalibrationState.Error):
 
-                # TODO: Send message to the ERP that the valve is not OK.
+                GlobalErrorHandler.log_hardware_malfunction(self.__logger, "The valve {} can not calibrated.".format(self.name))
                 # TODO: Should we take some action.
                 self._state.set_state(ValveState.Wait)
 
