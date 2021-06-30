@@ -687,16 +687,12 @@ class AirConditioner(BasePlugin):
     def __set_upper_fan(self, value):
 
         # Air temperatures.
-        upper_fan = self._registers.by_name("vent.upper_{}.fan.speed".format(self.__identifier))
-        if upper_fan is not None:
-            upper_fan.value = value
+        self._registers.write("vent.upper_{}.fan.speed".format(self.__identifier), value)
 
     def __set_lower_fan(self, value):
 
         # Air temperatures.
-        lower_fan = self._registers.by_name("vent.upper_{}.fan.speed".format(self.__identifier))
-        if lower_fan is not None:
-            lower_fan.value = value
+        self._registers.write("vent.lower_{}.fan.speed".format(self.__identifier), value)
 
 #endregion
 
@@ -833,29 +829,19 @@ class AirConditioner(BasePlugin):
             loop2_temp_value = self.__loop2_temp_dev.get_temp()
 
         # 2. If the folowing register is available then set ist value to the thermometers value.
-        air_temp_lower = self._registers.by_name("{}.air_temp_lower_{}.value".format(self.key, self.__identifier))
-        if air_temp_lower is not None:
-            air_temp_lower.value = air_temp_lower_value
+        self._registers.write("{}.air_temp_lower_{}.value".format(self.key, self.__identifier), air_temp_lower_value)
 
         # 2. If the folowing register is available then set ist value to the thermometers value.
-        air_temp_cent = self._registers.by_name("{}.air_temp_cent_{}.value".format(self.key, self.__identifier))
-        if air_temp_cent is not None:
-            air_temp_cent.value = air_temp_cent_value
+        self._registers.write("{}.air_temp_cent_{}.value".format(self.key, self.__identifier), air_temp_cent_value)
 
         # 2. If the folowing register is available then set ist value to the thermometers value.
-        air_temp_upper = self._registers.by_name("{}.air_temp_upper_{}.value".format(self.key, self.__identifier))
-        if air_temp_upper is not None:
-            air_temp_upper.value = air_temp_upper_value
+        self._registers.write("{}.air_temp_upper_{}.value".format(self.key, self.__identifier), air_temp_upper_value)
 
         # 2. If the folowing register is available then set ist value to the thermometers value.
-        loop1_temp = self._registers.by_name("{}.loop1_{}.temp.value".format(self.key, self.__identifier))
-        if loop1_temp is not None:
-            loop1_temp.value = loop1_temp_value
+        self._registers.write("{}.loop1_{}.temp.value".format(self.key, self.__identifier), loop1_temp_value)
 
         # 2. If the folowing register is available then set ist value to the thermometers value.
-        loop2_temp = self._registers.by_name("{}.loop2_{}.temp.value".format(self.key, self.__identifier))
-        if loop2_temp is not None:
-            loop2_temp.value = loop2_temp_value
+        self._registers.write("{}.loop2_{}.temp.value".format(self.key, self.__identifier), loop2_temp_value)
 
     def __is_empty(self):
 
@@ -1108,9 +1094,7 @@ class AirConditioner(BasePlugin):
                     if self.__loop2_leak_teat is not None: 
                         self.__loop2_leak_teat.run()
 
-            temp_actual = self._registers.by_name("{}.temp_{}.actual".format(self.key, self.__identifier))
-            if temp_actual is not None:
-                temp_actual.value = temperature
+            self._registers.write("{}.temp_{}.actual".format(self.key, self.__identifier), temperature)
 
         # Recalculate delta time.
         # pass_time = time.time() - self.__lastupdate_delta_time

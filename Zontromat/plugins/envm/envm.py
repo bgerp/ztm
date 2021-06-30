@@ -237,13 +237,8 @@ class Environment(BasePlugin):
         """Set sun position.
         """
 
-        sun_elevation = self._registers.by_name("envm.sun.elevation")
-        if sun_elevation is not None:
-            sun_elevation.value = self.__elevation
-
-        sun_azimuth = self._registers.by_name("envm.sun.azimuth")
-        if sun_azimuth is not None:
-            sun_azimuth.value = self.__azimuth
+        self._registers.write("envm.sun.elevation", self.__elevation)
+        self._registers.write("envm.sun.azimuth", self.__azimuth)
 
 #endregion
 

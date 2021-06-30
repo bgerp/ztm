@@ -510,18 +510,18 @@ class SecurityZone(BasePlugin):
             door_window_blind_output.update_handlers = self.__door_window_blind_output_cb
             door_window_blind_output.update()
 
-        # Door window blind.
-        door_window_blind_value = self._registers.by_name("{}.door_window_blind_{}.value".format(self.key, self.__identifier))
-        if door_window_blind_value is not None:
-            door_window_blind_value.update_handlers = self.__door_window_blind_value_cb
-            door_window_blind_value.update()
+        # Door window blind.        
+        self._registers.add_callback(
+            "{}.door_window_blind_{}.value".format(self.key, self.__identifier),
+            self.__door_window_blind_value_cb,
+            update=True)
 
     def __set_zone_occupied(self, value):
+
 
         reg_occupation = self._registers.by_name("{}.zone_{}_occupied".format(self.key, self.__identifier))
         if reg_occupation is not None:
             if reg_occupation.value != value:
-                print(value)
                 reg_occupation.value = value
 
 #endregion
@@ -590,7 +590,7 @@ class SecurityZone(BasePlugin):
                             self.__entry_reader.reader_state, \
                             self.__entry_reader.port_name)
 
-                GlobalErrorHandler.log_cart_reader_stop(self.__logger, message)
+                GlobalErrorHandler.log_hardware_malfunction(self.__logger, message)
 
                 self.__entry_reader.init()
 
@@ -599,7 +599,7 @@ class SecurityZone(BasePlugin):
                 message = "Card reader {}; State {}."\
                     .format(self.__entry_reader.serial_number, self.__entry_reader.reader_state)
 
-                GlobalErrorHandler.log_cart_reader_none(self.__logger, message)
+                GlobalErrorHandler.log_hardware_malfunction(self.__logger, message)
 
                 self.__entry_reader.init()
 
@@ -618,7 +618,7 @@ class SecurityZone(BasePlugin):
                             self.__exit_reader.reader_state, \
                             self.__exit_reader.port_name)
 
-                GlobalErrorHandler.log_cart_reader_stop(self.__logger, message)
+                GlobalErrorHandler.log_hardware_malfunction(self.__logger, message)
 
                 self.__exit_reader.init()
 
@@ -627,7 +627,7 @@ class SecurityZone(BasePlugin):
                 message = "Card reader {}; State {}."\
                     .format(self.__exit_reader.serial_number, self.__entry_reader.reader_state)
 
-                GlobalErrorHandler.log_cart_reader_none(self.__logger, message)
+                GlobalErrorHandler.log_hardware_malfunction(self.__logger, message)
 
                 self.__exit_reader.init()
 

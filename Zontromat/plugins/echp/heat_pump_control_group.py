@@ -620,19 +620,10 @@ class HeatPumpControllGroup(BasePlugin):
 
     def __update_registers(self):
 
-        # Update machine power.
-        hp_power = self._registers.by_name("{}.hp.power".format(self.key))
-        if hp_power is not None:
-            hp_power.value = self.__heat_pump_power
-
-        # Update machine mode.
-        hp_mode = self._registers.by_name("{}.hp.mode".format(self.key))
-        if hp_mode is not None:
-            hp_mode.value = self.__heat_pump_mode
-
-        hp_mode = self._registers.by_name("{}.hp.run".format(self.key))
-        if hp_mode is not None:
-            hp_mode.value = self.__heat_pump_run
+        # Update machine status.
+        self._registers.write("{}.hp.power".format(self.key), self.__heat_pump_power)
+        self._registers.write("{}.hp.mode".format(self.key), self.__heat_pump_mode)
+        self._registers.write("{}.hp.run".format(self.key), self.__heat_pump_run)
 
 #endregion
 

@@ -174,28 +174,13 @@ class Sys(BasePlugin):
             self.__logger.debug(intersections)
 
         if level == MonitoringLevel.Info and self.__enable_info_msg:
-            # self.__logger.info("Info")
-            # self.__logger.info(intersections)
-
-            info_message = self._registers.by_name(self.key + ".col.info_message")
-            if info_message is not None:
-                info_message.value = intersections
+            self._registers.write("{}.col.info_message".format(self.key), intersections)
 
         if level == MonitoringLevel.Warning and self.__enable_wrn_msg:
-            # self.__logger.warning("Warning")
-            # self.__logger.warning(intersections)
-
-            warning_message = self._registers.by_name(self.key + ".col.warning_message")
-            if warning_message is not None:
-                warning_message.value = intersections
+            self._registers.write("{}.col.warning_message".format(self.key), intersections)
 
         if level == MonitoringLevel.Error and self.__enable_err_msg:
-            # self.__logger.error("Error")
-            # self.__logger.error(intersections)
-
-            error_message = self._registers.by_name(self.key + ".col.error_message")
-            if error_message is not None:
-                error_message.value = intersections
+            self._registers.write("{}.col.error_message".format(self.key), intersections)
 
 #endregion
 
@@ -227,19 +212,13 @@ class Sys(BasePlugin):
             register.value = 0
 
             # Clear info messages.
-            info_message = self._registers.by_name(self.key + ".col.info_message")
-            if info_message is not None:
-                info_message.value = {}
+            self._registers.write("{}.col.info_message".format(self.key), {})
 
             # Clear warning messages.
-            warning_message = self._registers.by_name(self.key + ".col.warning_message")
-            if warning_message is not None:
-                warning_message.value = {}
+            self._registers.write("{}.col.warning_message".format(self.key), {})
 
             # Clear error messages.
-            error_message = self._registers.by_name(self.key + ".col.error_message")
-            if error_message is not None:
-                error_message.value = {}
+            self._registers.write("{}.col.error_message".format(self.key), {})
 
     def __enable_info_msg_cb(self, register):
 
@@ -309,17 +288,9 @@ class Sys(BasePlugin):
 
         total, used, free = disk_size()
 
-        sys_disc_total = self._registers.by_name("sys.disc.total")
-        if sys_disc_total is not None:
-            sys_disc_total.value = total
-
-        sys_disc_used = self._registers.by_name("sys.disc.used")
-        if sys_disc_used is not None:
-            sys_disc_used.value = used
-
-        sys_disc_free = self._registers.by_name("sys.disc.free")
-        if sys_disc_free is not None:
-            sys_disc_free.value = free
+        self._registers.write("sys.disc.total", total)
+        self._registers.write("sys.disc.used", used)
+        self._registers.write("sys.disc.free", free)
 
 #endregion
 

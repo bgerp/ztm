@@ -173,9 +173,7 @@ class Monitoring(BasePlugin):
     def __cw_leaktest_result(self, leak_liters):
 
         if leak_liters > 0:
-            register = self._registers.by_name(self.key + ".cw.leak")
-            if register is not None:
-                register.value = leak_liters
+            self._registers.write("{}.cw.leak".format(self.key), leak_liters)
 
     def __init_cw(self):
 
@@ -239,9 +237,7 @@ class Monitoring(BasePlugin):
     def __hw_leaktest_result(self, leak_liters):
 
         if leak_liters > 0:
-            register = self._registers.by_name(self.key + ".hw.leak")
-            if register is not None:
-                register.value = leak_liters
+            self._registers.write("{}.hw.leak".format(self.key), leak_liters)
 
     def __init_hw(self):
 
@@ -525,9 +521,7 @@ class Monitoring(BasePlugin):
         self.__filter_measurements_by_time(self.__measurements, 86400)
 
         # Update parameters in the registers.
-        measurements_reg = self._registers.by_name(self.key + ".pa.measurements")
-        if measurements_reg is not None:
-            measurements_reg.value = json.dumps(self.__measurements)
+        self._registers.write("{}.pa.measurements".format(self.key), json.dumps(self.__measurements))
 
 #endregion
 
