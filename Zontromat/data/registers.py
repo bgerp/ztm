@@ -70,10 +70,12 @@ class Registers(list):
 #region Attributes
 
     __instance = None
-    """Singelton instance."""
+    """Singelton instance.
+    """
 
     __logger = None
-    """Logger"""
+    """Logger
+    """
 
 #endregion
 
@@ -81,11 +83,6 @@ class Registers(list):
 
     def __init__(self):
         """Constructor
-
-        Parameters
-        ----------
-        self : Template
-            Current class instance.
         """
 
         super().__init__()
@@ -133,10 +130,11 @@ class Registers(list):
     def update(self, registers):
         """Update registers content.
 
-        Parameters
-        ----------
-        registers : mixed
-            Registers content.
+        Args:
+            registers (dict): Dictionary of registers.
+
+        Raises:
+            ValueError: None register values.
         """
 
         if registers is None:
@@ -163,18 +161,14 @@ class Registers(list):
 
                 GlobalErrorHandler.log_unexpected_register(self.__logger, register)
 
-    def exists(self, name):
+    def exists(self, name: str):
         """Update registers content.
 
-        Parameters
-        ----------
-        name : string
-            Name of the register.
+        Args:
+            name (str): Name of the register.
 
-        Returns
-        -------
-        bool
-            Exists or not.
+        Returns:
+            bool: Exists or not.
         """
 
         result = False
@@ -192,15 +186,11 @@ class Registers(list):
     def by_ts(self, ts):
         """Get registers with specified scope.
 
-        Parameters
-        ----------
-        ts : float
-            Timestamp
+        Args:
+            ts (float): Timestamp
 
-        Returns
-        -------
-        array
-            Registers specified time.
+        Returns:
+            list: Registers specified time.
         """
 
         result = Registers()
@@ -214,15 +204,11 @@ class Registers(list):
     def new_then(self, seconds):
         """Get registers newer then specific time from time of calling.
 
-        Parameters
-        ----------
-        seconds : float
-            seconds
+        Args:
+            seconds (float): seconds
 
-        Returns
-        -------
-        array
-            Registers specified time.
+        Returns:
+            list: Registers newer than specific time.
         """
 
         result = Registers()
@@ -240,15 +226,11 @@ class Registers(list):
     def by_scope(self, scope):
         """Get registers with specified scope.
 
-        Parameters
-        ----------
-        scope : Scope(Enum)
-            Scope
+        Args:
+            scope (Scope): Scope of action.
 
-        Returns
-        -------
-        array
-            Registers with scope.
+        Returns:
+            list: Registers with scope.
         """
 
         result = Registers()
@@ -259,18 +241,14 @@ class Registers(list):
 
         return result
 
-    def by_key(self, key):
+    def by_key(self, key: str):
         """Get registers with specified key in name.
 
-        Parameters
-        ----------
-        key : string
-            Key in name.
+        Args:
+            key (str): Key in name.
 
-        Returns
-        -------
-        array
-            Registers with key names.
+        Returns:
+            list: Registers with key names.
         """
 
         result = Registers()
@@ -281,18 +259,14 @@ class Registers(list):
 
         return result
 
-    def by_name(self, name):
-        """Get register with specified name.
+    def by_name(self, name: str):
+        """Returns register with specified name.
 
-        Parameters
-        ----------
-        name : string
-            Name of the register.
+        Args:
+            name (str): Name of the register.
 
-        Returns
-        -------
-        Register
-            Registers with name.
+        Returns:
+            list: Registers with name.
         """
 
         result = None
@@ -304,7 +278,15 @@ class Registers(list):
 
         return result
 
-    def by_names(self, names):
+    def by_names(self, names: list):
+        """Returns registers with specified name.
+
+        Args:
+            names (list): Names of the registers.
+
+        Returns:
+            list: Registers with names.
+        """
 
         filtered = Registers()
 
@@ -319,10 +301,8 @@ class Registers(list):
     def names(self):
         """Get registers names.
 
-        Returns
-        -------
-        array
-            Array of names.
+        Returns:
+            list: Array of names.
         """
 
         result = []
@@ -336,10 +316,8 @@ class Registers(list):
         """Converts array in to dictionary.
         Consisted of name and value as (key and value).
 
-        Returns
-        -------
-        array
-            Array of names.
+        Returns:
+            dict: Dictionary of registers.
         """
 
         result = {}
@@ -370,18 +348,14 @@ class Registers(list):
 
         return result
 
-    def get_group(self, name):
+    def get_group(self, name: str):
         """Get registerr with specified group name.
 
-        Parameters
-        ----------
-        name : string
-            Name of the registers.
+        Args:
+            name (str): Name of the registers.
 
-        Returns
-        -------
-        Register
-            Registers with name.
+        Returns:
+            Register: Registers with name.
         """
 
         result = []
@@ -393,16 +367,28 @@ class Registers(list):
         return result
 
     def keys(self):
-        """Return keys."""
+        """Return keys.
 
-        # Get keys.
+        Returns:
+            list: Names of the registers in list.
+        """
+
         registers_keys = []
         for register in self:
             registers_keys.append(register.name)
 
         return registers_keys
 
-    def write(self, name, value):
+    def write(self, name: str, value):
+        """Write in specific register.
+
+        Args:
+            name (str): The name.
+            value (Any): The value.
+
+        Returns:
+            bool: Execution status.
+        """
 
         status = False
 
@@ -412,6 +398,20 @@ class Registers(list):
             status = True
 
         return status
+
+    def add_callback(self, name: str, cb, **kwargs):
+        """[summary]
+
+        Args:
+            name (str): Name of the register.
+            cb (function): Function name.
+        """
+
+        register = self.by_name(name)
+        if register is not None:
+            register.update_handlers = cb
+            if "update" in kwargs:
+                register.update()
 
 #endregion
 
