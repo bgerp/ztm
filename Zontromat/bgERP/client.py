@@ -32,6 +32,8 @@ from utils.logger import get_logger
 
 from bgERP.session import Session
 
+from services.global_error_handler.global_error_handler import GlobalErrorHandler
+
 #region File Attributes
 
 __author__ = "Orlin Dimitrov"
@@ -219,8 +221,6 @@ class Client:
 
         uri = self.host + self.__api_login
 
-        # self.__logger.info("LOGIN; To bgERP: {}".format(credentials))
-
         try:
             response = requests.post(uri, data=credentials, timeout=self.timeout)
 
@@ -228,12 +228,9 @@ class Client:
 
                 # Take new login session key.
                 if response.status_code == 200:
+
                     data = response.json()
                     if data is not None:
-
-                        # response_data = json.loads(response.text)
-
-                        # self.__logger.info("LOGIN; From bgERP: {}".format(response_data))
 
                         # Authorization token.
                         if "token" in data:
@@ -259,7 +256,8 @@ class Client:
                     self.__logger.error("HTTP Error code: {}".format(response.status_code))
                     login_state = False
 
-        except:
+        except Exception as ex:
+            GlobalErrorHandler.log_no_connection_erp(self.__logger)
             self.__logger.error(traceback.format_exc())
             login_state = False
 
