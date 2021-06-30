@@ -143,11 +143,14 @@ class AccessControl(BasePlugin):
 
         return zones_occupation_flags
 
-    def __set_envm_is_empty(self, flag):
+    def __set_envm_is_empty(self, flag: bool):
+        """Set environment flag.
 
-        is_empty = self._registers.by_name("envm.is_empty")
-        if is_empty is not None:
-            is_empty.value = flag
+        Args:
+            flag (bool): Flag value.
+        """
+
+        self._registers.write("envm.is_empty", flag)
 
 #endregion
 
