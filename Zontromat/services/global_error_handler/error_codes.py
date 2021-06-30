@@ -65,5 +65,5 @@ class ErrorCodes(Enum):
     BadRegisterDataType = 504
     UnexpectedRegister = 505
     RegisterNotFound = 506
-    CartReaderStop = 507
-    CartReaderNone = 508
+    HardwareMalfunction = 507
+    HardwareLimit = 508
