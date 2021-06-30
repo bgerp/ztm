@@ -88,8 +88,8 @@ def __to_CSV(file_path):
         __add_error(writer, ErrorCodes.BadRegisterValue.name, ErrorCodes.BadRegisterValue.value, "Bad register value")
         __add_error(writer, ErrorCodes.BadRegisterDataType.name, ErrorCodes.BadRegisterDataType.value, "Bad register data type")
         __add_error(writer, ErrorCodes.UnexpectedRegister.name, ErrorCodes.UnexpectedRegister.value, "Unexpected register")
-        __add_error(writer, ErrorCodes.CartReaderStop.name, ErrorCodes.CartReaderStop.value, "Cart reader has stopped")
-        __add_error(writer, ErrorCodes.CartReaderNone.name, ErrorCodes.CartReaderNone.value, "Cart reader has None")
+        __add_error(writer, ErrorCodes.HardwareMalfunction.name, ErrorCodes.HardwareMalfunction.value, "Hardware malfunction")
+        __add_error(writer, ErrorCodes.HardwareLimit.name, ErrorCodes.HardwareLimit.value, "Hardware limit")
 
         csv_file.close()
 

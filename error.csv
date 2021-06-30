@@ -5,5 +5,5 @@ NoConnectionWithPLC,502,No connection with PLC
 BadRegisterValue,503,Bad register value
 BadRegisterDataType,504,Bad register data type
 UnexpectedRegister,505,Unexpected register
-CartReaderStop,507,Cart reader has stopped
-CartReaderNone,508,Cart reader has None
+HardwareMalfunction,507,Hardware malfunction
+HardwareLimit,508,Hardware limit
