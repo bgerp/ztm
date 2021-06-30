@@ -133,8 +133,6 @@ def main():
     # Read settings content.
     settings.read()
 
-    __logger.info("Starting")
-
     # Create zone.
     __zone = Zone()
 
