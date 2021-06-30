@@ -89,15 +89,13 @@ class EnergyMode(Enum):
     Accumulate = 2 # accumulate (акумулиране)
     Generator = 3 # generator (на генератор)
 
-class ZoneState(Enum):
-    """Zone state machine flags."""
+class ERPState(Enum):
+    """ERP state machine flags.
+    """
 
-    Idle = 0
-    Init = 1
-    Login = 2
-    Run = 3
-    Shutdown = 4
-    Test = 5
+    NONE = 0
+    Login = 1
+    Update = 2
 
 class Zone():
     """Main zone class"""
@@ -134,7 +132,7 @@ class Zone():
     __erp_service_update_timer = None
     """ERP update timer."""
 
-    __zone_state = None
+    __erp_state_machine = None
     """Zone state."""
 
     __stop_flag = False
@@ -155,15 +153,6 @@ class Zone():
 
 #endregion
 
-#region Constructor
-
-    def __init__(self):
-        """Initialize the zone."""
-
-        pass
-
-#endregion
-
 #region Private Methods
 
     def __init_runtime(self):
@@ -176,13 +165,7 @@ class Zone():
 
         # Setup the performance profiler timer. (60) 10 is for tests.
         self.__performance_profiler_timer = Timer(10)
-
-
-        # Set zone state machine.
-        self.__zone_state = StateMachine()
-        self.__zone_state.on_change(self.__cb_zone_state)
-        self.__zone_state.set_state(ZoneState.Idle)
-
+    
         # Update timer.
         self.__update_timer = Timer(self.__update_rate)
             
@@ -191,7 +174,6 @@ class Zone():
         if self.__controller.serial_number is not None and self.__controller.serial_number.isdigit():
             time_offset = int(self.__controller.serial_number)
         self.__update_timer.expiration_time = self.__update_timer.expiration_time + (time_offset / 1000)
-
 
     def __init_registers(self):
         """Setup registers source.
@@ -203,7 +185,6 @@ class Zone():
 
         elif os.name == "nt":
             self.__registers = Registers.from_CSV("registers.csv")
-
 
     def __evok_cb(self, device):
         """EVOK callback service handler.
@@ -226,9 +207,7 @@ class Zone():
 
                     # If register exists, apply value.
                     required_name = input_reg.name.replace("input", "state")
-                    target_reg = self.__registers.by_name(required_name)
-                    if target_reg is not None:
-                        target_reg.value = device["value"]
+                    self.__registers.write(required_name, device["value"])
 
     def __init_controller(self):
         """Initialize the controller.
@@ -266,6 +245,9 @@ class Zone():
                 # Restart the service to accept the settings.
                 EvokSettings.restart()
 
+#endregion 
+
+#region Private Methods (ERP)
 
     def __erp_set_registers(self, data):
         """ERP set registers values.
@@ -341,31 +323,23 @@ class Zone():
         # Set the ERP update timer.
         self.__erp_service_update_timer = Timer(self.__erp_service_update_rate)
 
-#endregion 
+        # Set zone state machine.
+        self.__erp_state_machine = StateMachine()
+        self.__erp_state_machine.on_change(self.__on_erp_state_change_cb)
+        self.__erp_state_machine.set_state(ERPState.Login)
 
-#region Private Methods Zone States
+    def __on_erp_state_change_cb(self, machine):
+        """React on ERP state changes.
 
-    def __cb_zone_state(self, machine):
-        """Set zone state.
+        Args:
+            machine (StateMachine): State machine state.
         """
 
-        self.__logger.info("Zone state: {}".format(machine.get_state()))
+        self.__logger.info("ERP state: {}".format(machine.get_state()))
 
-    def __init(self):
-        """Initialize the zone."""
-
-        # Update the neuron.
-        state = self.__controller.update()
-
-        if state:
-            # Clear all resources.
-            self.__zone_state.set_state(ZoneState.Login)
-
-        else:
-            GlobalErrorHandler.log_no_connection_plc(self.__logger)
-
-    def __login(self):
-        """Login to bgERP."""
+    def __login_erp(self):
+        """Login to bgERP.
+        """
 
         # one_wire = self.__controller.get_1w_devices()
         # modbus = self.__controller.get_modbus_devices()
@@ -387,25 +361,14 @@ class Zone():
                 self.__app_settings.get_erp_service["erp_id"] = self.__erp.erp_id
                 self.__app_settings.save()
 
-            self.__zone_state.set_state(ZoneState.Run)
+            self.__erp_state_machine.set_state(ERPState.Update)
 
         else:
-            self.__zone_state.set_state(ZoneState.Init)
+            self.__erp_state_machine.set_state(ERPState.Login)
 
-    def __run(self):
-
-        # Create log if if it does not.
-        crate_log_file()
-
-        # Update the neuron.
-        state = self.__controller.update()
-
-        if not state:
-            self.__logger.error("PLC service should be restarted.")
-            GlobalErrorHandler.log_no_connection_plc(self.__logger)
-
-        # Give plugins runtime.
-        self.__plugin_manager.update()
+    def __sync_erp(self):
+        """Sync registers.
+        """
 
         # Update periodically bgERP.
         self.__erp_service_update_timer.update()
@@ -422,9 +385,7 @@ class Zone():
                 self.__registers.update(update_state)
 
                 # Clear the last atendies. (Eml6287)
-                aa = self.__registers.by_name("ac.last_update_attendees")
-                if aa is not None:
-                    aa.value = str([])
+                self.__registers.write("ac.last_update_attendees", str([]))
 
                 # (Eml6287)
                 # (Request to stop the queue from MG @ 15.01.2021)
@@ -438,84 +399,82 @@ class Zone():
             else:
 
                 GlobalErrorHandler.log_no_connection_erp(self.__logger)
-
+                self.__erp_state_machine.set_state(ERPState.Login)
                 # # (Request to stop the queue from MG @ 15.01.2021)
                 # # Create absolute copy of the object.
                 # reg_copy = self.__registers.by_scope(Scope.Device).to_dict().copy()
                 # # Put the copy to the queue.
                 # self.__registers_snapshot.put(reg_copy)
 
-    def __shutdown(self):
-        """Shutdown procedure."""
+    def __update_erp(self):
+        """Update ERP.
+        """
 
-        self.__plugin_manager.shutdown()
+        if self.__erp_state_machine.is_state(ERPState.Login):
+            # Login room.
+            self.__login_erp()
 
-    def __test(self):
-        """Test devices."""
+        elif self.__erp_state_machine.is_state(ERPState.Update):
+            # Run the process of the room.
+            self.__sync_erp()
 
-        success = True
-
-        if success:
-            self.__zone_state.set_state(ZoneState.Run)
-
-        else:
-            self.__zone_state.set_state(ZoneState.Test)
+        elif self.__erp_state_machine.is_state(ERPState.NONE):
+            self.__erp_state_machine.set_state(ERPState.Login)
 
 #endregion
 
-#region Private Methods Performance Profiler
+#region Private Methods (Performance Profiler)
 
     def __on_time_change(self, passed_time):
+        """On consumed time change.
 
-        time_usage = self.__registers.by_name("sys.time.usage")
-        if time_usage is not None:
-            time_usage.value = float("{:10.4f}".format(passed_time))
+        Args:
+            passed_time (int): Consumed runtime.
+        """
+
+        self.__registers.write("sys.time.usage", float("{:10.3f}".format(passed_time)))
 
     def __on_memory_change(self, current, peak):
+        """On RAM memory change.
 
-        ram_current = self.__registers.by_name("sys.ram.current")
-        if ram_current is not None:
-            ram_current.value = current
+        Args:
+            current (int): Current RAM.
+            peak (int): Peak RAM.
+        """
 
-        ram_peak = self.__registers.by_name("sys.ram.peak")
-        if ram_peak is not None:
-            ram_peak.value = peak
+        self.__registers.write("sys.ram.current", float("{:10.4f}".format(current)))
+
+        self.__registers.write("sys.ram.peak", float("{:10.4f}".format(peak)))
 
         # print(f"Current memory usage is {current / 10**3}kB; Peak was {peak / 10**3}kB")
 
     @__performance_profiler.profile
     def __update(self):
+        """Update the zone.
+        """
 
-        if self.__zone_state.is_state(ZoneState.Idle):
-            # Do nothing for now.
-            self.__zone_state.set_state(ZoneState.Init)
+        # Create log if if it does not.
+        crate_log_file()
 
-        elif self.__zone_state.is_state(ZoneState.Init):
-            # Initialize
-            self.__init()
+        # Update the neuron.
+        state = self.__controller.update()
+        if not state:
+            self.__logger.error("PLC service should be restarted.")
+            GlobalErrorHandler.log_no_connection_plc(self.__logger)
+            return
 
-        elif self.__zone_state.is_state(ZoneState.Login):
-            # Login room.
-            self.__login()
+        # Give plugins runtime.
+        self.__plugin_manager.update()
 
-        elif self.__zone_state.is_state(ZoneState.Run):
-            # Run the process of the room.
-            self.__run()
-
-        elif self.__zone_state.is_state(ZoneState.Shutdown):
-            # Shutdown the devices.
-            self.__shutdown()
-            self.__stop_flag = True
-
-        elif self.__zone_state.is_state(ZoneState.Test):
-            self.__test()
+        self.__update_erp()
 
 #endregion
 
 #region Public Methods
 
     def init(self):
-        """Initialize the process."""
+        """Initialize the process.
+        """
 
         try:
             # Application settings.
@@ -548,7 +507,10 @@ class Zone():
             sys.exit(0)
 
     def run(self):
-        """Run the process."""
+        """Run the zone.
+        """        
+
+        self.__logger.info("Starting up the Zone")
 
         while not self.__stop_flag:
 
@@ -583,16 +545,22 @@ class Zone():
                 # Log the exception without to close the application.
                 except Exception:
                     self.__logger.error(traceback.format_exc())
-                    # self.__zone_state.set_state(ZoneState.Init)
 
                 self.__busy_flag = False
 
+        # Wait until the main teared ends.
+        while self.__busy_flag == True:
+            pass
+
+        self.__logger.info("Shutting down the Zone")
+
+        # Shutdown the plugins.
+        self.__plugin_manager.shutdown()
+
     def shutdown(self):
-        """Shutdown the process."""
+        """Shutdown the process.
+        """
 
-        self.__zone_state.set_state(ZoneState.Shutdown)
-        # self.__stop_flag = True
-        # self.__plugin_manager.shutdown()
-
+        self.__stop_flag = True
 
 #endregion
