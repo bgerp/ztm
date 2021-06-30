@@ -110,10 +110,13 @@ class GlobalErrorHandler:
 #region Public Static Methods
 
     @staticmethod
-    def log_no_connection_erp(logger):
-        """Log no connection with ERP."""
+    def log_no_connection_erp(logger, message: str= "Communication lost with ERP."):
+        """Log no connection with ERP.
 
-        message = "Communication lost with ERP."
+        Args:
+            logger (logger): Logger object.
+            message (str): `essage object.
+        """
 
         logger.error(message)
 
@@ -122,7 +125,11 @@ class GlobalErrorHandler:
 
     @staticmethod
     def log_no_connection_plc(logger):
-        """Log bad value register"""
+        """Log bad value register.
+
+        Args:
+            logger (logger): Logger object.
+        """
 
         message = "Communication lost with PLC."
 
@@ -132,8 +139,13 @@ class GlobalErrorHandler:
         GlobalErrorHandler.append(message, ErrorCodes.NoConnectionWithPLC)
 
     @staticmethod
-    def log_bad_register_value(logger, register):
-        """Log bad value register"""
+    def log_bad_register_value(logger, register: Register):
+        """Log bad value register.
+
+        Args:
+            logger (logger): Logger object.
+            register (Register): [description]
+        """
 
         message = "Inconsistent data for register {} with content {}"\
             .format(register.name, register.value)
@@ -144,8 +156,13 @@ class GlobalErrorHandler:
         GlobalErrorHandler.append(message, ErrorCodes.BadRegisterValue)
 
     @staticmethod
-    def log_bad_register_data_type(logger, register):
-        """Log bad value register"""
+    def log_bad_register_data_type(logger, register: Register):
+        """Log bad value register.
+
+        Args:
+            logger (logger): Logger object.
+            register (Register): [description]
+        """
 
         message = "Inconsistent data type for register {} with content {}"\
             .format(register.name, register.value)
@@ -156,8 +173,13 @@ class GlobalErrorHandler:
         GlobalErrorHandler.append(message, ErrorCodes.BadRegisterDataType)
 
     @staticmethod
-    def log_unexpected_register(logger, register):
-        """Unexpected register."""
+    def log_unexpected_register(logger, register: Register):
+        """Unexpected register.
+
+        Args:
+            logger (logger): Logger object.
+            register (Register): [description]
+        """
 
         message = "Add unexpected register {}; value: {}"\
             .format(register.name, register.value)
@@ -168,8 +190,13 @@ class GlobalErrorHandler:
         GlobalErrorHandler.append(message, ErrorCodes.UnexpectedRegister)
 
     @staticmethod
-    def log_register_not_found(logger, name):
-        """Unexpected register."""
+    def log_register_not_found(logger, name: str):
+        """Register not found.
+
+        Args:
+            logger (logger): Logger object.
+            name (str): Name of the register.
+        """
 
         message = "Register not found {}"\
             .format(name)
@@ -180,22 +207,32 @@ class GlobalErrorHandler:
         GlobalErrorHandler.append(message, ErrorCodes.RegisterNotFound)
 
     @staticmethod
-    def log_cart_reader_stop(logger, message):
-        """Log card reader stop."""
+    def log_hardware_malfunction(logger, message):
+        """Log malfunctioning hardware.
+
+        Args:
+            logger (logger): Logger object.
+            message (str): Defect description message.
+        """
 
         logger.warning(message)
 
         # Put error to the queue.
-        GlobalErrorHandler.append(message, ErrorCodes.CartReaderStop)
+        GlobalErrorHandler.append(message, ErrorCodes.HardwareMalfunction)
 
     @staticmethod
-    def log_cart_reader_none(logger, message):
-        """Log cart reader none."""
+    def log_hardware_limit(logger, message):
+        """Log limit of the hardware.
+
+        Args:
+            logger (logger): Logger object.
+            message (str): Limit description message.
+        """
 
         logger.warning(message)
 
         # Put error to the queue.
-        GlobalErrorHandler.append(message, ErrorCodes.CartReaderNone)
+        GlobalErrorHandler.append(message, ErrorCodes.HardwareLimit)
 
     @staticmethod
     def append(message, err_code):
