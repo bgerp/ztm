@@ -22,12 +22,21 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 
+import sys
 import unittest
 import os
+import time
 
-from devices.vendors.no_vendor_3.valve import Valve
+import os.path
+sys.path.append(
+    os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
 
-from controllers.dummy.dummy import Dummy
+from utils.settings import ApplicationSettings
+
+from devices.factories.valve.valve_factory import ValveFactory
+
+from controllers.controller_factory import ControllerFactory
+
 from data.registers import Registers
 
 #region File Attributes
@@ -82,59 +91,52 @@ class TestStringMethods(unittest.TestCase):
 
     def test_valve(self):
 
-        cases = {}
-        plc_cfg = {"test": self, "cases": cases}
-        controller = Dummy(plc_cfg)
+        settings = ApplicationSettings.get_instance()
+
+        controller = ControllerFactory.create(settings.controller)
+
         registers = self.__load_registers()
-        name = "vlv"
-        key = "ecd.pool_heating"
+        
 
-        # Create test object.
-        valve = Valve.create(name, key, registers, controller)
-
+        params = ["Flowx", "FLX-05F", "U1:ID6:R16:DO0", "U1:ID6:R17:DO0", "U1:ID6:R32:DI1", "U1:ID6:R32:DI0"]
+        valve = ValveFactory.create(
+            name="FLOWX_DIN65",
+            controller=controller,
+            params=params)
+        
         # Initialise the object.
         valve.init()
 
-        # Go to position 5.
-        valve.target_position = 5
-        while valve.current_position != valve.target_position:
+        # Set to calibrate state.
+        self.assertFalse(valve.is_calibrating)
+        valve.calibrate()
+        self.assertTrue(valve.is_calibrating)
+
+        # Calibarate
+        while valve.is_calibrating:
             valve.update()
 
-        # Go to position 0.
-        valve.target_position = 0
-        while valve.current_position != valve.target_position:
-            valve.update()
+        # Test the valve in several positions.
+        # positions = [0, 25, 50, 75, 100, 75, 50, 25, 0, 100]
+        # positions = [0, 50, 0, 50, 0, 50, 0, 50, 0]
+        # positions = [100]
+        # positions = [0]
+        # positions = [0, 50, 0, 50, 0]
+        positions = [0, 100, 0]
+        for position in positions:
+
+            # Go to position.
+            valve.target_position = position
+            valve.update_sync()
+            
+            # Assert position.
+            self.assertTrue(valve.target_position == position)
+
+            # Wait...
+            time.sleep(1)
 
         # Shutdown the valve.
         valve.shutdown()
-
-
-    def test_upper(self):
-        self.assertEqual("foo".upper(), "FOO")
-
-    def test_isupper(self):
-        self.assertTrue("FOO".isupper())
-        self.assertFalse("Foo".isupper())
-
-    def test_split(self):
-
-        # cases = {}
-        # plc_cfg = {"test": self, "cases": cases}
-
-        # config = {}
-        # config["controller"] = Dummy(plc_cfg)
-        # config["key"] = "ec"
-        # config["name"] = "EnergyCenter"
-        # config["registers"] = []
-
-        # plugin = EnergyCenter(config)
-        # plugin.init()
-
-        s = "hello world"
-        self.assertEqual(s.split(), ["hello", "world"])
-        # check that s.split fails when the separator is not a string
-        with self.assertRaises(TypeError):
-            s.split(2)
 
 if __name__ == "__main__":
     unittest.main()

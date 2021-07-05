@@ -132,7 +132,12 @@ class FLX05F(BaseValve):
 
     __limit_timer = None
     """Limit timer.
-    """    
+    """
+
+    __close_on_shutdown = True
+    """Close on shutdown flag.
+    """
+
 #endregion
 
 #region Constructor / Destructor
@@ -170,6 +175,10 @@ class FLX05F(BaseValve):
         if "limit_ccw" in config:
             self.__limit_ccw = config["limit_ccw"]
 
+        if "close_on_shutdown" in config:
+            self.__close_on_shutdown = config["close_on_shutdown"]
+
+
     def __del__(self):
         """Destructor
         """
@@ -178,6 +187,20 @@ class FLX05F(BaseValve):
 
         if self.__logger is not None:
             del self.__logger
+
+#endregion
+
+#region Properties
+
+    @property
+    def is_calibrating(self):
+        """Return is it in calibration state.
+
+        Returns:
+            bool: True if calibrating, else false.
+        """
+
+        return self._state.is_state(ValveState.Calibrate)
 
 #endregion
 
@@ -209,21 +232,21 @@ class FLX05F(BaseValve):
         if self._controller.is_valid_gpio(self.__output_ccw):
             self._controller.digital_write(self.__output_ccw, 0)
 
-    def __turn_cw(self):
+    def __close_valve(self):
         """Turn to CW direction.
         """
         
         if self._controller.is_valid_gpio(self.__output_cw):
             self._controller.digital_write(self.__output_cw, 1)
 
-    def __turn_ccw(self):
+    def __open_valve(self):
         """Turn to CCW direction.
         """
 
         if self._controller.is_valid_gpio(self.__output_ccw):
             self._controller.digital_write(self.__output_ccw, 1)
 
-    def __get_ccw_limit(self):
+    def __get_open_limit(self):
 
         state = False
 
@@ -234,7 +257,7 @@ class FLX05F(BaseValve):
 
         return state
 
-    def __get_cw_limit(self):
+    def __get_close_limit(self):
 
         state = False
 
@@ -263,9 +286,14 @@ class FLX05F(BaseValve):
         """Shutdown the valve.
         """
 
-        self.target_position = 0
-        while self.current_position != self.target_position:
-            self.update()
+        if self.__close_on_shutdown:
+
+            self.__close_valve()
+
+            while self.__get_close_limit() == False:
+                self.update()
+
+            self.__stop()
 
         self.__logger.debug("Shutdown the: {}".format(self.name))
 
@@ -289,10 +317,10 @@ class FLX05F(BaseValve):
             self.__move_timer.update_last_time()
 
             if delta_pos > 0:
-                self.__turn_cw()
+                self.__open_valve()
 
             elif delta_pos < 0:
-                self.__turn_ccw()
+                self.__close_valve()
 
             self._state.set_state(ValveState.Execute)
 
@@ -305,8 +333,8 @@ class FLX05F(BaseValve):
                 self._current_position = self.target_position
                 self._state.set_state(ValveState.Wait)
 
-            cw_limit_state = self.__get_cw_limit()
-            ccw_limit_state = self.__get_ccw_limit()
+            cw_limit_state = False # self.__get_close_limit()
+            ccw_limit_state = False # self.__get_open_limit()
             if cw_limit_state or ccw_limit_state:
                 self.__stop()
                 GlobalErrorHandler.log_hardware_limit(self.__logger, "{} has raised end position.".format(self.name))
@@ -318,10 +346,12 @@ class FLX05F(BaseValve):
             # Wait to start.
             if self.__calibration_state.is_state(CalibrationState.NONE):
                 self.__calibration_state.set_state(CalibrationState.OpenValve)
+                self.__stop()
 
             # Open the valve.
             if self.__calibration_state.is_state(CalibrationState.OpenValve):
-                self.__turn_ccw()
+                self.__stop()
+                self.__open_valve()
                 self.__calibration_state.set_state(CalibrationState.EnsureOpen)
                 self.__limit_timer.update_last_time()
 
@@ -329,7 +359,7 @@ class FLX05F(BaseValve):
             if self.__calibration_state.is_state(CalibrationState.EnsureOpen):
 
                 # Get CCW limit switch state.
-                ccw_limit_state = self.__get_ccw_limit()
+                ccw_limit_state = self.__get_open_limit()
                 if ccw_limit_state:
                     self.__t0 = time.time()
                     self.__calibration_state.set_state(CalibrationState.CloseValve)
@@ -343,7 +373,8 @@ class FLX05F(BaseValve):
 
             # Close the valve.            
             if self.__calibration_state.is_state(CalibrationState.CloseValve):
-                self.__turn_cw()
+                self.__stop()
+                self.__close_valve()
                 self.__calibration_state.set_state(CalibrationState.EnsureClose)
                 self.__limit_timer.update_last_time()
 
@@ -351,7 +382,7 @@ class FLX05F(BaseValve):
             if self.__calibration_state.is_state(CalibrationState.EnsureClose):
 
                 # Get CW limit switch state.
-                cw_limit_state = self.__get_cw_limit()
+                cw_limit_state = self.__get_close_limit()
                 if cw_limit_state:
                     self.__t1 = time.time()
                     self.__calibration_state.set_state(CalibrationState.YouDoTheMath)
@@ -365,7 +396,7 @@ class FLX05F(BaseValve):
 
             # Make calculations.
             if self.__calibration_state.is_state(CalibrationState.YouDoTheMath):
-
+                self.__stop()
                 self.__dt = self.__t1 - self.__t0
                 self._state.set_state(ValveState.Wait)
 
@@ -388,5 +419,10 @@ class FLX05F(BaseValve):
     def calibrate(self):
 
         self._state.set_state(ValveState.Calibrate)
+
+    def update_sync(self):
+
+        while self.current_position != self.target_position:
+            self.update()
 
 #endregion
