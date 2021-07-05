@@ -369,26 +369,32 @@ class PluginsManager:
         register = self.__registers.by_name("ac.enabled")
         if register is not None:
             register.update_handlers = self.__ac_enabled
+            # register.update()
 
         register = self.__registers.by_name("blinds.enabled")
         if register is not None:
             register.update_handlers = self.__blinds_enabled
+            # register.update()
 
         register = self.__registers.by_name("monitoring.enabled")
         if register is not None:
             register.update_handlers = self.__monitoring_enabled
+            # register.update()
 
         register = self.__registers.by_name("envm.enabled")
         if register is not None:
             register.update_handlers = self.__envm_enabled
+            # register.update()
 
         register = self.__registers.by_name("hvac.enabled")
         if register is not None:
             register.update_handlers = self.__hvac_enabled
+            # register.update()
 
         register = self.__registers.by_name("light.enabled")
         if register is not None:
             register.update_handlers = self.__light_enabled
+            # register.update()
 
         register = self.__registers.by_name("sys.last_minute_errs")
         if register is not None:
@@ -397,29 +403,26 @@ class PluginsManager:
         register = self.__registers.by_name("sys.enabled")
         if register is not None:
             register.update_handlers = self.__sys_enabled
+            # register.update()
 
         register = self.__registers.by_name("ecc.enabled")
         if register is not None:
             register.update_handlers = self.__ecc_enabled
-            # only for test purposes.
             # register.update()
 
         register = self.__registers.by_name("ecd.enabled")
         if register is not None:
             register.update_handlers = self.__ecd_enabled
-            # only for test purposes.
             # register.update()
 
         register = self.__registers.by_name("echp.enabled")
         if register is not None:
             register.update_handlers = self.__echp_enabled
-            # only for test purposes.
             # register.update()
 
         register = self.__registers.by_name("vent.enabled")
         if register is not None:
             register.update_handlers = self.__vent_enabled
-            # only for test purposes.
             # register.update()
 
 #endregion
