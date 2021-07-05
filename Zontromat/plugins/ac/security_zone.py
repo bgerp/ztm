@@ -442,6 +442,7 @@ class SecurityZone(BasePlugin):
         is_empty_timeout = self._registers.by_name("envm.is_empty_timeout")
         if is_empty_timeout is not None:
             is_empty_timeout.update_handlers = self.__is_empty_timeout_cb
+            is_empty_timeout.update()
 
         # Entry reader.
         entry_reader_enabled = self._registers.by_name("{}.entry_reader_{}.enabled".format(self.key, self.__identifier))
