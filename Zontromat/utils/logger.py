@@ -77,7 +77,8 @@ def crate_log_file(logs_dir_name="logs/"):
         Path to the log direcotory.
     """
 
-    debug_level = ApplicationSettings.get_instance().debug_level
+    settings = ApplicationSettings.get_instance()
+    debug_level = settings.debug_level
 
     # Crete log directory.
     if not os.path.exists(logs_dir_name):
