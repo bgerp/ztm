@@ -95,6 +95,10 @@ class ZL101PCC(BaseController):
     """Modbus client.
     """
 
+    __timeout = 0.5
+    """Modbus timeout.
+    """    
+
     __black_island = None
     """IO
     """
@@ -213,11 +217,14 @@ class ZL101PCC(BaseController):
         if "modbus_rtu_baud" in config:
             self.__modbus_rtu_baud = int(config["modbus_rtu_baud"])
 
+        if "timeout" in config:
+            self.__timeout = float(config["timeout"])
+
         if self.__modbus_rtu_client is None:
             self.__modbus_rtu_client = ModbusClient(
             method="rtu",
             port=self.__modbus_rtu_port,
-            timeout=5,
+            timeout=self.__timeout,
             baudrate=self.__modbus_rtu_baud)
 
         self.__black_island = BlackIsland(unit=1)
@@ -248,15 +255,18 @@ class ZL101PCC(BaseController):
                 uuid = split_result[2]
 
         else:
-            uuid = subprocess.check_output("dmidecode -s system-uuid")
+            try:
+                import dmidecode
+                system = dmidecode.system()
+                for key in system:
+                    try:
+                        uuid = system[key]['data']['UUID']
 
-            if result is not None:
-                result = result.decode("utf-8")
-                result = result.replace(" ", "")
-                result = result.replace("\n", "")
-                split_result = result.split("\r")
+                    except(IndexError, KeyError):
+                        continue
 
-                uuid = split_result[2]
+            except Exception as e:
+                pass
 
         return uuid
 
