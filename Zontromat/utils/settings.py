@@ -96,10 +96,14 @@ class ApplicationSettings:
             Debug level.
         """
 
-        if self.__config is not None:
-            return int(self.__config["APPLICATION"]["debug_level"])
+        value = 0
 
-        return 0
+        if self.__config is not None:
+            if "APPLICATION" in self.__config:
+                value = self.__config["APPLICATION"]["debug_level"]
+                value =  int(value)
+
+        return value
 
     @property
     def controller(self):
