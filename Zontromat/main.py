@@ -118,6 +118,9 @@ def main():
 
     settings = ApplicationSettings.get_instance()
 
+    # Read settings content.
+    settings.read()
+
     # Create log.
     crate_log_file()
     __logger = get_logger(__name__)
@@ -129,9 +132,6 @@ def main():
 
         __logger.error("Missing settings file.")
         time.sleep(5)
-
-    # Read settings content.
-    settings.read()
 
     # Create zone.
     __zone = Zone()
