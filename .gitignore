@@ -154,10 +154,14 @@ session*.txt
 # Settings for the application
 settings.yaml
 settings*.yaml
+settings.ini
+settings*.ini
 
 ### Evok Software
 # Evok Software application settings.
 evok.conf
 evok*.conf
+
+zontromat/registers.csv
 
 # End of https://www.gitignore.io/api/python,visualstudiocode
