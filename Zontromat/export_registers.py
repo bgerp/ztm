@@ -207,7 +207,7 @@ def __add_registers():
     register.plugin_name = "Access Control"
     register.description = "Lock mechanism output"
     register.range = __range["DO"]
-    register.value = verbal_const.OFF # "DO2"
+    register.value = "DO2"
     __registers.append(register)
 
     register = Register("ac.time_to_open_1")
@@ -604,7 +604,7 @@ def __add_registers():
     register.plugin_name = "Monitoring"
     register.description = "Power analyser settings"
     register.range = ""
-    register.value = verbal_const.OFF # "Eastron/SDM630/2/3" # "Eastron/SDM120/2/3"
+    register.value = "Eastron/SDM630/0/2" # "Eastron/SDM120/2/3"
     __registers.append(register)
 
     register = Register("monitoring.pa.measurements")
@@ -864,7 +864,7 @@ def __add_registers():
     register.plugin_name = "HVAC"
     register.description = "Air temperature sensor center settings"
     register.range = ""
-    register.value = "Dallas/DS18B20/28FFFCD0001703AE" # temp/DS18B20/28FFFCD0001703AE
+    register.value = "Donkger/XY-MD02/4" # Dallas/DS18B20/28FFFCD0001703AE # temp/DS18B20/28FFFCD0001703AE
     __registers.append(register)
 
     register = Register("hvac.air_temp_cent_1.value")
@@ -881,7 +881,7 @@ def __add_registers():
     register.plugin_name = "HVAC"
     register.description = "Air temperature sensor lower settings"
     register.range = ""
-    register.value = "Donkger/XY-MD02/2" # "Dallas/DS18B20/28FFC4EE00170349" # temp/DS18B20/28FFC4EE00170349
+    register.value = "Donkger/XY-MD02/3" # "Dallas/DS18B20/28FFC4EE00170349" # temp/DS18B20/28FFC4EE00170349
     __registers.append(register)
 
     register = Register("hvac.air_temp_lower_1.value")
@@ -898,7 +898,7 @@ def __add_registers():
     register.plugin_name = "HVAC"
     register.description = "Air temperature sensor upper settings"
     register.range = ""
-    register.value = "Dallas/DS18B20/28FF2B70C11604B7" # "Donkger/XY-MD02/2" # "Dallas/DS18B20/28FF2B70C11604B7" # "temp/DS18B20/28FF2B70C11604B7"
+    register.value = "Donkger/XY-MD02/5" # Dallas/DS18B20/28FF2B70C11604B7 # "Dallas/DS18B20/28FF2B70C11604B7" # "temp/DS18B20/28FF2B70C11604B7"
     __registers.append(register)
 
     register = Register("hvac.air_temp_upper_1.value")
@@ -969,7 +969,7 @@ def __add_registers():
     register.plugin_name = "HVAC"
     register.description = "Loop 1 temperature sensor settings"
     register.range = ""
-    register.value = "Dallas/DS18B20/28FF2B70C11604B7" # temp/DS18B20/28FF2B70C11604B7
+    register.value = "Donkger/XY-MD02/3" # "Dallas/DS18B20/28FF2B70C11604B7" # temp/DS18B20/28FF2B70C11604B7
     __registers.append(register)
 
     register = Register("hvac.loop1_1.temp.value")
@@ -1021,7 +1021,7 @@ def __add_registers():
     register.plugin_name = "HVAC"
     register.description = "Loop 2 temperature sensor settings"
     register.range = ""
-    register.value = "Dallas/DS18B20/28FFC4EE00170349" # temp/DS18B20/28FFC4EE00170349
+    register.value = "Donkger/XY-MD02/5" # "Dallas/DS18B20/28FFC4EE00170349" # temp/DS18B20/28FFC4EE00170349
     __registers.append(register)
 
     register = Register("hvac.loop2_1.temp.value")
