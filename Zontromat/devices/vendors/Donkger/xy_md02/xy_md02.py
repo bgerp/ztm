@@ -117,6 +117,11 @@ class XYMD02(ModbusDevice):
 #endregion
 
     def get_temp(self):
+        """Get temperature.
+
+        Returns:
+            float: Value of the temperature.
+        """
 
         value = 0.0
 
@@ -125,6 +130,26 @@ class XYMD02(ModbusDevice):
         response = self._controller.execute_mb_request(request)
         if response is not None:
             if not response.isError():
+                print(request.unit_id)
+                value = response.registers[0] / 10
+
+        return value
+
+    def get_hum(self):
+        """Get humidity.
+
+        Returns:
+            float: Value of the humidity.
+        """
+
+        value = 0.0
+
+        request = self.generate_request("Humidity")
+
+        response = self._controller.execute_mb_request(request)
+        if response is not None:
+            if not response.isError():
+                print(request.unit_id)
                 value = response.registers[0] / 10
 
         return value
