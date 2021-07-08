@@ -270,51 +270,6 @@ class ZL101PCC(BaseController):
 
         return uuid
 
-    def __update_black_island(self):
-
-        control_counter = 0
-
-        # Read device digital inputs.
-        request = self.__black_island.generate_request("GetDigitalInputs")
-        di_response = self.__modbus_rtu_client.execute(request)
-        if di_response is not None:
-            if not di_response.isError():
-                self.__DI = di_response.bits
-                control_counter += 1
-
-        # Read device analog inputs.
-        request = self.__black_island.generate_request("GetAnalogInputs")
-        irr_response = self.__modbus_rtu_client.execute(request)
-        if irr_response is not None:
-            if not irr_response.isError():
-                self.__AI = irr_response.registers
-                control_counter += 1
-
-        # Write device digital & relay outputs.
-        request = self.__black_island.generate_request("SetRelays", SetRelays=self.__DORO)
-        cw_response = self.__modbus_rtu_client.execute(request)
-        if cw_response is not None:
-            if not cw_response.isError():
-                control_counter += 1
-
-        # Write device analog outputs.
-        request = self.__black_island.generate_request("SetAnalogOutputs", SetAnalogOutputs=self.__AO)
-        hrw_response = self.__modbus_rtu_client.execute(request)
-        if hrw_response is not None:
-            if not hrw_response.isError():
-                control_counter += 1
-
-        # Read device coils.
-        # DEBUG PURPOSE ONLY
-        # request = self.__black_island.generate_request("GetRelays")
-        # cr_response = self.__modbus_rtu_client.execute(request)
-        # if cr_response is not None:
-        #     if not cr_response.isError():
-        #         self.__logger.debug(str(cr_response))
-        #         self.__logger.debug(str(cr_response.bits))
-
-        return (control_counter == self.__operations_count)
-
 #endregion
 
 #region Protected Methods
@@ -334,14 +289,7 @@ class ZL101PCC(BaseController):
     def update(self):
         """Update controller state."""
 
-        state = True
-
-        if self.__modbus_rtu_client is None:
-            return False
-
-        # state = self.__update_black_island()
-
-        return state
+        return (self.__modbus_rtu_client is not None)
 
     def digital_read(self, pin):
         """Read the digital input pin.
