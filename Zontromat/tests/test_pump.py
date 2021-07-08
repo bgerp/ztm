@@ -22,12 +22,21 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 
+import sys
 import unittest
 import os
+import time
 
-from devices.vendors.no_vendor_4.pump import Pump
+import os.path
+sys.path.append(
+    os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
 
-from controllers.dummy.dummy import Dummy
+from utils.settings import ApplicationSettings
+
+from devices.factories.pump.pump_factory import PumpFactory
+
+from controllers.controller_factory import ControllerFactory
+
 from data.registers import Registers
 
 #region File Attributes
@@ -82,31 +91,56 @@ class TestStringMethods(unittest.TestCase):
 
     def test_valve(self):
 
-        cases = {}
-        plc_cfg = {"test": self, "cases": cases}
+        settings = ApplicationSettings.get_instance()
 
-        controller = Dummy(plc_cfg)
+        controller = ControllerFactory.create(settings.controller)
+
+        controller.init()
+
         registers = self.__load_registers()
 
-        # Create test object.
-        Pump.create()
-        valve = Pump(name="vlv", controller=controller, registers=registers)
+        params = ["Grundfos", "Pump", "0"]
+        pump = PumpFactory.create(
+            name="GRUNFOS",
+            controller=controller,
+            params=params)
 
         # Initialise the object.
-        valve.init()
+        pump.init()
 
-        # Go to position 5.
-        valve.target_position = 5
-        while valve.current_position != valve.target_position:
-            valve.update()
+        # Set to calibrate state.
+        self.assertFalse(pump.is_calibrating)
+        pump.calibrate()
+        self.assertTrue(pump.is_calibrating)
 
-        # Go to position 0.
-        valve.target_position = 0
-        while valve.current_position != valve.target_position:
-            valve.update()
+        # Calibarate
+        while pump.is_calibrating:
+            controller.update()
+            pump.update()
 
-        # Shutdown the valve.
-        valve.shutdown()
+        # Test the pump in several debits.
+        # debits = [0, 25, 50, 75, 100, 75, 50, 25, 0, 100]
+        # debits = [0, 50, 0, 50, 0, 50, 0, 50, 0]
+        # debits = [100]
+        # debits = [0]
+        # debits = [0, 50, 0, 50, 0]
+        debits = [0, 100, 0]
+        for debit in debits:
+
+            # Go to debit.
+            pump.target_position = debit
+            while pump.current_position != pump.target_position:
+                controller.update()
+                pump.update()
+            
+            # Assert debit.
+            self.assertTrue(pump.target_position == debit)
+
+            # Wait...
+            time.sleep(1)
+
+        # Shutdown the pump.
+        pump.shutdown()
 
 
     def test_upper(self):
