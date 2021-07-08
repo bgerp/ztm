@@ -91,7 +91,7 @@ def crate_log_file(logs_dir_name="logs/"):
     log_file += ".log"
 
     # create message format.
-    log_format = "%(asctime)s\t%(levelname)s\t%(name)s\t%(message)s"
+    log_format = "%(asctime)s\t%(levelname)s\t%(name)s\t:%(lineno)s\t%(message)s"
 
     logging.basicConfig( \
         filename=log_file, \
