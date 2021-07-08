@@ -95,6 +95,8 @@ class TestStringMethods(unittest.TestCase):
 
         controller = ControllerFactory.create(settings.controller)
 
+        controller.init()
+
         registers = self.__load_registers()
         
 
@@ -114,6 +116,7 @@ class TestStringMethods(unittest.TestCase):
 
         # Calibarate
         while valve.is_calibrating:
+            controller.update()
             valve.update()
 
         # Test the valve in several positions.
@@ -127,7 +130,9 @@ class TestStringMethods(unittest.TestCase):
 
             # Go to position.
             valve.target_position = position
-            valve.update_sync()
+            while valve.current_position != valve.target_position:
+                controller.update()
+                valve.update()
             
             # Assert position.
             self.assertTrue(valve.target_position == position)
