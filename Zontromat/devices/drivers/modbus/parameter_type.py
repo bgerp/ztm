@@ -66,17 +66,20 @@ class ParameterType(Enum):
     INT64_T = "int64_t"
     FLOAT = "float"
     STRING = "string"
+    REAL= "real"
 
 #region Public static Methods
 
     @staticmethod
     def is_valid(value):
-        """Data type
+        """Check validity of the data type.
+
+        Args:
+            value (str): Target data type for check.
 
         Return:
             bool: Valid data type.
-        """
-
+        """        
         state = False
 
         for item in ParameterType:
