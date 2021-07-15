@@ -162,6 +162,4 @@ settings*.ini
 evok.conf
 evok*.conf
 
-zontromat/registers.csv
-
 # End of https://www.gitignore.io/api/python,visualstudiocode
