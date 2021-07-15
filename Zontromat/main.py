@@ -126,12 +126,10 @@ def main():
     __logger = get_logger(__name__)
 
     # Wait for settings.
-    while not settings.exists:
-        if __time_to_stop:
-            sys.exit(0)
-
-        __logger.error("Missing settings file.")
-        time.sleep(5)
+    if not settings.exists:
+        settings.create_default()
+        __logger.warning("Creating default application settings file. Please edit before next start. ({})".format(settings.path))
+        sys.exit(0)
 
     # Create zone.
     __zone = Zone()

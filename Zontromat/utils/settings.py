@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
 import configparser
+import time
 
 #region File Attributes
 
@@ -128,6 +129,13 @@ class ApplicationSettings:
 
         return self.__config["ERP_SERVICE"]
 
+    @property
+    def path(self):
+        """File name with settings.
+        """
+
+        return self.__file_name
+
 #endregion
 
 #region Constructor
@@ -148,8 +156,10 @@ class ApplicationSettings:
             ApplicationSettings.__instance = self
 
         if file_name is None:
-            cwd = os.getcwd()
-            self.__file_name = os.path.join(cwd, "settings.ini")
+
+            # Current file path. & Go to file.
+            cwf = os.path.dirname(os.path.abspath(__file__))
+            self.__file_name = os.path.join(cwf, "..", "..", "settings.ini")
             self.__config = configparser.ConfigParser()
             self.read()
 
@@ -170,6 +180,39 @@ class ApplicationSettings:
         """Read YAML file."""
 
         if self.exists:
+            with open(self.__file_name, "w") as stream:
+                self.__config.write(stream)
+                stream.close()  
+
+    def create_default(self):
+
+        # default debug level.
+        if self.__config is not None:
+            if "APPLICATION" not in self.__config:
+                self.__config["APPLICATION"] = {"debug_level": 10}
+
+        # Default controller.
+        if self.__config is not None:
+            if "CONTROLLER" not in self.__config:
+                self.__config["CONTROLLER"] = {
+                    "timeout": 0.1,
+                    "vendor": "zuljana",
+                    "model": "zl101pcc",
+                    "modbus_rtu_port": "COM1",
+                    "modbus_rtu_baud": 9600
+                    }
+
+        # Default ERP service.
+        if self.__config is not None:
+            if "ERP_SERVICE" not in self.__config:
+                self.__config["ERP_SERVICE"] = {
+                    "config_time": int(time.time()),
+                    "erp_id": "0000-0000-0000-0000",
+                    "host": "https://127.0.0.1/",
+                    "timeout": 5,
+                    }
+
+        if not self.exists:
             with open(self.__file_name, "w") as stream:
                 self.__config.write(stream)
                 stream.close()  
