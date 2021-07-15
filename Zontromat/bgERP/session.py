@@ -62,7 +62,7 @@ class Session():
 
 #region Attributes
 
-    __session_file_path = "\\"
+    __file_name = "\\"
     """Season file path."""
 
     __session_value = ""
@@ -87,11 +87,9 @@ class Session():
     def __init__(self):
         """Constructor"""
 
-        cwd = os.getcwd()
-        self.__session_file_path = os.path.join(cwd, "session.txt")
-        # print(self.__session_file_path)
-        # import sys
-        # sys.exit(0)
+        # Current file path. & Go to file.
+        cwf = os.path.dirname(os.path.abspath(__file__))
+        self.__file_name = os.path.join(cwf, "..", "..", "session.txt")
         self.__logger = get_logger(__name__)
 
 #endregion
@@ -109,8 +107,8 @@ class Session():
 
         content = ""
 
-        if os.path.exists(self.__session_file_path):
-            with open(self.__session_file_path, "r+") as stream:
+        if os.path.exists(self.__file_name):
+            with open(self.__file_name, "r+") as stream:
                 content = stream.read()
                 stream.close()
 
@@ -128,7 +126,7 @@ class Session():
             Session string.
         """
 
-        with open(self.__session_file_path, "w+") as stream:
+        with open(self.__file_name, "w+") as stream:
             stream.write(season)
             stream.close()
 

@@ -179,12 +179,16 @@ class Zone():
         """Setup registers source.
         """
 
-        if os.name == "posix":
-            file_path = os.path.join("..", "registers.csv")
-            self.__registers = Registers.from_CSV(file_path)
+        # Current file path.
+        cwf = os.path.dirname(os.path.abspath(__file__))
 
-        elif os.name == "nt":
-            self.__registers = Registers.from_CSV("registers.csv")
+        # Load from CSV file.
+        # registers_file = os.path.join(cwf, "..", "registers.csv")
+        # self.__registers = Registers.from_CSV(registers_file)
+
+        # Load from JSON file.
+        registers_file = os.path.join(cwf, "..", "registers.json")
+        self.__registers = Registers.from_JSON(registers_file)
 
     def __evok_cb(self, device):
         """EVOK callback service handler.

@@ -80,13 +80,17 @@ def crate_log_file(logs_dir_name="logs/"):
     settings = ApplicationSettings.get_instance()
     debug_level = settings.debug_level
 
+    # Current file path. & Go to file.
+    cwf = os.path.dirname(os.path.abspath(__file__))
+    full_dir_path = os.path.join(cwf, "..", "..", logs_dir_name)
+
     # Crete log directory.
-    if not os.path.exists(logs_dir_name):
-        os.makedirs(logs_dir_name)
+    if not os.path.exists(full_dir_path):
+        os.makedirs(full_dir_path)
 
     # File name.
     log_file = ""
-    log_file += logs_dir_name
+    log_file += full_dir_path
     log_file += strftime("%Y%m%d", gmtime())
     log_file += ".log"
 
