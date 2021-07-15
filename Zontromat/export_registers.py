@@ -2193,7 +2193,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "ECD"
     register.description = "ECD / VCG / TVA Wearhouse"
-    register.range = __range
+    register.range = __range["BOOL"]
     register.value = True
     __registers.append(register)
 
@@ -2565,13 +2565,19 @@ def main():
     parser = argparse.ArgumentParser()
 
     # Add arguments.
-    parser.add_argument("--action", type=str, default="w_csv", help="Export type.")
+    parser.add_argument("--action", type=str, default="w_json", help="Export type.")
 
     # Take arguments.
     args = parser.parse_args()
 
     if args.action == "w_json":
         Registers.to_JSON(__registers, "registers.json")
+
+    if args.action == "r_json":
+        registers = Registers.from_JSON("registers.json")
+
+        for register in registers:
+            print(register)
 
     elif args.action == "w_csv":
         Registers.to_CSV(__registers, "registers.csv")
