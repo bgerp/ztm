@@ -386,4 +386,24 @@ class Register:
                 if item is not None:
                     item(self)
 
+    def to_json(self):
+        """Converts register in to JSON ready dictionary.
+
+        Returns:
+            dict: JSON dict.
+        """
+
+        dict_obj = {
+            "name": self.name,
+            "data_type": self.data_type,
+            "range": self.range,
+            "plugin": self.plugin_name,
+            "scope": self.scope.name,
+            "default": self.value,
+            "description": self.description,
+            "limit": self.limit,
+        }
+
+        return dict_obj
+
 #endregion

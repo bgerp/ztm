@@ -348,6 +348,22 @@ class Registers(list):
 
         return result
 
+    def to_json(self):
+        """Converts array to JSON.
+
+        Returns:
+            dict: Dictionary of registers.
+        """
+
+        result = []
+
+        for register in self:
+
+            # Handle list and dict types.
+            result.append(register.to_json())
+
+        return result
+
     def get_group(self, name: str):
         """Get registerr with specified group name.
 
@@ -461,11 +477,17 @@ class Registers(list):
 
         # bool
         if typ == "bool":
-            if value == "false":
-                out_value = False
+            value_type = type(value)
 
-            if value == "true":
-                out_value = True
+            if value_type == bool:
+                out_value = value
+
+            else:
+                if value == "false":
+                    out_value = False
+
+                if value == "true":
+                    out_value = True
 
         # int
         elif typ == "int":
@@ -477,7 +499,16 @@ class Registers(list):
 
         # json
         elif typ == "json":
-            out_value = json.loads(value)
+            value_type = type(value)
+
+            if value_type == list:
+                out_value = value
+
+            elif value_type == dict:
+                out_value = value
+
+            else:
+                out_value = json.loads(value)
 
         else:
             out_value = value
@@ -500,7 +531,7 @@ class Registers(list):
 
         with open(file_path, "w", newline="") as csv_file:
 
-            fieldnames = ["name", "type", "range", "plugin", "scope", "default", "description"]
+            fieldnames = ["name", "data_type", "range", "plugin", "scope", "default", "description"]
             writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
 
             writer.writeheader()
@@ -526,7 +557,7 @@ class Registers(list):
                 description = Registers.__csv_escape(register.description)
 
                 writer.writerow({"name": register.name,\
-                                "type": register.data_type,\
+                                "data_type": register.data_type,\
                                 "range": reg_range,\
                                 "plugin": register.plugin_name,\
                                 "scope": scope,\
@@ -537,7 +568,7 @@ class Registers(list):
             csv_file.close()
 
     @staticmethod
-    def from_CSV(file_path=""):
+    def from_CSV(file_path="registers.csv"):
         """Load registers from CSV"""
 
         registers = Registers()
@@ -553,7 +584,7 @@ class Registers(list):
                 register.range = row["range"]
                 register.plugin_name = row["plugin"]
                 register.scope = Registers.__to_scope(row["scope"])
-                register.value = Registers.__to_value(row["type"], row["default"])
+                register.value = Registers.__to_value(row["data_type"], row["default"])
                 register.description = row["description"]
 
                 registers.append(register)
@@ -561,14 +592,35 @@ class Registers(list):
         return registers
 
     @staticmethod
-    def to_JSON(registers, file_path="registers.csv"):
+    def to_JSON(registers, file_path="registers.json"):
         """JSON output"""
 
-        dict_regs = registers.to_dict()
+        dict_regs = registers.to_json()
         text = json.dumps(dict_regs, indent=4, sort_keys=True)
 
         with open(file_path, "w") as json_file:
             json_file.write(text)
             json_file.close()
+
+    @staticmethod
+    def from_JSON(file_path="registers.json"):
+
+        registers = Registers()
+
+        with open(file_path, newline="") as json_file:
+
+            rows = json.load(json_file)
+            for row in rows:
+
+                register = Register(row["name"])
+                register.description = row["description"]
+                register.range = row["range"]
+                register.plugin_name = row["plugin"]
+                register.scope = Registers.__to_scope(row["scope"])
+                register.value = Registers.__to_value(row["data_type"], row["default"])
+
+                registers.append(register)
+
+        return registers
 
 #endregion
