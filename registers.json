@@ -1,0 +1,2732 @@
+[
+    {
+        "data_type": "bool",
+        "default": false,
+        "description": "Plugin enabled",
+        "limit": 0.0,
+        "name": "ac.enabled",
+        "plugin": "Access Control",
+        "range": "true|false",
+        "scope": "System"
+    },
+    {
+        "data_type": "json",
+        "default": [],
+        "description": "Allowed attendees",
+        "limit": 0.0,
+        "name": "ac.allowed_attendees",
+        "plugin": "Access Control",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "int",
+        "default": 2,
+        "description": "Number of security zones",
+        "limit": 0.0,
+        "name": "ac.zones_count",
+        "plugin": "Access Control",
+        "range": "1/",
+        "scope": "System"
+    },
+    {
+        "data_type": "json",
+        "default": [],
+        "description": "Nearby attendees",
+        "limit": 0.0,
+        "name": "ac.nearby_attendees",
+        "plugin": "Access Control",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "json",
+        "default": [],
+        "description": "Last update attendee",
+        "limit": 0.0,
+        "name": "ac.last_update_attendees",
+        "plugin": "Access Control",
+        "range": "",
+        "scope": "Device"
+    },
+    {
+        "data_type": "float",
+        "default": 0.0,
+        "description": "Next attendance",
+        "limit": 0.0,
+        "name": "ac.next_attendance",
+        "plugin": "Access Control",
+        "range": "0.0/",
+        "scope": "Device"
+    },
+    {
+        "data_type": "str",
+        "default": "off",
+        "description": "Card reader enabled",
+        "limit": 0.0,
+        "name": "ac.entry_reader_1.enabled",
+        "plugin": "Access Control",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "int",
+        "default": 9600,
+        "description": "Card reader port baud rate",
+        "limit": 0.0,
+        "name": "ac.entry_reader_1.port.baudrate",
+        "plugin": "Access Control",
+        "range": "300|600|1200|2400|4800|9600|19200|38400|57600|115200",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "COM11",
+        "description": "Card reader port name",
+        "limit": 0.0,
+        "name": "ac.entry_reader_1.port.name",
+        "plugin": "Access Control",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "off",
+        "description": "Card reader enabled",
+        "limit": 0.0,
+        "name": "ac.exit_reader_1.enabled",
+        "plugin": "Access Control",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "int",
+        "default": 9600,
+        "description": "Card reader 1 port baud rate",
+        "limit": 0.0,
+        "name": "ac.exit_reader_1.port.baudrate",
+        "plugin": "Access Control",
+        "range": "300|600|1200|2400|4800|9600|19200|38400|57600|115200",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "COM5",
+        "description": "Card reader 1 port name",
+        "limit": 0.0,
+        "name": "ac.exit_reader_1.port.name",
+        "plugin": "Access Control",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "off",
+        "description": "Exit button 1 input",
+        "limit": 0.0,
+        "name": "ac.exit_button_1.input",
+        "plugin": "Access Control",
+        "range": "off|DI0|DI1|DI2|DI3|DI4|DI5|DI6|DI7|DI8|!DI0|!DI1|!DI2|!DI3|!DI4|!DI5|!DI6|!DI7|!DI8",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "DO2",
+        "description": "Lock mechanism output",
+        "limit": 0.0,
+        "name": "ac.lock_mechanism_1.output",
+        "plugin": "Access Control",
+        "range": "off|DO0|DO1|DO2|DO3|DO4|DO5|DO6|DO7|DO8|!DO0|!DO1|!DO2|!DO3|!DO4|!DO5|!DO6|!DO7|!DO8",
+        "scope": "System"
+    },
+    {
+        "data_type": "int",
+        "default": 3,
+        "description": "Lock mechanism time to open [s]",
+        "limit": 0.0,
+        "name": "ac.time_to_open_1",
+        "plugin": "Access Control",
+        "range": "0/60",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "off",
+        "description": "Door closed input",
+        "limit": 0.0,
+        "name": "ac.door_closed_1.input",
+        "plugin": "Access Control",
+        "range": "off|DI0|DI1|DI2|DI3|DI4|DI5|DI6|DI7|DI8|!DI0|!DI1|!DI2|!DI3|!DI4|!DI5|!DI6|!DI7|!DI8",
+        "scope": "System"
+    },
+    {
+        "data_type": "bool",
+        "default": false,
+        "description": "Door closed input state",
+        "limit": 0.0,
+        "name": "ac.door_closed_1.state",
+        "plugin": "Access Control",
+        "range": "true|false",
+        "scope": "Device"
+    },
+    {
+        "data_type": "str",
+        "default": "off",
+        "description": "Card reader settings",
+        "limit": 0.0,
+        "name": "ac.entry_reader_2.enabled",
+        "plugin": "Access Control",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "int",
+        "default": 9600,
+        "description": "Card reader port baud rate",
+        "limit": 0.0,
+        "name": "ac.entry_reader_2.port.baudrate",
+        "plugin": "Access Control",
+        "range": "300|600|1200|2400|4800|9600|19200|38400|57600|115200",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "COM8",
+        "description": "Card reader port name",
+        "limit": 0.0,
+        "name": "ac.entry_reader_2.port.name",
+        "plugin": "Access Control",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "off",
+        "description": "Card reader settings",
+        "limit": 0.0,
+        "name": "ac.exit_reader_2.enabled",
+        "plugin": "Access Control",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "int",
+        "default": 9600,
+        "description": "Card reader port baud rate",
+        "limit": 0.0,
+        "name": "ac.exit_reader_2.port.baudrate",
+        "plugin": "Access Control",
+        "range": "300|600|1200|2400|4800|9600|19200|38400|57600|115200",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "COM9",
+        "description": "Card reader port name",
+        "limit": 0.0,
+        "name": "ac.exit_reader_2.port.name",
+        "plugin": "Access Control",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "off",
+        "description": "Exit button 2 input",
+        "limit": 0.0,
+        "name": "ac.exit_button_2.input",
+        "plugin": "Access Control",
+        "range": "off|DI0|DI1|DI2|DI3|DI4|DI5|DI6|DI7|DI8|!DI0|!DI1|!DI2|!DI3|!DI4|!DI5|!DI6|!DI7|!DI8",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "off",
+        "description": "Lock 2 mechanism output",
+        "limit": 0.0,
+        "name": "ac.lock_mechanism_2.output",
+        "plugin": "Access Control",
+        "range": "off|DO0|DO1|DO2|DO3|DO4|DO5|DO6|DO7|DO8|!DO0|!DO1|!DO2|!DO3|!DO4|!DO5|!DO6|!DO7|!DO8",
+        "scope": "System"
+    },
+    {
+        "data_type": "int",
+        "default": 3,
+        "description": "Lock 2 mechanism time to open",
+        "limit": 0.0,
+        "name": "ac.time_to_open_2",
+        "plugin": "Access Control",
+        "range": "0/60",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "off",
+        "description": "Door 2 closed input",
+        "limit": 0.0,
+        "name": "ac.door_closed_2.input",
+        "plugin": "Access Control",
+        "range": "off|DI0|DI1|DI2|DI3|DI4|DI5|DI6|DI7|DI8|!DI0|!DI1|!DI2|!DI3|!DI4|!DI5|!DI6|!DI7|!DI8",
+        "scope": "System"
+    },
+    {
+        "data_type": "bool",
+        "default": false,
+        "description": "Door 2 closed input state",
+        "limit": 0.0,
+        "name": "ac.door_closed_2.state",
+        "plugin": "Access Control",
+        "range": "true|false",
+        "scope": "Device"
+    },
+    {
+        "data_type": "str",
+        "default": "off",
+        "description": "PIR 1 sensor input",
+        "limit": 0.0,
+        "name": "ac.pir_1.input",
+        "plugin": "Access Control",
+        "range": "off|DI0|DI1|DI2|DI3|DI4|DI5|DI6|DI7|DI8|!DI0|!DI1|!DI2|!DI3|!DI4|!DI5|!DI6|!DI7|!DI8",
+        "scope": "System"
+    },
+    {
+        "data_type": "bool",
+        "default": false,
+        "description": "PIR 1 sensor input state",
+        "limit": 0.0,
+        "name": "ac.pir_1.state",
+        "plugin": "Access Control",
+        "range": "true|false",
+        "scope": "Device"
+    },
+    {
+        "data_type": "str",
+        "default": "off",
+        "description": "PIR 2 sensor input",
+        "limit": 0.0,
+        "name": "ac.pir_2.input",
+        "plugin": "Access Control",
+        "range": "off|DI0|DI1|DI2|DI3|DI4|DI5|DI6|DI7|DI8|!DI0|!DI1|!DI2|!DI3|!DI4|!DI5|!DI6|!DI7|!DI8",
+        "scope": "System"
+    },
+    {
+        "data_type": "bool",
+        "default": false,
+        "description": "PIR 2 sensor input state",
+        "limit": 0.0,
+        "name": "ac.pir_2.state",
+        "plugin": "Access Control",
+        "range": "true|false",
+        "scope": "Device"
+    },
+    {
+        "data_type": "str",
+        "default": "off",
+        "description": "Window 1 closed input",
+        "limit": 0.0,
+        "name": "ac.window_closed_1.input",
+        "plugin": "Access Control",
+        "range": "off|DI0|DI1|DI2|DI3|DI4|DI5|DI6|DI7|DI8|!DI0|!DI1|!DI2|!DI3|!DI4|!DI5|!DI6|!DI7|!DI8",
+        "scope": "System"
+    },
+    {
+        "data_type": "bool",
+        "default": false,
+        "description": "Window 1 closed input state",
+        "limit": 0.0,
+        "name": "ac.window_closed_1.state",
+        "plugin": "Access Control",
+        "range": "true|false",
+        "scope": "Device"
+    },
+    {
+        "data_type": "str",
+        "default": "off",
+        "description": "Window 2 closed input",
+        "limit": 0.0,
+        "name": "ac.window_closed_2.input",
+        "plugin": "Access Control",
+        "range": "off|DI0|DI1|DI2|DI3|DI4|DI5|DI6|DI7|DI8|!DI0|!DI1|!DI2|!DI3|!DI4|!DI5|!DI6|!DI7|!DI8",
+        "scope": "System"
+    },
+    {
+        "data_type": "bool",
+        "default": false,
+        "description": "Window 2 closed input state",
+        "limit": 0.0,
+        "name": "ac.window_closed_2.state",
+        "plugin": "Access Control",
+        "range": "true|false",
+        "scope": "Device"
+    },
+    {
+        "data_type": "str",
+        "default": "off",
+        "description": "Door window blind 1 output",
+        "limit": 0.0,
+        "name": "ac.door_window_blind_1.output",
+        "plugin": "Access Control",
+        "range": "off|DO0|DO1|DO2|DO3|DO4|DO5|DO6|DO7|DO8|!DO0|!DO1|!DO2|!DO3|!DO4|!DO5|!DO6|!DO7|!DO8",
+        "scope": "System"
+    },
+    {
+        "data_type": "bool",
+        "default": false,
+        "description": "Door window blind 1 value",
+        "limit": 0.0,
+        "name": "ac.door_window_blind_1.value",
+        "plugin": "Access Control",
+        "range": "true|false",
+        "scope": "Device"
+    },
+    {
+        "data_type": "str",
+        "default": "off",
+        "description": "Door window blind 2 output",
+        "limit": 0.0,
+        "name": "ac.door_window_blind_2.output",
+        "plugin": "Access Control",
+        "range": "off|DO0|DO1|DO2|DO3|DO4|DO5|DO6|DO7|DO8|!DO0|!DO1|!DO2|!DO3|!DO4|!DO5|!DO6|!DO7|!DO8",
+        "scope": "System"
+    },
+    {
+        "data_type": "bool",
+        "default": false,
+        "description": "Door window blind 2 value",
+        "limit": 0.0,
+        "name": "ac.door_window_blind_2.value",
+        "plugin": "Access Control",
+        "range": "true|false",
+        "scope": "Device"
+    },
+    {
+        "data_type": "bool",
+        "default": false,
+        "description": "Zone occupied flag",
+        "limit": 0.0,
+        "name": "ac.zone_1_occupied",
+        "plugin": "Access Control",
+        "range": "true|false",
+        "scope": "Device"
+    },
+    {
+        "data_type": "bool",
+        "default": false,
+        "description": "Zone occupied flag",
+        "limit": 0.0,
+        "name": "ac.zone_2_occupied",
+        "plugin": "Access Control",
+        "range": "true|false",
+        "scope": "Device"
+    },
+    {
+        "data_type": "str",
+        "default": "AI0",
+        "description": "Feedback input",
+        "limit": 0.0,
+        "name": "blinds.input_fb",
+        "plugin": "Blinds",
+        "range": "off|DI0|DI1|DI2|DI3|DI4|DI5|DI6|DI7|DI8|AI0|AI1|AI2|AI3|AI4|AI5|AI6|AI7|AI8",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "DO0",
+        "description": "CCW output",
+        "limit": 0.0,
+        "name": "blinds.output_ccw",
+        "plugin": "Blinds",
+        "range": "off|DO0|DO1|DO2|DO3|DO4|DO5|DO6|DO7|DO8|!DO0|!DO1|!DO2|!DO3|!DO4|!DO5|!DO6|!DO7|!DO8",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "DO1",
+        "description": "CW output",
+        "limit": 0.0,
+        "name": "blinds.output_cw",
+        "plugin": "Blinds",
+        "range": "off|DO0|DO1|DO2|DO3|DO4|DO5|DO6|DO7|DO8|!DO0|!DO1|!DO2|!DO3|!DO4|!DO5|!DO6|!DO7|!DO8",
+        "scope": "System"
+    },
+    {
+        "data_type": "float",
+        "default": 0.0,
+        "description": "Position [deg]",
+        "limit": 0.0,
+        "name": "blinds.position",
+        "plugin": "Blinds",
+        "range": "0.0/180.0",
+        "scope": "System"
+    },
+    {
+        "data_type": "float",
+        "default": 10.0,
+        "description": "Degrees pre seconds ratio.",
+        "limit": 0.0,
+        "name": "blinds.deg_per_sec",
+        "plugin": "Blinds",
+        "range": "0.0/",
+        "scope": "System"
+    },
+    {
+        "data_type": "float",
+        "default": 0.093,
+        "description": "Feedback treshold level in [V].",
+        "limit": 0.0,
+        "name": "blinds.feedback_treshold",
+        "plugin": "Blinds",
+        "range": "0.0/",
+        "scope": "System"
+    },
+    {
+        "data_type": "float",
+        "default": 1.0,
+        "description": "Sun spot limit [m].",
+        "limit": 0.0,
+        "name": "blinds.sunspot_limit",
+        "plugin": "Blinds",
+        "range": "0.0/",
+        "scope": "System"
+    },
+    {
+        "data_type": "float",
+        "default": 2.0,
+        "description": "Object height [m].",
+        "limit": 0.0,
+        "name": "blinds.object_height",
+        "plugin": "Blinds",
+        "range": "0.0/",
+        "scope": "System"
+    },
+    {
+        "data_type": "bool",
+        "default": false,
+        "description": "Plugin enabled",
+        "limit": 0.0,
+        "name": "blinds.enabled",
+        "plugin": "Blinds",
+        "range": "true|false",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "off",
+        "description": "Cold water input flow meter",
+        "limit": 0.0,
+        "name": "monitoring.cw.input",
+        "plugin": "Monitoring",
+        "range": "off|DI0|DI1|DI2|DI3|DI4|DI5|DI6|DI7|DI8|!DI0|!DI1|!DI2|!DI3|!DI4|!DI5|!DI6|!DI7|!DI8",
+        "scope": "System"
+    },
+    {
+        "data_type": "float",
+        "default": 1.0,
+        "description": "Cold water tics per liter",
+        "limit": 0.0,
+        "name": "monitoring.cw.tpl",
+        "plugin": "Monitoring",
+        "range": "0.0/",
+        "scope": "System"
+    },
+    {
+        "data_type": "float",
+        "default": 0.0,
+        "description": "Cold water liters",
+        "limit": 0.0,
+        "name": "monitoring.cw.value",
+        "plugin": "Monitoring",
+        "range": "0.0/",
+        "scope": "Device"
+    },
+    {
+        "data_type": "float",
+        "default": 1.0,
+        "description": "Cold water leaked liters",
+        "limit": 0.0,
+        "name": "monitoring.cw.leak",
+        "plugin": "Monitoring",
+        "range": "0.0/",
+        "scope": "Device"
+    },
+    {
+        "data_type": "str",
+        "default": "off",
+        "description": "Hot water input flow meter",
+        "limit": 0.0,
+        "name": "monitoring.hw.input",
+        "plugin": "Monitoring",
+        "range": "off|DI0|DI1|DI2|DI3|DI4|DI5|DI6|DI7|DI8|!DI0|!DI1|!DI2|!DI3|!DI4|!DI5|!DI6|!DI7|!DI8",
+        "scope": "System"
+    },
+    {
+        "data_type": "float",
+        "default": 1.0,
+        "description": "Hot water tics per liter",
+        "limit": 0.0,
+        "name": "monitoring.hw.tpl",
+        "plugin": "Monitoring",
+        "range": "0.0/",
+        "scope": "System"
+    },
+    {
+        "data_type": "float",
+        "default": 0.0,
+        "description": "Hot water liters",
+        "limit": 0.0,
+        "name": "monitoring.hw.value",
+        "plugin": "Monitoring",
+        "range": "0.0/",
+        "scope": "Device"
+    },
+    {
+        "data_type": "float",
+        "default": 1.0,
+        "description": "Hot water leaked liters",
+        "limit": 0.0,
+        "name": "monitoring.hw.leak",
+        "plugin": "Monitoring",
+        "range": "0.0/",
+        "scope": "Device"
+    },
+    {
+        "data_type": "str",
+        "default": "Eastron/SDM630/0/2",
+        "description": "Power analyser settings",
+        "limit": 0.0,
+        "name": "monitoring.pa.settings",
+        "plugin": "Monitoring",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "json",
+        "default": [],
+        "description": "Power analyser measurements",
+        "limit": 0.0,
+        "name": "monitoring.pa.measurements",
+        "plugin": "Monitoring",
+        "range": "",
+        "scope": "Device"
+    },
+    {
+        "data_type": "float",
+        "default": 3600.0,
+        "description": "Power analyser measuring demand",
+        "limit": 0.0,
+        "name": "monitoring.pa.demand_time",
+        "plugin": "Monitoring",
+        "range": "0.0/",
+        "scope": "Device"
+    },
+    {
+        "data_type": "bool",
+        "default": false,
+        "description": "Plugin enabled",
+        "limit": 0.0,
+        "name": "monitoring.enabled",
+        "plugin": "Monitoring",
+        "range": "true|false",
+        "scope": "System"
+    },
+    {
+        "data_type": "bool",
+        "default": true,
+        "description": "Is empty flag",
+        "limit": 0.0,
+        "name": "envm.is_empty",
+        "plugin": "Environment",
+        "range": "true|false",
+        "scope": "Device"
+    },
+    {
+        "data_type": "int",
+        "default": 3600,
+        "description": "Is empty time out [s]",
+        "limit": 0.0,
+        "name": "envm.is_empty_timeout",
+        "plugin": "Environment",
+        "range": "0/",
+        "scope": "System"
+    },
+    {
+        "data_type": "float",
+        "default": 20.0,
+        "description": "Actual outside temperature [C]",
+        "limit": 0.0,
+        "name": "envm.temp.actual",
+        "plugin": "Environment",
+        "range": "-50/50",
+        "scope": "System"
+    },
+    {
+        "data_type": "float",
+        "default": 30.0,
+        "description": "Actual outside temperature for 6 hours [C]",
+        "limit": 0.0,
+        "name": "envm.temp.a6",
+        "plugin": "Environment",
+        "range": "-50/50",
+        "scope": "System"
+    },
+    {
+        "data_type": "float",
+        "default": 20.0,
+        "description": "Minimum outside temperature for 24 hours [C]",
+        "limit": 0.0,
+        "name": "envm.temp.min24",
+        "plugin": "Environment",
+        "range": "-50/50",
+        "scope": "System"
+    },
+    {
+        "data_type": "float",
+        "default": 36.0,
+        "description": "Maximum outside temperature for 24 hours [C]",
+        "limit": 0.0,
+        "name": "envm.temp.max24",
+        "plugin": "Environment",
+        "range": "-50/50",
+        "scope": "System"
+    },
+    {
+        "data_type": "float",
+        "default": 60.0,
+        "description": "Actual outside relative humidity [%]",
+        "limit": 0.0,
+        "name": "envm.rh",
+        "plugin": "Environment",
+        "range": "0.0/100.0",
+        "scope": "System"
+    },
+    {
+        "data_type": "float",
+        "default": 3.0,
+        "description": "Actual wind [m/sec]",
+        "limit": 0.0,
+        "name": "envm.wind.actual",
+        "plugin": "Environment",
+        "range": "0.0/",
+        "scope": "System"
+    },
+    {
+        "data_type": "float",
+        "default": 6.0,
+        "description": "Maximum wind for 12 hours [m/sec]",
+        "limit": 0.0,
+        "name": "envm.wind.max12",
+        "plugin": "Environment",
+        "range": "0.0/",
+        "scope": "System"
+    },
+    {
+        "data_type": "float",
+        "default": 1000.0,
+        "description": "Outside light [lux]",
+        "limit": 0.0,
+        "name": "envm.light",
+        "plugin": "Environment",
+        "range": "0.0/",
+        "scope": "System"
+    },
+    {
+        "data_type": "int",
+        "default": 0,
+        "description": "Energy mode of the building",
+        "limit": 0.0,
+        "name": "envm.energy",
+        "plugin": "Environment",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "int",
+        "default": 0,
+        "description": "Emergency index for the fire.",
+        "limit": 0.0,
+        "name": "envm.flag_fire",
+        "plugin": "Environment",
+        "range": "0/3",
+        "scope": "System"
+    },
+    {
+        "data_type": "int",
+        "default": 0,
+        "description": "Emergency index for the storm.",
+        "limit": 0.0,
+        "name": "envm.flag_storm",
+        "plugin": "Environment",
+        "range": "0/3",
+        "scope": "System"
+    },
+    {
+        "data_type": "int",
+        "default": 0,
+        "description": "Emergency index for the earthquake.",
+        "limit": 0.0,
+        "name": "envm.flag_earthquake",
+        "plugin": "Environment",
+        "range": "0/3",
+        "scope": "System"
+    },
+    {
+        "data_type": "int",
+        "default": 0,
+        "description": "Emergency index for the gassing.",
+        "limit": 0.0,
+        "name": "envm.flag_gassing",
+        "plugin": "Environment",
+        "range": "0/3",
+        "scope": "System"
+    },
+    {
+        "data_type": "int",
+        "default": 0,
+        "description": "Emergency index for the flooding.",
+        "limit": 0.0,
+        "name": "envm.flag_flooding",
+        "plugin": "Environment",
+        "range": "0/3",
+        "scope": "System"
+    },
+    {
+        "data_type": "int",
+        "default": 0,
+        "description": "Emergency index for the blocking.",
+        "limit": 0.0,
+        "name": "envm.flag_blocked",
+        "plugin": "Environment",
+        "range": "0/3",
+        "scope": "System"
+    },
+    {
+        "data_type": "bool",
+        "default": false,
+        "description": "Enable software calculation of the sun position",
+        "limit": 0.0,
+        "name": "envm.sunpos.enabled",
+        "plugin": "Environment",
+        "range": "true|false",
+        "scope": "System"
+    },
+    {
+        "data_type": "float",
+        "default": 43.07779,
+        "description": "Latitude of the target building.",
+        "limit": 0.0,
+        "name": "envm.building.location.lat",
+        "plugin": "Environment",
+        "range": "0.0/360.0",
+        "scope": "System"
+    },
+    {
+        "data_type": "float",
+        "default": 25.59549,
+        "description": "Longitude of the target building.",
+        "limit": 0.0,
+        "name": "envm.building.location.lon",
+        "plugin": "Environment",
+        "range": "0.0/360.0",
+        "scope": "System"
+    },
+    {
+        "data_type": "int",
+        "default": 210,
+        "description": "Longitude of the target building.",
+        "limit": 0.0,
+        "name": "envm.building.location.elv",
+        "plugin": "Environment",
+        "range": "/",
+        "scope": "System"
+    },
+    {
+        "data_type": "int",
+        "default": 2,
+        "description": "Longitude of the target building.",
+        "limit": 0.0,
+        "name": "envm.building.location.time_zone",
+        "plugin": "Environment",
+        "range": "0/23",
+        "scope": "System"
+    },
+    {
+        "data_type": "bool",
+        "default": false,
+        "description": "Plugin enabled",
+        "limit": 0.0,
+        "name": "envm.enabled",
+        "plugin": "Environment",
+        "range": "true|false",
+        "scope": "System"
+    },
+    {
+        "data_type": "float",
+        "default": 0.0,
+        "description": "Sun azimuth value",
+        "limit": 0.0,
+        "name": "envm.sun.azimuth",
+        "plugin": "Blinds",
+        "range": "0.0/360.0",
+        "scope": "System"
+    },
+    {
+        "data_type": "float",
+        "default": 0.0,
+        "description": "Sun elevation value",
+        "limit": 0.0,
+        "name": "envm.sun.elevation",
+        "plugin": "Blinds",
+        "range": "0.0/360.0",
+        "scope": "System"
+    },
+    {
+        "data_type": "int",
+        "default": 1,
+        "description": "Count of the HVAC zones.",
+        "limit": 0.0,
+        "name": "hvac.zones_count",
+        "plugin": "HVAC",
+        "range": "0/",
+        "scope": "System"
+    },
+    {
+        "data_type": "float",
+        "default": 0.0,
+        "description": "Adjust temperature",
+        "limit": 0.0,
+        "name": "hvac.adjust_temp_1",
+        "plugin": "HVAC",
+        "range": "-50.0/50.0",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "Donkger/XY-MD02/4",
+        "description": "Air temperature sensor center settings",
+        "limit": 0.0,
+        "name": "hvac.air_temp_cent_1.settings",
+        "plugin": "HVAC",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "float",
+        "default": 0.0,
+        "description": "Air temperature sensor center value",
+        "limit": 0.0,
+        "name": "hvac.air_temp_cent_1.value",
+        "plugin": "HVAC",
+        "range": "/",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "Donkger/XY-MD02/3",
+        "description": "Air temperature sensor lower settings",
+        "limit": 0.0,
+        "name": "hvac.air_temp_lower_1.settings",
+        "plugin": "HVAC",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "float",
+        "default": 0.0,
+        "description": "Air temperature sensor lower value",
+        "limit": 0.0,
+        "name": "hvac.air_temp_lower_1.value",
+        "plugin": "HVAC",
+        "range": "/",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "Donkger/XY-MD02/5",
+        "description": "Air temperature sensor upper settings",
+        "limit": 0.0,
+        "name": "hvac.air_temp_upper_1.settings",
+        "plugin": "HVAC",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "float",
+        "default": 0.0,
+        "description": "Air temperature sensor upper value",
+        "limit": 0.0,
+        "name": "hvac.air_temp_upper_1.value",
+        "plugin": "HVAC",
+        "range": "/",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "Silpa/Klimafan/RO4/RO5/RO6",
+        "description": "Convector settings",
+        "limit": 0.0,
+        "name": "hvac.convector_1.settings",
+        "plugin": "HVAC",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "float",
+        "default": 5.0,
+        "description": "Measuring delta time",
+        "limit": 0.0,
+        "name": "hvac.delta_time_1",
+        "plugin": "HVAC",
+        "range": "0.0/",
+        "scope": "System"
+    },
+    {
+        "data_type": "bool",
+        "default": false,
+        "description": "Plugin enabled",
+        "limit": 0.0,
+        "name": "hvac.enabled",
+        "plugin": "HVAC",
+        "range": "true|false",
+        "scope": "System"
+    },
+    {
+        "data_type": "float",
+        "default": 20.0,
+        "description": "Goal of the building temperature",
+        "limit": 0.0,
+        "name": "hvac.goal_building_temp",
+        "plugin": "HVAC",
+        "range": "-50.0/50.0",
+        "scope": "System"
+    },
+    {
+        "data_type": "float",
+        "default": 1.0,
+        "description": "Loop 1 water flow meter ticks per liter scale",
+        "limit": 0.0,
+        "name": "hvac.loop1_1.cnt.tpl",
+        "plugin": "HVAC",
+        "range": "0.0/",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "off",
+        "description": "Loop 1 water flow meter signal input",
+        "limit": 0.0,
+        "name": "hvac.loop1_1.cnt.input",
+        "plugin": "HVAC",
+        "range": "off|DI0|DI1|DI2|DI3|DI4|DI5|DI6|DI7|DI8|!DI0|!DI1|!DI2|!DI3|!DI4|!DI5|!DI6|!DI7|!DI8",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "Donkger/XY-MD02/3",
+        "description": "Loop 1 temperature sensor settings",
+        "limit": 0.0,
+        "name": "hvac.loop1_1.temp.settings",
+        "plugin": "HVAC",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "float",
+        "default": 0.0,
+        "description": "Loop 1 temperature sensor value",
+        "limit": 0.0,
+        "name": "hvac.loop1_1.temp.value",
+        "plugin": "HVAC",
+        "range": "/",
+        "scope": "System"
+    },
+    {
+        "data_type": "int",
+        "default": 15,
+        "description": "Loop 1 temperature down limit",
+        "limit": 0.0,
+        "name": "hvac.loop1_1.temp.down_limit",
+        "plugin": "HVAC",
+        "range": "0.0/",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "Tonhe/a20m15b2c/RO2/off/0/100",
+        "description": "Loop 1 valve settings",
+        "limit": 0.0,
+        "name": "hvac.loop1_1.valve.settings",
+        "plugin": "HVAC",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "float",
+        "default": 1.0,
+        "description": "Loop 2 water flow meter ticks per liter scale",
+        "limit": 0.0,
+        "name": "hvac.loop2_1.cnt.tpl",
+        "plugin": "HVAC",
+        "range": "0.0/",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "off",
+        "description": "Loop 1 water flow meter signal input",
+        "limit": 0.0,
+        "name": "hvac.loop2_1.cnt.input",
+        "plugin": "HVAC",
+        "range": "off|DI0|DI1|DI2|DI3|DI4|DI5|DI6|DI7|DI8|!DI0|!DI1|!DI2|!DI3|!DI4|!DI5|!DI6|!DI7|!DI8",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "Donkger/XY-MD02/5",
+        "description": "Loop 2 temperature sensor settings",
+        "limit": 0.0,
+        "name": "hvac.loop2_1.temp.settings",
+        "plugin": "HVAC",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "float",
+        "default": 0.0,
+        "description": "Loop 1 temperature sensor value",
+        "limit": 0.0,
+        "name": "hvac.loop2_1.temp.value",
+        "plugin": "HVAC",
+        "range": "/",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "Tonhe/a20m15b2c/RO3/off/0/100",
+        "description": "Loop 2 valve settings",
+        "limit": 0.0,
+        "name": "hvac.loop2_1.valve.settings",
+        "plugin": "HVAC",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "float",
+        "default": 0.0,
+        "description": "Actual temperature",
+        "limit": 0.0,
+        "name": "hvac.temp_1.actual",
+        "plugin": "HVAC",
+        "range": "-50.0/50.0",
+        "scope": "System"
+    },
+    {
+        "data_type": "float",
+        "default": 30.0,
+        "description": "Maximum achievable",
+        "limit": 0.0,
+        "name": "hvac.temp_1.max",
+        "plugin": "HVAC",
+        "range": "-50.0/50.0",
+        "scope": "System"
+    },
+    {
+        "data_type": "float",
+        "default": 20.0,
+        "description": "Minimum achievable",
+        "limit": 0.0,
+        "name": "hvac.temp_1.min",
+        "plugin": "HVAC",
+        "range": "-50.0/50.0",
+        "scope": "System"
+    },
+    {
+        "data_type": "float",
+        "default": 100.0,
+        "description": "Thermal force limit",
+        "limit": 0.0,
+        "name": "hvac.thermal_force_limit_1",
+        "plugin": "HVAC",
+        "range": "0.0/100.0",
+        "scope": "System"
+    },
+    {
+        "data_type": "int",
+        "default": 2,
+        "description": "Thermal mode",
+        "limit": 0.0,
+        "name": "hvac.thermal_mode_1",
+        "plugin": "HVAC",
+        "range": "1|2|3|4",
+        "scope": "System"
+    },
+    {
+        "data_type": "float",
+        "default": 5.0,
+        "description": "Update rate of the plugin [s]",
+        "limit": 0.0,
+        "name": "hvac.update_rate_1",
+        "plugin": "HVAC",
+        "range": "0.0/",
+        "scope": "System"
+    },
+    {
+        "data_type": "float",
+        "default": 800.0,
+        "description": "Minimum limit",
+        "limit": 0.0,
+        "name": "light.min",
+        "plugin": "Light",
+        "range": "0.0/10000.0",
+        "scope": "System"
+    },
+    {
+        "data_type": "float",
+        "default": 10000.0,
+        "description": "Maximum limit",
+        "limit": 0.0,
+        "name": "light.max",
+        "plugin": "Light",
+        "range": "0.0/10000.0",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "AO2",
+        "description": "Analog output 1",
+        "limit": 0.0,
+        "name": "light.v1.output",
+        "plugin": "Light",
+        "range": "off|AO0|AO1|AO2|AO3|AO4|AO5|AO6|AO7|AO8",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "AO3",
+        "description": "Analog output 2",
+        "limit": 0.0,
+        "name": "light.v2.output",
+        "plugin": "Light",
+        "range": "off|AO0|AO1|AO2|AO3|AO4|AO5|AO6|AO7|AO8",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "PT/light_sensor/AI2",
+        "description": "Sensor settings",
+        "limit": 0.0,
+        "name": "light.sensor.settings",
+        "plugin": "Light",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "float",
+        "default": 0.0,
+        "description": "Target illumination",
+        "limit": 0.0,
+        "name": "light.target_illum",
+        "plugin": "Light",
+        "range": "0.0/10000.0",
+        "scope": "System"
+    },
+    {
+        "data_type": "float",
+        "default": 0.01,
+        "description": "Error gain",
+        "limit": 0.0,
+        "name": "light.error_gain",
+        "plugin": "Light",
+        "range": "/",
+        "scope": "System"
+    },
+    {
+        "data_type": "bool",
+        "default": false,
+        "description": "Plugin enabled",
+        "limit": 0.0,
+        "name": "light.enabled",
+        "plugin": "Light",
+        "range": "true|false",
+        "scope": "System"
+    },
+    {
+        "data_type": "json",
+        "default": [],
+        "description": "Last update cycle error",
+        "limit": 0.0,
+        "name": "sys.last_update_errs",
+        "plugin": "System",
+        "range": "",
+        "scope": "Device"
+    },
+    {
+        "data_type": "int",
+        "default": 0,
+        "description": "Current consumed RAM",
+        "limit": 0.0,
+        "name": "sys.ram.current",
+        "plugin": "System",
+        "range": "0/",
+        "scope": "Device"
+    },
+    {
+        "data_type": "int",
+        "default": 0,
+        "description": "Peek of consumed RAM",
+        "limit": 0.0,
+        "name": "sys.ram.peak",
+        "plugin": "System",
+        "range": "0/",
+        "scope": "Device"
+    },
+    {
+        "data_type": "float",
+        "default": 0.0,
+        "description": "Application time cycle",
+        "limit": 0.0,
+        "name": "sys.time.usage",
+        "plugin": "System",
+        "range": "0.0/",
+        "scope": "Device"
+    },
+    {
+        "data_type": "int",
+        "default": 0,
+        "description": "Total disc space",
+        "limit": 0.0,
+        "name": "sys.disc.total",
+        "plugin": "System",
+        "range": "0/",
+        "scope": "Device"
+    },
+    {
+        "data_type": "int",
+        "default": 0,
+        "description": "Used disc space",
+        "limit": 0.0,
+        "name": "sys.disc.used",
+        "plugin": "System",
+        "range": "0/",
+        "scope": "Device"
+    },
+    {
+        "data_type": "int",
+        "default": 0,
+        "description": "Free disc space",
+        "limit": 0.0,
+        "name": "sys.disc.free",
+        "plugin": "System",
+        "range": "0/",
+        "scope": "Device"
+    },
+    {
+        "data_type": "str",
+        "default": "LED0",
+        "description": "Status LED",
+        "limit": 0.0,
+        "name": "sys.sl.output",
+        "plugin": "System",
+        "range": "off|LED0|LED1|LED2|LED3|!LED0|!LED1|!LED2|!LED3",
+        "scope": "System"
+    },
+    {
+        "data_type": "float",
+        "default": 1.0,
+        "description": "Blink time",
+        "limit": 0.0,
+        "name": "sys.sl.blink_time",
+        "plugin": "System",
+        "range": "0.0/",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "off",
+        "description": "Anti tamper",
+        "limit": 0.0,
+        "name": "sys.at.input",
+        "plugin": "System",
+        "range": "off|DI0|DI1|DI2|DI3|DI4|DI5|DI6|DI7|DI8|!DI0|!DI1|!DI2|!DI3|!DI4|!DI5|!DI6|!DI7|!DI8",
+        "scope": "System"
+    },
+    {
+        "data_type": "bool",
+        "default": false,
+        "description": "Anti tampering state",
+        "limit": 0.0,
+        "name": "sys.at.state",
+        "plugin": "System",
+        "range": "true|false",
+        "scope": "Device"
+    },
+    {
+        "data_type": "json",
+        "default": {},
+        "description": "Collision info message",
+        "limit": 0.0,
+        "name": "sys.col.info_message",
+        "plugin": "System",
+        "range": "",
+        "scope": "Device"
+    },
+    {
+        "data_type": "json",
+        "default": {},
+        "description": "Collision warning message",
+        "limit": 0.0,
+        "name": "sys.col.warning_message",
+        "plugin": "System",
+        "range": "",
+        "scope": "Device"
+    },
+    {
+        "data_type": "json",
+        "default": {},
+        "description": "Collision error message",
+        "limit": 0.0,
+        "name": "sys.col.error_message",
+        "plugin": "System",
+        "range": "",
+        "scope": "Device"
+    },
+    {
+        "data_type": "int",
+        "default": 0,
+        "description": "Clear messages",
+        "limit": 0.0,
+        "name": "sys.col.clear_errors",
+        "plugin": "System",
+        "range": "0|1",
+        "scope": "System"
+    },
+    {
+        "data_type": "bool",
+        "default": false,
+        "description": "Plugin enabled",
+        "limit": 0.0,
+        "name": "sys.enabled",
+        "plugin": "System",
+        "range": "true|false",
+        "scope": "System"
+    },
+    {
+        "data_type": "bool",
+        "default": true,
+        "description": "Enable info messages",
+        "limit": 0.0,
+        "name": "sys.col.info_message.enable",
+        "plugin": "System",
+        "range": "true|false",
+        "scope": "System"
+    },
+    {
+        "data_type": "bool",
+        "default": true,
+        "description": "Enable warning messages",
+        "limit": 0.0,
+        "name": "sys.col.warning_message.enable",
+        "plugin": "System",
+        "range": "true|false",
+        "scope": "System"
+    },
+    {
+        "data_type": "bool",
+        "default": true,
+        "description": "Enable error messages",
+        "limit": 0.0,
+        "name": "sys.col.error_message.enable",
+        "plugin": "System",
+        "range": "true|false",
+        "scope": "System"
+    },
+    {
+        "data_type": "bool",
+        "default": false,
+        "description": "Plugin enabled",
+        "limit": 0.0,
+        "name": "ecc.enabled",
+        "plugin": "Energy Center Common",
+        "range": "true|false",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "Flowx/FLX-05F/U1:ID1:R0:DO0/U1:ID1:R0:DO1/U1:ID1:R0:DI0/U1:ID1:R0:DI1",
+        "description": "ECD / Foyer Floor Heating Settings",
+        "limit": 0.0,
+        "name": "ecd.underfloor_heating_foyer.valve.enabled",
+        "plugin": "ECD",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "float",
+        "default": 0.0,
+        "description": "ECD / Foyer Floor Heating Position",
+        "limit": 0.0,
+        "name": "ecd.underfloor_heating_foyer.valve.position",
+        "plugin": "ECD",
+        "range": "0.0/100.0",
+        "scope": "System"
+    },
+    {
+        "data_type": "bool",
+        "default": false,
+        "description": "ECD / Foyer Floor Heating Calibration",
+        "limit": 0.0,
+        "name": "ecd.underfloor_heating_foyer.valve.calibrate",
+        "plugin": "ECD",
+        "range": "true|false",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "Flowx/FLX-05F/U1:ID1:R0:DO2/U1:ID1:R0:DO3/U1:ID1:R0:DI2/U1:ID1:R0:DI3",
+        "description": "ECD / Underfloor Heating Trestle",
+        "limit": 0.0,
+        "name": "ecd.underfloor_heating_trestle.valve.enabled",
+        "plugin": "ECD",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "float",
+        "default": 0.0,
+        "description": "ECD / Underfloor Heating Trestle Position",
+        "limit": 0.0,
+        "name": "ecd.underfloor_heating_trestle.valve.position",
+        "plugin": "ECD",
+        "range": "0.0/100.0",
+        "scope": "System"
+    },
+    {
+        "data_type": "bool",
+        "default": false,
+        "description": "ECD / Underfloor Heating Trestle Calibration",
+        "limit": 0.0,
+        "name": "ecd.underfloor_heating_trestle.valve.calibration",
+        "plugin": "ECD",
+        "range": "true|false",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5",
+        "description": "ECD / Underfloor Heating Pool",
+        "limit": 0.0,
+        "name": "ecd.underfloor_heating_pool.valve.enabled",
+        "plugin": "ECD",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "float",
+        "default": 0.0,
+        "description": "ECD / Underfloor Heating Pool Position",
+        "limit": 0.0,
+        "name": "ecd.underfloor_heating_pool.valve.position",
+        "plugin": "ECD",
+        "range": "0.0/100.0",
+        "scope": "System"
+    },
+    {
+        "data_type": "bool",
+        "default": false,
+        "description": "ECD / Underfloor Heating Pool Calibration",
+        "limit": 0.0,
+        "name": "ecd.underfloor_heating_pool.valve.calibration",
+        "plugin": "ECD",
+        "range": "true|false",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5",
+        "description": "ECD / Air Cooling Valve Settings",
+        "limit": 0.0,
+        "name": "ecd.air_cooling.valve.enabled",
+        "plugin": "ECD",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "float",
+        "default": 0.0,
+        "description": "ECD / Air Cooling Valve Position",
+        "limit": 0.0,
+        "name": "ecd.air_cooling.valve.position",
+        "plugin": "ECD",
+        "range": "0.0/100.0",
+        "scope": "System"
+    },
+    {
+        "data_type": "bool",
+        "default": false,
+        "description": "ECD / Air Cooling Valve Calibration",
+        "limit": 0.0,
+        "name": "ecd.air_cooling.valve.calibration",
+        "plugin": "ECD",
+        "range": "true|false",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5",
+        "description": "ECD / Ground Drilling Valve",
+        "limit": 0.0,
+        "name": "ecd.ground_drill.valve.enabled",
+        "plugin": "ECD",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "float",
+        "default": 0.0,
+        "description": "ECD / Ground Drill Valve Position",
+        "limit": 0.0,
+        "name": "ecd.ground_drill.valve.position",
+        "plugin": "ECD",
+        "range": "0.0/100.0",
+        "scope": "System"
+    },
+    {
+        "data_type": "bool",
+        "default": false,
+        "description": "ECD / Ground Drill Valve Calibration",
+        "limit": 0.0,
+        "name": "ecd.ground_drill.valve.calibration",
+        "plugin": "ECD",
+        "range": "true|false",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5",
+        "description": "ECD / Generators Cooling Valve / Settings",
+        "limit": 0.0,
+        "name": "ecd.generators_cooling.valve.enabled",
+        "plugin": "ECD",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "float",
+        "default": 0.0,
+        "description": "ECD / Generators Cooling Valve / Position",
+        "limit": 0.0,
+        "name": "ecd.generators_cooling.valve.position",
+        "plugin": "ECD",
+        "range": "0.0/100.0",
+        "scope": "System"
+    },
+    {
+        "data_type": "bool",
+        "default": false,
+        "description": "ECD / Generators Cooling Valve Calibration",
+        "limit": 0.0,
+        "name": "ecd.generators_cooling.valve.calibration",
+        "plugin": "ECD",
+        "range": "true|false",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5",
+        "description": "ECD / Short Green/Purple Valve Settings",
+        "limit": 0.0,
+        "name": "ecd.short_green_purple.valve.enabled",
+        "plugin": "ECD",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "float",
+        "default": 0.0,
+        "description": "ECD / Short Green/Purple Valve Position",
+        "limit": 0.0,
+        "name": "ecd.short_green_purple.valve.position",
+        "plugin": "ECD",
+        "range": "0.0/100.0",
+        "scope": "System"
+    },
+    {
+        "data_type": "bool",
+        "default": false,
+        "description": "ECD / Generators Cooling Valve Calibration",
+        "limit": 0.0,
+        "name": "ecd.short_green_purple.valve.calibration",
+        "plugin": "ECD",
+        "range": "true|false",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5",
+        "description": "ECD / Underfloor West Bypass Valve Settings",
+        "limit": 0.0,
+        "name": "ecd.underfloor_west_bypass.valve.enabled",
+        "plugin": "ECD",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "float",
+        "default": 0.0,
+        "description": "ECD / Underfloor West Bypass Valve Position",
+        "limit": 0.0,
+        "name": "ecd.underfloor_west_bypass.valve.position",
+        "plugin": "ECD",
+        "range": "0.0/100.0",
+        "scope": "System"
+    },
+    {
+        "data_type": "bool",
+        "default": false,
+        "description": "ECD / Underfloor West Bypass Valve Calibration",
+        "limit": 0.0,
+        "name": "ecd.underfloor_west_bypass.valve.calibration",
+        "plugin": "ECD",
+        "range": "true|false",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5",
+        "description": "ECD / Underfloor East Bypass Valve Settings",
+        "limit": 0.0,
+        "name": "ecd.underfloor_east_bypass.valve.enabled",
+        "plugin": "ECD",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "float",
+        "default": 0.0,
+        "description": "ECD / Underfloor East Bypass Valve Position",
+        "limit": 0.0,
+        "name": "ecd.underfloor_east_bypass.valve.position",
+        "plugin": "ECD",
+        "range": "0.0/100.0",
+        "scope": "System"
+    },
+    {
+        "data_type": "bool",
+        "default": false,
+        "description": "ECD / Underfloor East Bypass Valve Calibration",
+        "limit": 0.0,
+        "name": "ecd.underfloor_east_bypass.valve.calibration",
+        "plugin": "ECD",
+        "range": "true|false",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5",
+        "description": "ECD / VCG / Pool Heating",
+        "limit": 0.0,
+        "name": "ecd.vcg_pool_heating.valve",
+        "plugin": "ECD",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "Grundfos/Pump/5",
+        "description": "ECD / VCG / Pool Heating",
+        "limit": 0.0,
+        "name": "ecd.vcg_pool_heating.pump",
+        "plugin": "ECD",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "bool",
+        "default": true,
+        "description": "ECD / VCG / Pool Heating",
+        "limit": 0.0,
+        "name": "ecd.vcg_pool_heating.enabled",
+        "plugin": "ECD",
+        "range": "true|false",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5",
+        "description": "ECD / VCG / Pool Cooling In",
+        "limit": 0.0,
+        "name": "ecd.vcg_tva_pool.cold_in",
+        "plugin": "ECD",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5",
+        "description": "ECD / VCG / Pool Cooling In",
+        "limit": 0.0,
+        "name": "ecd.vcg_tva_pool.cold_out",
+        "plugin": "ECD",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5",
+        "description": "ECD / VCG / Pool Heating In",
+        "limit": 0.0,
+        "name": "ecd.vcg_tva_pool.hot_in",
+        "plugin": "ECD",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5",
+        "description": "ECD / VCG / Pool Heating Out",
+        "limit": 0.0,
+        "name": "ecd.vcg_tva_pool.hot_out",
+        "plugin": "ECD",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "Grundfos/Pump/5",
+        "description": "ECD / VCG / Pump",
+        "limit": 0.0,
+        "name": "ecd.vcg_tva_pool.pump",
+        "plugin": "ECD",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "bool",
+        "default": true,
+        "description": "ECD / VCG / Enable",
+        "limit": 0.0,
+        "name": "ecd.vcg_tva_pool.enabled",
+        "plugin": "ECD",
+        "range": "true|false",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5",
+        "description": "ECD / VCG / Convectors East Cooling In",
+        "limit": 0.0,
+        "name": "ecd.convectors_east.cold_in",
+        "plugin": "ECD",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5",
+        "description": "ECD / VCG / Convectors East Cooling Out",
+        "limit": 0.0,
+        "name": "ecd.convectors_east.cold_out",
+        "plugin": "ECD",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5",
+        "description": "ECD / VCG / Convectors East Hot In",
+        "limit": 0.0,
+        "name": "ecd.convectors_east.hot_in",
+        "plugin": "ECD",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5",
+        "description": "ECD / VCG / Convectors East Hot Out",
+        "limit": 0.0,
+        "name": "ecd.convectors_east.hot_out",
+        "plugin": "ECD",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "Grundfos/Pump/5",
+        "description": "ECD / VCG / Convectors East Pump",
+        "limit": 0.0,
+        "name": "ecd.convectors_east.pump",
+        "plugin": "ECD",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "bool",
+        "default": true,
+        "description": "ECD / VCG / Convectors East Enable",
+        "limit": 0.0,
+        "name": "ecd.convectors_east.enabled",
+        "plugin": "ECD",
+        "range": "true|false",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5",
+        "description": "ECD / VCG / Floor East Cooling In",
+        "limit": 0.0,
+        "name": "ecd.underfloor_east.cold_in",
+        "plugin": "ECD",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5",
+        "description": "ECD / VCG / Floor East Cooling Out",
+        "limit": 0.0,
+        "name": "ecd.underfloor_east.cold_out",
+        "plugin": "ECD",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5",
+        "description": "ECD / VCG / Floor East Hot In",
+        "limit": 0.0,
+        "name": "ecd.underfloor_east.hot_in",
+        "plugin": "ECD",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5",
+        "description": "ECD / VCG / Floor East Hot Out",
+        "limit": 0.0,
+        "name": "ecd.underfloor_east.hot_out",
+        "plugin": "ECD",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "Grundfos/Pump/5",
+        "description": "ECD / VCG / Floor East Pump",
+        "limit": 0.0,
+        "name": "ecd.underfloor_east.pump",
+        "plugin": "ECD",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "bool",
+        "default": true,
+        "description": "ECD / VCG / Floor East Enable",
+        "limit": 0.0,
+        "name": "ecd.underfloor_east.enabled",
+        "plugin": "ECD",
+        "range": "true|false",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5",
+        "description": "ECD / VCG / Convectors West Cooling In",
+        "limit": 0.0,
+        "name": "ecd.convectors_west.cold_in",
+        "plugin": "ECD",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5",
+        "description": "ECD / VCG / Convectors West Cooling Out",
+        "limit": 0.0,
+        "name": "ecd.convectors_west.cold_out",
+        "plugin": "ECD",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5",
+        "description": "ECD / VCG / Convectors West Hot In",
+        "limit": 0.0,
+        "name": "ecd.convectors_west.hot_in",
+        "plugin": "ECD",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5",
+        "description": "ECD / VCG / Convectors West Hot Out",
+        "limit": 0.0,
+        "name": "ecd.convectors_west.hot_out",
+        "plugin": "ECD",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "Grundfos/Pump/5",
+        "description": "ECD / VCG / Convectors West Pump",
+        "limit": 0.0,
+        "name": "ecd.convectors_west.pump",
+        "plugin": "ECD",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "bool",
+        "default": true,
+        "description": "ECD / VCG / Convectors West Enable",
+        "limit": 0.0,
+        "name": "ecd.convectors_west.enabled",
+        "plugin": "ECD",
+        "range": "true|false",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5",
+        "description": "ECD / VCG / TVA Roof Floor In",
+        "limit": 0.0,
+        "name": "ecd.tva_roof_floor.cold_in",
+        "plugin": "ECD",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5",
+        "description": "ECD / VCG / TVA Roof Floor Out",
+        "limit": 0.0,
+        "name": "ecd.tva_roof_floor.cold_out",
+        "plugin": "ECD",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5",
+        "description": "ECD / VCG / TVA Roof Floor In",
+        "limit": 0.0,
+        "name": "ecd.tva_roof_floor.hot_in",
+        "plugin": "ECD",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5",
+        "description": "ECD / VCG / TVA Roof Floor Out",
+        "limit": 0.0,
+        "name": "ecd.tva_roof_floor.hot_out",
+        "plugin": "ECD",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "Grundfos/Pump/5",
+        "description": "ECD / VCG / TVA Roof Floor",
+        "limit": 0.0,
+        "name": "ecd.tva_roof_floor.pump",
+        "plugin": "ECD",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "bool",
+        "default": true,
+        "description": "ECD / VCG / TVA Roof Floor",
+        "limit": 0.0,
+        "name": "ecd.tva_roof_floor.enabled",
+        "plugin": "ECD",
+        "range": "true|false",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5",
+        "description": "ECD / VCG / TVA Fitness In",
+        "limit": 0.0,
+        "name": "ecd.tva_fitness.cold_in",
+        "plugin": "ECD",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5",
+        "description": "ECD / VCG / TVA Fitness Out",
+        "limit": 0.0,
+        "name": "ecd.tva_fitness.cold_out",
+        "plugin": "ECD",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5",
+        "description": "ECD / VCG / TVA Fitness In",
+        "limit": 0.0,
+        "name": "ecd.tva_fitness.hot_in",
+        "plugin": "ECD",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5",
+        "description": "ECD / VCG / TVA Fitness Out",
+        "limit": 0.0,
+        "name": "ecd.tva_fitness.hot_out",
+        "plugin": "ECD",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "Grundfos/Pump/5",
+        "description": "ECD / VCG / TVA Fitness",
+        "limit": 0.0,
+        "name": "ecd.tva_fitness.pump",
+        "plugin": "ECD",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "bool",
+        "default": true,
+        "description": "ECD / VCG / TVA Fitness",
+        "limit": 0.0,
+        "name": "ecd.tva_fitness.enabled",
+        "plugin": "ECD",
+        "range": "true|false",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5",
+        "description": "ECD / VCG / Floor West Cooling In",
+        "limit": 0.0,
+        "name": "ecd.floor_west.cold_in",
+        "plugin": "ECD",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5",
+        "description": "ECD / VCG / Floor West Cooling Out",
+        "limit": 0.0,
+        "name": "ecd.floor_west.cold_out",
+        "plugin": "ECD",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5",
+        "description": "ECD / VCG / Floor West Hot In",
+        "limit": 0.0,
+        "name": "ecd.floor_west.hot_in",
+        "plugin": "ECD",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5",
+        "description": "ECD / VCG / Floor West Hot Out",
+        "limit": 0.0,
+        "name": "ecd.floor_west.hot_out",
+        "plugin": "ECD",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "Grundfos/Pump/5",
+        "description": "ECD / VCG / Floor West Pump",
+        "limit": 0.0,
+        "name": "ecd.floor_west.pump",
+        "plugin": "ECD",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "bool",
+        "default": true,
+        "description": "ECD / VCG / Floor West Pump",
+        "limit": 0.0,
+        "name": "ecd.floor_west.enabled",
+        "plugin": "ECD",
+        "range": "true|false",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5",
+        "description": "ECD / VCG / TVA Conference Center In",
+        "limit": 0.0,
+        "name": "ecd.tva_conference_center.cold_in",
+        "plugin": "ECD",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5",
+        "description": "ECD / VCG / TVA Conference Center Out",
+        "limit": 0.0,
+        "name": "ecd.tva_conference_center.cold_out",
+        "plugin": "ECD",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5",
+        "description": "ECD / VCG / TVA Conference Center In",
+        "limit": 0.0,
+        "name": "ecd.tva_conference_center.hot_in",
+        "plugin": "ECD",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5",
+        "description": "ECD / VCG / TVA Conference Center Out",
+        "limit": 0.0,
+        "name": "ecd.tva_conference_center.hot_out",
+        "plugin": "ECD",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "Grundfos/Pump/5",
+        "description": "ECD / VCG / TVA Conference Center",
+        "limit": 0.0,
+        "name": "ecd.tva_conference_center.pump",
+        "plugin": "ECD",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "bool",
+        "default": true,
+        "description": "ECD / VCG / TVA Conference Center",
+        "limit": 0.0,
+        "name": "ecd.tva_conference_center.enabled",
+        "plugin": "ECD",
+        "range": "true|false",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5",
+        "description": "ECD / VCG / Convectors Kitchen Cold In",
+        "limit": 0.0,
+        "name": "ecd.convectors_kitchen.cold_in",
+        "plugin": "ECD",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5",
+        "description": "ECD / VCG / Convectors Kitchen Cold Out",
+        "limit": 0.0,
+        "name": "ecd.convectors_kitchen.cold_out",
+        "plugin": "ECD",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5",
+        "description": "ECD / VCG / Convectors Kitchen Hot In",
+        "limit": 0.0,
+        "name": "ecd.convectors_kitchen.hot_in",
+        "plugin": "ECD",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5",
+        "description": "ECD / VCG / Convectors Kitchen Hot Out",
+        "limit": 0.0,
+        "name": "ecd.convectors_kitchen.hot_out",
+        "plugin": "ECD",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "Grundfos/Pump/5",
+        "description": "ECD / VCG / Convectors Kitchen Pump",
+        "limit": 0.0,
+        "name": "ecd.convectors_kitchen.pump",
+        "plugin": "ECD",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "bool",
+        "default": true,
+        "description": "ECD / VCG / Convectors Kitchen Pump",
+        "limit": 0.0,
+        "name": "ecd.convectors_kitchen.enabled",
+        "plugin": "ECD",
+        "range": "true|false",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5",
+        "description": "ECD / VCG / TVA Wearhouse Cold In",
+        "limit": 0.0,
+        "name": "ecd.tva_warehouse.cold_in",
+        "plugin": "ECD",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5",
+        "description": "ECD / VCG / TVA Wearhouse Cold Out",
+        "limit": 0.0,
+        "name": "ecd.tva_warehouse.cold_out",
+        "plugin": "ECD",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5",
+        "description": "ECD / VCG / TVA Wearhouse Hot In",
+        "limit": 0.0,
+        "name": "ecd.tva_warehouse.hot_in",
+        "plugin": "ECD",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5",
+        "description": "ECD / VCG / TVA Wearhouse Hot Out",
+        "limit": 0.0,
+        "name": "ecd.tva_warehouse.hot_out",
+        "plugin": "ECD",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "Grundfos/Pump/5",
+        "description": "ECD / VCG / TVA Wearhouse",
+        "limit": 0.0,
+        "name": "ecd.tva_warehouse.pump",
+        "plugin": "ECD",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "bool",
+        "default": true,
+        "description": "ECD / VCG / TVA Wearhouse",
+        "limit": 0.0,
+        "name": "ecd.tva_warehouse.enabled",
+        "plugin": "ECD",
+        "range": "true|false",
+        "scope": "System"
+    },
+    {
+        "data_type": "bool",
+        "default": false,
+        "description": "Plugin enabled",
+        "limit": 0.0,
+        "name": "ecd.enabled",
+        "plugin": "Energy Center Distribution",
+        "range": "true|false",
+        "scope": "System"
+    },
+    {
+        "data_type": "int",
+        "default": 3,
+        "description": "Energy Center Heat Pump machines count",
+        "limit": 0.0,
+        "name": "echp.hp.count",
+        "plugin": "ECHP",
+        "range": "0/",
+        "scope": "System"
+    },
+    {
+        "data_type": "int",
+        "default": 0,
+        "description": "Energy Center Heat Pump machine index",
+        "limit": 0.0,
+        "name": "echp.hp.index",
+        "plugin": "ECHP",
+        "range": "0/",
+        "scope": "System"
+    },
+    {
+        "data_type": "int",
+        "default": 0,
+        "description": "The power of machine",
+        "limit": 0.0,
+        "name": "echp.hp.power",
+        "plugin": "ECHP",
+        "range": "-100.0/100.0",
+        "scope": "System"
+    },
+    {
+        "data_type": "int",
+        "default": 0,
+        "description": "The mode of the machine",
+        "limit": 0.0,
+        "name": "echp.hp.mode",
+        "plugin": "ECHP",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "int",
+        "default": 0,
+        "description": "The state of the machine",
+        "limit": 0.0,
+        "name": "echp.hp.run",
+        "plugin": "ECHP",
+        "range": "",
+        "scope": "Device"
+    },
+    {
+        "data_type": "float",
+        "default": 5.0,
+        "description": "Energy Center Heat Pump cold minimum",
+        "limit": 0.0,
+        "name": "echp.hp.cold_min",
+        "plugin": "ECHP",
+        "range": "3.0/8.0",
+        "scope": "System"
+    },
+    {
+        "data_type": "float",
+        "default": 7.0,
+        "description": "Energy Center Heat Pump cold maximum",
+        "limit": 0.0,
+        "name": "echp.hp.cold_max",
+        "plugin": "ECHP",
+        "range": "3.0/8.0",
+        "scope": "System"
+    },
+    {
+        "data_type": "float",
+        "default": 41.0,
+        "description": "Energy Center Heat Pump hot minimum",
+        "limit": 0.0,
+        "name": "echp.hp.hot_min",
+        "plugin": "ECHP",
+        "range": "40.0/47.0",
+        "scope": "System"
+    },
+    {
+        "data_type": "float",
+        "default": 46.0,
+        "description": "Energy Center Heat Pump hot maximum",
+        "limit": 0.0,
+        "name": "echp.hp.hot_max",
+        "plugin": "ECHP",
+        "range": "40.0/47.0",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "Flowx/FLX-05F/U1:ID1:R0:DO0/U1:ID1:R0:DO1/U1:ID1:R0:DI0/U1:ID1:R0:DI1",
+        "description": "Heat Pump Control Group / VCG / Cold Buffer / Input",
+        "limit": 0.0,
+        "name": "echp.hpcg.vcg_cold_buf.input",
+        "plugin": "ECHP",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "Flowx/FLX-05F/U1:ID6:R16:DO0/U1:ID6:R16:DO1/U1:ID6:R16:DI0/U1:ID6:R16:DO1",
+        "description": "Heat Pump Control Group / VCG / Cold Buffer / Output",
+        "limit": 0.0,
+        "name": "echp.hpcg.vcg_cold_buf.output",
+        "plugin": "ECHP",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "Flowx/FLX-05F/U1:ID6:R16:DO2/U1:ID6:R16:DO3/U1:ID6:R16:DI2/U1:ID6:R16:DO3",
+        "description": "Heat Pump Control Group / VCG / Cold Buffer / Short",
+        "limit": 0.0,
+        "name": "echp.hpcg.vcg_cold_buf.short",
+        "plugin": "ECHP",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "Flowx/FLX-05F/off/off/off/off",
+        "description": "Heat Pump Control Group / VCG / Cold Geo / Input",
+        "limit": 0.0,
+        "name": "echp.hpcg.vcg_cold_geo.input",
+        "plugin": "ECHP",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "Flowx/FLX-05F/off/off/off/off",
+        "description": "Heat Pump Control Group / VCG / Cold Geo / Output",
+        "limit": 0.0,
+        "name": "echp.hpcg.vcg_cold_geo.output",
+        "plugin": "ECHP",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "Flowx/FLX-05F/off/off/off/off",
+        "description": "Heat Pump Control Group / VCG / Cold Geo / Short",
+        "limit": 0.0,
+        "name": "echp.hpcg.vcg_cold_geo.short",
+        "plugin": "ECHP",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "Flowx/FLX-05F/off/off/off/off",
+        "description": "Heat Pump Control Group / VCG / Warm Geo / Input",
+        "limit": 0.0,
+        "name": "echp.hpcg.vcg_warm_geo.input",
+        "plugin": "ECHP",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "Flowx/FLX-05F/off/off/off/off",
+        "description": "Heat Pump Control Group / VCG / Warm Geo / Output",
+        "limit": 0.0,
+        "name": "echp.hpcg.vcg_warm_geo.output",
+        "plugin": "ECHP",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "Flowx/FLX-05F/off/off/off/off",
+        "description": "Heat Pump Control Group / VCG / Warm Geo / Short",
+        "limit": 0.0,
+        "name": "echp.hpcg.vcg_warm_geo.short",
+        "plugin": "ECHP",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "Flowx/FLX-05F/off/off/off/off",
+        "description": "Heat Pump Control Group / VCG / Warm Geo / Input",
+        "limit": 0.0,
+        "name": "echp.hpcg.vcg_warm_floor.input",
+        "plugin": "ECHP",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "Flowx/FLX-05F/off/off/off/off",
+        "description": "Heat Pump Control Group / VCG / Warm Geo / Output",
+        "limit": 0.0,
+        "name": "echp.hpcg.vcg_warm_floor.output",
+        "plugin": "ECHP",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "Flowx/FLX-05F/off/off/off/off",
+        "description": "Heat Pump Control Group / VCG / Warm Geo / Output",
+        "limit": 0.0,
+        "name": "echp.hpcg.vcg_warm_floor.short",
+        "plugin": "ECHP",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "Grundfos/Pump/2",
+        "description": "Heat Pump Control Group / Water Pump / Cold",
+        "limit": 0.0,
+        "name": "echp.hpcg.wp_cold.settings",
+        "plugin": "ECHP",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "Grundfos/Pump/3",
+        "description": "Heat Pump Control Group / Water Pump / Hot",
+        "limit": 0.0,
+        "name": "echp.hpcg.wp_hot.settings",
+        "plugin": "ECHP",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "Grundfos/Pump/4",
+        "description": "Heat Pump Control Group / Water Pump / Warm",
+        "limit": 0.0,
+        "name": "echp.hpcg.wp_warm_p.settings",
+        "plugin": "ECHP",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "Grundfos/Pump/5",
+        "description": "Heat Pump Control Group / Water Pump / Warm",
+        "limit": 0.0,
+        "name": "echp.hpcg.wp_warm_g.settings",
+        "plugin": "ECHP",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "HstarsGuangzhouRefrigeratingEquipmentGroup/HeatPump/5",
+        "description": "Heat Pump Control Group / Heat Pump",
+        "limit": 0.0,
+        "name": "echp.hpcg.hp.settings",
+        "plugin": "ECHP",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "bool",
+        "default": false,
+        "description": "Plugin enabled",
+        "limit": 0.0,
+        "name": "echp.enabled",
+        "plugin": "Energy Center Heat Pump",
+        "range": "true|false",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "HangzhouAirflowElectricApplications/f3p146ec072600/AO1",
+        "description": "Lower fan settings",
+        "limit": 0.0,
+        "name": "vent.lower_1.fan.settings",
+        "plugin": "HVAC",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "float",
+        "default": 0.0,
+        "description": "Lower fan minimum speed [%]",
+        "limit": 0.0,
+        "name": "vent.lower_1.fan.min_speed",
+        "plugin": "Ventilation",
+        "range": "0.0/100.0",
+        "scope": "System"
+    },
+    {
+        "data_type": "float",
+        "default": 30.0,
+        "description": "Lower fan maximum speed [%]",
+        "limit": 0.0,
+        "name": "vent.lower_1.fan.max_speed",
+        "plugin": "Ventilation",
+        "range": "0.0/100.0",
+        "scope": "System"
+    },
+    {
+        "data_type": "float",
+        "default": 0.0,
+        "description": "Upper fan speed [%]",
+        "limit": 0.0,
+        "name": "vent.lower_1.fan.speed",
+        "plugin": "Ventilation",
+        "range": "0.0/100.0",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "HangzhouAirflowElectricApplications/f3p146ec072600/AO0",
+        "description": "Upper fan settings",
+        "limit": 0.0,
+        "name": "vent.upper_1.fan.settings",
+        "plugin": "Ventilation",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "float",
+        "default": 0.0,
+        "description": "Upper fan minimum speed [%]",
+        "limit": 0.0,
+        "name": "vent.upper_1.fan.min_speed",
+        "plugin": "Ventilation",
+        "range": "0.0/100.0",
+        "scope": "System"
+    },
+    {
+        "data_type": "float",
+        "default": 0.0,
+        "description": "Upper fan speed [%]",
+        "limit": 0.0,
+        "name": "vent.upper_1.fan.speed",
+        "plugin": "Ventilation",
+        "range": "0.0/100.0",
+        "scope": "System"
+    },
+    {
+        "data_type": "float",
+        "default": 30.0,
+        "description": "Upper fan maximum speed [%]",
+        "limit": 0.0,
+        "name": "vent.upper_1.fan.max_speed",
+        "plugin": "Ventilation",
+        "range": "0.0/100.0",
+        "scope": "System"
+    },
+    {
+        "data_type": "int",
+        "default": 1,
+        "description": "Count of the ventilation zones.",
+        "limit": 0.0,
+        "name": "vent.zones_count",
+        "plugin": "Ventilation",
+        "range": "0/",
+        "scope": "System"
+    },
+    {
+        "data_type": "bool",
+        "default": false,
+        "description": "Ventilation enable flag.",
+        "limit": 0.0,
+        "name": "vent.enabled",
+        "plugin": "Ventilation",
+        "range": "",
+        "scope": "System"
+    }
+]
