@@ -142,7 +142,7 @@ class Server(HTTPServer):
 
             return response
 
-        @self._app.route("/api/v1/bgerp/registers/get", methods=["POST"])
+        @self._app.route("/api/v1/bgerp/registers/get", methods=["POST", "GET"])
         def get_register_post():
             """Callback that set the register.
             """
@@ -152,10 +152,17 @@ class Server(HTTPServer):
             json_data = {}
             response = "{}", 200
             token = ""
+            content = None
 
-            if request.data is not None:
+            if request.data is not None and len(request.data) != 0:
                 content = request.data.decode("UTF-8")
-                json_data = json.loads(content)
+                if content != "" and content != None:
+                    json_data = json.loads(content)
+
+            if request.form is not None and len(request.form) != 0:
+                content = request.form.get("params")
+                if content != "" and content != None:
+                    json_data = json.loads(content)
 
             if "token" in json_data:
                 token = json_data["token"]
@@ -166,11 +173,21 @@ class Server(HTTPServer):
             if token != self.__session.session:
                 return "Invalid token.", 401
 
+            if "registers" not in json_data:
+                return "Bad Request", 400 
+
+            if json_data["registers"] is None:
+                return "Not Found", 404
+
+            if len(json_data["registers"]) == 0:
+                return "Not Found", 404 
+
             if self.__get_registers is not None:
                 registers = self.__get_registers(json_data)
 
             response = make_response(registers)
             response.headers["Content-Type"] = "application/json; charset=utf-8"
+            response.headers["Access-Control-Allow-Origin"] = "*"
 
             return response
 
