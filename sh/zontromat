@@ -13,7 +13,7 @@ while [ 1 ]; do
   echo "$ts: begin checking..."
   check_process "Zontromat"
 
-  [ $? -eq 0 ] && echo "$ts: not running, restarting..." && `python3 /opt/Zontromat/Zontromat/main.py`
+  [ $? -eq 0 ] && echo "$ts: not running, restarting..." && `python3 /opt/ztm/Zontromat/main.py`
 
   sleep 5
 done
