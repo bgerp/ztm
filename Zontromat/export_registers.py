@@ -2468,10 +2468,19 @@ def __add_registers():
 
 #region Ventilation (vent)
 
+    # Operator panel setpoint.
+    register = Register("vent.op_setpoint_1")
+    register.scope = Scope.System
+    register.plugin_name = "Ventilation"
+    register.description = "Operators panel set point"
+    register.range = "0.0/100.0"
+    register.value = 50
+    __registers.append(register)
+
     # Upper fan
     register = Register("vent.lower_1.fan.settings")
     register.scope = Scope.System
-    register.plugin_name = "HVAC"
+    register.plugin_name = "Ventilation"
     register.description = "Lower fan settings"
     register.range = ""
     register.value = "HangzhouAirflowElectricApplications/f3p146ec072600/AO1"

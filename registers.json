@@ -2630,12 +2630,22 @@
         "scope": "System"
     },
     {
+        "data_type": "int",
+        "default": 50,
+        "description": "Operators panel set point",
+        "limit": 0.0,
+        "name": "vent.op_setpoint_1",
+        "plugin": "Ventilation",
+        "range": "0.0/100.0",
+        "scope": "System"
+    },
+    {
         "data_type": "str",
         "default": "HangzhouAirflowElectricApplications/f3p146ec072600/AO1",
         "description": "Lower fan settings",
         "limit": 0.0,
         "name": "vent.lower_1.fan.settings",
-        "plugin": "HVAC",
+        "plugin": "Ventilation",
         "range": "",
         "scope": "System"
     },
