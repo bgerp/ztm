@@ -185,6 +185,8 @@ class ApplicationSettings:
                 stream.close()  
 
     def create_default(self):
+        """Create default settings.
+        """
 
         # default debug level.
         if self.__config is not None:
@@ -202,15 +204,16 @@ class ApplicationSettings:
                     "modbus_rtu_baud": 9600
                     }
 
-        # Default ERP service.
-        if self.__config is not None:
-            if "ERP_SERVICE" not in self.__config:
-                self.__config["ERP_SERVICE"] = {
-                    "config_time": int(time.time()),
-                    "erp_id": "0000-0000-0000-0000",
-                    "host": "https://127.0.0.1/",
-                    "timeout": 5,
-                    }
+        # This will bi added by the setup script.
+        # # Default ERP service.
+        # if self.__config is not None:
+        #     if "ERP_SERVICE" not in self.__config:
+        #         self.__config["ERP_SERVICE"] = {
+        #             "config_time": int(time.time()),
+        #             "erp_id": "0000-0000-0000-0000",
+        #             "host": "https://127.0.0.1/",
+        #             "timeout": 5,
+        #             }
 
         if not self.exists:
             with open(self.__file_name, "w") as stream:
