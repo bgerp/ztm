@@ -269,6 +269,7 @@ class ZL101PCC(BaseController):
                             continue
 
                 except Exception as e:
+                    uuid = ""
                     pass
 
             # Second try
@@ -277,6 +278,7 @@ class ZL101PCC(BaseController):
                     uuid = os.popen("dmidecode | grep -i uuid").read().split()[-1]
 
                 except Exception as e:
+                    uuid = ""
                     pass
 
         return uuid
