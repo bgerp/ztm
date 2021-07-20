@@ -333,13 +333,11 @@ class AirConditioner(BasePlugin):
 
         min_temp_reg = self._registers.by_name("{}.temp_{}.min".format(self.key, self.__identifier))
         if min_temp_reg is not None:
-            if min_temp_reg.is_int_or_float():
-                min_temp = min_temp_reg.value
+            min_temp = min_temp_reg.value
 
         max_temp_reg = self._registers.by_name("{}.temp_{}.max".format(self.key, self.__identifier))
         if max_temp_reg is not None:
-            if max_temp_reg.is_int_or_float():
-                max_temp = max_temp_reg.value
+            max_temp = max_temp_reg.value
 
         actual_temp = register.value
 
@@ -749,7 +747,6 @@ class AirConditioner(BasePlugin):
         if goal_building_temp is not None:
             goal_building_temp.update_handlers = self.__goal_building_temp_cb
             goal_building_temp.update()
-
 
 
         # Convector
