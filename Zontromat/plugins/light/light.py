@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from utils.logger import get_logger
 from utils.logic.timer import Timer
+from utils.logic.functions import l_scale
 
 from plugins.base_plugin import BasePlugin
 
@@ -258,6 +259,38 @@ class Light(BasePlugin):
 
 #region Private Methods
 
+    def __flood_fade(self, setpoint):
+        """Flood fade generator.
+
+        Args:
+            setpoint (float): Setpoint for the hardware.
+
+        Returns:
+            list: Output voltages for the two analog outputs.
+        """
+
+        # Negative limit.
+        if setpoint < 0:
+            setpoint = 0
+
+        # Positive limit.
+        if setpoint > 100:
+            setpoint = 100
+
+        v1 = 0
+        v2 = 0
+
+        # The model.
+        if setpoint <= 50:
+            v1 = l_scale(setpoint, [0, 50], [0, 100])
+            v2 = 0
+        else:
+            v1 = 100
+            v2 = l_scale(setpoint, [50, 100], [0, 100])
+
+        # Return the voltages.
+        return (v1, v2)
+
     def __calculate(self):
         """ Apply thermal force to the devices. """
 
@@ -302,12 +335,16 @@ class Light(BasePlugin):
         self.__output = self.__tmp_output
 
         # Convert to volgate.
-        out_to_v = self.__output * 0.001
+        to_voltage_scale = 0.001 # Magic number!!!
+        v1, v2 = self.__flood_fade(self.__output)
+        out_to_v1 = v1 * to_voltage_scale
+        out_to_v2 = v2 * to_voltage_scale
 
-        self.__set_voltages(out_to_v, out_to_v)
+        # set the voltage.
+        self.__set_voltages(out_to_v1, out_to_v2)
 
-        self.__logger.debug("TRG {:3.3f}\tINP {:3.3f}\tERR: {:3.3f}\tOUT: {:3.3f}"\
-            .format(self.__target_illumination, current_illumination, delta, out_to_v))
+        self.__logger.debug("TRG {:3.3f}\tINP {:3.3f}\tERR: {:3.3f}\tOUT1: {:3.3f}\tOUT2: {:3.3f}"\
+            .format(self.__target_illumination, current_illumination, delta, out_to_v1, out_to_v2))
 
 #endregion
 
