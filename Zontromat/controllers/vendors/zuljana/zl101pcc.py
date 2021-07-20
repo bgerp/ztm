@@ -254,19 +254,30 @@ class ZL101PCC(BaseController):
 
                 uuid = split_result[2]
 
-        else:
-            try:
-                import dmidecode
-                system = dmidecode.system()
-                for key in system:
-                    try:
-                        uuid = system[key]['data']['UUID']
+        elif "posix" in os.name:
 
-                    except(IndexError, KeyError):
-                        continue
+            # First try.
+            if uuid == "":
+                try:
+                    import dmidecode
+                    system = dmidecode.system()
+                    for key in system:
+                        try:
+                            uuid = system[key]['data']['UUID']
 
-            except Exception as e:
-                pass
+                        except(IndexError, KeyError):
+                            continue
+
+                except Exception as e:
+                    pass
+
+            # Second try
+            if uuid == "":
+                try:
+                    uuid = os.popen("dmidecode | grep -i uuid").read().split()[-1]
+
+                except Exception as e:
+                    pass
 
         return uuid
 
