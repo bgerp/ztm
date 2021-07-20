@@ -10,20 +10,31 @@ The application is provoking communication with specified server of bgERP.
 Server is responsible to give configuration and parameters to this app,
 immediately the application starts to control the chosen zones.
 
-The main hardware controller behind this app is [UniPi Neuron M503](https://www.unipi.technology/unipi-neuron-m503-p104) and [UniPi Neuron M523](https://www.unipi.technology/unipi-neuron-m523-p320)
-
-Software that is running on the controller is [Evok](https://www.unipi.technology/products/evok-47)
-
 ## Limitations
 
-- Design of the system is strictly made for this particular application.
-- Application support hardware only based on top of Neuron with latest version of Evok.
+- Design of the system is made for this particular application.
+- Application supports multiple types of hardware controllers.
 
 ## Compatible Hardware
 
 - Neuron S/M/L series.
 
 Note: Any other hardware will be supported on demand. If any other hardware is needed to be supported there is a specific HAL that enables that.
+
+[UniPi Neuron M503](https://www.unipi.technology/unipi-neuron-m503-p104)
+
+[UniPi Neuron M523](https://www.unipi.technology/unipi-neuron-m523-p320)
+
+
+Software that is running on the controller is [Evok](https://www.unipi.technology/products/evok-47)
+
+ - PiCons X1BlackTitanium
+
+Costume hardware made by POLYGON Team Ltd. Industrial Tablet powered by Raspberry Pi.
+
+ - Zuljana zl101pcc
+
+Costume hardware made by Zuljana. Industrial  Tablet powered by Intel x86.
 
 ## License
 
@@ -58,41 +69,51 @@ The file is in following format:
 
 ### Manual
 
- - All necessary settings are placed ni settings.yaml the file is located: **/opt/Zontromat/Zontromat/settings.yaml**.
+ - All necessary settings are placed ni settings.ini the file is located: **/opt/Zontromat/settings.ini**.
 
  - The structure of the file is following:
 
-```yaml
-# Application
-application:
+```ini
+[APPLICATION]
+debug_level = 10
+; CRITICAL 50
+; ERROR 40
+; WARNING 30
+; INFO 20
+; DEBUG 10
+; NOTSET 0
 
-  # CRITICAL 50
-  # ERROR 40
-  # WARNING 30
-  # INFO 20
-  # DEBUG 10
-  # NOTSET 0
-  debug_level: 10
+; Hardware
+[CONTROLLER]
+timeout = 0.1
 
-# Hardware
-controller:
+; Neuron Interface
+; model = M503
+; vendor = unipi
+; host = http://176.33.1.207:8080
 
-  # IP address of the hardware. It will be replaced with 127.0.0.1
-  host: http://localhost:8080
-  timeout: 5
-  vendor: unipi
-  model: M503
-  
-# Remote server.
-erp_service:
+; PiCons Interface
+; model = X1BlackTitanium
+; vendor = pt
+; host = http://admin:admin@176.33.1.254:8090
 
-  # Remote server host address.
-  host: http://bcvt.eu
-  timeout: 5
-  config_time: 1594203916
+; Zuljana Interface
+vendor = zuljana
+model = zl101pcc
+modbus_rtu_port = COM10
+modbus_rtu_baud = 9600
 
+; Remote ERP service.
+[ERP_SERVICE]
+config_time = 1594203916
+erp_id = 0000-0000-0000-0000
+host = https://ip.of.the.bgERP/
+timeout = 5
 ```
-This file is auto generated and it is not dependant of version control.
+
+This file is auto generated in the first time of the application start.
+After its generation the application is killed.
+It is not dependant of the version control.
 This means that in moment of generation it will be with its default settings. And if you want to change something, you will be able by simply edit the file with your favorite text editor.
 
 Some of the field are auto generated like "config_time". This field is used for automatic detection when was last time of generating configuration. The field is used mostly of automated methods. In case you want to change it manually we recommend to use:
@@ -127,42 +148,52 @@ Log files are automatically generate files by the Zontromat software.
 The files has the following format:
 
 ```log
-2020-07-09 09:33:42,646	INFO	__main__	Starting
-2020-07-09 09:33:42,649	INFO	plugins.status_led.status_led	Starting up the Status LED
-2020-07-09 09:33:42,654	INFO	zone	Zone state: ZoneState.Init
+2021-07-19 10:33:51,369	INFO	zone	:227	Controller vendor(Bao Bao Industries) / model(ZL101PCC) 
+2021-07-19 10:33:51,372	INFO	plugins.plugins_manager	:367	Found plugin: ac
+2021-07-19 10:33:51,372	INFO	plugins.plugins_manager	:367	Found plugin: blinds
+2021-07-19 10:33:51,373	INFO	plugins.plugins_manager	:367	Found plugin: ecc
+2021-07-19 10:33:51,374	INFO	plugins.plugins_manager	:367	Found plugin: ecd
+2021-07-19 10:33:51,374	INFO	plugins.plugins_manager	:367	Found plugin: echp
+2021-07-19 10:33:51,375	INFO	plugins.plugins_manager	:367	Found plugin: envm
+2021-07-19 10:33:51,375	INFO	plugins.plugins_manager	:367	Found plugin: hvac
+2021-07-19 10:33:51,376	INFO	plugins.plugins_manager	:367	Found plugin: light
+2021-07-19 10:33:51,376	INFO	plugins.plugins_manager	:367	Found plugin: monitoring
+2021-07-19 10:33:51,377	INFO	plugins.plugins_manager	:367	Found plugin: sys
+2021-07-19 10:33:51,377	INFO	plugins.plugins_manager	:367	Found plugin: vent
+2021-07-19 10:33:51,403	INFO	zone	:342	ERP state: ERPState.Login
+2021-07-19 10:33:51,659	INFO	zone	:517	Starting up the Zone
 ```
 
  - The first segment is date and time of the event: **2020-07-09 09:33:42,646**
  - The Second segment is level of the log of the event: **INFO**
- - The Third segment is the message source: **__main__**
-(In this case name of the module.)
- - And the fourth segment is the actual message: **Starting**
+ - The Third segment is the message source: **zone** (In this case name of the module.)
+ - The fourth segment is line number of the event in the code: **:227**
+ - And the fifth segment is the actual message: **Controller vendor(Bao Bao Industries) / model(ZL101PCC)**
 
 2. Log location
 
-The log files are located at: **/opt/Zontromat/Zontromat/logs**
+The log files are located at: **/opt/Zontromat/logs**
 
-3. Log name
+1. Log name
 
 The name of the file is formatted by the following way: **YYYYMMDD.log**
 Example: **20200709.log**
 
 4. Log level
 
-The level of logging is placed in the setting.yaml described in the previous head. In segment "application->debug_level" it can be changed.
+The level of logging is placed in the setting.ini described in the previous head. In segment "application->debug_level" it can be changed.
 
 Example:
 
-```yaml
-application:
-
-  # CRITICAL 50
-  # ERROR 40
-  # WARNING 30
-  # INFO 20
-  # DEBUG 10
-  # NOTSET 0
-  debug_level: 10
+```ini
+[APPLICATION]
+debug_level = 10
+; CRITICAL 50
+; ERROR 40
+; WARNING 30
+; INFO 20
+; DEBUG 10
+; NOTSET 0
 ```
 
 ## Application dependency graph
@@ -178,12 +209,12 @@ For generating the dependency graph you need to do the following steps.
 
   - Call tha following module in **Windows**.
  ```sh
-python -m pydeps .\zontromat\main.py --max-bacon 33 --cluster --max-cluster-size 101 --noise-level 33 --include-missing --keep-target-cluster --rmprefix data. services. bgERP. devices. controllers. plugins. utils. sys. -o .\app_deps_graph.svg
+python -m pydeps .\zontromat\main.py --max-bacon 33 --cluster --max-cluster-size 101 --noise-level 33 --include-missing --keep-target-cluster --rmprefix data. services. bgERP. devices. controllers. plugins. utils. sys. -o .\doc\app_deps_graph.svg --show-deps >> .\doc\app_deps_graph.json
  ```
  
   - Call tha following module in **Linux**.
  ```sh
-python3 -m pydeps .\zontromat\main.py --max-bacon 33 --cluster --max-cluster-size 101 --noise-level 33 --include-missing --keep-target-cluster --rmprefix data. services. bgERP. devices. controllers. plugins. utils. sys. -o .\app_deps_graph.svg
+python3 -m pydeps .\zontromat\main.py --max-bacon 33 --cluster --max-cluster-size 101 --noise-level 33 --include-missing --keep-target-cluster --rmprefix data. services. bgERP. devices. controllers. plugins. utils. sys. -o .\doc\app_deps_graph.svg --show-deps >> .\doc\app_deps_graph.json
  ```
  
   - The result will be write ans SVG in **app_deps_graph.svg**
