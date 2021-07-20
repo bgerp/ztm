@@ -202,8 +202,15 @@ class Server(HTTPServer):
             response = "{}", 200
             token = ""
                         
-            if request.data is not None and request.data != "":
-                json_data = json.loads(request.data)
+            if request.data is not None and len(request.data) != 0:
+                content = request.data.decode("UTF-8")
+                if content != "" and content != None:
+                    json_data = json.loads(content)
+
+            if request.form is not None and len(request.form) != 0:
+                content = request.form.get("params")
+                if content != "" and content != None:
+                    json_data = json.loads(content)
 
             if "token" in json_data:
                 token = json_data["token"]
@@ -214,11 +221,21 @@ class Server(HTTPServer):
             if token != self.__session.session:
                 return "Invalid token.", 401
 
+            if "registers" not in json_data:
+                return "Bad Request", 400 
+
+            if json_data["registers"] is None:
+                return "Not Found", 404
+
+            if len(json_data["registers"]) == 0:
+                return "Not Found", 404 
+
             if self.__set_registers is not None:
                 registers = self.__set_registers(json_data)
 
             response = make_response(registers)
             response.headers["Content-Type"] = "application/json; charset=utf-8"
+            response.headers["Access-Control-Allow-Origin"] = "*"
 
             return response
 
