@@ -123,6 +123,21 @@ class Ventilation(BasePlugin):
 
 #region Private Methods (Colision Detection)
 
+    def __op_setpoint_cb(self, register: Register):
+
+        # Check data type.
+        if not (register.data_type == "float" or register.data_type == "int"):
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        # TODO: Create formula.
+        # The fans have 3 points where setpoint might come simultaneously.
+        # - HVAC module.
+        # - Manual from the tablet.
+        # - Access control when people have in the zone.
+        print(register.value)
+
+
     # Upper fan
     def __upper_fan_settings_cb(self, register: Register):
 
@@ -256,6 +271,12 @@ class Ventilation(BasePlugin):
 
 
     def __init_registers(self):
+
+        # Operator setpoint.
+        op_setpoint = self._registers.by_name("{}.op_setpoint_{}".format(self.key, self.__identifier))
+        if op_setpoint is not None:
+            op_setpoint.update_handlers = self.__op_setpoint_cb
+            op_setpoint.update()
 
         # Upper fan
         upper_fan_enabled = self._registers.by_name("{}.upper_{}.fan.settings".format(self.key, self.__identifier))
