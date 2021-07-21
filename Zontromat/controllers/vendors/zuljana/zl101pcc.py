@@ -281,6 +281,10 @@ class ZL101PCC(BaseController):
                     uuid = ""
                     pass
 
+        # If bytes then covert to string.
+        if type(uuid) == bytes:
+            uuid = uuid.decode('utf-8') 
+
         return uuid
 
 #endregion
