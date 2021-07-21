@@ -135,8 +135,17 @@ class Ventilation(BasePlugin):
         # - HVAC module.
         # - Manual from the tablet.
         # - Access control when people have in the zone.
-        print(register.value)
+        self.__logger.info("Ventilation manual set point: {}".format(register.value))
 
+        # Lower fan speed. TODO: REMOVE after tests.
+        lower_fan_speed = self._registers.by_name("{}.lower_{}.fan.speed".format(self.key, self.__identifier))
+        if lower_fan_speed is not None:
+            lower_fan_speed.value = register.value
+
+        # Upper fan speed. TODO: REMOVE after tests.
+        upper_fan_speed = self._registers.by_name("{}.upper_{}.fan.speed".format(self.key, self.__identifier))
+        if upper_fan_speed is not None:
+            upper_fan_speed.value = register.value
 
     # Upper fan
     def __upper_fan_settings_cb(self, register: Register):
@@ -294,10 +303,10 @@ class Ventilation(BasePlugin):
             upper_fan_max.update_handlers = self.__upper_fan_max_cb
             upper_fan_max.update()
 
-        lower_fan_speed = self._registers.by_name("{}.upper_{}.fan.speed".format(self.key, self.__identifier))
-        if lower_fan_speed is not None:
-            lower_fan_speed.update_handlers = self.__upper_fan_speed_cb
-            lower_fan_speed.update()
+        upper_fan_speed = self._registers.by_name("{}.upper_{}.fan.speed".format(self.key, self.__identifier))
+        if upper_fan_speed is not None:
+            upper_fan_speed.update_handlers = self.__upper_fan_speed_cb
+            upper_fan_speed.update()
 
         # Lower fan
         lower_fan_enabled = self._registers.by_name("{}.lower_{}.fan.settings".format(self.key, self.__identifier))
