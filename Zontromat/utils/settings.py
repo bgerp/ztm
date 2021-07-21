@@ -200,7 +200,7 @@ class ApplicationSettings:
                     "timeout": 0.1,
                     "vendor": "zuljana",
                     "model": "zl101pcc",
-                    "modbus_rtu_port": "COM1",
+                    "modbus_rtu_port": "/dev/ttyUSB0",
                     "modbus_rtu_baud": 9600
                     }
 
