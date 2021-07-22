@@ -239,6 +239,53 @@ class ZL101PCC(BaseController):
 
 #region Private Methods
 
+    def __get_posix_machine_id(self):
+
+        machine_id = ""
+
+        try:
+            machine_id = os.popen("cat /etc/machine-id").read().split()[-1]
+
+        except Exception as e:
+            pass
+
+        return machine_id
+
+    def __get_posix_uuid(self):
+
+        uuid = ""
+        
+        # First try.
+        if uuid == "":
+            try:
+                import dmidecode
+                system = dmidecode.system()
+                for key in system:
+                    try:
+                        uuid = system[key]['data']['UUID']
+
+                    except(IndexError, KeyError):
+                        continue
+
+            except Exception as e:
+                uuid = ""
+                pass
+
+        # Second try
+        if uuid == "":
+            try:
+                uuid = os.popen("dmidecode | grep -i uuid").read().split()[-1]
+
+            except Exception as e:
+                uuid = ""
+                pass
+
+        # If bytes then covert to string.
+        if type(uuid) == bytes:
+            uuid = uuid.decode('utf-8') 
+
+        return uuid
+
     def __get_hardware_id(self):
 
         uuid = ""
@@ -256,34 +303,10 @@ class ZL101PCC(BaseController):
 
         elif "posix" in os.name:
 
-            # First try.
-            if uuid == "":
-                try:
-                    import dmidecode
-                    system = dmidecode.system()
-                    for key in system:
-                        try:
-                            uuid = system[key]['data']['UUID']
+            # uuid = self.__get_posix_uuid()
+            uuid = self.__get_posix_machine_id()
 
-                        except(IndexError, KeyError):
-                            continue
 
-                except Exception as e:
-                    uuid = ""
-                    pass
-
-            # Second try
-            if uuid == "":
-                try:
-                    uuid = os.popen("dmidecode | grep -i uuid").read().split()[-1]
-
-                except Exception as e:
-                    uuid = ""
-                    pass
-
-        # If bytes then covert to string.
-        if type(uuid) == bytes:
-            uuid = uuid.decode('utf-8') 
 
         return uuid
 
