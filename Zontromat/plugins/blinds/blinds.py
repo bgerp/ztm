@@ -346,7 +346,7 @@ class Blinds(BasePlugin):
 
 #endregion
 
-#region Private Methods
+#region Private Methods (PLC I/O)
 
     def __stop(self):
         """Stop the engine."""
@@ -397,6 +397,10 @@ class Blinds(BasePlugin):
             # self.__logger.debug(f"Voltage: {value:02.4f}")
 
         return fb_value
+
+#endregion
+
+#region Private Methods
 
     def __set_position(self, position):
 
