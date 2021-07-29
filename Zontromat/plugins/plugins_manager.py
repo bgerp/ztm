@@ -62,7 +62,7 @@ __status__ = "Debug"
 #endregion
 
 class PluginsManager:
-    """Template class doc."""
+    """Plugin manager."""
 
 #region Attributes
 
@@ -87,18 +87,40 @@ class PluginsManager:
 
         Args:
             registers (Registers): Registers class instance.
-            controller (BaseController): Hardware controller
+            controller (BaseController): Hardware controller.
         """
 
         self.__logger = get_logger(__name__)
         self.__plugins = {}
         self.__registers = registers
         self.__controller = controller
-        self.__add_handlers()
+        self.__add_enable_handlers()
 
 #endregion
 
-#region Private Methods Enable Handlers
+#region Private Methods
+
+    def __find_plugins(self):
+
+        list_of_dirs = []
+
+        dir_path = os.path.dirname(os.path.realpath(__file__))
+
+        dirs = os.listdir(dir_path)
+        for item in dirs:
+
+            if item.startswith("__"):
+                continue
+
+            if item == "template_plugin":
+                continue
+
+            plugin_path = os.path.join(dir_path, item)
+
+            if os.path.isdir(plugin_path):
+                list_of_dirs.append(item)
+
+        return list_of_dirs
 
     def __prepare_config(self, name, key):
         """Prepare configuration of the plugin.
@@ -158,29 +180,7 @@ class PluginsManager:
 
         return class_isinstance
 
-    def __list_plugins(self):
-
-        list_of_dirs = []
-
-        dir_path = os.path.dirname(os.path.realpath(__file__))
-
-        dirs = os.listdir(dir_path)
-        for item in dirs:
-
-            if item.startswith("__"):
-                continue
-
-            if item == "template_plugin":
-                continue
-
-            plugin_path = os.path.join(dir_path, item)
-
-            if os.path.isdir(plugin_path):
-                list_of_dirs.append(item)
-
-        return list_of_dirs
-
-    def __ac_enabled(self, register):
+    def __enable_plugin_cb(self, register):
 
         # Check data type.
         if not register.data_type == "bool":
@@ -196,241 +196,24 @@ class PluginsManager:
             self.__plugins[name].shutdown()
             del self.__plugins[name]
 
-    def __blinds_enabled(self, register):
+    def __add_enable_handlers(self):
 
-        # Check data type.
-        if not register.data_type == "bool":
-            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
-            return
-
-        name = "blinds"
-        if register.value and name not in self.__plugins:
-            self.__plugins[name] = self.__load_plugin(name)
-            self.__plugins[name].init()
-
-        elif not register.value and name in self.__plugins:
-            self.__plugins[name].shutdown()
-            del self.__plugins[name]
-
-    def __monitoring_enabled(self, register):
-
-        # Check data type.
-        if not register.data_type == "bool":
-            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
-            return
-
-        name = register.base_name
-        if register.value and name not in self.__plugins:
-            self.__plugins[name] = self.__load_plugin(name)
-            self.__plugins[name].init()
-
-        elif not register.value and name in self.__plugins:
-            self.__plugins[name].shutdown()
-            del self.__plugins[name]
-
-    def __envm_enabled(self, register):
-
-        # Check data type.
-        if not register.data_type == "bool":
-            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
-            return
-
-        name = register.base_name
-        if register.value and name not in self.__plugins:
-            self.__plugins[name] = self.__load_plugin(name)
-            self.__plugins[name].init()
-
-        elif not register.value and name in self.__plugins:
-            self.__plugins[name].shutdown()
-            del self.__plugins[name]
-
-    def __hvac_enabled(self, register):
-
-        # Check data type.
-        if not register.data_type == "bool":
-            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
-            return
-
-        name = register.base_name
-        if register.value and name not in self.__plugins:
-            self.__plugins[name] = self.__load_plugin(name)
-            self.__plugins[name].init()
-
-        elif not register.value and name in self.__plugins:
-            self.__plugins[name].shutdown()
-            del self.__plugins[name]
-
-    def __light_enabled(self, register):
-
-        # Check data type.
-        if not register.data_type == "bool":
-            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
-            return
-
-        name = register.base_name
-        if register.value and name not in self.__plugins:
-            self.__plugins[name] = self.__load_plugin(name)
-            self.__plugins[name].init()
-
-        elif not register.value and name in self.__plugins:
-            self.__plugins[name].shutdown()
-            del self.__plugins[name]
-
-    def __sys_enabled(self, register):
-
-        # Check data type.
-        if not register.data_type == "bool":
-            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
-            return
-
-        name = register.base_name
-        if register.value and name not in self.__plugins:
-            self.__plugins[name] = self.__load_plugin(name)
-            self.__plugins[name].init()
-
-        elif not register.value and name in self.__plugins:
-            self.__plugins[name].shutdown()
-            del self.__plugins[name]
-
-    def __ecc_enabled(self, register):
-
-        # Check data type.
-        if not register.data_type == "bool":
-            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
-            return
-
-        name = register.base_name
-        if register.value and name not in self.__plugins:
-            self.__plugins[name] = self.__load_plugin(name)
-            self.__plugins[name].init()
-
-        elif not register.value and name in self.__plugins:
-            self.__plugins[name].shutdown()
-            del self.__plugins[name]
-
-    def __ecd_enabled(self, register):
-
-        # Check data type.
-        if not register.data_type == "bool":
-            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
-            return
-
-        name = register.base_name
-        if register.value and name not in self.__plugins:
-            self.__plugins[name] = self.__load_plugin(name)
-            self.__plugins[name].init()
-
-        elif not register.value and name in self.__plugins:
-            self.__plugins[name].shutdown()
-            del self.__plugins[name]
-
-    def __echp_enabled(self, register):
-
-        # Check data type.
-        if not register.data_type == "bool":
-            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
-            return
-
-        name = register.base_name
-        if register.value and name not in self.__plugins:
-            self.__plugins[name] = self.__load_plugin(name)
-            self.__plugins[name].init()
-
-        elif not register.value and name in self.__plugins:
-            self.__plugins[name].shutdown()
-            del self.__plugins[name]
-
-    def __vent_enabled(self, register):
-
-        # Check data type.
-        if not register.data_type == "bool":
-            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
-            return
-
-        name = register.base_name
-        if register.value and name not in self.__plugins:
-            self.__plugins[name] = self.__load_plugin(name)
-            self.__plugins[name].init()
-
-        elif not register.value and name in self.__plugins:
-            self.__plugins[name].shutdown()
-            del self.__plugins[name]
-
-#endregion
-
-#region Private Methods
-
-    def __add_handlers(self):
-
-        names = self.__list_plugins()
+        names = self.__find_plugins()
         for name in names:
             self.__logger.info("Found plugin: {}".format(name))
 
-        register = self.__registers.by_name("ac.enabled")
-        if register is not None:
-            register.update_handlers = self.__ac_enabled
-            # register.update()
-
-        register = self.__registers.by_name("blinds.enabled")
-        if register is not None:
-            register.update_handlers = self.__blinds_enabled
-            # register.update()
-
-        register = self.__registers.by_name("monitoring.enabled")
-        if register is not None:
-            register.update_handlers = self.__monitoring_enabled
-            # register.update()
-
-        register = self.__registers.by_name("envm.enabled")
-        if register is not None:
-            register.update_handlers = self.__envm_enabled
-            # register.update()
-
-        register = self.__registers.by_name("hvac.enabled")
-        if register is not None:
-            register.update_handlers = self.__hvac_enabled
-            # register.update()
-
-        register = self.__registers.by_name("light.enabled")
-        if register is not None:
-            register.update_handlers = self.__light_enabled
-            # register.update()
-
-        register = self.__registers.by_name("sys.last_minute_errs")
-        if register is not None:
-            GlobalErrorHandler.set_register(register)
-
-        register = self.__registers.by_name("sys.enabled")
-        if register is not None:
-            register.update_handlers = self.__sys_enabled
-            # register.update()
-
-        register = self.__registers.by_name("ecc.enabled")
-        if register is not None:
-            register.update_handlers = self.__ecc_enabled
-            # register.update()
-
-        register = self.__registers.by_name("ecd.enabled")
-        if register is not None:
-            register.update_handlers = self.__ecd_enabled
-            # register.update()
-
-        register = self.__registers.by_name("echp.enabled")
-        if register is not None:
-            register.update_handlers = self.__echp_enabled
-            # register.update()
-
-        register = self.__registers.by_name("vent.enabled")
-        if register is not None:
-            register.update_handlers = self.__vent_enabled
-            # register.update()
+            register = self.__registers.by_name("{}.enabled".format(name))
+            if register is not None:
+                register.update_handlers = self.__enable_plugin_cb
+                register.update()
 
 #endregion
 
 #region Public Methods
 
     def update(self):
-        """Update plugins."""
+        """Update plugins.
+        """
 
         for key in self.__plugins:
 
@@ -441,7 +224,8 @@ class PluginsManager:
                 self.__logger.error(traceback.format_exc())
 
     def shutdown(self):
-        """Shutdown plugins."""
+        """Shutdown plugins.
+        """
 
         for key in self.__plugins:
 
