@@ -241,6 +241,8 @@ class ZL101PCC(BaseController):
 
     def __get_posix_machine_id(self):
 
+        # https://askubuntu.com/questions/1200357/an-unique-key-id-that-corresponds-to-only-one-combination-of-ubuntu-os-and-hardw
+
         machine_id = ""
 
         try:
