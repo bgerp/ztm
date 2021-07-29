@@ -2738,5 +2738,35 @@
         "plugin": "Ventilation",
         "range": "",
         "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "",
+        "description": "Alarm module sound device settings.",
+        "limit": 0.0,
+        "name": "alarm.device.sound.settings",
+        "plugin": "Alarm",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "",
+        "description": "Alarm module visual device settings.",
+        "limit": 0.0,
+        "name": "alarm.device.visual.settings",
+        "plugin": "Alarm",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "bool",
+        "default": false,
+        "description": "Alarm module enable flag.",
+        "limit": 0.0,
+        "name": "alarm.enabled",
+        "plugin": "Alarm",
+        "range": "true|false",
+        "scope": "System"
     }
 ]

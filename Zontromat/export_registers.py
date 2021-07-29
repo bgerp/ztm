@@ -67,6 +67,7 @@ __registers = None
 """Registers"""
 
 __range = {
+    "NONE": "",
     "DI": "off|DI0|DI1|DI2|DI3|DI4|DI5|DI6|DI7|DI8|!DI0|!DI1|!DI2|!DI3|!DI4|!DI5|!DI6|!DI7|!DI8",
     "DO": "off|DO0|DO1|DO2|DO3|DO4|DO5|DO6|DO7|DO8|!DO0|!DO1|!DO2|!DO3|!DO4|!DO5|!DO6|!DO7|!DO8",
     "RO": "off|RO0|RO1|RO2|RO3|RO4|RO5|RO6|RO7|RO8|!RO0|!RO1|!RO2|!RO3|!RO4|!RO5|!RO6|!RO7|!RO8",
@@ -2562,6 +2563,38 @@ def __add_registers():
     __registers.append(register)
 
 #endregion
+
+#region Ventilation (alarm)
+
+    # Visual signal device.
+    register = Register("alarm.device.sound.settings")
+    register.scope = Scope.System
+    register.plugin_name = "Alarm"
+    register.description = "Alarm module sound device settings."
+    register.range = __range["NONE"]
+    register.value = ""
+    __registers.append(register)
+
+    # Visual signal device.
+    register = Register("alarm.device.visual.settings")
+    register.scope = Scope.System
+    register.plugin_name = "Alarm"
+    register.description = "Alarm module visual device settings."
+    register.range = __range["NONE"]
+    register.value = ""
+    __registers.append(register)
+
+    # Enable
+    register = Register("alarm.enabled")
+    register.scope = Scope.System
+    register.plugin_name = "Alarm"
+    register.description = "Alarm module enable flag."
+    register.range = __range["BOOL"]
+    register.value = False
+    __registers.append(register)
+
+#endregion
+
 
 def main():
     global __registers, __range
