@@ -741,14 +741,14 @@ class HeatPumpControllGroup(BasePlugin):
 
         # Open cold circuit.
         self.__vcg_cold_buff.target_position = output_power
-        self.__cold_water_pump.set_debit(output_power)
+        self.__cold_water_pump.set_setpoint(output_power)
 
         # Open warm circuit.
         self.__vcg_warm_geo.target_position = output_power
-        self.__warm_p_water_pump.set_debit(output_power)
+        self.__warm_p_water_pump.set_setpoint(output_power)
 
         # run pump for hot circuit.
-        self.__hot_water_pump.set_debit(output_power)
+        self.__hot_water_pump.set_setpoint(output_power)
 
         # ========================================================================
 

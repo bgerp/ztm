@@ -22,7 +22,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 
-from devices.vendors.Grundfos.pump import Pump
+from devices.vendors.Grundfos.magna1_80_100_f_360_1x230v_pn6.magna1_80_100_f_360_1x230v_pn6 import MAGNA1_80_100_F_360_1x230V_PN6
+from devices.vendors.Grundfos.magna3_40_150_f_q.magna3_40_150_f_q import Magna3_40_150_F_Q
+from devices.vendors.Grundfos.magna3_40_180_f_250_1x230v_pn6_10.magna3_40_180_f_250_1x230v_pn6_10 import MAGNA3_40_180_F_250_1x230V_PN6_10
+from devices.vendors.Grundfos.nbe_65_125_127s2af2abqqe.nbe_65_125_127s2af2abqqe import NBE_65_125_127S2AF2ABQQE
+from devices.vendors.Grundfos.tp_80_240_2_a_f_b_baqe_lx1_ie3.tp_80_240_2_a_f_b_baqe_lx1_ie3 import TP_80_240_2_A_F_B_BAQE_LX1_IE3
+from devices.vendors.Grundfos.tpe3_40_240_s_a_f_a_bqbe_hac_ie5.tpe3_40_240_s_a_f_a_bqbe_hac_ie5 import TPE3_40_240_S_A_F_A_BQBE_HAC_IE5
+from devices.vendors.Grundfos.tpe3_40_240_s_a_f_a_bqbe_hdc_ie5.tpe3_40_240_s_a_f_a_bqbe_hdc_ie5 import TPE3_40_240_S_A_F_A_BQBE_HDC_IE5
+from devices.vendors.Grundfos.tpe_100_240_2_s_a_f_a_baqemdb.tpe_100_240_2_s_a_f_a_baqemdb import TPE_100_240_2_S_A_F_A_BAQEMDB
 
 #region File Attributes
 
@@ -94,10 +101,73 @@ class PumpFactory:
         else:
             raise ValueError("No \"controller\" argument has been passed.") 
 
-        # Grundfos / Pump / 0
-        if vendor == "Grundfos" and  model == "Pump":
+        # Grundfos / MAGNA1_80_100_F_360_1x230V_PN6 / 0
+        if vendor == "Grundfos" and  model == "MAGNA1_80_100_F_360_1x230V_PN6":
 
-            device = Pump(
+            device = MAGNA1_80_100_F_360_1x230V_PN6(
+                name=name,
+                controller=controller,
+                unit=int(config["params"][2])
+            )
+
+        # Grundfos / Magna3_40_150_F_Q / 0
+        elif vendor == "Grundfos" and  model == "Magna3_40_150_F_Q":
+
+            device = Magna3_40_150_F_Q(
+                name=name,
+                controller=controller,
+                unit=int(config["params"][2])
+            )
+
+        # Grundfos / MAGNA3_40_180_F_250_1x230V_PN6_10 / 0
+        elif vendor == "Grundfos" and  model == "MAGNA3_40_180_F_250_1x230V_PN6_10":
+
+            device = MAGNA3_40_180_F_250_1x230V_PN6_10(
+                name=name,
+                controller=controller,
+                unit=int(config["params"][2])
+            )
+
+        # Grundfos / NBE_65_125_127S2AF2ABQQE / 0
+        elif vendor == "Grundfos" and  model == "NBE_65_125_127S2AF2ABQQE":
+
+            device = NBE_65_125_127S2AF2ABQQE(
+                name=name,
+                controller=controller,
+                unit=int(config["params"][2])
+            )
+
+        # Grundfos / TP_80_240_2_A_F_B_BAQE_LX1_IE3 / 0
+        elif vendor == "Grundfos" and  model == "TP_80_240_2_A_F_B_BAQE_LX1_IE3":
+
+            device = TP_80_240_2_A_F_B_BAQE_LX1_IE3(
+                name=name,
+                controller=controller,
+                unit=int(config["params"][2])
+            )
+
+        # Grundfos / TPE_100_240_2_S_A_F_A_BAQEMDB / 0
+        elif vendor == "Grundfos" and  model == "TPE_100_240_2_S_A_F_A_BAQEMDB":
+
+            device = TPE_100_240_2_S_A_F_A_BAQEMDB(
+                name=name,
+                controller=controller,
+                unit=int(config["params"][2])
+            )
+
+        # Grundfos / TPE3_40_240_S_A_F_A_BQBE_HAC_IE5 / 0
+        elif vendor == "Grundfos" and  model == "TPE3_40_240_S_A_F_A_BQBE_HAC_IE5":
+
+            device = TPE3_40_240_S_A_F_A_BQBE_HAC_IE5(
+                name=name,
+                controller=controller,
+                unit=int(config["params"][2])
+            )
+
+        # Grundfos / TPE3_40_240_S_A_F_A_BQBE_HDC_IE5 / 0
+        elif vendor == "Grundfos" and  model == "TPE3_40_240_S_A_F_A_BQBE_HDC_IE5":
+
+            device = TPE3_40_240_S_A_F_A_BQBE_HDC_IE5(
                 name=name,
                 controller=controller,
                 unit=int(config["params"][2])

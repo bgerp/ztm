@@ -99,7 +99,7 @@ class TestStringMethods(unittest.TestCase):
 
         registers = self.__load_registers()
 
-        params = ["Grundfos", "Pump", "0"]
+        params = ["Grundfos", "MAGNA1_80_100_F_360_1x230V_PN6", "0"]
         pump = PumpFactory.create(
             name="GRUNFOS",
             controller=controller,
