@@ -62,7 +62,7 @@ __class_name__ = "TemplatePlugin"
 #endregion
 
 class TemplatePlugin(BasePlugin):
-    """Blinds controller device."""
+    """Template plugin controller."""
 
 #region Attributes
 
@@ -97,13 +97,14 @@ class TemplatePlugin(BasePlugin):
     def _update(self):
         """Update the plugin.
         """
+
         # Update the timer.
         self.__update_timer.update()
 
         if self.__update_timer.expired:
-        
+
             self.__update_timer.clear()
-        
+
             self.__do_job()
 
     def _shutdown(self):
