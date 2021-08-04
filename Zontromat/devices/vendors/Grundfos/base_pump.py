@@ -243,8 +243,6 @@ class BasePump(ModbusDevice):
         """Update the pump logic.
         """
 
-        # TODO: Check which register is responsible for controlling the debit of the pump.
-
         pass
 
     def shutdown(self):

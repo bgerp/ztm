@@ -404,7 +404,6 @@ class FLX05F(BaseValve):
             if self.__calibration_state.is_state(CalibrationState.Error):
 
                 GlobalErrorHandler.log_hardware_malfunction(self.__logger, "The valve {} can not calibrated.".format(self.name))
-                # TODO: Should we take some action.
                 self._state.set_state(ValveState.Wait)
 
             # - Close the valve.
