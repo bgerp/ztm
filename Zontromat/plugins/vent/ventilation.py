@@ -375,3 +375,5 @@ class Ventilation(BasePlugin):
         self.__lower_fan_dev.shutdown()
         
 #endregion
+
+    # TODO: Change the formula. Ventilation will call the HVAC, AC, MANUAL registers.

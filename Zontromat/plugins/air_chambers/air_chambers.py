@@ -112,7 +112,7 @@ class AirChambers(BasePlugin):
 
 #endregion
 
-#region Public Methods
+#region Protected Methods
 
     def _init(self):
         """Initialize the plugin.
@@ -125,6 +125,9 @@ class AirChambers(BasePlugin):
 
         self.__init_registers()
 
+        # TODO: Check is it necessary to create a air chamber abstraction. Yes it is necessary.
+        # TODO: Create tcp modbus master.
+
     def _update(self):
         """Update the plugin.
         """
@@ -136,6 +139,8 @@ class AirChambers(BasePlugin):
             self.__update_timer.clear()
         
             self.__do_job()
+
+            # TODO: Pull the data from the chambers.
 
     def _shutdown(self):
         """Shutting down the plugin.
