@@ -39,6 +39,7 @@ from utils.logic.timer import Timer
 from controllers.controller_factory import ControllerFactory
 
 from bgERP.bgERP import bgERP
+from bgERP.erp_state import ERPState
 
 from data.register import Scope
 from data.registers import Registers
@@ -88,14 +89,6 @@ class EnergyMode(Enum):
     Normal = 1 # normal (нормален)
     Accumulate = 2 # accumulate (акумулиране)
     Generator = 3 # generator (на генератор)
-
-class ERPState(Enum):
-    """ERP state machine flags.
-    """
-
-    NONE = 0
-    Login = 1
-    Update = 2
 
 class Zone():
     """Main zone class"""
@@ -153,27 +146,7 @@ class Zone():
 
 #endregion
 
-#region Private Methods
-
-    def __init_runtime(self):
-
-        # Set the performance profiler.
-        self.__performance_profiler.enable_mem_profile = True
-        self.__performance_profiler.enable_time_profile = True
-        self.__performance_profiler.on_time_change(self.__on_time_change)
-        self.__performance_profiler.on_memory_change(self.__on_memory_change)
-
-        # Setup the performance profiler timer. (60) 10 is for tests.
-        self.__performance_profiler_timer = Timer(10)
-    
-        # Update timer.
-        self.__update_timer = Timer(self.__update_rate)
-            
-        # Update with offset based on the serial number of the device.
-        time_offset = 0
-        if self.__controller.serial_number is not None and self.__controller.serial_number.isdigit():
-            time_offset = int(self.__controller.serial_number)
-        self.__update_timer.expiration_time = self.__update_timer.expiration_time + (time_offset / 1000)
+#region Private Methods (Registers Interface)
 
     def __init_registers(self):
         """Setup registers source.
@@ -189,6 +162,10 @@ class Zone():
         # Load from JSON file.
         registers_file = os.path.join(cwf, "..", "registers.json")
         self.__registers = Registers.from_JSON(registers_file)
+
+#endregion
+
+#region Private Methods (PLC)
 
     def __evok_cb(self, device):
         """EVOK callback service handler.
@@ -211,7 +188,9 @@ class Zone():
 
                     # If register exists, apply value.
                     required_name = input_reg.name.replace("input", "state")
-                    self.__registers.write(required_name, device["value"])
+
+                    if self.__registers is not None:
+                        self.__registers.write(required_name, device["value"])
 
     def __init_controller(self):
         """Initialize the controller.
@@ -253,6 +232,15 @@ class Zone():
 
 #region Private Methods (ERP)
 
+    def __on_erp_state_change_cb(self, machine):
+        """React on ERP state changes.
+
+        Args:
+            machine (StateMachine): State machine state.
+        """
+
+        self.__logger.info("ERP state: {}".format(machine.get_state()))
+
     def __erp_set_registers(self, data):
         """ERP set registers values.
 
@@ -261,7 +249,6 @@ class Zone():
         """
 
         # (Request to have WEB API for work with registers. MG @ 15.01.2021)
-
 
         result = {}
         registers = {}
@@ -330,18 +317,9 @@ class Zone():
         # Set zone state machine.
         self.__erp_state_machine = StateMachine()
         self.__erp_state_machine.on_change(self.__on_erp_state_change_cb)
-        self.__erp_state_machine.set_state(ERPState.Login)
+        self.__erp_state_machine.set_state(ERPState.NONE)
 
-    def __on_erp_state_change_cb(self, machine):
-        """React on ERP state changes.
-
-        Args:
-            machine (StateMachine): State machine state.
-        """
-
-        self.__logger.info("ERP state: {}".format(machine.get_state()))
-
-    def __login_erp(self):
+    def __erp_login(self):
         """Login to bgERP.
         """
 
@@ -370,7 +348,7 @@ class Zone():
         else:
             self.__erp_state_machine.set_state(ERPState.Login)
 
-    def __sync_erp(self):
+    def __erp_update(self):
         """Sync registers.
         """
 
@@ -386,10 +364,11 @@ class Zone():
             update_state = self.__erp.sync(ztm_regs_dict)
 
             if update_state is not None: #  is not None
-                self.__registers.update(update_state)
-
-                # Clear the last atendies. (Eml6287)
-                self.__registers.write("ac.last_update_attendees", str([]))
+                
+                if self.__registers is not None:
+                    self.__registers.update(update_state)
+                    # Clear the last atendies. (Eml6287)
+                    self.__registers.write("ac.last_update_attendees", str([]))
 
                 # (Eml6287)
                 # (Request to stop the queue from MG @ 15.01.2021)
@@ -416,18 +395,45 @@ class Zone():
 
         if self.__erp_state_machine.is_state(ERPState.Login):
             # Login room.
-            self.__login_erp()
+            self.__erp_login()
 
         elif self.__erp_state_machine.is_state(ERPState.Update):
             # Run the process of the room.
-            self.__sync_erp()
+            self.__erp_update()
 
         elif self.__erp_state_machine.is_state(ERPState.NONE):
             self.__erp_state_machine.set_state(ERPState.Login)
 
 #endregion
 
+#region Private Methods (Runtime)
+
+    def __init_runtime(self):
+
+        # Update timer.
+        self.__update_timer = Timer(self.__update_rate)
+
+        # Update with offset based on the serial number of the device.
+        time_offset = 0
+        if self.__controller.serial_number is not None and self.__controller.serial_number.isdigit():
+            time_offset = int(self.__controller.serial_number)
+        self.__update_timer.expiration_time = self.__update_timer.expiration_time + (time_offset / 1000)
+    
+#endregion
+
 #region Private Methods (Performance Profiler)
+
+    def __init_performance_profiler(self):
+        """Set the performance profiler.
+        """
+
+        self.__performance_profiler.enable_mem_profile = True
+        self.__performance_profiler.enable_time_profile = True
+        self.__performance_profiler.on_time_change(self.__on_time_change)
+        self.__performance_profiler.on_memory_change(self.__on_memory_change)
+
+        # Setup the performance profiler timer. (60) 10 is for tests.
+        self.__performance_profiler_timer = Timer(10)
 
     def __on_time_change(self, passed_time):
         """On consumed time change.
@@ -436,7 +442,9 @@ class Zone():
             passed_time (int): Consumed runtime.
         """
 
-        self.__registers.write("sys.time.usage", float("{:10.3f}".format(passed_time)))
+        if self.__registers is not None:
+
+            self.__registers.write("sys.time.usage", float("{:10.3f}".format(passed_time)))
 
     def __on_memory_change(self, current, peak):
         """On RAM memory change.
@@ -446,9 +454,10 @@ class Zone():
             peak (int): Peak RAM.
         """
 
-        self.__registers.write("sys.ram.current", float("{:10.4f}".format(current)))
+        if self.__registers is not None:
 
-        self.__registers.write("sys.ram.peak", float("{:10.4f}".format(peak)))
+            self.__registers.write("sys.ram.current", float("{:10.4f}".format(current)))
+            self.__registers.write("sys.ram.peak", float("{:10.4f}".format(peak)))
 
         # print(f"Current memory usage is {current / 10**3}kB; Peak was {peak / 10**3}kB")
 
@@ -499,6 +508,9 @@ class Zone():
             # Setup the ERP.
             self.__init_erp()
 
+            # Initialize the performance profiler.
+            self.__init_performance_profiler()
+    
             # Initialize the runtime.
             self.__init_runtime()
 
