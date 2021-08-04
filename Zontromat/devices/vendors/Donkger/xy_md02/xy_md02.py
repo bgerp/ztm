@@ -22,10 +22,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 
+from utils.logger import get_logger
+
 from devices.drivers.modbus.device import ModbusDevice
 from devices.drivers.modbus.parameter import Parameter
 from devices.drivers.modbus.parameter_type import ParameterType
 from devices.drivers.modbus.register_type import RegisterType
+
+from services.global_error_handler.global_error_handler import GlobalErrorHandler
 
 #region File Attributes
 
@@ -63,12 +67,35 @@ class XYMD02(ModbusDevice):
 
     See: http://sahel.rs/media/sah/techdocs/xy-md02-manual.pdf"""
 
+#region Attributes
+
+    __logger = None
+    """Logger
+    """
+
+    __last_good_measurement = 0
+    """Last good known value from the thermometer.
+    """
+
+    __unsuccessful_times = 0
+    """Unsuccessful times counter.
+    """
+
+    __unsuccessful_times_limit = 5
+    """Unrestful times limit counter.
+    """
+
+#endregion
+
 #region Constructor
 
     def __init__(self, **config):
         """Constructor"""
 
         super().__init__(config)
+
+        # Create logger.
+        self.__logger = get_logger(__name__)
 
         self._vendor = "Donkger"
 
@@ -127,11 +154,34 @@ class XYMD02(ModbusDevice):
 
         request = self.generate_request("Temperature")
 
-        response = self._controller.execute_mb_request(request)
-        if response is not None:
-            if not response.isError():
-                print(request.unit_id)
-                value = response.registers[0] / 10
+        try:
+            response = self._controller.execute_mb_request(request)
+            if response is not None:
+                if not response.isError():
+                    value = response.registers[0] / 10
+
+                    # Dump good value.
+                    self.__last_good_measurement = value
+
+                    # Reset the counter.
+                    self.__unsuccessful_times = 0
+
+                else:
+                    self.__unsuccessful_times += 1
+                    value = self.__last_good_measurement
+
+            else:
+                self.__unsuccessful_times += 1
+                value = self.__last_good_measurement
+
+        except Exception as e:
+            self.__unsuccessful_times += 1
+            value = self.__last_good_measurement
+
+        if self.__unsuccessful_times >= self.__unsuccessful_times_limit:
+            GlobalErrorHandler.log_hardware_malfunction(
+                self.__logger, "Device: {}; ID: {}; Can not read the temperature value.".format(
+                    self.name, request.unit_id))
 
         return value
 
@@ -146,10 +196,34 @@ class XYMD02(ModbusDevice):
 
         request = self.generate_request("Humidity")
 
-        response = self._controller.execute_mb_request(request)
-        if response is not None:
-            if not response.isError():
-                print(request.unit_id)
-                value = response.registers[0] / 10
+        try:
+
+            response = self._controller.execute_mb_request(request)
+            if response is not None:
+                if not response.isError():
+                    value = response.registers[0] / 10
+
+                    # Dump good value.
+                    self.__last_good_measurement = value
+
+                    # Reset the counter.
+                    self.__unsuccessful_times = 0
+
+                else:
+                    self.__unsuccessful_times += 1
+                    value = self.__last_good_measurement
+
+            else:
+                self.__unsuccessful_times += 1
+                value = self.__last_good_measurement
+
+        except Exception as e:
+            self.__unsuccessful_times += 1
+            value = self.__last_good_measurement
+
+        if self.__unsuccessful_times >= self.__unsuccessful_times_limit:
+            GlobalErrorHandler.log_hardware_malfunction(
+                self.__logger, "Device: {}; ID: {}; Can not read the temperature value.".format(
+                    self.name, request.unit_id))
 
         return value
