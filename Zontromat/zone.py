@@ -26,7 +26,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import sys
 import traceback
 import os
-import queue
 
 from enum import Enum
 
@@ -43,11 +42,14 @@ from bgERP.erp_state import ERPState
 
 from data.register import Scope
 from data.registers import Registers
+from data.registers import Register
 
 from plugins.plugins_manager import PluginsManager
 
 from services.evok.settings import EvokSettings
 from services.global_error_handler.global_error_handler import GlobalErrorHandler
+
+from utils.updater import update as software_update
 
 #region File Attributes
 
@@ -148,6 +150,46 @@ class Zone():
 
 #region Private Methods (Registers Interface)
 
+    def __target_version_cb(self, register: Register):
+
+        cv = None
+        tv = None
+
+        target_version = register
+
+        # Check data type of the current version.
+        if not ((target_version.data_type == "json")):
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, target_version)
+            return
+
+        # Get target version value.
+        if target_version.value is not None:
+            tv = target_version.value
+
+        # Check the target version value.
+        if tv == None:
+            GlobalErrorHandler.log_bad_register_value(self.__logger, target_version)
+            return
+
+        # Get current version register.
+        current_version = self.__registers.by_name("sys.software.current_version")
+
+        # Check data type.
+        if not ((current_version.data_type == "json")):
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, current_version)
+            return
+
+        if current_version is not None:
+            cv = current_version.value
+        
+        # Check the current version value.
+        if cv == None:
+            GlobalErrorHandler.log_bad_register_value(self.__logger, current_version)
+            return
+
+        software_update(current_version, target_version)
+
+
     def __init_registers(self):
         """Setup registers source.
         """
@@ -162,6 +204,12 @@ class Zone():
         # Load from JSON file.
         registers_file = os.path.join(cwf, "..", "registers.json")
         self.__registers = Registers.from_JSON(registers_file)
+
+        target_version = self.__registers.by_name("sys.software.target_version")
+        if target_version is not None:
+            target_version.update_handlers = self.__target_version_cb
+            target_version.update()
+            # TODO: Will we ask for update on every start?
 
 #endregion
 
