@@ -221,8 +221,8 @@ class bgERP:
 
         self.__is_logged = self.__client.login(credentials)
 
-        if self.__is_logged:
-            if self.__server is not None:
+        if self.__is_logged:            
+            if (self.__server is not None) and (not self.__server.is_alive()):
                 self.__server.set_registers_cb(
                     get_cb=self.__get_registers,\
                     set_cb=self.__set_registers)
