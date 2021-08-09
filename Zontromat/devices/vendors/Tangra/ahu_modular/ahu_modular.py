@@ -27,6 +27,8 @@ from devices.drivers.modbus.parameter import Parameter
 from devices.drivers.modbus.parameter_type import ParameterType
 from devices.drivers.modbus.register_type import RegisterType
 
+from services.global_error_handler.global_error_handler import GlobalErrorHandler
+
 #region File Attributes
 
 __author__ = "Orlin Dimitrov"
@@ -73,6 +75,14 @@ class AHUModular(ModbusDevice):
         self._vendor = "Tangra"
 
         self._model = "AHU_Modular"
+
+        self.__set_registers()
+
+#endregion 
+
+#region Private Methods
+
+    def __set_registers(self):
 
         self._parameters.append(
             Parameter(
@@ -166,7 +176,7 @@ class AHUModular(ModbusDevice):
 
         self._parameters.append(
             Parameter(
-                "ReadMode",
+                "GetMode",
                 "State", # 0->Stop, 1->Cool, 2->Heat, 3->Fan, 4->Auto, 5->Dry
                 ParameterType.UINT16_T,
                 [0],
@@ -176,11 +186,31 @@ class AHUModular(ModbusDevice):
 
         self._parameters.append(
             Parameter(
-                "SP",
+                "SetMode",
+                "State", # 0->Stop, 1->Cool, 2->Heat, 3->Fan, 4->Auto, 5->Dry
+                ParameterType.UINT16_T,
+                [0],
+                RegisterType.ReadHoldingRegisters
+            )
+        )
+
+        self._parameters.append(
+            Parameter(
+                "GetTemperatureSetpoint",
                 "degC", # TODO: Give possible values.
                 ParameterType.UINT16_T,
                 [1],
                 RegisterType.ReadHoldingRegisters
+            )
+        )
+
+        self._parameters.append(
+            Parameter(
+                "SetTemperatureSetpoint",
+                "degC", # TODO: Give possible values.
+                ParameterType.UINT16_T,
+                [1],
+                RegisterType.WriteMultipleHoldingRegisters
             )
         )
 
@@ -373,20 +403,273 @@ class AHUModular(ModbusDevice):
                 RegisterType.ReadInputRegisters
             )
         )
-    """
+
+#endregion
+
+#region Public Methods
+
+    def get_alarms(self):
+        """Get alarm bit.
+
+        Returns:
+            bool: Value of the alarm.
+        """
+
+        value = False
+
+        try:
+            request = self.generate_request("GlobalAlarm")
+            response = self._controller.execute_mb_request(request)
+            if response is not None:
+                if not response.isError():
+                    value = response.registers[0] != 0
+
+                else:
+                    GlobalErrorHandler.log_hardware_malfunction(
+                        self.__logger, "Device: {}; ID: {}; Response error.".format(
+                            self.name, request.unit_id))
+
+            else:
+                GlobalErrorHandler.log_hardware_malfunction(
+                    self.__logger, "Device: {}; ID: {}; Invalid response.".format(
+                        self.name, request.unit_id))
+
+        except Exception as e:
+            GlobalErrorHandler.log_hardware_malfunction(
+                self.__logger, "Device: {}; ID: {}; Can not read the temperature value.".format(
+                    self.name, request.unit_id))
+
+        return value
 
 
+    def get_status(self):
+        """Get status.
+
+        Returns:
+            int: Value of the status.
+        """
+
+        value = None
+
+        try:
+            request = self.generate_request("UnitStatus")
+            response = self._controller.execute_mb_request(request)
+            if response is not None:
+                if not response.isError():
+                    value = response.registers[0]
+
+                else:
+                    GlobalErrorHandler.log_hardware_malfunction(
+                        self.__logger, "Device: {}; ID: {}; Response error.".format(
+                            self.name, request.unit_id))
+
+            else:
+                GlobalErrorHandler.log_hardware_malfunction(
+                    self.__logger, "Device: {}; ID: {}; Invalid response.".format(
+                        self.name, request.unit_id))
+
+        except Exception as e:
+            GlobalErrorHandler.log_hardware_malfunction(
+                self.__logger, "Device: {}; ID: {}; Can not read the unit status value.".format(
+                    self.name, request.unit_id))
+
+        return value
 
 
+    def get_mode(self):
+        """Get mode.
 
-Dev_PreHeater_PowerPercent_USINT
-Dev_RotaryREC_PowerPercent_USINT
-Dev_SF_PowerPercent_USINT
-Dev_EF_PowerPercent_USINT
-Dev_PJR_In_Out_FreshAir_PowerPercent_USINT
-Dev_PJR_Recirculation_PowerPercent_USINT
-Dev_PJR_Baypas_Rec_PowerPercent_USINT
-Dev_Heater_Supply_PowerPercent_USINT
-    """
+        Returns:
+            int: Value of the mode of the air camber.
+        """
+
+        value = None
+
+
+        try:
+            request = self.generate_request("GetMode")
+            response = self._controller.execute_mb_request(request)
+            if response is not None:
+                if not response.isError():
+                    value = response.registers[0]
+
+                else:
+                    GlobalErrorHandler.log_hardware_malfunction(
+                        self.__logger, "Device: {}; ID: {}; Response error.".format(
+                            self.name, request.unit_id))
+
+            else:
+                GlobalErrorHandler.log_hardware_malfunction(
+                    self.__logger, "Device: {}; ID: {}; Invalid response.".format(
+                        self.name, request.unit_id))
+
+        except Exception as e:
+            GlobalErrorHandler.log_hardware_malfunction(
+                self.__logger, "Device: {}; ID: {}; Can not read the mode.".format(
+                    self.name, request.unit_id))
+
+        return value
+
+    def set_mode(self, mode):
+        """Set mode of the air chamber.
+
+        Args:
+            mode (int): Mode of the chamber.
+
+        Returns:
+            int: Value of the mode of the air camber.
+        """
+
+        value = None
+
+        try:
+            request = self.generate_request("SetMode")
+            response = self._controller.execute_mb_request(request, SetMode=mode)
+            if response is not None:
+                if not response.isError():
+                    value = response.registers[0]
+
+                else:
+                    GlobalErrorHandler.log_hardware_malfunction(
+                        self.__logger, "Device: {}; ID: {}; Response error.".format(
+                            self.name, request.unit_id))
+
+            else:
+                GlobalErrorHandler.log_hardware_malfunction(
+                    self.__logger, "Device: {}; ID: {}; Invalid response.".format(
+                        self.name, request.unit_id))
+
+        except Exception as e:
+            GlobalErrorHandler.log_hardware_malfunction(
+                self.__logger, "Device: {}; ID: {}; Can not read the mode.".format(
+                    self.name, request.unit_id))
+
+        return value
+
+
+    def get_fresh_air(self):
+        """Get fresh air.
+
+        Returns:
+            int: Value of the mode of the air camber.
+        """
+
+        value = None
+
+        try:
+            request = self.generate_request("FreshAir")
+            response = self._controller.execute_mb_request(request)
+            if response is not None:
+                if not response.isError():
+                    value = response.registers[0]
+                    # Multiply
+                    value = value * 10.0
+
+                else:
+                    GlobalErrorHandler.log_hardware_malfunction(
+                        self.__logger, "Device: {}; ID: {}; Response error.".format(
+                            self.name, request.unit_id))
+
+            else:
+                GlobalErrorHandler.log_hardware_malfunction(
+                    self.__logger, "Device: {}; ID: {}; Invalid response.".format(
+                        self.name, request.unit_id))
+
+        except Exception as e:
+            GlobalErrorHandler.log_hardware_malfunction(
+                self.__logger, "Device: {}; ID: {}; Can not read the fresh air value.".format(
+                    self.name, request.unit_id))
+
+        return value
+
+    def set_fresh_air(self, setpiont):
+        """Set fresh air of the air chamber.
+
+        Args:
+            setpiont (float): Percentage
+
+        Returns:
+            int: Value of the mode of the air camber.
+        """
+
+        # get the value.
+        local_setpiont = setpiont
+
+        # Filter the minimum.
+        if local_setpiont < 0:
+            local_setpiont = 0
+
+        # Filter the maximum.
+        if local_setpiont > 100:
+            local_setpiont = 100
+
+        # Divide by 10 to get in nominal.
+        local_setpiont = local_setpiont / 10.0
+
+        # Take only integer part without rounding.
+        local_setpiont = int(local_setpiont)
+
+        value = None
+
+        try:
+            request = self.generate_request("FreshAir")
+            response = self._controller.execute_mb_request(request, FreshAir=local_setpiont)
+            if response is not None:
+                if not response.isError():
+                    value = response.registers[0]
+
+                else:
+                    GlobalErrorHandler.log_hardware_malfunction(
+                        self.__logger, "Device: {}; ID: {}; Response error.".format(
+                            self.name, request.unit_id))
+
+            else:
+                GlobalErrorHandler.log_hardware_malfunction(
+                    self.__logger, "Device: {}; ID: {}; Invalid response.".format(
+                        self.name, request.unit_id))
+
+        except Exception as e:
+            GlobalErrorHandler.log_hardware_malfunction(
+                self.__logger, "Device: {}; ID: {}; Can not read the mode.".format(
+                    self.name, request.unit_id))
+
+        return value
+
+
+    def get_setpoint_temp(self):
+        """Get mode.
+
+        Returns:
+            int: Value of the mode of the air camber.
+        """
+
+        value = None
+
+
+        try:
+            request = self.generate_request("GetTemperatureSetpoint")
+            response = self._controller.execute_mb_request(request)
+            if response is not None:
+                if not response.isError():
+                    value = response.registers[0]
+
+                else:
+                    GlobalErrorHandler.log_hardware_malfunction(
+                        self.__logger, "Device: {}; ID: {}; Response error.".format(
+                            self.name, request.unit_id))
+
+            else:
+                GlobalErrorHandler.log_hardware_malfunction(
+                    self.__logger, "Device: {}; ID: {}; Invalid response.".format(
+                        self.name, request.unit_id))
+
+        except Exception as e:
+            GlobalErrorHandler.log_hardware_malfunction(
+                self.__logger, "Device: {}; ID: {}; Can not read the mode.".format(
+                    self.name, request.unit_id))
+
+        return value
+
+
 
 #endregion
