@@ -101,6 +101,14 @@ class XYMD02(ModbusDevice):
 
         self._model = "XYMD02"
 
+        self.__set_registers()
+
+#endregion 
+
+#region Private Methods
+
+    def __set_registers(self):
+
         self._parameters.append(
             Parameter("Temperature", "C",\
             ParameterType.INT16_T, [0x0001], RegisterType.ReadInputRegisters))
@@ -143,6 +151,8 @@ class XYMD02(ModbusDevice):
 
 #endregion
 
+#region Public Methods
+
     def get_temp(self):
         """Get temperature.
 
@@ -152,9 +162,8 @@ class XYMD02(ModbusDevice):
 
         value = 0.0
 
-        request = self.generate_request("Temperature")
-
         try:
+            request = self.generate_request("Temperature")
             response = self._controller.execute_mb_request(request)
             if response is not None:
                 if not response.isError():
@@ -194,10 +203,8 @@ class XYMD02(ModbusDevice):
 
         value = 0.0
 
-        request = self.generate_request("Humidity")
-
         try:
-
+            request = self.generate_request("Humidity")
             response = self._controller.execute_mb_request(request)
             if response is not None:
                 if not response.isError():
@@ -227,3 +234,5 @@ class XYMD02(ModbusDevice):
                     self.name, request.unit_id))
 
         return value
+
+#endregion

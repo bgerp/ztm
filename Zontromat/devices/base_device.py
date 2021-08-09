@@ -61,7 +61,8 @@ class BaseDevice(Configuarable):
 #region Attributes
 
     _controller = None
-    """Controller"""
+    """Controller
+    """
 
     _vendor = ""
     """Vendor
@@ -72,6 +73,8 @@ class BaseDevice(Configuarable):
     """
 
 #endregion
+
+#region Properties
 
     @property
     def vendor(self):
@@ -96,6 +99,8 @@ class BaseDevice(Configuarable):
         """
 
         return self._model
+
+#endregion
 
 #region Constructor / Destructor
 
