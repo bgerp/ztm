@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import argparse
 import os
+import json
 
 from data.register import Register
 from data.register import Scope
@@ -1353,6 +1354,24 @@ def __add_registers():
     register.description = "Enable error messages"
     register.range = __range["BOOL"]
     register.value = True
+    __registers.append(register)
+
+    # Software update register.
+    register = Register("sys.software.target_version")
+    register.scope = Scope.System
+    register.plugin_name = "System"
+    register.description = "Target software version"
+    register.range = __range["NONE"]
+    register.value = json.loads("{\"repo\": \"http:\/\/github.com\/bgerp\/ztm\/\", \"branch\": \"master\", \"commit\":\"3462828\"}")
+    __registers.append(register)
+
+    # Current software version.
+    register = Register("sys.software.current_version")
+    register.scope = Scope.System
+    register.plugin_name = "System"
+    register.description = "Current software version."
+    register.range = __range["NONE"]
+    register.value = json.loads("{\"repo\": \"http:\/\/github.com\/bgerp\/ztm\/\", \"branch\": \"master\", \"commit\":\"e0c1dda\"}")
     __registers.append(register)
 
 #endregion

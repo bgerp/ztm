@@ -1440,6 +1440,34 @@
         "scope": "System"
     },
     {
+        "data_type": "json",
+        "default": {
+            "branch": "master",
+            "commit": "3462828",
+            "repo": "http://github.com/bgerp/ztm/"
+        },
+        "description": "Target software version",
+        "limit": 0.0,
+        "name": "sys.software.target_version",
+        "plugin": "System",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "json",
+        "default": {
+            "branch": "master",
+            "commit": "e0c1dda",
+            "repo": "http://github.com/bgerp/ztm/"
+        },
+        "description": "Current software version.",
+        "limit": 0.0,
+        "name": "sys.software.current_version",
+        "plugin": "System",
+        "range": "",
+        "scope": "System"
+    },
+    {
         "data_type": "bool",
         "default": false,
         "description": "Plugin enabled",
