@@ -3,7 +3,7 @@ Description=Zontromat Runner Monitor
 After=network-online.target
  
 [Service]
-ExecStart=/bin/bash /opt/ztm/sh/zontromat
+ExecStart=/bin/bash /opt/ztm/sh/ztm_auto_run
 WorkingDirectory=/opt/ztm/Zontromat
 StandardOutput=inherit
 StandardError=inherit

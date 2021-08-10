@@ -70,6 +70,9 @@ __status__ = "Debug"
 
 def update(target_version: Register, current_version: Register):
 
+    # Updater job file.
+    update_file_name = "ztm_auto_update.sh"
+
     logger = get_logger(__file__)
 
     # Check the consistency of the software version.
@@ -86,6 +89,12 @@ def update(target_version: Register, current_version: Register):
 
         # Current file path. & Go to file.
         cwf = os.path.dirname(os.path.abspath(__file__))
-        file_name = os.path.join(cwf, "..", "..", "sh", "test.sh")
-        response = os.system("{}".format(file_name)) # Thanks @Jim Dennis for suggesting the []
-        print(response)
+        file_name = os.path.join(cwf, "..", "..", "sh", update_file_name)
+
+        # Run the job in background.
+        response = os.system("{} {} {} {} &".format(
+            file_name, 
+            target_version.value["repo"],
+            target_version.value["branch"],
+            target_version.value["commit"]))
+        # logger.info(response)
