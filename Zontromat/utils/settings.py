@@ -136,6 +136,28 @@ class ApplicationSettings:
 
         return self.__file_name
 
+    @property
+    def current_version(self):
+        """Get the current version.
+
+        Returns:
+            dict: Current version dictionary.
+        """
+
+        d = dict(self.__config["CURRENT_VERSION"])
+        # for k in d:
+        #     d[k] = dict(self._defaults, **d[k])
+        #     d[k].pop('__name__', None)
+        
+        return d
+
+    @current_version.setter
+    def current_version(self, value):
+        """Set the current version.
+        """    
+
+        self.__config["CURRENT_VERSION"] = value
+
 #endregion
 
 #region Constructor
@@ -204,7 +226,16 @@ class ApplicationSettings:
                     "modbus_rtu_baud": 9600
                     }
 
-        # This will bi added by the setup script.
+        # # Default software version as current version.
+        if self.__config is not None:
+            if "CURRENT_VERSION" not in self.__config:
+                self.__config["CURRENT_VERSION"] = {
+                        "repo":"http://github.com/bgerp/ztm/",
+                        "branch":"master",
+                        "commit":"e0c1dda"
+                    }
+
+        # This will be added by the setup script.
         # # Default ERP service.
         # if self.__config is not None:
         #     if "ERP_SERVICE" not in self.__config:
