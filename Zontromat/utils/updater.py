@@ -68,7 +68,13 @@ __status__ = "Debug"
 
 #endregion
 
-def update(target_version: Register, current_version: Register):
+def update(target_version: dict, current_version: dict):
+    """Update the application.
+
+    Args:
+        target_version (dict): Dictionary that holds target version.
+        current_version (dict): Dictionary that holds the current version.
+    """
 
     # Updater job file.
     update_file_name = "ztm_auto_update.sh"
@@ -76,25 +82,29 @@ def update(target_version: Register, current_version: Register):
     logger = get_logger(__file__)
 
     # Check the consistency of the software version.
-    if current_version.value != target_version.value:
+    if current_version != target_version:
 
-        if target_version.value["repo"] != current_version.value["repo"]:
-            logger.info("Changed repo: from {} to {}".format(current_version.value["repo"], target_version.value["repo"]))
+        if target_version["repo"] != current_version["repo"]:
+            logger.info("Changed repo: from {} to {}".format(current_version["repo"], target_version["repo"]))
 
-        if target_version.value["branch"] != current_version.value["branch"]:
-            logger.info("Changed branch: from {} to {}".format(current_version.value["branch"], target_version.value["branch"]))
+        if target_version["branch"] != current_version["branch"]:
+            logger.info("Changed branch: from {} to {}".format(current_version["branch"], target_version["branch"]))
 
-        if target_version.value["commit"] != current_version.value["commit"]:
-            logger.info("Changed commit: from {} to {}".format(current_version.value["commit"], target_version.value["commit"]))
+        if target_version["commit"] != current_version["commit"]:
+            logger.info("Changed commit: from {} to {}".format(current_version["commit"], target_version["commit"]))
 
         # Current file path. & Go to file.
         cwf = os.path.dirname(os.path.abspath(__file__))
         file_name = os.path.join(cwf, "..", "..", "sh", update_file_name)
 
+        if not os.path.exists(file_name):
+            GlobalErrorHandler.log_missing_resource(logger, "Automatic update procedure: {}".format(file_name))
+            return
+
         # Run the job in background.
         response = os.system("{} {} {} {} &".format(
             file_name, 
-            target_version.value["repo"],
-            target_version.value["branch"],
-            target_version.value["commit"]))
+            target_version["repo"],
+            target_version["branch"],
+            target_version["commit"]))
         # logger.info(response)
