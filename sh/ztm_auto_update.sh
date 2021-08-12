@@ -31,7 +31,7 @@
 sudo systemctl stop zontromat
 
 # Go to home.
-cd ~
+sudo cd ~
 
 # Remove if there is old direcotry.
 sudo rm -rf Git
@@ -40,13 +40,15 @@ sudo rm -rf Git
 sudo mkdir Git
 
 # Go to the repo.
-cd Git/
+sudo cd Git/
 
 # Clone the Zontromat repo.
+# git clone <repo_name>
 sudo git clone $1
 
 # Clone the Zontromat Repo
-git checkout $2 $3
+# git checkout <new_branch> <commit_sha>
+sudo git checkout $2 $3
 
 # Copy the new file to opt/ folder.
 sudo cp . /opt/ -r
@@ -64,7 +66,7 @@ sudo systemctl daemon-reload
 sudo systemctl start zontromat
 
 # Go to home.
-cd ~
+sudo cd ~
 
 # Remove he old repo.
 sudo rm -rf ./Git

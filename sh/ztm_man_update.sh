@@ -23,7 +23,7 @@ sudo systemctl stop zontromat
 echo "Zontromat service stoped."
 
 # Go to home.
-cd ~
+sudo cd ~
 
 echo "Creating git directory."
 # Creating git directory.

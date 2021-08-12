@@ -39,7 +39,7 @@ echo "Updateing daemons."
 sudo systemctl daemon-reload
 
 # Go to Zontromat
-cd /opt
+sudo cd /opt
 
 # Remove Zontromat app folder.
 echo "Remove the Zontromat app."
@@ -47,7 +47,7 @@ sudo rm -rf ./ztm
 echo "Zontromat app removed."
 
 # Go to home.
-cd ~
+sudo cd ~
 
 # Remove the Git folder.
 sudo rm -rf ./Git
