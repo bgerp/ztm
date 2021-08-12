@@ -232,7 +232,22 @@ class GlobalErrorHandler:
         logger.warning(message)
 
         # Put error to the queue.
-        GlobalErrorHandler.append(message, ErrorCodes.HardwareLimit)
+        GlobalErrorHandler.append(message, ErrorCodes.MissingResource)
+
+    def log_missing_resource(logger, message: str= "Missing resource."):
+        """Log limit of the hardware.
+
+        Args:
+            logger (logger): Logger object.
+            message (str, optional): [description]. Defaults to "Missing resource.".
+        """
+
+        l_msg = "Missing resource: {}".format(message)
+
+        logger.warning(l_msg)
+
+        # Put error to the queue.
+        GlobalErrorHandler.append(l_msg, ErrorCodes.MissingResource)
 
     @staticmethod
     def append(message, err_code):

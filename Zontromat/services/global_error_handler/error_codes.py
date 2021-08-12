@@ -67,3 +67,4 @@ class ErrorCodes(Enum):
     RegisterNotFound = 506
     HardwareMalfunction = 507
     HardwareLimit = 508
+    MissingResource = 509
