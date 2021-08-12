@@ -187,7 +187,12 @@ class Zone():
             GlobalErrorHandler.log_bad_register_value(self.__logger, current_version)
             return
 
-        software_update(current_version, target_version)
+        # Update the software.
+        software_update(current_version.value, target_version.value)
+
+        # Save the current version.
+        self.__app_settings.current_version = target_version.value
+        self.__app_settings.save()
 
 
     def __init_registers(self):
@@ -204,6 +209,11 @@ class Zone():
         # Load from JSON file.
         registers_file = os.path.join(cwf, "..", "registers.json")
         self.__registers = Registers.from_JSON(registers_file)
+
+        target_version = self.__registers.by_name("sys.software.current_version")
+        if target_version is not None:
+            target_version.value = self.__app_settings.current_version
+            target_version.update()
 
         target_version = self.__registers.by_name("sys.software.target_version")
         if target_version is not None:
