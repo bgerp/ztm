@@ -87,6 +87,10 @@ class Server(HTTPServer):
     __session = None
     """Session control."""
 
+    __enable_auth_token = False
+    """Authentication token.
+    """    
+
 #endregion
 
 #region Constructor
@@ -139,6 +143,7 @@ class Server(HTTPServer):
 
             response = make_response()
             response.headers["Content-Type"] = "application/json; charset=utf-8"
+            response.headers["Access-Control-Allow-Origin"] = "*"
 
             return response
 
@@ -164,15 +169,18 @@ class Server(HTTPServer):
                 if content != "" and content != None:
                     json_data = json.loads(content)
 
-            if "token" in json_data:
-                token = json_data["token"]
+            # Check the authentication token.
+            if self.__enable_auth_token:
+                if "token" in json_data:
+                    token = json_data["token"]
 
-            if token is None or "":
-                return "Invalid token.", 401
+                if token is None or "":
+                    return "Invalid token.", 401
 
-            if token != self.__session.session:
-                return "Invalid token.", 401
+                if token != self.__session.session:
+                    return "Invalid token.", 401
 
+            # Check registers.
             if "registers" not in json_data:
                 return "Bad Request", 400 
 
@@ -212,18 +220,18 @@ class Server(HTTPServer):
                 if content != "" and content != None:
                     json_data = json.loads(content)
 
-            if "token" in json_data:
-                token = json_data["token"]
+            # Check the authentication token.
+            if self.__enable_auth_token:
+                if "token" in json_data:
+                    token = json_data["token"]
 
-            if token is None or "":
-                return "Invalid token.", 401
+                if token is None or "":
+                    return "Invalid token.", 401
 
-            if token != self.__session.session:
-                return "Invalid token.", 401
+                if token != self.__session.session:
+                    return "Invalid token.", 401
 
-            if "registers" not in json_data:
-                return "Bad Request", 400 
-
+            # Check registers.
             if json_data["registers"] is None:
                 return "Not Found", 404
 
