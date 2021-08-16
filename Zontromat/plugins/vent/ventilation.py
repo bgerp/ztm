@@ -33,6 +33,7 @@ from devices.factories.fan.fan_factory import FanFactory
 
 from data import verbal_const
 from data.register import Register
+from data.thermal_mode import ThermalMode
 
 from services.global_error_handler.global_error_handler import GlobalErrorHandler
 
@@ -94,6 +95,16 @@ class Ventilation(BasePlugin):
     """Occupied flag.
     """
 
+    __set_point_op = 0
+    """Operators Panel set point.
+    """    
+    __set_point_hvac = 0
+    """HVAC set point.
+    """    
+    __set_point_ac = 0
+    """Access Control set point. 
+    """    
+
 #endregion
 
 #region Destructor
@@ -121,7 +132,7 @@ class Ventilation(BasePlugin):
 
 #endregion
 
-#region Private Methods (Colision Detection)
+#region Private Methods (Registers)
 
     def __op_setpoint_cb(self, register: Register):
 
@@ -130,22 +141,56 @@ class Ventilation(BasePlugin):
             GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
             return
 
-        # TODO: Create formula.
-        # The fans have 3 points where setpoint might come simultaneously.
-        # - HVAC module.
-        # - Manual from the tablet.
-        # - Access control when people have in the zone.
-        self.__logger.info("Ventilation manual set point: {}".format(register.value))
+        temp_value = register.value
 
-        # Lower fan speed. TODO: REMOVE after tests.
-        lower_fan_speed = self._registers.by_name("{}.lower_{}.fan.speed".format(self.key, self.__identifier))
-        if lower_fan_speed is not None:
-            lower_fan_speed.value = register.value
+        if temp_value > 100:
+            temp_value = 100
 
-        # Upper fan speed. TODO: REMOVE after tests.
-        upper_fan_speed = self._registers.by_name("{}.upper_{}.fan.speed".format(self.key, self.__identifier))
-        if upper_fan_speed is not None:
-            upper_fan_speed.value = register.value
+        if temp_value < 0:
+            temp_value = 0
+
+        self.__set_point_op = temp_value
+
+        self.__logger.info("Ventilation OP set point: {}".format(self.__set_point_op))
+
+    def __hvac_setpoint_cb(self, register: Register):
+
+        # Check data type.
+        if not (register.data_type == "float" or register.data_type == "int"):
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        temp_value = register.value
+
+        if temp_value > 100:
+            temp_value = 100
+
+        if temp_value < 0:
+            temp_value = 0
+
+        self.__set_point_hvac = temp_value
+
+        self.__logger.info("Ventilation HVAC set point: {}".format(self.__set_point_hvac))
+
+    def __ac_setpoint_cb(self, register: Register):
+
+        # Check data type.
+        if not (register.data_type == "float" or register.data_type == "int"):
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        temp_value = register.value
+
+        if temp_value > 100:
+            temp_value = 100
+
+        if temp_value < 0:
+            temp_value = 0
+
+        self.__set_point_ac = temp_value
+
+        self.__logger.info("Ventilation AC set point: {}".format(register.value))
+
 
     # Upper fan
     def __upper_fan_settings_cb(self, register: Register):
@@ -287,6 +332,16 @@ class Ventilation(BasePlugin):
             op_setpoint.update_handlers = self.__op_setpoint_cb
             op_setpoint.update()
 
+        hvac_setpoint = self._registers.by_name("{}.hvac_setpoint_{}".format(self.key, self.__identifier))
+        if hvac_setpoint is not None:
+            hvac_setpoint.update_handlers = self.__hvac_setpoint_cb
+            hvac_setpoint.update()
+
+        ac_setpoint = self._registers.by_name("{}.ac_setpoint_{}".format(self.key, self.__identifier))
+        if ac_setpoint is not None:
+            ac_setpoint.update_handlers = self.__ac_setpoint_cb
+            ac_setpoint.update()
+
         # Upper fan
         upper_fan_enabled = self._registers.by_name("{}.upper_{}.fan.settings".format(self.key, self.__identifier))
         if upper_fan_enabled is not None:
@@ -329,11 +384,27 @@ class Ventilation(BasePlugin):
             lower_fan_speed.update_handlers = self.__lower_fan_speed_cb
             lower_fan_speed.update()
 
-        # # Occupied flag
-        # zone_occupied = self._registers.by_name("ac.zone_{}_occupied".format(self.__identifier))
-        # if zone_occupied is not None:
-        #     zone_occupied.update_handlers = self.__zone_occupied_cb
-        #     zone_occupied.update()
+    def __is_empty(self):
+
+        value = False
+
+        is_empty = self._registers.by_name("envm.is_empty")
+        if is_empty is not None:
+            value = is_empty.value
+
+        return value
+
+    def __get_thermal_mode(self):
+
+        value = None
+
+        thermal_mode = self._registers.by_name("hvac.thermal_mode_{}".format(self.__identifier))
+        if thermal_mode is not None:
+            if thermal_mode.value > -1:
+                value = ThermalMode(thermal_mode.value)
+
+        return value
+
 
 #endregion
 
@@ -352,23 +423,67 @@ class Ventilation(BasePlugin):
     def _update(self):
         """Runtime of the plugin."""
 
-        occupied_flag = False
-        zone_occupied = self._registers.by_name("ac.zone_{}_occupied".format(self.__identifier))
-        if zone_occupied is not None:
-            occupied_flag = zone_occupied.value
+        speed_upper = 0
+        speed_lower = 0
 
-        if occupied_flag:
+        is_empty = self.__is_empty()
+        # if not is_empty:
+        if is_empty:
+
             # TODO: We know that we will increse the ventilation whitin every entered man.
             # В един момент ще стане на макс
             # Ще се изключи само ако няма никой в стаята и накрая пак отначало.
             # Да се достави нформация за това, коклко души има
-            pass
+
+            # TODO: Present the options.
+            # - Take the highest.
+            # - Take the last one.
+            # - Linear equation.
+
+            # self.__set_point_ac
+            # self.__set_point_hvac
+            # self.__set_point_op
+
+            thermal_mode = self.__get_thermal_mode()
+
+            if thermal_mode == ThermalMode.ColdSeason:
+
+                upper_fan_speed = self._registers.by_name("{}.upper_{}.fan.speed".format(self.key, self.__identifier))
+                if upper_fan_speed is not None:
+                    upper_fan_speed.value = speed_upper
+
+            elif thermal_mode == ThermalMode.TransisionSeason:
+
+                lower_fan_speed = self._registers.by_name("{}.lower_{}.fan.speed".format(self.key, self.__identifier))
+                if lower_fan_speed is not None:
+                    lower_fan_speed.value = speed_lower
+
+                upper_fan_speed = self._registers.by_name("{}.upper_{}.fan.speed".format(self.key, self.__identifier))
+                if upper_fan_speed is not None:
+                    upper_fan_speed.value = speed_upper
+
+            elif thermal_mode == ThermalMode.WarmSeason:
+
+                lower_fan_speed = self._registers.by_name("{}.lower_{}.fan.speed".format(self.key, self.__identifier))
+                if lower_fan_speed is not None:
+                    lower_fan_speed.value = speed_lower
+
+        else:
+
+            lower_fan_speed = self._registers.by_name("{}.lower_{}.fan.speed".format(self.key, self.__identifier))
+            if lower_fan_speed is not None:
+                lower_fan_speed.value = speed_lower
+
+            upper_fan_speed = self._registers.by_name("{}.upper_{}.fan.speed".format(self.key, self.__identifier))
+            if upper_fan_speed is not None:
+                upper_fan_speed.value = speed_upper
 
         self.__upper_fan_dev.update()
         self.__lower_fan_dev.update()
 
     def _shutdown(self):
-        """Shutting down the blinds."""
+        """Shutting down the blinds.
+        """
 
         self.__logger.info("Shutting down the {}".format(self.name))
         self.__upper_fan_dev.shutdown()
