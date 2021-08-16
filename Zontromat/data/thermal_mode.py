@@ -59,6 +59,6 @@ class ThermalMode(Enum):
     """Thermal modes description."""
 
     NONE = 0
-    COLD_SEASON = 1
-    TRANSISION_SEASON = 2
-    WARM_SEASON = 3
+    ColdSeason = 1
+    TransisionSeason = 2
+    WarmSeason = 3

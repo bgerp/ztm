@@ -32,7 +32,6 @@ from utils.logic.timer import Timer
 from utils.logic.temp_processor import TemperatureProcessor
 
 from plugins.base_plugin import BasePlugin
-from plugins.hvac.thermal_mode import ThermalMode
 
 from devices.factories.thermal_sensor.thermal_sensor_factory import ThermalSensorFactory
 from devices.factories.valve.valve_factory import ValveFactory
@@ -45,6 +44,7 @@ from devices.tests.leak_test.leak_test import LeakTest
 from devices.tests.electrical_performance.electrical_performance import ElectricalPerformance
 
 from data import verbal_const
+from data.thermal_mode import ThermalMode
 
 from services.global_error_handler.global_error_handler import GlobalErrorHandler
 
@@ -926,7 +926,7 @@ class AirConditioner(BasePlugin):
         self.__logger.debug("Mode: {}; TForce: {:3.3f}"\
             .format(self.__thermal_mode.get_state(), thermal_force))
 
-        if self.__thermal_mode.is_state(ThermalMode.COLD_SEASON):
+        if self.__thermal_mode.is_state(ThermalMode.ColdSeason):
             if thermal_force > 0:
                 self.__loop1_valve_dev.target_position = 0
                 self.__loop2_valve_dev.target_position = 0
@@ -934,7 +934,7 @@ class AirConditioner(BasePlugin):
                 self.__loop1_valve_dev.target_position = 100
                 self.__loop2_valve_dev.target_position = 100
 
-        elif self.__thermal_mode.is_state(ThermalMode.TRANSISION_SEASON):
+        elif self.__thermal_mode.is_state(ThermalMode.TransisionSeason):
             if thermal_force < 0:
                 self.__loop1_valve_dev.target_position = 100
                 self.__loop2_valve_dev.target_position = 0
@@ -945,7 +945,7 @@ class AirConditioner(BasePlugin):
                 self.__loop1_valve_dev.target_position = 0
                 self.__loop2_valve_dev.target_position = 0
 
-        elif self.__thermal_mode.is_state(ThermalMode.WARM_SEASON):
+        elif self.__thermal_mode.is_state(ThermalMode.WarmSeason):
             if thermal_force < 0:
                 self.__loop1_valve_dev.target_position = 100
                 self.__loop2_valve_dev.target_position = 100

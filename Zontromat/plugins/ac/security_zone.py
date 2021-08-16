@@ -25,12 +25,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import time
 
 from plugins.base_plugin import BasePlugin
-from plugins.ac.card_state import CardState
 
 from utils.logger import get_logger
 from utils.logic.timer import Timer
 
 from data import verbal_const
+from data.card_state import CardState
 
 from devices.factories.card_readers.card_reader_factory import CardReaderFactory
 from devices.factories.card_readers.card_reader_state import CardReaderState

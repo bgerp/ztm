@@ -101,7 +101,7 @@ class Light(BasePlugin):
     """Target illumination. [Lux]
     """    
 
-    __error_gain = 0.01
+    __error_gain = 0.001
     """Gain of the error. This parameter is the smoothness of the curve.
     """
 
@@ -300,6 +300,10 @@ class Light(BasePlugin):
 
         self.__target_illumination = self.__read_target_ilum()
 
+        # Read sensor.
+        if self.__light_sensor is not None:
+            current_illumination = self.__light_sensor.get_value()
+
         # If there is no one at the zone, just turn off the lights.
         is_empty = self.__is_empty()
         
@@ -307,12 +311,6 @@ class Light(BasePlugin):
         if is_empty:
             self.__last_target_illum = self.__target_illumination
             self.__target_illumination = 0
-
-        else:
-            self.__target_illumination = self.__last_target_illum
-
-        # Read sensor.
-        current_illumination = self.__light_sensor.get_value()
 
         # Calculate the target error.
         error = self.__target_illumination - current_illumination
@@ -335,7 +333,7 @@ class Light(BasePlugin):
         self.__output = self.__tmp_output
 
         # Convert to volgate.
-        to_voltage_scale = 0.001 # Magic number!!!
+        to_voltage_scale = 0.1 # Magic number!!!
         v1, v2 = self.__flood_fade(self.__output)
         out_to_v1 = v1 * to_voltage_scale
         out_to_v2 = v2 * to_voltage_scale
