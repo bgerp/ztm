@@ -2659,10 +2659,30 @@
     },
     {
         "data_type": "int",
-        "default": 50,
+        "default": 0,
         "description": "Operators panel set point",
         "limit": 0.0,
         "name": "vent.op_setpoint_1",
+        "plugin": "Ventilation",
+        "range": "0.0/100.0",
+        "scope": "System"
+    },
+    {
+        "data_type": "int",
+        "default": 0,
+        "description": "HVAC set point",
+        "limit": 0.0,
+        "name": "vent.hvac_setpoint_1",
+        "plugin": "Ventilation",
+        "range": "0.0/100.0",
+        "scope": "System"
+    },
+    {
+        "data_type": "int",
+        "default": 0,
+        "description": "AC set point",
+        "limit": 0.0,
+        "name": "vent.ac_setpoint_1",
         "plugin": "Ventilation",
         "range": "0.0/100.0",
         "scope": "System"
