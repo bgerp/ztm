@@ -52,3 +52,4 @@ sudo cd ~
 # Remove the Git folder.
 sudo rm -rf ./Git
 
+sudo rm -rf ~/.config/autostart/ztm-kiosk.desktop
