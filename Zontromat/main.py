@@ -26,8 +26,11 @@ import sys
 import signal
 import os
 
+from psutil import Process
+
 from utils.logger import get_logger, crate_log_file
 from utils.settings import ApplicationSettings
+from utils.utils import find_proc
 
 from zone import Zone
 
@@ -107,9 +110,18 @@ def main():
 
     global __zone, __logger, __time_to_stop
 
-    # Create process name.
+    # If it is Unix like.
     if os.name == "posix":
-        setproctitle.setproctitle("Zontromat")
+        process_name = "python3"
+        process_title = "Zontromat"
+
+        # Check if the process is already running.
+        processes = find_proc(process_name, process_title)
+        if len(processes) > 0:
+            sys.exit(125)
+
+        # Create process name.
+        setproctitle.setproctitle(process_title)
 
     # Add signal handler.
     signal.signal(signal.SIGINT, interupt_handler)

@@ -26,6 +26,7 @@ import time
 from functools import wraps
 import tracemalloc
 import shutil
+import psutil
 
 #region File Attributes
 
@@ -85,13 +86,13 @@ def mem_time_usage(function):
     return function_timer
 
 def mem_usage(function):
-    """Mesure consumed RAM for execution.
+    """Measure consumed RAM for execution.
 
-    Parameters
-    ----------
-    function : object
-        Pointer to function.
+    Args:
+        function (function pointer): Function that we measure.
 
+    Returns:
+        dict: Measured RAM.
     """
 
     @wraps(function)
@@ -109,11 +110,11 @@ def mem_usage(function):
 def time_usage(function):
     """Measure consumed time for execution.
 
-    Parameters
-    ----------
-    function : object
-        Pointer to function.
+    Args:
+        function (function pointer): Function that we measure.
 
+    Returns:
+        float: Measured CPU consumed time to run the function.
     """
 
     @wraps(function)
@@ -129,7 +130,50 @@ def time_usage(function):
     return function_timer
 
 def disk_size():
+    """Measure the disc space.
+
+    Returns:
+        list: Total, Used, Free disc space.
+    """
 
     total, used, free = shutil.disk_usage("/")
 
     return (total, used, free)
+
+def find_proc(proc_name: str, proc_title: str):
+    """Find process does exists.
+
+    Args:
+        proc_name (str): Process name.
+        proc_title (str): Process title.
+
+    Returns:
+        list: Total, Used, Free disc space.
+    """
+
+    output_processes = []
+ 
+    filtered_processes_list = []
+ 
+    processes_list = psutil.process_iter()
+ 
+    # Iterate over the all the running process.
+    for process in processes_list:
+       try:
+           # Check if process name contains the given name string.
+           process_info = process.as_dict(attrs=['pid', "exe", 'name', "cmdline", 'create_time'])
+           if proc_name.lower() in process_info['name'].lower():
+               filtered_processes_list.append(process_info)
+
+       except (psutil.NoSuchProcess, psutil.AccessDenied , psutil.ZombieProcess):
+           pass
+ 
+ 	# Find process
+    for process in filtered_processes_list:
+        if "cmdline" in process:
+            cmdline = process["cmdline"]
+            for line in cmdline:
+                if line == proc_title:
+                    output_processes.append(process)
+ 
+    return output_processes
