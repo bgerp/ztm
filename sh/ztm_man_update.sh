@@ -43,6 +43,11 @@ echo "Copping new files."
 sudo cp . /opt/ -r
 echo "New files copyd."
 
+echo "Install the python application dependancies."
+# Install dependacies.
+sudo python3 -m pip install -r /opt/ztm/requirements.txt
+echo "Python application dependancies are installed."
+
 echo "Copping new daemon."
 # Copy the servie file.
 sudo cp /opt/ztm/sh/zontromat.service /etc/systemd/system/
