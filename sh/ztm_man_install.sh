@@ -116,3 +116,8 @@ sudo echo "" > $ssdm
 sudo echo $section >> $ssdm
 sudo echo $user >> $ssdm
 sudo echo $session >> $ssdm
+
+# Set KIOSK screen session.
+# ========================================================================
+# Copy the autorun file file.
+sudo cp /opt/ztm/sh/ztm-kiosk.desktop ~/.config/autostart/ztm-kiosk.desktop

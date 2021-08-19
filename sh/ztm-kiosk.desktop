@@ -1,0 +1,5 @@
+[Desktop Entry]
+Comment=KIOSK screen for the Zontromat front-end.
+Exec=firefox https://test.bcvt.eu/ztm_Adapter --kiosk
+Name=ZTM-KIOSK
+Type=Application
