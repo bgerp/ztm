@@ -35,7 +35,6 @@ from plugins.base_plugin import BasePlugin
 
 from devices.factories.thermal_sensor.thermal_sensor_factory import ThermalSensorFactory
 from devices.factories.valve.valve_factory import ValveFactory
-from devices.factories.fan.fan_factory import FanFactory
 from devices.factories.convector.convector_factory import ConvectorFactory
 
 from devices.vendors.no_vendor_1.flowmeter import Flowmeter
@@ -681,17 +680,12 @@ class AirConditioner(BasePlugin):
 
 #endregion
 
-#region Private Methods (Fan Interface)
+#region Private Methods (Ventilation Interface)
 
-    def __set_upper_fan(self, value):
+    def __set_ventilation(self, value):
 
-        # Air temperatures.
-        self._registers.write("vent.upper_{}.fan.speed".format(self.__identifier), value)
-
-    def __set_lower_fan(self, value):
-
-        # Air temperatures.
-        self._registers.write("vent.lower_{}.fan.speed".format(self.__identifier), value)
+        # Set the ventilation.
+        self._registers.write("vent.hvac_setpoint_{}".format(self.__identifier), value)
 
 #endregion
 
@@ -955,17 +949,8 @@ class AirConditioner(BasePlugin):
 
         # If thermal mode set properly apply thermal force
         if not self.__thermal_mode.is_state(ThermalMode.NONE):
-            # Set upper fan.
-            if thermal_force < 0:
-                self.__set_upper_fan(abs(thermal_force))
-            else:
-                self.__set_upper_fan(0)
 
-            # Set lowe fan.
-            if thermal_force > 0:
-                self.__set_lower_fan(abs(thermal_force))
-            else:
-                self.__set_lower_fan(0)
+            self.__set_ventilation(thermal_force)
 
             # Set convector fan.
             conv_tf = l_scale(thermal_force, [0, 100], [0, 3])

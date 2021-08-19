@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 
-import os
+from enum import Enum
 
 from utils.logger import get_logger
 from utils.logic.timer import Timer
@@ -71,6 +71,12 @@ __class_name__ = "Vent"
 
 #endregion
 
+class AirValveState(Enum):
+    NONE = 0
+    Off = 1
+    Open = 2
+    Close = 3
+
 class Ventilation(BasePlugin):
     """Ventilation zone controll."""
 
@@ -103,7 +109,15 @@ class Ventilation(BasePlugin):
     """    
     __set_point_ac = 0
     """Access Control set point. 
-    """    
+    """
+
+    __upper_valve_settings = []
+    """Lower valve settings.
+    """
+
+    __lower_valve_settings = []
+    """Lower valve settings.
+    """
 
 #endregion
 
@@ -132,8 +146,75 @@ class Ventilation(BasePlugin):
 
 #endregion
 
+#region Private Methods (PLC IO)
+
+    def __set_upper_valve(self, state: AirValveState = AirValveState.NONE):
+
+        if self.__upper_valve_settings == None:
+            return
+
+        if state == AirValveState.Close:
+            self._controller.digital_write(self.__upper_valve_settings["open"], 0)
+            self._controller.digital_write(self.__upper_valve_settings["close"], 1)
+
+        elif state == AirValveState.Open:
+            self._controller.digital_write(self.__upper_valve_settings["close"], 0)
+            self._controller.digital_write(self.__upper_valve_settings["open"], 1)
+
+        elif state == AirValveState.Off:
+            self._controller.digital_write(self.__upper_valve_settings["close"], 0)
+            self._controller.digital_write(self.__upper_valve_settings["open"], 0)
+
+    def __set_lower_valve(self, state):
+
+        if self.__lower_valve_settings == None:
+            return
+
+        if state == AirValveState.Close:
+            self._controller.digital_write(self.__lower_valve_settings["open"], 0)
+            self._controller.digital_write(self.__lower_valve_settings["close"], 1)
+
+        elif state == AirValveState.Open:
+            self._controller.digital_write(self.__lower_valve_settings["close"], 0)
+            self._controller.digital_write(self.__lower_valve_settings["open"], 1)
+
+        elif state == AirValveState.Off:
+            self._controller.digital_write(self.__lower_valve_settings["close"], 0)
+            self._controller.digital_write(self.__lower_valve_settings["open"], 0)
+
+#endregion
+
 #region Private Methods (Registers)
 
+    # Upper valve.
+    def __upper_valve_settings_cb(self, register: Register):
+        
+        # Check data type.
+        if not register.data_type == "str":
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        register_value = register.value
+        if register_value is not None:
+            segments = register_value.split("/")
+            self.__upper_valve_settings["close"] = segments[2]
+            self.__upper_valve_settings["open"] = segments[3]
+
+    # Lower valve.
+    def __lower_valve_settings_cb(self, register: Register):
+        
+        # Check data type.
+        if not register.data_type == "str":
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        register_value = register.value
+        if register_value is not None:
+            segments = register_value.split("/")
+            self.__lower_valve_settings["close"] = segments[2]
+            self.__lower_valve_settings["open"] = segments[3]
+
+    # Params
     def __op_setpoint_cb(self, register: Register):
 
         # Check data type.
@@ -257,6 +338,13 @@ class Ventilation(BasePlugin):
         if self.__upper_fan_dev is not None:
             self.__upper_fan_dev.speed = register.value
 
+            # TODO: If it is working fine migrate to device.
+            self.__set_lower_valve(AirValveState.Close)
+            
+            if abs(register.value) > 0:
+                self.__set_upper_valve(AirValveState.Open)
+            else:
+                self.__set_upper_valve(AirValveState.Close)
 
     # Lower fan
     def __lower_fan_settings_cb(self, register: Register):
@@ -323,6 +411,13 @@ class Ventilation(BasePlugin):
         if self.__lower_fan_dev is not None:
             self.__lower_fan_dev.speed = register.value
 
+            # TODO: If it is working fine migrate to device.
+            self.__set_upper_valve(AirValveState.Close)
+
+            if abs(register.value) > 0:
+                self.__set_lower_valve(AirValveState.Open)
+            else:
+                self.__set_lower_valve(AirValveState.Close)
 
     def __init_registers(self):
 
@@ -384,6 +479,16 @@ class Ventilation(BasePlugin):
             lower_fan_speed.update_handlers = self.__lower_fan_speed_cb
             lower_fan_speed.update()
 
+        lower_valve_settings = self._registers.by_name("{}.lower_{}.valve.settings".format(self.key, self.__identifier))
+        if lower_valve_settings is not None:
+            lower_valve_settings.update_handlers = self.__lower_valve_settings_cb
+            lower_valve_settings.update()
+
+        upper_valve_settings = self._registers.by_name("{}.upper_{}.valve.settings".format(self.key, self.__identifier))
+        if upper_valve_settings is not None:
+            upper_valve_settings.update_handlers = self.__upper_valve_settings_cb
+            upper_valve_settings.update()
+
     def __is_empty(self):
 
         value = False
@@ -405,7 +510,6 @@ class Ventilation(BasePlugin):
 
         return value
 
-
 #endregion
 
 #region Public Methods
@@ -425,8 +529,9 @@ class Ventilation(BasePlugin):
 
         speed_upper = 0
         speed_lower = 0
-
+        thermal_mode = self.__get_thermal_mode()
         is_empty = self.__is_empty()
+        
         # if not is_empty:
         if is_empty:
 
@@ -444,39 +549,31 @@ class Ventilation(BasePlugin):
             # self.__set_point_hvac
             # self.__set_point_op
 
-            thermal_mode = self.__get_thermal_mode()
+            if thermal_mode != ThermalMode.NONE:
 
-            if thermal_mode == ThermalMode.ColdSeason:
+                # Set upper fan.
+                if self.__set_point_hvac < 0:
+                    speed_upper = abs(self.__set_point_hvac)
+                else:
+                    speed_upper = 0
 
-                upper_fan_speed = self._registers.by_name("{}.upper_{}.fan.speed".format(self.key, self.__identifier))
-                if upper_fan_speed is not None:
-                    upper_fan_speed.value = speed_upper
-
-            elif thermal_mode == ThermalMode.TransisionSeason:
-
-                lower_fan_speed = self._registers.by_name("{}.lower_{}.fan.speed".format(self.key, self.__identifier))
-                if lower_fan_speed is not None:
-                    lower_fan_speed.value = speed_lower
-
-                upper_fan_speed = self._registers.by_name("{}.upper_{}.fan.speed".format(self.key, self.__identifier))
-                if upper_fan_speed is not None:
-                    upper_fan_speed.value = speed_upper
-
-            elif thermal_mode == ThermalMode.WarmSeason:
-
-                lower_fan_speed = self._registers.by_name("{}.lower_{}.fan.speed".format(self.key, self.__identifier))
-                if lower_fan_speed is not None:
-                    lower_fan_speed.value = speed_lower
+                # Set lowe fan.
+                if self.__set_point_hvac > 0:
+                    speed_lower = abs(self.__set_point_hvac)
+                else:
+                    speed_lower = 0
 
         else:
+            speed_upper = 0
+            speed_lower = 0
 
-            lower_fan_speed = self._registers.by_name("{}.lower_{}.fan.speed".format(self.key, self.__identifier))
-            if lower_fan_speed is not None:
-                lower_fan_speed.value = speed_lower
+        lower_fan_speed = self._registers.by_name("{}.lower_{}.fan.speed".format(self.key, self.__identifier))
+        if lower_fan_speed is not None:
+            lower_fan_speed.value = speed_lower
 
-            upper_fan_speed = self._registers.by_name("{}.upper_{}.fan.speed".format(self.key, self.__identifier))
-            if upper_fan_speed is not None:
-                upper_fan_speed.value = speed_upper
+        upper_fan_speed = self._registers.by_name("{}.upper_{}.fan.speed".format(self.key, self.__identifier))
+        if upper_fan_speed is not None:
+            upper_fan_speed.value = speed_upper
 
         self.__upper_fan_dev.update()
         self.__lower_fan_dev.update()
