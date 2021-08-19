@@ -24,7 +24,7 @@ requests==2.23.0
 rope==0.17.0
 six==1.15.0
 toml==0.10.0
-urllib3==1.25.9
+urllib3==1.26.5
 Werkzeug==1.0.1
 wrapt==1.12.1
 setproctitle==1.1.0
