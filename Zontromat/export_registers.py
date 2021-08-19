@@ -2502,7 +2502,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "Ventilation"
     register.description = "HVAC set point"
-    register.range = "0.0/100.0"
+    register.range = "-100.0/100.0"
     register.value = 0
     __registers.append(register)
 
@@ -2579,6 +2579,24 @@ def __add_registers():
     register.description = "Upper fan maximum speed [%]"
     register.range = __range["PERCENTAGE_F"]
     register.value = 30.0
+    __registers.append(register)
+
+    # Upper valve settings
+    register = Register("vent.upper_1.valve.settings")
+    register.scope = Scope.System
+    register.plugin_name = "Ventilation"
+    register.description = "Lower valve settings"
+    register.range = ""
+    register.value = "FONYES/Model1/DO9/DO10" # Vendor/Model/Closing/Opening
+    __registers.append(register)
+
+    # Lower valve settings
+    register = Register("vent.lower_1.valve.settings")
+    register.scope = Scope.System
+    register.plugin_name = "Ventilation"
+    register.description = "Upper valve settings"
+    register.range = ""
+    register.value = "FONYES/Model1/DO11/DO12" # Vendor/Model/Closing/Opening
     __registers.append(register)
 
     # Zones count.

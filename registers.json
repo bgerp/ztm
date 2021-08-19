@@ -2674,7 +2674,7 @@
         "limit": 0.0,
         "name": "vent.hvac_setpoint_1",
         "plugin": "Ventilation",
-        "range": "0.0/100.0",
+        "range": "-100.0/100.0",
         "scope": "System"
     },
     {
@@ -2765,6 +2765,26 @@
         "name": "vent.upper_1.fan.max_speed",
         "plugin": "Ventilation",
         "range": "0.0/100.0",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "FONYES/Model1/DO9/DO10",
+        "description": "Lower valve settings",
+        "limit": 0.0,
+        "name": "vent.upper_1.valve.settings",
+        "plugin": "Ventilation",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "FONYES/Model1/DO11/DO12",
+        "description": "Upper valve settings",
+        "limit": 0.0,
+        "name": "vent.lower_1.valve.settings",
+        "plugin": "Ventilation",
+        "range": "",
         "scope": "System"
     },
     {
