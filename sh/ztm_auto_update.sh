@@ -53,6 +53,9 @@ sudo git checkout $2 $3
 # Copy the new file to opt/ folder.
 sudo cp . /opt/ -r
 
+# Install dependacies.
+sudo python3 -m pip install -r /opt/ztm/requirements.txt
+
 # Copy the servie file.
 sudo cp /opt/ztm/sh/zontromat.service /etc/systemd/system/
 
