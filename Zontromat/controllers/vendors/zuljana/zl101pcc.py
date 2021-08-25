@@ -141,7 +141,7 @@ class ZL101PCC(BaseController):
     """Digital inputs.
     """
 
-    __DORO = [False]*8
+    __DORO = [False]*12
     """Digital & Relay outputs.
     """
 
@@ -413,10 +413,10 @@ class ZL101PCC(BaseController):
         # Inversion
         polarity = pin.startswith("!")
 
+        state = bool(value)
+
         if polarity:
-            state = not value
-        else:
-            state = bool(value)
+            state = not state            
 
         # Remote GPIO.
         if self.is_valid_remote_gpio(l_pin):
