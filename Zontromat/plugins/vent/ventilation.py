@@ -111,17 +111,17 @@ class Ventilation(BasePlugin):
     """Access Control set point. 
     """
 
-    __upper_valve_settings = []
+    __upper_valve_settings = {}
     """Lower valve settings.
     """
 
-    __lower_valve_settings = []
+    __lower_valve_settings = {}
     """Lower valve settings.
     """
 
 #endregion
 
-#region Destructor
+#region Constructor / Destructor
 
     def __init__(self, **config):
         """Constructor"""
@@ -153,6 +153,9 @@ class Ventilation(BasePlugin):
         if self.__upper_valve_settings == None:
             return
 
+        if len(self.__upper_valve_settings) == 0:
+            return
+
         if state == AirValveState.Close:
             self._controller.digital_write(self.__upper_valve_settings["open"], 0)
             self._controller.digital_write(self.__upper_valve_settings["close"], 1)
@@ -168,6 +171,9 @@ class Ventilation(BasePlugin):
     def __set_lower_valve(self, state):
 
         if self.__lower_valve_settings == None:
+            return
+
+        if len(self.__lower_valve_settings) == 0:
             return
 
         if state == AirValveState.Close:
@@ -243,10 +249,10 @@ class Ventilation(BasePlugin):
 
         temp_value = register.value
 
-        if temp_value > 100:
+        if temp_value > 100.0:
             temp_value = 100
 
-        if temp_value < 0:
+        if temp_value < -100.0:
             temp_value = 0
 
         self.__set_point_hvac = temp_value
@@ -338,10 +344,9 @@ class Ventilation(BasePlugin):
         if self.__upper_fan_dev is not None:
             self.__upper_fan_dev.speed = register.value
 
-            # TODO: If it is working fine migrate to device.
-            self.__set_lower_valve(AirValveState.Close)
             
             if abs(register.value) > 0:
+                self.__set_lower_valve(AirValveState.Close)
                 self.__set_upper_valve(AirValveState.Open)
             else:
                 self.__set_upper_valve(AirValveState.Close)
@@ -411,13 +416,13 @@ class Ventilation(BasePlugin):
         if self.__lower_fan_dev is not None:
             self.__lower_fan_dev.speed = register.value
 
-            # TODO: If it is working fine migrate to device.
-            self.__set_upper_valve(AirValveState.Close)
 
             if abs(register.value) > 0:
+                self.__set_upper_valve(AirValveState.Close)
                 self.__set_lower_valve(AirValveState.Open)
             else:
                 self.__set_lower_valve(AirValveState.Close)
+
 
     def __init_registers(self):
 
@@ -524,56 +529,64 @@ class Ventilation(BasePlugin):
         # Initialize the registers.
         self.__init_registers()
 
+        # Manually set to automatic mode on wake up.
+        self.__set_point_op = 50.0
+
     def _update(self):
         """Runtime of the plugin."""
 
+        # 
         speed_upper = 0
-        speed_lower = 0
+        speed_lower = 0        
+        calculated_value = 0.0
+
+        # 
         thermal_mode = self.__get_thermal_mode()
         is_empty = self.__is_empty()
-        
+
+        # Limits
+        lower_limit = 0.0
+        mid_1 = 20.0
+        mid_2 = 80.0
+        upper_limit = 100.0
+
+        # Check the limits.
+        if lower_limit <= self.__set_point_op and self.__set_point_op <= mid_1:
+            calculated_value = (self.__set_point_op / mid_1) * 20.0
+
+        elif mid_1 < self.__set_point_op and self.__set_point_op  < mid_2:
+            first = max(self.__set_point_ac, abs(self.__set_point_hvac))
+            second = (1 + ((50.0 - self.__set_point_op) / 100.0))
+            calculated_value = first * second
+
+        elif mid_2 <= self.__set_point_op and self.__set_point_op  <= upper_limit:
+            calculated_value = (self.__set_point_op / upper_limit) * 100.
+
+
         # if not is_empty:
-        if is_empty:
+        if is_empty and (thermal_mode != ThermalMode.NONE):
 
-            # TODO: We know that we will increse the ventilation whitin every entered man.
-            # В един момент ще стане на макс
-            # Ще се изключи само ако няма никой в стаята и накрая пак отначало.
-            # Да се достави нформация за това, коклко души има
+            # Set upper fan.
+            if self.__set_point_hvac < 0:
+                speed_upper = calculated_value
+            else:
+                speed_upper = 0
 
-            # TODO: Present the options.
-            # - Take the highest.
-            # - Take the last one.
-            # - Linear equation.
-
-            # self.__set_point_ac
-            # self.__set_point_hvac
-            # self.__set_point_op
-
-            if thermal_mode != ThermalMode.NONE:
-
-                # Set upper fan.
-                if self.__set_point_hvac < 0:
-                    speed_upper = abs(self.__set_point_hvac)
-                else:
-                    speed_upper = 0
-
-                # Set lowe fan.
-                if self.__set_point_hvac > 0:
-                    speed_lower = abs(self.__set_point_hvac)
-                else:
-                    speed_lower = 0
-
-        else:
-            speed_upper = 0
-            speed_lower = 0
+            # Set lowe fan.
+            if self.__set_point_hvac > 0:
+                speed_lower = calculated_value
+            else:
+                speed_lower = 0
 
         lower_fan_speed = self._registers.by_name("{}.lower_{}.fan.speed".format(self.key, self.__identifier))
         if lower_fan_speed is not None:
             lower_fan_speed.value = speed_lower
+            lower_fan_speed.update()
 
         upper_fan_speed = self._registers.by_name("{}.upper_{}.fan.speed".format(self.key, self.__identifier))
         if upper_fan_speed is not None:
             upper_fan_speed.value = speed_upper
+            upper_fan_speed.update()
 
         self.__upper_fan_dev.update()
         self.__lower_fan_dev.update()
@@ -585,6 +598,8 @@ class Ventilation(BasePlugin):
         self.__logger.info("Shutting down the {}".format(self.name))
         self.__upper_fan_dev.shutdown()
         self.__lower_fan_dev.shutdown()
+        self.__set_upper_valve(AirValveState.Close)
+        self.__set_lower_valve(AirValveState.Close)
         
 #endregion
 
