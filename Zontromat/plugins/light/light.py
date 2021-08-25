@@ -93,11 +93,7 @@ class Light(BasePlugin):
     """Analog voltage output 2.
     """
 
-    __last_target_illum = 0
-    """Last target illumination.
-    """
-
-    __target_illumination = 700
+    __target_illumination = 50.0
     """Target illumination. [Lux]
     """    
 
@@ -175,6 +171,16 @@ class Light(BasePlugin):
 
         self.__v2_output = register.value
 
+    def __target_illum_cb(self, register):
+        
+        # Check data type.
+        if not (register.data_type == "float" or register.data_type == "int"):
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
+            return
+
+        if self.__target_illumination != register.value:
+            self.__target_illumination = register.value
+
     def __init_registers(self):
 
         sensor_enabled = self._registers.by_name(self.key + ".sensor.settings")
@@ -194,18 +200,13 @@ class Light(BasePlugin):
 
         error_gain = self._registers.by_name(self.key + ".error_gain")
         if error_gain is not None:
-            error_gain.update_handler = self.__error_gain_cb
+            error_gain.update_handlers = self.__error_gain_cb
             error_gain.update()
-
-    def __read_target_ilum(self):
-
-        value = 0
 
         target_illum = self._registers.by_name(self.key + ".target_illum")
         if target_illum is not None:
-            value = target_illum.value
-
-        return value
+            target_illum.update_handlers = self.__target_illum_cb
+            target_illum.update()
 
     def __is_empty(self):
 
@@ -295,29 +296,47 @@ class Light(BasePlugin):
         """ Apply thermal force to the devices. """
 
         current_illumination = 0
+        target_illumination = 0
         delta = 0
         error = 0
 
-        self.__target_illumination = self.__read_target_ilum()
+        # If there is no one at the zone, just turn off the lights.
+        is_empty = self.__is_empty()
+
+        # Scale t
+        target_illumination = l_scale(self.__target_illumination, [0.0, self.__output_limit], [0.0, 100.0])
 
         # Read sensor.
         if self.__light_sensor is not None:
             current_illumination = self.__light_sensor.get_value()
-
-        # If there is no one at the zone, just turn off the lights.
-        is_empty = self.__is_empty()
+            current_illumination = l_scale(current_illumination, [0.0, self.__output_limit], [0.0, 100.0])
         
-        # If the zone is empty, turn the lights off.
-        if is_empty:
-            self.__last_target_illum = self.__target_illumination
-            self.__target_illumination = 0
+        # Limits
+        lower_limit = 0.0
+        mid_1 = 20.0
+        mid_2 = 80.0
+        upper_limit = 100.0
 
-        # Calculate the target error.
-        error = self.__target_illumination - current_illumination
+        # Check the limits.
+        if lower_limit <= target_illumination and target_illumination <= mid_1:
+            self.__tmp_output = (target_illumination / mid_1) * 20.0
 
-        # Integrate the delta to temporal output.
-        delta = error * self.__error_gain
-        self.__tmp_output += delta
+        elif mid_1 < target_illumination and target_illumination  < mid_2:
+            
+            # Apply the formula.
+            first = current_illumination
+            second = (1 + ((50.0 - target_illumination) / 100.0))
+            calculated_value = first * second
+
+            # Calculate the target error.
+            error = calculated_value - current_illumination
+
+            # Integrate the delta to temporal output.
+            delta = error * self.__error_gain
+            self.__tmp_output += delta
+
+        elif mid_2 <= target_illumination and target_illumination  <= upper_limit:
+            self.__tmp_output = (target_illumination / upper_limit) * 100.
 
         # Limitate the output by target value.
         if self.__tmp_output > abs(self.__output_limit):
@@ -326,8 +345,8 @@ class Light(BasePlugin):
         # Limitate by absolute maximum and minimum.
         if self.__tmp_output < 0:
             self.__tmp_output = 0
-        if self.__tmp_output > 10000:
-            self.__tmp_output = 10000
+        if self.__tmp_output > 100:
+            self.__tmp_output = 100
 
         # Apply the output if it is different.
         self.__output = self.__tmp_output
@@ -338,11 +357,16 @@ class Light(BasePlugin):
         out_to_v1 = v1 * to_voltage_scale
         out_to_v2 = v2 * to_voltage_scale
 
+
+        # If the zone is empty, turn the lights off.
+        if is_empty:
+            pass
+
         # set the voltage.
         self.__set_voltages(out_to_v1, out_to_v2)
 
         self.__logger.debug("TRG {:3.3f}\tINP {:3.3f}\tERR: {:3.3f}\tOUT1: {:3.3f}\tOUT2: {:3.3f}"\
-            .format(self.__target_illumination, current_illumination, delta, out_to_v1, out_to_v2))
+            .format(target_illumination, current_illumination, delta, out_to_v1, out_to_v2))
 
 #endregion
 
