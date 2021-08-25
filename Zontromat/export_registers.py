@@ -2587,7 +2587,7 @@ def __add_registers():
     register.plugin_name = "Ventilation"
     register.description = "Lower valve settings"
     register.range = ""
-    register.value = "FONYES/Model1/DO9/DO10" # Vendor/Model/Closing/Opening
+    register.value = "FONYES/Model1/DO8/DO9" # Vendor/Model/Closing/Opening
     __registers.append(register)
 
     # Lower valve settings
@@ -2596,7 +2596,7 @@ def __add_registers():
     register.plugin_name = "Ventilation"
     register.description = "Upper valve settings"
     register.range = ""
-    register.value = "FONYES/Model1/DO11/DO12" # Vendor/Model/Closing/Opening
+    register.value = "FONYES/Model1/DO10/DO11" # Vendor/Model/Closing/Opening
     __registers.append(register)
 
     # Zones count.

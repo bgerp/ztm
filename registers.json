@@ -2769,7 +2769,7 @@
     },
     {
         "data_type": "str",
-        "default": "FONYES/Model1/DO9/DO10",
+        "default": "FONYES/Model1/DO8/DO9",
         "description": "Lower valve settings",
         "limit": 0.0,
         "name": "vent.upper_1.valve.settings",
@@ -2779,7 +2779,7 @@
     },
     {
         "data_type": "str",
-        "default": "FONYES/Model1/DO11/DO12",
+        "default": "FONYES/Model1/DO10/DO11",
         "description": "Upper valve settings",
         "limit": 0.0,
         "name": "vent.lower_1.valve.settings",
