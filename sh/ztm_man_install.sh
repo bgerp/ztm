@@ -57,6 +57,9 @@ sudo apt install python3-pip -y
 # Install dmidecode
 sudo apt install python3-dmidecode -y
 
+# Install unclutter 
+sudo apt install unclutter -y
+
 # Install the app.
 # ========================================================================
 # Clone the Zontromat Repo
@@ -104,20 +107,32 @@ sudo systemctl daemon-reload
 # Start the zontromat daemon.
 sudo systemctl start zontromat
 
-# System screen session.
+# Stop sleep and screen saver.
 # ========================================================================
-# Enter autologin mode.
-ssdm="/etc/sddm.conf"
-section="[Autologin]"
-user="User=zontromat"
-session="Session=Lubuntu"
+sudo systemctl mask sleep.target suspend.target hibernate.target hybrid-sleep.target
 
-sudo echo "" > $ssdm
-sudo echo $section >> $ssdm
-sudo echo $user >> $ssdm
-sudo echo $session >> $ssdm
+# Create autostart directory if it is not created.
+# ========================================================================
+sudo mkdir -p ~/.config/autostart/
 
 # Set KIOSK screen session.
 # ========================================================================
 # Copy the autorun file file.
 sudo cp /opt/ztm/sh/ztm-kiosk.desktop ~/.config/autostart/ztm-kiosk.desktop
+
+# Hide cursor pointer in 10 ms affter usage the pointing device.
+sudo cp /opt/ztm/sh/ztm-unclutter.desktop ~/.config/autostart/ztm-unclutter.desktop
+
+# System screen session.
+# It would me active only in lubuntu distribution.
+# ========================================================================
+# Enter autologin mode.
+# ssdm="/etc/sddm.conf"
+# section="[Autologin]"
+# user="User=zontromat"
+# session="Session=Lubuntu"
+
+# sudo echo "" > $ssdm
+# sudo echo $section >> $ssdm
+# sudo echo $user >> $ssdm
+# sudo echo $session >> $ssdm
