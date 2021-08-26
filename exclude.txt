@@ -1,6 +1,0 @@
-Zontromat/settings.yaml
-.gitignore
-.gitlab-ci.yml
-Zontromat/.vscode
-Zontromat/.gitignore
-.git
