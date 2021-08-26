@@ -396,7 +396,7 @@
             "devices.SEDtronic.u1wtvs.u1wtvs",
             "devices.Silpa.klimafan.klimafan",
             "devices.Teracom.act230.act230",
-            "devices.TONHE.a20m15b2c.a20m15b2c",
+            "devices.Tonhe.a20m15b2c.a20m15b2c",
             "devices.drivers.modbus.device",
             "devices.no_vendors.no_vendor_1.flowmeter",
             "devices.tests.electrical_performance.electrical_performance",
@@ -657,23 +657,23 @@
         "name": "devices.Teracom.act230.act230",
         "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\devices\\Teracom\\act230\\act230.py"
     },
-    "devices.TONHE": {
+    "devices.Tonhe": {
         "bacon": 2,
         "imported_by": [
             "plugins.hvac.air_conditioner"
         ],
-        "name": "devices.TONHE",
-        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\devices\\TONHE\\__init__.py"
+        "name": "devices.Tonhe",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\devices\\Tonhe\\__init__.py"
     },
-    "devices.TONHE.a20m15b2c": {
+    "devices.Tonhe.a20m15b2c": {
         "bacon": 2,
         "imported_by": [
             "plugins.hvac.air_conditioner"
         ],
-        "name": "devices.TONHE.a20m15b2c",
-        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\devices\\TONHE\\a20m15b2c\\__init__.py"
+        "name": "devices.Tonhe.a20m15b2c",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\devices\\Tonhe\\a20m15b2c\\__init__.py"
     },
-    "devices.TONHE.a20m15b2c.a20m15b2c": {
+    "devices.Tonhe.a20m15b2c.a20m15b2c": {
         "bacon": 2,
         "imported_by": [
             "plugins.hvac.air_conditioner"
@@ -684,8 +684,8 @@
             "utils",
             "utils.logger"
         ],
-        "name": "devices.TONHE.a20m15b2c.a20m15b2c",
-        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\devices\\TONHE\\a20m15b2c\\a20m15b2c.py"
+        "name": "devices.Tonhe.a20m15b2c.a20m15b2c",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\devices\\Tonhe\\a20m15b2c\\a20m15b2c.py"
     },
     "devices.base_device": {
         "bacon": 3,
@@ -694,7 +694,7 @@
             "devices.HangzhouAirflowElectricApplications.f3p146ec072600.f3p146ec072600",
             "devices.SEDtronic.u1wtvs.u1wtvs",
             "devices.Silpa.klimafan.klimafan",
-            "devices.TONHE.a20m15b2c.a20m15b2c",
+            "devices.Tonhe.a20m15b2c.a20m15b2c",
             "devices.no_vendors.no_vendor_1.flowmeter",
             "devices.utils.card_readers.base_card_reader"
         ],
@@ -1179,9 +1179,9 @@
             "devices.Silpa",
             "devices.Silpa.klimafan",
             "devices.Silpa.klimafan.klimafan",
-            "devices.TONHE",
-            "devices.TONHE.a20m15b2c",
-            "devices.TONHE.a20m15b2c.a20m15b2c",
+            "devices.Tonhe",
+            "devices.Tonhe.a20m15b2c",
+            "devices.Tonhe.a20m15b2c.a20m15b2c",
             "devices.no_vendors",
             "devices.no_vendors.no_vendor_1",
             "devices.no_vendors.no_vendor_1.flowmeter",
@@ -1554,7 +1554,7 @@
             "devices.HangzhouAirflowElectricApplications.f3p146ec072600.f3p146ec072600",
             "devices.Silpa.klimafan.klimafan",
             "devices.Teracom.act230.act230",
-            "devices.TONHE.a20m15b2c.a20m15b2c",
+            "devices.Tonhe.a20m15b2c.a20m15b2c",
             "devices.base_device",
             "devices.tests.electrical_performance.electrical_performance",
             "devices.tests.leak_test.leak_test",
@@ -1601,7 +1601,7 @@
             "devices.HangzhouAirflowElectricApplications.f3p146ec072600.f3p146ec072600",
             "devices.Silpa.klimafan.klimafan",
             "devices.Teracom.act230.act230",
-            "devices.TONHE.a20m15b2c.a20m15b2c",
+            "devices.Tonhe.a20m15b2c.a20m15b2c",
             "main",
             "plugins.access_control.access_control",
             "plugins.access_control.security_zone",
@@ -2137,7 +2137,7 @@
             "devices.SEDtronic.u1wtvs.u1wtvs",
             "devices.Silpa.klimafan.klimafan",
             "devices.Teracom.act230.act230",
-            "devices.TONHE.a20m15b2c.a20m15b2c",
+            "devices.Tonhe.a20m15b2c.a20m15b2c",
             "devices.drivers.modbus.device",
             "devices.no_vendors.no_vendor_1.flowmeter",
             "devices.tests.electrical_performance.electrical_performance",
@@ -2398,23 +2398,23 @@
         "name": "devices.Teracom.act230.act230",
         "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\devices\\Teracom\\act230\\act230.py"
     },
-    "devices.TONHE": {
+    "devices.Tonhe": {
         "bacon": 2,
         "imported_by": [
             "plugins.hvac.air_conditioner"
         ],
-        "name": "devices.TONHE",
-        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\devices\\TONHE\\__init__.py"
+        "name": "devices.Tonhe",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\devices\\Tonhe\\__init__.py"
     },
-    "devices.TONHE.a20m15b2c": {
+    "devices.Tonhe.a20m15b2c": {
         "bacon": 2,
         "imported_by": [
             "plugins.hvac.air_conditioner"
         ],
-        "name": "devices.TONHE.a20m15b2c",
-        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\devices\\TONHE\\a20m15b2c\\__init__.py"
+        "name": "devices.Tonhe.a20m15b2c",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\devices\\Tonhe\\a20m15b2c\\__init__.py"
     },
-    "devices.TONHE.a20m15b2c.a20m15b2c": {
+    "devices.Tonhe.a20m15b2c.a20m15b2c": {
         "bacon": 2,
         "imported_by": [
             "plugins.hvac.air_conditioner"
@@ -2425,8 +2425,8 @@
             "utils",
             "utils.logger"
         ],
-        "name": "devices.TONHE.a20m15b2c.a20m15b2c",
-        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\devices\\TONHE\\a20m15b2c\\a20m15b2c.py"
+        "name": "devices.Tonhe.a20m15b2c.a20m15b2c",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\devices\\Tonhe\\a20m15b2c\\a20m15b2c.py"
     },
     "devices.base_device": {
         "bacon": 3,
@@ -2435,7 +2435,7 @@
             "devices.HangzhouAirflowElectricApplications.f3p146ec072600.f3p146ec072600",
             "devices.SEDtronic.u1wtvs.u1wtvs",
             "devices.Silpa.klimafan.klimafan",
-            "devices.TONHE.a20m15b2c.a20m15b2c",
+            "devices.Tonhe.a20m15b2c.a20m15b2c",
             "devices.no_vendors.no_vendor_1.flowmeter",
             "devices.utils.card_readers.base_card_reader"
         ],
@@ -2920,9 +2920,9 @@
             "devices.Silpa",
             "devices.Silpa.klimafan",
             "devices.Silpa.klimafan.klimafan",
-            "devices.TONHE",
-            "devices.TONHE.a20m15b2c",
-            "devices.TONHE.a20m15b2c.a20m15b2c",
+            "devices.Tonhe",
+            "devices.Tonhe.a20m15b2c",
+            "devices.Tonhe.a20m15b2c.a20m15b2c",
             "devices.no_vendors",
             "devices.no_vendors.no_vendor_1",
             "devices.no_vendors.no_vendor_1.flowmeter",
@@ -3295,7 +3295,7 @@
             "devices.HangzhouAirflowElectricApplications.f3p146ec072600.f3p146ec072600",
             "devices.Silpa.klimafan.klimafan",
             "devices.Teracom.act230.act230",
-            "devices.TONHE.a20m15b2c.a20m15b2c",
+            "devices.Tonhe.a20m15b2c.a20m15b2c",
             "devices.base_device",
             "devices.tests.electrical_performance.electrical_performance",
             "devices.tests.leak_test.leak_test",
@@ -3342,7 +3342,7 @@
             "devices.HangzhouAirflowElectricApplications.f3p146ec072600.f3p146ec072600",
             "devices.Silpa.klimafan.klimafan",
             "devices.Teracom.act230.act230",
-            "devices.TONHE.a20m15b2c.a20m15b2c",
+            "devices.Tonhe.a20m15b2c.a20m15b2c",
             "main",
             "plugins.access_control.access_control",
             "plugins.access_control.security_zone",
@@ -3878,7 +3878,7 @@
             "devices.SEDtronic.u1wtvs.u1wtvs",
             "devices.Silpa.klimafan.klimafan",
             "devices.Teracom.act230.act230",
-            "devices.TONHE.a20m15b2c.a20m15b2c",
+            "devices.Tonhe.a20m15b2c.a20m15b2c",
             "devices.drivers.modbus.device",
             "devices.no_vendors.no_vendor_1.flowmeter",
             "devices.tests.electrical_performance.electrical_performance",
@@ -4139,23 +4139,23 @@
         "name": "devices.Teracom.act230.act230",
         "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\devices\\Teracom\\act230\\act230.py"
     },
-    "devices.TONHE": {
+    "devices.Tonhe": {
         "bacon": 2,
         "imported_by": [
             "plugins.hvac.air_conditioner"
         ],
-        "name": "devices.TONHE",
-        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\devices\\TONHE\\__init__.py"
+        "name": "devices.Tonhe",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\devices\\Tonhe\\__init__.py"
     },
-    "devices.TONHE.a20m15b2c": {
+    "devices.Tonhe.a20m15b2c": {
         "bacon": 2,
         "imported_by": [
             "plugins.hvac.air_conditioner"
         ],
-        "name": "devices.TONHE.a20m15b2c",
-        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\devices\\TONHE\\a20m15b2c\\__init__.py"
+        "name": "devices.Tonhe.a20m15b2c",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\devices\\Tonhe\\a20m15b2c\\__init__.py"
     },
-    "devices.TONHE.a20m15b2c.a20m15b2c": {
+    "devices.Tonhe.a20m15b2c.a20m15b2c": {
         "bacon": 2,
         "imported_by": [
             "plugins.hvac.air_conditioner"
@@ -4166,8 +4166,8 @@
             "utils",
             "utils.logger"
         ],
-        "name": "devices.TONHE.a20m15b2c.a20m15b2c",
-        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\devices\\TONHE\\a20m15b2c\\a20m15b2c.py"
+        "name": "devices.Tonhe.a20m15b2c.a20m15b2c",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\devices\\Tonhe\\a20m15b2c\\a20m15b2c.py"
     },
     "devices.base_device": {
         "bacon": 3,
@@ -4176,7 +4176,7 @@
             "devices.HangzhouAirflowElectricApplications.f3p146ec072600.f3p146ec072600",
             "devices.SEDtronic.u1wtvs.u1wtvs",
             "devices.Silpa.klimafan.klimafan",
-            "devices.TONHE.a20m15b2c.a20m15b2c",
+            "devices.Tonhe.a20m15b2c.a20m15b2c",
             "devices.no_vendors.no_vendor_1.flowmeter",
             "devices.utils.card_readers.base_card_reader"
         ],
@@ -4661,9 +4661,9 @@
             "devices.Silpa",
             "devices.Silpa.klimafan",
             "devices.Silpa.klimafan.klimafan",
-            "devices.TONHE",
-            "devices.TONHE.a20m15b2c",
-            "devices.TONHE.a20m15b2c.a20m15b2c",
+            "devices.Tonhe",
+            "devices.Tonhe.a20m15b2c",
+            "devices.Tonhe.a20m15b2c.a20m15b2c",
             "devices.no_vendors",
             "devices.no_vendors.no_vendor_1",
             "devices.no_vendors.no_vendor_1.flowmeter",
@@ -5036,7 +5036,7 @@
             "devices.HangzhouAirflowElectricApplications.f3p146ec072600.f3p146ec072600",
             "devices.Silpa.klimafan.klimafan",
             "devices.Teracom.act230.act230",
-            "devices.TONHE.a20m15b2c.a20m15b2c",
+            "devices.Tonhe.a20m15b2c.a20m15b2c",
             "devices.base_device",
             "devices.tests.electrical_performance.electrical_performance",
             "devices.tests.leak_test.leak_test",
@@ -5083,7 +5083,7 @@
             "devices.HangzhouAirflowElectricApplications.f3p146ec072600.f3p146ec072600",
             "devices.Silpa.klimafan.klimafan",
             "devices.Teracom.act230.act230",
-            "devices.TONHE.a20m15b2c.a20m15b2c",
+            "devices.Tonhe.a20m15b2c.a20m15b2c",
             "main",
             "plugins.access_control.access_control",
             "plugins.access_control.security_zone",
