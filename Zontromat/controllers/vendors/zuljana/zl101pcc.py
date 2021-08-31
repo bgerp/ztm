@@ -97,7 +97,7 @@ class ZL101PCC(BaseController):
 
     __timeout = 0.5
     """Modbus timeout.
-    """    
+    """
 
     __black_island = None
     """IO
@@ -223,10 +223,10 @@ class ZL101PCC(BaseController):
         is_valid = False
         ports = serial_ports()
         for port in ports:
-            if self.__modbus_rtu_port in port:
+            if port in self.__modbus_rtu_port:
                 is_valid = True
                 break
-        
+
         if not is_valid:
             raise ValueError("The serial port \"{}\" does not exists in the known ports {}".format(self.__modbus_rtu_port, ports))
 
@@ -266,7 +266,7 @@ class ZL101PCC(BaseController):
     def __get_posix_uuid(self):
 
         uuid = ""
-        
+
         # First try.
         if uuid == "":
             try:
@@ -294,7 +294,7 @@ class ZL101PCC(BaseController):
 
         # If bytes then covert to string.
         if type(uuid) == bytes:
-            uuid = uuid.decode('utf-8') 
+            uuid = uuid.decode('utf-8')
 
         return uuid
 
@@ -426,7 +426,7 @@ class ZL101PCC(BaseController):
         state = bool(value)
 
         if polarity:
-            state = not state            
+            state = not state
 
         # Remote GPIO.
         if self.is_valid_remote_gpio(l_pin):
@@ -444,7 +444,7 @@ class ZL101PCC(BaseController):
         # Non remote GPIO.
         else:
             gpio = self.__map[pin]
-            
+
             self.__DORO[gpio] = state
 
             # Write device digital & relay outputs.
