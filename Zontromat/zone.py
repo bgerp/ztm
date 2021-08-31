@@ -576,7 +576,6 @@ class Zone():
             # self.__registers_snapshot = queue.Queue()
 
         except Exception:
-            exc_info = sys.exc_info()
             self.__logger.error(traceback.format_exc())
             sys.exit(0)
 
