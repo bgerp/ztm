@@ -72,5 +72,5 @@ cd ~
 
 # Remove he old repo.
 echo "Removing old repo."
-sudo rm -rf ~/Git/ztm
+sudo rm -rf ./Git
 echo "Old repo removed."
