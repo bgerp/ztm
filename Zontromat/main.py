@@ -26,8 +26,6 @@ import sys
 import signal
 import os
 
-from psutil import Process
-
 from utils.logger import get_logger, crate_log_file
 from utils.settings import ApplicationSettings
 from utils.utils import find_proc
