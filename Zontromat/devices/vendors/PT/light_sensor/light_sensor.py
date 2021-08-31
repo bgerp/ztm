@@ -68,8 +68,16 @@ class LightSensor(BaseLightSensor):
     """Sensor analog input.
     """
 
-    __state = 0
+    __state = {}
     """Value from the input.
+    """
+
+    __min_measured = 0.0
+    """Minimum value of the sensor.
+    """
+
+    __max_measured = 15000.0
+    """Maximum of te sensor.
     """
 
 #endregion
@@ -102,7 +110,12 @@ class LightSensor(BaseLightSensor):
         """Get value.
         """
 
-        raw = l_scale(self.__state["value"], [0, 10], [0, 15000])
+        raw = 0.0
+
+        if bool(self.__state):
+            raw = l_scale(self.__state["value"],
+                        [self.__state["min"], self.__state["max"]],
+                        [self.__min_measured, self.__max_measured])
 
         return raw
 
