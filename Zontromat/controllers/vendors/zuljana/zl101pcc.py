@@ -220,8 +220,14 @@ class ZL101PCC(BaseController):
         if "timeout" in config:
             self.__timeout = float(config["timeout"])
 
+        is_valid = False
         ports = serial_ports()
-        if not self.__modbus_rtu_port in ports:
+        for port in ports:
+            if self.__modbus_rtu_port in port:
+                is_valid = True
+                break
+        
+        if not is_valid:
             raise ValueError("The serial port \"{}\" does not exists in the known ports {}".format(self.__modbus_rtu_port, ports))
 
         if self.__modbus_rtu_client is None:
