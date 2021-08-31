@@ -58,10 +58,21 @@ __status__ = "Debug"
 #endregion
 
 class LightSensorFactory:
+    """Light sensor factory.
+    """
 
     @staticmethod
     def create(**config):
         """Create device instace.
+
+        Raises:
+            ValueError: Invalid vendor.
+            ValueError: Invalid model.
+            ValueError: No controller.
+            NotImplementedError: If device is not supported.
+
+        Returns:
+            mixed: Instance of the device.
         """
 
         # The device instance.
