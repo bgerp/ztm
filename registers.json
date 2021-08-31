@@ -2836,5 +2836,15 @@
         "plugin": "Alarm",
         "range": "true|false",
         "scope": "System"
+    },
+    {
+        "data_type": "bool",
+        "default": true,
+        "description": "Statistics module enable flag.",
+        "limit": 0.0,
+        "name": "stat.enabled",
+        "plugin": "Statistics",
+        "range": "true|false",
+        "scope": "System"
     }
 ]

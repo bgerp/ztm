@@ -2619,7 +2619,7 @@ def __add_registers():
 
 #endregion
 
-#region Ventilation (alarm)
+#region Alarm (alarm)
 
     # Visual signal device.
     register = Register("alarm.device.sound.settings")
@@ -2650,6 +2650,18 @@ def __add_registers():
 
 #endregion
 
+#region Statistics (stat)
+
+    # Enable
+    register = Register("stat.enabled")
+    register.scope = Scope.System
+    register.plugin_name = "Statistics"
+    register.description = "Statistics module enable flag."
+    register.range = __range["BOOL"]
+    register.value = True
+    __registers.append(register)
+
+#endregion
 
 def main():
     global __registers, __range
