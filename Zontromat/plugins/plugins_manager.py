@@ -216,23 +216,13 @@ class PluginsManager:
         """
 
         for key in self.__plugins:
-
-            try:
-                self.__plugins[key].update()
-
-            except:
-                self.__logger.error(traceback.format_exc())
+            self.__plugins[key].update()
 
     def shutdown(self):
         """Shutdown plugins.
         """
 
         for key in self.__plugins:
-
-            try:
-                self.__plugins[key].shutdown()
-
-            except:
-                self.__logger.error(traceback.format_exc())
+            self.__plugins[key].shutdown()
 
 #endregion

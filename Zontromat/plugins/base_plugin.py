@@ -22,7 +22,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 
+import traceback
+
 from utils.configuarable import Configuarable
+
+from utils.logger import get_logger
 
 #region File Attributes
 
@@ -60,6 +64,10 @@ class BasePlugin(Configuarable):
 
 #region Attributes
 
+    __logger = None
+    """Logger
+    """
+
     _controller = None
     """Controller
     """
@@ -69,9 +77,12 @@ class BasePlugin(Configuarable):
     """
 
     __ready_flag = False
+    """Ready flag.
+    """
 
     __in_cycle_flag = False
-
+    """In cycle flag.
+    """    
 #endregion
 
 #region Constructor / Destructor
@@ -87,6 +98,9 @@ class BasePlugin(Configuarable):
 
         if "registers" in config:
             self._registers = config["registers"]
+
+        # Create logger.
+        self.__logger = get_logger(__name__)
 
     def __del__(self):
         """Destructor
@@ -176,11 +190,14 @@ class BasePlugin(Configuarable):
         if not self.__is_ready():
             return
 
-        # Tell the runtime engine that it is entering in cycle.
+        # Update the plugin.
         self.__in_cycle(True)
 
-        # Update the plugin.
-        self._update()
+        try:
+            self._update()
+
+        except:
+            self.__logger.error(traceback.format_exc())
 
         # Tell the runtime engine that it is exiting from cycle.
         self.__in_cycle(False)
@@ -196,6 +213,11 @@ class BasePlugin(Configuarable):
         self.__wait()
 
         # Shutdown the plugin.
-        self._shutdown()
+        try:
+            self._shutdown()
+
+        except:
+            self.__logger.error(traceback.format_exc())
+
 
 #endregion
