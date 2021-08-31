@@ -140,6 +140,7 @@ class Statistics(BasePlugin):
         """Do the JOB method."""
 
         if self.__light_sensor is not None:
+            self.__light_sensor.update()
             measured_value = self.__light_sensor.get_value()
             if self.__light_sensor_logger is not None:
                 self.__light_sensor_logger.info("{}".format(measured_value))
@@ -176,7 +177,6 @@ class Statistics(BasePlugin):
         if sensor_enabled is not None:
             sensor_enabled.update_handlers = self.__light_sensor_settings_cb
             sensor_enabled.update()
-
 
 #endregion
 
