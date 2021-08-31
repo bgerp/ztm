@@ -31,12 +31,12 @@ import os
 from pymodbus.client.sync import ModbusSerialClient as ModbusClient
 
 from utils.logger import get_logger
+from utils.utils import serial_ports
+from utils.logic.functions import l_scale
 
 from controllers.base_controller import BaseController
 
 from devices.vendors.Super.s8_3cn.s8_3cn import S8_3CN as BlackIsland
-
-from utils.logic.functions import l_scale
 
 #region File Attributes
 
@@ -219,6 +219,10 @@ class ZL101PCC(BaseController):
 
         if "timeout" in config:
             self.__timeout = float(config["timeout"])
+
+        ports = serial_ports()
+        if not self.__modbus_rtu_port in ports:
+            raise ValueError("The serial port \"{}\" does not exists in the known ports {}".format(self.__modbus_rtu_port, ports))
 
         if self.__modbus_rtu_client is None:
             self.__modbus_rtu_client = ModbusClient(
