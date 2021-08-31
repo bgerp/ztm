@@ -27,6 +27,7 @@ from functools import wraps
 import tracemalloc
 import shutil
 import psutil
+import serial.tools.list_ports
 
 #region File Attributes
 
@@ -177,3 +178,11 @@ def find_proc(proc_name: str, proc_title: str):
                     output_processes.append(process)
  
     return output_processes
+
+def serial_ports():
+    """List all serial ports.
+    """    
+
+    ports = serial.tools.list_ports.comports()
+    names = [port.name for port in ports]
+    return names
