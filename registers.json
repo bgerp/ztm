@@ -900,8 +900,14 @@
         "scope": "System"
     },
     {
-        "data_type": "str",
-        "default": "Donkger/XY-MD02/4",
+        "data_type": "json",
+        "default": {
+            "model": "XY-MD02",
+            "options": {
+                "mb_id": 4
+            },
+            "vendor": "Donkger"
+        },
         "description": "Air temperature sensor center settings",
         "limit": 0.0,
         "name": "hvac.air_temp_cent_1.settings",
@@ -920,8 +926,14 @@
         "scope": "System"
     },
     {
-        "data_type": "str",
-        "default": "Donkger/XY-MD02/3",
+        "data_type": "json",
+        "default": {
+            "model": "XY-MD02",
+            "options": {
+                "mb_id": 3
+            },
+            "vendor": "Donkger"
+        },
         "description": "Air temperature sensor lower settings",
         "limit": 0.0,
         "name": "hvac.air_temp_lower_1.settings",
@@ -940,8 +952,14 @@
         "scope": "System"
     },
     {
-        "data_type": "str",
-        "default": "Donkger/XY-MD02/5",
+        "data_type": "json",
+        "default": {
+            "model": "XY-MD02",
+            "options": {
+                "mb_id": 5
+            },
+            "vendor": "Donkger"
+        },
         "description": "Air temperature sensor upper settings",
         "limit": 0.0,
         "name": "hvac.air_temp_upper_1.settings",
@@ -960,8 +978,16 @@
         "scope": "System"
     },
     {
-        "data_type": "str",
-        "default": "Silpa/Klimafan/RO4/RO5/RO6",
+        "data_type": "json",
+        "default": {
+            "model": "Klimafan",
+            "options": {
+                "stage1": "RO4",
+                "stage2": "RO5",
+                "stage3": "RO6"
+            },
+            "vendor": "Silpa"
+        },
         "description": "Convector settings",
         "limit": 0.0,
         "name": "hvac.convector_1.settings",
@@ -1020,8 +1046,14 @@
         "scope": "System"
     },
     {
-        "data_type": "str",
-        "default": "Donkger/XY-MD02/3",
+        "data_type": "json",
+        "default": {
+            "model": "XY-MD02",
+            "options": {
+                "mb_id": 3
+            },
+            "vendor": "Donkger"
+        },
         "description": "Loop 1 temperature sensor settings",
         "limit": 0.0,
         "name": "hvac.loop1_1.temp.settings",
@@ -1080,8 +1112,14 @@
         "scope": "System"
     },
     {
-        "data_type": "str",
-        "default": "Donkger/XY-MD02/5",
+        "data_type": "json",
+        "default": {
+            "model": "XY-MD02",
+            "options": {
+                "mb_id": 5
+            },
+            "vendor": "Donkger"
+        },
         "description": "Loop 2 temperature sensor settings",
         "limit": 0.0,
         "name": "hvac.loop2_1.temp.settings",
@@ -1210,8 +1248,14 @@
         "scope": "System"
     },
     {
-        "data_type": "str",
-        "default": "PT/light_sensor/AI2",
+        "data_type": "json",
+        "default": {
+            "model": "light_sensor",
+            "options": {
+                "input": "AI2"
+            },
+            "vendor": "PT"
+        },
         "description": "Sensor settings",
         "limit": 0.0,
         "name": "light.sensor.settings",
@@ -1478,8 +1522,17 @@
         "scope": "System"
     },
     {
-        "data_type": "str",
-        "default": "Flowx/FLX-05F/U1:ID1:R0:DO0/U1:ID1:R0:DO1/U1:ID1:R0:DI0/U1:ID1:R0:DI1",
+        "data_type": "json",
+        "default": {
+            "model": "FLX-05F",
+            "options": {
+                "limit_ccw": "U1:ID1:R0:DI1",
+                "limit_cw": "U1:ID1:R0:DI0",
+                "output_ccw": "U1:ID1:R0:DO1",
+                "output_cw": "U1:ID1:R0:DO0"
+            },
+            "vendor": "Flowx"
+        },
         "description": "ECD / Foyer Floor Heating Settings",
         "limit": 0.0,
         "name": "ecd.underfloor_heating_foyer.valve.enabled",
@@ -1508,8 +1561,17 @@
         "scope": "System"
     },
     {
-        "data_type": "str",
-        "default": "Flowx/FLX-05F/U1:ID1:R0:DO2/U1:ID1:R0:DO3/U1:ID1:R0:DI2/U1:ID1:R0:DI3",
+        "data_type": "json",
+        "default": {
+            "model": "FLX-05F",
+            "options": {
+                "limit_ccw": "U1:ID1:R0:DI1",
+                "limit_cw": "U1:ID1:R0:DI0",
+                "output_ccw": "U1:ID1:R0:DO1",
+                "output_cw": "U1:ID1:R0:DO0"
+            },
+            "vendor": "Flowx"
+        },
         "description": "ECD / Underfloor Heating Trestle",
         "limit": 0.0,
         "name": "ecd.underfloor_heating_trestle.valve.enabled",
@@ -1538,8 +1600,17 @@
         "scope": "System"
     },
     {
-        "data_type": "str",
-        "default": "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5",
+        "data_type": "json",
+        "default": {
+            "model": "FLX-05F",
+            "options": {
+                "limit_ccw": "U1:ID1:R0:DI1",
+                "limit_cw": "U1:ID1:R0:DI0",
+                "output_ccw": "U1:ID1:R0:DO1",
+                "output_cw": "U1:ID1:R0:DO0"
+            },
+            "vendor": "Flowx"
+        },
         "description": "ECD / Underfloor Heating Pool",
         "limit": 0.0,
         "name": "ecd.underfloor_heating_pool.valve.enabled",
@@ -1568,8 +1639,17 @@
         "scope": "System"
     },
     {
-        "data_type": "str",
-        "default": "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5",
+        "data_type": "json",
+        "default": {
+            "model": "FLX-05F",
+            "options": {
+                "limit_ccw": "U1:ID1:R0:DI1",
+                "limit_cw": "U1:ID1:R0:DI0",
+                "output_ccw": "U1:ID1:R0:DO1",
+                "output_cw": "U1:ID1:R0:DO0"
+            },
+            "vendor": "Flowx"
+        },
         "description": "ECD / Air Cooling Valve Settings",
         "limit": 0.0,
         "name": "ecd.air_cooling.valve.enabled",
@@ -1598,8 +1678,17 @@
         "scope": "System"
     },
     {
-        "data_type": "str",
-        "default": "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5",
+        "data_type": "json",
+        "default": {
+            "model": "FLX-05F",
+            "options": {
+                "limit_ccw": "U1:ID1:R0:DI1",
+                "limit_cw": "U1:ID1:R0:DI0",
+                "output_ccw": "U1:ID1:R0:DO1",
+                "output_cw": "U1:ID1:R0:DO0"
+            },
+            "vendor": "Flowx"
+        },
         "description": "ECD / Ground Drilling Valve",
         "limit": 0.0,
         "name": "ecd.ground_drill.valve.enabled",
@@ -1628,8 +1717,17 @@
         "scope": "System"
     },
     {
-        "data_type": "str",
-        "default": "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5",
+        "data_type": "json",
+        "default": {
+            "model": "FLX-05F",
+            "options": {
+                "limit_ccw": "U1:ID1:R0:DI1",
+                "limit_cw": "U1:ID1:R0:DI0",
+                "output_ccw": "U1:ID1:R0:DO1",
+                "output_cw": "U1:ID1:R0:DO0"
+            },
+            "vendor": "Flowx"
+        },
         "description": "ECD / Generators Cooling Valve / Settings",
         "limit": 0.0,
         "name": "ecd.generators_cooling.valve.enabled",
@@ -1658,8 +1756,17 @@
         "scope": "System"
     },
     {
-        "data_type": "str",
-        "default": "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5",
+        "data_type": "json",
+        "default": {
+            "model": "FLX-05F",
+            "options": {
+                "limit_ccw": "U1:ID1:R0:DI1",
+                "limit_cw": "U1:ID1:R0:DI0",
+                "output_ccw": "U1:ID1:R0:DO1",
+                "output_cw": "U1:ID1:R0:DO0"
+            },
+            "vendor": "Flowx"
+        },
         "description": "ECD / Short Green/Purple Valve Settings",
         "limit": 0.0,
         "name": "ecd.short_green_purple.valve.enabled",
@@ -1688,8 +1795,17 @@
         "scope": "System"
     },
     {
-        "data_type": "str",
-        "default": "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5",
+        "data_type": "json",
+        "default": {
+            "model": "FLX-05F",
+            "options": {
+                "limit_ccw": "U1:ID1:R0:DI1",
+                "limit_cw": "U1:ID1:R0:DI0",
+                "output_ccw": "U1:ID1:R0:DO1",
+                "output_cw": "U1:ID1:R0:DO0"
+            },
+            "vendor": "Flowx"
+        },
         "description": "ECD / Underfloor West Bypass Valve Settings",
         "limit": 0.0,
         "name": "ecd.underfloor_west_bypass.valve.enabled",
@@ -1718,8 +1834,17 @@
         "scope": "System"
     },
     {
-        "data_type": "str",
-        "default": "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5",
+        "data_type": "json",
+        "default": {
+            "model": "FLX-05F",
+            "options": {
+                "limit_ccw": "U1:ID1:R0:DI1",
+                "limit_cw": "U1:ID1:R0:DI0",
+                "output_ccw": "U1:ID1:R0:DO1",
+                "output_cw": "U1:ID1:R0:DO0"
+            },
+            "vendor": "Flowx"
+        },
         "description": "ECD / Underfloor East Bypass Valve Settings",
         "limit": 0.0,
         "name": "ecd.underfloor_east_bypass.valve.enabled",
@@ -1748,8 +1873,17 @@
         "scope": "System"
     },
     {
-        "data_type": "str",
-        "default": "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5",
+        "data_type": "json",
+        "default": {
+            "model": "FLX-05F",
+            "options": {
+                "limit_ccw": "U1:ID1:R0:DI1",
+                "limit_cw": "U1:ID1:R0:DI0",
+                "output_ccw": "U1:ID1:R0:DO1",
+                "output_cw": "U1:ID1:R0:DO0"
+            },
+            "vendor": "Flowx"
+        },
         "description": "ECD / VCG / Pool Heating",
         "limit": 0.0,
         "name": "ecd.vcg_pool_heating.valve",
@@ -1758,8 +1892,14 @@
         "scope": "System"
     },
     {
-        "data_type": "str",
-        "default": "Grundfos/Pump/5",
+        "data_type": "json",
+        "default": {
+            "model": "Pump",
+            "options": {
+                "mb_id": 5
+            },
+            "vendor": "Grundfos"
+        },
         "description": "ECD / VCG / Pool Heating",
         "limit": 0.0,
         "name": "ecd.vcg_pool_heating.pump",
@@ -1778,8 +1918,17 @@
         "scope": "System"
     },
     {
-        "data_type": "str",
-        "default": "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5",
+        "data_type": "json",
+        "default": {
+            "model": "FLX-05F",
+            "options": {
+                "limit_ccw": "U1:ID1:R0:DI1",
+                "limit_cw": "U1:ID1:R0:DI0",
+                "output_ccw": "U1:ID1:R0:DO1",
+                "output_cw": "U1:ID1:R0:DO0"
+            },
+            "vendor": "Flowx"
+        },
         "description": "ECD / VCG / Pool Cooling In",
         "limit": 0.0,
         "name": "ecd.vcg_tva_pool.cold_in",
@@ -1788,8 +1937,17 @@
         "scope": "System"
     },
     {
-        "data_type": "str",
-        "default": "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5",
+        "data_type": "json",
+        "default": {
+            "model": "FLX-05F",
+            "options": {
+                "limit_ccw": "U1:ID1:R0:DI1",
+                "limit_cw": "U1:ID1:R0:DI0",
+                "output_ccw": "U1:ID1:R0:DO1",
+                "output_cw": "U1:ID1:R0:DO0"
+            },
+            "vendor": "Flowx"
+        },
         "description": "ECD / VCG / Pool Cooling In",
         "limit": 0.0,
         "name": "ecd.vcg_tva_pool.cold_out",
@@ -1798,8 +1956,17 @@
         "scope": "System"
     },
     {
-        "data_type": "str",
-        "default": "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5",
+        "data_type": "json",
+        "default": {
+            "model": "FLX-05F",
+            "options": {
+                "limit_ccw": "U1:ID1:R0:DI1",
+                "limit_cw": "U1:ID1:R0:DI0",
+                "output_ccw": "U1:ID1:R0:DO1",
+                "output_cw": "U1:ID1:R0:DO0"
+            },
+            "vendor": "Flowx"
+        },
         "description": "ECD / VCG / Pool Heating In",
         "limit": 0.0,
         "name": "ecd.vcg_tva_pool.hot_in",
@@ -1808,8 +1975,17 @@
         "scope": "System"
     },
     {
-        "data_type": "str",
-        "default": "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5",
+        "data_type": "json",
+        "default": {
+            "model": "FLX-05F",
+            "options": {
+                "limit_ccw": "U1:ID1:R0:DI1",
+                "limit_cw": "U1:ID1:R0:DI0",
+                "output_ccw": "U1:ID1:R0:DO1",
+                "output_cw": "U1:ID1:R0:DO0"
+            },
+            "vendor": "Flowx"
+        },
         "description": "ECD / VCG / Pool Heating Out",
         "limit": 0.0,
         "name": "ecd.vcg_tva_pool.hot_out",
@@ -1818,8 +1994,14 @@
         "scope": "System"
     },
     {
-        "data_type": "str",
-        "default": "Grundfos/Pump/5",
+        "data_type": "json",
+        "default": {
+            "model": "Pump",
+            "options": {
+                "mb_id": 5
+            },
+            "vendor": "Grundfos"
+        },
         "description": "ECD / VCG / Pump",
         "limit": 0.0,
         "name": "ecd.vcg_tva_pool.pump",
@@ -1838,8 +2020,17 @@
         "scope": "System"
     },
     {
-        "data_type": "str",
-        "default": "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5",
+        "data_type": "json",
+        "default": {
+            "model": "FLX-05F",
+            "options": {
+                "limit_ccw": "U1:ID1:R0:DI1",
+                "limit_cw": "U1:ID1:R0:DI0",
+                "output_ccw": "U1:ID1:R0:DO1",
+                "output_cw": "U1:ID1:R0:DO0"
+            },
+            "vendor": "Flowx"
+        },
         "description": "ECD / VCG / Convectors East Cooling In",
         "limit": 0.0,
         "name": "ecd.convectors_east.cold_in",
@@ -1848,8 +2039,17 @@
         "scope": "System"
     },
     {
-        "data_type": "str",
-        "default": "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5",
+        "data_type": "json",
+        "default": {
+            "model": "FLX-05F",
+            "options": {
+                "limit_ccw": "U1:ID1:R0:DI1",
+                "limit_cw": "U1:ID1:R0:DI0",
+                "output_ccw": "U1:ID1:R0:DO1",
+                "output_cw": "U1:ID1:R0:DO0"
+            },
+            "vendor": "Flowx"
+        },
         "description": "ECD / VCG / Convectors East Cooling Out",
         "limit": 0.0,
         "name": "ecd.convectors_east.cold_out",
@@ -1858,8 +2058,17 @@
         "scope": "System"
     },
     {
-        "data_type": "str",
-        "default": "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5",
+        "data_type": "json",
+        "default": {
+            "model": "FLX-05F",
+            "options": {
+                "limit_ccw": "U1:ID1:R0:DI1",
+                "limit_cw": "U1:ID1:R0:DI0",
+                "output_ccw": "U1:ID1:R0:DO1",
+                "output_cw": "U1:ID1:R0:DO0"
+            },
+            "vendor": "Flowx"
+        },
         "description": "ECD / VCG / Convectors East Hot In",
         "limit": 0.0,
         "name": "ecd.convectors_east.hot_in",
@@ -1868,8 +2077,17 @@
         "scope": "System"
     },
     {
-        "data_type": "str",
-        "default": "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5",
+        "data_type": "json",
+        "default": {
+            "model": "FLX-05F",
+            "options": {
+                "limit_ccw": "U1:ID1:R0:DI1",
+                "limit_cw": "U1:ID1:R0:DI0",
+                "output_ccw": "U1:ID1:R0:DO1",
+                "output_cw": "U1:ID1:R0:DO0"
+            },
+            "vendor": "Flowx"
+        },
         "description": "ECD / VCG / Convectors East Hot Out",
         "limit": 0.0,
         "name": "ecd.convectors_east.hot_out",
@@ -1878,8 +2096,14 @@
         "scope": "System"
     },
     {
-        "data_type": "str",
-        "default": "Grundfos/Pump/5",
+        "data_type": "json",
+        "default": {
+            "model": "Pump",
+            "options": {
+                "mb_id": 5
+            },
+            "vendor": "Grundfos"
+        },
         "description": "ECD / VCG / Convectors East Pump",
         "limit": 0.0,
         "name": "ecd.convectors_east.pump",
@@ -1898,8 +2122,17 @@
         "scope": "System"
     },
     {
-        "data_type": "str",
-        "default": "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5",
+        "data_type": "json",
+        "default": {
+            "model": "FLX-05F",
+            "options": {
+                "limit_ccw": "U1:ID1:R0:DI1",
+                "limit_cw": "U1:ID1:R0:DI0",
+                "output_ccw": "U1:ID1:R0:DO1",
+                "output_cw": "U1:ID1:R0:DO0"
+            },
+            "vendor": "Flowx"
+        },
         "description": "ECD / VCG / Floor East Cooling In",
         "limit": 0.0,
         "name": "ecd.underfloor_east.cold_in",
@@ -1908,8 +2141,17 @@
         "scope": "System"
     },
     {
-        "data_type": "str",
-        "default": "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5",
+        "data_type": "json",
+        "default": {
+            "model": "FLX-05F",
+            "options": {
+                "limit_ccw": "U1:ID1:R0:DI1",
+                "limit_cw": "U1:ID1:R0:DI0",
+                "output_ccw": "U1:ID1:R0:DO1",
+                "output_cw": "U1:ID1:R0:DO0"
+            },
+            "vendor": "Flowx"
+        },
         "description": "ECD / VCG / Floor East Cooling Out",
         "limit": 0.0,
         "name": "ecd.underfloor_east.cold_out",
@@ -1918,8 +2160,17 @@
         "scope": "System"
     },
     {
-        "data_type": "str",
-        "default": "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5",
+        "data_type": "json",
+        "default": {
+            "model": "FLX-05F",
+            "options": {
+                "limit_ccw": "U1:ID1:R0:DI1",
+                "limit_cw": "U1:ID1:R0:DI0",
+                "output_ccw": "U1:ID1:R0:DO1",
+                "output_cw": "U1:ID1:R0:DO0"
+            },
+            "vendor": "Flowx"
+        },
         "description": "ECD / VCG / Floor East Hot In",
         "limit": 0.0,
         "name": "ecd.underfloor_east.hot_in",
@@ -1928,8 +2179,17 @@
         "scope": "System"
     },
     {
-        "data_type": "str",
-        "default": "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5",
+        "data_type": "json",
+        "default": {
+            "model": "FLX-05F",
+            "options": {
+                "limit_ccw": "U1:ID1:R0:DI1",
+                "limit_cw": "U1:ID1:R0:DI0",
+                "output_ccw": "U1:ID1:R0:DO1",
+                "output_cw": "U1:ID1:R0:DO0"
+            },
+            "vendor": "Flowx"
+        },
         "description": "ECD / VCG / Floor East Hot Out",
         "limit": 0.0,
         "name": "ecd.underfloor_east.hot_out",
@@ -1938,8 +2198,14 @@
         "scope": "System"
     },
     {
-        "data_type": "str",
-        "default": "Grundfos/Pump/5",
+        "data_type": "json",
+        "default": {
+            "model": "Pump",
+            "options": {
+                "mb_id": 5
+            },
+            "vendor": "Grundfos"
+        },
         "description": "ECD / VCG / Floor East Pump",
         "limit": 0.0,
         "name": "ecd.underfloor_east.pump",
@@ -1958,8 +2224,17 @@
         "scope": "System"
     },
     {
-        "data_type": "str",
-        "default": "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5",
+        "data_type": "json",
+        "default": {
+            "model": "FLX-05F",
+            "options": {
+                "limit_ccw": "U1:ID1:R0:DI1",
+                "limit_cw": "U1:ID1:R0:DI0",
+                "output_ccw": "U1:ID1:R0:DO1",
+                "output_cw": "U1:ID1:R0:DO0"
+            },
+            "vendor": "Flowx"
+        },
         "description": "ECD / VCG / Convectors West Cooling In",
         "limit": 0.0,
         "name": "ecd.convectors_west.cold_in",
@@ -1968,8 +2243,17 @@
         "scope": "System"
     },
     {
-        "data_type": "str",
-        "default": "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5",
+        "data_type": "json",
+        "default": {
+            "model": "FLX-05F",
+            "options": {
+                "limit_ccw": "U1:ID1:R0:DI1",
+                "limit_cw": "U1:ID1:R0:DI0",
+                "output_ccw": "U1:ID1:R0:DO1",
+                "output_cw": "U1:ID1:R0:DO0"
+            },
+            "vendor": "Flowx"
+        },
         "description": "ECD / VCG / Convectors West Cooling Out",
         "limit": 0.0,
         "name": "ecd.convectors_west.cold_out",
@@ -1978,8 +2262,17 @@
         "scope": "System"
     },
     {
-        "data_type": "str",
-        "default": "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5",
+        "data_type": "json",
+        "default": {
+            "model": "FLX-05F",
+            "options": {
+                "limit_ccw": "U1:ID1:R0:DI1",
+                "limit_cw": "U1:ID1:R0:DI0",
+                "output_ccw": "U1:ID1:R0:DO1",
+                "output_cw": "U1:ID1:R0:DO0"
+            },
+            "vendor": "Flowx"
+        },
         "description": "ECD / VCG / Convectors West Hot In",
         "limit": 0.0,
         "name": "ecd.convectors_west.hot_in",
@@ -1988,8 +2281,17 @@
         "scope": "System"
     },
     {
-        "data_type": "str",
-        "default": "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5",
+        "data_type": "json",
+        "default": {
+            "model": "FLX-05F",
+            "options": {
+                "limit_ccw": "U1:ID1:R0:DI1",
+                "limit_cw": "U1:ID1:R0:DI0",
+                "output_ccw": "U1:ID1:R0:DO1",
+                "output_cw": "U1:ID1:R0:DO0"
+            },
+            "vendor": "Flowx"
+        },
         "description": "ECD / VCG / Convectors West Hot Out",
         "limit": 0.0,
         "name": "ecd.convectors_west.hot_out",
@@ -1998,8 +2300,14 @@
         "scope": "System"
     },
     {
-        "data_type": "str",
-        "default": "Grundfos/Pump/5",
+        "data_type": "json",
+        "default": {
+            "model": "Pump",
+            "options": {
+                "mb_id": 5
+            },
+            "vendor": "Grundfos"
+        },
         "description": "ECD / VCG / Convectors West Pump",
         "limit": 0.0,
         "name": "ecd.convectors_west.pump",
@@ -2018,8 +2326,17 @@
         "scope": "System"
     },
     {
-        "data_type": "str",
-        "default": "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5",
+        "data_type": "json",
+        "default": {
+            "model": "FLX-05F",
+            "options": {
+                "limit_ccw": "U1:ID1:R0:DI1",
+                "limit_cw": "U1:ID1:R0:DI0",
+                "output_ccw": "U1:ID1:R0:DO1",
+                "output_cw": "U1:ID1:R0:DO0"
+            },
+            "vendor": "Flowx"
+        },
         "description": "ECD / VCG / TVA Roof Floor In",
         "limit": 0.0,
         "name": "ecd.tva_roof_floor.cold_in",
@@ -2028,8 +2345,17 @@
         "scope": "System"
     },
     {
-        "data_type": "str",
-        "default": "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5",
+        "data_type": "json",
+        "default": {
+            "model": "FLX-05F",
+            "options": {
+                "limit_ccw": "U1:ID1:R0:DI1",
+                "limit_cw": "U1:ID1:R0:DI0",
+                "output_ccw": "U1:ID1:R0:DO1",
+                "output_cw": "U1:ID1:R0:DO0"
+            },
+            "vendor": "Flowx"
+        },
         "description": "ECD / VCG / TVA Roof Floor Out",
         "limit": 0.0,
         "name": "ecd.tva_roof_floor.cold_out",
@@ -2038,8 +2364,17 @@
         "scope": "System"
     },
     {
-        "data_type": "str",
-        "default": "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5",
+        "data_type": "json",
+        "default": {
+            "model": "FLX-05F",
+            "options": {
+                "limit_ccw": "U1:ID1:R0:DI1",
+                "limit_cw": "U1:ID1:R0:DI0",
+                "output_ccw": "U1:ID1:R0:DO1",
+                "output_cw": "U1:ID1:R0:DO0"
+            },
+            "vendor": "Flowx"
+        },
         "description": "ECD / VCG / TVA Roof Floor In",
         "limit": 0.0,
         "name": "ecd.tva_roof_floor.hot_in",
@@ -2048,8 +2383,17 @@
         "scope": "System"
     },
     {
-        "data_type": "str",
-        "default": "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5",
+        "data_type": "json",
+        "default": {
+            "model": "FLX-05F",
+            "options": {
+                "limit_ccw": "U1:ID1:R0:DI1",
+                "limit_cw": "U1:ID1:R0:DI0",
+                "output_ccw": "U1:ID1:R0:DO1",
+                "output_cw": "U1:ID1:R0:DO0"
+            },
+            "vendor": "Flowx"
+        },
         "description": "ECD / VCG / TVA Roof Floor Out",
         "limit": 0.0,
         "name": "ecd.tva_roof_floor.hot_out",
@@ -2058,8 +2402,14 @@
         "scope": "System"
     },
     {
-        "data_type": "str",
-        "default": "Grundfos/Pump/5",
+        "data_type": "json",
+        "default": {
+            "model": "Pump",
+            "options": {
+                "mb_id": 5
+            },
+            "vendor": "Grundfos"
+        },
         "description": "ECD / VCG / TVA Roof Floor",
         "limit": 0.0,
         "name": "ecd.tva_roof_floor.pump",
@@ -2078,8 +2428,17 @@
         "scope": "System"
     },
     {
-        "data_type": "str",
-        "default": "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5",
+        "data_type": "json",
+        "default": {
+            "model": "FLX-05F",
+            "options": {
+                "limit_ccw": "U1:ID1:R0:DI1",
+                "limit_cw": "U1:ID1:R0:DI0",
+                "output_ccw": "U1:ID1:R0:DO1",
+                "output_cw": "U1:ID1:R0:DO0"
+            },
+            "vendor": "Flowx"
+        },
         "description": "ECD / VCG / TVA Fitness In",
         "limit": 0.0,
         "name": "ecd.tva_fitness.cold_in",
@@ -2088,8 +2447,17 @@
         "scope": "System"
     },
     {
-        "data_type": "str",
-        "default": "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5",
+        "data_type": "json",
+        "default": {
+            "model": "FLX-05F",
+            "options": {
+                "limit_ccw": "U1:ID1:R0:DI1",
+                "limit_cw": "U1:ID1:R0:DI0",
+                "output_ccw": "U1:ID1:R0:DO1",
+                "output_cw": "U1:ID1:R0:DO0"
+            },
+            "vendor": "Flowx"
+        },
         "description": "ECD / VCG / TVA Fitness Out",
         "limit": 0.0,
         "name": "ecd.tva_fitness.cold_out",
@@ -2098,8 +2466,17 @@
         "scope": "System"
     },
     {
-        "data_type": "str",
-        "default": "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5",
+        "data_type": "json",
+        "default": {
+            "model": "FLX-05F",
+            "options": {
+                "limit_ccw": "U1:ID1:R0:DI1",
+                "limit_cw": "U1:ID1:R0:DI0",
+                "output_ccw": "U1:ID1:R0:DO1",
+                "output_cw": "U1:ID1:R0:DO0"
+            },
+            "vendor": "Flowx"
+        },
         "description": "ECD / VCG / TVA Fitness In",
         "limit": 0.0,
         "name": "ecd.tva_fitness.hot_in",
@@ -2108,8 +2485,17 @@
         "scope": "System"
     },
     {
-        "data_type": "str",
-        "default": "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5",
+        "data_type": "json",
+        "default": {
+            "model": "FLX-05F",
+            "options": {
+                "limit_ccw": "U1:ID1:R0:DI1",
+                "limit_cw": "U1:ID1:R0:DI0",
+                "output_ccw": "U1:ID1:R0:DO1",
+                "output_cw": "U1:ID1:R0:DO0"
+            },
+            "vendor": "Flowx"
+        },
         "description": "ECD / VCG / TVA Fitness Out",
         "limit": 0.0,
         "name": "ecd.tva_fitness.hot_out",
@@ -2118,8 +2504,14 @@
         "scope": "System"
     },
     {
-        "data_type": "str",
-        "default": "Grundfos/Pump/5",
+        "data_type": "json",
+        "default": {
+            "model": "Pump",
+            "options": {
+                "mb_id": 5
+            },
+            "vendor": "Grundfos"
+        },
         "description": "ECD / VCG / TVA Fitness",
         "limit": 0.0,
         "name": "ecd.tva_fitness.pump",
@@ -2138,8 +2530,17 @@
         "scope": "System"
     },
     {
-        "data_type": "str",
-        "default": "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5",
+        "data_type": "json",
+        "default": {
+            "model": "FLX-05F",
+            "options": {
+                "limit_ccw": "U1:ID1:R0:DI1",
+                "limit_cw": "U1:ID1:R0:DI0",
+                "output_ccw": "U1:ID1:R0:DO1",
+                "output_cw": "U1:ID1:R0:DO0"
+            },
+            "vendor": "Flowx"
+        },
         "description": "ECD / VCG / Floor West Cooling In",
         "limit": 0.0,
         "name": "ecd.floor_west.cold_in",
@@ -2148,8 +2549,17 @@
         "scope": "System"
     },
     {
-        "data_type": "str",
-        "default": "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5",
+        "data_type": "json",
+        "default": {
+            "model": "FLX-05F",
+            "options": {
+                "limit_ccw": "U1:ID1:R0:DI1",
+                "limit_cw": "U1:ID1:R0:DI0",
+                "output_ccw": "U1:ID1:R0:DO1",
+                "output_cw": "U1:ID1:R0:DO0"
+            },
+            "vendor": "Flowx"
+        },
         "description": "ECD / VCG / Floor West Cooling Out",
         "limit": 0.0,
         "name": "ecd.floor_west.cold_out",
@@ -2158,8 +2568,17 @@
         "scope": "System"
     },
     {
-        "data_type": "str",
-        "default": "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5",
+        "data_type": "json",
+        "default": {
+            "model": "FLX-05F",
+            "options": {
+                "limit_ccw": "U1:ID1:R0:DI1",
+                "limit_cw": "U1:ID1:R0:DI0",
+                "output_ccw": "U1:ID1:R0:DO1",
+                "output_cw": "U1:ID1:R0:DO0"
+            },
+            "vendor": "Flowx"
+        },
         "description": "ECD / VCG / Floor West Hot In",
         "limit": 0.0,
         "name": "ecd.floor_west.hot_in",
@@ -2168,8 +2587,17 @@
         "scope": "System"
     },
     {
-        "data_type": "str",
-        "default": "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5",
+        "data_type": "json",
+        "default": {
+            "model": "FLX-05F",
+            "options": {
+                "limit_ccw": "U1:ID1:R0:DI1",
+                "limit_cw": "U1:ID1:R0:DI0",
+                "output_ccw": "U1:ID1:R0:DO1",
+                "output_cw": "U1:ID1:R0:DO0"
+            },
+            "vendor": "Flowx"
+        },
         "description": "ECD / VCG / Floor West Hot Out",
         "limit": 0.0,
         "name": "ecd.floor_west.hot_out",
@@ -2178,8 +2606,14 @@
         "scope": "System"
     },
     {
-        "data_type": "str",
-        "default": "Grundfos/Pump/5",
+        "data_type": "json",
+        "default": {
+            "model": "Pump",
+            "options": {
+                "mb_id": 5
+            },
+            "vendor": "Grundfos"
+        },
         "description": "ECD / VCG / Floor West Pump",
         "limit": 0.0,
         "name": "ecd.floor_west.pump",
@@ -2198,8 +2632,17 @@
         "scope": "System"
     },
     {
-        "data_type": "str",
-        "default": "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5",
+        "data_type": "json",
+        "default": {
+            "model": "FLX-05F",
+            "options": {
+                "limit_ccw": "U1:ID1:R0:DI1",
+                "limit_cw": "U1:ID1:R0:DI0",
+                "output_ccw": "U1:ID1:R0:DO1",
+                "output_cw": "U1:ID1:R0:DO0"
+            },
+            "vendor": "Flowx"
+        },
         "description": "ECD / VCG / TVA Conference Center In",
         "limit": 0.0,
         "name": "ecd.tva_conference_center.cold_in",
@@ -2208,8 +2651,17 @@
         "scope": "System"
     },
     {
-        "data_type": "str",
-        "default": "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5",
+        "data_type": "json",
+        "default": {
+            "model": "FLX-05F",
+            "options": {
+                "limit_ccw": "U1:ID1:R0:DI1",
+                "limit_cw": "U1:ID1:R0:DI0",
+                "output_ccw": "U1:ID1:R0:DO1",
+                "output_cw": "U1:ID1:R0:DO0"
+            },
+            "vendor": "Flowx"
+        },
         "description": "ECD / VCG / TVA Conference Center Out",
         "limit": 0.0,
         "name": "ecd.tva_conference_center.cold_out",
@@ -2218,8 +2670,17 @@
         "scope": "System"
     },
     {
-        "data_type": "str",
-        "default": "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5",
+        "data_type": "json",
+        "default": {
+            "model": "FLX-05F",
+            "options": {
+                "limit_ccw": "U1:ID1:R0:DI1",
+                "limit_cw": "U1:ID1:R0:DI0",
+                "output_ccw": "U1:ID1:R0:DO1",
+                "output_cw": "U1:ID1:R0:DO0"
+            },
+            "vendor": "Flowx"
+        },
         "description": "ECD / VCG / TVA Conference Center In",
         "limit": 0.0,
         "name": "ecd.tva_conference_center.hot_in",
@@ -2228,8 +2689,17 @@
         "scope": "System"
     },
     {
-        "data_type": "str",
-        "default": "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5",
+        "data_type": "json",
+        "default": {
+            "model": "FLX-05F",
+            "options": {
+                "limit_ccw": "U1:ID1:R0:DI1",
+                "limit_cw": "U1:ID1:R0:DI0",
+                "output_ccw": "U1:ID1:R0:DO1",
+                "output_cw": "U1:ID1:R0:DO0"
+            },
+            "vendor": "Flowx"
+        },
         "description": "ECD / VCG / TVA Conference Center Out",
         "limit": 0.0,
         "name": "ecd.tva_conference_center.hot_out",
@@ -2238,8 +2708,14 @@
         "scope": "System"
     },
     {
-        "data_type": "str",
-        "default": "Grundfos/Pump/5",
+        "data_type": "json",
+        "default": {
+            "model": "Pump",
+            "options": {
+                "mb_id": 5
+            },
+            "vendor": "Grundfos"
+        },
         "description": "ECD / VCG / TVA Conference Center",
         "limit": 0.0,
         "name": "ecd.tva_conference_center.pump",
@@ -2258,8 +2734,17 @@
         "scope": "System"
     },
     {
-        "data_type": "str",
-        "default": "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5",
+        "data_type": "json",
+        "default": {
+            "model": "FLX-05F",
+            "options": {
+                "limit_ccw": "U1:ID1:R0:DI1",
+                "limit_cw": "U1:ID1:R0:DI0",
+                "output_ccw": "U1:ID1:R0:DO1",
+                "output_cw": "U1:ID1:R0:DO0"
+            },
+            "vendor": "Flowx"
+        },
         "description": "ECD / VCG / Convectors Kitchen Cold In",
         "limit": 0.0,
         "name": "ecd.convectors_kitchen.cold_in",
@@ -2268,8 +2753,17 @@
         "scope": "System"
     },
     {
-        "data_type": "str",
-        "default": "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5",
+        "data_type": "json",
+        "default": {
+            "model": "FLX-05F",
+            "options": {
+                "limit_ccw": "U1:ID1:R0:DI1",
+                "limit_cw": "U1:ID1:R0:DI0",
+                "output_ccw": "U1:ID1:R0:DO1",
+                "output_cw": "U1:ID1:R0:DO0"
+            },
+            "vendor": "Flowx"
+        },
         "description": "ECD / VCG / Convectors Kitchen Cold Out",
         "limit": 0.0,
         "name": "ecd.convectors_kitchen.cold_out",
@@ -2278,8 +2772,17 @@
         "scope": "System"
     },
     {
-        "data_type": "str",
-        "default": "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5",
+        "data_type": "json",
+        "default": {
+            "model": "FLX-05F",
+            "options": {
+                "limit_ccw": "U1:ID1:R0:DI1",
+                "limit_cw": "U1:ID1:R0:DI0",
+                "output_ccw": "U1:ID1:R0:DO1",
+                "output_cw": "U1:ID1:R0:DO0"
+            },
+            "vendor": "Flowx"
+        },
         "description": "ECD / VCG / Convectors Kitchen Hot In",
         "limit": 0.0,
         "name": "ecd.convectors_kitchen.hot_in",
@@ -2288,8 +2791,17 @@
         "scope": "System"
     },
     {
-        "data_type": "str",
-        "default": "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5",
+        "data_type": "json",
+        "default": {
+            "model": "FLX-05F",
+            "options": {
+                "limit_ccw": "U1:ID1:R0:DI1",
+                "limit_cw": "U1:ID1:R0:DI0",
+                "output_ccw": "U1:ID1:R0:DO1",
+                "output_cw": "U1:ID1:R0:DO0"
+            },
+            "vendor": "Flowx"
+        },
         "description": "ECD / VCG / Convectors Kitchen Hot Out",
         "limit": 0.0,
         "name": "ecd.convectors_kitchen.hot_out",
@@ -2298,8 +2810,14 @@
         "scope": "System"
     },
     {
-        "data_type": "str",
-        "default": "Grundfos/Pump/5",
+        "data_type": "json",
+        "default": {
+            "model": "Pump",
+            "options": {
+                "mb_id": 5
+            },
+            "vendor": "Grundfos"
+        },
         "description": "ECD / VCG / Convectors Kitchen Pump",
         "limit": 0.0,
         "name": "ecd.convectors_kitchen.pump",
@@ -2318,8 +2836,17 @@
         "scope": "System"
     },
     {
-        "data_type": "str",
-        "default": "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5",
+        "data_type": "json",
+        "default": {
+            "model": "FLX-05F",
+            "options": {
+                "limit_ccw": "U1:ID1:R0:DI1",
+                "limit_cw": "U1:ID1:R0:DI0",
+                "output_ccw": "U1:ID1:R0:DO1",
+                "output_cw": "U1:ID1:R0:DO0"
+            },
+            "vendor": "Flowx"
+        },
         "description": "ECD / VCG / TVA Wearhouse Cold In",
         "limit": 0.0,
         "name": "ecd.tva_warehouse.cold_in",
@@ -2328,8 +2855,17 @@
         "scope": "System"
     },
     {
-        "data_type": "str",
-        "default": "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5",
+        "data_type": "json",
+        "default": {
+            "model": "FLX-05F",
+            "options": {
+                "limit_ccw": "U1:ID1:R0:DI1",
+                "limit_cw": "U1:ID1:R0:DI0",
+                "output_ccw": "U1:ID1:R0:DO1",
+                "output_cw": "U1:ID1:R0:DO0"
+            },
+            "vendor": "Flowx"
+        },
         "description": "ECD / VCG / TVA Wearhouse Cold Out",
         "limit": 0.0,
         "name": "ecd.tva_warehouse.cold_out",
@@ -2338,8 +2874,17 @@
         "scope": "System"
     },
     {
-        "data_type": "str",
-        "default": "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5",
+        "data_type": "json",
+        "default": {
+            "model": "FLX-05F",
+            "options": {
+                "limit_ccw": "U1:ID1:R0:DI1",
+                "limit_cw": "U1:ID1:R0:DI0",
+                "output_ccw": "U1:ID1:R0:DO1",
+                "output_cw": "U1:ID1:R0:DO0"
+            },
+            "vendor": "Flowx"
+        },
         "description": "ECD / VCG / TVA Wearhouse Hot In",
         "limit": 0.0,
         "name": "ecd.tva_warehouse.hot_in",
@@ -2348,8 +2893,17 @@
         "scope": "System"
     },
     {
-        "data_type": "str",
-        "default": "Flowx/FLX-05F/U1:ID1:R0:DO4/U1:ID1:R0:DO5/U1:ID1:R0:DI4/U1:ID1:R0:DI5",
+        "data_type": "json",
+        "default": {
+            "model": "FLX-05F",
+            "options": {
+                "limit_ccw": "U1:ID1:R0:DI1",
+                "limit_cw": "U1:ID1:R0:DI0",
+                "output_ccw": "U1:ID1:R0:DO1",
+                "output_cw": "U1:ID1:R0:DO0"
+            },
+            "vendor": "Flowx"
+        },
         "description": "ECD / VCG / TVA Wearhouse Hot Out",
         "limit": 0.0,
         "name": "ecd.tva_warehouse.hot_out",
@@ -2358,8 +2912,14 @@
         "scope": "System"
     },
     {
-        "data_type": "str",
-        "default": "Grundfos/Pump/5",
+        "data_type": "json",
+        "default": {
+            "model": "Pump",
+            "options": {
+                "mb_id": 5
+            },
+            "vendor": "Grundfos"
+        },
         "description": "ECD / VCG / TVA Wearhouse",
         "limit": 0.0,
         "name": "ecd.tva_warehouse.pump",
@@ -2478,8 +3038,17 @@
         "scope": "System"
     },
     {
-        "data_type": "str",
-        "default": "Flowx/FLX-05F/U1:ID1:R0:DO0/U1:ID1:R0:DO1/U1:ID1:R0:DI0/U1:ID1:R0:DI1",
+        "data_type": "json",
+        "default": {
+            "model": "FLX-05F",
+            "options": {
+                "limit_ccw": "U1:ID1:R0:DI1",
+                "limit_cw": "U1:ID1:R0:DI0",
+                "output_ccw": "U1:ID1:R0:DO1",
+                "output_cw": "U1:ID1:R0:DO0"
+            },
+            "vendor": "Flowx"
+        },
         "description": "Heat Pump Control Group / VCG / Cold Buffer / Input",
         "limit": 0.0,
         "name": "echp.hpcg.vcg_cold_buf.input",
@@ -2488,8 +3057,17 @@
         "scope": "System"
     },
     {
-        "data_type": "str",
-        "default": "Flowx/FLX-05F/U1:ID6:R16:DO0/U1:ID6:R16:DO1/U1:ID6:R16:DI0/U1:ID6:R16:DO1",
+        "data_type": "json",
+        "default": {
+            "model": "FLX-05F",
+            "options": {
+                "limit_ccw": "U1:ID1:R0:DI1",
+                "limit_cw": "U1:ID1:R0:DI0",
+                "output_ccw": "U1:ID1:R0:DO1",
+                "output_cw": "U1:ID1:R0:DO0"
+            },
+            "vendor": "Flowx"
+        },
         "description": "Heat Pump Control Group / VCG / Cold Buffer / Output",
         "limit": 0.0,
         "name": "echp.hpcg.vcg_cold_buf.output",
@@ -2498,8 +3076,17 @@
         "scope": "System"
     },
     {
-        "data_type": "str",
-        "default": "Flowx/FLX-05F/U1:ID6:R16:DO2/U1:ID6:R16:DO3/U1:ID6:R16:DI2/U1:ID6:R16:DO3",
+        "data_type": "json",
+        "default": {
+            "model": "FLX-05F",
+            "options": {
+                "limit_ccw": "U1:ID1:R0:DI1",
+                "limit_cw": "U1:ID1:R0:DI0",
+                "output_ccw": "U1:ID1:R0:DO1",
+                "output_cw": "U1:ID1:R0:DO0"
+            },
+            "vendor": "Flowx"
+        },
         "description": "Heat Pump Control Group / VCG / Cold Buffer / Short",
         "limit": 0.0,
         "name": "echp.hpcg.vcg_cold_buf.short",
@@ -2508,8 +3095,17 @@
         "scope": "System"
     },
     {
-        "data_type": "str",
-        "default": "Flowx/FLX-05F/off/off/off/off",
+        "data_type": "json",
+        "default": {
+            "model": "FLX-05F",
+            "options": {
+                "limit_ccw": "off",
+                "limit_cw": "off",
+                "output_ccw": "off",
+                "output_cw": "off"
+            },
+            "vendor": "Flowx"
+        },
         "description": "Heat Pump Control Group / VCG / Cold Geo / Input",
         "limit": 0.0,
         "name": "echp.hpcg.vcg_cold_geo.input",
@@ -2518,8 +3114,17 @@
         "scope": "System"
     },
     {
-        "data_type": "str",
-        "default": "Flowx/FLX-05F/off/off/off/off",
+        "data_type": "json",
+        "default": {
+            "model": "FLX-05F",
+            "options": {
+                "limit_ccw": "off",
+                "limit_cw": "off",
+                "output_ccw": "off",
+                "output_cw": "off"
+            },
+            "vendor": "Flowx"
+        },
         "description": "Heat Pump Control Group / VCG / Cold Geo / Output",
         "limit": 0.0,
         "name": "echp.hpcg.vcg_cold_geo.output",
@@ -2528,8 +3133,17 @@
         "scope": "System"
     },
     {
-        "data_type": "str",
-        "default": "Flowx/FLX-05F/off/off/off/off",
+        "data_type": "json",
+        "default": {
+            "model": "FLX-05F",
+            "options": {
+                "limit_ccw": "off",
+                "limit_cw": "off",
+                "output_ccw": "off",
+                "output_cw": "off"
+            },
+            "vendor": "Flowx"
+        },
         "description": "Heat Pump Control Group / VCG / Cold Geo / Short",
         "limit": 0.0,
         "name": "echp.hpcg.vcg_cold_geo.short",
@@ -2538,8 +3152,17 @@
         "scope": "System"
     },
     {
-        "data_type": "str",
-        "default": "Flowx/FLX-05F/off/off/off/off",
+        "data_type": "json",
+        "default": {
+            "model": "FLX-05F",
+            "options": {
+                "limit_ccw": "off",
+                "limit_cw": "off",
+                "output_ccw": "off",
+                "output_cw": "off"
+            },
+            "vendor": "Flowx"
+        },
         "description": "Heat Pump Control Group / VCG / Warm Geo / Input",
         "limit": 0.0,
         "name": "echp.hpcg.vcg_warm_geo.input",
@@ -2548,8 +3171,17 @@
         "scope": "System"
     },
     {
-        "data_type": "str",
-        "default": "Flowx/FLX-05F/off/off/off/off",
+        "data_type": "json",
+        "default": {
+            "model": "FLX-05F",
+            "options": {
+                "limit_ccw": "off",
+                "limit_cw": "off",
+                "output_ccw": "off",
+                "output_cw": "off"
+            },
+            "vendor": "Flowx"
+        },
         "description": "Heat Pump Control Group / VCG / Warm Geo / Output",
         "limit": 0.0,
         "name": "echp.hpcg.vcg_warm_geo.output",
@@ -2558,8 +3190,17 @@
         "scope": "System"
     },
     {
-        "data_type": "str",
-        "default": "Flowx/FLX-05F/off/off/off/off",
+        "data_type": "json",
+        "default": {
+            "model": "FLX-05F",
+            "options": {
+                "limit_ccw": "off",
+                "limit_cw": "off",
+                "output_ccw": "off",
+                "output_cw": "off"
+            },
+            "vendor": "Flowx"
+        },
         "description": "Heat Pump Control Group / VCG / Warm Geo / Short",
         "limit": 0.0,
         "name": "echp.hpcg.vcg_warm_geo.short",
@@ -2568,8 +3209,17 @@
         "scope": "System"
     },
     {
-        "data_type": "str",
-        "default": "Flowx/FLX-05F/off/off/off/off",
+        "data_type": "json",
+        "default": {
+            "model": "FLX-05F",
+            "options": {
+                "limit_ccw": "off",
+                "limit_cw": "off",
+                "output_ccw": "off",
+                "output_cw": "off"
+            },
+            "vendor": "Flowx"
+        },
         "description": "Heat Pump Control Group / VCG / Warm Geo / Input",
         "limit": 0.0,
         "name": "echp.hpcg.vcg_warm_floor.input",
@@ -2578,8 +3228,17 @@
         "scope": "System"
     },
     {
-        "data_type": "str",
-        "default": "Flowx/FLX-05F/off/off/off/off",
+        "data_type": "json",
+        "default": {
+            "model": "FLX-05F",
+            "options": {
+                "limit_ccw": "off",
+                "limit_cw": "off",
+                "output_ccw": "off",
+                "output_cw": "off"
+            },
+            "vendor": "Flowx"
+        },
         "description": "Heat Pump Control Group / VCG / Warm Geo / Output",
         "limit": 0.0,
         "name": "echp.hpcg.vcg_warm_floor.output",
@@ -2588,8 +3247,17 @@
         "scope": "System"
     },
     {
-        "data_type": "str",
-        "default": "Flowx/FLX-05F/off/off/off/off",
+        "data_type": "json",
+        "default": {
+            "model": "FLX-05F",
+            "options": {
+                "limit_ccw": "off",
+                "limit_cw": "off",
+                "output_ccw": "off",
+                "output_cw": "off"
+            },
+            "vendor": "Flowx"
+        },
         "description": "Heat Pump Control Group / VCG / Warm Geo / Output",
         "limit": 0.0,
         "name": "echp.hpcg.vcg_warm_floor.short",
@@ -2598,8 +3266,14 @@
         "scope": "System"
     },
     {
-        "data_type": "str",
-        "default": "Grundfos/Pump/2",
+        "data_type": "json",
+        "default": {
+            "model": "Pump",
+            "options": {
+                "mb_id": 2
+            },
+            "vendor": "Grundfos"
+        },
         "description": "Heat Pump Control Group / Water Pump / Cold",
         "limit": 0.0,
         "name": "echp.hpcg.wp_cold.settings",
@@ -2608,8 +3282,14 @@
         "scope": "System"
     },
     {
-        "data_type": "str",
-        "default": "Grundfos/Pump/3",
+        "data_type": "json",
+        "default": {
+            "model": "Pump",
+            "options": {
+                "mb_id": 3
+            },
+            "vendor": "Grundfos"
+        },
         "description": "Heat Pump Control Group / Water Pump / Hot",
         "limit": 0.0,
         "name": "echp.hpcg.wp_hot.settings",
@@ -2618,8 +3298,14 @@
         "scope": "System"
     },
     {
-        "data_type": "str",
-        "default": "Grundfos/Pump/4",
+        "data_type": "json",
+        "default": {
+            "model": "Pump",
+            "options": {
+                "mb_id": 4
+            },
+            "vendor": "Grundfos"
+        },
         "description": "Heat Pump Control Group / Water Pump / Warm",
         "limit": 0.0,
         "name": "echp.hpcg.wp_warm_p.settings",
@@ -2628,8 +3314,14 @@
         "scope": "System"
     },
     {
-        "data_type": "str",
-        "default": "Grundfos/Pump/5",
+        "data_type": "json",
+        "default": {
+            "model": "Pump",
+            "options": {
+                "mb_id": 5
+            },
+            "vendor": "Grundfos"
+        },
         "description": "Heat Pump Control Group / Water Pump / Warm",
         "limit": 0.0,
         "name": "echp.hpcg.wp_warm_g.settings",
@@ -2638,8 +3330,14 @@
         "scope": "System"
     },
     {
-        "data_type": "str",
-        "default": "HstarsGuangzhouRefrigeratingEquipmentGroup/HeatPump/5",
+        "data_type": "json",
+        "default": {
+            "model": "HeatPump",
+            "options": {
+                "mb_id": 5
+            },
+            "vendor": "HstarsGuangzhouRefrigeratingEquipmentGroup"
+        },
         "description": "Heat Pump Control Group / Heat Pump",
         "limit": 0.0,
         "name": "echp.hpcg.hp.settings",
@@ -2688,8 +3386,14 @@
         "scope": "System"
     },
     {
-        "data_type": "str",
-        "default": "HangzhouAirflowElectricApplications/f3p146ec072600/AO1",
+        "data_type": "json",
+        "default": {
+            "model": "f3p146ec072600",
+            "options": {
+                "output": "AO1"
+            },
+            "vendor": "HangzhouAirflowElectricApplications"
+        },
         "description": "Lower fan settings",
         "limit": 0.0,
         "name": "vent.lower_1.fan.settings",
@@ -2728,8 +3432,14 @@
         "scope": "System"
     },
     {
-        "data_type": "str",
-        "default": "HangzhouAirflowElectricApplications/f3p146ec072600/AO0",
+        "data_type": "json",
+        "default": {
+            "model": "f3p146ec072600",
+            "options": {
+                "output": "AO1"
+            },
+            "vendor": "HangzhouAirflowElectricApplications"
+        },
         "description": "Upper fan settings",
         "limit": 0.0,
         "name": "vent.upper_1.fan.settings",
@@ -2768,8 +3478,15 @@
         "scope": "System"
     },
     {
-        "data_type": "str",
-        "default": "FONYES/Model1/DO8/DO9",
+        "data_type": "json",
+        "default": {
+            "model": "Model1",
+            "options": {
+                "closing": "DO8",
+                "opening": "DO9"
+            },
+            "vendor": "FONYES"
+        },
         "description": "Lower valve settings",
         "limit": 0.0,
         "name": "vent.upper_1.valve.settings",
@@ -2778,8 +3495,15 @@
         "scope": "System"
     },
     {
-        "data_type": "str",
-        "default": "FONYES/Model1/DO10/DO11",
+        "data_type": "json",
+        "default": {
+            "model": "Model1",
+            "options": {
+                "closing": "DO10",
+                "opening": "DO11"
+            },
+            "vendor": "FONYES"
+        },
         "description": "Upper valve settings",
         "limit": 0.0,
         "name": "vent.lower_1.valve.settings",
