@@ -22,8 +22,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 
-
-
 #region File Attributes
 
 __author__ = "Orlin Dimitrov"

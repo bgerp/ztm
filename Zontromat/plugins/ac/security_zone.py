@@ -519,7 +519,6 @@ class SecurityZone(BasePlugin):
 
     def __set_zone_occupied(self, value):
 
-
         reg_occupation = self._registers.by_name("{}.zone_{}_occupied".format(self.key, self.__identifier))
         if reg_occupation is not None:
             if reg_occupation.value != value:
