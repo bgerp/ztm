@@ -22,12 +22,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 
+import os
 import time
 from functools import wraps
 import tracemalloc
 import shutil
-import psutil
 import serial.tools.list_ports
+
+if os.name == "posix":
+    import psutil
+
 
 #region File Attributes
 
@@ -154,6 +158,9 @@ def find_proc(proc_name: str, proc_title: str):
 
     output_processes = []
  
+    if os.name == "nt":
+        return output_processes
+
     filtered_processes_list = []
  
     processes_list = psutil.process_iter()
