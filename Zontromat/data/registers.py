@@ -471,12 +471,12 @@ class Registers(list):
         return out_scope
 
     @staticmethod
-    def __to_value(typ, value):
+    def __to_value(data_type, value):
 
         out_value = None
 
         # bool
-        if typ == "bool":
+        if data_type == "bool":
             value_type = type(value)
 
             if value_type == bool:
@@ -490,15 +490,15 @@ class Registers(list):
                     out_value = True
 
         # int
-        elif typ == "int":
+        elif data_type == "int":
             out_value = int(value)
 
         # float
-        elif typ == "float":
+        elif data_type == "float":
             out_value = float(value)
 
         # json
-        elif typ == "json":
+        elif data_type == "json":
             value_type = type(value)
 
             if value_type == list:
@@ -507,8 +507,26 @@ class Registers(list):
             elif value_type == dict:
                 out_value = value
 
+            elif value_type == str:
+
+                # Remove first "
+                if value.startswith("\""):
+                    value = value[1:]
+
+                # Remove last "
+                if value.endswith("\""):
+                    value = value[:-1]
+
+                # Convert single quotes to double.
+                value = value.replace("\'", "\"") 
+
+                # Converts to JSON.
+                value = json.loads(value)
+
+                out_value = value
+
             else:
-                out_value = json.loads(value)
+                raise TypeError("Unsupported data type: {}".format(value_type))
 
         else:
             out_value = value
