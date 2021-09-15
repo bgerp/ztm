@@ -234,6 +234,7 @@ class GlobalErrorHandler:
         # Put error to the queue.
         GlobalErrorHandler.append(message, ErrorCodes.MissingResource)
 
+    @staticmethod
     def log_missing_resource(logger, message: str= "Missing resource."):
         """Log limit of the hardware.
 
