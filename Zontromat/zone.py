@@ -202,13 +202,14 @@ class Zone():
         # Current file path.
         cwf = os.path.dirname(os.path.abspath(__file__))
 
-        # Load from CSV file.
-        # registers_file = os.path.join(cwf, "..", "registers.csv")
-        # self.__registers = Registers.from_CSV(registers_file)
-
-        # Load from JSON file.
-        registers_file = os.path.join(cwf, "..", "registers.json")
-        self.__registers = Registers.from_JSON(registers_file)
+        # Load the registers from file.
+        registers_file = os.path.join(cwf, "..", "registers.csv")
+        if registers_file.endswith('json'):
+            self.__registers = Registers.from_JSON(registers_file)
+        elif registers_file.endswith('csv'):
+            self.__registers = Registers.from_CSV(registers_file)
+        else:
+            sys.exit(0)
 
         target_version = self.__registers.by_name("sys.software.current_version")
         if target_version is not None:
