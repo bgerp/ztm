@@ -175,7 +175,7 @@ class SecurityZone(BasePlugin):
             if reg_enabled.data_type == "str":
                 if reg_enabled.value == verbal_const.OFF:
                     self.__delete_reader(self.__entry_reader)
-                    return # When fag is off. Just delete the object.
+                    return # When flag is off. Just delete the object.
 
                 elif reg_enabled.value != "":
                     params = reg_enabled.value.split("/")
