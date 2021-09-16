@@ -145,7 +145,7 @@ def __add_registers():
     register.plugin_name = "Access Control"
     register.description = "Card reader enabled"
     register.range = ""
-    register.value = verbal_const.OFF # "Teracom/act230/2911"
+    register.value = {} # "Teracom/act230/2911"
     __registers.append(register)
 
     register = Register("ac.entry_reader_1.port.baudrate")
@@ -173,7 +173,7 @@ def __add_registers():
     register.plugin_name = "Access Control"
     register.description = "Card reader enabled"
     register.range = ""
-    register.value = verbal_const.OFF # "Teracom/act230/2897"
+    register.value = {} # "Teracom/act230/2897"
     __registers.append(register)
 
     register = Register("ac.exit_reader_1.port.baudrate")
@@ -243,7 +243,7 @@ def __add_registers():
     register.plugin_name = "Access Control"
     register.description = "Card reader settings"
     register.range = ""
-    register.value = verbal_const.OFF # "Teracom/act230/2486"
+    register.value = {} # "Teracom/act230/2486"
     __registers.append(register)
 
 
@@ -272,7 +272,7 @@ def __add_registers():
     register.plugin_name = "Access Control"
     register.description = "Card reader settings"
     register.range = ""
-    register.value = verbal_const.OFF # "Teracom/act230/1208"
+    register.value = {} # "Teracom/act230/1208"
     __registers.append(register)
 
     register = Register("ac.exit_reader_2.port.baudrate")
@@ -606,7 +606,15 @@ def __add_registers():
     register.plugin_name = "Monitoring"
     register.description = "Power analyser settings"
     register.range = ""
-    register.value = "Eastron/SDM630/0/2" # "Eastron/SDM120/2/3"
+    register.value = {
+            "vendor": "Eastron",
+            "model": "SDM630",
+            "options":
+            {
+				"interface": 0,
+                "mb_id": 2,
+            }
+        } # "Eastron/SDM120/2/3"
     __registers.append(register)
 
     register = Register("monitoring.pa.measurements")
@@ -914,7 +922,7 @@ def __add_registers():
     register.plugin_name = "HVAC"
     register.description = "Air temperature sensor upper settings"
     register.range = ""
-    register.value =         {
+    register.value = {
             "vendor": "Donkger",
             "model": "XY-MD02",
             "options":
@@ -1034,7 +1042,17 @@ def __add_registers():
     register.plugin_name = "HVAC"
     register.description = "Loop 1 valve settings"
     register.range = ""
-    register.value = "Tonhe/a20m15b2c/RO2/off/0/100"
+    register.value = {
+            "vendor": "Tonhe",
+            "model": "a20m15b2c",
+            "options":
+            {
+				"output": "RO2",
+				"feedback": "off",
+				"min": 0,
+                "max": 100,
+            }
+        }
     __registers.append(register)
 
     # Loop 2 flowmeter
@@ -1084,7 +1102,17 @@ def __add_registers():
     register.plugin_name = "HVAC"
     register.description = "Loop 2 valve settings"
     register.range = ""
-    register.value = "Tonhe/a20m15b2c/RO3/off/0/100"
+    register.value = {
+            "vendor": "Tonhe",
+            "model": "a20m15b2c",
+            "options":
+            {
+				"output": "RO3",
+				"feedback": "off",
+				"min": 0,
+                "max": 100,
+            }
+        }
     __registers.append(register)
 
     # Temperature actual
@@ -1490,10 +1518,10 @@ def __add_registers():
             "model": "FLX-05F",
             "options":
             {
-                "output_cw": "U1:ID1:R0:DO0",
-                "output_ccw": "U1:ID1:R0:DO1",
-                "limit_cw": "U1:ID1:R0:DI0",
-                "limit_ccw": "U1:ID1:R0:DI1"
+                "output_cw": "off",
+                "output_ccw": "off",
+                "limit_cw": "off",
+                "limit_ccw": "off"
             }
         }
     __registers.append(register)
@@ -1528,10 +1556,10 @@ def __add_registers():
             "model": "FLX-05F",
             "options":
             {
-                "output_cw": "U1:ID1:R0:DO0",
-                "output_ccw": "U1:ID1:R0:DO1",
-                "limit_cw": "U1:ID1:R0:DI0",
-                "limit_ccw": "U1:ID1:R0:DI1"
+                "output_cw": "off",
+                "output_ccw": "off",
+                "limit_cw": "off",
+                "limit_ccw": "off"
             }
         }
     __registers.append(register)
@@ -1566,10 +1594,10 @@ def __add_registers():
             "model": "FLX-05F",
             "options":
             {
-                "output_cw": "U1:ID1:R0:DO0",
-                "output_ccw": "U1:ID1:R0:DO1",
-                "limit_cw": "U1:ID1:R0:DI0",
-                "limit_ccw": "U1:ID1:R0:DI1"
+                "output_cw": "off",
+                "output_ccw": "off",
+                "limit_cw": "off",
+                "limit_ccw": "off"
             }
         }
     __registers.append(register)
@@ -1604,10 +1632,10 @@ def __add_registers():
             "model": "FLX-05F",
             "options":
             {
-                "output_cw": "U1:ID1:R0:DO0",
-                "output_ccw": "U1:ID1:R0:DO1",
-                "limit_cw": "U1:ID1:R0:DI0",
-                "limit_ccw": "U1:ID1:R0:DI1"
+                "output_cw": "off",
+                "output_ccw": "off",
+                "limit_cw": "off",
+                "limit_ccw": "off"
             }
         }
     __registers.append(register)
@@ -1642,10 +1670,10 @@ def __add_registers():
             "model": "FLX-05F",
             "options":
             {
-                "output_cw": "U1:ID1:R0:DO0",
-                "output_ccw": "U1:ID1:R0:DO1",
-                "limit_cw": "U1:ID1:R0:DI0",
-                "limit_ccw": "U1:ID1:R0:DI1"
+                "output_cw": "off",
+                "output_ccw": "off",
+                "limit_cw": "off",
+                "limit_ccw": "off"
             }
         }
     __registers.append(register)
@@ -1680,10 +1708,10 @@ def __add_registers():
             "model": "FLX-05F",
             "options":
             {
-                "output_cw": "U1:ID1:R0:DO0",
-                "output_ccw": "U1:ID1:R0:DO1",
-                "limit_cw": "U1:ID1:R0:DI0",
-                "limit_ccw": "U1:ID1:R0:DI1"
+                "output_cw": "off",
+                "output_ccw": "off",
+                "limit_cw": "off",
+                "limit_ccw": "off"
             }
         }
     __registers.append(register)
@@ -1718,10 +1746,10 @@ def __add_registers():
             "model": "FLX-05F",
             "options":
             {
-                "output_cw": "U1:ID1:R0:DO0",
-                "output_ccw": "U1:ID1:R0:DO1",
-                "limit_cw": "U1:ID1:R0:DI0",
-                "limit_ccw": "U1:ID1:R0:DI1"
+                "output_cw": "off",
+                "output_ccw": "off",
+                "limit_cw": "off",
+                "limit_ccw": "off"
             }
         }
     __registers.append(register)
@@ -1756,10 +1784,10 @@ def __add_registers():
             "model": "FLX-05F",
             "options":
             {
-                "output_cw": "U1:ID1:R0:DO0",
-                "output_ccw": "U1:ID1:R0:DO1",
-                "limit_cw": "U1:ID1:R0:DI0",
-                "limit_ccw": "U1:ID1:R0:DI1"
+                "output_cw": "off",
+                "output_ccw": "off",
+                "limit_cw": "off",
+                "limit_ccw": "off"
             }
         }
     __registers.append(register)
@@ -1794,10 +1822,10 @@ def __add_registers():
             "model": "FLX-05F",
             "options":
             {
-                "output_cw": "U1:ID1:R0:DO0",
-                "output_ccw": "U1:ID1:R0:DO1",
-                "limit_cw": "U1:ID1:R0:DI0",
-                "limit_ccw": "U1:ID1:R0:DI1"
+                "output_cw": "off",
+                "output_ccw": "off",
+                "limit_cw": "off",
+                "limit_ccw": "off"
             }
         }
     __registers.append(register)
@@ -1813,7 +1841,7 @@ def __add_registers():
             "model": "Pump",
             "options":
             {
-                "mb_id": 5,
+                "mb_id": 0,
             }
         }
     __registers.append(register)
@@ -1839,10 +1867,10 @@ def __add_registers():
             "model": "FLX-05F",
             "options":
             {
-                "output_cw": "U1:ID1:R0:DO0",
-                "output_ccw": "U1:ID1:R0:DO1",
-                "limit_cw": "U1:ID1:R0:DI0",
-                "limit_ccw": "U1:ID1:R0:DI1"
+                "output_cw": "off",
+                "output_ccw": "off",
+                "limit_cw": "off",
+                "limit_ccw": "off"
             }
         }
     __registers.append(register)
@@ -1858,10 +1886,10 @@ def __add_registers():
             "model": "FLX-05F",
             "options":
             {
-                "output_cw": "U1:ID1:R0:DO0",
-                "output_ccw": "U1:ID1:R0:DO1",
-                "limit_cw": "U1:ID1:R0:DI0",
-                "limit_ccw": "U1:ID1:R0:DI1"
+                "output_cw": "off",
+                "output_ccw": "off",
+                "limit_cw": "off",
+                "limit_ccw": "off"
             }
         }
     __registers.append(register)
@@ -1878,10 +1906,10 @@ def __add_registers():
             "model": "FLX-05F",
             "options":
             {
-                "output_cw": "U1:ID1:R0:DO0",
-                "output_ccw": "U1:ID1:R0:DO1",
-                "limit_cw": "U1:ID1:R0:DI0",
-                "limit_ccw": "U1:ID1:R0:DI1"
+                "output_cw": "off",
+                "output_ccw": "off",
+                "limit_cw": "off",
+                "limit_ccw": "off"
             }
         }
     __registers.append(register)
@@ -1897,10 +1925,10 @@ def __add_registers():
             "model": "FLX-05F",
             "options":
             {
-                "output_cw": "U1:ID1:R0:DO0",
-                "output_ccw": "U1:ID1:R0:DO1",
-                "limit_cw": "U1:ID1:R0:DI0",
-                "limit_ccw": "U1:ID1:R0:DI1"
+                "output_cw": "off",
+                "output_ccw": "off",
+                "limit_cw": "off",
+                "limit_ccw": "off"
             }
         }
     __registers.append(register)
@@ -1916,7 +1944,7 @@ def __add_registers():
             "model": "Pump",
             "options":
             {
-                "mb_id": 5,
+                "mb_id": 0,
             }
         }
     __registers.append(register)
@@ -1941,10 +1969,10 @@ def __add_registers():
             "model": "FLX-05F",
             "options":
             {
-                "output_cw": "U1:ID1:R0:DO0",
-                "output_ccw": "U1:ID1:R0:DO1",
-                "limit_cw": "U1:ID1:R0:DI0",
-                "limit_ccw": "U1:ID1:R0:DI1"
+                "output_cw": "off",
+                "output_ccw": "off",
+                "limit_cw": "off",
+                "limit_ccw": "off"
             }
         }
     __registers.append(register)
@@ -1960,10 +1988,10 @@ def __add_registers():
             "model": "FLX-05F",
             "options":
             {
-                "output_cw": "U1:ID1:R0:DO0",
-                "output_ccw": "U1:ID1:R0:DO1",
-                "limit_cw": "U1:ID1:R0:DI0",
-                "limit_ccw": "U1:ID1:R0:DI1"
+                "output_cw": "off",
+                "output_ccw": "off",
+                "limit_cw": "off",
+                "limit_ccw": "off"
             }
         }
     __registers.append(register)
@@ -1980,10 +2008,10 @@ def __add_registers():
             "model": "FLX-05F",
             "options":
             {
-                "output_cw": "U1:ID1:R0:DO0",
-                "output_ccw": "U1:ID1:R0:DO1",
-                "limit_cw": "U1:ID1:R0:DI0",
-                "limit_ccw": "U1:ID1:R0:DI1"
+                "output_cw": "off",
+                "output_ccw": "off",
+                "limit_cw": "off",
+                "limit_ccw": "off"
             }
         }
     __registers.append(register)
@@ -1999,10 +2027,10 @@ def __add_registers():
             "model": "FLX-05F",
             "options":
             {
-                "output_cw": "U1:ID1:R0:DO0",
-                "output_ccw": "U1:ID1:R0:DO1",
-                "limit_cw": "U1:ID1:R0:DI0",
-                "limit_ccw": "U1:ID1:R0:DI1"
+                "output_cw": "off",
+                "output_ccw": "off",
+                "limit_cw": "off",
+                "limit_ccw": "off"
             }
         }
     __registers.append(register)
@@ -2018,7 +2046,7 @@ def __add_registers():
             "model": "Pump",
             "options":
             {
-                "mb_id": 5,
+                "mb_id": 0,
             }
         }
     __registers.append(register)
@@ -2044,10 +2072,10 @@ def __add_registers():
             "model": "FLX-05F",
             "options":
             {
-                "output_cw": "U1:ID1:R0:DO0",
-                "output_ccw": "U1:ID1:R0:DO1",
-                "limit_cw": "U1:ID1:R0:DI0",
-                "limit_ccw": "U1:ID1:R0:DI1"
+                "output_cw": "off",
+                "output_ccw": "off",
+                "limit_cw": "off",
+                "limit_ccw": "off"
             }
         }
     __registers.append(register)
@@ -2063,10 +2091,10 @@ def __add_registers():
             "model": "FLX-05F",
             "options":
             {
-                "output_cw": "U1:ID1:R0:DO0",
-                "output_ccw": "U1:ID1:R0:DO1",
-                "limit_cw": "U1:ID1:R0:DI0",
-                "limit_ccw": "U1:ID1:R0:DI1"
+                "output_cw": "off",
+                "output_ccw": "off",
+                "limit_cw": "off",
+                "limit_ccw": "off"
             }
         }
     __registers.append(register)
@@ -2082,10 +2110,10 @@ def __add_registers():
             "model": "FLX-05F",
             "options":
             {
-                "output_cw": "U1:ID1:R0:DO0",
-                "output_ccw": "U1:ID1:R0:DO1",
-                "limit_cw": "U1:ID1:R0:DI0",
-                "limit_ccw": "U1:ID1:R0:DI1"
+                "output_cw": "off",
+                "output_ccw": "off",
+                "limit_cw": "off",
+                "limit_ccw": "off"
             }
         }
     __registers.append(register)
@@ -2101,10 +2129,10 @@ def __add_registers():
             "model": "FLX-05F",
             "options":
             {
-                "output_cw": "U1:ID1:R0:DO0",
-                "output_ccw": "U1:ID1:R0:DO1",
-                "limit_cw": "U1:ID1:R0:DI0",
-                "limit_ccw": "U1:ID1:R0:DI1"
+                "output_cw": "off",
+                "output_ccw": "off",
+                "limit_cw": "off",
+                "limit_ccw": "off"
             }
         }
     __registers.append(register)
@@ -2120,7 +2148,7 @@ def __add_registers():
             "model": "Pump",
             "options":
             {
-                "mb_id": 5,
+                "mb_id": 0,
             }
         }
     __registers.append(register)
@@ -2146,10 +2174,10 @@ def __add_registers():
             "model": "FLX-05F",
             "options":
             {
-                "output_cw": "U1:ID1:R0:DO0",
-                "output_ccw": "U1:ID1:R0:DO1",
-                "limit_cw": "U1:ID1:R0:DI0",
-                "limit_ccw": "U1:ID1:R0:DI1"
+                "output_cw": "off",
+                "output_ccw": "off",
+                "limit_cw": "off",
+                "limit_ccw": "off"
             }
         }
     __registers.append(register)
@@ -2165,10 +2193,10 @@ def __add_registers():
             "model": "FLX-05F",
             "options":
             {
-                "output_cw": "U1:ID1:R0:DO0",
-                "output_ccw": "U1:ID1:R0:DO1",
-                "limit_cw": "U1:ID1:R0:DI0",
-                "limit_ccw": "U1:ID1:R0:DI1"
+                "output_cw": "off",
+                "output_ccw": "off",
+                "limit_cw": "off",
+                "limit_ccw": "off"
             }
         }
     __registers.append(register)
@@ -2185,10 +2213,10 @@ def __add_registers():
             "model": "FLX-05F",
             "options":
             {
-                "output_cw": "U1:ID1:R0:DO0",
-                "output_ccw": "U1:ID1:R0:DO1",
-                "limit_cw": "U1:ID1:R0:DI0",
-                "limit_ccw": "U1:ID1:R0:DI1"
+                "output_cw": "off",
+                "output_ccw": "off",
+                "limit_cw": "off",
+                "limit_ccw": "off"
             }
         }
     __registers.append(register)
@@ -2204,10 +2232,10 @@ def __add_registers():
             "model": "FLX-05F",
             "options":
             {
-                "output_cw": "U1:ID1:R0:DO0",
-                "output_ccw": "U1:ID1:R0:DO1",
-                "limit_cw": "U1:ID1:R0:DI0",
-                "limit_ccw": "U1:ID1:R0:DI1"
+                "output_cw": "off",
+                "output_ccw": "off",
+                "limit_cw": "off",
+                "limit_ccw": "off"
             }
         }
     __registers.append(register)
@@ -2223,7 +2251,7 @@ def __add_registers():
             "model": "Pump",
             "options":
             {
-                "mb_id": 5,
+                "mb_id": 0,
             }
         }
     __registers.append(register)
@@ -2248,10 +2276,10 @@ def __add_registers():
             "model": "FLX-05F",
             "options":
             {
-                "output_cw": "U1:ID1:R0:DO0",
-                "output_ccw": "U1:ID1:R0:DO1",
-                "limit_cw": "U1:ID1:R0:DI0",
-                "limit_ccw": "U1:ID1:R0:DI1"
+                "output_cw": "off",
+                "output_ccw": "off",
+                "limit_cw": "off",
+                "limit_ccw": "off"
             }
         }
     __registers.append(register)
@@ -2267,10 +2295,10 @@ def __add_registers():
             "model": "FLX-05F",
             "options":
             {
-                "output_cw": "U1:ID1:R0:DO0",
-                "output_ccw": "U1:ID1:R0:DO1",
-                "limit_cw": "U1:ID1:R0:DI0",
-                "limit_ccw": "U1:ID1:R0:DI1"
+                "output_cw": "off",
+                "output_ccw": "off",
+                "limit_cw": "off",
+                "limit_ccw": "off"
             }
         }
     __registers.append(register)
@@ -2286,10 +2314,10 @@ def __add_registers():
             "model": "FLX-05F",
             "options":
             {
-                "output_cw": "U1:ID1:R0:DO0",
-                "output_ccw": "U1:ID1:R0:DO1",
-                "limit_cw": "U1:ID1:R0:DI0",
-                "limit_ccw": "U1:ID1:R0:DI1"
+                "output_cw": "off",
+                "output_ccw": "off",
+                "limit_cw": "off",
+                "limit_ccw": "off"
             }
         }
     __registers.append(register)
@@ -2305,10 +2333,10 @@ def __add_registers():
             "model": "FLX-05F",
             "options":
             {
-                "output_cw": "U1:ID1:R0:DO0",
-                "output_ccw": "U1:ID1:R0:DO1",
-                "limit_cw": "U1:ID1:R0:DI0",
-                "limit_ccw": "U1:ID1:R0:DI1"
+                "output_cw": "off",
+                "output_ccw": "off",
+                "limit_cw": "off",
+                "limit_ccw": "off"
             }
         }
     __registers.append(register)
@@ -2325,7 +2353,7 @@ def __add_registers():
             "model": "Pump",
             "options":
             {
-                "mb_id": 5,
+                "mb_id": 0,
             }
         }
     __registers.append(register)
@@ -2350,10 +2378,10 @@ def __add_registers():
             "model": "FLX-05F",
             "options":
             {
-                "output_cw": "U1:ID1:R0:DO0",
-                "output_ccw": "U1:ID1:R0:DO1",
-                "limit_cw": "U1:ID1:R0:DI0",
-                "limit_ccw": "U1:ID1:R0:DI1"
+                "output_cw": "off",
+                "output_ccw": "off",
+                "limit_cw": "off",
+                "limit_ccw": "off"
             }
         }
     __registers.append(register)
@@ -2369,10 +2397,10 @@ def __add_registers():
             "model": "FLX-05F",
             "options":
             {
-                "output_cw": "U1:ID1:R0:DO0",
-                "output_ccw": "U1:ID1:R0:DO1",
-                "limit_cw": "U1:ID1:R0:DI0",
-                "limit_ccw": "U1:ID1:R0:DI1"
+                "output_cw": "off",
+                "output_ccw": "off",
+                "limit_cw": "off",
+                "limit_ccw": "off"
             }
         }
     __registers.append(register)
@@ -2388,10 +2416,10 @@ def __add_registers():
             "model": "FLX-05F",
             "options":
             {
-                "output_cw": "U1:ID1:R0:DO0",
-                "output_ccw": "U1:ID1:R0:DO1",
-                "limit_cw": "U1:ID1:R0:DI0",
-                "limit_ccw": "U1:ID1:R0:DI1"
+                "output_cw": "off",
+                "output_ccw": "off",
+                "limit_cw": "off",
+                "limit_ccw": "off"
             }
         }
     __registers.append(register)
@@ -2407,10 +2435,10 @@ def __add_registers():
             "model": "FLX-05F",
             "options":
             {
-                "output_cw": "U1:ID1:R0:DO0",
-                "output_ccw": "U1:ID1:R0:DO1",
-                "limit_cw": "U1:ID1:R0:DI0",
-                "limit_ccw": "U1:ID1:R0:DI1"
+                "output_cw": "off",
+                "output_ccw": "off",
+                "limit_cw": "off",
+                "limit_ccw": "off"
             }
         }
     __registers.append(register)
@@ -2426,7 +2454,7 @@ def __add_registers():
             "model": "Pump",
             "options":
             {
-                "mb_id": 5,
+                "mb_id": 0,
             }
         }
     __registers.append(register)
@@ -2451,10 +2479,10 @@ def __add_registers():
             "model": "FLX-05F",
             "options":
             {
-                "output_cw": "U1:ID1:R0:DO0",
-                "output_ccw": "U1:ID1:R0:DO1",
-                "limit_cw": "U1:ID1:R0:DI0",
-                "limit_ccw": "U1:ID1:R0:DI1"
+                "output_cw": "off",
+                "output_ccw": "off",
+                "limit_cw": "off",
+                "limit_ccw": "off"
             }
         }
     __registers.append(register)
@@ -2470,10 +2498,10 @@ def __add_registers():
             "model": "FLX-05F",
             "options":
             {
-                "output_cw": "U1:ID1:R0:DO0",
-                "output_ccw": "U1:ID1:R0:DO1",
-                "limit_cw": "U1:ID1:R0:DI0",
-                "limit_ccw": "U1:ID1:R0:DI1"
+                "output_cw": "off",
+                "output_ccw": "off",
+                "limit_cw": "off",
+                "limit_ccw": "off"
             }
         }
     __registers.append(register)
@@ -2489,10 +2517,10 @@ def __add_registers():
             "model": "FLX-05F",
             "options":
             {
-                "output_cw": "U1:ID1:R0:DO0",
-                "output_ccw": "U1:ID1:R0:DO1",
-                "limit_cw": "U1:ID1:R0:DI0",
-                "limit_ccw": "U1:ID1:R0:DI1"
+                "output_cw": "off",
+                "output_ccw": "off",
+                "limit_cw": "off",
+                "limit_ccw": "off"
             }
         }
     __registers.append(register)
@@ -2508,10 +2536,10 @@ def __add_registers():
             "model": "FLX-05F",
             "options":
             {
-                "output_cw": "U1:ID1:R0:DO0",
-                "output_ccw": "U1:ID1:R0:DO1",
-                "limit_cw": "U1:ID1:R0:DI0",
-                "limit_ccw": "U1:ID1:R0:DI1"
+                "output_cw": "off",
+                "output_ccw": "off",
+                "limit_cw": "off",
+                "limit_ccw": "off"
             }
         }
     __registers.append(register)
@@ -2527,7 +2555,7 @@ def __add_registers():
             "model": "Pump",
             "options":
             {
-                "mb_id": 5,
+                "mb_id": 0,
             }
         }
     __registers.append(register)
@@ -2552,10 +2580,10 @@ def __add_registers():
             "model": "FLX-05F",
             "options":
             {
-                "output_cw": "U1:ID1:R0:DO0",
-                "output_ccw": "U1:ID1:R0:DO1",
-                "limit_cw": "U1:ID1:R0:DI0",
-                "limit_ccw": "U1:ID1:R0:DI1"
+                "output_cw": "off",
+                "output_ccw": "off",
+                "limit_cw": "off",
+                "limit_ccw": "off"
             }
         }
     __registers.append(register)
@@ -2571,10 +2599,10 @@ def __add_registers():
             "model": "FLX-05F",
             "options":
             {
-                "output_cw": "U1:ID1:R0:DO0",
-                "output_ccw": "U1:ID1:R0:DO1",
-                "limit_cw": "U1:ID1:R0:DI0",
-                "limit_ccw": "U1:ID1:R0:DI1"
+                "output_cw": "off",
+                "output_ccw": "off",
+                "limit_cw": "off",
+                "limit_ccw": "off"
             }
         }
     __registers.append(register)
@@ -2590,10 +2618,10 @@ def __add_registers():
             "model": "FLX-05F",
             "options":
             {
-                "output_cw": "U1:ID1:R0:DO0",
-                "output_ccw": "U1:ID1:R0:DO1",
-                "limit_cw": "U1:ID1:R0:DI0",
-                "limit_ccw": "U1:ID1:R0:DI1"
+                "output_cw": "off",
+                "output_ccw": "off",
+                "limit_cw": "off",
+                "limit_ccw": "off"
             }
         }
     __registers.append(register)
@@ -2609,10 +2637,10 @@ def __add_registers():
             "model": "FLX-05F",
             "options":
             {
-                "output_cw": "U1:ID1:R0:DO0",
-                "output_ccw": "U1:ID1:R0:DO1",
-                "limit_cw": "U1:ID1:R0:DI0",
-                "limit_ccw": "U1:ID1:R0:DI1"
+                "output_cw": "off",
+                "output_ccw": "off",
+                "limit_cw": "off",
+                "limit_ccw": "off"
             }
         }
     __registers.append(register)
@@ -2628,7 +2656,7 @@ def __add_registers():
             "model": "Pump",
             "options":
             {
-                "mb_id": 5,
+                "mb_id": 0,
             }
         }
     __registers.append(register)
@@ -2653,10 +2681,10 @@ def __add_registers():
             "model": "FLX-05F",
             "options":
             {
-                "output_cw": "U1:ID1:R0:DO0",
-                "output_ccw": "U1:ID1:R0:DO1",
-                "limit_cw": "U1:ID1:R0:DI0",
-                "limit_ccw": "U1:ID1:R0:DI1"
+                "output_cw": "off",
+                "output_ccw": "off",
+                "limit_cw": "off",
+                "limit_ccw": "off"
             }
         }
     __registers.append(register)
@@ -2672,10 +2700,10 @@ def __add_registers():
             "model": "FLX-05F",
             "options":
             {
-                "output_cw": "U1:ID1:R0:DO0",
-                "output_ccw": "U1:ID1:R0:DO1",
-                "limit_cw": "U1:ID1:R0:DI0",
-                "limit_ccw": "U1:ID1:R0:DI1"
+                "output_cw": "off",
+                "output_ccw": "off",
+                "limit_cw": "off",
+                "limit_ccw": "off"
             }
         }
     __registers.append(register)
@@ -2691,10 +2719,10 @@ def __add_registers():
             "model": "FLX-05F",
             "options":
             {
-                "output_cw": "U1:ID1:R0:DO0",
-                "output_ccw": "U1:ID1:R0:DO1",
-                "limit_cw": "U1:ID1:R0:DI0",
-                "limit_ccw": "U1:ID1:R0:DI1"
+                "output_cw": "off",
+                "output_ccw": "off",
+                "limit_cw": "off",
+                "limit_ccw": "off"
             }
         }
     __registers.append(register)
@@ -2710,10 +2738,10 @@ def __add_registers():
             "model": "FLX-05F",
             "options":
             {
-                "output_cw": "U1:ID1:R0:DO0",
-                "output_ccw": "U1:ID1:R0:DO1",
-                "limit_cw": "U1:ID1:R0:DI0",
-                "limit_ccw": "U1:ID1:R0:DI1"
+                "output_cw": "off",
+                "output_ccw": "off",
+                "limit_cw": "off",
+                "limit_ccw": "off"
             }
         }
     __registers.append(register)
@@ -2730,7 +2758,7 @@ def __add_registers():
             "model": "Pump",
             "options":
             {
-                "mb_id": 5,
+                "mb_id": 0,
             }
         }
     __registers.append(register)
@@ -2755,10 +2783,10 @@ def __add_registers():
             "model": "FLX-05F",
             "options":
             {
-                "output_cw": "U1:ID1:R0:DO0",
-                "output_ccw": "U1:ID1:R0:DO1",
-                "limit_cw": "U1:ID1:R0:DI0",
-                "limit_ccw": "U1:ID1:R0:DI1"
+                "output_cw": "off",
+                "output_ccw": "off",
+                "limit_cw": "off",
+                "limit_ccw": "off"
             }
         }
     __registers.append(register)
@@ -2774,10 +2802,10 @@ def __add_registers():
             "model": "FLX-05F",
             "options":
             {
-                "output_cw": "U1:ID1:R0:DO0",
-                "output_ccw": "U1:ID1:R0:DO1",
-                "limit_cw": "U1:ID1:R0:DI0",
-                "limit_ccw": "U1:ID1:R0:DI1"
+                "output_cw": "off",
+                "output_ccw": "off",
+                "limit_cw": "off",
+                "limit_ccw": "off"
             }
         }
     __registers.append(register)
@@ -2793,10 +2821,10 @@ def __add_registers():
             "model": "FLX-05F",
             "options":
             {
-                "output_cw": "U1:ID1:R0:DO0",
-                "output_ccw": "U1:ID1:R0:DO1",
-                "limit_cw": "U1:ID1:R0:DI0",
-                "limit_ccw": "U1:ID1:R0:DI1"
+                "output_cw": "off",
+                "output_ccw": "off",
+                "limit_cw": "off",
+                "limit_ccw": "off"
             }
         }
     __registers.append(register)
@@ -2812,10 +2840,10 @@ def __add_registers():
             "model": "FLX-05F",
             "options":
             {
-                "output_cw": "U1:ID1:R0:DO0",
-                "output_ccw": "U1:ID1:R0:DO1",
-                "limit_cw": "U1:ID1:R0:DI0",
-                "limit_ccw": "U1:ID1:R0:DI1"
+                "output_cw": "off",
+                "output_ccw": "off",
+                "limit_cw": "off",
+                "limit_ccw": "off"
             }
         }
     __registers.append(register)
@@ -2831,7 +2859,7 @@ def __add_registers():
             "model": "Pump",
             "options":
             {
-                "mb_id": 5,
+                "mb_id": 0,
             }
         }
     __registers.append(register)
@@ -2950,10 +2978,10 @@ def __add_registers():
             "model": "FLX-05F",
             "options":
             {
-                "output_cw": "U1:ID1:R0:DO0",
-                "output_ccw": "U1:ID1:R0:DO1",
-                "limit_cw": "U1:ID1:R0:DI0",
-                "limit_ccw": "U1:ID1:R0:DI1"
+                "output_cw": "off",
+                "output_ccw": "off",
+                "limit_cw": "off",
+                "limit_ccw": "off"
             }
         }
     __registers.append(register)
@@ -2969,10 +2997,10 @@ def __add_registers():
             "model": "FLX-05F",
             "options":
             {
-                "output_cw": "U1:ID1:R0:DO0",
-                "output_ccw": "U1:ID1:R0:DO1",
-                "limit_cw": "U1:ID1:R0:DI0",
-                "limit_ccw": "U1:ID1:R0:DI1"
+                "output_cw": "off",
+                "output_ccw": "off",
+                "limit_cw": "off",
+                "limit_ccw": "off"
             }
         }
     __registers.append(register)
@@ -2988,10 +3016,10 @@ def __add_registers():
             "model": "FLX-05F",
             "options":
             {
-                "output_cw": "U1:ID1:R0:DO0",
-                "output_ccw": "U1:ID1:R0:DO1",
-                "limit_cw": "U1:ID1:R0:DI0",
-                "limit_ccw": "U1:ID1:R0:DI1"
+                "output_cw": "off",
+                "output_ccw": "off",
+                "limit_cw": "off",
+                "limit_ccw": "off"
             }
         }
     __registers.append(register)
@@ -3218,7 +3246,7 @@ def __add_registers():
             "model": "Pump",
             "options":
             {
-                "mb_id": 4,
+                "mb_id": 0,
             }
         }
     __registers.append(register)
@@ -3234,7 +3262,7 @@ def __add_registers():
             "model": "Pump",
             "options":
             {
-                "mb_id": 5,
+                "mb_id": 0,
             }
         }
     __registers.append(register)
@@ -3247,12 +3275,12 @@ def __add_registers():
     register.plugin_name = "ECHP"
     register.description = "Heat Pump Control Group / Heat Pump"
     register.range = ""
-    register.value =         {
+    register.value = {
             "vendor": "HstarsGuangzhouRefrigeratingEquipmentGroup",
             "model": "HeatPump",
             "options":
             {
-                "mb_id": 5,
+                "mb_id": 0,
             }
         }
     __registers.append(register)
@@ -3440,7 +3468,7 @@ def __add_registers():
     register.plugin_name = "Alarm"
     register.description = "Alarm module sound device settings."
     register.range = __range["NONE"]
-    register.value = ""
+    register.value = {}
     __registers.append(register)
 
     # Visual signal device.
@@ -3449,7 +3477,7 @@ def __add_registers():
     register.plugin_name = "Alarm"
     register.description = "Alarm module visual device settings."
     register.range = __range["NONE"]
-    register.value = ""
+    register.value = {}
     __registers.append(register)
 
     # Enable
