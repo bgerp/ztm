@@ -570,7 +570,7 @@ class Registers(list):
 
         with open(file_path, "w", newline="", encoding='utf-8') as csv_file:
 
-            fieldnames = ["name", "data_type", "range", "plugin", "scope", "default", "description"]
+            fieldnames = ["name", "type", "range", "plugin", "scope", "default", "description"]
             writer = csv.DictWriter(csv_file, fieldnames=fieldnames, delimiter=",", quoting=2) #/"" , quoting=2, escapechar="\""
             writer.writeheader()
 
@@ -582,7 +582,7 @@ class Registers(list):
                 description = Registers.__csv_escape(register.description)
 
                 writer.writerow({"name": register.name,\
-                                "data_type": register.data_type,\
+                                "type": register.data_type,\
                                 "range": reg_range,\
                                 "plugin": register.plugin_name,\
                                 "scope": scope,\
@@ -609,7 +609,7 @@ class Registers(list):
                 register.range = row["range"]
                 register.plugin_name = row["plugin"]
                 register.scope = Registers.__to_scope(row["scope"])
-                register.value = Registers.__to_value(row["data_type"], row["default"])
+                register.value = Registers.__to_value(row["type"], row["default"])
                 register.description = row["description"]
 
                 registers.append(register)
@@ -642,7 +642,7 @@ class Registers(list):
                 register.range = row["range"]
                 register.plugin_name = row["plugin"]
                 register.scope = Registers.__to_scope(row["scope"])
-                register.value = Registers.__to_value(row["data_type"], row["default"])
+                register.value = Registers.__to_value(row["type"], row["default"])
 
                 registers.append(register)
 

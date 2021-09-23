@@ -1,4 +1,4 @@
-"name","data_type","range","plugin","scope","default","description"
+"name","type","range","plugin","scope","default","description"
 "ac.enabled","bool","true|false","Access Control","system","false","Plugin enabled"
 "ac.allowed_attendees","json","","Access Control","system","[]","Allowed attendees"
 "ac.zones_count","int","1/","Access Control","system",2,"Number of security zones"
