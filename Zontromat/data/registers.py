@@ -551,7 +551,6 @@ class Registers(list):
 
         elif data_type == "json":
             our_value = json.dumps(value)
-            our_value = "\"" + our_value + "\""
 
         return our_value
 
@@ -569,10 +568,10 @@ class Registers(list):
 
         import csv
 
-        with open(file_path, "w", newline="") as csv_file:
+        with open(file_path, "w", newline="", encoding='utf-8') as csv_file:
 
             fieldnames = ["name", "data_type", "range", "plugin", "scope", "default", "description"]
-            writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
+            writer = csv.DictWriter(csv_file, fieldnames=fieldnames, delimiter=",", quoting=2) #/"" , quoting=2, escapechar="\""
             writer.writeheader()
 
             for register in registers:
@@ -603,7 +602,7 @@ class Registers(list):
 
         with open(file_path, newline="") as csv_file:
 
-            rows = csv.DictReader(csv_file)
+            rows = csv.DictReader(csv_file, delimiter=",", quoting=2)
             for row in rows:
 
                 register = Register(row["name"])
