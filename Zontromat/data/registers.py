@@ -447,6 +447,7 @@ class Registers(list):
 
         elif isinstance(value, dict):
             result = "\"" + str(value) + "\""
+            result = result.replace("\'", "\"")
 
         return result
 
@@ -534,6 +535,27 @@ class Registers(list):
         return out_value
 
     @staticmethod
+    def __from_value(data_type, value):
+
+        our_value = Registers.__csv_escape(value)
+
+        if data_type == "bool":
+            if our_value:
+                our_value = "true"
+            else:
+                our_value = "false"
+
+        elif data_type == "str":
+            if "," in value:
+                our_value = "\"" + value + "\""
+
+        elif data_type == "json":
+            our_value = json.dumps(value)
+            our_value = "\"" + our_value + "\""
+
+        return our_value
+
+    @staticmethod
     def get_instance():
         """Singelton instance."""
 
@@ -551,25 +573,11 @@ class Registers(list):
 
             fieldnames = ["name", "data_type", "range", "plugin", "scope", "default", "description"]
             writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
-
             writer.writeheader()
 
             for register in registers:
 
-                value = None
-
-                # TODO: FIX ME UGLY!
-                if register.data_type == "bool":
-                    value = Registers.__csv_escape(register.value)
-
-                    if value:
-                        value = "true"
-                    else:
-                        value = "false"
-
-                else:
-                    value = Registers.__csv_escape(register.value)
-
+                value = Registers.__from_value(register.data_type, register.value)
                 reg_range = Registers.__csv_escape(register.range)
                 scope = str(register.scope).replace("Scope.", "").lower()
                 description = Registers.__csv_escape(register.description)
