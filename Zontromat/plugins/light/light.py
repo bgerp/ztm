@@ -130,26 +130,23 @@ class Light(BasePlugin):
     def __sensor_settings_cb(self, register):
 
         # Check data type.
-        if not register.data_type == "str":
+        if not register.data_type == "json":
             GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
 
-        if register.value != verbal_const.OFF and self.__light_sensor is None:
-
-            params = register.value.split("/")
-
-            if len(params) <= 2:                
-                raise ValueError("Not enough parameters.")
+        if register.value != {} and self.__light_sensor is None:
 
             self.__light_sensor = LightSensorFactory.create(
                 controller=self._controller,
                 name="Room light sensor.",
-                params=params)
+                vendor=register.value['vendor'],
+                model=register.value['model'],
+                options=register.value['options'])
 
             if self.__light_sensor is not None:
                 self.__light_sensor.init()
 
-        elif register.value == verbal_const.OFF and self.__light_sensor is not None:
+        elif register.value == {} and self.__light_sensor is not None:
             self.__light_sensor.shutdown()
             del self.__light_sensor
 

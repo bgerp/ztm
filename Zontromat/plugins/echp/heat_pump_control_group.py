@@ -195,7 +195,7 @@ class HeatPumpControllGroup(BasePlugin):
         self.__logger.info("Starting up the: {}".format(self.name))
 
         # Valve group cold buffer. (BLUE)
-        self.__vcg_cold_buff = ValveControlGroup.create(
+        self.__vcg_cold_buff = ValveControlGroup(
             name="VCG Cold Buffer",
             key="{}.vcg_cold_buf".format(self.key),
             controller=self._controller,
@@ -205,7 +205,7 @@ class HeatPumpControllGroup(BasePlugin):
         self.__vcg_cold_buff.mode = ValveControlGroupMode.Proportional
 
         # Valve group cold geo. (GREEN)
-        self.__vcg_cold_geo = ValveControlGroup.create(
+        self.__vcg_cold_geo = ValveControlGroup(
             name="VCG Cold Geo",
             key="{}.vcg_cold_geo".format(self.key),
             controller=self._controller,
@@ -214,7 +214,7 @@ class HeatPumpControllGroup(BasePlugin):
         self.__vcg_cold_geo.mode = ValveControlGroupMode.Proportional
 
         # Valve group warm geo. (GREEN)
-        self.__vcg_warm_geo = ValveControlGroup.create(
+        self.__vcg_warm_geo = ValveControlGroup(
             name="VCG Warm Geo",
             key="{}.vcg_warm_geo".format(self.key),
             controller=self._controller,
@@ -224,7 +224,7 @@ class HeatPumpControllGroup(BasePlugin):
         self.__vcg_warm_geo.mode = ValveControlGroupMode.Proportional
 
         # Valve group warm floor. (PURPLE)
-        self.__vcg_warm_floor = ValveControlGroup.create(
+        self.__vcg_warm_floor = ValveControlGroup(
             name="VCG Warm floor",
             key="{}.vcg_warm_floor".format(self.key),
             controller=self._controller,
@@ -237,57 +237,57 @@ class HeatPumpControllGroup(BasePlugin):
         if register is not None:
             wp_setting = register.value
 
-            params = register.value.split("/")
-
-            if len(params) <= 2:                
-                raise ValueError("Not enough parameters.")
-
-            self.__cold_water_pump = PumpFactory.create(name="WP Cold", controller=self._controller, params=params)
+            self.__cold_water_pump = PumpFactory.create(
+                name="WP Cold",
+                controller=self._controller,
+                vendor=register.value['vendor'],
+                model=register.value['model'],
+                options=register.value['options'])
 
         register = self._registers.by_name("{}.wp_hot.settings".format(self.key))
         if register is not None:
             wp_setting = register.value
 
-            params = register.value.split("/")
-
-            if len(params) <= 2:                
-                raise ValueError("Not enough parameters.")
-
-            self.__hot_water_pump = PumpFactory.create(name="WP Hot", controller=self._controller, params=params)
+            self.__hot_water_pump = PumpFactory.create(
+                name="WP Hot",
+                controller=self._controller,
+                vendor=register.value['vendor'],
+                model=register.value['model'],
+                options=register.value['options'])
 
         
         register = self._registers.by_name("{}.wp_warm_g.settings".format(self.key))
         if register is not None:
             wp_setting = register.value
 
-            params = register.value.split("/")
-
-            if len(params) <= 2:                
-                raise ValueError("Not enough parameters.")
-
-            self.__warm_g_water_pump = PumpFactory.create(name="WP Warm G", controller=self._controller, params=params)
+            self.__warm_g_water_pump = PumpFactory.create(
+                name="WP Warm G",
+                controller=self._controller,
+                vendor=register.value['vendor'],
+                model=register.value['model'],
+                options=register.value['options'])
 
         register = self._registers.by_name("{}.wp_warm_p.settings".format(self.key))
         if register is not None:
             wp_setting = register.value
 
-            params = register.value.split("/")
-
-            if len(params) <= 2:                
-                raise ValueError("Not enough parameters.")
-
-            self.__warm_p_water_pump = PumpFactory.create(name="WP Warm P", controller=self._controller, params=params)
+            self.__warm_p_water_pump = PumpFactory.create(
+                name="WP Warm P",
+                controller=self._controller,
+                vendor=register.value['vendor'],
+                model=register.value['model'],
+                options=register.value['options'])
 
         register = self._registers.by_name("{}.hp.settings".format(self.key))
         if register is not None:
             wp_setting = register.value
 
-            params = register.value.split("/")
-
-            if len(params) <= 2:                
-                raise ValueError("Not enough parameters.")
-
-            self.__heat_pump = HeatPumpFactory.create(name="Heat Pump", controller=self._controller, params=params)
+            self.__heat_pump = HeatPumpFactory.create(
+                name="Heat Pump",
+                controller=self._controller,
+                vendor=register.value['vendor'],
+                model=register.value['model'],
+                options=register.value['options'])
 
     def __del__(self):
         """Destructor

@@ -386,27 +386,24 @@ class AirConditioner(BasePlugin):
     def __air_temp_cent_settings_cb(self, register):
 
         # Check data type.
-        if not register.data_type == "str":
+        if not register.data_type == "json":
             GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
 
-        if register.value != verbal_const.OFF and self.__air_temp_cent_dev is None:
-
-            params = register.value.split("/")
-
-            if len(params) <= 2:                
-                raise ValueError("Not enough parameters.")
+        if register.value != {} and self.__air_temp_cent_dev is None:
 
             self.__air_temp_cent_dev = ThermalSensorFactory.create(
                 controller=self._controller,
                 name="Air temperature center",
-                params=params)
+                vendor=register.value['vendor'],
+                model=register.value['model'],
+                options=register.value['options'])
 
             if self.__air_temp_cent_dev is not None:
                 self.__air_temp_cent_dev.init()
                 self.__temp_proc.add(self.__air_temp_cent_dev)
 
-        elif register.value == verbal_const.OFF and self.__air_temp_cent_dev is not None:
+        elif register.value == {} and self.__air_temp_cent_dev is not None:
 
             self.__temp_proc.add(self.__air_temp_cent_dev)
             self.__air_temp_cent_dev.shutdown()
@@ -415,27 +412,24 @@ class AirConditioner(BasePlugin):
     def __air_temp_lower_settings_cb(self, register):
 
         # Check data type.
-        if not register.data_type == "str":
+        if not register.data_type == "json":
             GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
 
-        if register.value != verbal_const.OFF and self.__air_temp_lower_dev is None:
-
-            params = register.value.split("/")
-
-            if len(params) <= 2:                
-                raise ValueError("Not enough parameters.")
+        if register.value != {} and self.__air_temp_lower_dev is None:
 
             self.__air_temp_lower_dev = ThermalSensorFactory.create(
                 controller=self._controller,
                 name="Air temperature lower",
-                params=params)
+                vendor=register.value['vendor'],
+                model=register.value['model'],
+                options=register.value['options'])
 
             if self.__air_temp_lower_dev is not None:
                 self.__air_temp_lower_dev.init()
                 self.__temp_proc.add(self.__air_temp_lower_dev)
 
-        elif register.value == verbal_const.OFF and self.__air_temp_lower_dev is not None:
+        elif register.value == {} and self.__air_temp_lower_dev is not None:
 
             self.__temp_proc.remove(self.__air_temp_lower_dev)
             self.__air_temp_lower_dev.shutdown()
@@ -444,27 +438,24 @@ class AirConditioner(BasePlugin):
     def __air_temp_upper_settings_cb(self, register):
 
         # Check data type.
-        if not register.data_type == "str":
+        if not register.data_type == "json":
             GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
 
-        if register.value != verbal_const.OFF and self.__air_temp_upper_dev is None:
-
-            params = register.value.split("/")
-
-            if len(params) <= 2:                
-                raise ValueError("Not enough parameters.")
+        if register.value != {} and self.__air_temp_upper_dev is None:
 
             self.__air_temp_upper_dev = ThermalSensorFactory.create(
                 controller=self._controller,
                 name="Air temperature upper",
-                params=params)
+                vendor=register.value['vendor'],
+                model=register.value['model'],
+                options=register.value['options'])
 
             if self.__air_temp_upper_dev is not None:
                 self.__air_temp_upper_dev.init()
                 self.__temp_proc.add(self.__air_temp_upper_dev)
 
-        elif register.value == verbal_const.OFF and self.__air_temp_upper_dev is not None:
+        elif register.value == {} and self.__air_temp_upper_dev is not None:
 
             self.__temp_proc.remove(self.__air_temp_upper_dev)
             self.__air_temp_upper_dev.shutdown()
@@ -477,27 +468,23 @@ class AirConditioner(BasePlugin):
     def __convector_settings_cb(self, register):
 
         # Check data type.
-        if not register.data_type == "str":
+        if not register.data_type == "json":
             GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
             return
 
-        if register.value != verbal_const.OFF and self.__convector_dev is None:
-
-            params = register.value.split("/")
-
-            if len(params) <= 2:                
-                raise ValueError("Not enough parameters.")
+        if register.value != {} and self.__convector_dev is None:
 
             self.__convector_dev = ConvectorFactory.create(
                 name="Convector_{}".format(self.__identifier),
                 controller=self._controller,
-                params=params
-            )
+                vendor=register.value['vendor'],
+                model=register.value['model'],
+                options=register.value['options'])
 
             if self.__convector_dev is not None:
                 self.__convector_dev.init()
 
-        elif register.value == verbal_const.OFF and self.__convector_dev is not None:
+        elif register.value == {} and self.__convector_dev is not None:
             self.__convector_dev.shutdown()
             del self.__convector_dev
 
@@ -534,52 +521,46 @@ class AirConditioner(BasePlugin):
     def __loop1_temp_settings_cb(self, register):
 
         # Check data type.
-        if not register.data_type == "str":
+        if not register.data_type == "json":
             GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
             return
 
-        if register.value != verbal_const.OFF and self.__loop1_temp_dev is None:
-
-            params = register.value.split("/")
-
-            if len(params) <= 2:                
-                raise ValueError("Not enough parameters.")
+        if register.value != {} and self.__loop1_temp_dev is None:
 
             self.__loop1_temp_dev = ThermalSensorFactory.create(
                 controller=self._controller,
                 name="Loop 1 temperature",
-                params=params)
+                vendor=register.value['vendor'],
+                model=register.value['model'],
+                options=register.value['options'])
 
             if self.__loop1_temp_dev is not None:
                 self.__loop1_temp_dev.init()
 
-        elif register.value == verbal_const.OFF and self.__loop1_temp_dev is not None:
+        elif register.value == {} and self.__loop1_temp_dev is not None:
             self.__loop1_temp_dev.shutdown()
             del self.__loop1_temp_dev
 
     def __loop1_valve_enabled_cb(self, register):
 
         # Check data type.
-        if not register.data_type == "str":
+        if not register.data_type == "json":
             GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
             return
 
-        if register.value != verbal_const.OFF and self.__loop1_valve_dev is None:
-
-            params = register.value.split("/")
-
-            if len(params) <= 2:                
-                raise ValueError("Not enough parameters.")
+        if register.value != {} and self.__loop1_valve_dev is None:
 
             self.__loop1_valve_dev = ValveFactory.create(
                 name="Loop 1 valve", 
                 controller=self._controller,
-                params=params)
+                vendor=register.value['vendor'],
+                model=register.value['model'],
+                options=register.value['options'])
 
             if self.__loop1_valve_dev is not None:
                 self.__loop1_valve_dev.init()
 
-        elif register.value == verbal_const.OFF and self.__loop1_valve_dev is not None:
+        elif register.value == {} and self.__loop1_valve_dev is not None:
             self.__loop1_valve_dev.shutdown()
             del self.__loop1_valve_dev
 
@@ -607,7 +588,7 @@ class AirConditioner(BasePlugin):
                 self.__loop2_leak_teat = LeakTest(self.__loop2_cnt_dev, 20)
                 self.__loop2_leak_teat.on_result(self.__loop2_leaktest_result)
 
-        elif register.value == verbal_const.OFF and self.__loop2_cnt_dev is not None:
+        elif register.value == {} and self.__loop2_cnt_dev is not None:
             self.__loop2_cnt_dev.shutdown()
             del self.__loop2_cnt_dev
             del self.__loop2_leak_teat
@@ -615,52 +596,47 @@ class AirConditioner(BasePlugin):
     def __loop2_temp_settings_cb(self, register):
 
         # Check data type.
-        if not register.data_type == "str":
+        if not register.data_type == "json":
             GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
             return
 
-        if register.value != verbal_const.OFF and self.__loop2_temp_dev is None:
-
-            params = register.value.split("/")
-
-            if len(params) <= 2:                
-                raise ValueError("Not enough parameters.")
+        if register.value != {} and self.__loop2_temp_dev is None:
 
             self.__loop2_temp_dev = ThermalSensorFactory.create(
                 controller=self._controller,
                 name="Loop 2 temperature",
-                params=params)
+                vendor=register.value['vendor'],
+                model=register.value['model'],
+                options=register.value['options'])
+
 
             if self.__loop2_temp_dev is not None:
                 self.__loop2_temp_dev.init()
 
-        elif register.value == verbal_const.OFF and self.__loop2_temp_dev is not None:
+        elif register.value == {} and self.__loop2_temp_dev is not None:
             self.__loop2_temp_dev.shutdown()
             del self.__loop2_temp_dev
 
     def __loop2_valve_settings_cb(self, register):
 
         # Check data type.
-        if not register.data_type == "str":
+        if not register.data_type == "json":
             GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
             return
 
-        if register.value != verbal_const.OFF and self.__loop2_valve_dev is None:
-
-            params = register.value.split("/")
-
-            if len(params) <= 2:                
-                raise ValueError("Not enough parameters.")
+        if register.value != {} and self.__loop2_valve_dev is None:
 
             self.__loop2_valve_dev = ValveFactory.create(
                 name="Loop 2 valve", 
                 controller=self._controller,
-                params=params)
+                vendor=register.value['vendor'],
+                model=register.value['model'],
+                options=register.value['options'])
 
             if self.__loop2_valve_dev is not None:
                 self.__loop2_valve_dev.init()
 
-        elif register.value == verbal_const.OFF and self.__loop2_valve_dev is not None:
+        elif register.value == {} and self.__loop2_valve_dev is not None:
             self.__loop2_valve_dev.shutdown()
             del self.__loop2_valve_dev
 
@@ -867,7 +843,7 @@ class AirConditioner(BasePlugin):
         if self._controller.is_valid_gpio(self.__window_closed_input):
             state = self._controller.digital_read(self.__window_closed_input)
 
-        if self.__window_closed_input == verbal_const.OFF:
+        if self.__window_closed_input == {}:
             state = True
 
         return state

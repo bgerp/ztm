@@ -196,29 +196,103 @@ class Ventilation(BasePlugin):
     def __upper_valve_settings_cb(self, register: Register):
         
         # Check data type.
-        if not register.data_type == "str":
+        if not register.data_type == "json":
             GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
             return
 
-        register_value = register.value
-        if register_value is not None:
-            segments = register_value.split("/")
-            self.__upper_valve_settings["close"] = segments[2]
-            self.__upper_valve_settings["open"] = segments[3]
+        config = register.value
+        if config is not None:
+
+            # Name
+            # name = ""
+            # if "name" in config:
+            #     name = config["name"]
+
+            # Vendor
+            vendor = None
+            if "vendor" in config:
+                vendor = config["vendor"]
+
+            else:
+                raise ValueError("No \"vendor\" argument has been passed.") 
+
+            # Model
+            model = None
+            if "model" in config:
+                model = config["model"]
+
+            else:
+                raise ValueError("No \"model\" argument has been passed.") 
+
+            # Controller
+            # controller = None
+            # if "controller" in config:
+            #     controller = config["controller"]
+
+            # else:
+            #     raise ValueError("No \"controller\" argument has been passed.") 
+
+            if vendor == "FONYES" and  model == "Model1":
+
+                # device = Model1(
+                #     name=name,
+                #     controller=controller,
+                #     output=config["options"]["output"]
+                # )
+
+                self.__upper_valve_settings["close"] = config['options']['closing']
+                self.__upper_valve_settings["open"] = config['options']['opening']
 
     # Lower valve.
     def __lower_valve_settings_cb(self, register: Register):
         
         # Check data type.
-        if not register.data_type == "str":
+        if not register.data_type == "json":
             GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
             return
 
-        register_value = register.value
-        if register_value is not None:
-            segments = register_value.split("/")
-            self.__lower_valve_settings["close"] = segments[2]
-            self.__lower_valve_settings["open"] = segments[3]
+        config = register.value
+        if config is not None:
+
+            # Name
+            # name = ""
+            # if "name" in config:
+            #     name = config["name"]
+
+            # Vendor
+            vendor = None
+            if "vendor" in config:
+                vendor = config["vendor"]
+
+            else:
+                raise ValueError("No \"vendor\" argument has been passed.") 
+
+            # Model
+            model = None
+            if "model" in config:
+                model = config["model"]
+
+            else:
+                raise ValueError("No \"model\" argument has been passed.") 
+
+            # Controller
+            # controller = None
+            # if "controller" in config:
+            #     controller = config["controller"]
+
+            # else:
+            #     raise ValueError("No \"controller\" argument has been passed.") 
+
+            if vendor == "FONYES" and  model == "Model1":
+
+                # device = Model1(
+                #     name=name,
+                #     controller=controller,
+                #     output=config["options"]["output"]
+                # )
+
+                self.__lower_valve_settings["close"] = config['options']['closing']
+                self.__lower_valve_settings["open"] = config['options']['opening']
 
     # Params
     def __op_setpoint_cb(self, register: Register):
@@ -283,26 +357,23 @@ class Ventilation(BasePlugin):
     def __upper_fan_settings_cb(self, register: Register):
 
         # Check data type.
-        if not register.data_type == "str":
+        if not register.data_type == "json":
             GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
             return
 
-        if register.value != verbal_const.OFF and self.__upper_fan_dev is None:
-
-            params = register.value.split("/")
-
-            if len(params) <= 2:                
-                raise ValueError("Not enough parameters.")
+        if register.value != {} and self.__upper_fan_dev is None:
 
             self.__upper_fan_dev = FanFactory.create(
                 controller=self._controller,
                 name="Upper fan {}".format(self.__identifier),
-                params=params)
+                vendor=register.value['vendor'],
+                model=register.value['model'],
+                options=register.value['options'])
 
             if self.__upper_fan_dev is not None:
                 self.__upper_fan_dev.init()
 
-        elif register.value == verbal_const.OFF and self.__upper_fan_dev is not None:
+        elif register.value == {} and self.__upper_fan_dev is not None:
             self.__upper_fan_dev.shutdown()
             del self.__upper_fan_dev
 
@@ -355,26 +426,23 @@ class Ventilation(BasePlugin):
     def __lower_fan_settings_cb(self, register: Register):
 
         # Check data type.
-        if not register.data_type == "str":
+        if not register.data_type == "json":
             GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
             return
 
-        if register.value != verbal_const.OFF and self.__lower_fan_dev is None:
-
-            params = register.value.split("/")
-
-            if len(params) <= 2:                
-                raise ValueError("Not enough parameters.")
+        if register.value != {} and self.__lower_fan_dev is None:
 
             self.__lower_fan_dev = FanFactory.create(
                 controller=self._controller,
                 name="Lower fan {}".format(self.__identifier),
-                params=params)
+                vendor=register.value['vendor'],
+                model=register.value['model'],
+                options=register.value['options'])
 
             if self.__lower_fan_dev is not None:
                 self.__lower_fan_dev.init()
 
-        elif register.value == verbal_const.OFF and self.__lower_fan_dev is not None:
+        elif register.value == {} and self.__lower_fan_dev is not None:
             self.__lower_fan_dev.shutdown()
             del self.__lower_fan_dev
 

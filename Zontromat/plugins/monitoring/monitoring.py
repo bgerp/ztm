@@ -343,22 +343,17 @@ class Monitoring(BasePlugin):
 
     def __pa_enabled_cb(self, register):
 
-        if not register.data_type == "str":
+        if not register.data_type == "json":
             return
 
-        if register.value != verbal_const.OFF and self.__power_analyser is None:
-
-            # mb-rtu/Eastron/SDM630/2/3
-            # Split parammeters
-            params = register.value.split("/")
-
-            if len(params) <= 2:                
-                raise ValueError("Not enough parameters.")
+        if register.value != {} and self.__power_analyser is None:
 
             self.__power_analyser = PowerAnalyserFactory.create(
                                         controller=self._controller,
                                         name="Zone Power analyser",
-                                        params=params)
+                                        vendor=register.value['vendor'],
+                                        model=register.value['model'],
+                                        options=register.value['options'])
 
             if self._controller.vendor == "UniPi":
 
@@ -372,16 +367,16 @@ class Monitoring(BasePlugin):
                 if not self.__evok_setting.device_exists("EXTENTION_1"):
 
                     # Vendor
-                    vendor = params[0]
+                    vendor = register.value['vendor']
 
                     # Model
-                    model = params[1]
+                    model = register.value['model']
 
                     # UART
-                    uart = params[2]
+                    uart = register.value['model']
 
                     # Unit
-                    unit = params[3]
+                    unit = register.value['options']['unit']
 
                     # Add extention 1.
                     extention_1 = {
@@ -407,7 +402,7 @@ class Monitoring(BasePlugin):
                         EvokSettings.restart()
                         self.__logger.debug("Restart the EVOK service.")
 
-        elif register.value == verbal_const.OFF and self.__power_analyser is not None:
+        elif register.value == {} and self.__power_analyser is not None:
             self.__power_analyser = None
 
             if self._controller.vendor == "UniPi":

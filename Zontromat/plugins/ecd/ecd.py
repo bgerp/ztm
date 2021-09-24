@@ -359,26 +359,23 @@ class EnergyCenterDistribution(BasePlugin):
     def __underfloor_heating_foyer_enabled_cb(self, register: Register):
 
         # Check data type.
-        if not register.data_type == "str":
+        if not register.data_type == "json":
             GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
             return
 
         if register.value != verbal_const.OFF and self.__v_underfloor_heating_foyer is None:
 
-            params = register.value.split("/")
-
-            if len(params) <= 2:
-                raise ValueError("Not enough parameters.")
-
             self.__v_underfloor_heating_foyer = ValveFactory.create(
                 name="Valve Underfloor Heating Foyer",
                 controller=self._controller,
-                params=params)
+                vendor=register.value['vendor'],
+                model=register.value['model'],
+                options=register.value['options'])
 
             if self.__v_underfloor_heating_foyer is not None:
                 self.__v_underfloor_heating_foyer.init()
 
-        elif register.value == verbal_const.OFF and self.__v_underfloor_heating_foyer is not None:
+        elif register.value == {} and self.__v_underfloor_heating_foyer is not None:
             self.__v_underfloor_heating_foyer.shutdown()
             del self.__v_underfloor_heating_foyer
 
@@ -411,26 +408,23 @@ class EnergyCenterDistribution(BasePlugin):
     def __underfloor_heating_trestle_enabled_cb(self, register: Register):
 
         # Check data type.
-        if not register.data_type == "str":
+        if not register.data_type == "json":
             GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
             return
 
         if register.value != verbal_const.OFF and self.__v_underfloor_heating_trestle is None:
 
-            params = register.value.split("/")
-
-            if len(params) <= 2:
-                raise ValueError("Not enough parameters.")
-
             self.__v_underfloor_heating_trestle = ValveFactory.create(
                 name="Valve Underfloor Heating Trestle",
                 controller=self._controller,
-                params=params)
+                vendor=register.value['vendor'],
+                model=register.value['model'],
+                options=register.value['options'])
 
             if self.__v_underfloor_heating_trestle is not None:
                 self.__v_underfloor_heating_trestle.init()
 
-        elif register.value == verbal_const.OFF and self.__v_underfloor_heating_trestle is not None:
+        elif register.value == {} and self.__v_underfloor_heating_trestle is not None:
             self.__v_underfloor_heating_trestle.shutdown()
             del self.__v_underfloor_heating_trestle
 
@@ -463,26 +457,23 @@ class EnergyCenterDistribution(BasePlugin):
     def __underfloor_heating_pool_enabled_cb(self, register: Register):
 
         # Check data type.
-        if not register.data_type == "str":
+        if not register.data_type == "json":
             GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
             return
 
         if register.value != verbal_const.OFF and self.__v_underfloor_heating_pool is None:
 
-            params = register.value.split("/")
-
-            if len(params) <= 2:
-                raise ValueError("Not enough parameters.")
-
             self.__v_underfloor_heating_pool = ValveFactory.create(
                 name="Valve Underfloor Heating Pool",
                 controller=self._controller,
-                params=params)
+                vendor=register.value['vendor'],
+                model=register.value['model'],
+                options=register.value['options'])
 
             if self.__v_underfloor_heating_pool is not None:
                 self.__v_underfloor_heating_pool.init()
 
-        elif register.value == verbal_const.OFF and self.__v_underfloor_heating_pool is not None:
+        elif register.value == {} and self.__v_underfloor_heating_pool is not None:
             self.__v_underfloor_heating_pool.shutdown()
             del self.__v_underfloor_heating_pool
 
@@ -515,26 +506,23 @@ class EnergyCenterDistribution(BasePlugin):
     def __air_cooling_enabled_cb(self, register: Register):
 
         # Check data type.
-        if not register.data_type == "str":
+        if not register.data_type == "json":
             GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
             return
 
         if register.value != verbal_const.OFF and self.__v_air_cooling is None:
 
-            params = register.value.split("/")
-
-            if len(params) <= 2:
-                raise ValueError("Not enough parameters.")
-
             self.__v_air_cooling = ValveFactory.create(
                 name="Valve Air Cooling",
                 controller=self._controller,
-                params=params)
+                vendor=register.value['vendor'],
+                model=register.value['model'],
+                options=register.value['options'])
 
             if self.__v_air_cooling is not None:
                 self.__v_air_cooling.init()
 
-        elif register.value == verbal_const.OFF and self.__v_air_cooling is not None:
+        elif register.value == {} and self.__v_air_cooling is not None:
             self.__v_air_cooling.shutdown()
             del self.__v_air_cooling
 
@@ -567,26 +555,23 @@ class EnergyCenterDistribution(BasePlugin):
     def __ground_drill_enabled_cb(self, register: Register):
 
         # Check data type.
-        if not register.data_type == "str":
+        if not register.data_type == "json":
             GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
             return
 
         if register.value != verbal_const.OFF and self.__v_ground_drill is None:
 
-            params = register.value.split("/")
-
-            if len(params) <= 2:
-                raise ValueError("Not enough parameters.")
-
             self.__v_ground_drill = ValveFactory.create(
                 name="Valve Ground Drilling",
                 controller=self._controller,
-                params=params)
+                vendor=register.value['vendor'],
+                model=register.value['model'],
+                options=register.value['options'])
 
             if self.__v_ground_drill is not None:
                 self.__v_ground_drill.init()
 
-        elif register.value == verbal_const.OFF and self.__v_ground_drill is not None:
+        elif register.value == {} and self.__v_ground_drill is not None:
             self.__v_ground_drill.shutdown()
             del self.__v_ground_drill
 
@@ -619,26 +604,23 @@ class EnergyCenterDistribution(BasePlugin):
     def __generators_cooling_enabled_cb(self, register: Register):
 
         # Check data type.
-        if not register.data_type == "str":
+        if not register.data_type == "json":
             GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
             return
 
         if register.value != verbal_const.OFF and self.__v_generators_cooling is None:
 
-            params = register.value.split("/")
-
-            if len(params) <= 2:
-                raise ValueError("Not enough parameters.")
-
             self.__v_generators_cooling = ValveFactory.create(
                 name="Valve Generators Cooling",
                 controller=self._controller,
-                params=params)
+                vendor=register.value['vendor'],
+                model=register.value['model'],
+                options=register.value['options'])
 
             if self.__v_generators_cooling is not None:
                 self.__v_generators_cooling.init()
 
-        elif register.value == verbal_const.OFF and self.__v_generators_cooling is not None:
+        elif register.value == {} and self.__v_generators_cooling is not None:
             self.__v_generators_cooling.shutdown()
             del self.__v_generators_cooling
 
@@ -671,26 +653,23 @@ class EnergyCenterDistribution(BasePlugin):
     def __short_green_purple_enabled_cb(self, register: Register):
 
         # Check data type.
-        if not register.data_type == "str":
+        if not register.data_type == "json":
             GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
             return
 
         if register.value != verbal_const.OFF and self.__v_short_green_purple is None:
 
-            params = register.value.split("/")
-
-            if len(params) <= 2:
-                raise ValueError("Not enough parameters.")
-
             self.__v_short_green_purple = ValveFactory.create(
                 name="Valve Short Green Purple",
                 controller=self._controller,
-                params=params)
+                vendor=register.value['vendor'],
+                model=register.value['model'],
+                options=register.value['options'])
 
             if self.__v_short_green_purple is not None:
                 self.__v_short_green_purple.init()
 
-        elif register.value == verbal_const.OFF and self.__v_short_green_purple is not None:
+        elif register.value == {} and self.__v_short_green_purple is not None:
             self.__v_short_green_purple.shutdown()
             del self.__v_short_green_purple
 
@@ -723,26 +702,23 @@ class EnergyCenterDistribution(BasePlugin):
     def __underfloor_west_bypass_enabled_cb(self, register: Register):
 
         # Check data type.
-        if not register.data_type == "str":
+        if not register.data_type == "json":
             GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
             return
 
         if register.value != verbal_const.OFF and self.__v_underfloor_west_bypass is None:
 
-            params = register.value.split("/")
-
-            if len(params) <= 2:
-                raise ValueError("Not enough parameters.")
-
             self.__v_underfloor_west_bypass = ValveFactory.create(
                 name="Valve Underfloor West Bypass",
                 controller=self._controller,
-                params=params)
+                vendor=register.value['vendor'],
+                model=register.value['model'],
+                options=register.value['options'])
 
             if self.__v_underfloor_west_bypass is not None:
                 self.__v_underfloor_west_bypass.init()
 
-        elif register.value == verbal_const.OFF and self.__v_underfloor_west_bypass is not None:
+        elif register.value == {} and self.__v_underfloor_west_bypass is not None:
             self.__v_underfloor_west_bypass.shutdown()
             del self.__v_underfloor_west_bypass   
 
@@ -775,26 +751,23 @@ class EnergyCenterDistribution(BasePlugin):
     def __underfloor_east_bypass_enabled_cb(self, register: Register):
 
         # Check data type.
-        if not register.data_type == "str":
+        if not register.data_type == "json":
             GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
             return
 
         if register.value != verbal_const.OFF and self.__v_underfloor_east_bypass is None:
 
-            params = register.value.split("/")
-
-            if len(params) <= 2:
-                raise ValueError("Not enough parameters.")
-
             self.__v_underfloor_east_bypass = ValveFactory.create(
                 name="Valve Underfloor East Bypass",
                 controller=self._controller,
-                params=params)
+                vendor=register.value['vendor'],
+                model=register.value['model'],
+                options=register.value['options'])
 
             if self.__v_underfloor_east_bypass is not None:
                 self.__v_underfloor_east_bypass.init()
 
-        elif register.value == verbal_const.OFF and self.__v_underfloor_east_bypass is not None:
+        elif register.value == {} and self.__v_underfloor_east_bypass is not None:
             self.__v_underfloor_east_bypass.shutdown()
             del self.__v_underfloor_east_bypass   
 
@@ -868,7 +841,6 @@ class EnergyCenterDistribution(BasePlugin):
                 fw_valves=["cold_in", "cold_out"],
                 rev_valves=["hot_in", "hot_out"],
                 fw_pumps=["pump"])
-
             self.__vcg_tva_pool.mode = ValveControlGroupMode.Proportional
 
             if self.__vcg_tva_pool is not None:
@@ -895,7 +867,6 @@ class EnergyCenterDistribution(BasePlugin):
                 fw_valves=["cold_in", "cold_out"],
                 rev_valves=["hot_in", "hot_out"],
                 fw_pumps=["pump"])
-
             self.__vcg_convectors_east.mode = ValveControlGroupMode.Proportional
 
             if self.__vcg_convectors_east is not None:

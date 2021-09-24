@@ -159,194 +159,50 @@ class SecurityZone(BasePlugin):
 
     def __entry_reader_cb(self, register):
 
-        # 1. Get data.
-        valid_data = 0
-        key = register.base_name
-        reg_enabled = self._registers.by_name("{}.entry_reader_{}.enabled" .format(key, self.__identifier))
-        reg_port_name = self._registers.by_name("{}.entry_reader_{}.port.name" .format(key, self.__identifier))
-        reg_port_baudrate = self._registers.by_name("{}.entry_reader_{}.port.baudrate" .format(key, self.__identifier))
-
-        # 2. If it is valid: delete old one.
-        # Get settings.
-        vendor = None
-        model = None
-        serial_number = None
-        if reg_enabled is not None:
-            if reg_enabled.data_type == "str":
-                if reg_enabled.value == verbal_const.OFF:
-                    self.__delete_reader(self.__entry_reader)
-                    return # When flag is off. Just delete the object.
-
-                elif reg_enabled.value != "":
-                    params = reg_enabled.value.split("/")
-                    vendor = params[0]
-                    model = params[1]
-                    serial_number = params[2]
-                    valid_data += 1
-
-                else:
-                    GlobalErrorHandler.log_bad_register_value(self.__logger, reg_enabled)
-
-            else:
-                GlobalErrorHandler.log_bad_register_data_type(self.__logger, reg_enabled)
-
-        else:
-            GlobalErrorHandler.log_register_not_found(self.__logger,\
-                "{}.entry_reader_{}.enabled" .format(key, self.__identifier))
-
-        # Get port name.
-        port_name = ""
-        if reg_port_name is not None:
-            if reg_port_name.data_type == "str":
-                port_name = reg_port_name.value
-                valid_data += 1
-                # UNCOMMENT ONLY FOR TEST PURPOSE
-                # if register.name == "ac.entry_reader_1.port.name":
-                #     port_name = "usb:072f:2200
-
-            else:
-                GlobalErrorHandler.log_bad_register_data_type(self.__logger, reg_port_name)
-
-        else:
-            GlobalErrorHandler.log_register_not_found(self.__logger,\
-                "{}.entry_reader_{}.port.name" .format(key, self.__identifier))
-
-
-        # Get serial port baudrate.
-        baudrate = 0
-        if reg_port_baudrate is not None:
-            if reg_port_baudrate.data_type == "int":
-                if reg_port_baudrate.value > 0:
-                    baudrate = reg_port_baudrate.value
-                    valid_data += 1
-
-                else:
-                    GlobalErrorHandler.log_bad_register_value(self.__logger, reg_port_baudrate)
-
-            else:
-                GlobalErrorHandler.log_bad_register_data_type(self.__logger, reg_port_baudrate)
-
-        else:
-            GlobalErrorHandler.log_register_not_found(self.__logger,\
-                "{}.entry_reader_{}.port.baudrate" .format(key, self.__identifier))
-
-        # 3. Else: Pass
-        if valid_data != 3:
+        # Check data type.
+        if not register.data_type == "json":
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
 
-        # 2. If it is valid: delete old one.
-        self.__delete_reader(self.__entry_reader)
+        # Create
+        if register.value != {} and self.__entry_reader is None:
 
-        # 4. Create new one.
-        # Create the card reader.
-        self.__entry_reader = CardReaderFactory.create(\
-            vendor=vendor,\
-            model=model,\
-            serial_number=serial_number,\
-            port_name=port_name,\
-            baudrate=baudrate)
+            self.__entry_reader = CardReaderFactory.create(
+                                        controller=self._controller,
+                                        name="Entry Reader",
+                                        vendor=register.value['vendor'],
+                                        model=register.value['model'],
+                                        options=register.value['options'])
 
-        # Check if it is working.
-        if self.__entry_reader is not None:
-            if self.__entry_reader.reader_state == CardReaderState.NONE:
-                self.__entry_reader.cb_read_card(self.__cb_read_card)
-                self.__entry_reader.init()
+            if self.__entry_reader is not None:
+                if self.__entry_reader.reader_state == CardReaderState.NONE:
+                    self.__entry_reader.cb_read_card(self.__cb_read_card)
+                    self.__entry_reader.init()
+
+        # Delete
+        elif register.value == {} and self.__entry_reader is not None:
+            self.__delete_reader(self.__entry_reader)
 
     def __exit_reader_cb(self, register):
 
-        # 1. Get data.
-        valid_data = 0
-        key = register.base_name
-        reg_enabled = self._registers.by_name("{}.exit_reader_{}.enabled" .format(key, self.__identifier))
-        reg_port_name = self._registers.by_name("{}.exit_reader_{}.port.name" .format(key, self.__identifier))
-        reg_port_baudrate = self._registers.by_name("{}.exit_reader_{}.port.baudrate" .format(key, self.__identifier))
+        # Create
+        if register.value != {} and self.__exit_reader is None:
 
-        # 2. If it is valid: delete old one.
-        # Get settings.
-        vendor = None
-        model = None
-        serial_number = None
-        if reg_enabled is not None:
-            if reg_enabled.data_type == "str":
-                if reg_enabled.value == verbal_const.OFF:
-                    self.__delete_reader(self.__exit_reader)
-                    return # When fag is off. Just delete the object.
+            self.__exit_reader = CardReaderFactory.create(
+                                        controller=self._controller,
+                                        name="Exit Reader",
+                                        vendor=register.value['vendor'],
+                                        model=register.value['model'],
+                                        options=register.value['options'])
 
-                elif reg_enabled.value != "":
-                    params = reg_enabled.value.split("/")
-                    vendor = params[0]
-                    model = params[1]
-                    serial_number = params[2]
-                    valid_data += 1
+            if self.__exit_reader is not None:
+                if self.__exit_reader.reader_state == CardReaderState.NONE:
+                    self.__exit_reader.cb_read_card(self.__cb_read_card)
+                    self.__exit_reader.init()
 
-                else:
-                    GlobalErrorHandler.log_bad_register_value(self.__logger, reg_enabled)
-
-            else:
-                GlobalErrorHandler.log_bad_register_data_type(self.__logger, reg_enabled)
-
-        else:
-            GlobalErrorHandler.log_register_not_found(self.__logger,\
-                "{}.exit_reader_{}.enabled" .format(key, self.__identifier))
-
-        # Get port name.
-        port_name = ""
-        if reg_port_name is not None:
-            if reg_port_name.data_type == "str":
-                port_name = reg_port_name.value
-                valid_data += 1
-                # UNCOMMENT ONLY FOR TEST PURPOSE
-                # if register.name == "ac.exit_reader_1.port.name":
-                #     port_name = "usb:072f:2200
-
-            else:
-                GlobalErrorHandler.log_bad_register_data_type(self.__logger, reg_port_name)
-
-        else:
-            GlobalErrorHandler.log_register_not_found(self.__logger,\
-                "{}.exit_reader_{}.port.name" .format(key, self.__identifier))
-
-
-        # Get serial port baudrate.
-        baudrate = 0
-        if reg_port_baudrate is not None:
-            if reg_port_baudrate.data_type == "int":
-                if reg_port_baudrate.value > 0:
-                    baudrate = reg_port_baudrate.value
-                    valid_data += 1
-
-                else:
-                    GlobalErrorHandler.log_bad_register_value(self.__logger, reg_port_baudrate)
-
-            else:
-                GlobalErrorHandler.log_bad_register_data_type(self.__logger, reg_port_baudrate)
-
-        else:
-            GlobalErrorHandler.log_register_not_found(self.__logger,\
-                "{}.exit_reader_{}.port.baudrate" .format(key, self.__identifier))
-
-        # 3. Else: Pass
-        if valid_data != 3:
-            return
-
-        # 2. If it is valid: delete old one.
-        self.__delete_reader(self.__exit_reader)
-
-        # 4. Create new one.
-        # Create the card reader.
-        self.__exit_reader = CardReaderFactory.create(\
-            vendor=vendor,\
-            model=model,\
-            serial_number=serial_number,\
-            port_name=port_name,\
-            baudrate=baudrate)
-
-        # Check if it is working.
-        if self.__exit_reader is not None:
-            if self.__exit_reader.reader_state == CardReaderState.NONE:
-                self.__exit_reader.cb_read_card(self.__cb_read_card)
-                self.__exit_reader.init()
-
+        # Delete
+        elif register.value == {} and self.__exit_reader is not None:
+            self.__delete_reader(self.__exit_reader)
 
     def __exit_btn_input_cb(self, register):
 
@@ -449,30 +305,10 @@ class SecurityZone(BasePlugin):
         if entry_reader_enabled is not None:
             entry_reader_enabled.update_handlers = self.__entry_reader_cb
 
-        entry_reader_port_baudrate = self._registers.by_name("{}.entry_reader_{}.port.baudrate".format(self.key, self.__identifier))
-        if entry_reader_port_baudrate is not None:
-            entry_reader_port_baudrate.update_handlers = self.__entry_reader_cb
-
-        entry_reader_port_name = self._registers.by_name("{}.entry_reader_{}.port.name".format(self.key, self.__identifier))
-        if entry_reader_port_name is not None:
-            entry_reader_port_name.update_handlers = self.__entry_reader_cb
-            entry_reader_port_name.update()
-
-
         # Exit reader.
-        exit_reader = self._registers.by_name("{}.exit_reader_{}.enabled".format(self.key, self.__identifier))
-        if exit_reader is not None:
-            exit_reader.update_handlers = self.__exit_reader_cb
-
-        exit_reader_port_baudrate = self._registers.by_name("{}.exit_reader_{}.port.baudrate".format(self.key, self.__identifier))
-        if exit_reader_port_baudrate is not None:
-            exit_reader_port_baudrate.update_handlers = self.__exit_reader_cb
-
-        exit_reader_port_name = self._registers.by_name("{}.exit_reader_{}.port.name".format(self.key, self.__identifier))
-        if exit_reader_port_name is not None:
-            exit_reader_port_name.update_handlers = self.__exit_reader_cb
-            exit_reader_port_name.update()
-
+        exit_reader_enabled = self._registers.by_name("{}.exit_reader_{}.enabled".format(self.key, self.__identifier))
+        if exit_reader_enabled is not None:
+            exit_reader_enabled.update_handlers = self.__exit_reader_cb
 
         # Create exit button.
         exit_button_input = self._registers.by_name("{}.exit_button_{}.input".format(self.key, self.__identifier))
