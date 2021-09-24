@@ -148,25 +148,6 @@ def __add_registers():
     register.value = {} # "Teracom/act230/2911"
     __registers.append(register)
 
-    register = Register("ac.entry_reader_1.port.baudrate")
-    register.scope = Scope.System
-    register.plugin_name = "Access Control"
-    register.description = "Card reader port baud rate"
-    register.range = __range["BAUD"]
-    register.value = 9600
-    __registers.append(register)
-
-    register = Register("ac.entry_reader_1.port.name")
-    register.scope = Scope.System
-    register.plugin_name = "Access Control"
-    register.description = "Card reader port name"
-    register.range = ""
-    if os.name == "posix":
-        register.value = "/dev/ttyUSB1"
-    if os.name == "nt":
-        register.value = "COM11"
-    __registers.append(register)
-
     # Exit card reader.
     register = Register("ac.exit_reader_1.enabled")
     register.scope = Scope.System
@@ -174,25 +155,6 @@ def __add_registers():
     register.description = "Card reader enabled"
     register.range = ""
     register.value = {} # "Teracom/act230/2897"
-    __registers.append(register)
-
-    register = Register("ac.exit_reader_1.port.baudrate")
-    register.scope = Scope.System
-    register.plugin_name = "Access Control"
-    register.description = "Card reader 1 port baud rate"
-    register.range = __range["BAUD"]
-    register.value = 9600
-    __registers.append(register)
-
-    register = Register("ac.exit_reader_1.port.name")
-    register.scope = Scope.System
-    register.plugin_name = "Access Control"
-    register.description = "Card reader 1 port name"
-    register.range = ""
-    if os.name == "posix":
-        register.value = "/dev/ttyUSB0"
-    if os.name == "nt":
-        register.value = "COM5"
     __registers.append(register)
 
     #
@@ -246,26 +208,6 @@ def __add_registers():
     register.value = {} # "Teracom/act230/2486"
     __registers.append(register)
 
-
-    register = Register("ac.entry_reader_2.port.baudrate")
-    register.scope = Scope.System
-    register.plugin_name = "Access Control"
-    register.description = "Card reader port baud rate"
-    register.range = __range["BAUD"]
-    register.value = 9600
-    __registers.append(register)
-
-    register = Register("ac.entry_reader_2.port.name")
-    register.scope = Scope.System
-    register.plugin_name = "Access Control"
-    register.description = "Card reader port name"
-    register.range = ""
-    if os.name == "posix":
-        register.value = "/dev/ttyUSB0"
-    if os.name == "nt":
-        register.value = "COM8"
-    __registers.append(register)
-
     # Exit card reader.
     register = Register("ac.exit_reader_2.enabled")
     register.scope = Scope.System
@@ -273,25 +215,6 @@ def __add_registers():
     register.description = "Card reader settings"
     register.range = ""
     register.value = {} # "Teracom/act230/1208"
-    __registers.append(register)
-
-    register = Register("ac.exit_reader_2.port.baudrate")
-    register.scope = Scope.System
-    register.plugin_name = "Access Control"
-    register.description = "Card reader port baud rate"
-    register.range = __range["BAUD"]
-    register.value = 9600
-    __registers.append(register)
-
-    register = Register("ac.exit_reader_2.port.name")
-    register.scope = Scope.System
-    register.plugin_name = "Access Control"
-    register.description = "Card reader port name"
-    register.range = ""
-    if os.name == "posix":
-        register.value = "/dev/ttyUSB0"
-    if os.name == "nt":
-        register.value = "COM9"
     __registers.append(register)
 
     #
@@ -1838,7 +1761,7 @@ def __add_registers():
     register.range = ""
     register.value = {
             "vendor": "Grundfos",
-            "model": "Pump",
+            "model": "MAGNA1_80_100_F_360_1x230V_PN6",
             "options":
             {
                 "mb_id": 0,
@@ -1941,7 +1864,7 @@ def __add_registers():
     register.range = ""
     register.value = {
             "vendor": "Grundfos",
-            "model": "Pump",
+            "model": "MAGNA1_80_100_F_360_1x230V_PN6",
             "options":
             {
                 "mb_id": 0,
@@ -2043,7 +1966,7 @@ def __add_registers():
     register.range = ""
     register.value = {
             "vendor": "Grundfos",
-            "model": "Pump",
+            "model": "MAGNA1_80_100_F_360_1x230V_PN6",
             "options":
             {
                 "mb_id": 0,
@@ -2145,7 +2068,7 @@ def __add_registers():
     register.range = ""
     register.value = {
             "vendor": "Grundfos",
-            "model": "Pump",
+            "model": "MAGNA1_80_100_F_360_1x230V_PN6",
             "options":
             {
                 "mb_id": 0,
@@ -2248,7 +2171,7 @@ def __add_registers():
     register.range = ""
     register.value = {
             "vendor": "Grundfos",
-            "model": "Pump",
+            "model": "MAGNA1_80_100_F_360_1x230V_PN6",
             "options":
             {
                 "mb_id": 0,
@@ -2350,7 +2273,7 @@ def __add_registers():
     register.range = ""
     register.value = {
             "vendor": "Grundfos",
-            "model": "Pump",
+            "model": "MAGNA1_80_100_F_360_1x230V_PN6",
             "options":
             {
                 "mb_id": 0,
@@ -2451,7 +2374,7 @@ def __add_registers():
     register.range = ""
     register.value = {
             "vendor": "Grundfos",
-            "model": "Pump",
+            "model": "MAGNA1_80_100_F_360_1x230V_PN6",
             "options":
             {
                 "mb_id": 0,
@@ -2552,7 +2475,7 @@ def __add_registers():
     register.range = ""
     register.value = {
             "vendor": "Grundfos",
-            "model": "Pump",
+            "model": "MAGNA1_80_100_F_360_1x230V_PN6",
             "options":
             {
                 "mb_id": 0,
@@ -2653,7 +2576,7 @@ def __add_registers():
     register.range = ""
     register.value = {
             "vendor": "Grundfos",
-            "model": "Pump",
+            "model": "MAGNA1_80_100_F_360_1x230V_PN6",
             "options":
             {
                 "mb_id": 0,
@@ -2755,7 +2678,7 @@ def __add_registers():
     register.range = ""
     register.value = {
             "vendor": "Grundfos",
-            "model": "Pump",
+            "model": "MAGNA1_80_100_F_360_1x230V_PN6",
             "options":
             {
                 "mb_id": 0,
@@ -2856,7 +2779,7 @@ def __add_registers():
     register.range = ""
     register.value = {
             "vendor": "Grundfos",
-            "model": "Pump",
+            "model": "MAGNA1_80_100_F_360_1x230V_PN6",
             "options":
             {
                 "mb_id": 0,
@@ -3211,7 +3134,7 @@ def __add_registers():
     register.range = ""
     register.value = {
             "vendor": "Grundfos",
-            "model": "Pump",
+            "model": "MAGNA1_80_100_F_360_1x230V_PN6",
             "options":
             {
                 "mb_id": 2,
@@ -3227,7 +3150,7 @@ def __add_registers():
     register.range = ""
     register.value = {
             "vendor": "Grundfos",
-            "model": "Pump",
+            "model": "MAGNA1_80_100_F_360_1x230V_PN6",
             "options":
             {
                 "mb_id": 3,
@@ -3243,7 +3166,7 @@ def __add_registers():
     register.range = ""
     register.value = {
             "vendor": "Grundfos",
-            "model": "Pump",
+            "model": "MAGNA1_80_100_F_360_1x230V_PN6",
             "options":
             {
                 "mb_id": 0,
@@ -3259,7 +3182,7 @@ def __add_registers():
     register.range = ""
     register.value = {
             "vendor": "Grundfos",
-            "model": "Pump",
+            "model": "MAGNA1_80_100_F_360_1x230V_PN6",
             "options":
             {
                 "mb_id": 0,
