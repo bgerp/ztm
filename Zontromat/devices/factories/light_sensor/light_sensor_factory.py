@@ -85,16 +85,16 @@ class LightSensorFactory:
 
         # Vendor
         vendor = None
-        if "params" in config:
-            vendor = config["params"][0]
+        if "vendor" in config:
+            vendor = config["vendor"]
 
         else:
             raise ValueError("No \"vendor\" argument has been passed.") 
 
         # Model
         model = None
-        if "params" in config:
-            model = config["params"][1]
+        if "model" in config:
+            model = config["model"]
 
         else:
             raise ValueError("No \"model\" argument has been passed.") 
@@ -113,7 +113,7 @@ class LightSensorFactory:
             device = LightSensor(
                 name=name,
                 controller=controller,
-                analog_input=config["params"][2]
+                analog_input=config["options"]['input']
             )
 
         # SEDtronic / u1wtvs
@@ -122,8 +122,8 @@ class LightSensorFactory:
             device = U1WTVS(
                 name=name,
                 controller=controller,
-                dev=config["params"][2],
-                circuit=config["params"][3],
+                dev=config["options"]['dev'],
+                circuit=config["options"]['circuit'],
             )
 
         # Not implemented device.

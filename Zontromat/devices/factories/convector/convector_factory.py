@@ -72,16 +72,16 @@ class ConvectorFactory:
 
         # Vendor
         vendor = None
-        if "params" in config:
-            vendor = config["params"][0]
+        if "vendor" in config:
+            vendor = config["vendor"]
 
         else:
             raise ValueError("No \"vendor\" argument has been passed.") 
 
         # Model
         model = None
-        if "params" in config:
-            model = config["params"][1]
+        if "model" in config:
+            model = config["model"]
 
         else:
             raise ValueError("No \"model\" argument has been passed.") 
@@ -100,9 +100,9 @@ class ConvectorFactory:
             device = Klimafan(
                 name=name,
                 controller=controller,
-                stage1=config["params"][2],
-                stage2=config["params"][3],
-                stage3=config["params"][4],
+                stage1=config["options"]["stage1"],
+                stage2=config["options"]["stage2"],
+                stage3=config["options"]["stage3"],
             )
 
         else:

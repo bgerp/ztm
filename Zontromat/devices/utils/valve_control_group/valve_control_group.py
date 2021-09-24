@@ -119,16 +119,13 @@ class ValveControlGroup(BasePlugin):
             register = self._registers.by_name(reg_name)
             if register is not None:
 
-                params = register.value.split("/")
-
-                if len(params) <= 2:                
-                    raise ValueError("Not enough parameters.")
-
                 valve_name = "{} {}".format(config["name"], name)
                 valve = ValveFactory.create(
                     name=valve_name,
                     controller=self._controller,
-                    params=params)
+                    vendor=register.value['vendor'],
+                    model=register.value['model'],
+                    options=register.value['options'])
 
                 self.__fw_valves[valve_name] = valve
 
@@ -141,16 +138,13 @@ class ValveControlGroup(BasePlugin):
             register = self._registers.by_name(reg_name)
             if register is not None:
 
-                params = register.value.split("/")
-
-                if len(params) <= 2:                
-                    raise ValueError("Not enough parameters.")
-
                 valve_name = "{} {}".format(config["name"], name)
                 valve = ValveFactory.create(
                     name=valve_name,
                     controller=self._controller,
-                    params=params)
+                    vendor=register.value['vendor'],
+                    model=register.value['model'],
+                    options=register.value['options'])
 
                 self.__rev_valves[valve_name] = valve
 
@@ -163,16 +157,13 @@ class ValveControlGroup(BasePlugin):
             register = self._registers.by_name(reg_name)
             if register is not None:
 
-                params = register.value.split("/")
-
-                if len(params) <= 2:                
-                    raise ValueError("Not enough parameters.")
-
                 pump_name = "{} {}".format(config["name"], name)
                 pump = PumpFactory.create(
                     name=pump_name,
                     controller=self._controller,
-                    params=params)
+                    vendor=register.value['vendor'],
+                    model=register.value['model'],
+                    options=register.value['options'])
 
                 self.__fw_pumps[pump_name] = pump
 
@@ -185,16 +176,13 @@ class ValveControlGroup(BasePlugin):
             register = self._registers.by_name(reg_name)
             if register is not None:
 
-                params = register.value.split("/")
-
-                if len(params) <= 2:                
-                    raise ValueError("Not enough parameters.")
-
                 pump_name = "{} {}".format(config["name"], name)
                 pump = PumpFactory.create(
                     name=pump_name,
                     controller=self._controller,
-                    params=params)
+                    vendor=register.value['vendor'],
+                    model=register.value['model'],
+                    options=register.value['options'])
 
                 self.__rev_pumps[pump_name] = pump
 

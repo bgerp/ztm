@@ -74,16 +74,16 @@ class ThermalSensorFactory:
 
         # Vendor
         vendor = None
-        if "params" in config:
-            vendor = config["params"][0]
+        if "vendor" in config:
+            vendor = config["vendor"]
 
         else:
             raise ValueError("No \"vendor\" argument has been passed.") 
 
         # Model
         model = None
-        if "params" in config:
-            model = config["params"][1]
+        if "model" in config:
+            model = config["model"]
 
         else:
             raise ValueError("No \"model\" argument has been passed.") 
@@ -103,7 +103,7 @@ class ThermalSensorFactory:
                 name=name,
                 controller=controller,
                 dev="temp",
-                circuit=config["params"][2]
+                circuit=config["options"]['circuit']
             )
 
         # SEDtronic / u1wtvs
@@ -112,8 +112,8 @@ class ThermalSensorFactory:
             device = U1WTVS(
                 name=name,
                 controller=controller,
-                dev=config["params"][3],
-                circuit=config["params"][4]
+                dev=config["options"]['dev'],
+                circuit=config["options"]['circuit']
             )
 
         # Donkger / u1wtvs
@@ -122,7 +122,7 @@ class ThermalSensorFactory:
             device = XYMD02(
                 name=name,
                 controller=controller,
-                unit=int(config["params"][2])
+                unit=config["options"]['mb_id']
             )
 
         else:

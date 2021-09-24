@@ -74,16 +74,16 @@ class FanFactory:
 
         # Vendor
         vendor = None
-        if "params" in config:
-            vendor = config["params"][0]
+        if "vendor" in config:
+            vendor = config["vendor"]
 
         else:
             raise ValueError("No \"vendor\" argument has been passed.") 
 
         # Model
         model = None
-        if "params" in config:
-            model = config["params"][1]
+        if "model" in config:
+            model = config["model"]
 
         else:
             raise ValueError("No \"model\" argument has been passed.") 
@@ -102,7 +102,7 @@ class FanFactory:
             device = F3P146EC072600(
                 name=name,
                 controller=controller,
-                output=config["params"][2]
+                output=config["options"]["output"]
             )
 
         else:

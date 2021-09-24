@@ -72,16 +72,16 @@ class ValveFactory:
 
         # Vendor
         vendor = None
-        if "params" in config:
-            vendor = config["params"][0]
+        if "vendor" in config:
+            vendor = config["vendor"]
 
         else:
             raise ValueError("No \"vendor\" argument has been passed.") 
 
         # Model
         model = None
-        if "params" in config:
-            model = config["params"][1]
+        if "model" in config:
+            model = config["model"]
 
         else:
             raise ValueError("No \"model\" argument has been passed.") 
@@ -100,10 +100,10 @@ class ValveFactory:
             device = FLX05F(
                 name=name,
                 controller=controller,
-                output_cw=config["params"][2],
-                output_ccw=config["params"][3],
-                limit_cw=config["params"][4],
-                limit_ccw=config["params"][5],
+                output_cw=config["options"]["output_cw"],
+                output_ccw=config["options"]["output_ccw"],
+                limit_cw=config["options"]["limit_cw"],
+                limit_ccw=config["options"]["limit_ccw"],
             )
 
         # Tonhe / a20m15b2c / (RO0/AO0) / AI0
@@ -112,10 +112,10 @@ class ValveFactory:
             device = A20M15B2C(
                 name=name,
                 controller=controller,
-                output=config["params"][2],
-                feedback=config["params"][3],
-                min_pos=int(config["params"][4]),
-                max_pos=int(config["params"][5])
+                output=config["options"]["output"],
+                feedback=config["options"]["feedback"],
+                min_pos=config["options"]["min"],
+                max_pos=config["options"]["max"]
             )
 
         else:

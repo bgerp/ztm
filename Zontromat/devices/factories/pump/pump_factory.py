@@ -79,16 +79,16 @@ class PumpFactory:
 
         # Vendor
         vendor = None
-        if "params" in config:
-            vendor = config["params"][0]
+        if "vendor" in config:
+            vendor = config["vendor"]
 
         else:
             raise ValueError("No \"vendor\" argument has been passed.") 
 
         # Model
         model = None
-        if "params" in config:
-            model = config["params"][1]
+        if "model" in config:
+            model = config["model"]
 
         else:
             raise ValueError("No \"model\" argument has been passed.") 
@@ -107,7 +107,7 @@ class PumpFactory:
             device = MAGNA1_80_100_F_360_1x230V_PN6(
                 name=name,
                 controller=controller,
-                unit=int(config["params"][2])
+                unit=config["options"]['mb_id']
             )
 
         # Grundfos / Magna3_40_150_F_Q / 0
@@ -116,7 +116,7 @@ class PumpFactory:
             device = Magna3_40_150_F_Q(
                 name=name,
                 controller=controller,
-                unit=int(config["params"][2])
+                unit=config["options"]['mb_id']
             )
 
         # Grundfos / MAGNA3_40_180_F_250_1x230V_PN6_10 / 0
@@ -125,7 +125,7 @@ class PumpFactory:
             device = MAGNA3_40_180_F_250_1x230V_PN6_10(
                 name=name,
                 controller=controller,
-                unit=int(config["params"][2])
+                unit=config["options"]['mb_id']
             )
 
         # Grundfos / NBE_65_125_127S2AF2ABQQE / 0
@@ -134,7 +134,7 @@ class PumpFactory:
             device = NBE_65_125_127S2AF2ABQQE(
                 name=name,
                 controller=controller,
-                unit=int(config["params"][2])
+                unit=config["options"]['mb_id']
             )
 
         # Grundfos / TP_80_240_2_A_F_B_BAQE_LX1_IE3 / 0
@@ -143,7 +143,7 @@ class PumpFactory:
             device = TP_80_240_2_A_F_B_BAQE_LX1_IE3(
                 name=name,
                 controller=controller,
-                unit=int(config["params"][2])
+                unit=config["options"]['mb_id']
             )
 
         # Grundfos / TPE_100_240_2_S_A_F_A_BAQEMDB / 0
@@ -152,7 +152,7 @@ class PumpFactory:
             device = TPE_100_240_2_S_A_F_A_BAQEMDB(
                 name=name,
                 controller=controller,
-                unit=int(config["params"][2])
+                unit=config["options"]['mb_id']
             )
 
         # Grundfos / TPE3_40_240_S_A_F_A_BQBE_HAC_IE5 / 0
@@ -161,7 +161,7 @@ class PumpFactory:
             device = TPE3_40_240_S_A_F_A_BQBE_HAC_IE5(
                 name=name,
                 controller=controller,
-                unit=int(config["params"][2])
+                unit=config["options"]['mb_id']
             )
 
         # Grundfos / TPE3_40_240_S_A_F_A_BQBE_HDC_IE5 / 0
@@ -170,7 +170,7 @@ class PumpFactory:
             device = TPE3_40_240_S_A_F_A_BQBE_HDC_IE5(
                 name=name,
                 controller=controller,
-                unit=int(config["params"][2])
+                unit=config["options"]['mb_id']
             )
 
         else:

@@ -73,24 +73,24 @@ class PowerAnalyserFactory:
 
         # Vendor
         vendor = None
-        if "params" in config:
-            vendor = config["params"][0]
+        if "vendor" in config:
+            vendor = config["vendor"]
 
         else:
             raise ValueError("No \"vendor\" argument has been passed.") 
 
         # Model
         model = None
-        if "params" in config:
-            model = config["params"][1].upper()
+        if "model" in config:
+            model = config["model"]
 
         else:
             raise ValueError("No \"model\" argument has been passed.") 
 
         # Unit
         unit = None
-        if "params" in config:
-            unit = int(config["params"][3])
+        if "options" in config:
+            unit = int(config["options"]['unit'])
 
         else:
             raise ValueError("No \"unit\" argument has been passed.") 
