@@ -94,12 +94,6 @@ class LightSensor(BaseLightSensor):
 
 #region Public Methods
 
-    def init(self):
-        """Initialize the sensor.
-        """
-
-        pass
-
     def update(self):
         """Update sensor data.
         """
@@ -114,8 +108,8 @@ class LightSensor(BaseLightSensor):
 
         if bool(self.__state):
             raw = l_scale(self.__state["value"],
-                        [self.__state["min"], self.__state["max"]],
-                        [self.__min_measured, self.__max_measured])
+                          [self.__state["min"], self.__state["max"]],
+                          [self.__min_measured, self.__max_measured])
 
         return raw
 

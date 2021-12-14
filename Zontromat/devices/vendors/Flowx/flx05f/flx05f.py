@@ -74,6 +74,8 @@ __class_name__ = "EnergyCenter"
 #endregion
 
 class CalibrationState(Enum):
+    """Calibration state description.
+    """
 
     NONE = 0
     OpenValve = 1
@@ -82,8 +84,8 @@ class CalibrationState(Enum):
     EnsureClose = 4
     YouDoTheMath = 5
     Error = 6
-    
-    # - Use dT and end position contacts to ensure that the valve is closed and opened.  
+
+    # - Use dT and end position contacts to ensure that the valve is closed and opened.
 
 class FLX05F(BaseValve):
     """Hydro Valve. Model: FLX-05F"""
@@ -104,7 +106,7 @@ class FLX05F(BaseValve):
 
     __output_cw = verbal_const.OFF
     """Valve output CW GPIO.
-    """    
+    """
 
     __output_ccw = verbal_const.OFF
     """Valve output CCW GPIO.
@@ -235,7 +237,7 @@ class FLX05F(BaseValve):
     def __close_valve(self):
         """Turn to CW direction.
         """
-        
+
         if self._controller.is_valid_gpio(self.__output_cw):
             self._controller.digital_write(self.__output_cw, 1)
 
@@ -371,7 +373,7 @@ class FLX05F(BaseValve):
                     self.__limit_timer.clear()
                     self.__calibration_state.set_state(CalibrationState.Error)
 
-            # Close the valve.            
+            # Close the valve.
             if self.__calibration_state.is_state(CalibrationState.CloseValve):
                 self.__stop()
                 self.__close_valve()
@@ -400,7 +402,7 @@ class FLX05F(BaseValve):
                 self.__dt = self.__t1 - self.__t0
                 self._state.set_state(ValveState.Wait)
 
-            # Close the valve.            
+            # Close the valve.
             if self.__calibration_state.is_state(CalibrationState.Error):
 
                 GlobalErrorHandler.log_hardware_malfunction(self.__logger, "The valve {} can not calibrated.".format(self.name))
@@ -413,13 +415,15 @@ class FLX05F(BaseValve):
             # - Ensure the the valve is opened 90deg.
             # - Record the time in T1.
             # - Store (T0 - T1) in dT
-            # - Use dT and end position contacts to ensure that the valve is closed and opened. 
+            # - Use dT and end position contacts to ensure that the valve is closed and opened.
 
     def calibrate(self):
 
         self._state.set_state(ValveState.Calibrate)
 
     def update_sync(self):
+        """Update synchronious.
+        """
 
         while self.current_position != self.target_position:
             self.update()

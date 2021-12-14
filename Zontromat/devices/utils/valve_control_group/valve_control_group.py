@@ -22,9 +22,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 
-import time
-from enum import Enum
-
 from utils.logger import get_logger
 from utils.logic.functions import l_scale
 
@@ -68,6 +65,14 @@ __status__ = "Debug"
 #endregion
 
 class ValveControlGroup(BasePlugin):
+    """[summary]
+
+    Args:
+        BasePlugin ([type]): [description]
+
+    Returns:
+        [type]: [description]
+    """
 
 #region Attributes
 
@@ -89,11 +94,11 @@ class ValveControlGroup(BasePlugin):
 
     __fw_pumps = {}
     """Forward pumps control.
-    """    
+    """
 
     __rev_pumps = {}
     """Revers pumps control.
-    """    
+    """
 
 #endregion
 
@@ -103,12 +108,12 @@ class ValveControlGroup(BasePlugin):
         """Constructor
         """
 
-        super().__init__(config) 
+        super().__init__(config)
 
         self.__fw_valves = {}
         self.__rev_valves = {}
         self.__fw_pumps = {}
-        self.__rev_pumps = {}  
+        self.__rev_pumps = {}
 
         fw_valves = []
         if "fw_valves" in self._config:
@@ -210,7 +215,7 @@ class ValveControlGroup(BasePlugin):
                 del self.__rev_pumps[valve]
             del self.__rev_pumps
 
-        
+
         super().__del__()
 
         if self.__logger is not None:
@@ -259,7 +264,7 @@ class ValveControlGroup(BasePlugin):
 
         # In this mode we controll proportional all the forward vales.
         # And invers proportional all revers valves.
-        # But when the value of the 
+        # But when the value of the
         elif self.mode == ValveControlGroupMode.DualSide:
 
             if position > 100.0:
@@ -313,7 +318,7 @@ class ValveControlGroup(BasePlugin):
         Returns:
             float: Debit of the group.
         """
-        
+
         return 0
 
     @debit.setter

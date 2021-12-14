@@ -22,9 +22,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 
-from devices.vendors.SEDtronic.u1wtvs.u1wtvs import U1WTVS
+from devices.vendors.sed_tronic.u1wtvs.u1wtvs import U1WTVS
 
-from devices.vendors.PT.light_sensor.light_sensor import LightSensor
+from devices.vendors.pt.light_sensor.light_sensor import LightSensor
 
 #region File Attributes
 
@@ -89,7 +89,7 @@ class LightSensorFactory:
             vendor = config["vendor"]
 
         else:
-            raise ValueError("No \"vendor\" argument has been passed.") 
+            raise ValueError("No \"vendor\" argument has been passed.")
 
         # Model
         model = None
@@ -97,7 +97,7 @@ class LightSensorFactory:
             model = config["model"]
 
         else:
-            raise ValueError("No \"model\" argument has been passed.") 
+            raise ValueError("No \"model\" argument has been passed.")
 
         # Controller
         controller = None
@@ -105,7 +105,7 @@ class LightSensorFactory:
             controller = config["controller"]
 
         else:
-            raise ValueError("No \"controller\" argument has been passed.") 
+            raise ValueError("No \"controller\" argument has been passed.")
 
         # POLYGON Team / light_sensor
         if vendor == "PT" and  model == "light_sensor":
@@ -128,7 +128,7 @@ class LightSensorFactory:
 
         # Not implemented device.
         else:
-            raise NotImplementedError("The {} and {}, is not supported.".format(vendor,model))
+            raise NotImplementedError("The {} and {}, is not supported.".format(vendor, model))
 
         # Return the instance.
         return device

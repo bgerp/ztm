@@ -55,7 +55,7 @@ __status__ = "Debug"
 
 class ErrorsWarnings:
     """Code Alarm/warning description
- 
+
     See: 10.4 Alarms and warnings @ Grundfosliterature-6012947.pdf
     """
 

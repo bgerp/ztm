@@ -564,7 +564,7 @@ class Registers(list):
         return Registers.__instance
 
     @staticmethod
-    def to_CSV(registers, file_path="registers.csv"):
+    def to_csv(registers, file_path="registers.csv"):
 
         import csv
 
@@ -593,7 +593,7 @@ class Registers(list):
             csv_file.close()
 
     @staticmethod
-    def from_CSV(file_path="registers.csv"):
+    def from_csv(file_path="registers.csv"):
         """Load registers from CSV"""
 
         registers = Registers()
@@ -617,7 +617,7 @@ class Registers(list):
         return registers
 
     @staticmethod
-    def to_JSON(registers, file_path="registers.json"):
+    def to_json(registers, file_path="registers.json"):
         """JSON output"""
 
         dict_regs = registers.to_json()
@@ -628,7 +628,7 @@ class Registers(list):
             json_file.close()
 
     @staticmethod
-    def from_JSON(file_path="registers.json"):
+    def from_json(file_path="registers.json"):
 
         registers = Registers()
 

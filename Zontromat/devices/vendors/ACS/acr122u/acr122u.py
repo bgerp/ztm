@@ -138,7 +138,9 @@ class ACR122U(BaseCardReader):
             self.__clf = nfc.ContactlessFrontend(self.port_name)
 
             # Connect to the WFE.
-            self.__clf.connect(rdwr={"on-startup": self.__on_startup, "on-connect": self.__on_connected})
+            self.__clf.connect(
+                rdwr={"on-startup": self.__on_startup,
+                "on-connect": self.__on_connected})
 
             if self.__clf is not None:
 
@@ -149,7 +151,7 @@ class ACR122U(BaseCardReader):
 
                 self._state.set_state(CardReaderState.START)
 
-        except:
+        except Exception:
             # When the horse when in to the river go to NONE state.
             self._state.set_state(CardReaderState.STOP)
             self.__logger.error(traceback.format_exc())
@@ -163,7 +165,7 @@ class ACR122U(BaseCardReader):
 
             self._state.set_state(CardReaderState.RUN)
 
-        except:
+        except Exception:
             # When the horse when in to the river go to STOP state.
             self._state.set_state(CardReaderState.STOP)
             self.__logger.error(traceback.format_exc())
@@ -204,5 +206,5 @@ class ACR122U(BaseCardReader):
                 del self.__clf
                 self.__clf = None
 
-        except:
+        except Exception:
             self.__logger.error(traceback.format_exc())

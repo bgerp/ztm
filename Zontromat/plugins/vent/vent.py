@@ -22,18 +22,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 
-import os
-
 from utils.logger import get_logger
-from utils.logic.timer import Timer
-from utils.utils import disk_size
 
 from plugins.base_plugin import BasePlugin
 from plugins.vent.ventilation import Ventilation
-
-from data import verbal_const
-
-from services.global_error_handler.global_error_handler import GlobalErrorHandler
 
 #region File Attributes
 

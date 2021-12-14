@@ -16,12 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-import time
-from enum import Enum
-
 from utils.logger import get_logger
-from utils.logic.timer import Timer
-from utils.logic.state_machine import StateMachine
 
 from devices.base_device import BaseDevice
 
@@ -98,6 +93,8 @@ class Boiler(BaseDevice):
 #region Public Methods
 
     def set_heat(self, heat):
+        """Heater setpoint
+        """
 
         self.__heat = heat
 
@@ -114,3 +111,5 @@ class Boiler(BaseDevice):
     def update(self):
 
         self.__logger.debug("The heat of {} is {}.".format(self.name, self.__heat))
+
+#endregion

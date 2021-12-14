@@ -54,6 +54,8 @@ __status__ = "Debug"
 #endregion
 
 class CardReaderFactory:
+    """Card reader factrory class.
+    """
 
     @staticmethod
     def create(**config):
@@ -69,7 +71,7 @@ class CardReaderFactory:
             vendor = config["vendor"]
 
         else:
-            raise ValueError("No \"vendor\" argument has been passed.") 
+            raise ValueError("No \"vendor\" argument has been passed.")
 
         # Model
         model = None
@@ -77,7 +79,7 @@ class CardReaderFactory:
             model = config["model"]
 
         else:
-            raise ValueError("No \"model\" argument has been passed.") 
+            raise ValueError("No \"model\" argument has been passed.")
 
         # Port name
         port_name = None
@@ -85,7 +87,7 @@ class CardReaderFactory:
             port_name = config["port_name"]
 
         else:
-            raise ValueError("No \"port_name\" argument has been passed.") 
+            raise ValueError("No \"port_name\" argument has been passed.")
 
         # Serial number
         serial_number = None
@@ -93,12 +95,12 @@ class CardReaderFactory:
             serial_number = config["serial_number"]
 
         else:
-            raise ValueError("No \"serial_number\" argument has been passed.") 
+            raise ValueError("No \"serial_number\" argument has been passed.")
 
         # Teracom / ACT230
         if vendor == "Teracom" and  model == "act230":
 
-            from devices.vendors.Teracom.act230.act230 import ACT230
+            from devices.vendors.teracom.act230.act230 import ACT230
 
             # Port name
             baudrate = None
@@ -106,7 +108,7 @@ class CardReaderFactory:
                 baudrate = config["baudrate"]
 
             else:
-                raise ValueError("No \"baudrate\" argument has been passed.") 
+                raise ValueError("No \"baudrate\" argument has been passed.")
 
             device = ACT230(
                 port_name=port_name,
@@ -117,7 +119,7 @@ class CardReaderFactory:
         # ACS / ACR122
         elif vendor == "ACS" and model == "acr122u":
 
-            from devices.vendors.ACS.acr122u.acr122u import ACR122U
+            from devices.vendors.acs.acr122u.acr122u import ACR122U
 
             device = ACR122U(
                 port_name=port_name,
@@ -125,7 +127,7 @@ class CardReaderFactory:
             )
 
         else:
-            raise NotImplementedError("The {} and {}, is not supported.".format(vendor,model))
+            raise NotImplementedError("The {} and {}, is not supported.".format(vendor, model))
 
         # Return the instance.
         return device

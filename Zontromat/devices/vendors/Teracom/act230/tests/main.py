@@ -26,7 +26,7 @@ import argparse
 import signal
 import time
 
-from devices.vendors.Teracom.act230.act230 import ACT230
+from devices.vendors.teracom.act230.act230 import ACT230
 from devices.factories.card_readers.card_reader_state import CardReaderState
 
 #region File Attributes
@@ -93,8 +93,8 @@ def init(port_name, sn):
 
     # Create card reader.
     __reader = ACT230(port_name=port_name,
-        baudrate=9600,
-        serial_number=sn)
+                        baudrate=9600,
+                        serial_number=sn)
 
     if __reader.reader_state is CardReaderState.NONE:
         __reader.cb_read_card(reader_read)

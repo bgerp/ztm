@@ -22,8 +22,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 
-from devices.vendors.Eastron.sdm120.sdm120 import SDM120
-from devices.vendors.Eastron.sdm630.sdm630 import SDM630
+from devices.vendors.eastron.sdm120.sdm120 import SDM120
+from devices.vendors.eastron.sdm630.sdm630 import SDM630
 
 #region File Attributes
 
@@ -57,6 +57,8 @@ __status__ = "Debug"
 #endregion
 
 class PowerAnalyserFactory:
+    """Power analyser factory class.
+    """
 
     @staticmethod
     def create(**config):
@@ -77,7 +79,7 @@ class PowerAnalyserFactory:
             vendor = config["vendor"]
 
         else:
-            raise ValueError("No \"vendor\" argument has been passed.") 
+            raise ValueError("No \"vendor\" argument has been passed.")
 
         # Model
         model = None
@@ -85,7 +87,7 @@ class PowerAnalyserFactory:
             model = config["model"]
 
         else:
-            raise ValueError("No \"model\" argument has been passed.") 
+            raise ValueError("No \"model\" argument has been passed.")
 
         # Unit
         unit = None
@@ -93,7 +95,7 @@ class PowerAnalyserFactory:
             unit = int(config["options"]['unit'])
 
         else:
-            raise ValueError("No \"unit\" argument has been passed.") 
+            raise ValueError("No \"unit\" argument has been passed.")
 
 
         # Controller
@@ -102,7 +104,7 @@ class PowerAnalyserFactory:
             controller = config["controller"]
 
         else:
-            raise ValueError("No \"controller\" argument has been passed.") 
+            raise ValueError("No \"controller\" argument has been passed.")
 
 
         # Eastron / SDM120
@@ -116,7 +118,7 @@ class PowerAnalyserFactory:
 
         # Eastron / ACR122
         elif vendor == "Eastron" and model == "SDM630":
-            
+
             device = SDM630(
                 controller=controller,
                 name=name,
@@ -124,7 +126,7 @@ class PowerAnalyserFactory:
             )
 
         else:
-            raise NotImplementedError("The {} and {}, is not supported.".format(vendor,model))
+            raise NotImplementedError("The {} and {}, is not supported.".format(vendor, model))
 
         # Return the instance.
         return device

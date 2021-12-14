@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 
-from controllers.unipi.evok.evok import Evok
+from controllers.vendors.unipi.evok.evok import Evok
 
 #region File Attributes
 
@@ -71,12 +71,13 @@ class Neuron(Evok):
 
         # Read serial number.
         if plc_info is not None and "serial" in plc_info:
-            if (plc_info["serial"] is not None) and ("serial" in config) and (config["serial"] is None):
-                config["serial"] = plc_info["serial"]   
+            if (plc_info["serial"] is not None) and ("serial" in config)\
+                and (config["serial"] is None):
+                config["serial"] = plc_info["serial"]
 
         # Read serial number.
         if plc_info is not None and "model" in plc_info:
             if plc_info["model"] is not None and config["model"] is None:
-                config["model"] = plc_info["model"]   
+                config["model"] = plc_info["model"]
 
 #endregion

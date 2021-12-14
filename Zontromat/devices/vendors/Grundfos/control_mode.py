@@ -77,5 +77,5 @@ class ControlMode(Enum):
     ConstantTemperature = 8
     ConstantLevel = 10
     AUTOADAPT = 128
-    FLOWADAPT  = 129 # (set FLOWLIMIT in register 00106)
+    FLOWADAPT = 129 # (set FLOWLIMIT in register 00106)
     ClosedLoopSensor = 130

@@ -79,6 +79,8 @@ __status__ = "Debug"
 #endregion
 
 class AirConditioner(BasePlugin):
+    """Air conditioner control logic.
+    """
 
 #region Attributes
 
@@ -102,7 +104,7 @@ class AirConditioner(BasePlugin):
     """Air thermometer lower."""
 
     __queue_temperatures = None
-    """Queue of the temperatures."""    
+    """Queue of the temperatures."""
 
 
     __convector_dev = None
@@ -551,7 +553,7 @@ class AirConditioner(BasePlugin):
         if register.value != {} and self.__loop1_valve_dev is None:
 
             self.__loop1_valve_dev = ValveFactory.create(
-                name="Loop 1 valve", 
+                name="Loop 1 valve",
                 controller=self._controller,
                 vendor=register.value['vendor'],
                 model=register.value['model'],
@@ -627,7 +629,7 @@ class AirConditioner(BasePlugin):
         if register.value != {} and self.__loop2_valve_dev is None:
 
             self.__loop2_valve_dev = ValveFactory.create(
-                name="Loop 2 valve", 
+                name="Loop 2 valve",
                 controller=self._controller,
                 vendor=register.value['vendor'],
                 model=register.value['model'],
@@ -959,7 +961,7 @@ class AirConditioner(BasePlugin):
         self.__temp_proc = TemperatureProcessor()
 
         # Create temperature queue.
-        self.__queue_temperatures = deque([], maxlen = 20)
+        self.__queue_temperatures = deque([], maxlen=20)
 
         # Create registers callbacks.
         self.__init_registers()
@@ -1045,12 +1047,12 @@ class AirConditioner(BasePlugin):
 
             if self.__loop1_valve_dev is not None:
                 if self.__loop1_valve_dev.current_position <= 0:
-                    if self.__loop1_leak_test is not None: 
+                    if self.__loop1_leak_test is not None:
                         self.__loop1_leak_test.run()
 
             if self.__loop2_valve_dev is not None:
                 if self.__loop2_valve_dev.current_position <= 0:
-                    if self.__loop2_leak_teat is not None: 
+                    if self.__loop2_leak_teat is not None:
                         self.__loop2_leak_teat.run()
 
             self._registers.write("{}.temp_{}.actual".format(self.key, self.__identifier), temperature)

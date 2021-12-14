@@ -22,10 +22,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 
-from devices.vendors.Dallas.ds18b20.ds18b20 import DS18B20
-from devices.vendors.SEDtronic.u1wtvs.u1wtvs import U1WTVS
-from devices.vendors.Donkger.xy_md02.xy_md02 import XYMD02
-
+from devices.vendors.dallas.ds18b20.ds18b20 import DS18B20
+from devices.vendors.sed_tronic.u1wtvs.u1wtvs import U1WTVS
+from devices.vendors.donkger.xy_md02.xy_md02 import XYMD02
 
 #region File Attributes
 
@@ -59,6 +58,8 @@ __status__ = "Debug"
 #endregion
 
 class ThermalSensorFactory:
+    """Thermal sensors factory class.
+    """
 
     @staticmethod
     def create(**config):
@@ -78,7 +79,7 @@ class ThermalSensorFactory:
             vendor = config["vendor"]
 
         else:
-            raise ValueError("No \"vendor\" argument has been passed.") 
+            raise ValueError("No \"vendor\" argument has been passed.")
 
         # Model
         model = None
@@ -86,7 +87,7 @@ class ThermalSensorFactory:
             model = config["model"]
 
         else:
-            raise ValueError("No \"model\" argument has been passed.") 
+            raise ValueError("No \"model\" argument has been passed.")
 
         # Controller
         controller = None
@@ -94,7 +95,7 @@ class ThermalSensorFactory:
             controller = config["controller"]
 
         else:
-            raise ValueError("No \"controller\" argument has been passed.") 
+            raise ValueError("No \"controller\" argument has been passed.")
 
         # Dallas / DS18B20
         if vendor == "Dallas" and  model == "DS18B20":
@@ -126,7 +127,7 @@ class ThermalSensorFactory:
             )
 
         else:
-            raise NotImplementedError("The {} and {}, is not supported.".format(vendor,model))
+            raise NotImplementedError("The {} and {}, is not supported.".format(vendor, model))
 
         # Return the instance.
         return device

@@ -30,7 +30,7 @@ import requests
 
 from utils.logger import get_logger
 
-from bgERP.session import Session
+from bg_erp.session import Session
 
 from services.global_error_handler.global_error_handler import GlobalErrorHandler
 

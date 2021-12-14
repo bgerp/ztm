@@ -82,10 +82,10 @@ class TestStringMethods(unittest.TestCase):
         # Create registers.
         if os.name == "posix":
             file_path = os.path.join("..", "registers.csv")
-            registers = Registers.from_CSV(file_path)
+            registers = Registers.from_csv(file_path)
 
         elif os.name == "nt":
-            registers = Registers.from_CSV("registers.csv")
+            registers = Registers.from_csv("registers.csv")
 
         return registers
 

@@ -82,7 +82,7 @@ class BasePlugin(Configuarable):
 
     __in_cycle_flag = False
     """In cycle flag.
-    """    
+    """
 #endregion
 
 #region Constructor / Destructor
@@ -118,7 +118,7 @@ class BasePlugin(Configuarable):
         Args:
             value (bool): Flag state.
         """
-        
+
         self.__ready_flag = value
 
     def __is_ready(self):
@@ -143,7 +143,7 @@ class BasePlugin(Configuarable):
         """Wait until in cycle flag is true.
         """
 
-        while self.__in_cycle_flag == True:
+        while self.__in_cycle_flag:
             pass
 
 #endregion

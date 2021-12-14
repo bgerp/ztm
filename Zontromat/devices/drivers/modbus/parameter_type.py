@@ -66,7 +66,7 @@ class ParameterType(Enum):
     INT64_T = "int64_t"
     FLOAT = "float"
     STRING = "string"
-    REAL= "real"
+    REAL = "real"
 
 #region Public static Methods
 
@@ -79,7 +79,7 @@ class ParameterType(Enum):
 
         Return:
             bool: Valid data type.
-        """        
+        """
         state = False
 
         for item in ParameterType:

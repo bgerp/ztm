@@ -22,8 +22,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 
-import json
-import sys
 import traceback
 import xml.etree.ElementTree as ET
 
@@ -84,11 +82,35 @@ class PiCons(BaseController):
     __json_data = None
     """JSON data container."""
 
-    __instance = None
-    """Singelton instance."""
+    __map = \
+    {\
+        "identification": {"vendor": "bao bao industries", "model": "zl101pcc"},\
 
-    _gpio_map = None
-    """GPIO Mapping"""
+        # LEDs
+        "LED0": 0, "LED1": 1, "LED2": 2, "LED3": 3,
+
+        # Digital Inputs
+        "DI0": 0, "DI1": 1, "DI2": 2, "DI3": 3,
+        "DI4": 4, "DI5": 5, "DI6": 6, "DI7": 7,
+        "DI8": 8, "DI9": 9,
+
+        # Digital Outputs
+        "DO0": 0, "DO1": 1, "DO2": 2, "DO3": 3,
+        "DO4": 4, "DO5": 5, "DO6": 6, "DO7": 7,
+        "DO8": 8, "DO9": 9, "DO10": 10, "DO11": 11,
+
+        # Relay Outputs
+        "RO0": 0, "RO1": 1, "RO2": 2, "RO3": 3,
+        "RO4": 4, "RO5": 5, "RO6": 6, "RO7": 7,
+        "RO8": 8, "RO9": 9, "RO10": 10, "RO11": 11,
+
+        # Analog Inputs
+        "AI0": 0, "AI1": 1, "AI2": 2, "AI3": 3,
+        "AI4": 4, "AI5": 5, "AI6": 6, "AI7": 7,
+
+        # Analog Outputs
+        "AO0": 0, "AO1": 1, "AO2": 2, "AO3": 3,
+    }
 
 #endregion
 
@@ -169,7 +191,7 @@ class PiCons(BaseController):
             Neuron model.
         """
 
-        return "M503"
+        return "X1-Black"
 
     @property
     def serial_number(self):
@@ -212,7 +234,7 @@ class PiCons(BaseController):
 
 #region Private Methods
 
-    def __XML2DICT(self, content):
+    def __xml_to_dict(self, content):
         """XML to dictionary."""
 
         root = ET.fromstring(content)
@@ -279,7 +301,7 @@ class PiCons(BaseController):
             if response.status_code == 200:
 
                 # print(response.text)
-                self.__json_data = self.__XML2DICT(response.text)
+                self.__json_data = self.__xml_to_dict(response.text)
                 # print(self.__json_data)
 
                 # Mark as successfull.
@@ -289,7 +311,7 @@ class PiCons(BaseController):
                 self.__logger.error("Controller answer with: {}".format(response.status_code))
                 state = False
 
-        except:
+        except Exception:
             state = False
             self.__logger.error(traceback.format_exc())
 
@@ -346,7 +368,7 @@ class PiCons(BaseController):
         circuit = "Relay{}={}".format(idx+1, str(value))
         uri = self.__host + "/?" + circuit
         response = requests.get(uri, timeout=self.__timeout)
-        json_data = self.__XML2DICT(response.text)
+        json_data = self.__xml_to_dict(response.text)
         return json_data
 
     def _set_digital_output(self, idx, value):
@@ -368,10 +390,10 @@ class PiCons(BaseController):
         circuit = "Relay{}={}".format(idx+1, str(value))
         uri = self.__host + "/?" + circuit
         response = requests.get(uri, timeout=self.__timeout)
-        json_data = self.__XML2DICT(response.text)
+        json_data = self.__xml_to_dict(response.text)
         return json_data
 
-    def _reset_input_counter(self, major_index, minor_index, counter=0):
+    def _reset_input_counter(self, idx):
         """Turn the DI state.
 
         See https://evok-14.api-docs.io/1.11/rest/change-digital-input-state
@@ -391,10 +413,11 @@ class PiCons(BaseController):
             JSON response data.
         """
 
-        circuit = Neuron.generate_device_circuit(major_index, minor_index)
-        uri = self.__host + self.__rest_di + circuit
-        response = requests.post(uri, data={"counter":str(counter)}, timeout=self.__timeout)
-        return json.loads(response.text)
+        entries = self._get_field("Entries")
+
+        item = self._get_item(entries, idx)
+
+        return item
 
     def _get_counter(self, idx):
         """Read digital input counter.
@@ -476,7 +499,7 @@ class PiCons(BaseController):
 
         return item
 
-    def _get_analog_in(self, major_index, minor_index):
+    def _get_analog_in(self, idx):
         """Read analog inputs.
 
         Parameters
@@ -536,12 +559,12 @@ class PiCons(BaseController):
         if self.is_off_gpio(l_pin):
             return state
 
-        gpio_map = self._gpio_map[l_pin]
-        if gpio_map["dev"] == "do":
-            response = self._get_digital_output(gpio_map["id"])
-            state = int(response["Value"])
+        gpio_map = self.__map[l_pin]
+        # if gpio_map["dev"] == "do":
+        #     response = self._get_digital_output(gpio_map["id"])
+        #     state = int(response["Value"])
 
-        elif gpio_map["dev"] == "relay":
+        if gpio_map["dev"] == "relay":
             response = self._get_relay_outputs(gpio_map["id"])
             state = int(response["Value"])
 
@@ -588,7 +611,7 @@ class PiCons(BaseController):
         if self.is_off_gpio(l_pin):
             return response
 
-        gpio_map = self._gpio_map[l_pin]
+        gpio_map = self.__map[l_pin]
 
         # Inversion
         polarity = pin.startswith("!")
@@ -636,9 +659,9 @@ class PiCons(BaseController):
         if self.is_off_gpio(pin):
             return counter
 
-        gpio_map = self._gpio_map[pin]
+        gpio_map = self.__map[pin]
 
-        response = self._get_counter(gpio_map["major_index"], gpio_map["minor_index"])
+        response = self._get_counter(gpio_map)
         if response is not None:
             counter = response["counter"]
 
@@ -672,11 +695,10 @@ class PiCons(BaseController):
         if self.is_off_gpio(pin):
             return response
 
-        gpio_map = self._gpio_map[pin]
+        gpio_map = self.__map[pin]
 
         if gpio_map["dev"] == "ai":
-            response = self._get_analog_in(gpio_map["major_index"],\
-                gpio_map["minor_index"])
+            response = self._get_analog_in(gpio_map)
 
         return response
 
@@ -708,9 +730,9 @@ class PiCons(BaseController):
         if self.is_off_gpio(pin):
             return response
 
-        gpio_map = self._gpio_map[pin]
-        response = self._reset_input_counter(gpio_map["major_index"],\
-            gpio_map["minor_index"], value)
+        gpio_map = self.__map[pin]
+
+        response = self._reset_input_counter(gpio_map)
 
         return response
 

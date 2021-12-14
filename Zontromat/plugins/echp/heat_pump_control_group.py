@@ -22,18 +22,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 
-import time
-from enum import Enum
 from datetime import date
 
 from utils.logger import get_logger
-from utils.logic.timer import Timer
-from utils.logic.state_machine import StateMachine
 from utils.logic.functions import rotate_list
 
 from plugins.base_plugin import BasePlugin
 
-from devices.vendors.HstarsGuangzhouRefrigeratingEquipmentGroup.heat_pump import HeatPump, HeatPumpMode
+from devices.vendors.hstars_guangzhou_refrigerating_equipment_group.heat_pump import HeatPump, HeatPumpMode
 from devices.utils.valve_control_group.valve_control_group import ValveControlGroup
 from devices.utils.valve_control_group.valve_control_group_mode import ValveControlGroupMode
 
@@ -75,6 +71,8 @@ __status__ = "Debug"
 #endregion
 
 class HeatPumpControllGroup(BasePlugin):
+    """Heat pump control grpoup calss.
+    """
 
 #region Attributes
 
@@ -255,7 +253,7 @@ class HeatPumpControllGroup(BasePlugin):
                 model=register.value['model'],
                 options=register.value['options'])
 
-        
+
         register = self._registers.by_name("{}.wp_warm_g.settings".format(self.key))
         if register is not None:
             wp_setting = register.value
@@ -312,13 +310,13 @@ class HeatPumpControllGroup(BasePlugin):
         # Thermal agents pumps.
         if self.__cold_water_pump is not None:
             del self.__cold_water_pump
-        
+
         if self.__hot_water_pump is not None:
             del self.__hot_water_pump
-        
+
         if self.__warm_g_water_pump is not None:
             del self.__warm_g_water_pump
-        
+
         if self.__warm_p_water_pump is not None:
             del self.__warm_p_water_pump
 
@@ -397,7 +395,7 @@ class HeatPumpControllGroup(BasePlugin):
         # Take information from register.
         # If there is no connection with bgERP, take this information from zontromat sensors.
         # If there is no sensor connected to the zontromat.
-        # Or no connection to the sensor, take the information from machines. 
+        # Or no connection to the sensor, take the information from machines.
 
         # Тези температури ще се вземат:
         # или от bgERP
@@ -415,7 +413,7 @@ class HeatPumpControllGroup(BasePlugin):
         # Take information from register.
         # If there is no connection with bgERP, take this information from zontromat sensors.
         # If there is no sensor connected to the zontromat.
-        # Or no connection to the sensor, take the information from machines. 
+        # Or no connection to the sensor, take the information from machines.
 
         # Тези температури ще се вземат
         # или от bgERP

@@ -33,10 +33,8 @@ from plugins.base_plugin import BasePlugin
 
 from devices.vendors.no_vendor_1.flowmeter import Flowmeter
 from devices.tests.leak_test.leak_test import LeakTest
-
 from devices.factories.power_analyzers.power_analyser_factory import PowerAnalyserFactory
-
-from data import verbal_const
+from devices.drivers.modbus.register_type import RegisterType
 
 from services.evok.settings import EvokSettings
 
@@ -127,14 +125,14 @@ class Monitoring(BasePlugin):
         time_now = time.time()
 
         # Filter all records.
-        for attendee in measurements:
+        for measurement in measurements:
 
             # Calculate delta time.
-            delta_t = time_now - attendee["ts"]
+            delta_t = time_now - measurement["ts"]
 
             # Filter
             if delta_t < time_sec:
-                filtered_measurements.append(attendee)
+                filtered_measurements.append(measurement)
 
             # Else mark for deletion.
             else:
@@ -142,9 +140,9 @@ class Monitoring(BasePlugin):
 
         # Execute the flag.
         if delete_flag:
-            self.measurements.clear()
-            for atendee in filtered_measurements:
-                self.measurements.append(atendee)
+            self.__measurements.clear()
+            for measurement in filtered_measurements:
+                self.__measurements.append(measurement)
 
 #endregion
 
@@ -295,10 +293,10 @@ class Monitoring(BasePlugin):
 
             if name in black_list:
                 continue
-            
+
             value = self.__read_local_parameter(name)
 
-            print("{}: {}".format(name, value))        
+            print("{}: {}".format(name, value))
 
     def __read_local_parameter(self, name):
 
@@ -349,11 +347,11 @@ class Monitoring(BasePlugin):
         if register.value != {} and self.__power_analyser is None:
 
             self.__power_analyser = PowerAnalyserFactory.create(
-                                        controller=self._controller,
-                                        name="Zone Power analyser",
-                                        vendor=register.value['vendor'],
-                                        model=register.value['model'],
-                                        options=register.value['options'])
+                controller=self._controller,
+                name="Zone Power analyser",
+                vendor=register.value['vendor'],
+                model=register.value['model'],
+                options=register.value['options'])
 
             if self._controller.vendor == "UniPi":
 
@@ -367,7 +365,7 @@ class Monitoring(BasePlugin):
                 if not self.__evok_setting.device_exists("EXTENTION_1"):
 
                     # Vendor
-                    vendor = register.value['vendor']
+                    # vendor = register.value['vendor']
 
                     # Model
                     model = register.value['model']
@@ -448,7 +446,7 @@ class Monitoring(BasePlugin):
     def __update_pa(self):
 
         if self.__power_analyser is None:
-            return         
+            return
 
         # self.__read_all_parameters()
 

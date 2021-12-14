@@ -68,7 +68,7 @@ class Configuarable:
 
     __name = ""
     """Name
-    """    
+    """
 
 #endregion
 

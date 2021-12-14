@@ -95,15 +95,15 @@ class Light(BasePlugin):
 
     __target_illumination = 50.0
     """Target illumination. [Lux]
-    """    
+    """
 
     __error_gain = 0.001
     """Gain of the error. This parameter is the smoothness of the curve.
     """
 
-    __output_limit = 10000 
+    __output_limit = 10000
     """Illumination force limit. [V]
-    """   
+    """
 
     __tmp_output = 0
     """Temporary output. [V]
@@ -118,7 +118,7 @@ class Light(BasePlugin):
 #region Private Methods (Registers Interface)
 
     def __error_gain_cb(self, register):
-        
+
         # Check data type.
         if not (register.data_type == "float" or register.data_type == "int"):
             GlobalErrorHandler.log_bad_register_value(self.__logger, register)
@@ -169,7 +169,7 @@ class Light(BasePlugin):
         self.__v2_output = register.value
 
     def __target_illum_cb(self, register):
-        
+
         # Check data type.
         if not (register.data_type == "float" or register.data_type == "int"):
             GlobalErrorHandler.log_bad_register_value(self.__logger, register)
@@ -219,18 +219,18 @@ class Light(BasePlugin):
 
 #region Private Methods (Controller Interface)
 
-    def __set_voltages(self, v1, v2):
+    def __set_voltages(self, voltage_1, voltage_2):
         """Set the voltage outputs.
 
         Parameters
         ----------
-        v1 : float
+        voltage_1 : float
             Voltage 1.
-        v2 : float
+        voltage_2 : float
             Voltage 2.
         """
 
-        value_v1 = v1
+        value_v1 = voltage_1
 
         if value_v1 > 10:
             value_v1 = 10
@@ -238,7 +238,7 @@ class Light(BasePlugin):
         if value_v1 < 0:
             value_v1 = 0
 
-        value_v2 = v2
+        value_v2 = voltage_2
 
         if value_v2 > 10:
             value_v2 = 10
@@ -249,7 +249,7 @@ class Light(BasePlugin):
 
         if self._controller.is_valid_gpio(self.__v1_output):
             self._controller.analog_write(self.__v1_output, value_v1)
-    
+
         if self._controller.is_valid_gpio(self.__v2_output):
             self._controller.analog_write(self.__v2_output, value_v2)
 
@@ -275,19 +275,19 @@ class Light(BasePlugin):
         if setpoint > 100:
             setpoint = 100
 
-        v1 = 0
-        v2 = 0
+        voltage_1 = 0
+        voltage_2 = 0
 
         # The model.
         if setpoint <= 50:
-            v1 = l_scale(setpoint, [0, 50], [0, 100])
-            v2 = 0
+            voltage_1 = l_scale(setpoint, [0, 50], [0, 100])
+            voltage_2 = 0
         else:
-            v1 = 100
-            v2 = l_scale(setpoint, [50, 100], [0, 100])
+            voltage_1 = 100
+            voltage_2 = l_scale(setpoint, [50, 100], [0, 100])
 
         # Return the voltages.
-        return (v1, v2)
+        return (voltage_1, voltage_2)
 
     def __calculate(self):
         """ Apply thermal force to the devices. """
@@ -307,7 +307,7 @@ class Light(BasePlugin):
         if self.__light_sensor is not None:
             current_illumination = self.__light_sensor.get_value()
             current_illumination = l_scale(current_illumination, [0.0, self.__output_limit], [0.0, 100.0])
-        
+
         # Limits
         lower_limit = 0.0
         mid_1 = 20.0
@@ -315,11 +315,11 @@ class Light(BasePlugin):
         upper_limit = 100.0
 
         # Check the limits.
-        if lower_limit <= target_illumination and target_illumination <= mid_1:
+        if lower_limit <= target_illumination <= mid_1:
             self.__tmp_output = (target_illumination / mid_1) * 20.0
 
-        elif mid_1 < target_illumination and target_illumination  < mid_2:
-            
+        elif mid_1 < target_illumination < mid_2:
+
             # Apply the formula.
             first = current_illumination
             second = (1 + ((50.0 - target_illumination) / 100.0))
@@ -332,7 +332,7 @@ class Light(BasePlugin):
             delta = error * self.__error_gain
             self.__tmp_output += delta
 
-        elif mid_2 <= target_illumination and target_illumination  <= upper_limit:
+        elif mid_2 <= target_illumination <= upper_limit:
             self.__tmp_output = (target_illumination / upper_limit) * 100.
 
         # Limitate the output by target value.
@@ -350,9 +350,9 @@ class Light(BasePlugin):
 
         # Convert to volgate.
         to_voltage_scale = 0.1 # Magic number!!!
-        v1, v2 = self.__flood_fade(self.__output)
-        out_to_v1 = v1 * to_voltage_scale
-        out_to_v2 = v2 * to_voltage_scale
+        voltage_1, voltage_2 = self.__flood_fade(self.__output)
+        out_to_v1 = voltage_1 * to_voltage_scale
+        out_to_v2 = voltage_2 * to_voltage_scale
 
 
         # If the zone is empty, turn the lights off.

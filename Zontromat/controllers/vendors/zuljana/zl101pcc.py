@@ -36,7 +36,7 @@ from utils.logic.functions import l_scale
 
 from controllers.base_controller import BaseController
 
-from devices.vendors.Super.s8_3cn.s8_3cn import S8_3CN as BlackIsland
+from devices.vendors.super.s8_3cn.s8_3cn import S83CN as BlackIsland
 
 #region File Attributes
 
@@ -131,7 +131,7 @@ class ZL101PCC(BaseController):
 
         # Analog Inputs
         "AI0": 0, "AI1": 1, "AI2": 2, "AI3": 3,
-        "AI4": 4, "AI4": 5, "AI4": 6, "AI4": 7,
+        "AI4": 4, "AI5": 5, "AI6": 6, "AI7": 7,
 
         # Analog Outputs
         "AO0": 0, "AO1": 1, "AO2": 2, "AO3": 3,
@@ -228,22 +228,17 @@ class ZL101PCC(BaseController):
                 break
 
         if not is_valid:
-            raise ValueError("The serial port \"{}\" does not exists in the known ports {}".format(self.__modbus_rtu_port, ports))
+            raise ValueError("The serial port \"{}\" does not exists in the known ports {}"\
+                .format(self.__modbus_rtu_port, ports))
 
         if self.__modbus_rtu_client is None:
             self.__modbus_rtu_client = ModbusClient(
-            method="rtu",
-            port=self.__modbus_rtu_port,
-            timeout=self.__timeout,
-            baudrate=self.__modbus_rtu_baud)
+                method="rtu",
+                port=self.__modbus_rtu_port,
+                timeout=self.__timeout,
+                baudrate=self.__modbus_rtu_baud)
 
         self.__black_island = BlackIsland(unit=1)
-
-    def __del__(self):
-        """Destructor
-        """
-
-        pass
 
 #endregion
 
@@ -258,7 +253,7 @@ class ZL101PCC(BaseController):
         try:
             machine_id = os.popen("cat /etc/machine-id").read().split()[-1]
 
-        except Exception as e:
+        except Exception:
             pass
 
         return machine_id
@@ -279,7 +274,7 @@ class ZL101PCC(BaseController):
                     except(IndexError, KeyError):
                         continue
 
-            except Exception as e:
+            except Exception:
                 uuid = ""
                 pass
 
@@ -288,12 +283,12 @@ class ZL101PCC(BaseController):
             try:
                 uuid = os.popen("dmidecode | grep -i uuid").read().split()[-1]
 
-            except Exception as e:
+            except Exception:
                 uuid = ""
                 pass
 
         # If bytes then covert to string.
-        if type(uuid) == bytes:
+        if isinstance(uuid, bytes):
             uuid = uuid.decode('utf-8')
 
         return uuid
@@ -341,7 +336,7 @@ class ZL101PCC(BaseController):
     def update(self):
         """Update controller state."""
 
-        return (self.__modbus_rtu_client is not None)
+        return self.__modbus_rtu_client is not None
 
     def digital_read(self, pin):
         """Read the digital input pin.
@@ -490,7 +485,8 @@ class ZL101PCC(BaseController):
         self.__AO[self.__map[pin]] = value
 
         # Write device analog outputs.
-        request = self.__black_island.generate_request("SetAnalogOutputs", SetAnalogOutputs=self.__AO)
+        request = self.__black_island\
+            .generate_request("SetAnalogOutputs", SetAnalogOutputs=self.__AO)
         hrw_response = self.__modbus_rtu_client.execute(request)
         if hrw_response is not None:
             if not hrw_response.isError():
@@ -683,22 +679,6 @@ class ZL101PCC(BaseController):
         # self.__logger.debug("get_1w_devices({})".format(self.model))
 
         return []
-
-    def get_device(self, dev, circuit):
-        """Get device.
-
-        Returns:
-            [type]: [description]
-        """
-
-        # self.__logger.debug("get_device({}, {}, {})".format(self.model, dev, circuit))
-
-        device = None
-
-        if dev == "1wdevice":
-            device = {"vis": 0.0}
-
-        return device
 
     def execute_mb_request(self, request):
         """Execute modbus request.

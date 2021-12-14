@@ -22,14 +22,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 
-from devices.vendors.Grundfos.magna1_80_100_f_360_1x230v_pn6.magna1_80_100_f_360_1x230v_pn6 import MAGNA1_80_100_F_360_1x230V_PN6
-from devices.vendors.Grundfos.magna3_40_150_f_q.magna3_40_150_f_q import Magna3_40_150_F_Q
-from devices.vendors.Grundfos.magna3_40_180_f_250_1x230v_pn6_10.magna3_40_180_f_250_1x230v_pn6_10 import MAGNA3_40_180_F_250_1x230V_PN6_10
-from devices.vendors.Grundfos.nbe_65_125_127s2af2abqqe.nbe_65_125_127s2af2abqqe import NBE_65_125_127S2AF2ABQQE
-from devices.vendors.Grundfos.tp_80_240_2_a_f_b_baqe_lx1_ie3.tp_80_240_2_a_f_b_baqe_lx1_ie3 import TP_80_240_2_A_F_B_BAQE_LX1_IE3
-from devices.vendors.Grundfos.tpe3_40_240_s_a_f_a_bqbe_hac_ie5.tpe3_40_240_s_a_f_a_bqbe_hac_ie5 import TPE3_40_240_S_A_F_A_BQBE_HAC_IE5
-from devices.vendors.Grundfos.tpe3_40_240_s_a_f_a_bqbe_hdc_ie5.tpe3_40_240_s_a_f_a_bqbe_hdc_ie5 import TPE3_40_240_S_A_F_A_BQBE_HDC_IE5
-from devices.vendors.Grundfos.tpe_100_240_2_s_a_f_a_baqemdb.tpe_100_240_2_s_a_f_a_baqemdb import TPE_100_240_2_S_A_F_A_BAQEMDB
+from devices.vendors.grundfos.magna1_80_100_f_360_1x230v_pn6.magna1_80_100_f_360_1x230v_pn6 import MAGNA1_80_100_F_360_1x230V_PN6
+from devices.vendors.grundfos.magna3_40_150_f_q.magna3_40_150_f_q import Magna3_40_150_F_Q
+from devices.vendors.grundfos.magna3_40_180_f_250_1x230v_pn6_10.magna3_40_180_f_250_1x230v_pn6_10 import MAGNA3_40_180_F_250_1x230V_PN6_10
+from devices.vendors.grundfos.nbe_65_125_127s2af2abqqe.nbe_65_125_127s2af2abqqe import NBE_65_125_127S2AF2ABQQE
+from devices.vendors.grundfos.tp_80_240_2_a_f_b_baqe_lx1_ie3.tp_80_240_2_a_f_b_baqe_lx1_ie3 import TP_80_240_2_A_F_B_BAQE_LX1_IE3
+from devices.vendors.grundfos.tpe3_40_240_s_a_f_a_bqbe_hac_ie5.tpe3_40_240_s_a_f_a_bqbe_hac_ie5 import TPE3_40_240_S_A_F_A_BQBE_HAC_IE5
+from devices.vendors.grundfos.tpe3_40_240_s_a_f_a_bqbe_hdc_ie5.tpe3_40_240_s_a_f_a_bqbe_hdc_ie5 import TPE3_40_240_S_A_F_A_BQBE_HDC_IE5
+from devices.vendors.grundfos.tpe_100_240_2_s_a_f_a_baqemdb.tpe_100_240_2_s_a_f_a_baqemdb import TPE_100_240_2_S_A_F_A_BAQEMDB
 
 #region File Attributes
 
@@ -63,6 +63,8 @@ __status__ = "Debug"
 #endregion
 
 class PumpFactory:
+    """Pump factory calss
+    """
 
     @staticmethod
     def create(**config):
@@ -83,7 +85,7 @@ class PumpFactory:
             vendor = config["vendor"]
 
         else:
-            raise ValueError("No \"vendor\" argument has been passed.") 
+            raise ValueError("No \"vendor\" argument has been passed.")
 
         # Model
         model = None
@@ -91,7 +93,7 @@ class PumpFactory:
             model = config["model"]
 
         else:
-            raise ValueError("No \"model\" argument has been passed.") 
+            raise ValueError("No \"model\" argument has been passed.")
 
         # Controller
         controller = None
@@ -99,7 +101,7 @@ class PumpFactory:
             controller = config["controller"]
 
         else:
-            raise ValueError("No \"controller\" argument has been passed.") 
+            raise ValueError("No \"controller\" argument has been passed.")
 
         # Grundfos / MAGNA1_80_100_F_360_1x230V_PN6 / 0
         if vendor == "Grundfos" and  model == "MAGNA1_80_100_F_360_1x230V_PN6":
@@ -174,7 +176,7 @@ class PumpFactory:
             )
 
         else:
-            raise NotImplementedError("The {} and {}, is not supported.".format(vendor,model))
+            raise NotImplementedError("The {} and {}, is not supported.".format(vendor, model))
 
         # Return the instance.
         return device

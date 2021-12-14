@@ -81,12 +81,8 @@ class BaseThermalSensor(BaseDevice):
         """Get temperature.
         """
 
-        pass
-
     def get_hum(self):
         """Get humidity.
         """
-
-        pass
 
 #endregion

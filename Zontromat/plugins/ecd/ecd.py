@@ -22,10 +22,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 
-import time
-import json
-from datetime import date
-from enum import Enum
+# import time
+# import json
+# from datetime import date
+# from enum import Enum
 
 from data import verbal_const
 
@@ -118,7 +118,7 @@ class EnergyCenterDistribution(BasePlugin):
 
     __v_underfloor_west_bypass = None
     """Valve underfloor west bypass.
-    """    
+    """
 
     __v_underfloor_east_bypass = None
     """Valve underfloor east bypass.
@@ -338,22 +338,22 @@ class EnergyCenterDistribution(BasePlugin):
         reg_name = "{}.{}.valve.enabled".format(self.key, valve_name)
         enabled = self._registers.by_name(reg_name)
         if enabled is not None:
-                enabled.update_handlers = enable_cb
-                enabled.update()
+            enabled.update_handlers = enable_cb
+            enabled.update()
 
         # Generators cooling valve postition.
         reg_name = "{}.{}.valve.position".format(self.key, valve_name)
         position = self._registers.by_name(reg_name)
         if position is not None:
-                position.update_handlers = position_cb
-                position.update()
+            position.update_handlers = position_cb
+            position.update()
 
         # Generators cooling valve calibrate.
         reg_name = "{}.{}.valve.calibrate".format(self.key, valve_name)
         calibration = self._registers.by_name(reg_name)
         if calibration is not None:
-                calibration.update_handlers = calibration_cb
-                calibration.update()
+            calibration.update_handlers = calibration_cb
+            calibration.update()
 
 
     def __underfloor_heating_foyer_enabled_cb(self, register: Register):
@@ -538,7 +538,7 @@ class EnergyCenterDistribution(BasePlugin):
             return
 
         if self.__v_air_cooling is not None:
-            self.__v_air_cooling.target_position = register.value    
+            self.__v_air_cooling.target_position = register.value
 
     def __air_cooling_calib_cb(self, register: Register):
 
@@ -587,7 +587,7 @@ class EnergyCenterDistribution(BasePlugin):
             return
 
         if self.__v_ground_drill is not None:
-            self.__v_ground_drill.target_position = register.value 
+            self.__v_ground_drill.target_position = register.value
 
     def __ground_drill_calib_cb(self, register: Register):
 
@@ -598,7 +598,7 @@ class EnergyCenterDistribution(BasePlugin):
 
         if register.value:
             if self.__v_ground_drill is not None:
-                self.__v_ground_drill.calibrate()  
+                self.__v_ground_drill.calibrate()
 
 
     def __generators_cooling_enabled_cb(self, register: Register):
@@ -647,7 +647,7 @@ class EnergyCenterDistribution(BasePlugin):
 
         if register.value:
             if self.__v_generators_cooling is not None:
-                self.__v_generators_cooling.calibrate()  
+                self.__v_generators_cooling.calibrate()
 
 
     def __short_green_purple_enabled_cb(self, register: Register):
@@ -696,7 +696,7 @@ class EnergyCenterDistribution(BasePlugin):
 
         if register.value:
             if self.__v_short_green_purple is not None:
-                self.__v_short_green_purple.calibrate() 
+                self.__v_short_green_purple.calibrate()
 
 
     def __underfloor_west_bypass_enabled_cb(self, register: Register):
@@ -720,7 +720,7 @@ class EnergyCenterDistribution(BasePlugin):
 
         elif register.value == {} and self.__v_underfloor_west_bypass is not None:
             self.__v_underfloor_west_bypass.shutdown()
-            del self.__v_underfloor_west_bypass   
+            del self.__v_underfloor_west_bypass
 
     def __underfloor_west_bypass_pos_cb(self, register: Register):
 
@@ -745,7 +745,7 @@ class EnergyCenterDistribution(BasePlugin):
 
         if register.value:
             if self.__v_underfloor_west_bypass is not None:
-                self.__v_underfloor_west_bypass.calibrate()  
+                self.__v_underfloor_west_bypass.calibrate()
 
 
     def __underfloor_east_bypass_enabled_cb(self, register: Register):
@@ -769,7 +769,7 @@ class EnergyCenterDistribution(BasePlugin):
 
         elif register.value == {} and self.__v_underfloor_east_bypass is not None:
             self.__v_underfloor_east_bypass.shutdown()
-            del self.__v_underfloor_east_bypass   
+            del self.__v_underfloor_east_bypass
 
     def __underfloor_east_bypass_pos_cb(self, register: Register):
 
@@ -794,7 +794,7 @@ class EnergyCenterDistribution(BasePlugin):
 
         if register.value:
             if self.__v_underfloor_east_bypass is not None:
-                self.__v_underfloor_east_bypass.calibrate() 
+                self.__v_underfloor_east_bypass.calibrate()
 
 
     def __vcg_pool_heating_enable_cb(self, register: Register):
@@ -821,7 +821,7 @@ class EnergyCenterDistribution(BasePlugin):
 
         elif register.value == False and self.__vcg_pool_heating is not None:
             self.__vcg_pool_heating.shutdown()
-            del self.__vcg_pool_heating 
+            del self.__vcg_pool_heating
 
     def __vcg_tva_pool_enable_cb(self, register: Register):
 
@@ -848,7 +848,7 @@ class EnergyCenterDistribution(BasePlugin):
 
         elif register.value == False and self.__vcg_tva_pool is not None:
             self.__vcg_tva_pool.shutdown()
-            del self.__vcg_tva_pool 
+            del self.__vcg_tva_pool
 
     def __convectors_east_enable_cb(self, register: Register):
 
@@ -874,7 +874,7 @@ class EnergyCenterDistribution(BasePlugin):
 
         elif register.value == False and self.__vcg_convectors_east is not None:
             self.__vcg_convectors_east.shutdown()
-            del self.__vcg_convectors_east       
+            del self.__vcg_convectors_east
 
     def __underfloor_east_enable_cb(self, register: Register):
 
@@ -900,7 +900,7 @@ class EnergyCenterDistribution(BasePlugin):
 
         elif register.value == False and self.__vcg_underfloor_east is not None:
             self.__vcg_underfloor_east.shutdown()
-            del self.__vcg_underfloor_east  
+            del self.__vcg_underfloor_east
 
     def __convectors_west_enable_cb(self, register: Register):
 
@@ -926,10 +926,10 @@ class EnergyCenterDistribution(BasePlugin):
 
         elif register.value == False and self.__vcg_convectors_west is not None:
             self.__vcg_convectors_west.shutdown()
-            del self.__vcg_convectors_west  
+            del self.__vcg_convectors_west
 
     def __tva_fitness_enable_cb(self, register: Register):
-        
+
         if not register.data_type == "bool":
             GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
             return
@@ -1090,124 +1090,124 @@ class EnergyCenterDistribution(BasePlugin):
         # =========================== Valve group. (PURPLE) ===========================
         # Generators cooling valve.
         self.__attach_single_valve("underfloor_heating_foyer",
-                                    self.__underfloor_heating_foyer_enabled_cb,
-                                    self.__underfloor_heating_foyer_pos_cb,
-                                    self.__underfloor_heating_foyer_calib_cb)
+                                   self.__underfloor_heating_foyer_enabled_cb,
+                                   self.__underfloor_heating_foyer_pos_cb,
+                                   self.__underfloor_heating_foyer_calib_cb)
 
         # Underfloor heating trestle valve.
         self.__attach_single_valve("underfloor_heating_trestle",
-                                    self.__underfloor_heating_trestle_enabled_cb,
-                                    self.__underfloor_heating_trestle_pos_cb,
-                                    self.__underfloor_heating_trestle_calib_cb)                
+                                   self.__underfloor_heating_trestle_enabled_cb,
+                                   self.__underfloor_heating_trestle_pos_cb,
+                                   self.__underfloor_heating_trestle_calib_cb)
 
         self.__attach_single_valve("underfloor_heating_pool",
-                                    self.__underfloor_heating_pool_enabled_cb,
-                                    self.__underfloor_heating_pool_pos_cb,
-                                    self.__underfloor_heating_pool_calib_cb)   
+                                   self.__underfloor_heating_pool_enabled_cb,
+                                   self.__underfloor_heating_pool_pos_cb,
+                                   self.__underfloor_heating_pool_calib_cb)
 
         # Air cooling valve.
         self.__attach_single_valve("air_cooling",
-                                    self.__air_cooling_enabled_cb,
-                                    self.__air_cooling_pos_cb,
-                                    self.__air_cooling_calib_cb) 
+                                   self.__air_cooling_enabled_cb,
+                                   self.__air_cooling_pos_cb,
+                                   self.__air_cooling_calib_cb)
 
         # Ground drill valve.
         self.__attach_single_valve("ground_drill",
-                                    self.__ground_drill_enabled_cb,
-                                    self.__ground_drill_pos_cb,
-                                    self.__ground_drill_calib_cb) 
+                                   self.__ground_drill_enabled_cb,
+                                   self.__ground_drill_pos_cb,
+                                   self.__ground_drill_calib_cb)
 
         # =========================== Generators Cooling (GREEN) ===========================
         # Generators Cooling valve.
         self.__attach_single_valve("generators_cooling",
-                                    self.__generators_cooling_enabled_cb,
-                                    self.__generators_cooling_pos_cb,
-                                    self.__generators_cooling_calib_cb) 
+                                   self.__generators_cooling_enabled_cb,
+                                   self.__generators_cooling_pos_cb,
+                                   self.__generators_cooling_calib_cb)
 
         # Short valve between green and purple pipes.
         self.__attach_single_valve("short_green_purple",
-                                    self.__short_green_purple_enabled_cb,
-                                    self.__short_green_purple_pos_cb,
-                                    self.__short_green_purple_calib_cb) 
-        
+                                   self.__short_green_purple_enabled_cb,
+                                   self.__short_green_purple_pos_cb,
+                                   self.__short_green_purple_calib_cb)
+
         # Underfloor west bypass valve.
         self.__attach_single_valve("underfloor_west_bypass",
-                                    self.__underfloor_west_bypass_enabled_cb,
-                                    self.__underfloor_west_bypass_pos_cb,
-                                    self.__underfloor_west_bypass_calib_cb) 
+                                   self.__underfloor_west_bypass_enabled_cb,
+                                   self.__underfloor_west_bypass_pos_cb,
+                                   self.__underfloor_west_bypass_calib_cb)
 
         # Underfloor east bypass valve.
         self.__attach_single_valve("air_cooling",
-                                    self.__underfloor_east_bypass_enabled_cb,
-                                    self.__underfloor_east_bypass_pos_cb,
-                                    self.__underfloor_east_bypass_calib_cb) 
+                                   self.__underfloor_east_bypass_enabled_cb,
+                                   self.__underfloor_east_bypass_pos_cb,
+                                   self.__underfloor_east_bypass_calib_cb)
 
         # =========================== Valve Controll Groups ===========================
         reg_name = "{}.vcg_pool_heating.enabled".format(self.key)
         vcg_pool_heating = self._registers.by_name(reg_name)
         if vcg_pool_heating is not None:
-                vcg_pool_heating.update_handlers = self.__vcg_pool_heating_enable_cb
-                vcg_pool_heating.update()
+            vcg_pool_heating.update_handlers = self.__vcg_pool_heating_enable_cb
+            vcg_pool_heating.update()
 
         reg_name = "{}.vcg_tva_pool.enabled".format(self.key)
         vcg_tva_pool = self._registers.by_name(reg_name)
         if vcg_tva_pool is not None:
-                vcg_tva_pool.update_handlers = self.__vcg_tva_pool_enable_cb
-                vcg_tva_pool.update()
+            vcg_tva_pool.update_handlers = self.__vcg_tva_pool_enable_cb
+            vcg_tva_pool.update()
 
         reg_name = "{}.convectors_east.enabled".format(self.key)
         convectors_east = self._registers.by_name(reg_name)
         if convectors_east is not None:
-                convectors_east.update_handlers = self.__convectors_east_enable_cb
-                convectors_east.update()
+            convectors_east.update_handlers = self.__convectors_east_enable_cb
+            convectors_east.update()
 
         reg_name = "{}.underfloor_east.enabled".format(self.key)
         underfloor_east = self._registers.by_name(reg_name)
         if underfloor_east is not None:
-                underfloor_east.update_handlers = self.__underfloor_east_enable_cb
-                underfloor_east.update()
+            underfloor_east.update_handlers = self.__underfloor_east_enable_cb
+            underfloor_east.update()
 
         reg_name = "{}.convectors_west.enabled".format(self.key)
         convectors_west = self._registers.by_name(reg_name)
         if convectors_west is not None:
-                convectors_west.update_handlers = self.__convectors_west_enable_cb
-                convectors_west.update()
+            convectors_west.update_handlers = self.__convectors_west_enable_cb
+            convectors_west.update()
 
         reg_name = "{}.tva_fitness.enabled".format(self.key)
         tva_fitness = self._registers.by_name(reg_name)
         if tva_fitness is not None:
-                tva_fitness.update_handlers = self.__tva_fitness_enable_cb
-                tva_fitness.update()
+            tva_fitness.update_handlers = self.__tva_fitness_enable_cb
+            tva_fitness.update()
 
         reg_name = "{}.tva_roof_floor.enabled".format(self.key)
         tva_roof_floor = self._registers.by_name(reg_name)
         if tva_roof_floor is not None:
-                tva_roof_floor.update_handlers = self.__tva_roof_floor_enable_cb
-                tva_roof_floor.update()
+            tva_roof_floor.update_handlers = self.__tva_roof_floor_enable_cb
+            tva_roof_floor.update()
 
         reg_name = "{}.floor_west.enabled".format(self.key)
         underfloor_west = self._registers.by_name(reg_name)
         if underfloor_west is not None:
-                underfloor_west.update_handlers = self.__underfloor_west_enable_cb
-                underfloor_west.update()
+            underfloor_west.update_handlers = self.__underfloor_west_enable_cb
+            underfloor_west.update()
 
         reg_name = "{}.tva_conference_center.enabled".format(self.key)
         tva_conference_center = self._registers.by_name(reg_name)
         if tva_conference_center is not None:
-                tva_conference_center.update_handlers = self.__vcg_tva_conference_center_enable_cb
-                tva_conference_center.update()
+            tva_conference_center.update_handlers = self.__vcg_tva_conference_center_enable_cb
+            tva_conference_center.update()
 
         reg_name = "{}.convectors_kitchen.enabled".format(self.key)
         convectors_kitchen = self._registers.by_name(reg_name)
         if convectors_kitchen is not None:
-                convectors_kitchen.update_handlers = self.__vcg_convectors_kitchen_enable_cb
-                convectors_kitchen.update()
+            convectors_kitchen.update_handlers = self.__vcg_convectors_kitchen_enable_cb
+            convectors_kitchen.update()
 
         reg_name = "{}.tva_warehouse.enabled".format(self.key)
         tva_warehouse = self._registers.by_name(reg_name)
         if tva_warehouse is not None:
-                tva_warehouse.update_handlers = self.__vcg_tva_warehouse_enable_cb
-                tva_warehouse.update()
+            tva_warehouse.update_handlers = self.__vcg_tva_warehouse_enable_cb
+            tva_warehouse.update()
 
 #endregion
 
@@ -1229,62 +1229,62 @@ class EnergyCenterDistribution(BasePlugin):
 
         if self.__v_underfloor_heating_foyer is not None:
             self.__v_underfloor_heating_foyer.update()
-        
+
         if self.__v_underfloor_heating_trestle is not None:
             self.__v_underfloor_heating_trestle.update()
-        
+
         if self.__v_underfloor_heating_pool is not None:
             self.__v_underfloor_heating_pool.update()
-        
+
         if self.__v_air_cooling is not None:
             self.__v_air_cooling.update()
-        
+
         if self.__v_ground_drill is not None:
             self.__v_ground_drill.update()
-        
+
         if self.__v_generators_cooling is not None:
             self.__v_generators_cooling.update()
-        
+
         if self.__v_short_green_purple is not None:
             self.__v_short_green_purple.update()
-        
+
         if self.__v_underfloor_west_bypass is not None:
             self.__v_underfloor_west_bypass.update()
-        
+
         if self.__v_underfloor_east_bypass is not None:
             self.__v_underfloor_east_bypass.update()
 
 
         if self.__vcg_pool_heating is not None:
             self.__vcg_pool_heating.update()
-        
+
         if self.__vcg_tva_pool is not None:
             self.__vcg_tva_pool.update()
-        
+
         if self.__vcg_convectors_east is not None:
             self.__vcg_convectors_east.update()
-        
+
         if self.__vcg_underfloor_east is not None:
             self.__vcg_underfloor_east.update()
-        
+
         if self.__vcg_convectors_west is not None:
             self.__vcg_convectors_west.update()
-        
+
         if self.__vcg_tva_fitness is not None:
             self.__vcg_tva_fitness.update()
-        
+
         if self.__vcg_tva_roof_floor is not None:
             self.__vcg_tva_roof_floor.update()
-        
+
         if self.__vcg_underfloor_west is not None:
             self.__vcg_underfloor_west.update()
-        
+
         if self.__vcg_tva_conference_center is not None:
             self.__vcg_tva_conference_center.update()
-        
+
         if self.__vcg_convectors_kitchen is not None:
             self.__vcg_convectors_kitchen.update()
-        
+
         if self.__vcg_tva_warehouse is not None:
             self.__vcg_tva_warehouse.update()
 

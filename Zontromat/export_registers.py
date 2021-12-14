@@ -530,14 +530,14 @@ def __add_registers():
     register.description = "Power analyser settings"
     register.range = ""
     register.value = {
-            "vendor": "Eastron",
-            "model": "SDM630",
-            "options":
-            {
-				"interface": 0,
-                "mb_id": 2,
-            }
-        } # "Eastron/SDM120/2/3"
+        "vendor": "Eastron",
+        "model": "SDM630",
+        "options":
+        {
+            "interface": 0,
+            "mb_id": 2,
+        }
+    } # "Eastron/SDM120/2/3"
     __registers.append(register)
 
     register = Register("monitoring.pa.measurements")
@@ -798,13 +798,13 @@ def __add_registers():
     register.description = "Air temperature sensor center settings"
     register.range = ""
     register.value = {
-            "vendor": "Donkger",
-            "model": "XY-MD02",
-            "options":
-            {
-                "mb_id": 4,
-            }
-        } # Dallas/DS18B20/28FFFCD0001703AE # temp/DS18B20/28FFFCD0001703AE
+        "vendor": "Donkger",
+        "model": "XY-MD02",
+        "options":
+        {
+            "mb_id": 4,
+        }
+    } # Dallas/DS18B20/28FFFCD0001703AE # temp/DS18B20/28FFFCD0001703AE
     __registers.append(register)
 
     register = Register("hvac.air_temp_cent_1.value")
@@ -822,13 +822,13 @@ def __add_registers():
     register.description = "Air temperature sensor lower settings"
     register.range = ""
     register.value = {
-            "vendor": "Donkger",
-            "model": "XY-MD02",
-            "options":
-            {
-                "mb_id": 3,
-            }
-        } # "Dallas/DS18B20/28FFC4EE00170349" # temp/DS18B20/28FFC4EE00170349
+        "vendor": "Donkger",
+        "model": "XY-MD02",
+        "options":
+        {
+            "mb_id": 3,
+        }
+    } # "Dallas/DS18B20/28FFC4EE00170349" # temp/DS18B20/28FFC4EE00170349
     __registers.append(register)
 
     register = Register("hvac.air_temp_lower_1.value")
@@ -846,13 +846,13 @@ def __add_registers():
     register.description = "Air temperature sensor upper settings"
     register.range = ""
     register.value = {
-            "vendor": "Donkger",
-            "model": "XY-MD02",
-            "options":
-            {
-                "mb_id": 5,
-            }
-        } # Dallas/DS18B20/28FF2B70C11604B7 # "Dallas/DS18B20/28FF2B70C11604B7" # "temp/DS18B20/28FF2B70C11604B7"
+        "vendor": "Donkger",
+        "model": "XY-MD02",
+        "options":
+        {
+            "mb_id": 5,
+        }
+    } # Dallas/DS18B20/28FF2B70C11604B7 # "Dallas/DS18B20/28FF2B70C11604B7" # "temp/DS18B20/28FF2B70C11604B7"
     __registers.append(register)
 
     register = Register("hvac.air_temp_upper_1.value")
@@ -870,15 +870,15 @@ def __add_registers():
     register.description = "Convector settings"
     register.range = ""
     register.value = {
-            "vendor": "Silpa",
-            "model": "Klimafan",
-            "options":
-            {
-                "stage1": "RO4",
-                "stage2": "RO5",
-                "stage3": "RO6",
-            }
+        "vendor": "Silpa",
+        "model": "Klimafan",
+        "options":
+        {
+            "stage1": "RO4",
+            "stage2": "RO5",
+            "stage3": "RO6",
         }
+    }
     __registers.append(register)
 
     # Delta time.
@@ -933,13 +933,13 @@ def __add_registers():
     register.description = "Loop 1 temperature sensor settings"
     register.range = ""
     register.value = {
-            "vendor": "Donkger",
-            "model": "XY-MD02",
-            "options":
-            {
-                "mb_id": 3,
-            }
-        } # "Dallas/DS18B20/28FF2B70C11604B7" # temp/DS18B20/28FF2B70C11604B7
+        "vendor": "Donkger",
+        "model": "XY-MD02",
+        "options":
+        {
+            "mb_id": 3,
+        }
+    } # "Dallas/DS18B20/28FF2B70C11604B7" # temp/DS18B20/28FF2B70C11604B7
     __registers.append(register)
 
     register = Register("hvac.loop1_1.temp.value")
@@ -966,16 +966,16 @@ def __add_registers():
     register.description = "Loop 1 valve settings"
     register.range = ""
     register.value = {
-            "vendor": "Tonhe",
-            "model": "a20m15b2c",
-            "options":
-            {
-				"output": "RO2",
-				"feedback": "off",
-				"min": 0,
-                "max": 100,
-            }
+        "vendor": "Tonhe",
+        "model": "a20m15b2c",
+        "options":
+        {
+            "output": "RO2",
+            "feedback": "off",
+            "min": 0,
+            "max": 100,
         }
+    }
     __registers.append(register)
 
     # Loop 2 flowmeter
@@ -1002,13 +1002,13 @@ def __add_registers():
     register.description = "Loop 2 temperature sensor settings"
     register.range = ""
     register.value = {
-            "vendor": "Donkger",
-            "model": "XY-MD02",
-            "options":
-            {
-                "mb_id": 5,
-            }
-        } # "Dallas/DS18B20/28FFC4EE00170349" # temp/DS18B20/28FFC4EE00170349
+        "vendor": "Donkger",
+        "model": "XY-MD02",
+        "options":
+        {
+            "mb_id": 5,
+        }
+    } # "Dallas/DS18B20/28FFC4EE00170349" # temp/DS18B20/28FFC4EE00170349
     __registers.append(register)
 
     register = Register("hvac.loop2_1.temp.value")
@@ -1026,16 +1026,16 @@ def __add_registers():
     register.description = "Loop 2 valve settings"
     register.range = ""
     register.value = {
-            "vendor": "Tonhe",
-            "model": "a20m15b2c",
-            "options":
-            {
-				"output": "RO3",
-				"feedback": "off",
-				"min": 0,
-                "max": 100,
-            }
+        "vendor": "Tonhe",
+        "model": "a20m15b2c",
+        "options":
+        {
+            "output": "RO3",
+            "feedback": "off",
+            "min": 0,
+            "max": 100,
         }
+    }
     __registers.append(register)
 
     # Temperature actual
@@ -1132,13 +1132,13 @@ def __add_registers():
     register.description = "Sensor settings"
     register.range = ""
     register.value = {
-            "vendor": "PT",
-            "model": "light_sensor",
-            "options":
-            {
-                "input": "AI2",
-            }
+        "vendor": "PT",
+        "model": "light_sensor",
+        "options":
+        {
+            "input": "AI2",
         }
+    }
     # ""SEDtronic/u1wtvs/1wdevice/26607314020000F8"
     # SEDtronic/u1wtvs/1wdevice/26607314020000F8
     # PT/light_sensor/AI2
@@ -1399,16 +1399,16 @@ def __add_registers():
     register.description = "ECD / Foyer Floor Heating Settings"
     register.range = ""
     register.value = {
-            "vendor": "Flowx",
-            "model": "FLX-05F",
-            "options":
-            {
-                "output_cw": "U1:ID1:R0:DO0",
-                "output_ccw": "U1:ID1:R0:DO1",
-                "limit_cw": "U1:ID1:R0:DI0",
-                "limit_ccw": "U1:ID1:R0:DI1"
-            }
+        "vendor": "Flowx",
+        "model": "FLX-05F",
+        "options":
+        {
+            "output_cw": "U1:ID1:R0:DO0",
+            "output_ccw": "U1:ID1:R0:DO1",
+            "limit_cw": "U1:ID1:R0:DI0",
+            "limit_ccw": "U1:ID1:R0:DI1"
         }
+    }
     __registers.append(register)
 
     # ECD / Foyer Floor Heating Position
@@ -1437,16 +1437,16 @@ def __add_registers():
     register.description = "ECD / Underfloor Heating Trestle"
     register.range = ""
     register.value = {
-            "vendor": "Flowx",
-            "model": "FLX-05F",
-            "options":
-            {
-                "output_cw": "off",
-                "output_ccw": "off",
-                "limit_cw": "off",
-                "limit_ccw": "off"
-            }
+        "vendor": "Flowx",
+        "model": "FLX-05F",
+        "options":
+        {
+            "output_cw": "off",
+            "output_ccw": "off",
+            "limit_cw": "off",
+            "limit_ccw": "off"
         }
+    }
     __registers.append(register)
 
     # ECD / Underfloor Heating Trestle Position
@@ -1475,16 +1475,16 @@ def __add_registers():
     register.description = "ECD / Underfloor Heating Pool"
     register.range = ""
     register.value = {
-            "vendor": "Flowx",
-            "model": "FLX-05F",
-            "options":
-            {
-                "output_cw": "off",
-                "output_ccw": "off",
-                "limit_cw": "off",
-                "limit_ccw": "off"
-            }
+        "vendor": "Flowx",
+        "model": "FLX-05F",
+        "options":
+        {
+            "output_cw": "off",
+            "output_ccw": "off",
+            "limit_cw": "off",
+            "limit_ccw": "off"
         }
+    }
     __registers.append(register)
 
     # ECD / Underfloor Heating Pool Position
@@ -1513,16 +1513,16 @@ def __add_registers():
     register.description = "ECD / Air Cooling Valve Settings"
     register.range = ""
     register.value = {
-            "vendor": "Flowx",
-            "model": "FLX-05F",
-            "options":
-            {
-                "output_cw": "off",
-                "output_ccw": "off",
-                "limit_cw": "off",
-                "limit_ccw": "off"
-            }
+        "vendor": "Flowx",
+        "model": "FLX-05F",
+        "options":
+        {
+            "output_cw": "off",
+            "output_ccw": "off",
+            "limit_cw": "off",
+            "limit_ccw": "off"
         }
+    }
     __registers.append(register)
 
     # ECD / Air Cooling Valve Position
@@ -1551,16 +1551,16 @@ def __add_registers():
     register.description = "ECD / Ground Drilling Valve"
     register.range = ""
     register.value = {
-            "vendor": "Flowx",
-            "model": "FLX-05F",
-            "options":
-            {
-                "output_cw": "off",
-                "output_ccw": "off",
-                "limit_cw": "off",
-                "limit_ccw": "off"
-            }
+        "vendor": "Flowx",
+        "model": "FLX-05F",
+        "options":
+        {
+            "output_cw": "off",
+            "output_ccw": "off",
+            "limit_cw": "off",
+            "limit_ccw": "off"
         }
+    }
     __registers.append(register)
 
     # ECD / Ground Drill Valve Position
@@ -1589,16 +1589,16 @@ def __add_registers():
     register.description = "ECD / Generators Cooling Valve / Settings"
     register.range = ""
     register.value = {
-            "vendor": "Flowx",
-            "model": "FLX-05F",
-            "options":
-            {
-                "output_cw": "off",
-                "output_ccw": "off",
-                "limit_cw": "off",
-                "limit_ccw": "off"
-            }
+        "vendor": "Flowx",
+        "model": "FLX-05F",
+        "options":
+        {
+            "output_cw": "off",
+            "output_ccw": "off",
+            "limit_cw": "off",
+            "limit_ccw": "off"
         }
+    }
     __registers.append(register)
 
     # ECD / Generators Cooling Valve Position
@@ -1627,16 +1627,16 @@ def __add_registers():
     register.description = "ECD / Short Green/Purple Valve Settings"
     register.range = ""
     register.value = {
-            "vendor": "Flowx",
-            "model": "FLX-05F",
-            "options":
-            {
-                "output_cw": "off",
-                "output_ccw": "off",
-                "limit_cw": "off",
-                "limit_ccw": "off"
-            }
+        "vendor": "Flowx",
+        "model": "FLX-05F",
+        "options":
+        {
+            "output_cw": "off",
+            "output_ccw": "off",
+            "limit_cw": "off",
+            "limit_ccw": "off"
         }
+    }
     __registers.append(register)
 
     # ECD / Short Green/Purple Valve Position
@@ -1665,16 +1665,16 @@ def __add_registers():
     register.description = "ECD / Underfloor West Bypass Valve Settings"
     register.range = ""
     register.value = {
-            "vendor": "Flowx",
-            "model": "FLX-05F",
-            "options":
-            {
-                "output_cw": "off",
-                "output_ccw": "off",
-                "limit_cw": "off",
-                "limit_ccw": "off"
-            }
+        "vendor": "Flowx",
+        "model": "FLX-05F",
+        "options":
+        {
+            "output_cw": "off",
+            "output_ccw": "off",
+            "limit_cw": "off",
+            "limit_ccw": "off"
         }
+    }
     __registers.append(register)
 
     # ECD / Underfloor West Bypass Valve Position
@@ -1703,16 +1703,16 @@ def __add_registers():
     register.description = "ECD / Underfloor East Bypass Valve Settings"
     register.range = ""
     register.value = {
-            "vendor": "Flowx",
-            "model": "FLX-05F",
-            "options":
-            {
-                "output_cw": "off",
-                "output_ccw": "off",
-                "limit_cw": "off",
-                "limit_ccw": "off"
-            }
+        "vendor": "Flowx",
+        "model": "FLX-05F",
+        "options":
+        {
+            "output_cw": "off",
+            "output_ccw": "off",
+            "limit_cw": "off",
+            "limit_ccw": "off"
         }
+    }
     __registers.append(register)
 
     # ECD / Underfloor East Bypass Valve Position
@@ -1741,16 +1741,16 @@ def __add_registers():
     register.description = "ECD / VCG / Pool Heating"
     register.range = ""
     register.value = {
-            "vendor": "Flowx",
-            "model": "FLX-05F",
-            "options":
-            {
-                "output_cw": "off",
-                "output_ccw": "off",
-                "limit_cw": "off",
-                "limit_ccw": "off"
-            }
+        "vendor": "Flowx",
+        "model": "FLX-05F",
+        "options":
+        {
+            "output_cw": "off",
+            "output_ccw": "off",
+            "limit_cw": "off",
+            "limit_ccw": "off"
         }
+    }
     __registers.append(register)
 
     # ECD / VCG / Pool Heating Valve Pump
@@ -1760,13 +1760,13 @@ def __add_registers():
     register.description = "ECD / VCG / Pool Heating"
     register.range = ""
     register.value = {
-            "vendor": "Grundfos",
-            "model": "MAGNA1_80_100_F_360_1x230V_PN6",
-            "options":
-            {
-                "mb_id": 0,
-            }
+        "vendor": "Grundfos",
+        "model": "MAGNA1_80_100_F_360_1x230V_PN6",
+        "options":
+        {
+            "mb_id": 0,
         }
+    }
     __registers.append(register)
 
     # ECD / VCG / Pool Heating Valve Pump
@@ -1786,16 +1786,16 @@ def __add_registers():
     register.description = "ECD / VCG / Pool Cooling In"
     register.range = ""
     register.value = {
-            "vendor": "Flowx",
-            "model": "FLX-05F",
-            "options":
-            {
-                "output_cw": "off",
-                "output_ccw": "off",
-                "limit_cw": "off",
-                "limit_ccw": "off"
-            }
+        "vendor": "Flowx",
+        "model": "FLX-05F",
+        "options":
+        {
+            "output_cw": "off",
+            "output_ccw": "off",
+            "limit_cw": "off",
+            "limit_ccw": "off"
         }
+    }
     __registers.append(register)
 
     # ECD / VCG / Pool Cooling Out
@@ -1805,16 +1805,16 @@ def __add_registers():
     register.description = "ECD / VCG / Pool Cooling In"
     register.range = ""
     register.value = {
-            "vendor": "Flowx",
-            "model": "FLX-05F",
-            "options":
-            {
-                "output_cw": "off",
-                "output_ccw": "off",
-                "limit_cw": "off",
-                "limit_ccw": "off"
-            }
+        "vendor": "Flowx",
+        "model": "FLX-05F",
+        "options":
+        {
+            "output_cw": "off",
+            "output_ccw": "off",
+            "limit_cw": "off",
+            "limit_ccw": "off"
         }
+    }
     __registers.append(register)
 
 
@@ -1825,16 +1825,16 @@ def __add_registers():
     register.description = "ECD / VCG / Pool Heating In"
     register.range = ""
     register.value = {
-            "vendor": "Flowx",
-            "model": "FLX-05F",
-            "options":
-            {
-                "output_cw": "off",
-                "output_ccw": "off",
-                "limit_cw": "off",
-                "limit_ccw": "off"
-            }
+        "vendor": "Flowx",
+        "model": "FLX-05F",
+        "options":
+        {
+            "output_cw": "off",
+            "output_ccw": "off",
+            "limit_cw": "off",
+            "limit_ccw": "off"
         }
+    }
     __registers.append(register)
 
     # ECD / VCG / Pool Heating Out
@@ -1844,16 +1844,16 @@ def __add_registers():
     register.description = "ECD / VCG / Pool Heating Out"
     register.range = ""
     register.value = {
-            "vendor": "Flowx",
-            "model": "FLX-05F",
-            "options":
-            {
-                "output_cw": "off",
-                "output_ccw": "off",
-                "limit_cw": "off",
-                "limit_ccw": "off"
-            }
+        "vendor": "Flowx",
+        "model": "FLX-05F",
+        "options":
+        {
+            "output_cw": "off",
+            "output_ccw": "off",
+            "limit_cw": "off",
+            "limit_ccw": "off"
         }
+    }
     __registers.append(register)
 
     # ECD / VCG / Pump
@@ -1863,13 +1863,13 @@ def __add_registers():
     register.description = "ECD / VCG / Pump"
     register.range = ""
     register.value = {
-            "vendor": "Grundfos",
-            "model": "MAGNA1_80_100_F_360_1x230V_PN6",
-            "options":
-            {
-                "mb_id": 0,
-            }
+        "vendor": "Grundfos",
+        "model": "MAGNA1_80_100_F_360_1x230V_PN6",
+        "options":
+        {
+            "mb_id": 0,
         }
+    }
     __registers.append(register)
 
     # ECD / VCG / Enable
@@ -1888,16 +1888,16 @@ def __add_registers():
     register.description = "ECD / VCG / Convectors East Cooling In"
     register.range = ""
     register.value = {
-            "vendor": "Flowx",
-            "model": "FLX-05F",
-            "options":
-            {
-                "output_cw": "off",
-                "output_ccw": "off",
-                "limit_cw": "off",
-                "limit_ccw": "off"
-            }
+        "vendor": "Flowx",
+        "model": "FLX-05F",
+        "options":
+        {
+            "output_cw": "off",
+            "output_ccw": "off",
+            "limit_cw": "off",
+            "limit_ccw": "off"
         }
+    }
     __registers.append(register)
 
     # ECD / VCG / Convectors East Cooling Out
@@ -1907,16 +1907,16 @@ def __add_registers():
     register.description = "ECD / VCG / Convectors East Cooling Out"
     register.range = ""
     register.value = {
-            "vendor": "Flowx",
-            "model": "FLX-05F",
-            "options":
-            {
-                "output_cw": "off",
-                "output_ccw": "off",
-                "limit_cw": "off",
-                "limit_ccw": "off"
-            }
-        }
+       "vendor": "Flowx",
+       "model": "FLX-05F",
+       "options":
+       {
+           "output_cw": "off",
+           "output_ccw": "off",
+           "limit_cw": "off",
+           "limit_ccw": "off"
+       }
+    }
     __registers.append(register)
 
 
@@ -1927,16 +1927,16 @@ def __add_registers():
     register.description = "ECD / VCG / Convectors East Hot In"
     register.range = ""
     register.value = {
-            "vendor": "Flowx",
-            "model": "FLX-05F",
-            "options":
-            {
-                "output_cw": "off",
-                "output_ccw": "off",
-                "limit_cw": "off",
-                "limit_ccw": "off"
-            }
+        "vendor": "Flowx",
+        "model": "FLX-05F",
+        "options":
+        {
+            "output_cw": "off",
+            "output_ccw": "off",
+            "limit_cw": "off",
+            "limit_ccw": "off"
         }
+    }
     __registers.append(register)
 
     # ECD / VCG / Convectors East Hot Out
@@ -1946,16 +1946,16 @@ def __add_registers():
     register.description = "ECD / VCG / Convectors East Hot Out"
     register.range = ""
     register.value = {
-            "vendor": "Flowx",
-            "model": "FLX-05F",
-            "options":
-            {
-                "output_cw": "off",
-                "output_ccw": "off",
-                "limit_cw": "off",
-                "limit_ccw": "off"
-            }
+        "vendor": "Flowx",
+        "model": "FLX-05F",
+        "options":
+        {
+            "output_cw": "off",
+            "output_ccw": "off",
+            "limit_cw": "off",
+            "limit_ccw": "off"
         }
+    }
     __registers.append(register)
 
     # ECD / VCG / Convectors East Pump
@@ -1965,13 +1965,13 @@ def __add_registers():
     register.description = "ECD / VCG / Convectors East Pump"
     register.range = ""
     register.value = {
-            "vendor": "Grundfos",
-            "model": "MAGNA1_80_100_F_360_1x230V_PN6",
-            "options":
-            {
-                "mb_id": 0,
-            }
+        "vendor": "Grundfos",
+        "model": "MAGNA1_80_100_F_360_1x230V_PN6",
+        "options":
+        {
+            "mb_id": 0,
         }
+    }
     __registers.append(register)
 
     # ECD / VCG / Convectors East Enable
@@ -1991,16 +1991,16 @@ def __add_registers():
     register.description = "ECD / VCG / Floor East Cooling In"
     register.range = ""
     register.value = {
-            "vendor": "Flowx",
-            "model": "FLX-05F",
-            "options":
-            {
-                "output_cw": "off",
-                "output_ccw": "off",
-                "limit_cw": "off",
-                "limit_ccw": "off"
-            }
+        "vendor": "Flowx",
+        "model": "FLX-05F",
+        "options":
+        {
+            "output_cw": "off",
+            "output_ccw": "off",
+            "limit_cw": "off",
+            "limit_ccw": "off"
         }
+    }
     __registers.append(register)
 
     # ECD / VCG / Floor East Cooling Out
@@ -2010,16 +2010,16 @@ def __add_registers():
     register.description = "ECD / VCG / Floor East Cooling Out"
     register.range = ""
     register.value = {
-            "vendor": "Flowx",
-            "model": "FLX-05F",
-            "options":
-            {
-                "output_cw": "off",
-                "output_ccw": "off",
-                "limit_cw": "off",
-                "limit_ccw": "off"
-            }
+        "vendor": "Flowx",
+        "model": "FLX-05F",
+        "options":
+        {
+            "output_cw": "off",
+            "output_ccw": "off",
+            "limit_cw": "off",
+            "limit_ccw": "off"
         }
+    }
     __registers.append(register)
 
     # ECD / VCG / Floor East Hot In
@@ -2029,16 +2029,16 @@ def __add_registers():
     register.description = "ECD / VCG / Floor East Hot In"
     register.range = ""
     register.value = {
-            "vendor": "Flowx",
-            "model": "FLX-05F",
-            "options":
-            {
-                "output_cw": "off",
-                "output_ccw": "off",
-                "limit_cw": "off",
-                "limit_ccw": "off"
-            }
+        "vendor": "Flowx",
+        "model": "FLX-05F",
+        "options":
+        {
+            "output_cw": "off",
+            "output_ccw": "off",
+            "limit_cw": "off",
+            "limit_ccw": "off"
         }
+    }
     __registers.append(register)
 
     # ECD / VCG / Floor East Hot Out
@@ -2048,16 +2048,16 @@ def __add_registers():
     register.description = "ECD / VCG / Floor East Hot Out"
     register.range = ""
     register.value = {
-            "vendor": "Flowx",
-            "model": "FLX-05F",
-            "options":
-            {
-                "output_cw": "off",
-                "output_ccw": "off",
-                "limit_cw": "off",
-                "limit_ccw": "off"
-            }
+        "vendor": "Flowx",
+        "model": "FLX-05F",
+        "options":
+        {
+            "output_cw": "off",
+            "output_ccw": "off",
+            "limit_cw": "off",
+            "limit_ccw": "off"
         }
+    }
     __registers.append(register)
 
     # ECD / VCG / Floor East Pump
@@ -2067,13 +2067,13 @@ def __add_registers():
     register.description = "ECD / VCG / Floor East Pump"
     register.range = ""
     register.value = {
-            "vendor": "Grundfos",
-            "model": "MAGNA1_80_100_F_360_1x230V_PN6",
-            "options":
-            {
-                "mb_id": 0,
-            }
+        "vendor": "Grundfos",
+        "model": "MAGNA1_80_100_F_360_1x230V_PN6",
+        "options":
+        {
+            "mb_id": 0,
         }
+    }
     __registers.append(register)
 
     # ECD / VCG / Underfloor East Enable
@@ -2093,16 +2093,16 @@ def __add_registers():
     register.description = "ECD / VCG / Convectors West Cooling In"
     register.range = ""
     register.value = {
-            "vendor": "Flowx",
-            "model": "FLX-05F",
-            "options":
-            {
-                "output_cw": "off",
-                "output_ccw": "off",
-                "limit_cw": "off",
-                "limit_ccw": "off"
-            }
+        "vendor": "Flowx",
+        "model": "FLX-05F",
+        "options":
+        {
+            "output_cw": "off",
+            "output_ccw": "off",
+            "limit_cw": "off",
+            "limit_ccw": "off"
         }
+    }
     __registers.append(register)
 
     # ECD / VCG / Convectors West Cooling Out
@@ -2112,16 +2112,16 @@ def __add_registers():
     register.description = "ECD / VCG / Convectors West Cooling Out"
     register.range = ""
     register.value = {
-            "vendor": "Flowx",
-            "model": "FLX-05F",
-            "options":
-            {
-                "output_cw": "off",
-                "output_ccw": "off",
-                "limit_cw": "off",
-                "limit_ccw": "off"
-            }
+        "vendor": "Flowx",
+        "model": "FLX-05F",
+        "options":
+        {
+            "output_cw": "off",
+            "output_ccw": "off",
+            "limit_cw": "off",
+            "limit_ccw": "off"
         }
+    }
     __registers.append(register)
 
 
@@ -2132,16 +2132,16 @@ def __add_registers():
     register.description = "ECD / VCG / Convectors West Hot In"
     register.range = ""
     register.value = {
-            "vendor": "Flowx",
-            "model": "FLX-05F",
-            "options":
-            {
-                "output_cw": "off",
-                "output_ccw": "off",
-                "limit_cw": "off",
-                "limit_ccw": "off"
-            }
+        "vendor": "Flowx",
+        "model": "FLX-05F",
+        "options":
+        {
+            "output_cw": "off",
+            "output_ccw": "off",
+            "limit_cw": "off",
+            "limit_ccw": "off"
         }
+    }
     __registers.append(register)
 
     # ECD / VCG / Convectors West Hot Out
@@ -2151,16 +2151,16 @@ def __add_registers():
     register.description = "ECD / VCG / Convectors West Hot Out"
     register.range = ""
     register.value = {
-            "vendor": "Flowx",
-            "model": "FLX-05F",
-            "options":
-            {
-                "output_cw": "off",
-                "output_ccw": "off",
-                "limit_cw": "off",
-                "limit_ccw": "off"
-            }
+        "vendor": "Flowx",
+        "model": "FLX-05F",
+        "options":
+        {
+            "output_cw": "off",
+            "output_ccw": "off",
+            "limit_cw": "off",
+            "limit_ccw": "off"
         }
+    }
     __registers.append(register)
 
     # ECD / VCG / Convectors West Pump
@@ -2170,13 +2170,13 @@ def __add_registers():
     register.description = "ECD / VCG / Convectors West Pump"
     register.range = ""
     register.value = {
-            "vendor": "Grundfos",
-            "model": "MAGNA1_80_100_F_360_1x230V_PN6",
-            "options":
-            {
-                "mb_id": 0,
-            }
+        "vendor": "Grundfos",
+        "model": "MAGNA1_80_100_F_360_1x230V_PN6",
+        "options":
+        {
+            "mb_id": 0,
         }
+    }
     __registers.append(register)
 
     # ECD / VCG / Convectors West Enable
@@ -2195,16 +2195,16 @@ def __add_registers():
     register.description = "ECD / VCG / TVA Roof Floor In"
     register.range = ""
     register.value = {
-            "vendor": "Flowx",
-            "model": "FLX-05F",
-            "options":
-            {
-                "output_cw": "off",
-                "output_ccw": "off",
-                "limit_cw": "off",
-                "limit_ccw": "off"
-            }
+        "vendor": "Flowx",
+        "model": "FLX-05F",
+        "options":
+        {
+            "output_cw": "off",
+            "output_ccw": "off",
+            "limit_cw": "off",
+            "limit_ccw": "off"
         }
+    }
     __registers.append(register)
 
     # ECD / VCG / TVA Roof Floor Out
@@ -2214,18 +2214,18 @@ def __add_registers():
     register.description = "ECD / VCG / TVA Roof Floor Out"
     register.range = ""
     register.value = {
-            "vendor": "Flowx",
-            "model": "FLX-05F",
-            "options":
-            {
-                "output_cw": "off",
-                "output_ccw": "off",
-                "limit_cw": "off",
-                "limit_ccw": "off"
-            }
+        "vendor": "Flowx",
+        "model": "FLX-05F",
+        "options":
+        {
+            "output_cw": "off",
+            "output_ccw": "off",
+            "limit_cw": "off",
+            "limit_ccw": "off"
         }
+    }
     __registers.append(register)
-    
+
     # ECD / VCG / TVA Roof Floor In
     register = Register("ecd.tva_roof_floor.hot_in")
     register.scope = Scope.System
@@ -2233,16 +2233,16 @@ def __add_registers():
     register.description = "ECD / VCG / TVA Roof Floor In"
     register.range = ""
     register.value = {
-            "vendor": "Flowx",
-            "model": "FLX-05F",
-            "options":
-            {
-                "output_cw": "off",
-                "output_ccw": "off",
-                "limit_cw": "off",
-                "limit_ccw": "off"
-            }
+        "vendor": "Flowx",
+        "model": "FLX-05F",
+        "options":
+        {
+            "output_cw": "off",
+            "output_ccw": "off",
+            "limit_cw": "off",
+            "limit_ccw": "off"
         }
+    }
     __registers.append(register)
 
     # ECD / VCG / TVA Roof Floor Out
@@ -2252,16 +2252,16 @@ def __add_registers():
     register.description = "ECD / VCG / TVA Roof Floor Out"
     register.range = ""
     register.value = {
-            "vendor": "Flowx",
-            "model": "FLX-05F",
-            "options":
-            {
-                "output_cw": "off",
-                "output_ccw": "off",
-                "limit_cw": "off",
-                "limit_ccw": "off"
-            }
+        "vendor": "Flowx",
+        "model": "FLX-05F",
+        "options":
+        {
+            "output_cw": "off",
+            "output_ccw": "off",
+            "limit_cw": "off",
+            "limit_ccw": "off"
         }
+    }
     __registers.append(register)
 
 
@@ -2272,13 +2272,13 @@ def __add_registers():
     register.description = "ECD / VCG / TVA Roof Floor"
     register.range = ""
     register.value = {
-            "vendor": "Grundfos",
-            "model": "MAGNA1_80_100_F_360_1x230V_PN6",
-            "options":
-            {
-                "mb_id": 0,
-            }
+        "vendor": "Grundfos",
+        "model": "MAGNA1_80_100_F_360_1x230V_PN6",
+        "options":
+        {
+            "mb_id": 0,
         }
+    }
     __registers.append(register)
 
     # ECD / VCG / TVA Roof Floor Pump
@@ -2297,16 +2297,16 @@ def __add_registers():
     register.description = "ECD / VCG / TVA Fitness In"
     register.range = ""
     register.value = {
-            "vendor": "Flowx",
-            "model": "FLX-05F",
-            "options":
-            {
-                "output_cw": "off",
-                "output_ccw": "off",
-                "limit_cw": "off",
-                "limit_ccw": "off"
-            }
+        "vendor": "Flowx",
+        "model": "FLX-05F",
+        "options":
+        {
+            "output_cw": "off",
+            "output_ccw": "off",
+            "limit_cw": "off",
+            "limit_ccw": "off"
         }
+    }
     __registers.append(register)
 
     # ECD / VCG / TVA Fitness Out
@@ -2316,16 +2316,16 @@ def __add_registers():
     register.description = "ECD / VCG / TVA Fitness Out"
     register.range = ""
     register.value = {
-            "vendor": "Flowx",
-            "model": "FLX-05F",
-            "options":
-            {
-                "output_cw": "off",
-                "output_ccw": "off",
-                "limit_cw": "off",
-                "limit_ccw": "off"
-            }
+        "vendor": "Flowx",
+        "model": "FLX-05F",
+        "options":
+        {
+            "output_cw": "off",
+            "output_ccw": "off",
+            "limit_cw": "off",
+            "limit_ccw": "off"
         }
+    }
     __registers.append(register)
 
     # ECD / VCG / TVA Fitness In
@@ -2335,16 +2335,16 @@ def __add_registers():
     register.description = "ECD / VCG / TVA Fitness In"
     register.range = ""
     register.value = {
-            "vendor": "Flowx",
-            "model": "FLX-05F",
-            "options":
-            {
-                "output_cw": "off",
-                "output_ccw": "off",
-                "limit_cw": "off",
-                "limit_ccw": "off"
-            }
+        "vendor": "Flowx",
+        "model": "FLX-05F",
+        "options":
+        {
+            "output_cw": "off",
+            "output_ccw": "off",
+            "limit_cw": "off",
+            "limit_ccw": "off"
         }
+    }
     __registers.append(register)
 
     # ECD / VCG / TVA Fitness Out
@@ -2354,16 +2354,16 @@ def __add_registers():
     register.description = "ECD / VCG / TVA Fitness Out"
     register.range = ""
     register.value = {
-            "vendor": "Flowx",
-            "model": "FLX-05F",
-            "options":
-            {
-                "output_cw": "off",
-                "output_ccw": "off",
-                "limit_cw": "off",
-                "limit_ccw": "off"
-            }
+        "vendor": "Flowx",
+        "model": "FLX-05F",
+        "options":
+        {
+            "output_cw": "off",
+            "output_ccw": "off",
+            "limit_cw": "off",
+            "limit_ccw": "off"
         }
+    }
     __registers.append(register)
 
     # ECD / VCG / TVA Fitness
@@ -2373,13 +2373,13 @@ def __add_registers():
     register.description = "ECD / VCG / TVA Fitness"
     register.range = ""
     register.value = {
-            "vendor": "Grundfos",
-            "model": "MAGNA1_80_100_F_360_1x230V_PN6",
-            "options":
-            {
-                "mb_id": 0,
-            }
+        "vendor": "Grundfos",
+        "model": "MAGNA1_80_100_F_360_1x230V_PN6",
+        "options":
+        {
+            "mb_id": 0,
         }
+    }
     __registers.append(register)
 
     # ECD / VCG / TVA Fitness
@@ -2398,16 +2398,16 @@ def __add_registers():
     register.description = "ECD / VCG / Floor West Cooling In"
     register.range = ""
     register.value = {
-            "vendor": "Flowx",
-            "model": "FLX-05F",
-            "options":
-            {
-                "output_cw": "off",
-                "output_ccw": "off",
-                "limit_cw": "off",
-                "limit_ccw": "off"
-            }
+        "vendor": "Flowx",
+        "model": "FLX-05F",
+        "options":
+        {
+            "output_cw": "off",
+            "output_ccw": "off",
+            "limit_cw": "off",
+            "limit_ccw": "off"
         }
+    }
     __registers.append(register)
 
     # ECD / VCG / Floor West Cooling Out
@@ -2417,16 +2417,16 @@ def __add_registers():
     register.description = "ECD / VCG / Floor West Cooling Out"
     register.range = ""
     register.value = {
-            "vendor": "Flowx",
-            "model": "FLX-05F",
-            "options":
-            {
-                "output_cw": "off",
-                "output_ccw": "off",
-                "limit_cw": "off",
-                "limit_ccw": "off"
-            }
+        "vendor": "Flowx",
+        "model": "FLX-05F",
+        "options":
+        {
+            "output_cw": "off",
+            "output_ccw": "off",
+            "limit_cw": "off",
+            "limit_ccw": "off"
         }
+    }
     __registers.append(register)
 
     # ECD / VCG / Floor West Hot In
@@ -2436,16 +2436,16 @@ def __add_registers():
     register.description = "ECD / VCG / Floor West Hot In"
     register.range = ""
     register.value = {
-            "vendor": "Flowx",
-            "model": "FLX-05F",
-            "options":
-            {
-                "output_cw": "off",
-                "output_ccw": "off",
-                "limit_cw": "off",
-                "limit_ccw": "off"
-            }
+        "vendor": "Flowx",
+        "model": "FLX-05F",
+        "options":
+        {
+            "output_cw": "off",
+            "output_ccw": "off",
+            "limit_cw": "off",
+            "limit_ccw": "off"
         }
+    }
     __registers.append(register)
 
     # ECD / VCG / Floor West Hot Out
@@ -2455,16 +2455,16 @@ def __add_registers():
     register.description = "ECD / VCG / Floor West Hot Out"
     register.range = ""
     register.value = {
-            "vendor": "Flowx",
-            "model": "FLX-05F",
-            "options":
-            {
-                "output_cw": "off",
-                "output_ccw": "off",
-                "limit_cw": "off",
-                "limit_ccw": "off"
-            }
+        "vendor": "Flowx",
+        "model": "FLX-05F",
+        "options":
+        {
+            "output_cw": "off",
+            "output_ccw": "off",
+            "limit_cw": "off",
+            "limit_ccw": "off"
         }
+    }
     __registers.append(register)
 
     # ECD / VCG / Floor West Pump
@@ -2474,13 +2474,13 @@ def __add_registers():
     register.description = "ECD / VCG / Floor West Pump"
     register.range = ""
     register.value = {
-            "vendor": "Grundfos",
-            "model": "MAGNA1_80_100_F_360_1x230V_PN6",
-            "options":
-            {
-                "mb_id": 0,
-            }
+        "vendor": "Grundfos",
+        "model": "MAGNA1_80_100_F_360_1x230V_PN6",
+        "options":
+        {
+            "mb_id": 0,
         }
+    }
     __registers.append(register)
 
     # ECD / VCG / Floor West Pump
@@ -2499,16 +2499,16 @@ def __add_registers():
     register.description = "ECD / VCG / TVA Conference Center In"
     register.range = ""
     register.value = {
-            "vendor": "Flowx",
-            "model": "FLX-05F",
-            "options":
-            {
-                "output_cw": "off",
-                "output_ccw": "off",
-                "limit_cw": "off",
-                "limit_ccw": "off"
-            }
+        "vendor": "Flowx",
+        "model": "FLX-05F",
+        "options":
+        {
+            "output_cw": "off",
+            "output_ccw": "off",
+            "limit_cw": "off",
+            "limit_ccw": "off"
         }
+    }
     __registers.append(register)
 
     # ECD / VCG / TVA Conference Center Out
@@ -2518,16 +2518,16 @@ def __add_registers():
     register.description = "ECD / VCG / TVA Conference Center Out"
     register.range = ""
     register.value = {
-            "vendor": "Flowx",
-            "model": "FLX-05F",
-            "options":
-            {
-                "output_cw": "off",
-                "output_ccw": "off",
-                "limit_cw": "off",
-                "limit_ccw": "off"
-            }
+        "vendor": "Flowx",
+        "model": "FLX-05F",
+        "options":
+        {
+            "output_cw": "off",
+            "output_ccw": "off",
+            "limit_cw": "off",
+            "limit_ccw": "off"
         }
+    }
     __registers.append(register)
 
     # ECD / VCG / TVA Conference Center In
@@ -2537,16 +2537,16 @@ def __add_registers():
     register.description = "ECD / VCG / TVA Conference Center In"
     register.range = ""
     register.value = {
-            "vendor": "Flowx",
-            "model": "FLX-05F",
-            "options":
-            {
-                "output_cw": "off",
-                "output_ccw": "off",
-                "limit_cw": "off",
-                "limit_ccw": "off"
-            }
+        "vendor": "Flowx",
+        "model": "FLX-05F",
+        "options":
+        {
+            "output_cw": "off",
+            "output_ccw": "off",
+            "limit_cw": "off",
+            "limit_ccw": "off"
         }
+    }
     __registers.append(register)
 
     # ECD / VCG / TVA Conference Center Out
@@ -2556,16 +2556,16 @@ def __add_registers():
     register.description = "ECD / VCG / TVA Conference Center Out"
     register.range = ""
     register.value = {
-            "vendor": "Flowx",
-            "model": "FLX-05F",
-            "options":
-            {
-                "output_cw": "off",
-                "output_ccw": "off",
-                "limit_cw": "off",
-                "limit_ccw": "off"
-            }
+        "vendor": "Flowx",
+        "model": "FLX-05F",
+        "options":
+        {
+            "output_cw": "off",
+            "output_ccw": "off",
+            "limit_cw": "off",
+            "limit_ccw": "off"
         }
+    }
     __registers.append(register)
 
     # ECD / VCG / TVA Conference Center Pump
@@ -2575,13 +2575,13 @@ def __add_registers():
     register.description = "ECD / VCG / TVA Conference Center"
     register.range = ""
     register.value = {
-            "vendor": "Grundfos",
-            "model": "MAGNA1_80_100_F_360_1x230V_PN6",
-            "options":
-            {
-                "mb_id": 0,
-            }
+        "vendor": "Grundfos",
+        "model": "MAGNA1_80_100_F_360_1x230V_PN6",
+        "options":
+        {
+            "mb_id": 0,
         }
+    }
     __registers.append(register)
 
     # ECD / VCG / TVA Conference Center Pump
@@ -2600,16 +2600,16 @@ def __add_registers():
     register.description = "ECD / VCG / Convectors Kitchen Cold In"
     register.range = ""
     register.value = {
-            "vendor": "Flowx",
-            "model": "FLX-05F",
-            "options":
-            {
-                "output_cw": "off",
-                "output_ccw": "off",
-                "limit_cw": "off",
-                "limit_ccw": "off"
-            }
+        "vendor": "Flowx",
+        "model": "FLX-05F",
+        "options":
+        {
+            "output_cw": "off",
+            "output_ccw": "off",
+            "limit_cw": "off",
+            "limit_ccw": "off"
         }
+    }
     __registers.append(register)
 
     # ECD / VCG / Convectors Kitchen Cold Out
@@ -2619,18 +2619,18 @@ def __add_registers():
     register.description = "ECD / VCG / Convectors Kitchen Cold Out"
     register.range = ""
     register.value = {
-            "vendor": "Flowx",
-            "model": "FLX-05F",
-            "options":
-            {
-                "output_cw": "off",
-                "output_ccw": "off",
-                "limit_cw": "off",
-                "limit_ccw": "off"
-            }
+        "vendor": "Flowx",
+        "model": "FLX-05F",
+        "options":
+        {
+            "output_cw": "off",
+            "output_ccw": "off",
+            "limit_cw": "off",
+            "limit_ccw": "off"
         }
+    }
     __registers.append(register)
-    
+
     # ECD / VCG / Convectors Kitchen Hot In
     register = Register("ecd.convectors_kitchen.hot_in")
     register.scope = Scope.System
@@ -2638,16 +2638,16 @@ def __add_registers():
     register.description = "ECD / VCG / Convectors Kitchen Hot In"
     register.range = ""
     register.value = {
-            "vendor": "Flowx",
-            "model": "FLX-05F",
-            "options":
-            {
-                "output_cw": "off",
-                "output_ccw": "off",
-                "limit_cw": "off",
-                "limit_ccw": "off"
-            }
+        "vendor": "Flowx",
+        "model": "FLX-05F",
+        "options":
+        {
+            "output_cw": "off",
+            "output_ccw": "off",
+            "limit_cw": "off",
+            "limit_ccw": "off"
         }
+    }
     __registers.append(register)
 
     # ECD / VCG / Convectors Kitchen Hot Out
@@ -2657,16 +2657,16 @@ def __add_registers():
     register.description = "ECD / VCG / Convectors Kitchen Hot Out"
     register.range = ""
     register.value = {
-            "vendor": "Flowx",
-            "model": "FLX-05F",
-            "options":
-            {
-                "output_cw": "off",
-                "output_ccw": "off",
-                "limit_cw": "off",
-                "limit_ccw": "off"
-            }
+        "vendor": "Flowx",
+        "model": "FLX-05F",
+        "options":
+        {
+            "output_cw": "off",
+            "output_ccw": "off",
+            "limit_cw": "off",
+            "limit_ccw": "off"
         }
+    }
     __registers.append(register)
 
 
@@ -2677,13 +2677,13 @@ def __add_registers():
     register.description = "ECD / VCG / Convectors Kitchen Pump"
     register.range = ""
     register.value = {
-            "vendor": "Grundfos",
-            "model": "MAGNA1_80_100_F_360_1x230V_PN6",
-            "options":
-            {
-                "mb_id": 0,
-            }
+        "vendor": "Grundfos",
+        "model": "MAGNA1_80_100_F_360_1x230V_PN6",
+        "options":
+        {
+            "mb_id": 0,
         }
+    }
     __registers.append(register)
 
     # ECD / VCG / Convectors Kitchen Pump
@@ -2702,18 +2702,18 @@ def __add_registers():
     register.description = "ECD / VCG / TVA Wearhouse Cold In"
     register.range = ""
     register.value = {
-            "vendor": "Flowx",
-            "model": "FLX-05F",
-            "options":
-            {
-                "output_cw": "off",
-                "output_ccw": "off",
-                "limit_cw": "off",
-                "limit_ccw": "off"
-            }
+        "vendor": "Flowx",
+        "model": "FLX-05F",
+        "options":
+        {
+            "output_cw": "off",
+            "output_ccw": "off",
+            "limit_cw": "off",
+            "limit_ccw": "off"
         }
+    }
     __registers.append(register)
-    
+
     # ECD / VCG / TVA Wearhouse Cold Out
     register = Register("ecd.tva_warehouse.cold_out")
     register.scope = Scope.System
@@ -2721,16 +2721,16 @@ def __add_registers():
     register.description = "ECD / VCG / TVA Wearhouse Cold Out"
     register.range = ""
     register.value = {
-            "vendor": "Flowx",
-            "model": "FLX-05F",
-            "options":
-            {
-                "output_cw": "off",
-                "output_ccw": "off",
-                "limit_cw": "off",
-                "limit_ccw": "off"
-            }
+        "vendor": "Flowx",
+        "model": "FLX-05F",
+        "options":
+        {
+            "output_cw": "off",
+            "output_ccw": "off",
+            "limit_cw": "off",
+            "limit_ccw": "off"
         }
+    }
     __registers.append(register)
 
     # ECD / VCG / TVA Wearhouse Hot In
@@ -2740,16 +2740,16 @@ def __add_registers():
     register.description = "ECD / VCG / TVA Wearhouse Hot In"
     register.range = ""
     register.value = {
-            "vendor": "Flowx",
-            "model": "FLX-05F",
-            "options":
-            {
-                "output_cw": "off",
-                "output_ccw": "off",
-                "limit_cw": "off",
-                "limit_ccw": "off"
-            }
+        "vendor": "Flowx",
+        "model": "FLX-05F",
+        "options":
+        {
+            "output_cw": "off",
+            "output_ccw": "off",
+            "limit_cw": "off",
+            "limit_ccw": "off"
         }
+    }
     __registers.append(register)
 
     # ECD / VCG / TVA Wearhouse Hot Out
@@ -2759,16 +2759,16 @@ def __add_registers():
     register.description = "ECD / VCG / TVA Wearhouse Hot Out"
     register.range = ""
     register.value = {
-            "vendor": "Flowx",
-            "model": "FLX-05F",
-            "options":
-            {
-                "output_cw": "off",
-                "output_ccw": "off",
-                "limit_cw": "off",
-                "limit_ccw": "off"
-            }
+        "vendor": "Flowx",
+        "model": "FLX-05F",
+        "options":
+        {
+            "output_cw": "off",
+            "output_ccw": "off",
+            "limit_cw": "off",
+            "limit_ccw": "off"
         }
+    }
     __registers.append(register)
 
     # ECD / VCG / TVA Wearhouse Pump
@@ -2778,13 +2778,13 @@ def __add_registers():
     register.description = "ECD / VCG / TVA Wearhouse"
     register.range = ""
     register.value = {
-            "vendor": "Grundfos",
-            "model": "MAGNA1_80_100_F_360_1x230V_PN6",
-            "options":
-            {
-                "mb_id": 0,
-            }
+        "vendor": "Grundfos",
+        "model": "MAGNA1_80_100_F_360_1x230V_PN6",
+        "options":
+        {
+            "mb_id": 0,
         }
+    }
     __registers.append(register)
 
     # ECD / VCG / TVA Wearhouse Pump
@@ -2897,16 +2897,16 @@ def __add_registers():
     register.description = "Heat Pump Control Group / VCG / Cold Buffer / Input"
     register.range = ""
     register.value = {
-            "vendor": "Flowx",
-            "model": "FLX-05F",
-            "options":
-            {
-                "output_cw": "off",
-                "output_ccw": "off",
-                "limit_cw": "off",
-                "limit_ccw": "off"
-            }
+        "vendor": "Flowx",
+        "model": "FLX-05F",
+        "options":
+        {
+            "output_cw": "off",
+            "output_ccw": "off",
+            "limit_cw": "off",
+            "limit_ccw": "off"
         }
+    }
     __registers.append(register)
 
     # Heat Pump Control Group / VCG / Cold Buffer / Output
@@ -2916,16 +2916,16 @@ def __add_registers():
     register.description = "Heat Pump Control Group / VCG / Cold Buffer / Output"
     register.range = ""
     register.value = {
-            "vendor": "Flowx",
-            "model": "FLX-05F",
-            "options":
-            {
-                "output_cw": "off",
-                "output_ccw": "off",
-                "limit_cw": "off",
-                "limit_ccw": "off"
-            }
+        "vendor": "Flowx",
+        "model": "FLX-05F",
+        "options":
+        {
+            "output_cw": "off",
+            "output_ccw": "off",
+            "limit_cw": "off",
+            "limit_ccw": "off"
         }
+    }
     __registers.append(register)
 
     # Heat Pump Control Group / VCG / Cold Buffer / Short
@@ -2935,16 +2935,16 @@ def __add_registers():
     register.description = "Heat Pump Control Group / VCG / Cold Buffer / Short"
     register.range = ""
     register.value = {
-            "vendor": "Flowx",
-            "model": "FLX-05F",
-            "options":
-            {
-                "output_cw": "off",
-                "output_ccw": "off",
-                "limit_cw": "off",
-                "limit_ccw": "off"
-            }
+        "vendor": "Flowx",
+        "model": "FLX-05F",
+        "options":
+        {
+            "output_cw": "off",
+            "output_ccw": "off",
+            "limit_cw": "off",
+            "limit_ccw": "off"
         }
+    }
     __registers.append(register)
 
     # -================================================================================-
@@ -2956,16 +2956,16 @@ def __add_registers():
     register.description = "Heat Pump Control Group / VCG / Cold Geo / Input"
     register.range = ""
     register.value = {
-            "vendor": "Flowx",
-            "model": "FLX-05F",
-            "options":
-            {
-                "output_cw": "off",
-                "output_ccw": "off",
-                "limit_cw": "off",
-                "limit_ccw": "off"
-            }
+        "vendor": "Flowx",
+        "model": "FLX-05F",
+        "options":
+        {
+            "output_cw": "off",
+            "output_ccw": "off",
+            "limit_cw": "off",
+            "limit_ccw": "off"
         }
+    }
     __registers.append(register)
 
     # Heat Pump Control Group / VCG / Cold Geo / Output
@@ -2975,16 +2975,16 @@ def __add_registers():
     register.description = "Heat Pump Control Group / VCG / Cold Geo / Output"
     register.range = ""
     register.value = {
-            "vendor": "Flowx",
-            "model": "FLX-05F",
-            "options":
-            {
-                "output_cw": "off",
-                "output_ccw": "off",
-                "limit_cw": "off",
-                "limit_ccw": "off"
-            }
+        "vendor": "Flowx",
+        "model": "FLX-05F",
+        "options":
+        {
+            "output_cw": "off",
+            "output_ccw": "off",
+            "limit_cw": "off",
+            "limit_ccw": "off"
         }
+    }
     __registers.append(register)
 
     # Heat Pump Control Group / VCG / Cold Geo / Short
@@ -2994,16 +2994,16 @@ def __add_registers():
     register.description = "Heat Pump Control Group / VCG / Cold Geo / Short"
     register.range = ""
     register.value = {
-            "vendor": "Flowx",
-            "model": "FLX-05F",
-            "options":
-            {
-                "output_cw": "off",
-                "output_ccw": "off",
-                "limit_cw": "off",
-                "limit_ccw": "off"
-            }
+        "vendor": "Flowx",
+        "model": "FLX-05F",
+        "options":
+        {
+            "output_cw": "off",
+            "output_ccw": "off",
+            "limit_cw": "off",
+            "limit_ccw": "off"
         }
+    }
     __registers.append(register)
 
     # -================================================================================-
@@ -3015,16 +3015,16 @@ def __add_registers():
     register.description = "Heat Pump Control Group / VCG / Warm Geo / Input"
     register.range = ""
     register.value = {
-            "vendor": "Flowx",
-            "model": "FLX-05F",
-            "options":
-            {
-                "output_cw": "off",
-                "output_ccw": "off",
-                "limit_cw": "off",
-                "limit_ccw": "off"
-            }
+        "vendor": "Flowx",
+        "model": "FLX-05F",
+        "options":
+        {
+            "output_cw": "off",
+            "output_ccw": "off",
+            "limit_cw": "off",
+            "limit_ccw": "off"
         }
+    }
     __registers.append(register)
 
     # Heat Pump Control Group / VCG / Warm Geo / Output
@@ -3034,16 +3034,16 @@ def __add_registers():
     register.description = "Heat Pump Control Group / VCG / Warm Geo / Output"
     register.range = ""
     register.value = {
-            "vendor": "Flowx",
-            "model": "FLX-05F",
-            "options":
-            {
-                "output_cw": "off",
-                "output_ccw": "off",
-                "limit_cw": "off",
-                "limit_ccw": "off"
-            }
+        "vendor": "Flowx",
+        "model": "FLX-05F",
+        "options":
+        {
+            "output_cw": "off",
+            "output_ccw": "off",
+            "limit_cw": "off",
+            "limit_ccw": "off"
         }
+    }
     __registers.append(register)
 
     # Heat Pump Control Group / VCG / Warm Geo / Short
@@ -3053,16 +3053,16 @@ def __add_registers():
     register.description = "Heat Pump Control Group / VCG / Warm Geo / Short"
     register.range = ""
     register.value = {
-            "vendor": "Flowx",
-            "model": "FLX-05F",
-            "options":
-            {
-                "output_cw": "off",
-                "output_ccw": "off",
-                "limit_cw": "off",
-                "limit_ccw": "off"
-            }
+        "vendor": "Flowx",
+        "model": "FLX-05F",
+        "options":
+        {
+            "output_cw": "off",
+            "output_ccw": "off",
+            "limit_cw": "off",
+            "limit_ccw": "off"
         }
+    }
     __registers.append(register)
 
     # -================================================================================-
@@ -3074,16 +3074,16 @@ def __add_registers():
     register.description = "Heat Pump Control Group / VCG / Warm Geo / Input"
     register.range = ""
     register.value = {
-            "vendor": "Flowx",
-            "model": "FLX-05F",
-            "options":
-            {
-                "output_cw": "off",
-                "output_ccw": "off",
-                "limit_cw": "off",
-                "limit_ccw": "off"
-            }
+        "vendor": "Flowx",
+        "model": "FLX-05F",
+        "options":
+        {
+            "output_cw": "off",
+            "output_ccw": "off",
+            "limit_cw": "off",
+            "limit_ccw": "off"
         }
+    }
     __registers.append(register)
 
     # Heat Pump Control Group / VCG / Warm Geo / Output
@@ -3093,16 +3093,16 @@ def __add_registers():
     register.description = "Heat Pump Control Group / VCG / Warm Geo / Output"
     register.range = ""
     register.value = {
-            "vendor": "Flowx",
-            "model": "FLX-05F",
-            "options":
-            {
-                "output_cw": "off",
-                "output_ccw": "off",
-                "limit_cw": "off",
-                "limit_ccw": "off"
-            }
+        "vendor": "Flowx",
+        "model": "FLX-05F",
+        "options":
+        {
+            "output_cw": "off",
+            "output_ccw": "off",
+            "limit_cw": "off",
+            "limit_ccw": "off"
         }
+    }
     __registers.append(register)
 
     # Heat Pump Control Group / VCG / Warm Geo / Short
@@ -3112,16 +3112,16 @@ def __add_registers():
     register.description = "Heat Pump Control Group / VCG / Warm Geo / Output"
     register.range = ""
     register.value = {
-            "vendor": "Flowx",
-            "model": "FLX-05F",
-            "options":
-            {
-                "output_cw": "off",
-                "output_ccw": "off",
-                "limit_cw": "off",
-                "limit_ccw": "off"
-            }
+        "vendor": "Flowx",
+        "model": "FLX-05F",
+        "options":
+        {
+            "output_cw": "off",
+            "output_ccw": "off",
+            "limit_cw": "off",
+            "limit_ccw": "off"
         }
+    }
     __registers.append(register)
 
     # -================================================================================-
@@ -3133,13 +3133,13 @@ def __add_registers():
     register.description = "Heat Pump Control Group / Water Pump / Cold"
     register.range = ""
     register.value = {
-            "vendor": "Grundfos",
-            "model": "MAGNA1_80_100_F_360_1x230V_PN6",
-            "options":
-            {
-                "mb_id": 2,
-            }
+        "vendor": "Grundfos",
+        "model": "MAGNA1_80_100_F_360_1x230V_PN6",
+        "options":
+        {
+            "mb_id": 2,
         }
+    }
     __registers.append(register)
 
     # Heat Pump Control Group / Water Pump / Hot
@@ -3149,13 +3149,13 @@ def __add_registers():
     register.description = "Heat Pump Control Group / Water Pump / Hot"
     register.range = ""
     register.value = {
-            "vendor": "Grundfos",
-            "model": "MAGNA1_80_100_F_360_1x230V_PN6",
-            "options":
-            {
-                "mb_id": 3,
-            }
+        "vendor": "Grundfos",
+        "model": "MAGNA1_80_100_F_360_1x230V_PN6",
+        "options":
+        {
+            "mb_id": 3,
         }
+    }
     __registers.append(register)
 
     # Heat Pump Control Group / Water Pump / Warm
@@ -3165,13 +3165,13 @@ def __add_registers():
     register.description = "Heat Pump Control Group / Water Pump / Warm"
     register.range = ""
     register.value = {
-            "vendor": "Grundfos",
-            "model": "MAGNA1_80_100_F_360_1x230V_PN6",
-            "options":
-            {
-                "mb_id": 0,
-            }
+        "vendor": "Grundfos",
+        "model": "MAGNA1_80_100_F_360_1x230V_PN6",
+        "options":
+        {
+            "mb_id": 0,
         }
+    }
     __registers.append(register)
 
     # Heat Pump Control Group / Water Pump / Warm
@@ -3181,13 +3181,13 @@ def __add_registers():
     register.description = "Heat Pump Control Group / Water Pump / Warm"
     register.range = ""
     register.value = {
-            "vendor": "Grundfos",
-            "model": "MAGNA1_80_100_F_360_1x230V_PN6",
-            "options":
-            {
-                "mb_id": 0,
-            }
+        "vendor": "Grundfos",
+        "model": "MAGNA1_80_100_F_360_1x230V_PN6",
+        "options":
+        {
+            "mb_id": 0,
         }
+    }
     __registers.append(register)
 
     # -================================================================================-
@@ -3199,13 +3199,13 @@ def __add_registers():
     register.description = "Heat Pump Control Group / Heat Pump"
     register.range = ""
     register.value = {
-            "vendor": "HstarsGuangzhouRefrigeratingEquipmentGroup",
-            "model": "HeatPump",
-            "options":
-            {
-                "mb_id": 0,
-            }
+        "vendor": "HstarsGuangzhouRefrigeratingEquipmentGroup",
+        "model": "HeatPump",
+        "options":
+        {
+            "mb_id": 0,
         }
+    }
     __registers.append(register)
 
     # Output registers.
@@ -3256,13 +3256,13 @@ def __add_registers():
     register.description = "Lower fan settings"
     register.range = ""
     register.value = {
-            "vendor": "HangzhouAirflowElectricApplications",
-            "model": "f3p146ec072600",
-            "options":
-            {
-                "output": "AO1",
-            }
+        "vendor": "HangzhouAirflowElectricApplications",
+        "model": "f3p146ec072600",
+        "options":
+        {
+            "output": "AO1",
         }
+    }
     __registers.append(register)
 
     register = Register("vent.lower_1.fan.min_speed")
@@ -3296,13 +3296,13 @@ def __add_registers():
     register.description = "Upper fan settings"
     register.range = ""
     register.value = {
-            "vendor": "HangzhouAirflowElectricApplications",
-            "model": "f3p146ec072600",
-            "options":
-            {
-                "output": "AO1",
-            }
+        "vendor": "HangzhouAirflowElectricApplications",
+        "model": "f3p146ec072600",
+        "options":
+        {
+            "output": "AO1",
         }
+    }
     __registers.append(register)
 
     register = Register("vent.upper_1.fan.min_speed")
@@ -3336,14 +3336,14 @@ def __add_registers():
     register.description = "Lower valve settings"
     register.range = ""
     register.value = {
-            "vendor": "FONYES",
-            "model": "Model1",
-            "options":
-            {
-                "closing": "DO8",
-                "opening": "DO9",
-            }
+        "vendor": "FONYES",
+        "model": "Model1",
+        "options":
+        {
+            "closing": "DO8",
+            "opening": "DO9",
         }
+    }
     __registers.append(register)
 
     # Lower valve settings
@@ -3353,14 +3353,14 @@ def __add_registers():
     register.description = "Upper valve settings"
     register.range = ""
     register.value = {
-            "vendor": "FONYES",
-            "model": "Model1",
-            "options":
-            {
-                "closing": "DO10",
-                "opening": "DO11",
-            }
+        "vendor": "FONYES",
+        "model": "Model1",
+        "options":
+        {
+            "closing": "DO10",
+            "opening": "DO11",
         }
+    }
     __registers.append(register)
 
     # Zones count.
@@ -3444,19 +3444,19 @@ def main():
     args = parser.parse_args()
 
     if args.action == "w_json":
-        Registers.to_JSON(__registers, "registers.json")
+        Registers.to_json(__registers, "registers.json")
 
     if args.action == "r_json":
-        registers = Registers.from_JSON("registers.json")
+        registers = Registers.from_json("registers.json")
 
         for register in registers:
             print(register)
 
     elif args.action == "w_csv":
-        Registers.to_CSV(__registers, "registers.csv")
+        Registers.to_csv(__registers, "registers.csv")
 
     elif args.action == "r_csv":
-        registers = Registers.from_CSV("registers.csv")
+        registers = Registers.from_csv("registers.csv")
 
         for register in registers:
             print(register)

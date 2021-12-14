@@ -110,7 +110,7 @@ class GlobalErrorHandler:
 #region Public Static Methods
 
     @staticmethod
-    def log_no_connection_erp(logger, message: str= "Communication lost with ERP."):
+    def log_no_connection_erp(logger, message: str = "Communication lost with ERP."):
         """Log no connection with ERP.
 
         Args:
@@ -235,7 +235,7 @@ class GlobalErrorHandler:
         GlobalErrorHandler.append(message, ErrorCodes.MissingResource)
 
     @staticmethod
-    def log_missing_resource(logger, message: str= "Missing resource."):
+    def log_missing_resource(logger, message: str = "Missing resource."):
         """Log limit of the hardware.
 
         Args:

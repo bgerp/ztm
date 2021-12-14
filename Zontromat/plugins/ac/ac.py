@@ -209,7 +209,7 @@ class AccessControl(BasePlugin):
         # Update last 60 seconds attendee list.
         last_minute_attendees = self._registers.by_name(self.key + ".last_update_attendees")
         if last_minute_attendees is not None:
-            
+
             if last_minute_attendees.data_type == "str":
 
                 obj = json.loads(last_minute_attendees.value)
@@ -252,7 +252,7 @@ class AccessControl(BasePlugin):
                 registers=self._registers, controller=self._controller,\
                 identifier=index, key=self.key, name="Security Zone")
 
-            # Add on card callback. 
+            # Add on card callback.
             self.__zones[name].on_card(self.__on_card_cb)
 
             # Initialize the module.

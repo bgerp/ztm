@@ -168,11 +168,11 @@ class SecurityZone(BasePlugin):
         if register.value != {} and self.__entry_reader is None:
 
             self.__entry_reader = CardReaderFactory.create(
-                                        controller=self._controller,
-                                        name="Entry Reader",
-                                        vendor=register.value['vendor'],
-                                        model=register.value['model'],
-                                        options=register.value['options'])
+                controller=self._controller,
+                name="Entry Reader",
+                vendor=register.value['vendor'],
+                model=register.value['model'],
+                options=register.value['options'])
 
             if self.__entry_reader is not None:
                 if self.__entry_reader.reader_state == CardReaderState.NONE:
@@ -185,15 +185,20 @@ class SecurityZone(BasePlugin):
 
     def __exit_reader_cb(self, register):
 
+        # Check data type.
+        if not register.data_type == "json":
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
+            return
+
         # Create
         if register.value != {} and self.__exit_reader is None:
 
             self.__exit_reader = CardReaderFactory.create(
-                                        controller=self._controller,
-                                        name="Exit Reader",
-                                        vendor=register.value['vendor'],
-                                        model=register.value['model'],
-                                        options=register.value['options'])
+                controller=self._controller,
+                name="Exit Reader",
+                vendor=register.value['vendor'],
+                model=register.value['model'],
+                options=register.value['options'])
 
             if self.__exit_reader is not None:
                 if self.__exit_reader.reader_state == CardReaderState.NONE:
@@ -293,7 +298,7 @@ class SecurityZone(BasePlugin):
         if time_to_open is not None:
             time_to_open.update_handlers = self.__time_to_open_cb
             time_to_open.update()
-    
+
         # Is empty timeout.
         is_empty_timeout = self._registers.by_name("envm.is_empty_timeout")
         if is_empty_timeout is not None:
@@ -347,7 +352,7 @@ class SecurityZone(BasePlugin):
             door_window_blind_output.update_handlers = self.__door_window_blind_output_cb
             door_window_blind_output.update()
 
-        # Door window blind.        
+        # Door window blind.
         self._registers.add_callback(
             "{}.door_window_blind_{}.value".format(self.key, self.__identifier),
             self.__door_window_blind_value_cb,
@@ -382,7 +387,7 @@ class SecurityZone(BasePlugin):
                 else:
                     card_state = CardState.Expired
                     break
-            
+
             checked_index += 1
             if checked_index == allowed_len and card_state == CardState.NONE:
                 card_state = CardState.NotAllowed

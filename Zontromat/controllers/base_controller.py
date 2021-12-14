@@ -85,7 +85,10 @@ class BaseController(Configuarable):
         Returns:
             str: Short description.
         """
-        return "Controller vendor({}) / model({}) / ID({}) ".format(self.vendor, self.model, self.serial_number)
+        return "Controller vendor({}) / model({}) / ID({}) ".format(
+            self.vendor,
+            self.model,
+            self.serial_number)
 
     __repr__ = __str__
 
@@ -170,7 +173,7 @@ class BaseController(Configuarable):
         has_delimiter = (self._delimiter in io_name)
 
         if not has_delimiter:
-        #     raise SyntaxError("No delimiter symbol included.") 
+        #     raise SyntaxError("No delimiter symbol included.")
             return False
 
         # Split the target in to chunks.
@@ -199,7 +202,7 @@ class BaseController(Configuarable):
         uart_identifier = int(uart_identifier)
 
         # Validate the MODBUS range.
-        valid_uart_identifier = (uart_identifier > -1) and (uart_identifier <= 247)
+        valid_uart_identifier = -1 < uart_identifier <= 247
 
         if not valid_uart_identifier:
         #     raise ValueError("MODBUS identifier should be M1 to M247.")
@@ -222,7 +225,7 @@ class BaseController(Configuarable):
         mb_identifier = int(mb_identifier)
 
         # Validate the MODBUS range.
-        valid_mb_identifier = (mb_identifier > 0) and (mb_identifier <= 247)
+        valid_mb_identifier = 0 < mb_identifier <= 247
 
         if not valid_mb_identifier:
         #     raise ValueError("MODBUS identifier should be M1 to M254.")
@@ -275,7 +278,17 @@ class BaseController(Configuarable):
         return result
 
     def parse_remote_gpio(self, gpio):
+        """Parse remote GPIO
 
+        Args:
+            gpio (str): GPIO description
+
+        Raises:
+            TypeError: Inavalid IO type
+
+        Returns:
+            dict: Decription
+        """
         io_name = gpio.upper()
 
         # Remove flip identification.
@@ -285,7 +298,7 @@ class BaseController(Configuarable):
         chunks = io_name.split(self._delimiter)
 
         # Get UART identifier.
-        uart = chunks[Identifiers.UART.value].replace("U", "") 
+        uart = chunks[Identifiers.UART.value].replace("U", "")
         uart = int(uart)
 
         # Get MODBUS identifier.

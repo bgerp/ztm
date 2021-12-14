@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 
-from devices.vendors.Grundfos.base_pump import BasePump
+from devices.vendors.grundfos.base_pump import BasePump
 
 #region File Attributes
 

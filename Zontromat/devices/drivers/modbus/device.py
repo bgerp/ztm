@@ -344,10 +344,17 @@ class ModbusDevice(BaseDevice):
 
         return request
 
-    def generate_requests(self, **config):
+    def generate_requests(self, config):
+        """Generate requests
 
+        Args:
+            config (dict): Request configuration.
+
+        Returns:
+            dict: REquests objects.
+        """
         requests = {}
-        names = self.get_parameters_names()        
+        names = self.get_parameters_names()
 
         for name in names:
             requests[name] = self.generate_request(name, config)
@@ -382,6 +389,9 @@ class ModbusDevice(BaseDevice):
 
         if not registers:
             raise Exception("Invalid registers length.")
+
+        if len(registers_data) <= 0:
+            raise Exception("Registers content length can not be 0.")
 
         #/** @var object Unpacked float value. value */
         value = None

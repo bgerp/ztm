@@ -87,7 +87,7 @@ class Environment(BasePlugin):
 
     __location_lat = 0.0
     """Location latitude.
-    """    
+    """
 
     __location_lon = 0.0
     """Location longitude.
@@ -247,7 +247,7 @@ class Environment(BasePlugin):
     def __calculate_position(self):
         """Calculate sun position.
         """
-        
+
         # https://www.suncalc.org/#/43.0781,25.5955,17/2021.05.07/11:09/1/1
 
         # Latitude of the target.

@@ -30,7 +30,7 @@ import requests
 from utils.logger import get_logger
 
 from controllers.base_controller import BaseController
-from controllers.unipi.evok.server import Server
+from controllers.vendors.unipi.evok.server import Server
 
 from devices.drivers.modbus.register_type import RegisterType
 
@@ -113,7 +113,7 @@ class Evok(BaseController):
 
     __web_service = None
     """EVOK web service.
-    """    
+    """
 
     __instance = None
     """Singelton instance."""
@@ -1106,7 +1106,7 @@ class Evok(BaseController):
         is_remote = False
         try:
             is_remote = self.is_valid_remote_gpio(pin)
-        except Exception as exception:
+        except Exception:
             pass
 
         if is_remote:
@@ -1119,33 +1119,7 @@ class Evok(BaseController):
                 if pin_data["io_type"] == "DI":
                     io_index = pin_data["io_index"]
 
-                    """
                     # Comments are from date 15.01.2021 y., meeting with M.G.
- 
-                    # 1. Create remote module.
-                    from devices.vendors.Mainland.hhc_r4i4d.hhc_r4i4d import HHC_R4I4D
-                    remote_module = HHC_R4I4D()
-
-                    # 2. Get registers IDs.
-                    registers_ids = remote_module.get_registers_ids()
-
-                    # 3. Get values by the structure.
-                    registers_values = self._controller.read_mb_registers(\
-                        pin_data["uart"], \
-                        pin_data["mb_id"], \
-                        registers_ids, \
-                        RegisterType.ReadDiscreteInput)
-
-                    # 4. Read the Input specific bit.
-                    value = registers_values[0]
-                    if value is not None:
-
-                        # Extract individual bits, that holds, them.
-                        state = (value & (1 << io_index)) != 0
-
-                        print(state)
-
-                    """
 
                     # Add two serial registers that holding two 16 bit boolean inputs.
                     reg_adr = 244

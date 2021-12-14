@@ -23,16 +23,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 import time
-import traceback
-from enum import Enum
 
 import serial
 
 from devices.base_device import BaseDevice
-from devices.vendors.Dallas.ds2480b.commands import Commands
-from devices.vendors.Dallas.ds2480b.slew_rate_controll import PulldownSlewRateControl
-from devices.vendors.Dallas.ds2480b.low_time import Write1LowTime
-from devices.vendors.Dallas.ds2480b.data_sample import DataSampleOffsetAndWrite0RecoveryTime
+from devices.vendors.dallas.ds2480b.commands import Commands
+from devices.vendors.dallas.ds2480b.slew_rate_controll import PulldownSlewRateControl
+from devices.vendors.dallas.ds2480b.low_time import Write1LowTime
+from devices.vendors.dallas.ds2480b.data_sample import DataSampleOffsetAndWrite0RecoveryTime
 
 from utils.logger import get_logger
 

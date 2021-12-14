@@ -27,15 +27,7 @@ import argparse
 # from pymodbus.client.sync import ModbusTcpClient as ModbusClient
 from pymodbus.client.sync import ModbusSerialClient as ModbusClient
 
-from devices.drivers.modbus.requests.read_device_coils import ReadDeviceCoils
-from devices.drivers.modbus.requests.read_device_discrete_inputs import ReadDeviceDiscreteInputs
-from devices.drivers.modbus.requests.read_device_holding_registers import ReadDeviceHoldingRegisters
-from devices.drivers.modbus.requests.read_device_input_registers import ReadDeviceInputRegisters
-
-from devices.drivers.modbus.requests.write_device_coils import WriteDeviceCoils
-from devices.drivers.modbus.requests.write_device_registers import WriteDeviceRegisters
-
-from devices.vendors.Super.s8_3cn.s8_3cn import S8_3CN as BlackIsland
+from devices.vendors.super.s8_3cn.s8_3cn import S83CN as BlackIsland
 
 #region File Attributes
 
@@ -88,7 +80,7 @@ def main():
     port = args.port
 
     # Black Island interface.
-    bi = BlackIsland()
+    black_island = BlackIsland()
 
     # Create client.
     with ModbusClient(method="rtu", port=port, baudrate=9600, timeout=1,
@@ -97,7 +89,7 @@ def main():
         #---------------------------------------------------------------------------#
         # Generate request.
         #---------------------------------------------------------------------------#
-        requests = bi.generate_requests(unit, SetRelays=[False]*12 + [False]*4, SetAnalogOutputs=[0]*4)
+        requests = black_island.generate_requests(unit, SetRelays=[False]*12 + [False]*4, SetAnalogOutputs=[0]*4)
 
         #---------------------------------------------------------------------------#
         # Read Coils.
@@ -166,7 +158,7 @@ def main():
         #---------------------------------------------------------------------------#
         # Generate request.
         #---------------------------------------------------------------------------#
-        requests = bi.generate_requests(unit, SetRelays=[True]*12 + [False]*4, SetAnalogOutputs=[50000]*4)
+        requests = black_island.generate_requests(unit, SetRelays=[True]*12 + [False]*4, SetAnalogOutputs=[50000]*4)
 
         #---------------------------------------------------------------------------#
         # Write Coils.
@@ -193,7 +185,7 @@ def main():
         #---------------------------------------------------------------------------#
         # Generate request.
         #---------------------------------------------------------------------------#
-        requests = bi.generate_requests(unit, SetRelays=[False]*16)
+        requests = black_island.generate_requests(unit, SetRelays=[False]*16)
 
         #---------------------------------------------------------------------------#
         # Write Coils.
@@ -220,7 +212,7 @@ def main():
         #---------------------------------------------------------------------------#
         # Generate request.
         #---------------------------------------------------------------------------#
-        requests = bi.generate_requests(unit, SetAnalogOutputs=[50000]*4)
+        requests = black_island.generate_requests(unit, SetAnalogOutputs=[50000]*4)
 
         #---------------------------------------------------------------------------#
         # Write Holding Registers.
@@ -247,7 +239,7 @@ def main():
         #---------------------------------------------------------------------------#
         # Generate request.
         #---------------------------------------------------------------------------#
-        requests = bi.generate_requests(unit, SetAnalogOutputs=[0]*4)
+        requests = black_island.generate_requests(unit, SetAnalogOutputs=[0]*4)
 
         #---------------------------------------------------------------------------#
         # Write Holding Registers.

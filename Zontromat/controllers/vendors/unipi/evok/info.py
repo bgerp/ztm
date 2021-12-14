@@ -25,7 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import getopt
 import sys
 
-from evok import Evok
+from controllers.vendors.unipi.evok import Evok
 
 #region File Attributes
 

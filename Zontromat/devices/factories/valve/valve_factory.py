@@ -22,8 +22,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 
-from devices.vendors.Tonhe.a20m15b2c.a20m15b2c import A20M15B2C
-from devices.vendors.Flowx.flx05f.flx05f import FLX05F
+from devices.vendors.tonhe.a20m15b2c.a20m15b2c import A20M15B2C
+from devices.vendors.flowx.flx05f.flx05f import FLX05F
 
 #region File Attributes
 
@@ -57,6 +57,8 @@ __status__ = "Debug"
 #endregion
 
 class ValveFactory:
+    """Valve factory class.
+    """
 
     @staticmethod
     def create(**config):
@@ -76,7 +78,7 @@ class ValveFactory:
             vendor = config["vendor"]
 
         else:
-            raise ValueError("No \"vendor\" argument has been passed.") 
+            raise ValueError("No \"vendor\" argument has been passed.")
 
         # Model
         model = None
@@ -84,7 +86,7 @@ class ValveFactory:
             model = config["model"]
 
         else:
-            raise ValueError("No \"model\" argument has been passed.") 
+            raise ValueError("No \"model\" argument has been passed.")
 
         # Controller
         controller = None
@@ -92,7 +94,7 @@ class ValveFactory:
             controller = config["controller"]
 
         else:
-            raise ValueError("No \"controller\" argument has been passed.") 
+            raise ValueError("No \"controller\" argument has been passed.")
 
         # Flowx / FLX-05F / (DO0,R0) / (DO1,R1) / DI0 / DI1
         if vendor == "Flowx" and  model == "FLX-05F":
@@ -119,7 +121,7 @@ class ValveFactory:
             )
 
         else:
-            raise NotImplementedError("The {} and {}, is not supported.".format(vendor,model))
+            raise NotImplementedError("The {} and {}, is not supported.".format(vendor, model))
 
         # Return the instance.
         return device

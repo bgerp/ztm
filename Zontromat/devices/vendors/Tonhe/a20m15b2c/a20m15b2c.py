@@ -182,7 +182,7 @@ class A20M15B2C(BaseValve):
 
             self.__logger.debug("{} @ {}".format(self.name, self.target_position))
 
-            self._state.set_state(ValveState.Wait) 
+            self._state.set_state(ValveState.Wait)
 
     def shutdown(self):
         """Shutdown"""

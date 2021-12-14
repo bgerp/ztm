@@ -24,7 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import signal
 import nfc
-import ndef
+# import ndef
 from threading import Thread
 
 #region File Attributes
@@ -96,7 +96,7 @@ def on_connected(llc):
                     content = content.replace("en", "")
                     content = content.replace("\x02", "")
                     print(content)
-                    
+
                 state = True
                 __time_to_stop = True
 

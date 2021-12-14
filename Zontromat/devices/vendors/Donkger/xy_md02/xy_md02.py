@@ -63,7 +63,8 @@ __status__ = "Debug"
 #endregion
 
 class XYMD02(ModbusDevice):
-    """This class is dedicated to read data from XY-MD02 high precision humidity and temperature sensor.
+    """This class is dedicated to read data from XY-MD02
+    high precision humidity and temperature sensor.
 
     See: http://sahel.rs/media/sah/techdocs/xy-md02-manual.pdf"""
 
@@ -103,7 +104,7 @@ class XYMD02(ModbusDevice):
 
         self.__set_registers()
 
-#endregion 
+#endregion
 
 #region Private Methods
 
@@ -183,7 +184,7 @@ class XYMD02(ModbusDevice):
                 self.__unsuccessful_times += 1
                 value = self.__last_good_measurement
 
-        except Exception as e:
+        except Exception:
             self.__unsuccessful_times += 1
             value = self.__last_good_measurement
 
@@ -224,7 +225,7 @@ class XYMD02(ModbusDevice):
                 self.__unsuccessful_times += 1
                 value = self.__last_good_measurement
 
-        except Exception as e:
+        except Exception:
             self.__unsuccessful_times += 1
             value = self.__last_good_measurement
 

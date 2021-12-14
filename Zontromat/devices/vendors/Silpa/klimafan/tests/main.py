@@ -25,7 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import argparse
 import time
 
-from devices.vendors.Silpa.klimafan.klimafan import Klimafan as Convector
+from devices.vendors.silpa.klimafan.klimafan import Klimafan as Convector
 
 from controllers.controller_factory import ControllerFactory as CF
 
@@ -77,25 +77,25 @@ def main():
     args = parser.parse_args()
 
     # Get args.
-    unit = args.unit
-    port = args.port
+    # unit = args.unit
+    # port = args.port
     plc_vendor = args.plc_vendor
     plc_model = args.plc_model
-    
+
     plc_config = {
-            "vendor": plc_vendor,
-            "model": plc_model
+        "vendor": plc_vendor,
+        "model": plc_model
         }
     controller = CF.create(plc_config)
 
 
     # Convector interface.
     convector_config = {
-            "name": "Test convector",
-            "stage1": "RO0",
-            "stage2": "RO1",
-            "stage3": "RO2",
-            "controller": controller
+        "name": "Test convector",
+        "stage1": "RO0",
+        "stage2": "RO1",
+        "stage3": "RO2",
+        "controller": controller
         }
     convector = Convector(convector_config)
     convector.init()
@@ -147,7 +147,7 @@ def main():
     if is_ok:
         time.sleep(5)
     assert is_ok, "Incorrect state."
-    
+
     #---------------------------------------------------------------------------#
     # Test case
     #---------------------------------------------------------------------------#

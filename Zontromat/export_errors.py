@@ -23,7 +23,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 import argparse
-import os
 import csv
 
 from services.global_error_handler.error_codes import ErrorCodes
@@ -74,8 +73,8 @@ def __add_error(writer, name, code, description):
                     "description": description,\
                     })
 
-def __to_CSV(file_path):
-    
+def __to_csv(file_path):
+
     with open(file_path, "w", newline="") as csv_file:
 
         fieldnames = ["name", "code", "description"]
@@ -94,6 +93,8 @@ def __to_CSV(file_path):
         csv_file.close()
 
 def main():
+    """Main function.
+    """
 
     # Create parser.
     parser = argparse.ArgumentParser()
@@ -105,7 +106,7 @@ def main():
     args = parser.parse_args()
 
     if args.typ == "csv":
-        __to_CSV("error.csv")
+        __to_csv("error.csv")
 
 if __name__ == "__main__":
     main()

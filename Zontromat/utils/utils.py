@@ -77,10 +77,10 @@ def mem_time_usage(function):
     @wraps(function)
     def function_timer(*args, **config):
         tracemalloc.start()
-        t0 = time.time()
+        t_0 = time.time()
         result = function(*args, **config)
-        t1 = time.time()
-        passed_time = t1-t0
+        t_1 = time.time()
+        passed_time = t_1 - t_0
         current, peak = tracemalloc.get_traced_memory()
         print("Current memory usage is {}MB; Peak was {}MB".format(current / 10**6, peak / 10**6))
         print("Total time: {0:.3f} sec".format(passed_time))
@@ -124,10 +124,10 @@ def time_usage(function):
 
     @wraps(function)
     def function_timer(*args, **config):
-        t0 = time.time()
+        t_0 = time.time()
         result = function(*args, **config)
-        t1 = time.time()
-        passed_time = t1-t0
+        t_1 = time.time()
+        passed_time = t_1 - t_0
         print("Total time: {0:.3f} sec".format(passed_time))
 
         return result
@@ -157,25 +157,25 @@ def find_proc(proc_name: str, proc_title: str):
     """
 
     output_processes = []
- 
+
     if os.name == "nt":
         return output_processes
 
     filtered_processes_list = []
- 
+
     processes_list = psutil.process_iter()
- 
+
     # Iterate over the all the running process.
     for process in processes_list:
-       try:
-           # Check if process name contains the given name string.
-           process_info = process.as_dict(attrs=['pid', "exe", 'name', "cmdline", 'create_time'])
-           if proc_name.lower() in process_info['name'].lower():
-               filtered_processes_list.append(process_info)
+        try:
+            # Check if process name contains the given name string.
+            process_info = process.as_dict(attrs=['pid', "exe", 'name', "cmdline", 'create_time'])
+            if proc_name.lower() in process_info['name'].lower():
+                filtered_processes_list.append(process_info)
 
-       except (psutil.NoSuchProcess, psutil.AccessDenied , psutil.ZombieProcess):
-           pass
- 
+        except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
+            pass
+
  	# Find process
     for process in filtered_processes_list:
         if "cmdline" in process:
@@ -183,12 +183,12 @@ def find_proc(proc_name: str, proc_title: str):
             for line in cmdline:
                 if line == proc_title:
                     output_processes.append(process)
- 
+
     return output_processes
 
 def serial_ports():
     """List all serial ports.
-    """    
+    """
 
     ports = serial.tools.list_ports.comports()
     names = [port.name for port in ports]

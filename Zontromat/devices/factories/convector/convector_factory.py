@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 
-from devices.vendors.Silpa.klimafan.klimafan import Klimafan
+from devices.vendors.silpa.klimafan.klimafan import Klimafan
 
 #region File Attributes
 
@@ -56,6 +56,8 @@ __status__ = "Debug"
 #endregion
 
 class ConvectorFactory:
+    """Convector factory.
+    """
 
     @staticmethod
     def create(**config):
@@ -76,7 +78,7 @@ class ConvectorFactory:
             vendor = config["vendor"]
 
         else:
-            raise ValueError("No \"vendor\" argument has been passed.") 
+            raise ValueError("No \"vendor\" argument has been passed.")
 
         # Model
         model = None
@@ -84,7 +86,7 @@ class ConvectorFactory:
             model = config["model"]
 
         else:
-            raise ValueError("No \"model\" argument has been passed.") 
+            raise ValueError("No \"model\" argument has been passed.")
 
         # Controller
         controller = None
@@ -92,7 +94,7 @@ class ConvectorFactory:
             controller = config["controller"]
 
         else:
-            raise ValueError("No \"controller\" argument has been passed.") 
+            raise ValueError("No \"controller\" argument has been passed.")
 
         # Silpa / Klimafan / (DO0,R0,U1:ID1:R0:DO0) / (DO1,R1,U1:ID1:R0:DO1) / (DO2,R2,U1:ID1:R0:DO2)
         if vendor == "Silpa" and  model == "Klimafan":
@@ -106,7 +108,7 @@ class ConvectorFactory:
             )
 
         else:
-            raise NotImplementedError("The {} and {}, is not supported.".format(vendor,model))
+            raise NotImplementedError("The {} and {}, is not supported.".format(vendor, model))
 
         # Return the instance.
         return device

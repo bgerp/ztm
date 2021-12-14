@@ -137,9 +137,9 @@ class Alarm(BasePlugin):
         self.__update_timer.update()
 
         if self.__update_timer.expired:
-        
+
             self.__update_timer.clear()
-        
+
             self.__do_job()
 
     def _shutdown(self):

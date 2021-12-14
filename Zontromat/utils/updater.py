@@ -23,17 +23,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 
-import sys
-import traceback
 import os
 
-from enum import Enum
-
 from utils.logger import get_logger, crate_log_file
-
-from data.register import Scope
-from data.registers import Registers
-from data.registers import Register
 
 from services.global_error_handler.global_error_handler import GlobalErrorHandler
 
@@ -85,13 +77,16 @@ def update(target_version: dict, current_version: dict):
     if current_version != target_version:
 
         if target_version["repo"] != current_version["repo"]:
-            logger.info("Changed repo: from {} to {}".format(current_version["repo"], target_version["repo"]))
+            logger.info("Changed repo: from {} to {}"
+                        .format(current_version["repo"], target_version["repo"]))
 
         if target_version["branch"] != current_version["branch"]:
-            logger.info("Changed branch: from {} to {}".format(current_version["branch"], target_version["branch"]))
+            logger.info("Changed branch: from {} to {}"
+                        .format(current_version["branch"], target_version["branch"]))
 
         if target_version["commit"] != current_version["commit"]:
-            logger.info("Changed commit: from {} to {}".format(current_version["commit"], target_version["commit"]))
+            logger.info("Changed commit: from {} to {}"
+                        .format(current_version["commit"], target_version["commit"]))
 
         # Current file path. & Go to file.
         cwf = os.path.dirname(os.path.abspath(__file__))
@@ -103,8 +98,8 @@ def update(target_version: dict, current_version: dict):
 
         # Run the job in background.
         response = os.system("{} {} {} {} &".format(
-            file_name, 
+            file_name,
             target_version["repo"],
             target_version["branch"],
             target_version["commit"]))
-        # logger.info(response)
+        logger.info(response)

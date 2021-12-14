@@ -22,12 +22,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 
-import time
 from enum import Enum
 
 from utils.logger import get_logger
-from utils.logic.timer import Timer
-from utils.logic.state_machine import StateMachine
 
 from devices.base_device import BaseDevice
 
@@ -98,7 +95,7 @@ class HeatPump(BaseDevice):
         """Constructor
         """
 
-        super().__init__(config) 
+        super().__init__(config)
 
         self._vendor = "Hstars Guangzhou Refrigerating Equipment Group.Co.,Ltd"
 
@@ -160,11 +157,4 @@ class HeatPump(BaseDevice):
         self.set_power(0)
         self.__logger.debug("Shutdown the: {}".format(self.name))
 
-    def update(self):
-        """Update heat pump state.
-        """
-
-        pass
-
 #endregion
-

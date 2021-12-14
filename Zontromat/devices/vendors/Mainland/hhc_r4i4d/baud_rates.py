@@ -22,9 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 
-from devices.drivers.modbus.parameter import Parameter
-from devices.drivers.modbus.parameter_type import ParameterType
-from devices.drivers.modbus.register_type import RegisterType
+from enum import Enum
 
 #region File Attributes
 
@@ -58,6 +56,9 @@ __status__ = "Debug"
 #endregion
 
 class BaudRates(Enum):
+    """Baudrates of the device.
+    """
+
     B1200 = 1
     B2400 = 2
     B4800 = 3

@@ -30,7 +30,7 @@ from utils.logger import get_logger
 
 from services.http.server import Server as HTTPServer
 
-from bgERP.session import Session
+from bg_erp.session import Session
 
 #region File Attributes
 
@@ -89,7 +89,7 @@ class Server(HTTPServer):
 
     __enable_auth_token = False
     """Authentication token.
-    """    
+    """
 
 #endregion
 
@@ -182,13 +182,13 @@ class Server(HTTPServer):
 
             # Check registers.
             if "registers" not in json_data:
-                return "Bad Request", 400 
+                return "Bad Request", 400
 
             if json_data["registers"] is None:
                 return "Not Found", 404
 
             if len(json_data["registers"]) == 0:
-                return "Not Found", 404 
+                return "Not Found", 404
 
             if self.__get_registers is not None:
                 registers = self.__get_registers(json_data)
@@ -209,7 +209,7 @@ class Server(HTTPServer):
             json_data = {}
             response = "{}", 200
             token = ""
-                        
+
             if request.data is not None and len(request.data) != 0:
                 content = request.data.decode("UTF-8")
                 if content != "" and content != None:
@@ -236,7 +236,7 @@ class Server(HTTPServer):
                 return "Not Found", 404
 
             if len(json_data["registers"]) == 0:
-                return "Not Found", 404 
+                return "Not Found", 404
 
             if self.__set_registers is not None:
                 registers = self.__set_registers(json_data)

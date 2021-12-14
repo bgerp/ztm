@@ -120,9 +120,9 @@ class EvokSettings:
         if not isinstance(value, str):
             raise TypeError("Value should be string.")
 
-        p = re.compile(r"^(([^:/?#]+):)?(//([^/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?")
-        m = p.match(value)
-        if m:
+        compiled = re.compile(r"^(([^:/?#]+):)?(//([^/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?")
+        matched = compiled.match(value)
+        if matched:
             self.__config["MAIN"]["webhook_address"] = str(value)
         else:
             raise ValueError("String should be URL.")
@@ -274,10 +274,9 @@ class EvokSettings:
         """Restart EVOK service."""
 
         try:
-            result = subprocess.call("systemctl restart evok", shell=True)
-            # print(result)
+            subprocess.call("systemctl restart evok", shell=True)
 
-        except Exception as e:
-            print(e)
+        except Exception as exception:
+            print(exception)
 
 #endregion

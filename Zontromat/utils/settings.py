@@ -24,7 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
 import configparser
-import time
+# import time
 
 #region File Attributes
 
@@ -102,7 +102,7 @@ class ApplicationSettings:
         if self.__config is not None:
             if "APPLICATION" in self.__config:
                 value = self.__config["APPLICATION"]["debug_level"]
-                value =  int(value)
+                value = int(value)
 
         return value
 
@@ -144,17 +144,17 @@ class ApplicationSettings:
             dict: Current version dictionary.
         """
 
-        d = dict(self.__config["CURRENT_VERSION"])
+        current_version = dict(self.__config["CURRENT_VERSION"])
         # for k in d:
         #     d[k] = dict(self._defaults, **d[k])
         #     d[k].pop('__name__', None)
-        
-        return d
+
+        return current_version
 
     @current_version.setter
     def current_version(self, value):
         """Set the current version.
-        """    
+        """
 
         self.__config["CURRENT_VERSION"] = value
 
@@ -174,8 +174,7 @@ class ApplicationSettings:
         if ApplicationSettings.__instance is not None:
             raise Exception("This class is a singleton!")
 
-        else:
-            ApplicationSettings.__instance = self
+        ApplicationSettings.__instance = self
 
         if file_name is None:
 
@@ -204,7 +203,7 @@ class ApplicationSettings:
         if self.exists:
             with open(self.__file_name, "w") as stream:
                 self.__config.write(stream)
-                stream.close()  
+                stream.close()
 
     def create_default(self):
         """Create default settings.
@@ -230,10 +229,10 @@ class ApplicationSettings:
         if self.__config is not None:
             if "CURRENT_VERSION" not in self.__config:
                 self.__config["CURRENT_VERSION"] = {
-                        "repo":"http://github.com/bgerp/ztm/",
-                        "branch":"master",
-                        "commit":"e0c1dda"
-                    }
+                    "repo":"http://github.com/bgerp/ztm/",
+                    "branch":"master",
+                    "commit":"e0c1dda"
+                }
 
         # This will be added by the setup script.
         # # Default ERP service.
@@ -249,7 +248,7 @@ class ApplicationSettings:
         if not self.exists:
             with open(self.__file_name, "w") as stream:
                 self.__config.write(stream)
-                stream.close()  
+                stream.close()
 
 #endregion
 

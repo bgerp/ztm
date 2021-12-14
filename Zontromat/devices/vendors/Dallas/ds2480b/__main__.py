@@ -62,8 +62,8 @@ import serial
 from enum import Enum
 from utils.logger import get_logger, crate_log_file
 
-from devices.vendors.Dallas.ds2480b.ds2480b import DS2480B
-from devices.vendors.Dallas.ds18b20.commands import Commands as DS18B20
+from devices.vendors.dallas.ds2480b.ds2480b import DS2480B
+from devices.vendors.dallas.ds18b20.commands import Commands as DS18B20
 
 #region Variables
 

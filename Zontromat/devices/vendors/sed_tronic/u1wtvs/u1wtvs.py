@@ -24,10 +24,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from devices.factories.light_sensor.base_light_sensor import BaseLightSensor
 
-from devices.base_device import BaseDevice
-
-
-
 #region File Attributes
 
 __author__ = "Orlin Dimitrov"
@@ -82,12 +78,6 @@ class U1WTVS(BaseLightSensor):
 #endregion
 
 #region Public Methods
-
-    def init(self):
-        """Initialize the device.
-        """
-
-        pass
 
     def update(self):
         """Update sensor data.

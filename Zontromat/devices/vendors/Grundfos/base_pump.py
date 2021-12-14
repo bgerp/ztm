@@ -22,19 +22,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 
-import time
-from enum import Enum
-
 from utils.logger import get_logger
-from utils.logic.timer import Timer
-from utils.logic.state_machine import StateMachine
 
 from devices.drivers.modbus.device import ModbusDevice
 from devices.drivers.modbus.parameter import Parameter
 from devices.drivers.modbus.parameter_type import ParameterType
 from devices.drivers.modbus.register_type import RegisterType
 
-from devices.vendors.Grundfos.control_mode import ControlMode
+from devices.vendors.grundfos.control_mode import ControlMode
 
 # (Request from mail: Eml6429)
 
@@ -92,7 +87,7 @@ class BasePump(ModbusDevice):
 
         super().__init__(config)
 
-        self._vendor = "Grundfos"
+        self._vendor = "grundfos"
 
         self.__set_registers()
 
@@ -225,7 +220,9 @@ class BasePump(ModbusDevice):
             if not response.isError():
                 registers = {}
                 for index in range(request.address, request.address + request.count):
-                    registers[index] = response.registers[index - request.address]
+                    if hasattr(response, 'registers'):
+                        registers[index] = response.registers[index - request.address]
+
                 value = self.get_parameter_value(name, registers)
 
         return value
@@ -243,12 +240,8 @@ class BasePump(ModbusDevice):
         """Update the pump logic.
         """
 
-        pass
-
     def shutdown(self):
         """Shutdown the pump.
         """
-
-        pass
 
 #endregion

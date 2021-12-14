@@ -233,5 +233,5 @@ if __name__ == "__main__":
     except KeyboardInterrupt:
         kb_interupt()
 
-    except Exception as e:
-        print(e)
+    except Exception as exception:
+        print(exception)

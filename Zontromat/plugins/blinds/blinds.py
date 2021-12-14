@@ -167,7 +167,7 @@ class Blinds(BasePlugin):
 
     __object_height = 0
     """Object height [m]
-    """    
+    """
 
 #endregion
 
@@ -191,7 +191,7 @@ class Blinds(BasePlugin):
             return
 
         if self.__sun_spot_limit != register.value:
-            self.__sun_spot_limit = register.value    
+            self.__sun_spot_limit = register.value
 
     def __feedback_treshold_cb(self, register):
 
@@ -201,7 +201,7 @@ class Blinds(BasePlugin):
             return
 
         if self.__feedback_treshold != register.value:
-            self.__feedback_treshold = register.value      
+            self.__feedback_treshold = register.value
 
     def __deg_per_sec_cb(self, register):
 
@@ -211,7 +211,7 @@ class Blinds(BasePlugin):
             return
 
         if self.__deg_per_sec != register.value:
-            self.__deg_per_sec = register.value  
+            self.__deg_per_sec = register.value
 
     def __input_fb_cb(self, register):
 

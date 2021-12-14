@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 
-from controllers.picons.picons import PiCons
+from controllers.vendors.picons.picons import PiCons
 
 #region File Attributes
 

@@ -32,13 +32,14 @@ from enum import Enum
 from utils.settings import ApplicationSettings
 from utils.logger import get_logger, crate_log_file
 from utils.performance_profiler import PerformanceProfiler
-
 from utils.logic.state_machine import StateMachine
 from utils.logic.timer import Timer
+from utils.updater import update as software_update
+
 from controllers.controller_factory import ControllerFactory
 
-from bgERP.bgERP import bgERP
-from bgERP.erp_state import ERPState
+from bg_erp.bg_erp import bgERP
+from bg_erp.erp_state import ERPState
 
 from data.register import Scope
 from data.registers import Registers
@@ -49,7 +50,7 @@ from plugins.plugins_manager import PluginsManager
 from services.evok.settings import EvokSettings
 from services.global_error_handler.global_error_handler import GlobalErrorHandler
 
-from utils.updater import update as software_update
+
 
 #region File Attributes
 
@@ -152,46 +153,46 @@ class Zone():
 
     def __target_version_cb(self, register: Register):
 
-        cv = None
-        tv = None
+        current_version = None
+        target_version = None
 
-        target_version = register
+        target_version_reg = register
 
         # Check data type of the current version.
-        if not ((target_version.data_type == "json")):
-            GlobalErrorHandler.log_bad_register_data_type(self.__logger, target_version)
+        if not target_version_reg.data_type == "json":
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, target_version_reg)
             return
 
         # Get target version value.
-        if target_version.value is not None:
-            tv = target_version.value
+        if target_version_reg.value is not None:
+            target_version = target_version_reg.value
 
         # Check the target version value.
-        if tv == None:
+        if target_version == None:
             GlobalErrorHandler.log_bad_register_value(self.__logger, target_version)
             return
 
         # Get current version register.
-        current_version = self.__registers.by_name("sys.software.current_version")
+        current_version_reg = self.__registers.by_name("sys.software.current_version")
 
         # Check data type.
-        if not ((current_version.data_type == "json")):
-            GlobalErrorHandler.log_bad_register_data_type(self.__logger, current_version)
+        if not ((current_version_reg.data_type == "json")):
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, current_version_reg)
             return
 
-        if current_version is not None:
-            cv = current_version.value
-        
+        if current_version_reg is not None:
+            current_version = current_version_reg.value
+
         # Check the current version value.
-        if cv == None:
+        if current_version == None:
             GlobalErrorHandler.log_bad_register_value(self.__logger, current_version)
             return
 
         # Update the software.
-        software_update(current_version.value, target_version.value)
+        software_update(current_version_reg.value, target_version_reg.value)
 
         # Save the current version.
-        self.__app_settings.current_version = target_version.value
+        self.__app_settings.current_version = target_version_reg.value
         self.__app_settings.save()
 
 
@@ -205,9 +206,9 @@ class Zone():
         # Load the registers from file.
         registers_file = os.path.join(cwf, "..", "registers.csv")
         if registers_file.endswith('json'):
-            self.__registers = Registers.from_JSON(registers_file)
+            self.__registers = Registers.from_json(registers_file)
         elif registers_file.endswith('csv'):
-            self.__registers = Registers.from_CSV(registers_file)
+            self.__registers = Registers.from_csv(registers_file)
         else:
             sys.exit(0)
 
@@ -234,7 +235,7 @@ class Zone():
         """
 
         # Target inputs, by registers names.
-        names = ["ac.door_closed_1.input","ac.door_closed_2.input",\
+        names = ["ac.door_closed_1.input", "ac.door_closed_2.input",\
             "ac.pir_1.input", "ac.pir_2.input",\
             "ac.window_closed_1.input", "ac.window_closed_2.input",\
             "monitoring.cw.input", "monitoring.hw.input", "sys.at.input"]
@@ -287,7 +288,7 @@ class Zone():
                 # Restart the service to accept the settings.
                 EvokSettings.restart()
 
-#endregion 
+#endregion
 
 #region Private Methods (ERP)
 
@@ -324,7 +325,7 @@ class Zone():
 
                 # In th response add what is going on.
                 result[register.name] = register.value
-    
+
         return result
 
     def __erp_get_registers(self, data):
@@ -349,7 +350,7 @@ class Zone():
             register = self.__registers.by_name(register_name)
             if register is not None:
                 result[register.name] = register.value
-        
+
         return result
 
     def __init_erp(self):
@@ -357,17 +358,15 @@ class Zone():
         """
 
         # Take ERP info from settings.
-        erp_host=self.__app_settings.get_erp_service["host"]
-        erp_timeout=self.__app_settings.get_erp_service["timeout"]
+        erp_host = self.__app_settings.get_erp_service["host"]
+        erp_timeout = self.__app_settings.get_erp_service["timeout"]
 
         # Create ERP.
-        self.__erp = bgERP(\
-            host=erp_host,\
-            timeout=erp_timeout)
+        self.__erp = bgERP(host=erp_host, timeout=erp_timeout)
 
         # Set callbacks.
-        self.__erp.set_registers_cb(\
-            get_cb=self.__erp_get_registers,\
+        self.__erp.set_registers_cb(
+            get_cb=self.__erp_get_registers,
             set_cb=self.__erp_set_registers)
 
         # Set the ERP update timer.
@@ -389,11 +388,11 @@ class Zone():
             # "modbus=modbus, \
         # }
 
-        login_state = self.__erp.login(\
-            serial_number=self.__controller.serial_number,\
-            model=self.__controller.model,\
-            version=self.__controller.version,\
-            config_time=self.__app_settings.get_erp_service["config_time"],\
+        login_state = self.__erp.login(
+            serial_number=self.__controller.serial_number,
+            model=self.__controller.model,
+            version=self.__controller.version,
+            config_time=self.__app_settings.get_erp_service["config_time"],
             bgerp_id=self.__app_settings.get_erp_service["erp_id"])
 
         if login_state:
@@ -423,7 +422,7 @@ class Zone():
             update_state = self.__erp.sync(ztm_regs_dict)
 
             if update_state is not None: #  is not None
-                
+
                 if self.__registers is not None:
                     self.__registers.update(update_state)
                     # Clear the last atendies. (Eml6287)
@@ -477,7 +476,7 @@ class Zone():
         if self.__controller.serial_number is not None and self.__controller.serial_number.isdigit():
             time_offset = int(self.__controller.serial_number)
         self.__update_timer.expiration_time = self.__update_timer.expiration_time + (time_offset / 1000)
-    
+
 #endregion
 
 #region Private Methods (Performance Profiler)
@@ -569,7 +568,7 @@ class Zone():
 
             # Initialize the performance profiler.
             self.__init_performance_profiler()
-    
+
             # Initialize the runtime.
             self.__init_runtime()
 
@@ -582,7 +581,7 @@ class Zone():
 
     def run(self):
         """Run the zone.
-        """        
+        """
 
         self.__logger.info("Starting up the Zone")
 

@@ -82,7 +82,7 @@ class Server(HTTPServer):
 
         port = 8889
         if "port" in config:
-            port = config["port"]
+            port = config.get("port", 8889)
 
         super().__init__(target=self, name=__name__, port=port)
 

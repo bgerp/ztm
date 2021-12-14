@@ -24,7 +24,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
 import importlib
-import traceback
 
 from utils.logger import get_logger
 
@@ -162,7 +161,7 @@ class PluginsManager:
 
         module = importlib.import_module(module_path)
         if module is None:
-            raise ImportError("{}.{}".format(module_path))        
+            raise ImportError("{}".format(module_path))
 
         if not hasattr(module, "__class_name__"):
             raise AttributeError("Module: {}, has no attribute __class_name__.".format(module_path))
@@ -175,7 +174,7 @@ class PluginsManager:
             raise ModuleNotFoundError("{}.{}".format(module_path, module.__class_name__))
 
         config = self.__prepare_config(module.__class_name__, module_name)
-        
+
         class_isinstance = class_module(config)
 
         return class_isinstance

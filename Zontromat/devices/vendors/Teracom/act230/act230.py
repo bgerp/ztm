@@ -23,7 +23,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 import traceback
-from enum import Enum
 
 import serial
 
@@ -64,7 +63,7 @@ __status__ = "Debug"
 #endregion
 
 class ACT230(BaseCardReader):
-    """Teracom RFID card reader model ACA100."""
+    """Teracom RFID card reader model ACT230."""
 
 #region Attributes
 
@@ -116,7 +115,7 @@ class ACT230(BaseCardReader):
 
                     del self.__serial_port
 
-            except:
+            except Exception:
                 self._state.set_state(CardReaderState.NONE)
 
         # Start
@@ -135,7 +134,7 @@ class ACT230(BaseCardReader):
                 # Change the state to RUN.
                 self._state.set_state(CardReaderState.RUN)
 
-            except:
+            except Exception:
                 # If something goes wrong go to NONE.
                 self._state.set_state(CardReaderState.NONE)
 
@@ -154,7 +153,7 @@ class ACT230(BaseCardReader):
                         if len(frame) == self.__card_number_len:
                             self._cb_read_card(frame, self.serial_number)
 
-            except:
+            except Exception:
                 self.__logger.error(traceback.format_exc())
                 self.shutdown()
 

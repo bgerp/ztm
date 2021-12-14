@@ -24,7 +24,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import struct
 
-from pymodbus.pdu import ModbusRequest, ModbusResponse
+from pymodbus.pdu import ModbusRequest
+from pymodbus.pdu import ModbusExceptions as merror
 
 #region File Attributes
 
@@ -58,6 +59,8 @@ __status__ = "Debug"
 #endregion
 
 class CustomModbusRequest(ModbusRequest):
+    """Custume modbus string.
+    """
 
     function_code = 1
 
@@ -73,9 +76,21 @@ class CustomModbusRequest(ModbusRequest):
         self.address, self.count = struct.unpack(">HH", data)
 
     def execute(self, context):
+        """Execute the request.
+
+        Args:
+            context (Modbusrequest): The request.
+
+        Returns:
+            ModbusResponse: Response from the server.
+        """
+
         if not 1 <= self.count <= 0x7d0:
             return self.doException(merror.IllegalValue)
+
         if not context.validate(self.function_code, self.address, self.count):
             return self.doException(merror.IllegalAddress)
+
         values = context.getValues(self.function_code, self.address, self.count)
-        return CustomModbusResponse(values)
+
+        return values

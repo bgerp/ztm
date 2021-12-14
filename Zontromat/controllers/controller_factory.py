@@ -92,17 +92,19 @@ class ControllerFactory():
 
         module = importlib.import_module(module_path)
         if module is None:
-            raise ImportError("{}".format(module_path))        
+            raise ImportError("{}".format(module_path))
 
         if not hasattr(module, "__class_name__"):
-            raise AttributeError("Controller file: {}, has no attribute __class_name__.".format(module_path))
+            raise AttributeError("Controller file: {}, has no attribute __class_name__."\
+                .format(module_path))
 
         if module.__class_name__ == "":
             raise ValueError("Controller file: {}.__class_name__ is empty.".format(module_path))
 
         class_module = getattr(module, module.__class_name__)
         if class_module is None:
-            raise ModuleNotFoundError("Controller: \"{}.{}\" not found.".format(module_path, module.__class_name__))
+            raise ModuleNotFoundError("Controller: \"{}.{}\" not found."\
+                .format(module_path, module.__class_name__))
 
         class_isinstance = class_module(config)
 

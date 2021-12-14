@@ -27,12 +27,7 @@ import argparse
 # from pymodbus.client.sync import ModbusTcpClient as ModbusClient
 from pymodbus.client.sync import ModbusSerialClient as ModbusClient
 
-from devices.drivers.modbus.requests.read_device_coils import ReadDeviceCoils
-from devices.drivers.modbus.requests.read_device_discrete_inputs import ReadDeviceDiscreteInputs
-
-from devices.drivers.modbus.requests.write_device_coils import WriteDeviceCoils
-
-from devices.vendors.Mainland.hhc_r4i4d.hhc_r4i4d import HHC_R4I4D as Island
+from devices.vendors.mainland.hhc_r4i4d.hhc_r4i4d import HHCR4I4D as Island
 
 #region File Attributes
 
@@ -101,11 +96,11 @@ def main():
         response = client.execute(requests["GetDigitalInputs"])
 
         # Check the response.
-        assert(not response.isError(), "Device did not respond properly to the request.")
+        assert not response.isError(), "Device did not respond properly to the request."
 
         #Check the content.
         is_ok = response.bits == [False]*4 + [False]*4
-        assert(is_ok, "Device did not respond with proper bit count.")
+        assert is_ok, "Device did not respond with proper bit count."
 
         print(response)
         print(response.bits)
@@ -122,17 +117,17 @@ def main():
         response = client.execute(requests["SetRelays"])
 
         # Check the response.
-        assert(not response.isError(), "Device did not respond properly to the request.")
+        assert not response.isError(), "Device did not respond properly to the request."
         print(response)
 
         response = client.execute(requests["GetRelays"])
 
         # Check the response.
-        assert(not response.isError(), "Device did not respond properly to the request.")
+        assert not response.isError(), "Device did not respond properly to the request."
 
         #Check the content.
         is_ok = response.bits == [True]*4 + [False]*4
-        assert(is_ok)
+        assert is_ok
 
         print(response)
         print(response.bits)
@@ -149,17 +144,17 @@ def main():
         response = client.execute(requests["SetRelays"])
 
         # Check the response.
-        assert(not response.isError(), "Device did not respond properly to the request.")
+        assert not response.isError(), "Device did not respond properly to the request."
         print(response)
 
         response = client.execute(requests["GetRelays"])
 
         # Check the response.
-        assert(not response.isError(), "Device did not respond properly to the request.")
+        assert not response.isError(), "Device did not respond properly to the request."
 
         #Check the content.
         is_ok = response.bits == [False]*4 + [False]*4
-        assert(is_ok)
+        assert is_ok
 
         print(response)
         print()

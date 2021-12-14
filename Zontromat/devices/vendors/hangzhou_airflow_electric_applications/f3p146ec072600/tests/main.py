@@ -25,7 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import argparse
 import time
 
-from devices.vendors.HangzhouAirflowElectricApplications.f3p146ec072600.f3p146ec072600 import F3P146EC072600 as Fan
+from devices.vendors.hangzhou_airflow_electric_applications.f3p146ec072600.f3p146ec072600 import F3P146EC072600 as Fan
 
 from controllers.controller_factory import ControllerFactory as CF
 
@@ -77,23 +77,23 @@ def main():
     args = parser.parse_args()
 
     # Get args.
-    unit = args.unit
-    port = args.port
+    # unit = args.unit
+    # port = args.port
     plc_vendor = args.plc_vendor
     plc_model = args.plc_model
 
     # PLC configuration.
     plc_config = {
-            "vendor": plc_vendor,
-            "model": plc_model
+        "vendor": plc_vendor,
+        "model": plc_model
         }
     controller = CF.create(plc_config)
 
     # Convector interface.
     convector_config = {
-            "name": "Test Fan",
-            "output": "A0",
-            "controller": controller
+        "name": "Test Fan",
+        "output": "A0",
+        "controller": controller
         }
     fan = Fan(convector_config)
     fan.init()
@@ -137,7 +137,7 @@ def main():
     is_ok = set_point == state
     print("Setpoint: {}; State: {}; IS OK: {}".format(set_point, state, is_ok))
     assert is_ok, "Incorrect state."
-    
+
     #---------------------------------------------------------------------------#
     # Test case
     #---------------------------------------------------------------------------#

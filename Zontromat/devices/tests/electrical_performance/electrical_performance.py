@@ -28,7 +28,7 @@ from enum import Enum
 
 from data.registers import Registers
 
-from devices.vendors.HangzhouAirflowElectricApplications.f3p146ec072600.f3p146ec072600 import F3P146EC072600
+from devices.vendors.hangzhou_airflow_electric_applications.f3p146ec072600.f3p146ec072600 import F3P146EC072600
 
 from utils.logic.state_machine import StateMachine
 from utils.logic.timer import Timer

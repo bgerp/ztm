@@ -203,13 +203,13 @@ class PerformanceProfiler:
                 tracemalloc.start()
 
             if self.__enable_time_profile and self.__enable:
-                t0 = time.time()
+                t_0 = time.time()
 
             result = function(*args, **config)
 
             if self.__enable_time_profile and self.__enable:
-                t1 = time.time()
-                passed_time = t1-t0
+                t_1 = time.time()
+                passed_time = t_1 - t_0
 
             if self.__enable_mem_profile and self.__enable:
                 current, peak = tracemalloc.get_traced_memory()

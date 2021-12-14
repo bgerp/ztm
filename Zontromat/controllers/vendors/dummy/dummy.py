@@ -77,7 +77,7 @@ class Dummy(BaseController):
 
     __test = None
     """Test
-    """    
+    """
 
 #endregion
 
@@ -119,7 +119,7 @@ class Dummy(BaseController):
 
         Returns:
             str: Version
-        """        
+        """
 
 
         return "0"
@@ -142,8 +142,6 @@ class Dummy(BaseController):
     def __del__(self):
         """Destructor
         """
-
-        pass
 
 #endregion
 
@@ -276,7 +274,7 @@ class Dummy(BaseController):
         int
             State of the pin.
         """
-    
+
         self.__logger.debug("write_counter({}, {})".format(pin, value))
 
         return 0

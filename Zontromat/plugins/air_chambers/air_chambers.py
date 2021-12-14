@@ -135,9 +135,9 @@ class AirChambers(BasePlugin):
         self.__update_timer.update()
 
         if self.__update_timer.expired:
-        
+
             self.__update_timer.clear()
-        
+
             self.__do_job()
 
             # TODO: Pull the data from the chambers.

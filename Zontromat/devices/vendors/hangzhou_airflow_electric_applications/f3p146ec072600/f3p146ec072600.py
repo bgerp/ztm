@@ -1,34 +1,31 @@
+
 #!/usr/bin/env python3
 # -*- coding: utf8 -*-
 
 """
+
 Zontromat - Zonal Electronic Automation
+
 Copyright (C) [2020] [POLYGONTeam Ltd.]
+
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
+
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
+
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 """
 
-import time
-from enum import Enum
-
 from utils.logger import get_logger
-from utils.logic.timer import Timer
-from utils.logic.state_machine import StateMachine
 
-from devices.drivers.modbus.device import ModbusDevice
-from devices.drivers.modbus.parameter import Parameter
-from devices.drivers.modbus.parameter_type import ParameterType
-from devices.drivers.modbus.register_type import RegisterType
-
-# (Request from mail: Eml6429)
+from devices.factories.fan.base_fan import BaseFan
 
 #region File Attributes
 
@@ -61,15 +58,28 @@ __status__ = "Debug"
 
 #endregion
 
-class WCR(ModbusDevice):
-    """Boiler.
-    """
+class F3P146EC072600(BaseFan):
+    """Model: F3P146-EC072-600
+
+    See http://www.shidaqian.com/Upload/SDQ_ECqqlxfj/F3P146-EC072-600.PDF"""
 
 #region Attributes
 
+    __logger = None
+    """Logger"""
+
+    __output = "AO0"
+    """Output physical signal."""
+
+    __speed = -1
+
 #endregion
 
-#region Constructor / Destructor
+#region Properties
+
+#endregion
+
+#region Constructor
 
     def __init__(self, **config):
         """Constructor
@@ -77,18 +87,42 @@ class WCR(ModbusDevice):
 
         super().__init__(config)
 
-        self._vendor = "Weili"
+        self._vendor = "HangzhouAirflowElectricApplications"
 
-        self._model = "WCR"
+        self._model = "F3P146EC072600"
 
-        self._parameters.append(
-            Parameter(
-                "AccumulateHeatEnergy",
-                "kWh",
-                ParameterType.FLOAT,
-                [0, 1],
-                RegisterType.ReadCoil
-            )
-        )
+        self.__logger = get_logger(__name__)
+
+        if "output" in self._config:
+            self.__output = self._config["output"]
+
+#endregion
+
+#region Public Methods
+
+    def init(self):
+        """Init
+        """
+
+        self.shutdown()
+
+    def update(self):
+        """Update device.
+        """
+
+        if self.__speed == self.speed:
+            return
+
+        self.__speed = self.speed
+        value_speed = self.speed / 10
+        self._controller.analog_write(self.__output, value_speed)
+        self.__logger.debug(self)
+
+    def shutdown(self):
+        """Shutdown"""
+
+        self.min_speed = 0
+        self.speed = 0
+        self.update()
 
 #endregion

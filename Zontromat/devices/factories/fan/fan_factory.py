@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 
-from devices.vendors.HangzhouAirflowElectricApplications.f3p146ec072600.f3p146ec072600 import F3P146EC072600
+from devices.vendors.hangzhou_airflow_electric_applications.f3p146ec072600.f3p146ec072600 import F3P146EC072600
 
 #region File Attributes
 
@@ -78,7 +78,7 @@ class FanFactory:
             vendor = config["vendor"]
 
         else:
-            raise ValueError("No \"vendor\" argument has been passed.") 
+            raise ValueError("No \"vendor\" argument has been passed.")
 
         # Model
         model = None
@@ -86,7 +86,7 @@ class FanFactory:
             model = config["model"]
 
         else:
-            raise ValueError("No \"model\" argument has been passed.") 
+            raise ValueError("No \"model\" argument has been passed.")
 
         # Controller
         controller = None
@@ -94,7 +94,7 @@ class FanFactory:
             controller = config["controller"]
 
         else:
-            raise ValueError("No \"controller\" argument has been passed.") 
+            raise ValueError("No \"controller\" argument has been passed.")
 
         # HangzhouAirflowElectricApplications / f3p146ec072600 / AO0
         if vendor == "HangzhouAirflowElectricApplications" and  model == "f3p146ec072600":
@@ -106,7 +106,7 @@ class FanFactory:
             )
 
         else:
-            raise NotImplementedError("The {} and {}, is not supported.".format(vendor,model))
+            raise NotImplementedError("The {} and {}, is not supported.".format(vendor, model))
 
         # Return the instance.
         return device

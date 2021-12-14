@@ -22,11 +22,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 
-import traceback
 from threading import Thread
 
 from flask import Flask, request
-from werkzeug.serving import make_server
+# from werkzeug.serving import make_server
 
 #region File Attributes
 

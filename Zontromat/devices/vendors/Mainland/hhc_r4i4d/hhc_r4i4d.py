@@ -58,7 +58,7 @@ __status__ = "Debug"
 
 #endregion
 
-class HHC_R4I4D(ModbusDevice):
+class HHCR4I4D(ModbusDevice):
     """This class is dedicated to communicate with remote modbus module HHC-R4I4D.
 
     See: README.md"""

@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 
-from devices.vendors.HstarsGuangzhouRefrigeratingEquipmentGroup.heat_pump import HeatPump
+from devices.vendors.hstars_guangzhou_refrigerating_equipment_group.heat_pump import HeatPump
 
 #region File Attributes
 
@@ -56,6 +56,8 @@ __status__ = "Debug"
 #endregion
 
 class HeatPumpFactory:
+    """Het pump factory.
+    """
 
     @staticmethod
     def create(**config):
@@ -76,7 +78,7 @@ class HeatPumpFactory:
             vendor = config["vendor"]
 
         else:
-            raise ValueError("No \"vendor\" argument has been passed.") 
+            raise ValueError("No \"vendor\" argument has been passed.")
 
         # Model
         model = None
@@ -84,7 +86,7 @@ class HeatPumpFactory:
             model = config["model"]
 
         else:
-            raise ValueError("No \"model\" argument has been passed.") 
+            raise ValueError("No \"model\" argument has been passed.")
 
         # Controller
         controller = None
@@ -92,7 +94,7 @@ class HeatPumpFactory:
             controller = config["controller"]
 
         else:
-            raise ValueError("No \"controller\" argument has been passed.") 
+            raise ValueError("No \"controller\" argument has been passed.")
 
         # HstarsGuangzhouRefrigeratingEquipmentGroup / HeatPump / 0
         if vendor == "HstarsGuangzhouRefrigeratingEquipmentGroup" and  model == "HeatPump":
@@ -104,7 +106,7 @@ class HeatPumpFactory:
             )
 
         else:
-            raise NotImplementedError("The {} and {}, is not supported.".format(vendor,model))
+            raise NotImplementedError("The {} and {}, is not supported.".format(vendor, model))
 
         # Return the instance.
         return device

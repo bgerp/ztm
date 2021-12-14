@@ -27,12 +27,7 @@ import argparse
 # from pymodbus.client.sync import ModbusTcpClient as ModbusClient
 from pymodbus.client.sync import ModbusSerialClient as ModbusClient
 
-from devices.drivers.modbus.requests.read_device_holding_registers import ReadDeviceHoldingRegisters
-from devices.drivers.modbus.requests.read_device_input_registers import ReadDeviceInputRegisters
-
-from devices.drivers.modbus.requests.write_device_registers import WriteDeviceRegisters
-
-from devices.vendors.Donkger.xy_md02.xy_md02 import XYMD02 as Thermometer
+from devices.vendors.donkger.xy_md02.xy_md02 import XYMD02 as Thermometer
 
 #region File Attributes
 

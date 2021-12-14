@@ -27,7 +27,7 @@ import argparse
 # from pymodbus.client.sync import ModbusTcpClient as ModbusClient
 from pymodbus.client.sync import ModbusSerialClient as ModbusClient
 
-from devices.vendors.Super.s8_3cn.s8_3cn import S8_3CN as BlackIsland
+from devices.vendors.super.s8_3cn.s8_3cn import S83CN as BlackIsland
 
 #region File Attributes
 
@@ -77,27 +77,33 @@ def main():
 
     # Get args.
     port = args.port
-    baudrate=args.baudrate
+    baudrate = args.baudrate
     unit = args.unit
 
     black_island = BlackIsland()
 
     # Create client.
-    with ModbusClient(method="rtu", port=port, baudrate=baudrate, timeout=1,
-        xonxoff=False, rtscts=False, dsrdtr=False) as client:
+    with ModbusClient(
+            method="rtu",
+            port=port,
+            baudrate=baudrate,
+            timeout=1,
+            xonxoff=False,
+            rtscts=False,
+            dsrdtr=False) as client:
 
         #---------------------------------------------------------------------------#
         # Read Coils.
         #---------------------------------------------------------------------------#
         request = black_island.generate_request(unit, "GetRelays")
         response = client.execute(request)
-        
+
         # Check the response.
-        assert(not response.isError())
+        assert not response.isError()
 
         # Check the content.
         is_ok = response.bits == [False]*12 + [False]*4
-        assert(is_ok)
+        assert is_ok
 
         print(response)
         print()
@@ -109,11 +115,11 @@ def main():
         response = client.execute(request)
 
         # Check the response.
-        assert(not response.isError())
+        assert not response.isError()
 
         #Check the content.
         is_ok = response.bits == [False]*8
-        assert(is_ok)
+        assert is_ok
 
         print(response)
         print()
@@ -125,11 +131,11 @@ def main():
         response = client.execute(request)
 
         # Check the response.
-        assert(not response.isError())
+        assert not response.isError()
 
         #Check the content.
         is_ok = response.registers == [0]*4
-        assert(is_ok)
+        assert is_ok
 
         print(response)
         print()
@@ -141,11 +147,11 @@ def main():
         response = client.execute(request)
 
         # Check the response.
-        assert(not response.isError())
+        assert not response.isError()
 
         #Check the content.
         is_ok = response.registers == [0]*8
-        assert(is_ok)
+        assert is_ok
 
         print(response)
         print()
@@ -157,18 +163,18 @@ def main():
         response = client.execute(request)
 
         # Check the response.
-        assert(not response.isError())
+        assert not response.isError()
         print(response)
 
         request = black_island.generate_request(unit, "GetRelays")
         response = client.execute(request)
 
         # Check the response.
-        assert(not response.isError())
+        assert not response.isError()
 
         #Check the content.
         is_ok = response.bits == [True]*12 + [False]*4
-        assert(is_ok)
+        assert is_ok
 
         print(response)
         print()
@@ -180,18 +186,18 @@ def main():
         hrw_response = client.execute(request)
 
         # Check the response.
-        assert(not hrw_response.isError())
+        assert not hrw_response.isError()
         print(hrw_response)
 
         request = black_island.generate_request(unit, "GetAnalogOutputs")
         response = client.execute(request)
 
         # Check the response.
-        assert(not response.isError())
+        assert not response.isError()
 
         #Check the content.
         is_ok = response.registers == [10000]*4
-        assert(is_ok)
+        assert is_ok
 
         print(response)
         print()
@@ -203,18 +209,18 @@ def main():
         response = client.execute(request)
 
         # Check the response.
-        assert(not response.isError())
+        assert not response.isError()
         print(response)
 
         request = black_island.generate_request(unit, "GetRelays")
         response = client.execute(request)
 
         # Check the response.
-        assert(not response.isError())
+        assert not response.isError()
 
         #Check the content.
         is_ok = response.bits == [False]*12 + [False]*4
-        assert(is_ok)
+        assert is_ok
 
         print(response)
         print()
@@ -226,18 +232,18 @@ def main():
         hrw_response = client.execute(request)
 
         # Check the response.
-        assert(not hrw_response.isError())
+        assert not hrw_response.isError()
         print(hrw_response)
 
         request = black_island.generate_request(unit, "GetAnalogOutputs")
         response = client.execute(request)
 
         # Check the response.
-        assert(not response.isError())
+        assert not response.isError()
 
         #Check the content.
         is_ok = response.registers == [0]*4
-        assert(is_ok)
+        assert is_ok
 
         print(response)
         print()

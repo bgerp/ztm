@@ -27,12 +27,7 @@ import argparse
 # from pymodbus.client.sync import ModbusTcpClient as ModbusClient
 from pymodbus.client.sync import ModbusSerialClient as ModbusClient
 
-from devices.drivers.modbus.requests.read_device_holding_registers import ReadDeviceHoldingRegisters
-from devices.drivers.modbus.requests.read_device_input_registers import ReadDeviceInputRegisters
-
-from devices.drivers.modbus.requests.write_device_registers import WriteDeviceRegisters
-
-from devices.vendors.Eastron.sdm120.sdm120 import SDM120 as PowerAnalyser
+from devices.vendors.eastron.sdm120.sdm120 import SDM120 as PowerAnalyser
 
 #region File Attributes
 
@@ -116,7 +111,7 @@ def main():
             response = client.execute(requests[param_name])
 
             # Check the response.
-            assert(not response.isError(), "Device did not respond properly to the request.")
+            assert not response.isError(), "Device did not respond properly to the request."
 
             # Get parameter by name
             parameter = p_analyser.get_parameter_by_name(param_name)

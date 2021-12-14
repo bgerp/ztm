@@ -72,6 +72,9 @@ __class_name__ = "Vent"
 #endregion
 
 class AirValveState(Enum):
+    """Ventilation states.
+    """    
+
     NONE = 0
     Off = 1
     Open = 2
@@ -91,7 +94,7 @@ class Ventilation(BasePlugin):
 
     __upper_fan_dev = None
     """Upper fan.
-    """    
+    """
 
     __lower_fan_dev = None
     """Lower fan.
@@ -103,12 +106,12 @@ class Ventilation(BasePlugin):
 
     __set_point_op = 0
     """Operators Panel set point.
-    """    
+    """
     __set_point_hvac = 0
     """HVAC set point.
-    """    
+    """
     __set_point_ac = 0
-    """Access Control set point. 
+    """Access Control set point.
     """
 
     __upper_valve_settings = {}
@@ -194,7 +197,7 @@ class Ventilation(BasePlugin):
 
     # Upper valve.
     def __upper_valve_settings_cb(self, register: Register):
-        
+
         # Check data type.
         if not register.data_type == "json":
             GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
@@ -214,7 +217,7 @@ class Ventilation(BasePlugin):
                 vendor = config["vendor"]
 
             else:
-                raise ValueError("No \"vendor\" argument has been passed.") 
+                raise ValueError("No \"vendor\" argument has been passed.")
 
             # Model
             model = None
@@ -222,7 +225,7 @@ class Ventilation(BasePlugin):
                 model = config["model"]
 
             else:
-                raise ValueError("No \"model\" argument has been passed.") 
+                raise ValueError("No \"model\" argument has been passed.")
 
             # Controller
             # controller = None
@@ -230,7 +233,7 @@ class Ventilation(BasePlugin):
             #     controller = config["controller"]
 
             # else:
-            #     raise ValueError("No \"controller\" argument has been passed.") 
+            #     raise ValueError("No \"controller\" argument has been passed.")
 
             if vendor == "FONYES" and  model == "Model1":
 
@@ -245,7 +248,7 @@ class Ventilation(BasePlugin):
 
     # Lower valve.
     def __lower_valve_settings_cb(self, register: Register):
-        
+
         # Check data type.
         if not register.data_type == "json":
             GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
@@ -265,7 +268,7 @@ class Ventilation(BasePlugin):
                 vendor = config["vendor"]
 
             else:
-                raise ValueError("No \"vendor\" argument has been passed.") 
+                raise ValueError("No \"vendor\" argument has been passed.")
 
             # Model
             model = None
@@ -273,7 +276,7 @@ class Ventilation(BasePlugin):
                 model = config["model"]
 
             else:
-                raise ValueError("No \"model\" argument has been passed.") 
+                raise ValueError("No \"model\" argument has been passed.")
 
             # Controller
             # controller = None
@@ -281,7 +284,7 @@ class Ventilation(BasePlugin):
             #     controller = config["controller"]
 
             # else:
-            #     raise ValueError("No \"controller\" argument has been passed.") 
+            #     raise ValueError("No \"controller\" argument has been passed.")
 
             if vendor == "FONYES" and  model == "Model1":
 
@@ -415,7 +418,7 @@ class Ventilation(BasePlugin):
         if self.__upper_fan_dev is not None:
             self.__upper_fan_dev.speed = register.value
 
-            
+
             if abs(register.value) > 0:
                 self.__set_lower_valve(AirValveState.Close)
                 self.__set_upper_valve(AirValveState.Open)
@@ -603,12 +606,12 @@ class Ventilation(BasePlugin):
     def _update(self):
         """Runtime of the plugin."""
 
-        # 
+        #
         speed_upper = 0
-        speed_lower = 0        
+        speed_lower = 0
         calculated_value = 0.0
 
-        # 
+        #
         thermal_mode = self.__get_thermal_mode()
         is_empty = self.__is_empty()
 
@@ -622,12 +625,12 @@ class Ventilation(BasePlugin):
         if lower_limit <= self.__set_point_op and self.__set_point_op <= mid_1:
             calculated_value = (self.__set_point_op / mid_1) * 20.0
 
-        elif mid_1 < self.__set_point_op and self.__set_point_op  < mid_2:
+        elif mid_1 < self.__set_point_op and self.__set_point_op < mid_2:
             first = max(self.__set_point_ac, abs(self.__set_point_hvac))
             second = (1 + ((50.0 - self.__set_point_op) / 100.0))
             calculated_value = first * second
 
-        elif mid_2 <= self.__set_point_op and self.__set_point_op  <= upper_limit:
+        elif mid_2 <= self.__set_point_op and self.__set_point_op <= upper_limit:
             calculated_value = (self.__set_point_op / upper_limit) * 100.
 
 
@@ -668,7 +671,5 @@ class Ventilation(BasePlugin):
         self.__lower_fan_dev.shutdown()
         self.__set_upper_valve(AirValveState.Close)
         self.__set_lower_valve(AirValveState.Close)
-        
-#endregion
 
-    # TODO: Change the formula. Ventilation will call the HVAC, AC, MANUAL registers.
+#endregion

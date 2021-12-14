@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 
-from controllers.unipi.neuron import Neuron
+from controllers.vendors.unipi.neuron import Neuron
 
 #region File Attributes
 

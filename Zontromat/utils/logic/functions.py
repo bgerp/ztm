@@ -78,7 +78,7 @@ def to_deg(rad):
 
     Returns:
         float: Degres output.
-    """    
+    """
 
     return rad * (180.0 / math.pi)
 
@@ -120,15 +120,15 @@ def shadow_length(height, alpha):
 
     return height / math.tan(alpha)
 
-def rotate_list(l, n):
+def rotate_list(target_list, rotations):
     """Rotate list.
 
     Args:
-        l (list): Target list.
-        n (int): Rotations count.
+        target_list (list): Target list.
+        rotations (int): Rotations count.
 
     Returns:
         list: Rotated list.
     """
 
-    return l[-n:] + l[:-n]
+    return target_list[-rotations:] + target_list[:-rotations]

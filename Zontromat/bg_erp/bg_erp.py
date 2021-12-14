@@ -24,8 +24,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from utils.logger import get_logger
 
-from bgERP.client import Client
-from bgERP.server import Server
+from bg_erp.client import Client
+from bg_erp.server import Server
 
 #region File Attributes
 
@@ -221,7 +221,7 @@ class bgERP:
 
         self.__is_logged = self.__client.login(credentials)
 
-        if self.__is_logged:            
+        if self.__is_logged:
             if (self.__server is not None) and (not self.__server.is_alive()):
                 self.__server.set_registers_cb(
                     get_cb=self.__get_registers,\

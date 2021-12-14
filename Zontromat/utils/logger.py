@@ -61,7 +61,7 @@ __status__ = "Debug"
 
 #region Variables
 
-__modules_names = []
+__MODULES_NAMES = []
 """Modules names."""
 
 #endregion
@@ -116,16 +116,14 @@ def get_logger(module_name):
         Logger instance.
     """
 
-    global __modules_names
-
+    global __MODULES_NAMES
 
     logger = logging.getLogger(module_name)
 
-    if module_name in __modules_names:
+    if module_name in __MODULES_NAMES:
         return logger
 
-    else:
-        __modules_names.append(module_name)
+    __MODULES_NAMES.append(module_name)
 
     # Get debug level.
     debug_level = ApplicationSettings.get_instance().debug_level

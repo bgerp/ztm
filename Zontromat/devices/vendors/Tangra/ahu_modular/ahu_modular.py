@@ -29,6 +29,8 @@ from devices.drivers.modbus.register_type import RegisterType
 
 from services.global_error_handler.global_error_handler import GlobalErrorHandler
 
+from utils.logger import get_logger
+
 #region File Attributes
 
 __author__ = "Orlin Dimitrov"
@@ -65,6 +67,10 @@ class AHUModular(ModbusDevice):
 
     See: https://www.tangra.bg/products_EN_86_232_1.html"""
 
+    __logger = None
+    """Logger
+    """
+
 #region Constructor
 
     def __init__(self, **config):
@@ -76,9 +82,12 @@ class AHUModular(ModbusDevice):
 
         self._model = "AHU_Modular"
 
+        # Create logger.
+        self.__logger = get_logger(__name__)
+
         self.__set_registers()
 
-#endregion 
+#endregion
 
 #region Private Methods
 
@@ -434,7 +443,7 @@ class AHUModular(ModbusDevice):
                     self.__logger, "Device: {}; ID: {}; Invalid response.".format(
                         self.name, request.unit_id))
 
-        except Exception as e:
+        except Exception:
             GlobalErrorHandler.log_hardware_malfunction(
                 self.__logger, "Device: {}; ID: {}; Can not read the temperature value.".format(
                     self.name, request.unit_id))
@@ -468,7 +477,7 @@ class AHUModular(ModbusDevice):
                     self.__logger, "Device: {}; ID: {}; Invalid response.".format(
                         self.name, request.unit_id))
 
-        except Exception as e:
+        except Exception:
             GlobalErrorHandler.log_hardware_malfunction(
                 self.__logger, "Device: {}; ID: {}; Can not read the unit status value.".format(
                     self.name, request.unit_id))
@@ -503,7 +512,7 @@ class AHUModular(ModbusDevice):
                     self.__logger, "Device: {}; ID: {}; Invalid response.".format(
                         self.name, request.unit_id))
 
-        except Exception as e:
+        except Exception:
             GlobalErrorHandler.log_hardware_malfunction(
                 self.__logger, "Device: {}; ID: {}; Can not read the mode.".format(
                     self.name, request.unit_id))
@@ -539,7 +548,7 @@ class AHUModular(ModbusDevice):
                     self.__logger, "Device: {}; ID: {}; Invalid response.".format(
                         self.name, request.unit_id))
 
-        except Exception as e:
+        except Exception:
             GlobalErrorHandler.log_hardware_malfunction(
                 self.__logger, "Device: {}; ID: {}; Can not read the mode.".format(
                     self.name, request.unit_id))
@@ -575,7 +584,7 @@ class AHUModular(ModbusDevice):
                     self.__logger, "Device: {}; ID: {}; Invalid response.".format(
                         self.name, request.unit_id))
 
-        except Exception as e:
+        except Exception:
             GlobalErrorHandler.log_hardware_malfunction(
                 self.__logger, "Device: {}; ID: {}; Can not read the fresh air value.".format(
                     self.name, request.unit_id))
@@ -628,7 +637,7 @@ class AHUModular(ModbusDevice):
                     self.__logger, "Device: {}; ID: {}; Invalid response.".format(
                         self.name, request.unit_id))
 
-        except Exception as e:
+        except Exception:
             GlobalErrorHandler.log_hardware_malfunction(
                 self.__logger, "Device: {}; ID: {}; Can not read the mode.".format(
                     self.name, request.unit_id))
@@ -663,13 +672,11 @@ class AHUModular(ModbusDevice):
                     self.__logger, "Device: {}; ID: {}; Invalid response.".format(
                         self.name, request.unit_id))
 
-        except Exception as e:
+        except Exception:
             GlobalErrorHandler.log_hardware_malfunction(
                 self.__logger, "Device: {}; ID: {}; Can not read the mode.".format(
                     self.name, request.unit_id))
 
         return value
-
-
 
 #endregion
