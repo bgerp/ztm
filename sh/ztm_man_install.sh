@@ -24,11 +24,11 @@ sudo cd ~
 # Remove zsys, there is a bug when creating image.
 # See also: https://answers.launchpad.net/cubic/+question/695399
 # ========================================================================
-apt --yes remove zsys
+sudo apt remove zsys -y
 
 # Update and Upgrade the system
 # ========================================================================
-sudo apt update
+sudo apt update -y
 sudo apt upgrade -y
 
 # Remove linked packages which are outdated
@@ -65,9 +65,9 @@ sudo apt install unclutter -y
 # ========================================================================
 # Clone the Zontromat Repo
 sudo mkdir -p Git
-cd ./Git
+sudo cd ./Git
 sudo git clone https://github.com/bgerp/ztm
-cd ./ztm
+sudo cd ./ztm
 
 # Copy the project to opt/ folder.
 sudo cp ./ /opt/ztm -r
