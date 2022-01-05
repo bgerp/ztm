@@ -21,6 +21,11 @@
 # ========================================================================
 sudo cd ~
 
+# Remove zsys, there is a bug when creating image.
+# See also: https://answers.launchpad.net/cubic/+question/695399
+# ========================================================================
+apt --yes remove zsys
+
 # Preset for the test BCVT envirenmont.
 # ========================================================================
 host="host = https://test.bcvt.eu/"
@@ -38,7 +43,7 @@ sudo apt autoremove -y
 # Add anydes repo.
 wget -qO - https://keys.anydesk.com/repos/DEB-GPG-KEY | sudo apt-key add -
 echo "deb http://deb.anydesk.com/ all main" | sudo tee /etc/apt/sources.list.d/anydesk-stable.list
-sudo apt update
+sudo apt update -y
 
 # Initial Any Desk
 sudo apt install anydesk -y
@@ -90,8 +95,10 @@ sudo echo $config_time >> $settings_file
 sudo echo $erp_id >> $settings_file
 sudo echo $timeout >> $settings_file
 
+cd ~
+
 # Remove he old repo.
-sudo rm -rf ~/Git/ztm
+sudo rm -rf ./Git
 
 # Daemonize the app.
 # ========================================================================
@@ -109,7 +116,7 @@ sudo systemctl start zontromat
 
 # Stop sleep and screen saver.
 # ========================================================================
-sudo systemctl mask sleep.target suspend.target hibernate.target hybrid-sleep.target
+# sudo systemctl mask sleep.target suspend.target hibernate.target hybrid-sleep.target
 
 # Create autostart directory if it is not created.
 # ========================================================================
