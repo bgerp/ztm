@@ -26,15 +26,11 @@ sudo cd ~
 # ========================================================================
 apt --yes remove zsys
 
-# Preset for the test BCVT envirenmont.
-# ========================================================================
-host="host = https://test.bcvt.eu/"
-erp_id="erp_id = 0082-4140-0042-4216"
-
 # Update and Upgrade the system
 # ========================================================================
-# Initial Update
-sudo apt update && sudo apt upgrade -y
+sudo apt update
+sudo apt upgrade -y
+
 # Remove linked packages which are outdated
 sudo apt autoremove -y
 
@@ -82,10 +78,14 @@ sudo python3 -m pip install -r /opt/ztm/requirements.txt
 # Run the project. This will create the default setings.
 sudo python3 /opt/ztm/Zontromat/main.py
 
+# Preset for the test BCVT envirenmont.
+# ========================================================================
 settings_file="/opt/ztm/settings.ini"
 ts=$(sudo date +%s)
 section="[ERP_SERVICE]"
+host="host = https://test.bcvt.eu/"
 config_time="config_time = "$ts
+erp_id="erp_id = 0082-4140-0042-4216"
 timeout="timeout = 5"
 
 # Add settings for the ERP.
@@ -95,7 +95,9 @@ sudo echo $config_time >> $settings_file
 sudo echo $erp_id >> $settings_file
 sudo echo $timeout >> $settings_file
 
-cd ~
+# Go to home dir.
+# ========================================================================
+sudo cd ~
 
 # Remove he old repo.
 sudo rm -rf ./Git
@@ -116,7 +118,7 @@ sudo systemctl start zontromat
 
 # Stop sleep and screen saver.
 # ========================================================================
-# sudo systemctl mask sleep.target suspend.target hibernate.target hybrid-sleep.target
+sudo systemctl mask sleep.target suspend.target hibernate.target hybrid-sleep.target
 
 # Create autostart directory if it is not created.
 # ========================================================================
