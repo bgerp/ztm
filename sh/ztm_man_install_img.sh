@@ -37,6 +37,11 @@ erp_id="erp_id = 0082-4140-0042-4216"
 apt update -y
 apt upgrade -y
 
+sources_list="/etc/apt/sources.list"
+echo "deb http://archive.ubuntu.com/ubuntu bionic main universe" >> $sources_list
+echo "deb http://archive.ubuntu.com/ubuntu bionic-security main universe" >> $sources_list
+echo "deb http://archive.ubuntu.com/ubuntu bionic-updates main universe" >> $sources_list
+
 # Remove linked packages which are outdated
 apt autoremove -y
 
