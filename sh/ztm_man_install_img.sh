@@ -61,10 +61,10 @@ apt install git -y
 # Install python env.
 apt install python3-pip -y
 
-# Install dmidecode
+# Install dmidecode.
 apt install python3-dmidecode -y
 
-# Install unclutter 
+# Install unclutter.
 apt install unclutter -y
 
 # Install Open SSH server.
@@ -72,6 +72,9 @@ apt install openssh-server -y
 
 # Install git client.
 apt install git -y
+
+# Install caffein to keep the PC wakeup.
+apt install caffeine -y
 
 # Install Salt Minion.
 # apt install python3-tornado
