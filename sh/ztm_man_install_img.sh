@@ -70,8 +70,13 @@ apt install unclutter -y
 # Install Open SSH server.
 apt install openssh-server -y
 
+# Install git client.
+apt install git -y
+
 # Install Salt Minion.
-apt install salt-minion -y
+# apt install python3-tornado
+# apt install salt-common -y
+# apt install salt-minion -y
 
 # Remove all unesicery software.
 # ========================================================================
@@ -88,7 +93,6 @@ apt remove --purge transmission-gtk -y
 apt remove --purge cheese -y
 apt remove --purge shotwell -y
 apt remove --purge gnome-screenshot -y
-apt remove --purge canonical-livepatch -y
 apt remove --purge usb-creator-gtk -y
 apt remove --purge rhythmbox -y
 apt remove --purge totem totem-plugins -y
@@ -99,6 +103,7 @@ apt remove --purge gnome-calculator -y
 apt remove --purge gnome-characters -y
 apt remove --purge gnome-power-manager -y
 apt remove --purge evince -y
+apt remove --purge gparted -y
 
 apt autoremove -y
 apt autoclean
@@ -120,28 +125,31 @@ python3 -m pip install -r /opt/ztm/requirements.txt
 # Mount the HDD.
 # ========================================================================
 mkdir -p /media/zontromat
-mount /dev/sdb1 /media/zontromat
+
+fstab_file="/etc/fstab"
+disc_line="/dev/sdb1     /media/zontromat   auto    rw,user,auto"
+echo $disc_line >> $fstab_file
 
 # Run the project. This will create the default setings.
 python3 /opt/ztm/Zontromat/main.py
 
 # Preset for the test BCVT envirenmont.
 # ========================================================================
-settings_file="/media/zontromat/settings.ini"
-# settings_file="/opt/ztm/settings.ini"
-ts=$(date +%s)
-section="[ERP_SERVICE]"
-host="host = https://test.bcvt.eu/"
-config_time="config_time = "$ts
-erp_id="erp_id = 0082-4140-0042-4216"
-timeout="timeout = 5"
+# settings_file="/media/zontromat/settings.ini"
+# # settings_file="/opt/ztm/settings.ini"
+# ts=$(date +%s)
+# section="[ERP_SERVICE]"
+# host="host = https://test.bcvt.eu/"
+# config_time="config_time = "$ts
+# erp_id="erp_id = 0082-4140-0042-4216"
+# timeout="timeout = 5"
 
-# Add settings for the ERP.
-echo $section >> $settings_file
-echo $host >> $settings_file
-echo $config_time >> $settings_file
-echo $erp_id >> $settings_file
-echo $timeout >> $settings_file
+# # Add settings for the ERP.
+# echo $section >> $settings_file
+# echo $host >> $settings_file
+# echo $config_time >> $settings_file
+# echo $erp_id >> $settings_file
+# echo $timeout >> $settings_file
 
 # Copy the registers initial file.
 # ========================================================================
@@ -163,6 +171,7 @@ cp /opt/ztm/sh/zontromat.service /etc/systemd/system/
 # ========================================================================
 systemctl mask sleep.target suspend.target hibernate.target hybrid-sleep.target
 
+
 # Create autostart directory if it is not created.
 # ========================================================================
 mkdir -p ~/.config/autostart/
@@ -180,3 +189,4 @@ adduser zontromat
 
 # Add Zontromat user to sudo.
 usermod -aG sudo zontromat
+
