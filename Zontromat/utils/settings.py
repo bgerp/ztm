@@ -24,7 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
 import configparser
-# import time
+import time
 
 #region File Attributes
 
@@ -176,11 +176,18 @@ class ApplicationSettings:
 
         ApplicationSettings.__instance = self
 
+        self.__file_name = ""
+
         if file_name is None:
 
             # Current file path. & Go to file.
-            cwf = os.path.dirname(os.path.abspath(__file__))
-            self.__file_name = os.path.join(cwf, "..", "..", "settings.ini")
+            if os.name == "posix":
+                self.__file_name = os.path.join("media", "zontromat", "settings.ini")
+
+            elif os.name == "nt":
+                cwf = os.path.dirname(os.path.abspath(__file__))
+                self.__file_name = os.path.join(cwf, "..", "..", "settings.ini")
+
             self.__config = configparser.ConfigParser()
             self.read()
 
@@ -192,13 +199,13 @@ class ApplicationSettings:
 #region Public Methods
 
     def read(self):
-        """Read YAML file."""
+        """Read INI file."""
 
         if self.exists:
             self.__config.read(self.__file_name)
 
     def save(self):
-        """Read YAML file."""
+        """Read INI file."""
 
         if self.exists:
             with open(self.__file_name, "w") as stream:
@@ -223,7 +230,7 @@ class ApplicationSettings:
                     "model": "zl101pcc",
                     "modbus_rtu_port": "/dev/ttyUSB0",
                     "modbus_rtu_baud": 9600
-                    }
+                }
 
         # # Default software version as current version.
         if self.__config is not None:
@@ -236,14 +243,14 @@ class ApplicationSettings:
 
         # This will be added by the setup script.
         # # Default ERP service.
-        # if self.__config is not None:
-        #     if "ERP_SERVICE" not in self.__config:
-        #         self.__config["ERP_SERVICE"] = {
-        #             "config_time": int(time.time()),
-        #             "erp_id": "0000-0000-0000-0000",
-        #             "host": "https://127.0.0.1/",
-        #             "timeout": 5,
-        #             }
+        if self.__config is not None:
+            if "ERP_SERVICE" not in self.__config:
+                self.__config["ERP_SERVICE"] = {
+                    "config_time": int(time.time()),
+                    "erp_id": "0000-0000-0000-0000",
+                    # "host": "https://127.0.0.1/",
+                    "timeout": 5,
+                    }
 
         if not self.exists:
             with open(self.__file_name, "w") as stream:
