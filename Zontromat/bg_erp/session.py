@@ -90,6 +90,7 @@ class Session():
         # Current file path. & Go to file.
         cwf = os.path.dirname(os.path.abspath(__file__))
         self.__file_name = os.path.join(cwf, "..", "..", "session.txt")
+
         self.__logger = get_logger(__name__)
 
 #endregion

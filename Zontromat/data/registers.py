@@ -69,10 +69,6 @@ class Registers(list):
 
 #region Attributes
 
-    __instance = None
-    """Singelton instance.
-    """
-
     __logger = None
     """Logger
     """
@@ -89,9 +85,6 @@ class Registers(list):
 
         # Create logger.
         self.__logger = get_logger(__name__)
-
-        if Registers.__instance is None:
-            Registers.__instance = self
 
 #endregion
 
@@ -429,6 +422,8 @@ class Registers(list):
             if "update" in kwargs:
                 register.update()
 
+    # TODO: Dump to file.
+
 #endregion
 
 #region Static Methods
@@ -553,15 +548,6 @@ class Registers(list):
             our_value = json.dumps(value)
 
         return our_value
-
-    @staticmethod
-    def get_instance():
-        """Singelton instance."""
-
-        if Registers.__instance is None:
-            Registers()
-
-        return Registers.__instance
 
     @staticmethod
     def to_csv(registers, file_path="registers.csv"):

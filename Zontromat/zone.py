@@ -200,11 +200,13 @@ class Zone():
         """Setup registers source.
         """
 
-        # Current file path.
-        cwf = os.path.dirname(os.path.abspath(__file__))
+        registers_file = ""
 
-        # Load the registers from file.
+        # Current file path. & Go to file.
+        cwf = os.path.dirname(os.path.abspath(__file__))
         registers_file = os.path.join(cwf, "..", "registers.csv")
+
+        # Load depending of file format.
         if registers_file.endswith('json'):
             self.__registers = Registers.from_json(registers_file)
         elif registers_file.endswith('csv'):
@@ -475,7 +477,9 @@ class Zone():
         time_offset = 0
         if self.__controller.serial_number is not None and self.__controller.serial_number.isdigit():
             time_offset = int(self.__controller.serial_number)
-        self.__update_timer.expiration_time = self.__update_timer.expiration_time + (time_offset / 1000)
+            
+        # Preset the time.
+        self.__update_timer.expiration_time += (time_offset / 1000)
 
 #endregion
 

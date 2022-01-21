@@ -68,7 +68,7 @@ __MODULES_NAMES = []
 
 #region Public Functions
 
-def crate_log_file(logs_dir_name="logs/"):
+def crate_log_file(logs_dir_name="logs"):
     """This method create a new instance of the LOG direcotry.
 
     Parameters
@@ -79,6 +79,7 @@ def crate_log_file(logs_dir_name="logs/"):
 
     settings = ApplicationSettings.get_instance()
     debug_level = settings.debug_level
+    full_dir_path = "/"
 
     # Current file path. & Go to file.
     cwf = os.path.dirname(os.path.abspath(__file__))
@@ -89,17 +90,16 @@ def crate_log_file(logs_dir_name="logs/"):
         os.makedirs(full_dir_path)
 
     # File name.
-    log_file = ""
-    log_file += full_dir_path
-    log_file += strftime("%Y%m%d", gmtime())
-    log_file += ".log"
+    log_file = strftime("%Y%m%d", gmtime()) + ".log"
+    log_file = os.path.join(full_dir_path, log_file)
 
     # create message format.
     log_format = "%(asctime)s\t%(levelname)s\t%(name)s\t:%(lineno)s\t%(message)s"
 
-    logging.basicConfig( \
-        filename=log_file, \
-        level=debug_level, \
+    # Set basic config.
+    logging.basicConfig(
+        filename=log_file,
+        level=debug_level,
         format=log_format)
 
 def get_logger(module_name):
