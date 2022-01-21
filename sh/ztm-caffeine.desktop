@@ -1,0 +1,5 @@
+[Desktop Entry]
+Comment=Keep screen ON for the Zontromat front-end.
+Exec=caffeinate sleep 9999999
+Name=ZTM-CAFFEINE
+Type=Application
