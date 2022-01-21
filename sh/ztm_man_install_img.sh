@@ -17,10 +17,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Go to home dir.
-# ========================================================================
-cd ~
-
 # Remove zsys, there is a bug when creating image.
 # See also: https://answers.launchpad.net/cubic/+question/695399
 # ========================================================================
@@ -40,7 +36,7 @@ echo "deb http://archive.ubuntu.com/ubuntu bionic-updates main universe" >> $sou
 # Remove linked packages which are outdated
 apt autoremove -y
 
-# Add repo for the Any Desk.
+# Add repo for the Any Desk and nesicery software.
 # ========================================================================
 # Add anydes repo.
 wget -qO - https://keys.anydesk.com/repos/DEB-GPG-KEY | apt-key add -
@@ -50,13 +46,8 @@ apt update -y
 # Initial Any Desk
 apt install anydesk -y
 
-# Install tools.
-# ========================================================================
 # Install ifconfig
 apt install net-tools -y
-
-# Install Git client.
-apt install git -y
 
 # Install python env.
 apt install python3-pip -y
@@ -111,8 +102,12 @@ apt remove --purge gparted -y
 apt autoremove -y
 apt autoclean
 
-# Install the app.
+
+# Install the Zontromat Software.
 # ========================================================================
+# Go to home dir.
+cd ~
+
 # Clone the Zontromat Repo
 mkdir -p Git
 cd ./Git
@@ -125,38 +120,8 @@ cp ./ /opt/ztm -r
 # Install dependacies.
 python3 -m pip install -r /opt/ztm/requirements.txt
 
-# Mount the HDD.
-# ========================================================================
-mkdir -p /media/zontromat
-
-fstab_file="/etc/fstab"
-disc_line="/dev/sdb1     /media/zontromat   auto    rw,user,auto"
-echo $disc_line >> $fstab_file
-
 # Run the project. This will create the default setings.
 python3 /opt/ztm/Zontromat/main.py
-
-# Preset for the test BCVT envirenmont.
-# ========================================================================
-# settings_file="/media/zontromat/settings.ini"
-# # settings_file="/opt/ztm/settings.ini"
-# ts=$(date +%s)
-# section="[ERP_SERVICE]"
-# host="host = https://test.bcvt.eu/"
-# config_time="config_time = "$ts
-# erp_id="erp_id = 0082-4140-0042-4216"
-# timeout="timeout = 5"
-
-# # Add settings for the ERP.
-# echo $section >> $settings_file
-# echo $host >> $settings_file
-# echo $config_time >> $settings_file
-# echo $erp_id >> $settings_file
-# echo $timeout >> $settings_file
-
-# Copy the registers initial file.
-# ========================================================================
-sudo cp /opt/ztm/registers.csv /media/zontromat/registers.csv
 
 # Go to home dir.
 # ========================================================================
@@ -170,26 +135,30 @@ rm -rf ./Git
 # Copy the servie file.
 cp /opt/ztm/sh/zontromat.service /etc/systemd/system/
 
-# Stop sleep and screen saver.
-# ========================================================================
-systemctl mask sleep.target suspend.target hibernate.target hybrid-sleep.target
-
-
-# Create autostart directory if it is not created.
-# ========================================================================
-mkdir -p ~/.config/autostart/
-
-# Set KIOSK screen session.
-# ========================================================================
-# Copy the autorun file file.
-cp /opt/ztm/sh/ztm-kiosk.desktop ~/.config/autostart/ztm-kiosk.desktop
-
-# Hide cursor pointer in 10 ms affter usage the pointing device.
-cp /opt/ztm/sh/ztm-unclutter.desktop ~/.config/autostart/ztm-unclutter.desktop
-
 # Add Zontromat user.
 adduser zontromat
 
 # Add Zontromat user to sudo.
 usermod -aG sudo zontromat
 
+# Make auto login of the user.
+nano /etc/gdm3/custom.conf
+
+# Create autostart directory if it is not created.
+# ========================================================================
+mkdir -p /home/zontromat/.config/autostart/
+
+# Set KIOSK screen session.
+# ========================================================================
+# Copy the KIOSK browser autorun. (KIOSK browser autorun file.)
+cp /opt/ztm/sh/ztm-kiosk.desktop /home/zontromat/.config/autostart/ztm-kiosk.desktop
+
+# Copy the unclutter autorun. (Hide cursor pointer in 10 ms affter usage the pointing device.)
+cp /opt/ztm/sh/ztm-unclutter.desktop /home/zontromat/.config/autostart/ztm-unclutter.desktop
+
+# Copy the caffeinie autorun. (Keep screen ON of the device.)
+cp /opt/ztm/sh/ztm-caffeine.desktop /home/zontromat/.config/autostart/ztm-caffeine.desktop
+
+# Stop sleep and screen saver.
+# ========================================================================
+# systemctl mask sleep.target suspend.target hibernate.target hybrid-sleep.target
