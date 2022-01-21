@@ -109,7 +109,7 @@ class ElectricalPerformance:
 
         self.__test_state = StateMachine(TestState.NONE)
         self.__check_timer = Timer(0)
-        self.__registers = Registers.get_instance()
+        self.__registers = Registers.from_csv()
 
     def __del__(self):
         """Destructor"""
