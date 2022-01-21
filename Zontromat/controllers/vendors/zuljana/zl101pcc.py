@@ -29,6 +29,7 @@ import os
 # from pymodbus.client.sync import ModbusTcpClient as ModbusClient
 # from pymodbus.client.sync import ModbusUdpClient as ModbusClient
 from pymodbus.client.sync import ModbusSerialClient as ModbusClient
+from services.global_error_handler.global_error_handler import GlobalErrorHandler
 
 from utils.logger import get_logger
 from utils.utils import serial_ports
@@ -380,6 +381,10 @@ class ZL101PCC(BaseController):
             if di_response is not None:
                 if not di_response.isError():
                     self.__DI = di_response.bits
+                else:
+                    GlobalErrorHandler.log_hardware_malfunction(self.__logger, "GPIO: {} @ {} malfunctioning, check modbus cables and connections.".format(pin, self))
+            else:
+                GlobalErrorHandler.log_hardware_malfunction(self.__logger, "GPIO: {} @ {} malfunctioning, check modbus cables and connections.".format(pin, self))
 
             response = self.__DI[self.__map[pin]]
 
@@ -448,6 +453,10 @@ class ZL101PCC(BaseController):
             if cw_response is not None:
                 if not cw_response.isError():
                     response = True
+                else:
+                    GlobalErrorHandler.log_hardware_malfunction(self.__logger, "GPIO: {} @ {} malfunctioning, check modbus cables and connections.".format(pin, self))
+            else:
+                GlobalErrorHandler.log_hardware_malfunction(self.__logger, "GPIO: {} @ {} malfunctioning, check modbus cables and connections.".format(pin, self))
 
             # self.__logger.debug("digital_write({}, {}, {})".format(self.model, pin, value))
 
@@ -489,8 +498,11 @@ class ZL101PCC(BaseController):
             .generate_request("SetAnalogOutputs", SetAnalogOutputs=self.__AO)
         hrw_response = self.__modbus_rtu_client.execute(request)
         if hrw_response is not None:
-            if not hrw_response.isError():
-                pass
+            if hrw_response.isError():
+                GlobalErrorHandler.log_hardware_malfunction(self.__logger, "GPIO: {} @ {} malfunctioning, check modbus cables and connections.".format(pin, self))
+        else:
+            GlobalErrorHandler.log_hardware_malfunction(self.__logger, "GPIO: {} @ {} malfunctioning, check modbus cables and connections.".format(pin, self))
+
         # self.__logger.debug("analog_write({}, {}, {})".format(self.model, pin, value))
 
         return state
@@ -545,6 +557,10 @@ class ZL101PCC(BaseController):
         if irr_response is not None:
             if not irr_response.isError():
                 self.__AI = irr_response.registers
+            else:
+                GlobalErrorHandler.log_hardware_malfunction(self.__logger, "GPIO: {} @ {} malfunctioning, check modbus cables and connections.".format(pin, self))
+        else:
+            GlobalErrorHandler.log_hardware_malfunction(self.__logger, "GPIO: {} @ {} malfunctioning, check modbus cables and connections.".format(pin, self))
 
         value = self.__AI[self.__map[pin]]
 
