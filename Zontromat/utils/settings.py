@@ -244,7 +244,7 @@ class ApplicationSettings:
                 self.__config["ERP_SERVICE"] = {
                     "config_time": int(time.time()),
                     "erp_id": "0000-0000-0000-0000",
-                    # "host": "https://127.0.0.1/",
+                    "host": "https://test.bcvt.eu/",
                     "timeout": 5,
                     }
 
