@@ -181,12 +181,8 @@ class ApplicationSettings:
         if file_name is None:
 
             # Current file path. & Go to file.
-            if os.name == "posix":
-                self.__file_name = os.path.join("media", "zontromat", "settings.ini")
-
-            elif os.name == "nt":
-                cwf = os.path.dirname(os.path.abspath(__file__))
-                self.__file_name = os.path.join(cwf, "..", "..", "settings.ini")
+            cwf = os.path.dirname(os.path.abspath(__file__))
+            self.__file_name = os.path.join(cwf, "..", "..", "settings.ini")
 
             self.__config = configparser.ConfigParser()
             self.read()
