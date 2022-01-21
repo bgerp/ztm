@@ -85,7 +85,7 @@ class BaseController(Configuarable):
         Returns:
             str: Short description.
         """
-        return "Controller vendor({}) / model({}) / ID({}) ".format(
+        return "Controller vendor({}) / model({}) / ID({})".format(
             self.vendor,
             self.model,
             self.serial_number)
