@@ -380,31 +380,28 @@ def __add_registers():
 
 #region Blinds (blinds)
 
-    register = Register("blinds.input_fb")
+    register = Register("blinds.blind_1.mechanism")
     register.scope = Scope.System
     register.plugin_name = "Blinds"
-    register.description = "Feedback input"
-    register.range = "off|DI0|DI1|DI2|DI3|DI4|DI5|DI6|DI7|DI8|AI0|AI1|AI2|AI3|AI4|AI5|AI6|AI7|AI8"
-    register.value = "AI0" # "DI8"
+    register.description = "Window 1 blinds mechanism"
+    register.range = __range["NONE"]
+    register.value = {
+        "vendor": "PT",
+        "model": "MODv1",
+        "options":
+        {
+            "cw": "DO0",
+            "ccw": "DO1",
+            "feedback": "AI0",
+            "feedback_tresh": 0.093,
+            "min": 0,
+            "max": 180,
+            "deg_per_sec": 10.0,
+        }
+    }
     __registers.append(register)
 
-    register = Register("blinds.output_ccw")
-    register.scope = Scope.System
-    register.plugin_name = "Blinds"
-    register.description = "CCW output"
-    register.range = __range["DO"]
-    register.value = "DO0"
-    __registers.append(register)
-
-    register = Register("blinds.output_cw")
-    register.scope = Scope.System
-    register.plugin_name = "Blinds"
-    register.description = "CW output"
-    register.range = __range["DO"]
-    register.value = "DO1"
-    __registers.append(register)
-
-    register = Register("blinds.position")
+    register = Register("blinds.blind_1.position")
     register.scope = Scope.System
     register.plugin_name = "Blinds"
     register.description = "Position [deg]"
@@ -412,23 +409,15 @@ def __add_registers():
     register.value = 0.0
     __registers.append(register)
 
-    register = Register("blinds.deg_per_sec")
+    register = Register("blinds.blind_1.object_height")
     register.scope = Scope.System
     register.plugin_name = "Blinds"
-    register.description = "Degrees pre seconds ratio."
+    register.description = "Object height [m]."
     register.range = "0.0/"
-    register.value = 10.0
+    register.value = 2.0
     __registers.append(register)
 
-    register = Register("blinds.feedback_treshold")
-    register.scope = Scope.System
-    register.plugin_name = "Blinds"
-    register.description = "Feedback treshold level in [V]."
-    register.range = "0.0/"
-    register.value = 0.093
-    __registers.append(register)
-
-    register = Register("blinds.sunspot_limit")
+    register = Register("blinds.blind_1.sunspot_limit")
     register.scope = Scope.System
     register.plugin_name = "Blinds"
     register.description = "Sun spot limit [m]."
@@ -436,12 +425,12 @@ def __add_registers():
     register.value = 1.0
     __registers.append(register)
 
-    register = Register("blinds.object_height")
+    register = Register("blinds.count")
     register.scope = Scope.System
     register.plugin_name = "Blinds"
-    register.description = "Object height [m]."
-    register.range = "0.0/"
-    register.value = 2.0
+    register.description = "Number of blind controllers"
+    register.range = "1/"
+    register.value = 1
     __registers.append(register)
 
     register = Register("blinds.enabled")
