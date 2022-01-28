@@ -35,7 +35,7 @@ from data.register import Register
 
 from services.global_error_handler.global_error_handler import GlobalErrorHandler
 
-from devices.factories.light_sensor.light_sensor_factory import LightSensorFactory
+from devices.factories.luxmeters.luxmeters_factory import LuxmeterFactory
 
 #region File Attributes
 
@@ -158,7 +158,7 @@ class Statistics(BasePlugin):
         if register.value != None and self.__light_sensor is None:
 
             dev_name = "{} {}".format("Test sensor", self.name)
-            self.__light_sensor = LightSensorFactory.create(
+            self.__light_sensor = LuxmeterFactory.create(
                 name=dev_name,
                 controller=self._controller,
                 vendor=register.value['vendor'],
