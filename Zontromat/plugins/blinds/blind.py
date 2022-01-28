@@ -186,7 +186,7 @@ class Blind(BasePlugin):
     def __zone_occupation_cb(self, register):
 
         # Check data type.
-        if not ((register.data_type == "float") or (register.data_type == "int")):
+        if not ((register.data_type == "float") or (register.data_type == "int") or (register.data_type == "bool")):
             GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
 
