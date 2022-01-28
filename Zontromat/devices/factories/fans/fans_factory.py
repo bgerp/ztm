@@ -55,7 +55,7 @@ __status__ = "Debug"
 
 #endregion
 
-class FanFactory:
+class FansFactory:
     """Fan device factory.
     """
 

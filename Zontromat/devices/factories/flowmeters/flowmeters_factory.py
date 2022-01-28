@@ -22,9 +22,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 
-from devices.vendors.dallas.ds18b20.ds18b20 import DS18B20
-from devices.vendors.sed_tronic.u1wtvs.u1wtvs import U1WTVS
-from devices.vendors.donkger.xy_md02.xy_md02 import XYMD02
+from devices.vendors.enbra.sk09 import SK09
+from devices.vendors.mainone.flowmeter_dn20.flowmeter_dn20 import FlowmeterDN20
 
 #region File Attributes
 
@@ -57,15 +56,16 @@ __status__ = "Debug"
 
 #endregion
 
-class ThermalSensorFactory:
-    """Thermal sensors factory class.
+class FlowmetersFactory:
+    """Flowmeters factory.
     """
 
     @staticmethod
     def create(**config):
-        """Create thermal device factory instace."""
+        """Create device instace.
+        """
 
-        # The device.
+        # The device instance.
         device = None
 
         # Name
@@ -97,33 +97,23 @@ class ThermalSensorFactory:
         else:
             raise ValueError("No \"controller\" argument has been passed.")
 
-        # Dallas / DS18B20
-        if vendor == "Dallas" and  model == "DS18B20":
+        # enbra / SK09
+        if vendor == "enbra" and  model == "sk09":
 
-            device = DS18B20(
+            device = SK09(
                 name=name,
                 controller=controller,
-                dev="temp",
-                circuit=config["options"]['circuit']
+                input=config["options"]["input"]
             )
 
-        # SEDtronic / u1wtvs
-        elif vendor == "SEDtronic" and model == "u1wtvs":
+        # mainone / flowmeter_dn20
+        if vendor == "mainone" and  model == "flowmeter_dn20":
 
-            device = U1WTVS(
+            device = FlowmeterDN20(
                 name=name,
                 controller=controller,
-                dev=config["options"]['dev'],
-                circuit=config["options"]['circuit']
-            )
-
-        # Donkger / u1wtvs
-        elif vendor == "Donkger" and model == "XY-MD02":
-
-            device = XYMD02(
-                name=name,
-                controller=controller,
-                unit=config["options"]['mb_id']
+                uart=config["options"]["uart"],
+                mb_id=config["options"]["mb_id"]
             )
 
         else:

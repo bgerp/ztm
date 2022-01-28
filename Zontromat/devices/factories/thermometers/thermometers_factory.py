@@ -22,9 +22,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 
+from devices.vendors.dallas.ds18b20.ds18b20 import DS18B20
 from devices.vendors.sed_tronic.u1wtvs.u1wtvs import U1WTVS
-
-from devices.vendors.pt.light_sensor.light_sensor import LightSensor
+from devices.vendors.donkger.xy_md02.xy_md02 import XYMD02
 
 #region File Attributes
 
@@ -57,25 +57,15 @@ __status__ = "Debug"
 
 #endregion
 
-class LightSensorFactory:
-    """Light sensor factory.
+class ThermometersFactory:
+    """Thermal sensors factory class.
     """
 
     @staticmethod
     def create(**config):
-        """Create device instace.
+        """Create thermal device factory instace."""
 
-        Raises:
-            ValueError: Invalid vendor.
-            ValueError: Invalid model.
-            ValueError: No controller.
-            NotImplementedError: If device is not supported.
-
-        Returns:
-            mixed: Instance of the device.
-        """
-
-        # The device instance.
+        # The device.
         device = None
 
         # Name
@@ -107,13 +97,14 @@ class LightSensorFactory:
         else:
             raise ValueError("No \"controller\" argument has been passed.")
 
-        # POLYGON Team / light_sensor
-        if vendor == "PT" and  model == "light_sensor":
+        # Dallas / DS18B20
+        if vendor == "Dallas" and  model == "DS18B20":
 
-            device = LightSensor(
+            device = DS18B20(
                 name=name,
                 controller=controller,
-                analog_input=config["options"]['input']
+                dev="temp",
+                circuit=config["options"]['circuit']
             )
 
         # SEDtronic / u1wtvs
@@ -123,10 +114,18 @@ class LightSensorFactory:
                 name=name,
                 controller=controller,
                 dev=config["options"]['dev'],
-                circuit=config["options"]['circuit'],
+                circuit=config["options"]['circuit']
             )
 
-        # Not implemented device.
+        # Donkger / u1wtvs
+        elif vendor == "Donkger" and model == "XY-MD02":
+
+            device = XYMD02(
+                name=name,
+                controller=controller,
+                unit=config["options"]['mb_id']
+            )
+
         else:
             raise NotImplementedError("The {} and {}, is not supported.".format(vendor, model))
 

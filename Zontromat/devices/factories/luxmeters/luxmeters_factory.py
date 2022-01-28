@@ -22,7 +22,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 
-from devices.vendors.silpa.klimafan.klimafan import Klimafan
+from devices.vendors.sed_tronic.u1wtvs.u1wtvs import U1WTVS
+
+from devices.vendors.pt.light_sensor.light_sensor import LightSensor
 
 #region File Attributes
 
@@ -55,16 +57,25 @@ __status__ = "Debug"
 
 #endregion
 
-class ConvectorFactory:
-    """Convector factory.
+class LuxmeterFactory:
+    """Light sensor factory.
     """
 
     @staticmethod
     def create(**config):
         """Create device instace.
+
+        Raises:
+            ValueError: Invalid vendor.
+            ValueError: Invalid model.
+            ValueError: No controller.
+            NotImplementedError: If device is not supported.
+
+        Returns:
+            mixed: Instance of the device.
         """
 
-        # The device.
+        # The device instance.
         device = None
 
         # Name
@@ -96,17 +107,26 @@ class ConvectorFactory:
         else:
             raise ValueError("No \"controller\" argument has been passed.")
 
-        # Silpa / Klimafan / (DO0,R0,U1:ID1:R0:DO0) / (DO1,R1,U1:ID1:R0:DO1) / (DO2,R2,U1:ID1:R0:DO2)
-        if vendor == "Silpa" and  model == "Klimafan":
+        # POLYGON Team / light_sensor
+        if vendor == "PT" and  model == "light_sensor":
 
-            device = Klimafan(
+            device = LightSensor(
                 name=name,
                 controller=controller,
-                stage1=config["options"]["stage1"],
-                stage2=config["options"]["stage2"],
-                stage3=config["options"]["stage3"],
+                analog_input=config["options"]['input']
             )
 
+        # SEDtronic / u1wtvs
+        elif vendor == "SEDtronic" and model == "u1wtvs":
+
+            device = U1WTVS(
+                name=name,
+                controller=controller,
+                dev=config["options"]['dev'],
+                circuit=config["options"]['circuit'],
+            )
+
+        # Not implemented device.
         else:
             raise NotImplementedError("The {} and {}, is not supported.".format(vendor, model))
 

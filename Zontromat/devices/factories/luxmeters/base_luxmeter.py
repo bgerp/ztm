@@ -56,7 +56,7 @@ __status__ = "Debug"
 
 #endregion
 
-class BaseLightSensor(BaseDevice):
+class BaseLuxmeter(BaseDevice):
     """Light sensor base class."""
 
 #region Attributes
