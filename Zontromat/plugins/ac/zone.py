@@ -68,7 +68,7 @@ __status__ = "Debug"
 
 #endregion
 
-class SecurityZone(BasePlugin):
+class Zone(BasePlugin):
     """Security zone definition class."""
 
 #region Attribute

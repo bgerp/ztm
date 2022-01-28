@@ -29,7 +29,7 @@ from utils.logger import get_logger
 from utils.logic.timer import Timer
 
 from plugins.base_plugin import BasePlugin
-from plugins.ac.security_zone import SecurityZone
+from plugins.ac.zone import Zone
 
 from services.global_error_handler.global_error_handler import GlobalErrorHandler
 
@@ -240,7 +240,7 @@ class AccessControl(BasePlugin):
             zones_count = reg_zones_count.value
 
         # Name the zones.
-        prototype = "AC_{}"
+        prototype = "AccessControl_{}"
         zones_count += 1
         for index in range(1, zones_count):
 
@@ -248,9 +248,9 @@ class AccessControl(BasePlugin):
             name = prototype.format(index)
 
             # Register the zone.
-            self.__zones[name] = SecurityZone(\
+            self.__zones[name] = Zone(\
                 registers=self._registers, controller=self._controller,\
-                identifier=index, key=self.key, name="Security Zone")
+                identifier=index, key=self.key, name="AccessControl")
 
             # Add on card callback.
             self.__zones[name].on_card(self.__on_card_cb)
