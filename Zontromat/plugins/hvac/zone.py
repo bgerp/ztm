@@ -33,11 +33,10 @@ from utils.logic.temp_processor import TemperatureProcessor
 
 from plugins.base_plugin import BasePlugin
 
-from devices.factories.thermal_sensor.thermal_sensor_factory import ThermalSensorFactory
 from devices.factories.valve.valve_factory import ValveFactory
-from devices.factories.convector.convector_factory import ConvectorFactory
-
-from devices.vendors.no_vendor_1.flowmeter import Flowmeter
+from devices.factories.convectors.convectors_factory import ConvectorsFactory
+from devices.factories.flowmeters.flowmeters_factory import FlowmetersFactory
+from devices.factories.thermometers.thermometers_factory import ThermometersFactory
 
 from devices.tests.leak_test.leak_test import LeakTest
 from devices.tests.electrical_performance.electrical_performance import ElectricalPerformance
@@ -78,7 +77,7 @@ __status__ = "Debug"
 
 #endregion
 
-class AirConditioner(BasePlugin):
+class Zone(BasePlugin):
     """Air conditioner control logic.
     """
 
@@ -117,7 +116,7 @@ class AirConditioner(BasePlugin):
     __loop1_valve_dev = None
     """Loop 1 valve device."""
 
-    __loop1_cnt_dev = None
+    __loop1_flowmeter = None
     """Loop 1 flow metter."""
 
     __loop1_leak_test = None
@@ -130,7 +129,7 @@ class AirConditioner(BasePlugin):
     __loop2_valve_dev = None
     """Loop 2 valve device."""
 
-    __loop2_cnt_dev = None
+    __loop2_flowmeter = None
     """Loop 2 flow metter."""
 
     __loop2_leak_teat = None
@@ -200,8 +199,8 @@ class AirConditioner(BasePlugin):
         if self.__loop1_valve_dev is not None:
             del self.__loop1_valve_dev
 
-        if self.__loop1_cnt_dev is not None:
-            del self.__loop1_cnt_dev
+        if self.__loop1_flowmeter is not None:
+            del self.__loop1_flowmeter
 
         if self.__loop2_temp_dev is not None:
             del self.__loop2_temp_dev
@@ -209,8 +208,8 @@ class AirConditioner(BasePlugin):
         if self.__loop2_valve_dev is not None:
             del self.__loop2_valve_dev
 
-        if self.__loop2_cnt_dev is not None:
-            del self.__loop2_cnt_dev
+        if self.__loop2_flowmeter is not None:
+            del self.__loop2_flowmeter
 
         if self.__thermal_mode is not None:
             del self.__thermal_mode
@@ -394,9 +393,9 @@ class AirConditioner(BasePlugin):
 
         if register.value != {} and self.__air_temp_cent_dev is None:
 
-            self.__air_temp_cent_dev = ThermalSensorFactory.create(
-                controller=self._controller,
+            self.__air_temp_cent_dev = ThermometersFactory.create(
                 name="Air temperature center",
+                controller=self._controller,
                 vendor=register.value['vendor'],
                 model=register.value['model'],
                 options=register.value['options'])
@@ -420,7 +419,7 @@ class AirConditioner(BasePlugin):
 
         if register.value != {} and self.__air_temp_lower_dev is None:
 
-            self.__air_temp_lower_dev = ThermalSensorFactory.create(
+            self.__air_temp_lower_dev = ThermometersFactory.create(
                 controller=self._controller,
                 name="Air temperature lower",
                 vendor=register.value['vendor'],
@@ -446,7 +445,7 @@ class AirConditioner(BasePlugin):
 
         if register.value != {} and self.__air_temp_upper_dev is None:
 
-            self.__air_temp_upper_dev = ThermalSensorFactory.create(
+            self.__air_temp_upper_dev = ThermometersFactory.create(
                 controller=self._controller,
                 name="Air temperature upper",
                 vendor=register.value['vendor'],
@@ -476,8 +475,8 @@ class AirConditioner(BasePlugin):
 
         if register.value != {} and self.__convector_dev is None:
 
-            self.__convector_dev = ConvectorFactory.create(
-                name="Convector_{}".format(self.__identifier),
+            self.__convector_dev = ConvectorsFactory.create(
+                name="Convector {}".format(self.__identifier),
                 controller=self._controller,
                 vendor=register.value['vendor'],
                 model=register.value['model'],
@@ -494,30 +493,31 @@ class AirConditioner(BasePlugin):
 
 #region Private Methods (Registers Loop 1)
 
-    def __loop1_cnt_input_cb(self, register):
+    def __loop1_flowmeter_settings_cb(self, register):
 
         # Check data type.
-        if not register.data_type == "str":
+        if not register.data_type == "json":
             GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
             return
 
-        if register.value != verbal_const.OFF and self.__loop1_cnt_dev is None:
-            self.__loop1_cnt_dev = Flowmeter.create(\
-                "Loop 2 flowmeter",\
-                "{}.loop2_{}.cnt".format(self.key, self.__identifier),\
-                self._registers,\
-                self._controller)
+        if register.value != {} and self.__loop1_flowmeter is None:
+            self.__loop1_flowmeter = FlowmetersFactory.create(
+                name="Loop 1 flowmeter",
+                controller=self._controller,
+                vendor=register.value['vendor'],
+                model=register.value['model'],
+                options=register.value['options'])
 
-            if self.__loop1_cnt_dev is not None:
-                self.__loop1_cnt_dev.init()
+            if self.__loop1_flowmeter is not None:
+                self.__loop1_flowmeter.init()
 
                 # 20 seconds is time for leak testing.
-                self.__loop1_leak_test = LeakTest(self.__loop1_cnt_dev, 20)
+                self.__loop1_leak_test = LeakTest(self.__loop1_flowmeter, 20)
                 self.__loop1_leak_test.on_result(self.__loop1_leaktest_result)
 
-        elif register.value == verbal_const.OFF and self.__loop1_cnt_dev is not None:
-            self.__loop1_cnt_dev.shutdown()
-            del self.__loop1_cnt_dev
+        elif register.value == {} and self.__loop1_flowmeter is not None:
+            self.__loop1_flowmeter.shutdown()
+            del self.__loop1_flowmeter
             del self.__loop1_leak_test
 
     def __loop1_temp_settings_cb(self, register):
@@ -529,7 +529,7 @@ class AirConditioner(BasePlugin):
 
         if register.value != {} and self.__loop1_temp_dev is None:
 
-            self.__loop1_temp_dev = ThermalSensorFactory.create(
+            self.__loop1_temp_dev = ThermometersFactory.create(
                 controller=self._controller,
                 name="Loop 1 temperature",
                 vendor=register.value['vendor'],
@@ -543,7 +543,7 @@ class AirConditioner(BasePlugin):
             self.__loop1_temp_dev.shutdown()
             del self.__loop1_temp_dev
 
-    def __loop1_valve_enabled_cb(self, register):
+    def __loop1_valve_settings_cb(self, register):
 
         # Check data type.
         if not register.data_type == "json":
@@ -570,29 +570,30 @@ class AirConditioner(BasePlugin):
 
 #region Private Methods (Registers Loop 2)
 
-    def __loop2_cnt_input_cb(self, register):
+    def __loop2_flowmeter_settings_cb(self, register):
 
         # Check data type.
-        if not register.data_type == "str":
+        if not register.data_type == "json":
             GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
             return
 
-        if register.value != verbal_const.OFF and self.__loop2_cnt_dev is None:
-            self.__loop2_cnt_dev = Flowmeter.create(\
-                "Loop 2 flowmeter",\
-                "{}.loop2_{}.cnt".format(self.key, self.__identifier),\
-                self._registers,\
-                self._controller)
+        if register.value != {} and self.__loop2_flowmeter is None:
+            self.__loop2_flowmeter = FlowmetersFactory.create(
+                name="Loop 2 flowmeter",
+                controller=self._controller,
+                vendor=register.value['vendor'],
+                model=register.value['model'],
+                options=register.value['options'])
 
-            if self.__loop2_cnt_dev is not None:
-                self.__loop2_cnt_dev.init()
+            if self.__loop2_flowmeter is not None:
+                self.__loop2_flowmeter.init()
 
-                self.__loop2_leak_teat = LeakTest(self.__loop2_cnt_dev, 20)
+                self.__loop2_leak_teat = LeakTest(self.__loop2_flowmeter, 20)
                 self.__loop2_leak_teat.on_result(self.__loop2_leaktest_result)
 
-        elif register.value == {} and self.__loop2_cnt_dev is not None:
-            self.__loop2_cnt_dev.shutdown()
-            del self.__loop2_cnt_dev
+        elif register.value == {} and self.__loop2_flowmeter is not None:
+            self.__loop2_flowmeter.shutdown()
+            del self.__loop2_flowmeter
             del self.__loop2_leak_teat
 
     def __loop2_temp_settings_cb(self, register):
@@ -604,7 +605,7 @@ class AirConditioner(BasePlugin):
 
         if register.value != {} and self.__loop2_temp_dev is None:
 
-            self.__loop2_temp_dev = ThermalSensorFactory.create(
+            self.__loop2_temp_dev = ThermometersFactory.create(
                 controller=self._controller,
                 name="Loop 2 temperature",
                 vendor=register.value['vendor'],
@@ -674,20 +675,64 @@ class AirConditioner(BasePlugin):
         """
 
         # Air temperatures.
-        air_temp_cent_enabled = self._registers.by_name("{}.air_temp_cent_{}.settings".format(self.key, self.__identifier))
-        if air_temp_cent_enabled is not None:
-            air_temp_cent_enabled.update_handlers = self.__air_temp_cent_settings_cb
-            air_temp_cent_enabled.update()
+        air_temp_cent_settings = self._registers.by_name("{}.air_temp_cent_{}.settings".format(self.key, self.__identifier))
+        if air_temp_cent_settings is not None:
+            air_temp_cent_settings.update_handlers = self.__air_temp_cent_settings_cb
+            air_temp_cent_settings.update()
 
-        air_temp_lower_enabled = self._registers.by_name("{}.air_temp_lower_{}.settings".format(self.key, self.__identifier))
-        if air_temp_lower_enabled is not None:
-            air_temp_lower_enabled.update_handlers = self.__air_temp_lower_settings_cb
-            air_temp_lower_enabled.update()
+        air_temp_lower_settings = self._registers.by_name("{}.air_temp_lower_{}.settings".format(self.key, self.__identifier))
+        if air_temp_lower_settings is not None:
+            air_temp_lower_settings.update_handlers = self.__air_temp_lower_settings_cb
+            air_temp_lower_settings.update()
 
-        air_temp_upper_enabled = self._registers.by_name("{}.air_temp_upper_{}.settings".format(self.key, self.__identifier))
-        if air_temp_upper_enabled is not None:
-            air_temp_upper_enabled.update_handlers = self.__air_temp_upper_settings_cb
-            air_temp_upper_enabled.update()
+        air_temp_upper_settings = self._registers.by_name("{}.air_temp_upper_{}.settings".format(self.key, self.__identifier))
+        if air_temp_upper_settings is not None:
+            air_temp_upper_settings.update_handlers = self.__air_temp_upper_settings_cb
+            air_temp_upper_settings.update()
+
+        # Convector
+        convector_enable = self._registers.by_name("{}.convector_{}.settings".format(self.key, self.__identifier))
+        if convector_enable is not None:
+            convector_enable.update_handlers = self.__convector_settings_cb
+            convector_enable.update()
+
+        # Loop 1
+        loop1_flowmeter = self._registers.by_name("{}.loop1_{}.flowmeter.settings".format(self.key, self.__identifier))
+        if loop1_flowmeter is not None:
+            loop1_flowmeter.update_handlers = self.__loop1_flowmeter_settings_cb
+            loop1_flowmeter.update()
+
+        loop1_temp_settings = self._registers.by_name("{}.loop1_{}.temp.settings".format(self.key, self.__identifier))
+        if loop1_temp_settings is not None:
+            loop1_temp_settings.update_handlers = self.__loop1_temp_settings_cb
+            loop1_temp_settings.update()
+
+        loop1_valve_enabled = self._registers.by_name("{}.loop1_{}.valve.settings".format(self.key, self.__identifier))
+        if loop1_valve_enabled is not None:
+            loop1_valve_enabled.update_handlers = self.__loop1_valve_settings_cb
+            loop1_valve_enabled.update()
+
+        # Loop 2
+        loop2_flowmeter_settings = self._registers.by_name("{}.loop2_{}.flowmeter.settings".format(self.key, self.__identifier))
+        if loop2_flowmeter_settings is not None:
+            loop2_flowmeter_settings.update_handlers = self.__loop2_flowmeter_settings_cb
+            loop2_flowmeter_settings.update()
+
+        loop2_temp_settings = self._registers.by_name("{}.loop2_{}.temp.settings".format(self.key, self.__identifier))
+        if loop2_temp_settings is not None:
+            loop2_temp_settings.update_handlers = self.__loop2_temp_settings_cb
+            loop2_temp_settings.update()
+
+        loop2_valve_settings = self._registers.by_name("{}.loop2_{}.valve.settings".format(self.key, self.__identifier))
+        if loop2_valve_settings is not None:
+            loop2_valve_settings.update_handlers = self.__loop2_valve_settings_cb
+            loop2_valve_settings.update()
+
+        # Create window closed sensor.
+        window_closed_input = self._registers.by_name("{}.window_closed_{}.input".format("ac", self.__identifier))
+        if window_closed_input is not None:
+            window_closed_input.update_handlers = self.__window_closed_input_cb
+            window_closed_input.update()
 
         # Region parameters
         update_rate = self._registers.by_name("{}.update_rate_{}".format(self.key, self.__identifier))
@@ -719,51 +764,6 @@ class AirConditioner(BasePlugin):
         if goal_building_temp is not None:
             goal_building_temp.update_handlers = self.__goal_building_temp_cb
             goal_building_temp.update()
-
-
-        # Convector
-        convector_enable = self._registers.by_name("{}.convector_{}.settings".format(self.key, self.__identifier))
-        if convector_enable is not None:
-            convector_enable.update_handlers = self.__convector_settings_cb
-            convector_enable.update()
-
-        # Loop 1
-        loop1_cnt_enabled = self._registers.by_name("{}.loop1_{}.cnt.input".format(self.key, self.__identifier))
-        if loop1_cnt_enabled is not None:
-            loop1_cnt_enabled.update_handlers = self.__loop1_cnt_input_cb
-            loop1_cnt_enabled.update()
-
-        loop1_temp_enabled = self._registers.by_name("{}.loop1_{}.temp.settings".format(self.key, self.__identifier))
-        if loop1_temp_enabled is not None:
-            loop1_temp_enabled.update_handlers = self.__loop1_temp_settings_cb
-            loop1_temp_enabled.update()
-
-        loop1_valve_enabled = self._registers.by_name("{}.loop1_{}.valve.settings".format(self.key, self.__identifier))
-        if loop1_valve_enabled is not None:
-            loop1_valve_enabled.update_handlers = self.__loop1_valve_enabled_cb
-            loop1_valve_enabled.update()
-
-        # Loop 2
-        loop2_cnt_enabled = self._registers.by_name("{}.loop2_{}.cnt.input".format(self.key, self.__identifier))
-        if loop2_cnt_enabled is not None:
-            loop2_cnt_enabled.update_handlers = self.__loop2_cnt_input_cb
-            loop1_cnt_enabled.update()
-
-        loop2_temp_enabled = self._registers.by_name("{}.loop2_{}.temp.settings".format(self.key, self.__identifier))
-        if loop2_temp_enabled is not None:
-            loop2_temp_enabled.update_handlers = self.__loop2_temp_settings_cb
-            loop2_temp_enabled.update()
-
-        loop2_valve_enabled = self._registers.by_name("{}.loop2_{}.valve.settings".format(self.key, self.__identifier))
-        if loop2_valve_enabled is not None:
-            loop2_valve_enabled.update_handlers = self.__loop2_valve_settings_cb
-            loop2_valve_enabled.update()
-
-        # Create window closed sensor.
-        window_closed_input = self._registers.by_name("{}.window_closed_{}.input".format("ac", self.__identifier))
-        if window_closed_input is not None:
-            window_closed_input.update_handlers = self.__window_closed_input_cb
-            window_closed_input.update()
 
         # Get the power mode of the building.
         envm_energy = self._registers.by_name("envm.energy")
@@ -845,7 +845,7 @@ class AirConditioner(BasePlugin):
         if self._controller.is_valid_gpio(self.__window_closed_input):
             state = self._controller.digital_read(self.__window_closed_input)
 
-        if self.__window_closed_input == {}:
+        if self.__window_closed_input == verbal_const.OFF:
             state = True
 
         return state
@@ -1008,7 +1008,7 @@ class AirConditioner(BasePlugin):
             self.__update_timer.clear()
 
             # Recalculate the temperatures.
-            self.__temp_proc.update() # Add thermometers : DS18B20 - 28B802B5030000CF 11.8 °C
+            self.__temp_proc.update()
 
             crg_temp = 0
             expected_room_temp = 0

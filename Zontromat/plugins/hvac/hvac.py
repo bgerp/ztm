@@ -25,7 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from utils.logger import get_logger
 
 from plugins.base_plugin import BasePlugin
-from plugins.hvac.air_conditioner import AirConditioner
+from plugins.hvac.zone import Zone
 
 #region File Attributes
 
@@ -107,16 +107,16 @@ class HVAC(BasePlugin):
             zones_count = reg_zones_count.value
 
         # Name the zones.
-        prototype = "AC_{}"
+        prototype = "AirConditioning {}"
         zones_count += 1
         for index in range(1, zones_count):
 
             # Create name.
             name = prototype.format(index)
 
-            self.__zones[name] = AirConditioner(\
+            self.__zones[name] = Zone(\
                 registers=self._registers, controller=self._controller,\
-                identifier=index, key=self.key, name="AC")
+                identifier=index, key=self.key, name="AirConditioning")
 
             # Initialize the module.
             self.__zones[name].init()
