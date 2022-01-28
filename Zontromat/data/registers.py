@@ -341,7 +341,7 @@ class Registers(list):
 
         return result
 
-    def to_json(self):
+    def get_json(self):
         """Converts array to JSON.
 
         Returns:
@@ -353,7 +353,7 @@ class Registers(list):
         for register in self:
 
             # Handle list and dict types.
-            result.append(register.to_json())
+            result.append(register.get_json())
 
         return result
 
@@ -606,7 +606,7 @@ class Registers(list):
     def to_json(registers, file_path="registers.json"):
         """JSON output"""
 
-        dict_regs = registers.to_json()
+        dict_regs = registers.get_json()
         text = json.dumps(dict_regs, indent=4, sort_keys=True)
 
         with open(file_path, "w") as json_file:

@@ -386,7 +386,7 @@ class Register:
                 if item is not None:
                     item(self)
 
-    def to_json(self):
+    def get_json(self):
         """Converts register in to JSON ready dictionary.
 
         Returns:
