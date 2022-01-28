@@ -25,7 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from utils.logger import get_logger
 
 from plugins.base_plugin import BasePlugin
-from plugins.vent.ventilation import Ventilation
+from plugins.vent.zone import Zone
 
 #region File Attributes
 
@@ -62,7 +62,7 @@ __class_name__ = "Vent"
 #endregion
 
 class Vent(BasePlugin):
-    """Ventilation controll plugin."""
+    """Zone controll plugin."""
 
 #region Attributes
 
@@ -114,7 +114,7 @@ class Vent(BasePlugin):
             # Create name.
             name = prototype.format(index)
 
-            self.__zones[name] = Ventilation(\
+            self.__zones[name] = Zone(\
                 registers=self._registers, controller=self._controller,\
                 identifier=index, key=self.key, name=name)
 

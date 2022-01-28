@@ -29,13 +29,15 @@ from utils.logic.timer import Timer
 from utils.utils import disk_size
 
 from plugins.base_plugin import BasePlugin
-from devices.factories.fan.fan_factory import FanFactory
+from devices.factories.fans.fans_factory import FansFactory
+from devices.factories.air_dampers.air_dampers_factory import AirDampersFactory
 
-from data import verbal_const
 from data.register import Register
 from data.thermal_mode import ThermalMode
 
 from services.global_error_handler.global_error_handler import GlobalErrorHandler
+
+
 
 #region File Attributes
 
@@ -80,7 +82,7 @@ class AirValveState(Enum):
     Open = 2
     Close = 3
 
-class Ventilation(BasePlugin):
+class Zone(BasePlugin):
     """Ventilation zone controll."""
 
 #region Attributes
@@ -114,12 +116,12 @@ class Ventilation(BasePlugin):
     """Access Control set point.
     """
 
-    __upper_valve_settings = {}
-    """Lower valve settings.
+    __upper_air_damper = None
+    """Upper air damper settings.
     """
 
-    __lower_valve_settings = {}
-    """Lower valve settings.
+    __lower_air_damper = None
+    """Lower air damper settings.
     """
 
 #endregion
@@ -149,153 +151,55 @@ class Ventilation(BasePlugin):
 
 #endregion
 
-#region Private Methods (PLC IO)
-
-    def __set_upper_valve(self, state: AirValveState = AirValveState.NONE):
-
-        if self.__upper_valve_settings == None:
-            return
-
-        if len(self.__upper_valve_settings) == 0:
-            return
-
-        if state == AirValveState.Close:
-            self._controller.digital_write(self.__upper_valve_settings["open"], 0)
-            self._controller.digital_write(self.__upper_valve_settings["close"], 1)
-
-        elif state == AirValveState.Open:
-            self._controller.digital_write(self.__upper_valve_settings["close"], 0)
-            self._controller.digital_write(self.__upper_valve_settings["open"], 1)
-
-        elif state == AirValveState.Off:
-            self._controller.digital_write(self.__upper_valve_settings["close"], 0)
-            self._controller.digital_write(self.__upper_valve_settings["open"], 0)
-
-    def __set_lower_valve(self, state):
-
-        if self.__lower_valve_settings == None:
-            return
-
-        if len(self.__lower_valve_settings) == 0:
-            return
-
-        if state == AirValveState.Close:
-            self._controller.digital_write(self.__lower_valve_settings["open"], 0)
-            self._controller.digital_write(self.__lower_valve_settings["close"], 1)
-
-        elif state == AirValveState.Open:
-            self._controller.digital_write(self.__lower_valve_settings["close"], 0)
-            self._controller.digital_write(self.__lower_valve_settings["open"], 1)
-
-        elif state == AirValveState.Off:
-            self._controller.digital_write(self.__lower_valve_settings["close"], 0)
-            self._controller.digital_write(self.__lower_valve_settings["open"], 0)
-
-#endregion
-
 #region Private Methods (Registers)
 
-    # Upper valve.
-    def __upper_valve_settings_cb(self, register: Register):
+    # Upper air damper.
+    def __upper_air_damper_settings_cb(self, register: Register):
 
         # Check data type.
         if not register.data_type == "json":
             GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
             return
 
-        config = register.value
-        if config is not None:
+        if register.value != {} and self.__upper_air_damper is None:
 
-            # Name
-            # name = ""
-            # if "name" in config:
-            #     name = config["name"]
+            self.__upper_air_damper = AirDampersFactory.create(
+                name="Air damper upper",
+                controller=self._controller,
+                vendor=register.value['vendor'],
+                model=register.value['model'],
+                options=register.value['options'])
 
-            # Vendor
-            vendor = None
-            if "vendor" in config:
-                vendor = config["vendor"]
+            if self.__upper_air_damper is not None:
+                self.__upper_air_damper.init()
 
-            else:
-                raise ValueError("No \"vendor\" argument has been passed.")
+        elif register.value == {} and self.__upper_air_damper is not None:
+            self.__upper_air_damper.shutdown()
+            del self.__upper_air_damper
 
-            # Model
-            model = None
-            if "model" in config:
-                model = config["model"]
-
-            else:
-                raise ValueError("No \"model\" argument has been passed.")
-
-            # Controller
-            # controller = None
-            # if "controller" in config:
-            #     controller = config["controller"]
-
-            # else:
-            #     raise ValueError("No \"controller\" argument has been passed.")
-
-            if vendor == "FONYES" and  model == "Model1":
-
-                # device = Model1(
-                #     name=name,
-                #     controller=controller,
-                #     output=config["options"]["output"]
-                # )
-
-                self.__upper_valve_settings["close"] = config['options']['closing']
-                self.__upper_valve_settings["open"] = config['options']['opening']
-
-    # Lower valve.
-    def __lower_valve_settings_cb(self, register: Register):
+    # Lower air damper.
+    def __lower_air_damper_settings_cb(self, register: Register):
 
         # Check data type.
         if not register.data_type == "json":
             GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
             return
 
-        config = register.value
-        if config is not None:
+        if register.value != {} and self.__lower_air_damper is None:
 
-            # Name
-            # name = ""
-            # if "name" in config:
-            #     name = config["name"]
+            self.__lower_air_damper = AirDampersFactory.create(
+                name="Air damper lower",
+                controller=self._controller,
+                vendor=register.value['vendor'],
+                model=register.value['model'],
+                options=register.value['options'])
 
-            # Vendor
-            vendor = None
-            if "vendor" in config:
-                vendor = config["vendor"]
+            if self.__lower_air_damper is not None:
+                self.__lower_air_damper.init()
 
-            else:
-                raise ValueError("No \"vendor\" argument has been passed.")
-
-            # Model
-            model = None
-            if "model" in config:
-                model = config["model"]
-
-            else:
-                raise ValueError("No \"model\" argument has been passed.")
-
-            # Controller
-            # controller = None
-            # if "controller" in config:
-            #     controller = config["controller"]
-
-            # else:
-            #     raise ValueError("No \"controller\" argument has been passed.")
-
-            if vendor == "FONYES" and  model == "Model1":
-
-                # device = Model1(
-                #     name=name,
-                #     controller=controller,
-                #     output=config["options"]["output"]
-                # )
-
-                self.__lower_valve_settings["close"] = config['options']['closing']
-                self.__lower_valve_settings["open"] = config['options']['opening']
+        elif register.value == {} and self.__lower_air_damper is not None:
+            self.__lower_air_damper.shutdown()
+            del self.__lower_air_damper
 
     # Params
     def __op_setpoint_cb(self, register: Register):
@@ -355,7 +259,6 @@ class Ventilation(BasePlugin):
 
         self.__logger.info("Ventilation AC set point: {}".format(register.value))
 
-
     # Upper fan
     def __upper_fan_settings_cb(self, register: Register):
 
@@ -366,7 +269,7 @@ class Ventilation(BasePlugin):
 
         if register.value != {} and self.__upper_fan_dev is None:
 
-            self.__upper_fan_dev = FanFactory.create(
+            self.__upper_fan_dev = FansFactory.create(
                 controller=self._controller,
                 name="Upper fan {}".format(self.__identifier),
                 vendor=register.value['vendor'],
@@ -418,12 +321,12 @@ class Ventilation(BasePlugin):
         if self.__upper_fan_dev is not None:
             self.__upper_fan_dev.speed = register.value
 
-
             if abs(register.value) > 0:
-                self.__set_lower_valve(AirValveState.Close)
-                self.__set_upper_valve(AirValveState.Open)
+                self.__lower_air_damper.position = 0
+                self.__upper_air_damper.position = 100
             else:
-                self.__set_upper_valve(AirValveState.Close)
+                self.__upper_air_damper.position = 0
+
 
     # Lower fan
     def __lower_fan_settings_cb(self, register: Register):
@@ -435,7 +338,7 @@ class Ventilation(BasePlugin):
 
         if register.value != {} and self.__lower_fan_dev is None:
 
-            self.__lower_fan_dev = FanFactory.create(
+            self.__lower_fan_dev = FansFactory.create(
                 controller=self._controller,
                 name="Lower fan {}".format(self.__identifier),
                 vendor=register.value['vendor'],
@@ -489,12 +392,12 @@ class Ventilation(BasePlugin):
 
 
             if abs(register.value) > 0:
-                self.__set_upper_valve(AirValveState.Close)
-                self.__set_lower_valve(AirValveState.Open)
+                self.__upper_air_damper.position = 0
+                self.__lower_air_damper.position = 100
             else:
-                self.__set_lower_valve(AirValveState.Close)
+                self.__lower_air_damper.position = 0
 
-
+    # Init
     def __init_registers(self):
 
         # Operator setpoint.
@@ -513,6 +416,13 @@ class Ventilation(BasePlugin):
             ac_setpoint.update_handlers = self.__ac_setpoint_cb
             ac_setpoint.update()
 
+        # Air damper upper.
+        upper_air_damper_settings = self._registers.by_name("{}.upper_{}.air_damper.settings".format(self.key, self.__identifier))
+        if upper_air_damper_settings is not None:
+            upper_air_damper_settings.update_handlers = self.__upper_air_damper_settings_cb
+            upper_air_damper_settings.update()
+
+
         # Upper fan
         upper_fan_enabled = self._registers.by_name("{}.upper_{}.fan.settings".format(self.key, self.__identifier))
         if upper_fan_enabled is not None:
@@ -529,10 +439,11 @@ class Ventilation(BasePlugin):
             upper_fan_max.update_handlers = self.__upper_fan_max_cb
             upper_fan_max.update()
 
-        upper_fan_speed = self._registers.by_name("{}.upper_{}.fan.speed".format(self.key, self.__identifier))
-        if upper_fan_speed is not None:
-            upper_fan_speed.update_handlers = self.__upper_fan_speed_cb
-            upper_fan_speed.update()
+        # Air damper lower.
+        lower_air_damper_settings = self._registers.by_name("{}.lower_{}.air_damper.settings".format(self.key, self.__identifier))
+        if lower_air_damper_settings is not None:
+            lower_air_damper_settings.update_handlers = self.__lower_air_damper_settings_cb
+            lower_air_damper_settings.update()
 
         # Lower fan
         lower_fan_enabled = self._registers.by_name("{}.lower_{}.fan.settings".format(self.key, self.__identifier))
@@ -550,20 +461,18 @@ class Ventilation(BasePlugin):
             lower_fan_max.update_handlers = self.__lower_fan_max_cb
             lower_fan_max.update()
 
+
+        # Speeds
+        upper_fan_speed = self._registers.by_name("{}.upper_{}.fan.speed".format(self.key, self.__identifier))
+        if upper_fan_speed is not None:
+            upper_fan_speed.update_handlers = self.__upper_fan_speed_cb
+            upper_fan_speed.update()
+
         lower_fan_speed = self._registers.by_name("{}.lower_{}.fan.speed".format(self.key, self.__identifier))
         if lower_fan_speed is not None:
             lower_fan_speed.update_handlers = self.__lower_fan_speed_cb
             lower_fan_speed.update()
 
-        lower_valve_settings = self._registers.by_name("{}.lower_{}.valve.settings".format(self.key, self.__identifier))
-        if lower_valve_settings is not None:
-            lower_valve_settings.update_handlers = self.__lower_valve_settings_cb
-            lower_valve_settings.update()
-
-        upper_valve_settings = self._registers.by_name("{}.upper_{}.valve.settings".format(self.key, self.__identifier))
-        if upper_valve_settings is not None:
-            upper_valve_settings.update_handlers = self.__upper_valve_settings_cb
-            upper_valve_settings.update()
 
     def __is_empty(self):
 
@@ -652,15 +561,16 @@ class Ventilation(BasePlugin):
         lower_fan_speed = self._registers.by_name("{}.lower_{}.fan.speed".format(self.key, self.__identifier))
         if lower_fan_speed is not None:
             lower_fan_speed.value = speed_lower
-            lower_fan_speed.update()
 
         upper_fan_speed = self._registers.by_name("{}.upper_{}.fan.speed".format(self.key, self.__identifier))
         if upper_fan_speed is not None:
             upper_fan_speed.value = speed_upper
-            upper_fan_speed.update()
 
         self.__upper_fan_dev.update()
         self.__lower_fan_dev.update()
+
+        self.__upper_air_damper.update()
+        self.__lower_air_damper.update()
 
     def _shutdown(self):
         """Shutting down the blinds.
@@ -669,7 +579,7 @@ class Ventilation(BasePlugin):
         self.__logger.info("Shutting down the {}".format(self.name))
         self.__upper_fan_dev.shutdown()
         self.__lower_fan_dev.shutdown()
-        self.__set_upper_valve(AirValveState.Close)
-        self.__set_lower_valve(AirValveState.Close)
+        self.__upper_air_damper.shutdown()
+        self.__lower_air_damper.shutdown()
 
 #endregion
