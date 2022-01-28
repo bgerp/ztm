@@ -23,7 +23,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 import argparse
-import os
 import json
 
 from data.register import Register
@@ -62,6 +61,17 @@ __status__ = "Debug"
 
 #endregion
 
+"""
+
+ U1:ID1:R0:DO0
+ |  |   |  |
+ |  |   |  \----> Bit from the register.
+ |  |   \-------> Register type.
+ |  \-----------> Modbus identifier.
+ \--------------> UART interface.
+
+"""
+
 #region Variables
 
 __registers = None
@@ -95,7 +105,6 @@ def __add_registers():
     register.plugin_name = "Access Control"
     register.description = "Plugin enabled"
     register.range = __range["BOOL"]
-    # register.update_handlers = self.__access_control_enabled
     register.value = False
     __registers.append(register)
 
@@ -103,7 +112,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "Access Control"
     register.description = "Allowed attendees"
-    register.range = ""
+    register.range = __range["NONE"]
     register.value = [] # {"card_id": "445E6046010080FF", "pin": "159753", "valid_until": "1595322860"}
     __registers.append(register)
 
@@ -119,7 +128,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "Access Control"
     register.description = "Nearby attendees"
-    register.range = ""
+    register.range = __range["NONE"]
     register.value = [] # {"card_id": "445E6046010080FF", "ts":"1595322860"}
     __registers.append(register)
 
@@ -127,7 +136,7 @@ def __add_registers():
     register.scope = Scope.Device
     register.plugin_name = "Access Control"
     register.description = "Last update attendee"
-    register.range = ""
+    register.range = __range["NONE"]
     register.value = [] # {"card_id": "445E6046010080FF", "ts":"1595322860"}
     __registers.append(register)
 
@@ -144,7 +153,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "Access Control"
     register.description = "Card reader enabled"
-    register.range = ""
+    register.range = __range["NONE"]
     register.value = {} # "Teracom/act230/2911"
     __registers.append(register)
 
@@ -153,7 +162,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "Access Control"
     register.description = "Card reader enabled"
-    register.range = ""
+    register.range = __range["NONE"]
     register.value = {} # "Teracom/act230/2897"
     __registers.append(register)
 
@@ -163,7 +172,7 @@ def __add_registers():
     register.plugin_name = "Access Control"
     register.description = "Exit button 1 input"
     register.range = __range["DI"]
-    register.value = verbal_const.OFF # "DI0"
+    register.value = verbal_const.OFF
     __registers.append(register)
 
     register = Register("ac.lock_mechanism_1.output")
@@ -171,7 +180,7 @@ def __add_registers():
     register.plugin_name = "Access Control"
     register.description = "Lock mechanism output"
     register.range = __range["DO"]
-    register.value = "DO2"
+    register.value = verbal_const.OFF
     __registers.append(register)
 
     register = Register("ac.time_to_open_1")
@@ -204,7 +213,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "Access Control"
     register.description = "Card reader settings"
-    register.range = ""
+    register.range = __range["NONE"]
     register.value = {} # "Teracom/act230/2486"
     __registers.append(register)
 
@@ -213,7 +222,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "Access Control"
     register.description = "Card reader settings"
-    register.range = ""
+    register.range = __range["NONE"]
     register.value = {} # "Teracom/act230/1208"
     __registers.append(register)
 
@@ -223,7 +232,7 @@ def __add_registers():
     register.plugin_name = "Access Control"
     register.description = "Exit button 2 input"
     register.range = __range["DI"]
-    register.value = verbal_const.OFF # "DI0"
+    register.value = verbal_const.OFF
     __registers.append(register)
 
     register = Register("ac.lock_mechanism_2.output")
@@ -231,7 +240,7 @@ def __add_registers():
     register.plugin_name = "Access Control"
     register.description = "Lock 2 mechanism output"
     register.range = __range["DO"]
-    register.value = verbal_const.OFF # "DO2"
+    register.value = verbal_const.OFF
     __registers.append(register)
 
     register = Register("ac.time_to_open_2")
@@ -330,7 +339,7 @@ def __add_registers():
     register.plugin_name = "Access Control"
     register.description = "Door window blind 1 output"
     register.range = __range["DO"]
-    register.value = verbal_const.OFF # "DO2"
+    register.value = verbal_const.OFF
     __registers.append(register)
 
 
@@ -348,7 +357,7 @@ def __add_registers():
     register.plugin_name = "Access Control"
     register.description = "Door window blind 2 output"
     register.range = __range["DO"]
-    register.value = verbal_const.OFF # "DO2"
+    register.value = verbal_const.OFF
     __registers.append(register)
 
     register = Register("ac.door_window_blind_2.value")
@@ -390,9 +399,9 @@ def __add_registers():
         "model": "MODv1",
         "options":
         {
-            "cw": "DO0",
-            "ccw": "DO1",
-            "feedback": "AI0",
+            "output_cw": verbal_const.OFF,
+            "output_ccw": verbal_const.OFF,
+            "feedback": verbal_const.OFF,
             "feedback_tresh": 0.093,
             "min": 0,
             "max": 180,
@@ -438,7 +447,6 @@ def __add_registers():
     register.plugin_name = "Blinds"
     register.description = "Plugin enabled"
     register.range = __range["BOOL"]
-    # register.update_handlers = self.__blinds_enabled
     register.value = False
     __registers.append(register)
 
@@ -517,7 +525,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "Monitoring"
     register.description = "Power analyser settings"
-    register.range = ""
+    register.range = __range["NONE"]
     register.value = {
         "vendor": "Eastron",
         "model": "SDM630",
@@ -533,7 +541,7 @@ def __add_registers():
     register.scope = Scope.Device
     register.plugin_name = "Monitoring"
     register.description = "Power analyser measurements"
-    register.range = ""
+    register.range = __range["NONE"]
     register.value = []
     __registers.append(register)
 
@@ -551,7 +559,6 @@ def __add_registers():
     register.plugin_name = "Monitoring"
     register.description = "Plugin enabled"
     register.range = __range["BOOL"]
-    # register.update_handlers = self.__monitoring_enabled
     register.value = False
     __registers.append(register)
 
@@ -643,7 +650,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "Environment"
     register.description = "Energy mode of the building"
-    register.range = ""
+    register.range = __range["NONE"]
     register.value = 0
     __registers.append(register)
 
@@ -737,7 +744,6 @@ def __add_registers():
 
     register = Register("envm.enabled")
     register.scope = Scope.System
-    # register.update_handlers = self.__env_enabled
     register.plugin_name = "Environment"
     register.description = "Plugin enabled"
     register.range = __range["BOOL"]
@@ -785,7 +791,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "HVAC"
     register.description = "Air temperature sensor center settings"
-    register.range = ""
+    register.range = __range["NONE"]
     register.value = {
         "vendor": "Donkger",
         "model": "XY-MD02",
@@ -809,7 +815,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "HVAC"
     register.description = "Air temperature sensor lower settings"
-    register.range = ""
+    register.range = __range["NONE"]
     register.value = {
         "vendor": "Donkger",
         "model": "XY-MD02",
@@ -833,7 +839,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "HVAC"
     register.description = "Air temperature sensor upper settings"
-    register.range = ""
+    register.range = __range["NONE"]
     register.value = {
         "vendor": "Donkger",
         "model": "XY-MD02",
@@ -857,15 +863,15 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "HVAC"
     register.description = "Convector settings"
-    register.range = ""
+    register.range = __range["NONE"]
     register.value = {
         "vendor": "Silpa",
         "model": "Klimafan",
         "options":
         {
-            "stage1": "RO4",
-            "stage2": "RO5",
-            "stage3": "RO6",
+            "stage1": "RO0",
+            "stage2": "RO1",
+            "stage3": "RO2",
         }
     }
     __registers.append(register)
@@ -882,7 +888,6 @@ def __add_registers():
     # HVAC Enabled.
     register = Register("hvac.enabled")
     register.scope = Scope.System
-    # register.update_handlers = self.__hvac_enabled
     register.plugin_name = "HVAC"
     register.description = "Plugin enabled"
     register.range = __range["BOOL"]
@@ -898,21 +903,22 @@ def __add_registers():
     register.value = 20.0
     __registers.append(register)
 
-    # Loop 1 flowmeter.
-    register = Register("hvac.loop1_1.cnt.tpl")
-    register.scope = Scope.System
-    register.plugin_name = "HVAC"
-    register.description = "Loop 1 water flow meter ticks per liter scale"
-    register.range = "0.0/"
-    register.value = 1.0
-    __registers.append(register)
 
-    register = Register("hvac.loop1_1.cnt.input")
+    # Loop 1 flowmeter.
+    register = Register("hvac.loop1_1.flowmeter.settings")
     register.scope = Scope.System
     register.plugin_name = "HVAC"
     register.description = "Loop 1 water flow meter signal input"
-    register.range = __range["DI"]
-    register.value = verbal_const.OFF # "DI1"
+    register.range = __range["NONE"]
+    register.value = {
+        "vendor": "mainone",
+        "model": "flowmeter_dn20",
+        "options":
+        {
+            "uart": 2,
+            "mb_id": 3,
+        }
+    }
     __registers.append(register)
 
     # Loop 1 Temperature
@@ -920,7 +926,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "HVAC"
     register.description = "Loop 1 temperature sensor settings"
-    register.range = ""
+    register.range = __range["NONE"]
     register.value = {
         "vendor": "Donkger",
         "model": "XY-MD02",
@@ -953,35 +959,32 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "HVAC"
     register.description = "Loop 1 valve settings"
-    register.range = ""
+    register.range = __range["NONE"]
     register.value = {
         "vendor": "Tonhe",
-        "model": "a20m15b2c",
+        "model": "a20t20b2c",
         "options":
         {
-            "output": "RO2",
-            "feedback": "off",
-            "min": 0,
-            "max": 100,
+            "output": "RO4",
         }
     }
     __registers.append(register)
 
     # Loop 2 flowmeter
-    register = Register("hvac.loop2_1.cnt.tpl")
+    register = Register("hvac.loop2_1.flowmeter.settings")
     register.scope = Scope.System
     register.plugin_name = "HVAC"
     register.description = "Loop 2 water flow meter ticks per liter scale"
-    register.range = "0.0/"
-    register.value = 1.0
-    __registers.append(register)
-
-    register = Register("hvac.loop2_1.cnt.input")
-    register.scope = Scope.System
-    register.plugin_name = "HVAC"
-    register.description = "Loop 1 water flow meter signal input"
-    register.range = __range["DI"]
-    register.value = verbal_const.OFF # "DI0"
+    register.range = __range["NONE"]
+    register.value = {
+        "vendor": "mainone",
+        "model": "flowmeter_dn20",
+        "options":
+        {
+            "uart": 2,
+            "mb_id": 3,
+        }
+    }
     __registers.append(register)
 
     # Loop 2 Temperature
@@ -989,7 +992,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "HVAC"
     register.description = "Loop 2 temperature sensor settings"
-    register.range = ""
+    register.range = __range["NONE"]
     register.value = {
         "vendor": "Donkger",
         "model": "XY-MD02",
@@ -997,7 +1000,7 @@ def __add_registers():
         {
             "mb_id": 5,
         }
-    } # "Dallas/DS18B20/28FFC4EE00170349" # temp/DS18B20/28FFC4EE00170349
+    }
     __registers.append(register)
 
     register = Register("hvac.loop2_1.temp.value")
@@ -1013,16 +1016,13 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "HVAC"
     register.description = "Loop 2 valve settings"
-    register.range = ""
+    register.range = __range["NONE"]
     register.value = {
         "vendor": "Tonhe",
-        "model": "a20m15b2c",
+        "model": "a20t20b2c",
         "options":
         {
-            "output": "RO3",
-            "feedback": "off",
-            "min": 0,
-            "max": 100,
+            "output": "RO5",
         }
     }
     __registers.append(register)
@@ -1119,7 +1119,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "Light"
     register.description = "Sensor settings"
-    register.range = ""
+    register.range = __range["NONE"]
     register.value = {
         "vendor": "PT",
         "model": "light_sensor",
@@ -1128,30 +1128,7 @@ def __add_registers():
             "input": "AI2",
         }
     }
-    # ""SEDtronic/u1wtvs/1wdevice/26607314020000F8"
-    # SEDtronic/u1wtvs/1wdevice/26607314020000F8
-    # PT/light_sensor/AI2
     __registers.append(register)
-
-    # register = Register("light.sensor.model")
-    # register.scope = Scope.Global
-    # register.scope = Scope.System
-    # register.plugin_name = "Light"
-    # register.scope = "system"
-    # register.description = ""
-    # register.range = ""
-    # register.value = "u1wtvs"
-    # __registers.append(register)
-
-    # register = Register("light.sensor.vendor")
-    # register.scope = Scope.Global
-    # register.scope = Scope.System
-    # register.plugin_name = "Light"
-    # register.scope = "system"
-    # register.description = ""
-    # register.range = ""
-    # register.value = "SEDtronic"
-    # __registers.append(register)
 
     register = Register("light.target_illum")
     register.scope = Scope.System
@@ -1169,13 +1146,11 @@ def __add_registers():
     register.value = 0.01
     __registers.append(register)
 
-
     register = Register("light.enabled")
     register.scope = Scope.System
     register.plugin_name = "Light"
     register.description = "Plugin enabled"
     register.range = __range["BOOL"]
-    # register.update_handlers = self.__light_enabled
     register.value = False
     __registers.append(register)
 
@@ -1188,7 +1163,7 @@ def __add_registers():
     register.scope = Scope.Device
     register.plugin_name = "System"
     register.description = "Last update cycle error"
-    register.range = ""
+    register.range = __range["NONE"]
     register.value = []
     # GlobalErrorHandler.set_register(register)
     __registers.append(register)
@@ -1281,7 +1256,7 @@ def __add_registers():
     register.scope = Scope.Device
     register.plugin_name = "System"
     register.description = "Collision info message"
-    register.range = ""
+    register.range = __range["NONE"]
     register.value = {}
     __registers.append(register)
 
@@ -1289,7 +1264,7 @@ def __add_registers():
     register.scope = Scope.Device
     register.plugin_name = "System"
     register.description = "Collision warning message"
-    register.range = ""
+    register.range = __range["NONE"]
     register.value = {}
     __registers.append(register)
 
@@ -1297,7 +1272,7 @@ def __add_registers():
     register.scope = Scope.Device
     register.plugin_name = "System"
     register.description = "Collision error message"
-    register.range = ""
+    register.range = __range["NONE"]
     register.value = {}
     __registers.append(register)
 
@@ -1315,10 +1290,8 @@ def __add_registers():
     register.plugin_name = "System"
     register.description = "Plugin enabled"
     register.range = __range["BOOL"]
-    # register.update_handlers = self.__sys_enabled
     register.value = False
     __registers.append(register)
-
 
     # Enable info messages.
     register = Register("sys.col.info_message.enable")
@@ -1386,16 +1359,16 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "ECD"
     register.description = "ECD / Foyer Floor Heating Settings"
-    register.range = ""
+    register.range = __range["NONE"]
     register.value = {
         "vendor": "Flowx",
         "model": "FLX-05F",
         "options":
         {
-            "output_cw": "U1:ID1:R0:DO0",
-            "output_ccw": "U1:ID1:R0:DO1",
-            "limit_cw": "U1:ID1:R0:DI0",
-            "limit_ccw": "U1:ID1:R0:DI1"
+            "output_cw": verbal_const.OFF, #"U1:ID1:R0:DO0",
+            "output_ccw": verbal_const.OFF, #"U1:ID1:R0:DO1",
+            "limit_cw": verbal_const.OFF, #"U1:ID1:R0:DI0",
+            "limit_ccw": verbal_const.OFF, #"U1:ID1:R0:DI1"
         }
     }
     __registers.append(register)
@@ -1424,7 +1397,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "ECD"
     register.description = "ECD / Underfloor Heating Trestle"
-    register.range = ""
+    register.range = __range["NONE"]
     register.value = {
         "vendor": "Flowx",
         "model": "FLX-05F",
@@ -1462,7 +1435,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "ECD"
     register.description = "ECD / Underfloor Heating Pool"
-    register.range = ""
+    register.range = __range["NONE"]
     register.value = {
         "vendor": "Flowx",
         "model": "FLX-05F",
@@ -1500,7 +1473,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "ECD"
     register.description = "ECD / Air Cooling Valve Settings"
-    register.range = ""
+    register.range = __range["NONE"]
     register.value = {
         "vendor": "Flowx",
         "model": "FLX-05F",
@@ -1538,7 +1511,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "ECD"
     register.description = "ECD / Ground Drilling Valve"
-    register.range = ""
+    register.range = __range["NONE"]
     register.value = {
         "vendor": "Flowx",
         "model": "FLX-05F",
@@ -1576,7 +1549,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "ECD"
     register.description = "ECD / Generators Cooling Valve / Settings"
-    register.range = ""
+    register.range = __range["NONE"]
     register.value = {
         "vendor": "Flowx",
         "model": "FLX-05F",
@@ -1614,7 +1587,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "ECD"
     register.description = "ECD / Short Green/Purple Valve Settings"
-    register.range = ""
+    register.range = __range["NONE"]
     register.value = {
         "vendor": "Flowx",
         "model": "FLX-05F",
@@ -1652,7 +1625,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "ECD"
     register.description = "ECD / Underfloor West Bypass Valve Settings"
-    register.range = ""
+    register.range = __range["NONE"]
     register.value = {
         "vendor": "Flowx",
         "model": "FLX-05F",
@@ -1690,7 +1663,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "ECD"
     register.description = "ECD / Underfloor East Bypass Valve Settings"
-    register.range = ""
+    register.range = __range["NONE"]
     register.value = {
         "vendor": "Flowx",
         "model": "FLX-05F",
@@ -1728,7 +1701,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "ECD"
     register.description = "ECD / VCG / Pool Heating"
-    register.range = ""
+    register.range = __range["NONE"]
     register.value = {
         "vendor": "Flowx",
         "model": "FLX-05F",
@@ -1747,7 +1720,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "ECD"
     register.description = "ECD / VCG / Pool Heating"
-    register.range = ""
+    register.range = __range["NONE"]
     register.value = {
         "vendor": "Grundfos",
         "model": "MAGNA1_80_100_F_360_1x230V_PN6",
@@ -1773,7 +1746,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "ECD"
     register.description = "ECD / VCG / Pool Cooling In"
-    register.range = ""
+    register.range = __range["NONE"]
     register.value = {
         "vendor": "Flowx",
         "model": "FLX-05F",
@@ -1792,7 +1765,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "ECD"
     register.description = "ECD / VCG / Pool Cooling In"
-    register.range = ""
+    register.range = __range["NONE"]
     register.value = {
         "vendor": "Flowx",
         "model": "FLX-05F",
@@ -1812,7 +1785,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "ECD"
     register.description = "ECD / VCG / Pool Heating In"
-    register.range = ""
+    register.range = __range["NONE"]
     register.value = {
         "vendor": "Flowx",
         "model": "FLX-05F",
@@ -1831,7 +1804,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "ECD"
     register.description = "ECD / VCG / Pool Heating Out"
-    register.range = ""
+    register.range = __range["NONE"]
     register.value = {
         "vendor": "Flowx",
         "model": "FLX-05F",
@@ -1850,7 +1823,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "ECD"
     register.description = "ECD / VCG / Pump"
-    register.range = ""
+    register.range = __range["NONE"]
     register.value = {
         "vendor": "Grundfos",
         "model": "MAGNA1_80_100_F_360_1x230V_PN6",
@@ -1875,7 +1848,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "ECD"
     register.description = "ECD / VCG / Convectors East Cooling In"
-    register.range = ""
+    register.range = __range["NONE"]
     register.value = {
         "vendor": "Flowx",
         "model": "FLX-05F",
@@ -1894,7 +1867,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "ECD"
     register.description = "ECD / VCG / Convectors East Cooling Out"
-    register.range = ""
+    register.range = __range["NONE"]
     register.value = {
        "vendor": "Flowx",
        "model": "FLX-05F",
@@ -1914,7 +1887,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "ECD"
     register.description = "ECD / VCG / Convectors East Hot In"
-    register.range = ""
+    register.range = __range["NONE"]
     register.value = {
         "vendor": "Flowx",
         "model": "FLX-05F",
@@ -1933,7 +1906,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "ECD"
     register.description = "ECD / VCG / Convectors East Hot Out"
-    register.range = ""
+    register.range = __range["NONE"]
     register.value = {
         "vendor": "Flowx",
         "model": "FLX-05F",
@@ -1952,7 +1925,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "ECD"
     register.description = "ECD / VCG / Convectors East Pump"
-    register.range = ""
+    register.range = __range["NONE"]
     register.value = {
         "vendor": "Grundfos",
         "model": "MAGNA1_80_100_F_360_1x230V_PN6",
@@ -1978,7 +1951,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "ECD"
     register.description = "ECD / VCG / Floor East Cooling In"
-    register.range = ""
+    register.range = __range["NONE"]
     register.value = {
         "vendor": "Flowx",
         "model": "FLX-05F",
@@ -1997,7 +1970,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "ECD"
     register.description = "ECD / VCG / Floor East Cooling Out"
-    register.range = ""
+    register.range = __range["NONE"]
     register.value = {
         "vendor": "Flowx",
         "model": "FLX-05F",
@@ -2016,7 +1989,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "ECD"
     register.description = "ECD / VCG / Floor East Hot In"
-    register.range = ""
+    register.range = __range["NONE"]
     register.value = {
         "vendor": "Flowx",
         "model": "FLX-05F",
@@ -2035,7 +2008,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "ECD"
     register.description = "ECD / VCG / Floor East Hot Out"
-    register.range = ""
+    register.range = __range["NONE"]
     register.value = {
         "vendor": "Flowx",
         "model": "FLX-05F",
@@ -2054,7 +2027,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "ECD"
     register.description = "ECD / VCG / Floor East Pump"
-    register.range = ""
+    register.range = __range["NONE"]
     register.value = {
         "vendor": "Grundfos",
         "model": "MAGNA1_80_100_F_360_1x230V_PN6",
@@ -2080,7 +2053,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "ECD"
     register.description = "ECD / VCG / Convectors West Cooling In"
-    register.range = ""
+    register.range = __range["NONE"]
     register.value = {
         "vendor": "Flowx",
         "model": "FLX-05F",
@@ -2099,7 +2072,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "ECD"
     register.description = "ECD / VCG / Convectors West Cooling Out"
-    register.range = ""
+    register.range = __range["NONE"]
     register.value = {
         "vendor": "Flowx",
         "model": "FLX-05F",
@@ -2119,7 +2092,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "ECD"
     register.description = "ECD / VCG / Convectors West Hot In"
-    register.range = ""
+    register.range = __range["NONE"]
     register.value = {
         "vendor": "Flowx",
         "model": "FLX-05F",
@@ -2138,7 +2111,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "ECD"
     register.description = "ECD / VCG / Convectors West Hot Out"
-    register.range = ""
+    register.range = __range["NONE"]
     register.value = {
         "vendor": "Flowx",
         "model": "FLX-05F",
@@ -2157,7 +2130,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "ECD"
     register.description = "ECD / VCG / Convectors West Pump"
-    register.range = ""
+    register.range = __range["NONE"]
     register.value = {
         "vendor": "Grundfos",
         "model": "MAGNA1_80_100_F_360_1x230V_PN6",
@@ -2182,7 +2155,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "ECD"
     register.description = "ECD / VCG / TVA Roof Floor In"
-    register.range = ""
+    register.range = __range["NONE"]
     register.value = {
         "vendor": "Flowx",
         "model": "FLX-05F",
@@ -2201,7 +2174,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "ECD"
     register.description = "ECD / VCG / TVA Roof Floor Out"
-    register.range = ""
+    register.range = __range["NONE"]
     register.value = {
         "vendor": "Flowx",
         "model": "FLX-05F",
@@ -2220,7 +2193,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "ECD"
     register.description = "ECD / VCG / TVA Roof Floor In"
-    register.range = ""
+    register.range = __range["NONE"]
     register.value = {
         "vendor": "Flowx",
         "model": "FLX-05F",
@@ -2239,7 +2212,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "ECD"
     register.description = "ECD / VCG / TVA Roof Floor Out"
-    register.range = ""
+    register.range = __range["NONE"]
     register.value = {
         "vendor": "Flowx",
         "model": "FLX-05F",
@@ -2259,7 +2232,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "ECD"
     register.description = "ECD / VCG / TVA Roof Floor"
-    register.range = ""
+    register.range = __range["NONE"]
     register.value = {
         "vendor": "Grundfos",
         "model": "MAGNA1_80_100_F_360_1x230V_PN6",
@@ -2284,7 +2257,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "ECD"
     register.description = "ECD / VCG / TVA Fitness In"
-    register.range = ""
+    register.range = __range["NONE"]
     register.value = {
         "vendor": "Flowx",
         "model": "FLX-05F",
@@ -2303,7 +2276,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "ECD"
     register.description = "ECD / VCG / TVA Fitness Out"
-    register.range = ""
+    register.range = __range["NONE"]
     register.value = {
         "vendor": "Flowx",
         "model": "FLX-05F",
@@ -2322,7 +2295,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "ECD"
     register.description = "ECD / VCG / TVA Fitness In"
-    register.range = ""
+    register.range = __range["NONE"]
     register.value = {
         "vendor": "Flowx",
         "model": "FLX-05F",
@@ -2341,7 +2314,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "ECD"
     register.description = "ECD / VCG / TVA Fitness Out"
-    register.range = ""
+    register.range = __range["NONE"]
     register.value = {
         "vendor": "Flowx",
         "model": "FLX-05F",
@@ -2360,7 +2333,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "ECD"
     register.description = "ECD / VCG / TVA Fitness"
-    register.range = ""
+    register.range = __range["NONE"]
     register.value = {
         "vendor": "Grundfos",
         "model": "MAGNA1_80_100_F_360_1x230V_PN6",
@@ -2385,7 +2358,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "ECD"
     register.description = "ECD / VCG / Floor West Cooling In"
-    register.range = ""
+    register.range = __range["NONE"]
     register.value = {
         "vendor": "Flowx",
         "model": "FLX-05F",
@@ -2404,7 +2377,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "ECD"
     register.description = "ECD / VCG / Floor West Cooling Out"
-    register.range = ""
+    register.range = __range["NONE"]
     register.value = {
         "vendor": "Flowx",
         "model": "FLX-05F",
@@ -2423,7 +2396,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "ECD"
     register.description = "ECD / VCG / Floor West Hot In"
-    register.range = ""
+    register.range = __range["NONE"]
     register.value = {
         "vendor": "Flowx",
         "model": "FLX-05F",
@@ -2442,7 +2415,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "ECD"
     register.description = "ECD / VCG / Floor West Hot Out"
-    register.range = ""
+    register.range = __range["NONE"]
     register.value = {
         "vendor": "Flowx",
         "model": "FLX-05F",
@@ -2461,7 +2434,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "ECD"
     register.description = "ECD / VCG / Floor West Pump"
-    register.range = ""
+    register.range = __range["NONE"]
     register.value = {
         "vendor": "Grundfos",
         "model": "MAGNA1_80_100_F_360_1x230V_PN6",
@@ -2486,7 +2459,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "ECD"
     register.description = "ECD / VCG / TVA Conference Center In"
-    register.range = ""
+    register.range = __range["NONE"]
     register.value = {
         "vendor": "Flowx",
         "model": "FLX-05F",
@@ -2505,7 +2478,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "ECD"
     register.description = "ECD / VCG / TVA Conference Center Out"
-    register.range = ""
+    register.range = __range["NONE"]
     register.value = {
         "vendor": "Flowx",
         "model": "FLX-05F",
@@ -2524,7 +2497,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "ECD"
     register.description = "ECD / VCG / TVA Conference Center In"
-    register.range = ""
+    register.range = __range["NONE"]
     register.value = {
         "vendor": "Flowx",
         "model": "FLX-05F",
@@ -2543,7 +2516,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "ECD"
     register.description = "ECD / VCG / TVA Conference Center Out"
-    register.range = ""
+    register.range = __range["NONE"]
     register.value = {
         "vendor": "Flowx",
         "model": "FLX-05F",
@@ -2562,7 +2535,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "ECD"
     register.description = "ECD / VCG / TVA Conference Center"
-    register.range = ""
+    register.range = __range["NONE"]
     register.value = {
         "vendor": "Grundfos",
         "model": "MAGNA1_80_100_F_360_1x230V_PN6",
@@ -2587,7 +2560,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "ECD"
     register.description = "ECD / VCG / Convectors Kitchen Cold In"
-    register.range = ""
+    register.range = __range["NONE"]
     register.value = {
         "vendor": "Flowx",
         "model": "FLX-05F",
@@ -2606,7 +2579,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "ECD"
     register.description = "ECD / VCG / Convectors Kitchen Cold Out"
-    register.range = ""
+    register.range = __range["NONE"]
     register.value = {
         "vendor": "Flowx",
         "model": "FLX-05F",
@@ -2625,7 +2598,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "ECD"
     register.description = "ECD / VCG / Convectors Kitchen Hot In"
-    register.range = ""
+    register.range = __range["NONE"]
     register.value = {
         "vendor": "Flowx",
         "model": "FLX-05F",
@@ -2644,7 +2617,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "ECD"
     register.description = "ECD / VCG / Convectors Kitchen Hot Out"
-    register.range = ""
+    register.range = __range["NONE"]
     register.value = {
         "vendor": "Flowx",
         "model": "FLX-05F",
@@ -2664,7 +2637,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "ECD"
     register.description = "ECD / VCG / Convectors Kitchen Pump"
-    register.range = ""
+    register.range = __range["NONE"]
     register.value = {
         "vendor": "Grundfos",
         "model": "MAGNA1_80_100_F_360_1x230V_PN6",
@@ -2689,7 +2662,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "ECD"
     register.description = "ECD / VCG / TVA Wearhouse Cold In"
-    register.range = ""
+    register.range = __range["NONE"]
     register.value = {
         "vendor": "Flowx",
         "model": "FLX-05F",
@@ -2708,7 +2681,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "ECD"
     register.description = "ECD / VCG / TVA Wearhouse Cold Out"
-    register.range = ""
+    register.range = __range["NONE"]
     register.value = {
         "vendor": "Flowx",
         "model": "FLX-05F",
@@ -2727,7 +2700,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "ECD"
     register.description = "ECD / VCG / TVA Wearhouse Hot In"
-    register.range = ""
+    register.range = __range["NONE"]
     register.value = {
         "vendor": "Flowx",
         "model": "FLX-05F",
@@ -2746,7 +2719,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "ECD"
     register.description = "ECD / VCG / TVA Wearhouse Hot Out"
-    register.range = ""
+    register.range = __range["NONE"]
     register.value = {
         "vendor": "Flowx",
         "model": "FLX-05F",
@@ -2765,7 +2738,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "ECD"
     register.description = "ECD / VCG / TVA Wearhouse"
-    register.range = ""
+    register.range = __range["NONE"]
     register.value = {
         "vendor": "Grundfos",
         "model": "MAGNA1_80_100_F_360_1x230V_PN6",
@@ -2829,7 +2802,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "ECHP"
     register.description = "The mode of the machine"
-    register.range = ""
+    register.range = __range["NONE"]
     register.value = 0
     __registers.append(register)
 
@@ -2837,7 +2810,7 @@ def __add_registers():
     register.scope = Scope.Device
     register.plugin_name = "ECHP"
     register.description = "The state of the machine"
-    register.range = ""
+    register.range = __range["NONE"]
     register.value = 0
     __registers.append(register)
 
@@ -2884,7 +2857,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "ECHP"
     register.description = "Heat Pump Control Group / VCG / Cold Buffer / Input"
-    register.range = ""
+    register.range = __range["NONE"]
     register.value = {
         "vendor": "Flowx",
         "model": "FLX-05F",
@@ -2903,7 +2876,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "ECHP"
     register.description = "Heat Pump Control Group / VCG / Cold Buffer / Output"
-    register.range = ""
+    register.range = __range["NONE"]
     register.value = {
         "vendor": "Flowx",
         "model": "FLX-05F",
@@ -2922,7 +2895,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "ECHP"
     register.description = "Heat Pump Control Group / VCG / Cold Buffer / Short"
-    register.range = ""
+    register.range = __range["NONE"]
     register.value = {
         "vendor": "Flowx",
         "model": "FLX-05F",
@@ -2943,7 +2916,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "ECHP"
     register.description = "Heat Pump Control Group / VCG / Cold Geo / Input"
-    register.range = ""
+    register.range = __range["NONE"]
     register.value = {
         "vendor": "Flowx",
         "model": "FLX-05F",
@@ -2962,7 +2935,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "ECHP"
     register.description = "Heat Pump Control Group / VCG / Cold Geo / Output"
-    register.range = ""
+    register.range = __range["NONE"]
     register.value = {
         "vendor": "Flowx",
         "model": "FLX-05F",
@@ -2981,7 +2954,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "ECHP"
     register.description = "Heat Pump Control Group / VCG / Cold Geo / Short"
-    register.range = ""
+    register.range = __range["NONE"]
     register.value = {
         "vendor": "Flowx",
         "model": "FLX-05F",
@@ -3002,7 +2975,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "ECHP"
     register.description = "Heat Pump Control Group / VCG / Warm Geo / Input"
-    register.range = ""
+    register.range = __range["NONE"]
     register.value = {
         "vendor": "Flowx",
         "model": "FLX-05F",
@@ -3021,7 +2994,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "ECHP"
     register.description = "Heat Pump Control Group / VCG / Warm Geo / Output"
-    register.range = ""
+    register.range = __range["NONE"]
     register.value = {
         "vendor": "Flowx",
         "model": "FLX-05F",
@@ -3040,7 +3013,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "ECHP"
     register.description = "Heat Pump Control Group / VCG / Warm Geo / Short"
-    register.range = ""
+    register.range = __range["NONE"]
     register.value = {
         "vendor": "Flowx",
         "model": "FLX-05F",
@@ -3061,7 +3034,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "ECHP"
     register.description = "Heat Pump Control Group / VCG / Warm Geo / Input"
-    register.range = ""
+    register.range = __range["NONE"]
     register.value = {
         "vendor": "Flowx",
         "model": "FLX-05F",
@@ -3080,7 +3053,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "ECHP"
     register.description = "Heat Pump Control Group / VCG / Warm Geo / Output"
-    register.range = ""
+    register.range = __range["NONE"]
     register.value = {
         "vendor": "Flowx",
         "model": "FLX-05F",
@@ -3099,7 +3072,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "ECHP"
     register.description = "Heat Pump Control Group / VCG / Warm Geo / Output"
-    register.range = ""
+    register.range = __range["NONE"]
     register.value = {
         "vendor": "Flowx",
         "model": "FLX-05F",
@@ -3120,7 +3093,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "ECHP"
     register.description = "Heat Pump Control Group / Water Pump / Cold"
-    register.range = ""
+    register.range = __range["NONE"]
     register.value = {
         "vendor": "Grundfos",
         "model": "MAGNA1_80_100_F_360_1x230V_PN6",
@@ -3136,7 +3109,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "ECHP"
     register.description = "Heat Pump Control Group / Water Pump / Hot"
-    register.range = ""
+    register.range = __range["NONE"]
     register.value = {
         "vendor": "Grundfos",
         "model": "MAGNA1_80_100_F_360_1x230V_PN6",
@@ -3152,7 +3125,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "ECHP"
     register.description = "Heat Pump Control Group / Water Pump / Warm"
-    register.range = ""
+    register.range = __range["NONE"]
     register.value = {
         "vendor": "Grundfos",
         "model": "MAGNA1_80_100_F_360_1x230V_PN6",
@@ -3168,7 +3141,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "ECHP"
     register.description = "Heat Pump Control Group / Water Pump / Warm"
-    register.range = ""
+    register.range = __range["NONE"]
     register.value = {
         "vendor": "Grundfos",
         "model": "MAGNA1_80_100_F_360_1x230V_PN6",
@@ -3186,7 +3159,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "ECHP"
     register.description = "Heat Pump Control Group / Heat Pump"
-    register.range = ""
+    register.range = __range["NONE"]
     register.value = {
         "vendor": "HstarsGuangzhouRefrigeratingEquipmentGroup",
         "model": "HeatPump",
@@ -3243,7 +3216,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "Ventilation"
     register.description = "Lower fan settings"
-    register.range = ""
+    register.range = __range["NONE"]
     register.value = {
         "vendor": "HangzhouAirflowElectricApplications",
         "model": "f3p146ec072600",
@@ -3283,7 +3256,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "Ventilation"
     register.description = "Upper fan settings"
-    register.range = ""
+    register.range = __range["NONE"]
     register.value = {
         "vendor": "HangzhouAirflowElectricApplications",
         "model": "f3p146ec072600",
@@ -3319,35 +3292,35 @@ def __add_registers():
     __registers.append(register)
 
     # Upper valve settings
-    register = Register("vent.upper_1.valve.settings")
+    register = Register("vent.upper_1.air_damper.settings")
     register.scope = Scope.System
     register.plugin_name = "Ventilation"
-    register.description = "Lower valve settings"
-    register.range = ""
+    register.description = "Lower air damper settings"
+    register.range = __range["NONE"]
     register.value = {
-        "vendor": "FONYES",
-        "model": "Model1",
+        "vendor": "fonyes",
+        "model": "model_1",
         "options":
         {
-            "closing": "DO8",
-            "opening": "DO9",
+            "output_cw": verbal_const.OFF,
+            "output_ccw": verbal_const.OFF
         }
     }
     __registers.append(register)
 
     # Lower valve settings
-    register = Register("vent.lower_1.valve.settings")
+    register = Register("vent.lower_1.air_damper.settings")
     register.scope = Scope.System
     register.plugin_name = "Ventilation"
-    register.description = "Upper valve settings"
-    register.range = ""
+    register.description = "Upper air damper settings"
+    register.range = __range["NONE"]
     register.value = {
-        "vendor": "FONYES",
-        "model": "Model1",
+        "vendor": "fonyes",
+        "model": "model_1",
         "options":
         {
-            "closing": "DO10",
-            "opening": "DO11",
+            "output_cw": verbal_const.OFF,
+            "output_ccw": verbal_const.OFF,
         }
     }
     __registers.append(register)
@@ -3366,7 +3339,7 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "Ventilation"
     register.description = "Ventilation enable flag."
-    register.range = ""
+    register.range = __range["NONE"]
     register.value = False
     __registers.append(register)
 
@@ -3411,7 +3384,7 @@ def __add_registers():
     register.plugin_name = "Statistics"
     register.description = "Statistics module enable flag."
     register.range = __range["BOOL"]
-    register.value = True
+    register.value = False
     __registers.append(register)
 
 #endregion
@@ -3427,7 +3400,9 @@ def main():
     parser = argparse.ArgumentParser()
 
     # Add arguments.
+    # parser.add_argument("--action", type=str, default="w_json", help="Export type.")
     parser.add_argument("--action", type=str, default="w_csv", help="Export type.")
+    # parser.add_argument("--action", type=str, default="list_gpio", help="Export type.")
 
     # Take arguments.
     args = parser.parse_args()
@@ -3435,7 +3410,7 @@ def main():
     if args.action == "w_json":
         Registers.to_json(__registers, "registers.json")
 
-    if args.action == "r_json":
+    elif args.action == "r_json":
         registers = Registers.from_json("registers.json")
 
         for register in registers:
@@ -3449,6 +3424,12 @@ def main():
 
         for register in registers:
             print(register)
+
+    elif args.action == "list_gpio":
+        for register in __registers:
+            if isinstance(register.value, dict):
+                if "options" in register.value.keys():
+                    print("Register: {} -> {}".format(register.name, register.value["options"]))                    
 
 if __name__ == "__main__":
     main()
