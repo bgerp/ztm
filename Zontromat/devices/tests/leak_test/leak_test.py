@@ -78,7 +78,7 @@ class LeakTest:
     __check_timer = None
     """Leak test timer."""
 
-    __flowmetter_dev = None
+    __flowmeter_dev = None
     """Flow meter device."""
 
     __result_cb = None
@@ -94,8 +94,8 @@ class LeakTest:
 
 #region Constructor / Destructor
 
-    def __init__(self, flowmetter, test_time):
-        self.__flowmetter_dev = flowmetter
+    def __init__(self, flowmeter, test_time):
+        self.__flowmeter_dev = flowmeter
         self.__test_state = StateMachine(TestState.TakeFirstMeasurement)
         self.__check_timer = Timer(test_time)
 
@@ -134,11 +134,11 @@ class LeakTest:
                     self.__test_state.set_state(TestState.TakeFirstMeasurement)
 
             elif self.__test_state.is_state(TestState.TakeFirstMeasurement):
-                self.__first_measurement = self.__flowmetter_dev.get_liters()
+                self.__first_measurement = self.__flowmeter_dev.get_liters()
                 self.__test_state.set_state(TestState.WaitForLeak)
 
             elif self.__test_state.is_state(TestState.TakeSecondMeasurement):
-                self.__second_measurement = self.__flowmetter_dev.get_liters()
+                self.__second_measurement = self.__flowmeter_dev.get_liters()
                 self.__test_state.set_state(TestState.WaitForLeak)
 
             leak_liters = abs(self.__second_measurement - self.__first_measurement)
