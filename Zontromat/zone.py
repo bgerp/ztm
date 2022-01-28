@@ -217,12 +217,10 @@ class Zone():
         target_version = self.__registers.by_name("sys.software.current_version")
         if target_version is not None:
             target_version.value = self.__app_settings.current_version
-            target_version.update()
 
         target_version = self.__registers.by_name("sys.software.target_version")
         if target_version is not None:
             target_version.update_handlers = self.__target_version_cb
-            target_version.update()
             # TODO: Will we ask for update on every start?
 
 #endregion
