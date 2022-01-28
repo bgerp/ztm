@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 
-from devices.factories.light_sensor.base_light_sensor import BaseLightSensor
+from devices.factories.luxmeters.base_luxmeter import BaseLuxmeter
 
 #region File Attributes
 
@@ -55,7 +55,7 @@ __status__ = "Debug"
 
 #endregion
 
-class U1WTVS(BaseLightSensor):
+class U1WTVS(BaseLuxmeter):
     """1W light sensor."""
 
 #region Attributes

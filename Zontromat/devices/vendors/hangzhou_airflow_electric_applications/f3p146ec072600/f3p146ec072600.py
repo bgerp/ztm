@@ -25,7 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from utils.logger import get_logger
 
-from devices.factories.fan.base_fan import BaseFan
+from devices.factories.fans.base_fan import BaseFan
 
 #region File Attributes
 

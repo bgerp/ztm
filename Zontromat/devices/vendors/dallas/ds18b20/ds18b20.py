@@ -23,7 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 
-from devices.factories.thermal_sensor.base_thermal_sensor import BaseThermalSensor
+from devices.factories.thermometers.base_thermometers import BaseThermometers
 
 #region File Attributes
 
@@ -56,7 +56,7 @@ __status__ = "Debug"
 
 #endregion
 
-class DS18B20(BaseThermalSensor):
+class DS18B20(BaseThermometers):
     """Digital thermometer by Dallas."""
 
 #region Constructor

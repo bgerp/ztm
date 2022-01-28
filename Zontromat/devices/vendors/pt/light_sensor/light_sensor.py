@@ -26,7 +26,7 @@ from data import verbal_const
 
 from utils.logic.functions import l_scale
 
-from devices.factories.light_sensor.base_light_sensor import BaseLightSensor
+from devices.factories.luxmeters.base_luxmeter import BaseLuxmeter
 
 #region File Attributes
 
@@ -59,7 +59,7 @@ __status__ = "Debug"
 
 #endregion
 
-class LightSensor(BaseLightSensor):
+class LightSensor(BaseLuxmeter):
     """Light sensor."""
 
 #region Attributes

@@ -132,13 +132,21 @@ class MODV1(BaseBlind):
 
         self._model = "Blind"
 
+        self.__logger = get_logger(__name__)
+
+        self.__blinds_state = StateMachine(BlindsState.Wait)
+
+        self.__move_timer = Timer()
+
+        self.__calibration_state = StateMachine(CalibrationState.NONE)
+
         options = self._config["options"]
 
-        if "cw" in options:
-            self.__output_cw = options["cw"]
+        if "output_cw" in options:
+            self.__output_cw = options["output_cw"]
 
-        if "ccw" in options:
-            self.__output_ccw = options["ccw"]
+        if "output_ccw" in options:
+            self.__output_ccw = options["output_ccw"]
 
         if "feedback" in options:
             self.__input_fb = options["feedback"]
@@ -148,6 +156,17 @@ class MODV1(BaseBlind):
 
         if "deg_per_sec" in options:
             self.__deg_per_sec = options["deg_per_sec"]
+        
+
+        # Set the feedback type.
+        if self.__input_fb.startswith("AI"):
+            self.__feedback_type = FeedbackType.Analog
+        
+        elif self.__input_fb.startswith("DI"):
+            self.__feedback_type = FeedbackType.Digital
+
+        else:
+            GlobalErrorHandler.log_missing_resource(self.__logger, "{}: feedback not set correct or incomparable. Check feedback settings.".format(self.name))
 
 #endregion
 
@@ -215,14 +234,6 @@ class MODV1(BaseBlind):
 #region Public Methods
 
     def init(self):
-
-        self.__logger = get_logger(__name__)
-
-        self.__blinds_state = StateMachine(BlindsState.Wait)
-
-        self.__move_timer = Timer()
-
-        self.__calibration_state = StateMachine(CalibrationState.NONE)
 
         self.__stop()
 
