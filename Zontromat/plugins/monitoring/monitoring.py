@@ -82,13 +82,13 @@ class Monitoring(BasePlugin):
     __logger = None
     """Logger"""
 
-    __cw_flowmetter_dev = None
+    __cw_flowmeter_dev = None
     """Cold water flow meter."""
 
     __cw_leak_test = None
     """Cold water leak test."""
 
-    __hw_flowmetter_dev = None
+    __hw_flowmeter_dev = None
     """Hot water flow meter."""
 
     __hw_leak_test = None
@@ -155,8 +155,8 @@ class Monitoring(BasePlugin):
             GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
 
-        if self.__cw_flowmetter_dev.input != register.value:
-            self.__cw_flowmetter_dev.input = register.value
+        if self.__cw_flowmeter_dev.input != register.value:
+            self.__cw_flowmeter_dev.input = register.value
 
     def __cw_tpl_cb(self, register):
 
@@ -165,8 +165,8 @@ class Monitoring(BasePlugin):
             GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
 
-        if self.__cw_flowmetter_dev.tpl != register.value:
-            self.__cw_flowmetter_dev.tpl = register.value
+        if self.__cw_flowmeter_dev.tpl != register.value:
+            self.__cw_flowmeter_dev.tpl = register.value
 
     def __cw_leaktest_result(self, leak_liters):
 
@@ -183,26 +183,26 @@ class Monitoring(BasePlugin):
         if cw_tpl is not None:
             cw_tpl.update_handlers = self.__cw_tpl_cb
 
-        self.__cw_flowmetter_dev = Flowmeter.create(\
+        self.__cw_flowmeter_dev = Flowmeter.create(\
             self.name + " cold water flow meter",\
             "monitoring.cw",\
             self._registers,\
             self._controller)
-        self.__cw_flowmetter_dev.init()
+        self.__cw_flowmeter_dev.init()
 
-        self.__cw_leak_test = LeakTest(self.__cw_flowmetter_dev, 20)
+        self.__cw_leak_test = LeakTest(self.__cw_flowmeter_dev, 20)
         self.__cw_leak_test.on_result(self.__cw_leaktest_result)
 
     def __update_cw(self):
 
         fm_state = self._registers.by_name(self.key + ".cw.value")
-        if self.__cw_flowmetter_dev is not None and\
+        if self.__cw_flowmeter_dev is not None and\
             fm_state is not None:
-            fm_state.value = self.__cw_flowmetter_dev.get_liters()
+            fm_state.value = self.__cw_flowmeter_dev.get_liters()
 
         # If the zone is empty check for leaks.
         is_empty = self._registers.by_name("envm.is_empty")
-        if self.__cw_flowmetter_dev is not None and\
+        if self.__cw_flowmeter_dev is not None and\
             is_empty is not None and\
             is_empty.value:
 
@@ -219,8 +219,8 @@ class Monitoring(BasePlugin):
             GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
 
-        if self.__hw_flowmetter_dev.input != register.value:
-            self.__hw_flowmetter_dev.input = register.value
+        if self.__hw_flowmeter_dev.input != register.value:
+            self.__hw_flowmeter_dev.input = register.value
 
     def __hw_tpl_cb(self, register):
 
@@ -229,8 +229,8 @@ class Monitoring(BasePlugin):
             GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
 
-        if self.__hw_flowmetter_dev.tpl != register.value:
-            self.__hw_flowmetter_dev.tpl = register.value
+        if self.__hw_flowmeter_dev.tpl != register.value:
+            self.__hw_flowmeter_dev.tpl = register.value
 
     def __hw_leaktest_result(self, leak_liters):
 
@@ -247,26 +247,26 @@ class Monitoring(BasePlugin):
         if hw_tpl is not None:
             hw_tpl.update_handlers = self.__hw_tpl_cb
 
-        self.__hw_flowmetter_dev = Flowmeter.create(\
+        self.__hw_flowmeter_dev = Flowmeter.create(\
             self.name + " hot water flow meter",\
             "monitoring.hw",\
             self._registers,\
             self._controller)
-        self.__hw_flowmetter_dev.init()
+        self.__hw_flowmeter_dev.init()
 
-        self.__hw_leak_test = LeakTest(self.__hw_flowmetter_dev, 20)
+        self.__hw_leak_test = LeakTest(self.__hw_flowmeter_dev, 20)
         self.__hw_leak_test.on_result(self.__hw_leaktest_result)
 
     def __update_hw(self):
 
         fm_state = self._registers.by_name(self.key + ".hw.value")
-        if self.__hw_flowmetter_dev is not None and\
+        if self.__hw_flowmeter_dev is not None and\
             fm_state is not None:
-            fm_state.value = self.__hw_flowmetter_dev.get_liters()
+            fm_state.value = self.__hw_flowmeter_dev.get_liters()
 
         # If the zone is empty check for leaks.
         is_empty = self._registers.by_name("envm.is_empty")
-        if self.__hw_flowmetter_dev is not None and\
+        if self.__hw_flowmeter_dev is not None and\
             is_empty is not None and\
             is_empty.value:
 
