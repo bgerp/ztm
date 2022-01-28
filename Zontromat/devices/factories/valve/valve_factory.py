@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 from devices.vendors.tonhe.a20m15b2c.a20m15b2c import A20M15B2C
+from devices.vendors.tonhe.a20t20b2c.a20t20b2c import A20T20B2C
 from devices.vendors.flowx.flx05f.flx05f import FLX05F
 
 #region File Attributes
@@ -118,6 +119,15 @@ class ValveFactory:
                 feedback=config["options"]["feedback"],
                 min_pos=config["options"]["min"],
                 max_pos=config["options"]["max"]
+            )
+
+        # Tonhe / a20t20b2c / (RO0/AO0) / AI0
+        elif vendor == "Tonhe" and model == "a20t20b2c":
+
+            device = A20T20B2C(
+                name=name,
+                controller=controller,
+                output=config["options"]["output"],
             )
 
         else:
