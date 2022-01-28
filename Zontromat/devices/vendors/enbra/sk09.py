@@ -57,8 +57,8 @@ __status__ = "Debug"
 
 #endregion
 
-class Flowmeter(BaseDevice):
-    """Flowmeter input device."""
+class SK09(BaseDevice):
+    """Flowmeter input device Enbra SK09."""
 
 #region Attributes
 
