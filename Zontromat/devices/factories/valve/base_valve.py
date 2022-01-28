@@ -241,4 +241,14 @@ class BaseValve(BaseDevice):
 
         pass
 
+    def shutdown(self):
+
+        if self.current_position == 0:
+            return
+
+        self.target_position = 0
+
+        while not self._state.is_state(ValveState.Wait):
+            self.update()
+
 #endregion
