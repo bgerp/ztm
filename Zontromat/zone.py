@@ -381,13 +381,6 @@ class Zone():
         """Login to bgERP.
         """
 
-        # one_wire = self.__controller.get_1w_devices()
-        # modbus = self.__controller.get_modbus_devices()
-        # credentials = {
-            # "one_wire=one_wire, \
-            # "modbus=modbus, \
-        # }
-
         login_state = self.__erp.login(
             serial_number=self.__controller.serial_number,
             model=self.__controller.model,
