@@ -360,14 +360,3 @@ class Dummy(BaseController):
         """
 
         return 0
-
-    def get_1w_devices(self):
-        """Get 1W device from the list of all.
-
-        Returns
-        -------
-        tuple
-            1W devices.
-        """
-
-        return 0

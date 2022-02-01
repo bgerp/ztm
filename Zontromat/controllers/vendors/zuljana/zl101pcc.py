@@ -32,7 +32,6 @@ from pymodbus.client.sync import ModbusSerialClient as ModbusClient
 from services.global_error_handler.global_error_handler import GlobalErrorHandler
 
 from utils.logger import get_logger
-from utils.utils import serial_ports
 from utils.logic.functions import l_scale
 
 from controllers.base_controller import BaseController
@@ -75,7 +74,7 @@ __class_name__ = "ZL101PCC"
 #endregion
 
 class ZL101PCC(BaseController):
-    """Dummy PLC class.
+    """ZL101PCC PLC class.
     """
 
 #region Attributes
@@ -84,28 +83,16 @@ class ZL101PCC(BaseController):
     """Logger
     """
 
-    __modbus_rtu_port = None
-    """MODBUS RTU RS485 port.
+    __modbus_rtu_clients_count = 2
+    """Modbus-RTU clients count.
     """
 
-    __modbus_rtu_baud = 9600
-    """MODBUS serial port baudrate.
-    """
-
-    __modbus_rtu_client = None
-    """Modbus client.
-    """
-
-    __timeout = 0.5
-    """Modbus timeout.
+    __modbus_rtu_clients = {}
+    """Modbus-RTU clients.
     """
 
     __black_island = None
     """IO
-    """
-
-    __operations_count = 4
-    """Operations count.
     """
 
     __map = \
@@ -208,36 +195,28 @@ class ZL101PCC(BaseController):
 
         super().__init__(config)
 
+        # Validate GPIO map.
+        if self.__map is None:
+            raise ValueError("Invalid GPIO map.")
+
         self._gpio_map = self.__map
 
         self.__logger = get_logger(__name__)
 
-        if "modbus_rtu_port" in config:
-            self.__modbus_rtu_port = config["modbus_rtu_port"]
-
-        if "modbus_rtu_baud" in config:
-            self.__modbus_rtu_baud = int(config["modbus_rtu_baud"])
-
-        if "timeout" in config:
-            self.__timeout = float(config["timeout"])
-
-        is_valid = False
-        ports = serial_ports()
-        for port in ports:
-            if port in self.__modbus_rtu_port:
-                is_valid = True
-                break
-
-        if not is_valid:
-            raise ValueError("The serial port \"{}\" does not exists in the known ports {}"\
-                .format(self.__modbus_rtu_port, ports))
-
-        if self.__modbus_rtu_client is None:
-            self.__modbus_rtu_client = ModbusClient(
-                method="rtu",
-                port=self.__modbus_rtu_port,
-                timeout=self.__timeout,
-                baudrate=self.__modbus_rtu_baud)
+        for index in range(0, self.__modbus_rtu_clients_count):
+            modbus_rtu_cfg = self.is_valid_port_cfg(index)
+            if (not index in self.__modbus_rtu_clients) and (not modbus_rtu_cfg is {}):
+                self.__modbus_rtu_clients[index] = ModbusClient(
+                    method="rtu",
+                    port=modbus_rtu_cfg["port"],
+                    baudrate=modbus_rtu_cfg["baudrate"],
+                    timeout=modbus_rtu_cfg["timeout"],
+                    bytesize=modbus_rtu_cfg["bytesize"],
+                    parity=modbus_rtu_cfg["parity"],
+                    stopbits=modbus_rtu_cfg["stopbits"]
+                    )
+            else:
+                self.show_valid_serial_ports(modbus_rtu_cfg["port"])
 
         self.__black_island = BlackIsland(unit=1)
 
@@ -337,7 +316,7 @@ class ZL101PCC(BaseController):
     def update(self):
         """Update controller state."""
 
-        return self.__modbus_rtu_client is not None
+        return self.__modbus_rtu_clients is not None or {}
 
     def digital_read(self, pin):
         """Read the digital input pin.
@@ -349,35 +328,20 @@ class ZL101PCC(BaseController):
             int: State of the pin.
         """
 
-        l_pin = pin.replace("!", "")
+        if self.is_gpio_off(pin):
+            return False
+
+        if self.is_gpio_nothing(pin):
+            raise ValueError("Pin can not be None or empty string.")
+
         response = False
 
-        if self.__map is None:
-            return response
-
-        # Remote GPIO.
-        if self.is_valid_remote_gpio(l_pin):
-
-            data = self.parse_remote_gpio(l_pin)
-
-            read_response = self.__modbus_rtu_client.read_discrete_inputs(
-                data["io_reg"],
-                data["io_index"]+1,
-                unit=data["mb_id"])
-
-            if not read_response.isError():
-                response = read_response.bits[data["io_index"]]
-
-        # Non remote GPIO.
-        else:
-
-            # If the pin does not exists then exit.
-            if not pin in self.__map:
-                return response
+        # Local GPIO.
+        if self.is_gpio_local(pin):
 
             # Read device digital inputs.
             request = self.__black_island.generate_request("GetDigitalInputs")
-            di_response = self.__modbus_rtu_client.execute(request)
+            di_response = self.__modbus_rtu_clients[0].execute(request)
             if di_response is not None:
                 if not di_response.isError():
                     self.__DI = di_response.bits
@@ -386,7 +350,31 @@ class ZL101PCC(BaseController):
             else:
                 GlobalErrorHandler.log_hardware_malfunction(self.__logger, "GPIO: {} @ {} malfunctioning, check modbus cables and connections.".format(pin, self))
 
-            response = self.__DI[self.__map[pin]]
+            response = self.__DI[self._gpio_map[pin]]
+
+            # Inversion
+            if self.is_gpio_inverted(pin):
+                response = not response
+
+        # Remote GPIO.
+        elif self.is_gpio_remote(pin):
+
+            remote_gpio = self.parse_remote_gpio(pin)
+
+            read_response = self.self.__modbus_rtu_clients[remote_gpio["uart"]].read_discrete_inputs(
+                remote_gpio["io_reg"],
+                remote_gpio["io_index"]+1,
+                unit=remote_gpio["mb_id"])
+
+            if not read_response.isError():
+                response = read_response.bits[remote_gpio["io_index"]]
+
+                # Inversion
+                if self.is_gpio_inverted(pin):
+                    response = not response
+
+        else:
+            raise ValueError("Pin does not exists in pin map.")
 
         return response
 
@@ -407,49 +395,31 @@ class ZL101PCC(BaseController):
             State of the pin.
         """
 
-        l_pin = pin.replace("!", "")
         response = False
         state = False
 
-        if self.is_off_gpio(l_pin):
-            return state
+        if self.is_gpio_off(pin):
+            return False
 
-        if not self.is_valid_gpio_type(l_pin):
+        if self.is_gpio_nothing(pin):
             raise ValueError("Pin can not be None or empty string.")
-
-        if not self.is_valid_gpio(l_pin):
-            raise ValueError("Pin does not exists in pin map.")
-
-        # Inversion
-        polarity = pin.startswith("!")
-
+        
+        # Make is bool.
         state = bool(value)
 
-        if polarity:
+        # Inversion
+        if self.is_gpio_inverted(pin):
             state = not state
 
-        # Remote GPIO.
-        if self.is_valid_remote_gpio(l_pin):
-            data = self.parse_remote_gpio(l_pin)
+        # Local GPIO.
+        if self.is_gpio_local(pin):
 
-            write_response = self.__modbus_rtu_client.write_coil(
-                data["io_reg"]+data["io_index"],
-                state,
-                unit=data["mb_id"])
-
-            if not write_response.isError():
-
-                response = True
-
-        # Non remote GPIO.
-        else:
-            gpio = self.__map[pin]
-
+            gpio = self._gpio_map[pin]
             self.__DORO[gpio] = state
 
             # Write device digital & relay outputs.
             request = self.__black_island.generate_request("SetRelays", SetRelays=self.__DORO)
-            cw_response = self.__modbus_rtu_client.execute(request)
+            cw_response = self.__modbus_rtu_clients[0].execute(request)
             if cw_response is not None:
                 if not cw_response.isError():
                     response = True
@@ -459,6 +429,21 @@ class ZL101PCC(BaseController):
                 GlobalErrorHandler.log_hardware_malfunction(self.__logger, "GPIO: {} @ {} malfunctioning, check modbus cables and connections.".format(pin, self))
 
             # self.__logger.debug("digital_write({}, {}, {})".format(self.model, pin, value))
+
+        # Remote GPIO.
+        elif self.is_gpio_remote(pin):
+            remote_gpio = self.parse_remote_gpio(pin)
+
+            write_response = self.__modbus_rtu_clients[remote_gpio["uart"]].write_coil(
+                remote_gpio["io_reg"]+remote_gpio["io_index"],
+                state,
+                unit=remote_gpio["mb_id"])
+
+            if not write_response.isError():
+                response = True
+
+        else:
+            raise ValueError("Pin does not exists in pin map.")
 
         return response
 
@@ -479,51 +464,41 @@ class ZL101PCC(BaseController):
             State of the pin.
         """
 
-        state = {"value": value}
+        if self.is_gpio_off(pin):
+            return False
 
-        if self.__map is None:
-            return state
+        if self.is_gpio_nothing(pin):
+            raise ValueError("Pin can not be None or empty string.")
 
-        if not pin in self.__map:
-            return state
+        response = False
 
-        value = l_scale(value, [0, 10], [0, 50000])
+        # Local GPIO.
+        if self.is_gpio_local(pin):
 
-        value = int(value)
+            value = l_scale(value, [0, 10], [0, 50000])
 
-        self.__AO[self.__map[pin]] = value
+            value = int(value)
 
-        # Write device analog outputs.
-        request = self.__black_island\
-            .generate_request("SetAnalogOutputs", SetAnalogOutputs=self.__AO)
-        hrw_response = self.__modbus_rtu_client.execute(request)
-        if hrw_response is not None:
-            if hrw_response.isError():
+            self.__AO[self._gpio_map[pin]] = value
+
+            # Write device analog outputs.
+            request = self.__black_island\
+                .generate_request("SetAnalogOutputs", SetAnalogOutputs=self.__AO)
+            hrw_response = self.__modbus_rtu_clients[0].execute(request)
+            if hrw_response is not None:
+                if not hrw_response.isError():
+                    response = True
+                else:
+                    GlobalErrorHandler.log_hardware_malfunction(self.__logger, "GPIO: {} @ {} malfunctioning, check modbus cables and connections.".format(pin, self))
+            else:
                 GlobalErrorHandler.log_hardware_malfunction(self.__logger, "GPIO: {} @ {} malfunctioning, check modbus cables and connections.".format(pin, self))
+
+            # self.__logger.debug("analog_write({}, {}, {})".format(self.model, pin, value))
+
         else:
-            GlobalErrorHandler.log_hardware_malfunction(self.__logger, "GPIO: {} @ {} malfunctioning, check modbus cables and connections.".format(pin, self))
+            raise ValueError("Pin does not exists in pin map.")
 
-        # self.__logger.debug("analog_write({}, {}, {})".format(self.model, pin, value))
-
-        return state
-
-    def read_counter(self, pin):
-        """Read the digital counter input.
-
-        Parameters
-        ----------
-        pin : str
-            Pin index.
-
-        Returns
-        -------
-        int
-            State of the pin.
-        """
-
-        self.__logger.debug("read_counter({}, {})".format(self.model, pin))
-
-        return 0
+        return response
 
     def analog_read(self, pin):
         """Write the analog input pin.
@@ -542,161 +517,43 @@ class ZL101PCC(BaseController):
             State of the pin.
         """
 
+        if self.is_gpio_off(pin):
+            return False
+
+        if self.is_gpio_nothing(pin):
+            raise ValueError("Pin can not be None or empty string.")
+
         value = 0.0
         state = {"value": value, "min": 0.0, "max": 10.0}
 
-        if self.__map is None:
-            return state
+        # Local GPIO.
+        if self.is_gpio_local(pin):
 
-        if not pin in self.__map:
-            return state
-
-        # Read device analog inputs.
-        request = self.__black_island.generate_request("GetAnalogInputs")
-        irr_response = self.__modbus_rtu_client.execute(request)
-        if irr_response is not None:
-            if not irr_response.isError():
-                self.__AI = irr_response.registers
+            # Read device analog inputs.
+            request = self.__black_island.generate_request("GetAnalogInputs")
+            irr_response = self.__modbus_rtu_clients[0].execute(request)
+            if irr_response is not None:
+                if not irr_response.isError():
+                    self.__AI = irr_response.registers
+                else:
+                    GlobalErrorHandler.log_hardware_malfunction(self.__logger, "GPIO: {} @ {} malfunctioning, check modbus cables and connections.".format(pin, self))
             else:
                 GlobalErrorHandler.log_hardware_malfunction(self.__logger, "GPIO: {} @ {} malfunctioning, check modbus cables and connections.".format(pin, self))
+
+            value = self.__AI[self._gpio_map[pin]]
+
+            value = l_scale(value, [0, 50000], [0, 10])
+
+            state["value"] = value
+
+            # self.__logger.debug("analog_read({}, {})".format(self.model, pin))
+
         else:
-            GlobalErrorHandler.log_hardware_malfunction(self.__logger, "GPIO: {} @ {} malfunctioning, check modbus cables and connections.".format(pin, self))
-
-        value = self.__AI[self.__map[pin]]
-
-        value = l_scale(value, [0, 50000], [0, 10])
-
-        state["value"] = value
-
-        # self.__logger.debug("analog_read({}, {})".format(self.model, pin))
+            raise ValueError("Pin does not exists in pin map.")
 
         return state
 
-    def write_counter(self, pin, value):
-        """Write the digital counter value.
-
-        Parameters
-        ----------
-        pin : str
-            Pin index.
-
-        value : int
-            Value for the counter.
-
-        Returns
-        -------
-        int
-            State of the pin.
-        """
-
-        self.__logger.debug("write_counter({}, {}, {})".format(self.model, pin, value))
-
-        return 0
-
-    def set_led(self, pin, value):
-        """Write the LED.
-
-        Parameters
-        ----------
-        pin : str
-            Pin index.
-
-        value : int
-            Value for the LED.
-
-        Returns
-        -------
-        int
-            State of the pin.
-        """
-
-        # self.__logger.debug("set_led({}, {}, {})".format(self.model, pin, value))
-
-        return 0
-
-    def read_temperature(self, dev, circuit):
-        """Read the thermometer.
-
-        Parameters
-        ----------
-        dev : str
-            Dev ID.
-
-        circuit : str
-            Circuit ID.
-
-        Returns
-        -------
-        int
-            State of the device.
-        """
-
-        # self.__logger.debug("read_temperature({}, {}, {})".format(self.model, dev, circuit))
-
-        return 0
-
-    def read_light(self, dev, circuit):
-        """Read the light sensor.
-
-        Parameters
-        ----------
-        dev : str
-            Dev ID.
-
-        circuit : str
-            Circuit ID.
-
-        Returns
-        -------
-        int
-            State of the device.
-        """
-
-        self.__logger.debug("read_light({}, {}, {})".format(self.model, dev, circuit))
-
-        return 0
-
-    def read_mb_registers(self, uart, dev_id, registers, register_type=None):
-        """Read MODBUS register.
-
-        Parameters
-        ----------
-        uart : int
-            UART index.
-
-        dev_id : int
-            MODBUS ID.
-
-        registers : array
-            Registers IDs.
-
-        register_type : str
-            Registers types.
-
-        Returns
-        -------
-        mixed
-            State of the device.
-        """
-
-        self.__logger.debug("read_mb_registers({}, {}, {}, {}, {})".format(self.model, uart, dev_id, registers, register_type))
-
-        return 0
-
-    def get_1w_devices(self):
-        """Get 1W device from the list of all.
-
-        Returns
-        -------
-        tuple
-            1W devices.
-        """
-
-        # self.__logger.debug("get_1w_devices({})".format(self.model))
-
-        return []
-
-    def execute_mb_request(self, request):
+    def execute_mb_request(self, request, uarl):
         """Execute modbus request.
 
         Args:
@@ -708,6 +565,6 @@ class ZL101PCC(BaseController):
         response = None
 
         if self.__modbus_rtu_client is not None:
-            response = self.__modbus_rtu_client.execute(request)
+            response = self.__modbus_rtu_clients[0].execute(request)
 
         return response

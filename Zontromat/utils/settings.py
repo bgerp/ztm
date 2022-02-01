@@ -221,11 +221,16 @@ class ApplicationSettings:
         if self.__config is not None:
             if "CONTROLLER" not in self.__config:
                 self.__config["CONTROLLER"] = {
-                    "timeout": 0.1,
                     "vendor": "zuljana",
                     "model": "zl101pcc",
-                    "modbus_rtu_port": "/dev/ttyUSB0",
-                    "modbus_rtu_baud": 9600
+                    "modbus_rtu_port_0": "/dev/ttyUSB0",
+                    "modbus_rtu_baud_0": 9600,
+                    "modbus_rtu_cfg_0": "8N1",
+                    "modbus_rtu_timeout_0": 0.1,
+                    "modbus_rtu_port_1": "/dev/ttyUSB1",
+                    "modbus_rtu_baud_1": 9600,
+                    "modbus_rtu_cfg_1": "8N1",
+                    "modbus_rtu_timeout_1": 0.1,
                 }
 
         # # Default software version as current version.
@@ -243,7 +248,7 @@ class ApplicationSettings:
             if "ERP_SERVICE" not in self.__config:
                 self.__config["ERP_SERVICE"] = {
                     "config_time": int(time.time()),
-                    "erp_id": "0000-0000-0000-0000",
+                    "erp_id": "0082-4140-0042-4216",
                     "host": "https://test.bcvt.eu/",
                     "timeout": 5,
                     }

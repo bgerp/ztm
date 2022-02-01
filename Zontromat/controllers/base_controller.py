@@ -22,7 +22,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 
+import re
+
 from utils.configuarable import Configuarable
+from utils.utils import serial_ports
 
 from data import verbal_const
 
@@ -136,12 +139,55 @@ class BaseController(Configuarable):
 
 #region Public Methods
 
-    def is_valid_gpio_type(self, gpio):
-        """Is valid GPIO type"""
+    def is_gpio_nothing(self, gpio):
+        """Is GPIO nothing"""
 
-        return gpio is not None and gpio != ""
+        is_none = gpio is None
+        is_nothing = gpio == ""
 
-    def is_valid_remote_gpio(self, gpio):
+        return is_none or is_nothing
+
+    def is_gpio_off(self, gpio):
+        """Is not OFF"""
+
+        io_name = gpio.upper()
+
+        return io_name == verbal_const.OFF
+
+    def is_gpio_inverted(self, gpio):
+        """Is the polarity inverted.
+
+        Args:
+            gpio (string): GPIO
+
+        Returns:
+            bool: True if it is inverted.
+        """        
+
+        return gpio.startswith("!")
+
+    def is_gpio_local(self, gpio):
+
+        result = False
+
+        if self.is_gpio_nothing(gpio):
+            return False
+
+        if self.is_gpio_off(gpio):
+            return False
+
+        # Capitalize the target.
+        io_name = gpio.upper()
+
+        # Remove flip sign.
+        io_name = io_name.replace("!", "")
+
+        # Check is it part of the local map.
+        result = io_name in self._gpio_map
+
+        return result
+
+    def is_gpio_remote(self, gpio):
         """[summary]
 
         Args:
@@ -162,6 +208,12 @@ class BaseController(Configuarable):
         Returns:
             [bool]: True - Valid syntax; False Invalid syntax.
         """
+
+        if self.is_gpio_nothing(gpio):
+            return False
+
+        if self.is_gpio_off(gpio):
+            return False
 
         # Capitalize the target.
         io_name = gpio.upper()
@@ -253,29 +305,12 @@ class BaseController(Configuarable):
         # Return the result.
         return valid
 
-    def is_off_gpio(self, gpio):
-        """Is not OFF"""
-
-        return gpio == verbal_const.OFF
-
-    def is_existing_gpio(self, gpio):
-        """Is part of the GPIO definitions"""
-
-        return gpio in self._gpio_map
-
     def is_valid_gpio(self, gpio):
-        """Complex check is it valid."""
 
-        is_off_gpio = not self.is_off_gpio(gpio)
-        is_existing_gpio = self.is_existing_gpio(gpio)
-        is_valid_gpio_type = self.is_valid_gpio_type(gpio)
-        valid_remote_gpio = self.is_valid_remote_gpio(gpio)
+        local_gpio = self.is_gpio_local(gpio)
+        remote_gpio = self.is_gpio_remote(gpio)
 
-        result = (is_off_gpio\
-            and is_existing_gpio\
-            and is_valid_gpio_type) or valid_remote_gpio
-
-        return result
+        return (local_gpio or remote_gpio)
 
     def parse_remote_gpio(self, gpio):
         """Parse remote GPIO
@@ -287,7 +322,7 @@ class BaseController(Configuarable):
             TypeError: Inavalid IO type
 
         Returns:
-            dict: Decription
+            dict: Description
         """
         io_name = gpio.upper()
 
@@ -338,6 +373,39 @@ class BaseController(Configuarable):
         """
 
         return self._gpio_map
+
+    def is_valid_port_cfg(self, index):
+
+        configuration = {}
+
+        port = "modbus_rtu_port_{}".format(index)
+        if port in self._config:
+            configuration["port"] = self._config[port]
+
+        baudrate = "modbus_rtu_baud_{}".format(index)
+        if baudrate in self._config:
+            configuration["baudrate"] = int(self._config[baudrate])
+
+        timeout = "modbus_rtu_timeout_{}".format(index)
+        if timeout in self._config:
+            configuration["timeout"] = float(self._config[timeout])
+
+        port_cfg = "modbus_rtu_cfg_{}".format(index)
+        if port_cfg in self._config:
+            cfg = re.search("[5-8][ENO][12]", self._config[port_cfg])
+            if not cfg is None:            
+                configuration["bytesize"] = int(cfg.string[0])
+                configuration["parity"] = cfg.string[1]
+                configuration["stopbits"] = int(cfg.string[2])
+
+        return configuration
+
+    def show_valid_serial_ports(self, port=""):
+
+        ports = serial_ports()
+
+        raise ValueError("The serial port \"{}\" does not exists in the known ports {}"\
+            .format(port, ports))
 
 #endregion
 
@@ -543,6 +611,8 @@ class BaseController(Configuarable):
         tuple
             All 1W devices connected to the controller.
         """
+
+        return []
 
     def execute_mb_request(self, request):
         """Execute modbus request.

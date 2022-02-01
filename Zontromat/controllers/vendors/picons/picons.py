@@ -736,9 +736,4 @@ class PiCons(BaseController):
 
         return response
 
-    def get_1w_devices(self):
-        """Returns list of One Wire Device."""
-
-        return []
-
 #endregion
