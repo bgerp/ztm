@@ -138,7 +138,7 @@ class Sys(BasePlugin):
         self.__rules = Rules()
 
         # GPIOs
-        for index in range(9):
+        for index in range(12):
             self.__rules.add(Rule("DO{}".format(index), MonitoringLevel.Error))
             self.__rules.add(Rule("DI{}".format(index), MonitoringLevel.Warning))
             self.__rules.add(Rule("AO{}".format(index), MonitoringLevel.Error))

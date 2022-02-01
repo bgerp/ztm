@@ -31,9 +31,9 @@ from utils.logic.timer import Timer
 
 from plugins.base_plugin import BasePlugin
 
-from devices.vendors.no_vendor_1.flowmeter import Flowmeter
 from devices.tests.leak_test.leak_test import LeakTest
 from devices.factories.power_analyzers.power_analyser_factory import PowerAnalyserFactory
+from devices.factories.flowmeters.flowmeters_factory import FlowmetersFactory
 from devices.drivers.modbus.register_type import RegisterType
 
 from services.evok.settings import EvokSettings
@@ -148,25 +148,33 @@ class Monitoring(BasePlugin):
 
 #region Private Methods (Cold Water Flowmeter)
 
-    def __cw_input_cb(self, register):
+    def __cw_flowmeter_settings_cb(self, register):
 
         # Check data type.
-        if not register.data_type == "str":
-            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
+        if not register.data_type == "json":
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
             return
 
-        if self.__cw_flowmeter_dev.input != register.value:
-            self.__cw_flowmeter_dev.input = register.value
+        if register.value != {} and self.__cw_flowmeter_dev is None:
+            self.__cw_flowmeter_dev = FlowmetersFactory.create(
+                name="Cold water flowmeter",
+                controller=self._controller,
+                vendor=register.value['vendor'],
+                model=register.value['model'],
+                options=register.value['options'])
 
-    def __cw_tpl_cb(self, register):
+            if self.__cw_flowmeter_dev is not None:
+                self.__cw_flowmeter_dev.init()
 
-        # Check data type.
-        if not register.data_type == "int":
-            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
-            return
+                # 20 seconds is time for leak testing.
+                self.__cw_leak_test = LeakTest(self.__cw_flowmeter_dev, 20)
+                self.__cw_leak_test.on_result(self.__cw_leaktest_result)
 
-        if self.__cw_flowmeter_dev.tpl != register.value:
-            self.__cw_flowmeter_dev.tpl = register.value
+
+        elif register.value == {} and self.__cw_flowmeter_dev is not None:
+            self.__cw_flowmeter_dev.shutdown()
+            del self.__cw_flowmeter_dev
+            del self.__cw_leak_test
 
     def __cw_leaktest_result(self, leak_liters):
 
@@ -175,23 +183,10 @@ class Monitoring(BasePlugin):
 
     def __init_cw(self):
 
-        cw_input = self._registers.by_name(self.key + ".cw.input")
-        if cw_input is not None:
-            cw_input.update_handlers = self.__cw_input_cb
-
-        cw_tpl = self._registers.by_name(self.key + ".cw.tpl")
-        if cw_tpl is not None:
-            cw_tpl.update_handlers = self.__cw_tpl_cb
-
-        self.__cw_flowmeter_dev = Flowmeter.create(\
-            self.name + " cold water flow meter",\
-            "monitoring.cw",\
-            self._registers,\
-            self._controller)
-        self.__cw_flowmeter_dev.init()
-
-        self.__cw_leak_test = LeakTest(self.__cw_flowmeter_dev, 20)
-        self.__cw_leak_test.on_result(self.__cw_leaktest_result)
+        cw_flowmeter = self._registers.by_name("{}.cw.flowmeter_settings".format(self.key))
+        if cw_flowmeter is not None:
+            cw_flowmeter.update_handlers = self.__cw_flowmeter_settings_cb
+            cw_flowmeter.update()
 
     def __update_cw(self):
 
@@ -212,25 +207,32 @@ class Monitoring(BasePlugin):
 
 #region Private Methods (Hot Water Flowmeter)
 
-    def __hw_input_cb(self, register):
+    def __hw_flowmeter_settings_cb(self, register):
 
         # Check data type.
-        if not register.data_type == "str":
-            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
+        if not register.data_type == "json":
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
             return
 
-        if self.__hw_flowmeter_dev.input != register.value:
-            self.__hw_flowmeter_dev.input = register.value
+        if register.value != {} and self.__hw_flowmeter_dev is None:
+            self.__hw_flowmeter_dev = FlowmetersFactory.create(
+                name="Hot water flowmeter",
+                controller=self._controller,
+                vendor=register.value['vendor'],
+                model=register.value['model'],
+                options=register.value['options'])
 
-    def __hw_tpl_cb(self, register):
+            if self.__hw_flowmeter_dev is not None:
+                self.__hw_flowmeter_dev.init()
 
-        # Check data type.
-        if not register.data_type == "float":
-            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
-            return
+                # 20 seconds is time for leak testing.
+                self.__hw_leak_test = LeakTest(self.__hw_flowmeter_dev, 20)
+                self.__hw_leak_test.on_result(self.__hw_leaktest_result)
 
-        if self.__hw_flowmeter_dev.tpl != register.value:
-            self.__hw_flowmeter_dev.tpl = register.value
+        elif register.value == {} and self.__hw_flowmeter_dev is not None:
+            self.__hw_flowmeter_dev.shutdown()
+            del self.__hw_flowmeter_dev
+            del self.__hw_leak_test
 
     def __hw_leaktest_result(self, leak_liters):
 
@@ -239,27 +241,14 @@ class Monitoring(BasePlugin):
 
     def __init_hw(self):
 
-        hw_input = self._registers.by_name(self.key + ".hw.input")
-        if hw_input is not None:
-            hw_input.update_handlers = self.__hw_input_cb
-
-        hw_tpl = self._registers.by_name(self.key + ".hw.tpl")
-        if hw_tpl is not None:
-            hw_tpl.update_handlers = self.__hw_tpl_cb
-
-        self.__hw_flowmeter_dev = Flowmeter.create(\
-            self.name + " hot water flow meter",\
-            "monitoring.hw",\
-            self._registers,\
-            self._controller)
-        self.__hw_flowmeter_dev.init()
-
-        self.__hw_leak_test = LeakTest(self.__hw_flowmeter_dev, 20)
-        self.__hw_leak_test.on_result(self.__hw_leaktest_result)
+        hw_flowmeter = self._registers.by_name("{}.hw.flowmeter_settings".format(self.key))
+        if hw_flowmeter is not None:
+            hw_flowmeter.update_handlers = self.__hw_flowmeter_settings_cb
+            hw_flowmeter.update()
 
     def __update_hw(self):
 
-        fm_state = self._registers.by_name(self.key + ".hw.value")
+        fm_state = self._registers.by_name("{}.hw.value".foamrat(self.key))
         if self.__hw_flowmeter_dev is not None and\
             fm_state is not None:
             fm_state.value = self.__hw_flowmeter_dev.get_liters()
