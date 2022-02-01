@@ -455,20 +455,20 @@ def __add_registers():
 #region Monitoring (mon)
 
     # Cold water flow meter.
-    register = Register("monitoring.cw.input")
+    register = Register("monitoring.cw.flowmeter_settings")
     register.scope = Scope.System
     register.plugin_name = "Monitoring"
-    register.description = "Cold water input flow meter"
-    register.range = __range["DI"]
-    register.value = verbal_const.OFF # "DI3"
-    __registers.append(register)
-
-    register = Register("monitoring.cw.tpl")
-    register.scope = Scope.System
-    register.plugin_name = "Monitoring"
-    register.description = "Cold water tics per liter"
-    register.range = "0.0/"
-    register.value = 1.0
+    register.description = "Cold water flow meter"
+    register.range = __range["NONE"]
+    register.value = {
+        "vendor": "mainone",
+        "model": "flowmeter_dn20",
+        "options":
+        {
+            "uart": 1,
+            "mb_id": 3,
+        }
+    }
     __registers.append(register)
 
     register = Register("monitoring.cw.value")
@@ -488,20 +488,20 @@ def __add_registers():
     __registers.append(register)
 
     # Hot water flow meter.
-    register = Register("monitoring.hw.input")
+    register = Register("monitoring.hw.flowmeter_settings")
     register.scope = Scope.System
     register.plugin_name = "Monitoring"
     register.description = "Hot water input flow meter"
-    register.range = __range["DI"]
-    register.value = verbal_const.OFF # "DI2"
-    __registers.append(register)
-
-    register = Register("monitoring.hw.tpl")
-    register.scope = Scope.System
-    register.plugin_name = "Monitoring"
-    register.description = "Hot water tics per liter"
-    register.range = "0.0/"
-    register.value = 1.0
+    register.range = __range["NONE"]
+    register.value = {
+        "vendor": "mainone",
+        "model": "flowmeter_dn20",
+        "options":
+        {
+            "uart": 1,
+            "mb_id": 3,
+        }
+    }
     __registers.append(register)
 
     register = Register("monitoring.hw.value")
@@ -531,7 +531,7 @@ def __add_registers():
         "model": "SDM630",
         "options":
         {
-            "interface": 0,
+            "uart": 0,
             "mb_id": 2,
         }
     } # "Eastron/SDM120/2/3"
@@ -797,7 +797,8 @@ def __add_registers():
         "model": "XY-MD02",
         "options":
         {
-            "mb_id": 4,
+            "uart": 0,
+            "mb_id": 4
         }
     } # Dallas/DS18B20/28FFFCD0001703AE # temp/DS18B20/28FFFCD0001703AE
     __registers.append(register)
@@ -821,7 +822,8 @@ def __add_registers():
         "model": "XY-MD02",
         "options":
         {
-            "mb_id": 3,
+            "uart": 0,
+            "mb_id": 3
         }
     } # "Dallas/DS18B20/28FFC4EE00170349" # temp/DS18B20/28FFC4EE00170349
     __registers.append(register)
@@ -845,7 +847,8 @@ def __add_registers():
         "model": "XY-MD02",
         "options":
         {
-            "mb_id": 5,
+            "uart": 0,
+            "mb_id": 5
         }
     } # Dallas/DS18B20/28FF2B70C11604B7 # "Dallas/DS18B20/28FF2B70C11604B7" # "temp/DS18B20/28FF2B70C11604B7"
     __registers.append(register)
@@ -915,7 +918,7 @@ def __add_registers():
         "model": "flowmeter_dn20",
         "options":
         {
-            "uart": 2,
+            "uart": 1,
             "mb_id": 3,
         }
     }
@@ -932,7 +935,8 @@ def __add_registers():
         "model": "XY-MD02",
         "options":
         {
-            "mb_id": 3,
+            "uart": 0,
+            "mb_id": 3
         }
     } # "Dallas/DS18B20/28FF2B70C11604B7" # temp/DS18B20/28FF2B70C11604B7
     __registers.append(register)
@@ -981,7 +985,7 @@ def __add_registers():
         "model": "flowmeter_dn20",
         "options":
         {
-            "uart": 2,
+            "uart": 1,
             "mb_id": 3,
         }
     }
@@ -998,7 +1002,8 @@ def __add_registers():
         "model": "XY-MD02",
         "options":
         {
-            "mb_id": 5,
+            "uart": 0,
+            "mb_id": 5
         }
     }
     __registers.append(register)
@@ -1726,7 +1731,8 @@ def __add_registers():
         "model": "MAGNA1_80_100_F_360_1x230V_PN6",
         "options":
         {
-            "mb_id": 0,
+            "uart": 0,
+            "mb_id": 0
         }
     }
     __registers.append(register)
@@ -1829,7 +1835,8 @@ def __add_registers():
         "model": "MAGNA1_80_100_F_360_1x230V_PN6",
         "options":
         {
-            "mb_id": 0,
+            "uart": 0,
+            "mb_id": 0
         }
     }
     __registers.append(register)
@@ -1931,7 +1938,8 @@ def __add_registers():
         "model": "MAGNA1_80_100_F_360_1x230V_PN6",
         "options":
         {
-            "mb_id": 0,
+            "uart": 0,
+            "mb_id": 0
         }
     }
     __registers.append(register)
@@ -2033,7 +2041,8 @@ def __add_registers():
         "model": "MAGNA1_80_100_F_360_1x230V_PN6",
         "options":
         {
-            "mb_id": 0,
+            "uart": 0,
+            "mb_id": 0
         }
     }
     __registers.append(register)
@@ -2136,7 +2145,8 @@ def __add_registers():
         "model": "MAGNA1_80_100_F_360_1x230V_PN6",
         "options":
         {
-            "mb_id": 0,
+            "uart": 0,
+            "mb_id": 0
         }
     }
     __registers.append(register)
@@ -2238,7 +2248,8 @@ def __add_registers():
         "model": "MAGNA1_80_100_F_360_1x230V_PN6",
         "options":
         {
-            "mb_id": 0,
+            "uart": 0,
+            "mb_id": 0
         }
     }
     __registers.append(register)
@@ -2339,7 +2350,8 @@ def __add_registers():
         "model": "MAGNA1_80_100_F_360_1x230V_PN6",
         "options":
         {
-            "mb_id": 0,
+            "uart": 0,
+            "mb_id": 0
         }
     }
     __registers.append(register)
@@ -2440,7 +2452,8 @@ def __add_registers():
         "model": "MAGNA1_80_100_F_360_1x230V_PN6",
         "options":
         {
-            "mb_id": 0,
+            "uart": 0,
+            "mb_id": 0
         }
     }
     __registers.append(register)
@@ -2541,7 +2554,8 @@ def __add_registers():
         "model": "MAGNA1_80_100_F_360_1x230V_PN6",
         "options":
         {
-            "mb_id": 0,
+            "uart": 0,
+            "mb_id": 0
         }
     }
     __registers.append(register)
@@ -2643,7 +2657,8 @@ def __add_registers():
         "model": "MAGNA1_80_100_F_360_1x230V_PN6",
         "options":
         {
-            "mb_id": 0,
+            "uart": 0,
+            "mb_id": 0
         }
     }
     __registers.append(register)
@@ -2744,7 +2759,8 @@ def __add_registers():
         "model": "MAGNA1_80_100_F_360_1x230V_PN6",
         "options":
         {
-            "mb_id": 0,
+            "uart": 0,
+            "mb_id": 0
         }
     }
     __registers.append(register)
@@ -3099,7 +3115,8 @@ def __add_registers():
         "model": "MAGNA1_80_100_F_360_1x230V_PN6",
         "options":
         {
-            "mb_id": 2,
+            "uart": 0,
+            "mb_id": 2
         }
     }
     __registers.append(register)
@@ -3115,7 +3132,8 @@ def __add_registers():
         "model": "MAGNA1_80_100_F_360_1x230V_PN6",
         "options":
         {
-            "mb_id": 3,
+            "uart": 0,
+            "mb_id": 3
         }
     }
     __registers.append(register)
@@ -3131,7 +3149,8 @@ def __add_registers():
         "model": "MAGNA1_80_100_F_360_1x230V_PN6",
         "options":
         {
-            "mb_id": 0,
+            "uart": 0,
+            "mb_id": 0
         }
     }
     __registers.append(register)
@@ -3147,7 +3166,8 @@ def __add_registers():
         "model": "MAGNA1_80_100_F_360_1x230V_PN6",
         "options":
         {
-            "mb_id": 0,
+            "uart": 0,
+            "mb_id": 0
         }
     }
     __registers.append(register)
@@ -3165,7 +3185,8 @@ def __add_registers():
         "model": "HeatPump",
         "options":
         {
-            "mb_id": 0,
+            "uart": 0,
+            "mb_id": 0
         }
     }
     __registers.append(register)
