@@ -137,5 +137,4 @@ class HVAC(BasePlugin):
         for key in self.__zones:
             self.__zones[key].shutdown()
 
-
 #endregion
