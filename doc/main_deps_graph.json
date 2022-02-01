@@ -1,0 +1,5325 @@
+{
+    "Cookie": {
+        "bacon": 2,
+        "imported_by": [
+            "requests.compat"
+        ],
+        "name": "Cookie",
+        "path": null
+    },
+    "OpenSSL.SSL": {
+        "bacon": 2,
+        "imported_by": [
+            "urllib3.contrib.pyopenssl"
+        ],
+        "name": "OpenSSL.SSL",
+        "path": null
+    },
+    "OpenSSL.crypto": {
+        "bacon": 2,
+        "imported_by": [
+            "urllib3.contrib.pyopenssl"
+        ],
+        "name": "OpenSSL.crypto",
+        "path": null
+    },
+    "Queue": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__"
+        ],
+        "imports": [
+            "collections.deque"
+        ],
+        "name": "Queue",
+        "path": null
+    },
+    "StringIO": {
+        "bacon": 2,
+        "imported_by": [
+            "jinja2.compiler",
+            "requests.compat",
+            "urllib3.packages.six"
+        ],
+        "name": "StringIO",
+        "path": null
+    },
+    "System": {
+        "bacon": 2,
+        "imported_by": [
+            "serial.serialcli"
+        ],
+        "name": "System",
+        "path": null
+    },
+    "System.IO.Ports": {
+        "bacon": 2,
+        "imported_by": [
+            "serial.serialcli"
+        ],
+        "name": "System.IO.Ports",
+        "path": null
+    },
+    "__main__": {
+        "bacon": 0,
+        "imported_by": [
+            "pkg_resources"
+        ],
+        "imports": [
+            "Queue",
+            "bg_erp.server",
+            "charset_normalizer.api",
+            "charset_normalizer.assets",
+            "charset_normalizer.cd",
+            "charset_normalizer.constant",
+            "charset_normalizer.models",
+            "charset_normalizer.utils",
+            "click._termui_impl",
+            "click._winconsole",
+            "click.core",
+            "click.globals",
+            "click.parser",
+            "click.types",
+            "click.utils",
+            "colorama.win32",
+            "flask",
+            "flask.app",
+            "flask.blueprints",
+            "flask.cli",
+            "flask.json.tag",
+            "flask.scaffold",
+            "flask.sessions",
+            "flask.signals",
+            "flask.templating",
+            "flask.testing",
+            "flask.typing",
+            "flask.wrappers",
+            "importlib_metadata",
+            "importlib_metadata._compat",
+            "itsdangerous.timed",
+            "jinja2.Environment",
+            "jinja2.bccache",
+            "jinja2.compiler",
+            "jinja2.debug",
+            "jinja2.defaults",
+            "jinja2.environment",
+            "jinja2.ext",
+            "jinja2.filters",
+            "jinja2.lexer",
+            "jinja2.loaders",
+            "jinja2.nodes",
+            "jinja2.parser",
+            "jinja2.runtime",
+            "jinja2.sandbox",
+            "jinja2.utils",
+            "jinja2.visitor",
+            "main",
+            "markupsafe",
+            "markupsafe._native",
+            "pkg_resources",
+            "requests",
+            "requests.adapters",
+            "requests.auth",
+            "requests.certs",
+            "requests.compat",
+            "requests.cookies",
+            "requests.models",
+            "requests.packages",
+            "requests.sessions",
+            "requests.structures",
+            "requests.utils",
+            "serial.serialcli",
+            "serial.serialposix",
+            "serial.tools.list_ports_common",
+            "serial.win32",
+            "services.http.server",
+            "urllib3",
+            "urllib3._collections",
+            "urllib3.connection",
+            "urllib3.connectionpool",
+            "urllib3.contrib.pyopenssl",
+            "urllib3.contrib.socks",
+            "urllib3.exceptions",
+            "urllib3.packages.six",
+            "urllib3.poolmanager",
+            "urllib3.request",
+            "urllib3.response",
+            "urllib3.util.queue",
+            "urllib3.util.request",
+            "urllib3.util.response",
+            "urllib3.util.retry",
+            "urllib3.util.url",
+            "utils.utils",
+            "werkzeug._internal",
+            "werkzeug._reloader",
+            "werkzeug.debug",
+            "werkzeug.debug.console",
+            "werkzeug.debug.repr",
+            "werkzeug.debug.tbtools",
+            "werkzeug.exceptions",
+            "werkzeug.formparser",
+            "werkzeug.http",
+            "werkzeug.local",
+            "werkzeug.middleware.shared_data",
+            "werkzeug.routing",
+            "werkzeug.sansio.response",
+            "werkzeug.serving",
+            "werkzeug.test",
+            "werkzeug.useragents",
+            "werkzeug.utils",
+            "werkzeug.wrappers.Request",
+            "werkzeug.wrappers.Response",
+            "werkzeug.wrappers.request",
+            "werkzeug.wrappers.response",
+            "werkzeug.wsgi",
+            "zipp"
+        ],
+        "name": "__main__",
+        "path": null
+    },
+    "_imp": {
+        "bacon": 2,
+        "imported_by": [
+            "pkg_resources"
+        ],
+        "name": "_imp",
+        "path": null
+    },
+    "_multibytecodec": {
+        "bacon": 2,
+        "imported_by": [
+            "charset_normalizer.utils"
+        ],
+        "name": "_multibytecodec",
+        "path": null
+    },
+    "_string": {
+        "bacon": 2,
+        "imported_by": [
+            "jinja2.sandbox"
+        ],
+        "name": "_string",
+        "path": null
+    },
+    "_typeshed.wsgi": {
+        "bacon": 2,
+        "imported_by": [
+            "flask.typing",
+            "werkzeug._internal",
+            "werkzeug.debug",
+            "werkzeug.exceptions",
+            "werkzeug.formparser",
+            "werkzeug.http",
+            "werkzeug.local",
+            "werkzeug.middleware.shared_data",
+            "werkzeug.routing",
+            "werkzeug.serving",
+            "werkzeug.test",
+            "werkzeug.useragents",
+            "werkzeug.utils",
+            "werkzeug.wrappers.Request",
+            "werkzeug.wrappers.Response",
+            "werkzeug.wrappers.request",
+            "werkzeug.wrappers.response",
+            "werkzeug.wsgi"
+        ],
+        "name": "_typeshed.wsgi",
+        "path": null
+    },
+    "asgiref.sync": {
+        "bacon": 2,
+        "imported_by": [
+            "flask.app"
+        ],
+        "name": "asgiref.sync",
+        "path": null
+    },
+    "assets.FREQUENCIES": {
+        "bacon": 2,
+        "imported_by": [
+            "charset_normalizer.cd",
+            "charset_normalizer.constant"
+        ],
+        "name": "assets.FREQUENCIES",
+        "path": null
+    },
+    "bg_erp": {
+        "bacon": 2,
+        "imported_by": [
+            "bg_erp.bg_erp",
+            "bg_erp.server",
+            "zone"
+        ],
+        "name": "bg_erp",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\bg_erp\\__init__.py"
+    },
+    "bg_erp.bg_erp": {
+        "bacon": 3,
+        "imported_by": [
+            "zone"
+        ],
+        "imports": [
+            "bg_erp",
+            "bg_erp.server",
+            "utils",
+            "utils.logger"
+        ],
+        "name": "bg_erp.bg_erp",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\bg_erp\\bg_erp.py"
+    },
+    "bg_erp.erp_state": {
+        "bacon": 3,
+        "imported_by": [
+            "zone"
+        ],
+        "name": "bg_erp.erp_state",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\bg_erp\\erp_state.py"
+    },
+    "bg_erp.server": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "bg_erp.bg_erp"
+        ],
+        "imports": [
+            "bg_erp",
+            "bg_erp.session",
+            "flask",
+            "flask.Flask",
+            "flask.make_response",
+            "flask.request",
+            "services",
+            "services.http",
+            "services.http.server",
+            "utils",
+            "utils.logger"
+        ],
+        "name": "bg_erp.server",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\bg_erp\\server.py"
+    },
+    "bg_erp.session": {
+        "bacon": 2,
+        "imported_by": [
+            "bg_erp.server"
+        ],
+        "imports": [
+            "utils",
+            "utils.logger"
+        ],
+        "name": "bg_erp.session",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\bg_erp\\session.py"
+    },
+    "blinker": {
+        "bacon": 2,
+        "imported_by": [
+            "flask.signals"
+        ],
+        "name": "blinker",
+        "path": null
+    },
+    "brotli": {
+        "bacon": 2,
+        "imported_by": [
+            "urllib3.response",
+            "urllib3.util.request"
+        ],
+        "name": "brotli",
+        "path": null
+    },
+    "certifi": {
+        "bacon": 2,
+        "imported_by": [
+            "requests.certs"
+        ],
+        "imports": [
+            "certifi.core"
+        ],
+        "name": "certifi",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\certifi\\__init__.py"
+    },
+    "certifi.core": {
+        "bacon": 3,
+        "imported_by": [
+            "certifi"
+        ],
+        "name": "certifi.core",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\certifi\\core.py"
+    },
+    "certifi.where": {
+        "bacon": 2,
+        "imported_by": [
+            "requests.certs"
+        ],
+        "name": "certifi.where",
+        "path": null
+    },
+    "chardet": {
+        "bacon": 2,
+        "imported_by": [
+            "requests",
+            "requests.compat",
+            "requests.models",
+            "requests.packages"
+        ],
+        "name": "chardet",
+        "path": null
+    },
+    "charset_normalizer": {
+        "bacon": 2,
+        "imported_by": [
+            "charset_normalizer.models",
+            "requests",
+            "requests.compat",
+            "requests.packages"
+        ],
+        "imports": [
+            "charset_normalizer.api",
+            "charset_normalizer.legacy",
+            "charset_normalizer.models",
+            "charset_normalizer.utils",
+            "charset_normalizer.version"
+        ],
+        "name": "charset_normalizer",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\charset_normalizer\\__init__.py"
+    },
+    "charset_normalizer.__version__": {
+        "bacon": 2,
+        "imported_by": [
+            "requests"
+        ],
+        "name": "charset_normalizer.__version__",
+        "path": null
+    },
+    "charset_normalizer.api": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "charset_normalizer",
+            "charset_normalizer.legacy"
+        ],
+        "imports": [
+            "charset_normalizer.cd",
+            "charset_normalizer.constant",
+            "charset_normalizer.md",
+            "charset_normalizer.models",
+            "charset_normalizer.utils"
+        ],
+        "name": "charset_normalizer.api",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\charset_normalizer\\api.py"
+    },
+    "charset_normalizer.assets": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "charset_normalizer.cd",
+            "charset_normalizer.constant"
+        ],
+        "imports": [
+            "collections.OrderedDict"
+        ],
+        "name": "charset_normalizer.assets",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\charset_normalizer\\assets\\__init__.py"
+    },
+    "charset_normalizer.cd": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "charset_normalizer.api",
+            "charset_normalizer.models"
+        ],
+        "imports": [
+            "assets.FREQUENCIES",
+            "charset_normalizer.assets",
+            "charset_normalizer.constant",
+            "charset_normalizer.md",
+            "charset_normalizer.models",
+            "charset_normalizer.utils",
+            "collections.Counter",
+            "collections.OrderedDict"
+        ],
+        "name": "charset_normalizer.cd",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\charset_normalizer\\cd.py"
+    },
+    "charset_normalizer.constant": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "charset_normalizer.api",
+            "charset_normalizer.cd",
+            "charset_normalizer.legacy",
+            "charset_normalizer.md",
+            "charset_normalizer.models",
+            "charset_normalizer.utils"
+        ],
+        "imports": [
+            "assets.FREQUENCIES",
+            "charset_normalizer.assets",
+            "collections.OrderedDict"
+        ],
+        "name": "charset_normalizer.constant",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\charset_normalizer\\constant.py"
+    },
+    "charset_normalizer.legacy": {
+        "bacon": 3,
+        "imported_by": [
+            "charset_normalizer"
+        ],
+        "imports": [
+            "charset_normalizer.api",
+            "charset_normalizer.constant",
+            "charset_normalizer.models"
+        ],
+        "name": "charset_normalizer.legacy",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\charset_normalizer\\legacy.py"
+    },
+    "charset_normalizer.md": {
+        "bacon": 2,
+        "imported_by": [
+            "charset_normalizer.api",
+            "charset_normalizer.cd",
+            "charset_normalizer.models"
+        ],
+        "imports": [
+            "charset_normalizer.constant",
+            "charset_normalizer.utils"
+        ],
+        "name": "charset_normalizer.md",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\charset_normalizer\\md.py"
+    },
+    "charset_normalizer.models": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "charset_normalizer",
+            "charset_normalizer.api",
+            "charset_normalizer.cd",
+            "charset_normalizer.legacy"
+        ],
+        "imports": [
+            "charset_normalizer",
+            "charset_normalizer.cd",
+            "charset_normalizer.constant",
+            "charset_normalizer.md",
+            "charset_normalizer.utils",
+            "collections.Counter",
+            "json.dumps"
+        ],
+        "name": "charset_normalizer.models",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\charset_normalizer\\models.py"
+    },
+    "charset_normalizer.utils": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "charset_normalizer",
+            "charset_normalizer.api",
+            "charset_normalizer.cd",
+            "charset_normalizer.md",
+            "charset_normalizer.models"
+        ],
+        "imports": [
+            "_multibytecodec",
+            "charset_normalizer.constant",
+            "unicodedata2"
+        ],
+        "name": "charset_normalizer.utils",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\charset_normalizer\\utils.py"
+    },
+    "charset_normalizer.version": {
+        "bacon": 3,
+        "imported_by": [
+            "charset_normalizer"
+        ],
+        "name": "charset_normalizer.version",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\charset_normalizer\\version.py"
+    },
+    "click": {
+        "bacon": 2,
+        "imported_by": [
+            "click.core",
+            "click.testing",
+            "click.types",
+            "flask.cli",
+            "flask.testing"
+        ],
+        "imports": [
+            "click.core",
+            "click.decorators",
+            "click.exceptions",
+            "click.formatting",
+            "click.globals",
+            "click.parser",
+            "click.termui",
+            "click.types",
+            "click.utils"
+        ],
+        "name": "click",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\click\\__init__.py"
+    },
+    "click._compat": {
+        "bacon": 2,
+        "imported_by": [
+            "click._termui_impl",
+            "click._winconsole",
+            "click.exceptions",
+            "click.formatting",
+            "click.termui",
+            "click.testing",
+            "click.types",
+            "click.utils"
+        ],
+        "imports": [
+            "click._winconsole",
+            "colorama"
+        ],
+        "name": "click._compat",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\click\\_compat.py"
+    },
+    "click._termui_impl": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "click.termui"
+        ],
+        "imports": [
+            "click._compat",
+            "click.exceptions",
+            "click.utils"
+        ],
+        "name": "click._termui_impl",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\click\\_termui_impl.py"
+    },
+    "click._textwrap": {
+        "bacon": 3,
+        "imported_by": [
+            "click.formatting"
+        ],
+        "name": "click._textwrap",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\click\\_textwrap.py"
+    },
+    "click._unicodefun": {
+        "bacon": 2,
+        "imported_by": [
+            "click.core"
+        ],
+        "name": "click._unicodefun",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\click\\_unicodefun.py"
+    },
+    "click._winconsole": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "click._compat"
+        ],
+        "imports": [
+            "click._compat",
+            "ctypes.POINTER",
+            "ctypes.Structure",
+            "ctypes.WINFUNCTYPE",
+            "ctypes.byref",
+            "ctypes.c_char",
+            "ctypes.c_char_p",
+            "ctypes.c_int",
+            "ctypes.c_ssize_t",
+            "ctypes.c_ulong",
+            "ctypes.c_void_p",
+            "ctypes.py_object",
+            "ctypes.pythonapi",
+            "ctypes.windll"
+        ],
+        "name": "click._winconsole",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\click\\_winconsole.py"
+    },
+    "click.core": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "click",
+            "click.decorators",
+            "click.exceptions",
+            "click.globals",
+            "click.parser",
+            "click.shell_completion",
+            "click.testing",
+            "click.types"
+        ],
+        "imports": [
+            "click",
+            "click._unicodefun",
+            "click.decorators",
+            "click.exceptions",
+            "click.formatting",
+            "click.globals",
+            "click.parser",
+            "click.shell_completion",
+            "click.termui",
+            "click.types",
+            "click.utils",
+            "typing_extensions"
+        ],
+        "name": "click.core",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\click\\core.py"
+    },
+    "click.decorators": {
+        "bacon": 2,
+        "imported_by": [
+            "click",
+            "click.core"
+        ],
+        "imports": [
+            "click.core",
+            "click.globals",
+            "click.utils",
+            "importlib_metadata"
+        ],
+        "name": "click.decorators",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\click\\decorators.py"
+    },
+    "click.exceptions": {
+        "bacon": 2,
+        "imported_by": [
+            "click",
+            "click._termui_impl",
+            "click.core",
+            "click.parser",
+            "click.termui",
+            "click.types",
+            "click.utils"
+        ],
+        "imports": [
+            "click._compat",
+            "click.core",
+            "click.utils"
+        ],
+        "name": "click.exceptions",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\click\\exceptions.py"
+    },
+    "click.formatting": {
+        "bacon": 2,
+        "imported_by": [
+            "click",
+            "click.core",
+            "click.testing"
+        ],
+        "imports": [
+            "click._compat",
+            "click._textwrap",
+            "click.parser"
+        ],
+        "name": "click.formatting",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\click\\formatting.py"
+    },
+    "click.globals": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "click",
+            "click.core",
+            "click.decorators",
+            "click.termui",
+            "click.utils"
+        ],
+        "imports": [
+            "click.core",
+            "typing_extensions"
+        ],
+        "name": "click.globals",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\click\\globals.py"
+    },
+    "click.parser": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "click",
+            "click.core",
+            "click.formatting",
+            "click.shell_completion"
+        ],
+        "imports": [
+            "click.core",
+            "click.exceptions",
+            "collections.deque",
+            "typing_extensions"
+        ],
+        "name": "click.parser",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\click\\parser.py"
+    },
+    "click.shell_completion": {
+        "bacon": 2,
+        "imported_by": [
+            "click.core",
+            "click.types"
+        ],
+        "imports": [
+            "click.core",
+            "click.parser",
+            "click.utils"
+        ],
+        "name": "click.shell_completion",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\click\\shell_completion.py"
+    },
+    "click.termui": {
+        "bacon": 2,
+        "imported_by": [
+            "click",
+            "click.core",
+            "click.testing"
+        ],
+        "imports": [
+            "click._compat",
+            "click._termui_impl",
+            "click.exceptions",
+            "click.globals",
+            "click.types",
+            "click.utils"
+        ],
+        "name": "click.termui",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\click\\termui.py"
+    },
+    "click.testing": {
+        "bacon": 2,
+        "imported_by": [
+            "flask.testing"
+        ],
+        "imports": [
+            "click",
+            "click._compat",
+            "click.core",
+            "click.formatting",
+            "click.termui",
+            "click.utils"
+        ],
+        "name": "click.testing",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\click\\testing.py"
+    },
+    "click.types": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "click",
+            "click.core",
+            "click.termui"
+        ],
+        "imports": [
+            "click",
+            "click._compat",
+            "click.core",
+            "click.exceptions",
+            "click.shell_completion",
+            "click.utils",
+            "typing_extensions"
+        ],
+        "name": "click.types",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\click\\types.py"
+    },
+    "click.utils": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "click",
+            "click._termui_impl",
+            "click.core",
+            "click.decorators",
+            "click.exceptions",
+            "click.shell_completion",
+            "click.termui",
+            "click.testing",
+            "click.types"
+        ],
+        "imports": [
+            "click._compat",
+            "click.exceptions",
+            "click.globals",
+            "typing_extensions"
+        ],
+        "name": "click.utils",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\click\\utils.py"
+    },
+    "collections.Callable": {
+        "bacon": 2,
+        "imported_by": [
+            "requests.compat"
+        ],
+        "name": "collections.Callable",
+        "path": null
+    },
+    "collections.ChainMap": {
+        "bacon": 2,
+        "imported_by": [
+            "jinja2.Environment",
+            "jinja2.environment"
+        ],
+        "name": "collections.ChainMap",
+        "path": null
+    },
+    "collections.Counter": {
+        "bacon": 2,
+        "imported_by": [
+            "charset_normalizer.cd",
+            "charset_normalizer.models"
+        ],
+        "name": "collections.Counter",
+        "path": null
+    },
+    "collections.Mapping": {
+        "bacon": 2,
+        "imported_by": [
+            "requests.compat",
+            "urllib3._collections"
+        ],
+        "name": "collections.Mapping",
+        "path": null
+    },
+    "collections.MutableMapping": {
+        "bacon": 2,
+        "imported_by": [
+            "requests.compat",
+            "urllib3._collections"
+        ],
+        "name": "collections.MutableMapping",
+        "path": null
+    },
+    "collections.OrderedDict": {
+        "bacon": 2,
+        "imported_by": [
+            "charset_normalizer.assets",
+            "charset_normalizer.cd",
+            "charset_normalizer.constant",
+            "requests.compat",
+            "requests.sessions",
+            "requests.structures",
+            "requests.utils",
+            "urllib3._collections",
+            "zipp"
+        ],
+        "name": "collections.OrderedDict",
+        "path": null
+    },
+    "collections.defaultdict": {
+        "bacon": 2,
+        "imported_by": [
+            "flask.blueprints",
+            "flask.scaffold",
+            "werkzeug.test"
+        ],
+        "name": "collections.defaultdict",
+        "path": null
+    },
+    "collections.deque": {
+        "bacon": 2,
+        "imported_by": [
+            "Queue",
+            "click.parser",
+            "jinja2.lexer",
+            "jinja2.nodes",
+            "jinja2.sandbox",
+            "jinja2.utils",
+            "werkzeug.debug.repr"
+        ],
+        "name": "collections.deque",
+        "path": null
+    },
+    "collections.namedtuple": {
+        "bacon": 2,
+        "imported_by": [
+            "urllib3.util.retry",
+            "urllib3.util.url"
+        ],
+        "name": "collections.namedtuple",
+        "path": null
+    },
+    "colorama": {
+        "bacon": 2,
+        "imported_by": [
+            "click._compat",
+            "werkzeug._internal"
+        ],
+        "imports": [
+            "colorama.ansi",
+            "colorama.ansitowin32",
+            "colorama.initialise"
+        ],
+        "name": "colorama",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\colorama\\__init__.py"
+    },
+    "colorama.ansi": {
+        "bacon": 3,
+        "imported_by": [
+            "colorama",
+            "colorama.ansitowin32"
+        ],
+        "name": "colorama.ansi",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\colorama\\ansi.py"
+    },
+    "colorama.ansitowin32": {
+        "bacon": 3,
+        "imported_by": [
+            "colorama",
+            "colorama.initialise"
+        ],
+        "imports": [
+            "colorama.ansi",
+            "colorama.win32"
+        ],
+        "name": "colorama.ansitowin32",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\colorama\\ansitowin32.py"
+    },
+    "colorama.initialise": {
+        "bacon": 3,
+        "imported_by": [
+            "colorama"
+        ],
+        "imports": [
+            "colorama.ansitowin32"
+        ],
+        "name": "colorama.initialise",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\colorama\\initialise.py"
+    },
+    "colorama.win32": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "colorama.ansitowin32"
+        ],
+        "imports": [
+            "ctypes.LibraryLoader",
+            "ctypes.POINTER",
+            "ctypes.Structure",
+            "ctypes.byref",
+            "ctypes.c_char"
+        ],
+        "name": "colorama.win32",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\colorama\\win32.py"
+    },
+    "controllers": {
+        "bacon": 3,
+        "imported_by": [
+            "zone"
+        ],
+        "name": "controllers",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\controllers\\__init__.py"
+    },
+    "controllers.controller_factory": {
+        "bacon": 3,
+        "imported_by": [
+            "zone"
+        ],
+        "name": "controllers.controller_factory",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\controllers\\controller_factory.py"
+    },
+    "cookielib": {
+        "bacon": 2,
+        "imported_by": [
+            "requests.compat",
+            "requests.cookies",
+            "requests.models",
+            "requests.sessions"
+        ],
+        "name": "cookielib",
+        "path": null
+    },
+    "cryptography": {
+        "bacon": 2,
+        "imported_by": [
+            "flask.cli",
+            "requests",
+            "urllib3.contrib.pyopenssl",
+            "werkzeug.serving"
+        ],
+        "name": "cryptography",
+        "path": null
+    },
+    "cryptography.hazmat.backends": {
+        "bacon": 2,
+        "imported_by": [
+            "werkzeug.serving"
+        ],
+        "name": "cryptography.hazmat.backends",
+        "path": null
+    },
+    "cryptography.hazmat.backends.openssl": {
+        "bacon": 2,
+        "imported_by": [
+            "urllib3.contrib.pyopenssl"
+        ],
+        "name": "cryptography.hazmat.backends.openssl",
+        "path": null
+    },
+    "cryptography.hazmat.backends.openssl.x509": {
+        "bacon": 2,
+        "imported_by": [
+            "urllib3.contrib.pyopenssl"
+        ],
+        "name": "cryptography.hazmat.backends.openssl.x509",
+        "path": null
+    },
+    "cryptography.hazmat.primitives": {
+        "bacon": 2,
+        "imported_by": [
+            "werkzeug.serving"
+        ],
+        "name": "cryptography.hazmat.primitives",
+        "path": null
+    },
+    "cryptography.hazmat.primitives.asymmetric": {
+        "bacon": 2,
+        "imported_by": [
+            "werkzeug.serving"
+        ],
+        "name": "cryptography.hazmat.primitives.asymmetric",
+        "path": null
+    },
+    "cryptography.hazmat.primitives.asymmetric.rsa": {
+        "bacon": 2,
+        "imported_by": [
+            "werkzeug.serving"
+        ],
+        "name": "cryptography.hazmat.primitives.asymmetric.rsa",
+        "path": null
+    },
+    "cryptography.x509": {
+        "bacon": 2,
+        "imported_by": [
+            "urllib3.contrib.pyopenssl",
+            "werkzeug.serving"
+        ],
+        "name": "cryptography.x509",
+        "path": null
+    },
+    "cryptography.x509.extensions": {
+        "bacon": 2,
+        "imported_by": [
+            "urllib3.contrib.pyopenssl"
+        ],
+        "name": "cryptography.x509.extensions",
+        "path": null
+    },
+    "cryptography.x509.oid": {
+        "bacon": 2,
+        "imported_by": [
+            "werkzeug.serving"
+        ],
+        "name": "cryptography.x509.oid",
+        "path": null
+    },
+    "ctypes.LibraryLoader": {
+        "bacon": 2,
+        "imported_by": [
+            "colorama.win32"
+        ],
+        "name": "ctypes.LibraryLoader",
+        "path": null
+    },
+    "ctypes.POINTER": {
+        "bacon": 2,
+        "imported_by": [
+            "click._winconsole",
+            "colorama.win32",
+            "serial.win32"
+        ],
+        "name": "ctypes.POINTER",
+        "path": null
+    },
+    "ctypes.Structure": {
+        "bacon": 2,
+        "imported_by": [
+            "click._winconsole",
+            "colorama.win32",
+            "serial.win32"
+        ],
+        "name": "ctypes.Structure",
+        "path": null
+    },
+    "ctypes.Union": {
+        "bacon": 2,
+        "imported_by": [
+            "serial.win32"
+        ],
+        "name": "ctypes.Union",
+        "path": null
+    },
+    "ctypes.WINFUNCTYPE": {
+        "bacon": 2,
+        "imported_by": [
+            "click._winconsole"
+        ],
+        "name": "ctypes.WINFUNCTYPE",
+        "path": null
+    },
+    "ctypes.WinDLL": {
+        "bacon": 2,
+        "imported_by": [
+            "serial.win32"
+        ],
+        "name": "ctypes.WinDLL",
+        "path": null
+    },
+    "ctypes.byref": {
+        "bacon": 2,
+        "imported_by": [
+            "click._winconsole",
+            "colorama.win32"
+        ],
+        "name": "ctypes.byref",
+        "path": null
+    },
+    "ctypes.c_char": {
+        "bacon": 2,
+        "imported_by": [
+            "click._winconsole",
+            "colorama.win32",
+            "serial.win32"
+        ],
+        "name": "ctypes.c_char",
+        "path": null
+    },
+    "ctypes.c_char_p": {
+        "bacon": 2,
+        "imported_by": [
+            "click._winconsole"
+        ],
+        "name": "ctypes.c_char_p",
+        "path": null
+    },
+    "ctypes.c_int": {
+        "bacon": 2,
+        "imported_by": [
+            "click._winconsole"
+        ],
+        "name": "ctypes.c_int",
+        "path": null
+    },
+    "ctypes.c_int64": {
+        "bacon": 2,
+        "imported_by": [
+            "serial.win32"
+        ],
+        "name": "ctypes.c_int64",
+        "path": null
+    },
+    "ctypes.c_ssize_t": {
+        "bacon": 2,
+        "imported_by": [
+            "click._winconsole"
+        ],
+        "name": "ctypes.c_ssize_t",
+        "path": null
+    },
+    "ctypes.c_ulong": {
+        "bacon": 2,
+        "imported_by": [
+            "click._winconsole",
+            "serial.win32"
+        ],
+        "name": "ctypes.c_ulong",
+        "path": null
+    },
+    "ctypes.c_void_p": {
+        "bacon": 2,
+        "imported_by": [
+            "click._winconsole",
+            "serial.win32"
+        ],
+        "name": "ctypes.c_void_p",
+        "path": null
+    },
+    "ctypes.py_object": {
+        "bacon": 2,
+        "imported_by": [
+            "click._winconsole"
+        ],
+        "name": "ctypes.py_object",
+        "path": null
+    },
+    "ctypes.pythonapi": {
+        "bacon": 2,
+        "imported_by": [
+            "click._winconsole"
+        ],
+        "name": "ctypes.pythonapi",
+        "path": null
+    },
+    "ctypes.sizeof": {
+        "bacon": 2,
+        "imported_by": [
+            "serial.win32"
+        ],
+        "name": "ctypes.sizeof",
+        "path": null
+    },
+    "ctypes.windll": {
+        "bacon": 2,
+        "imported_by": [
+            "click._winconsole"
+        ],
+        "name": "ctypes.windll",
+        "path": null
+    },
+    "data": {
+        "bacon": 3,
+        "imported_by": [
+            "data.registers",
+            "services.global_error_handler.global_error_handler",
+            "zone"
+        ],
+        "name": "data",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\data\\__init__.py"
+    },
+    "data.register": {
+        "bacon": 3,
+        "imported_by": [
+            "data.registers",
+            "services.global_error_handler.global_error_handler",
+            "zone"
+        ],
+        "name": "data.register",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\data\\register.py"
+    },
+    "data.registers": {
+        "bacon": 3,
+        "imported_by": [
+            "zone"
+        ],
+        "imports": [
+            "data",
+            "data.register",
+            "services",
+            "services.global_error_handler",
+            "services.global_error_handler.global_error_handler",
+            "utils",
+            "utils.logger"
+        ],
+        "name": "data.registers",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\data\\registers.py"
+    },
+    "debug.DebuggedApplication": {
+        "bacon": 2,
+        "imported_by": [
+            "werkzeug.serving"
+        ],
+        "name": "debug.DebuggedApplication",
+        "path": null
+    },
+    "dotenv": {
+        "bacon": 2,
+        "imported_by": [
+            "flask.cli"
+        ],
+        "name": "dotenv",
+        "path": null
+    },
+    "dummy_threading": {
+        "bacon": 2,
+        "imported_by": [
+            "requests.cookies"
+        ],
+        "name": "dummy_threading",
+        "path": null
+    },
+    "flask": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "bg_erp.server",
+            "flask",
+            "flask.app",
+            "flask.cli",
+            "flask.config",
+            "flask.testing",
+            "flask.wrappers",
+            "services.http.server"
+        ],
+        "imports": [
+            "flask",
+            "flask.app",
+            "flask.blueprints",
+            "flask.config",
+            "flask.ctx",
+            "flask.globals",
+            "flask.helpers",
+            "flask.json",
+            "flask.signals",
+            "flask.templating",
+            "json.jsonify",
+            "markupsafe",
+            "markupsafe.Markup",
+            "markupsafe.escape",
+            "werkzeug",
+            "werkzeug.exceptions",
+            "werkzeug.utils"
+        ],
+        "name": "flask",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\flask\\__init__.py"
+    },
+    "flask.Flask": {
+        "bacon": 2,
+        "imported_by": [
+            "bg_erp.server",
+            "flask.cli",
+            "services.http.server"
+        ],
+        "name": "flask.Flask",
+        "path": null
+    },
+    "flask.__version__": {
+        "bacon": 2,
+        "imported_by": [
+            "flask.cli"
+        ],
+        "name": "flask.__version__",
+        "path": null
+    },
+    "flask._request_ctx_stack": {
+        "bacon": 2,
+        "imported_by": [
+            "flask.testing"
+        ],
+        "name": "flask._request_ctx_stack",
+        "path": null
+    },
+    "flask.app": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "flask",
+            "flask.blueprints",
+            "flask.ctx",
+            "flask.debughelpers",
+            "flask.globals",
+            "flask.json",
+            "flask.logging",
+            "flask.sessions",
+            "flask.templating",
+            "flask.testing"
+        ],
+        "imports": [
+            "asgiref.sync",
+            "flask",
+            "flask.blueprints",
+            "flask.cli",
+            "flask.config",
+            "flask.ctx",
+            "flask.debughelpers",
+            "flask.globals",
+            "flask.helpers",
+            "flask.json",
+            "flask.logging",
+            "flask.scaffold",
+            "flask.sessions",
+            "flask.signals",
+            "flask.templating",
+            "flask.testing",
+            "flask.typing",
+            "flask.wrappers",
+            "json.jsonify",
+            "typing_extensions",
+            "werkzeug",
+            "werkzeug.datastructures",
+            "werkzeug.exceptions",
+            "werkzeug.local",
+            "werkzeug.routing",
+            "werkzeug.serving",
+            "werkzeug.wrappers",
+            "werkzeug.wrappers.Response"
+        ],
+        "name": "flask.app",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\flask\\app.py"
+    },
+    "flask.blueprints": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "flask",
+            "flask.app",
+            "flask.debughelpers"
+        ],
+        "imports": [
+            "collections.defaultdict",
+            "flask.app",
+            "flask.scaffold",
+            "flask.typing"
+        ],
+        "name": "flask.blueprints",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\flask\\blueprints.py"
+    },
+    "flask.cli": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "flask.app",
+            "flask.scaffold",
+            "flask.testing"
+        ],
+        "imports": [
+            "click",
+            "cryptography",
+            "dotenv",
+            "flask",
+            "flask.Flask",
+            "flask.__version__",
+            "flask.globals",
+            "flask.helpers",
+            "pkg_resources",
+            "werkzeug",
+            "werkzeug.serving",
+            "werkzeug.utils"
+        ],
+        "name": "flask.cli",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\flask\\cli.py"
+    },
+    "flask.config": {
+        "bacon": 2,
+        "imported_by": [
+            "flask",
+            "flask.app"
+        ],
+        "imports": [
+            "flask",
+            "flask.json",
+            "werkzeug",
+            "werkzeug.utils"
+        ],
+        "name": "flask.config",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\flask\\config.py"
+    },
+    "flask.ctx": {
+        "bacon": 2,
+        "imported_by": [
+            "flask",
+            "flask.app",
+            "flask.globals"
+        ],
+        "imports": [
+            "flask.app",
+            "flask.globals",
+            "flask.sessions",
+            "flask.signals",
+            "flask.typing",
+            "flask.wrappers",
+            "werkzeug",
+            "werkzeug.exceptions"
+        ],
+        "name": "flask.ctx",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\flask\\ctx.py"
+    },
+    "flask.debughelpers": {
+        "bacon": 2,
+        "imported_by": [
+            "flask.app",
+            "flask.templating",
+            "flask.wrappers"
+        ],
+        "imports": [
+            "flask.app",
+            "flask.blueprints",
+            "flask.globals"
+        ],
+        "name": "flask.debughelpers",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\flask\\debughelpers.py"
+    },
+    "flask.globals": {
+        "bacon": 2,
+        "imported_by": [
+            "flask",
+            "flask.app",
+            "flask.cli",
+            "flask.ctx",
+            "flask.debughelpers",
+            "flask.helpers",
+            "flask.json",
+            "flask.logging",
+            "flask.scaffold",
+            "flask.templating",
+            "flask.wrappers"
+        ],
+        "imports": [
+            "flask.app",
+            "flask.ctx",
+            "flask.sessions",
+            "flask.wrappers",
+            "werkzeug",
+            "werkzeug.local"
+        ],
+        "name": "flask.globals",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\flask\\globals.py"
+    },
+    "flask.helpers": {
+        "bacon": 2,
+        "imported_by": [
+            "flask",
+            "flask.app",
+            "flask.cli",
+            "flask.scaffold",
+            "flask.sessions",
+            "flask.wrappers"
+        ],
+        "imports": [
+            "flask.globals",
+            "flask.signals",
+            "flask.wrappers",
+            "werkzeug",
+            "werkzeug.exceptions",
+            "werkzeug.routing",
+            "werkzeug.urls",
+            "werkzeug.utils"
+        ],
+        "name": "flask.helpers",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\flask\\helpers.py"
+    },
+    "flask.json": {
+        "bacon": 2,
+        "imported_by": [
+            "flask",
+            "flask.app",
+            "flask.config",
+            "flask.json.tag",
+            "flask.sessions",
+            "flask.testing",
+            "flask.wrappers"
+        ],
+        "imports": [
+            "flask.app",
+            "flask.globals",
+            "flask.wrappers",
+            "jinja2",
+            "jinja2.utils",
+            "werkzeug",
+            "werkzeug.http"
+        ],
+        "name": "flask.json",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\flask\\json\\__init__.py"
+    },
+    "flask.json.tag": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "flask.sessions"
+        ],
+        "imports": [
+            "flask.json",
+            "json.dumps",
+            "json.loads",
+            "markupsafe",
+            "markupsafe.Markup",
+            "werkzeug",
+            "werkzeug.http"
+        ],
+        "name": "flask.json.tag",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\flask\\json\\tag.py"
+    },
+    "flask.logging": {
+        "bacon": 2,
+        "imported_by": [
+            "flask.app"
+        ],
+        "imports": [
+            "flask.app",
+            "flask.globals",
+            "werkzeug",
+            "werkzeug.local"
+        ],
+        "name": "flask.logging",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\flask\\logging.py"
+    },
+    "flask.make_response": {
+        "bacon": 2,
+        "imported_by": [
+            "bg_erp.server"
+        ],
+        "name": "flask.make_response",
+        "path": null
+    },
+    "flask.request": {
+        "bacon": 2,
+        "imported_by": [
+            "bg_erp.server",
+            "services.http.server"
+        ],
+        "name": "flask.request",
+        "path": null
+    },
+    "flask.scaffold": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "flask.app",
+            "flask.blueprints",
+            "flask.templating"
+        ],
+        "imports": [
+            "collections.defaultdict",
+            "flask.cli",
+            "flask.globals",
+            "flask.helpers",
+            "flask.templating",
+            "flask.typing",
+            "flask.wrappers",
+            "jinja2",
+            "jinja2.FileSystemLoader",
+            "json.JSONDecoder",
+            "json.JSONEncoder",
+            "werkzeug",
+            "werkzeug.exceptions"
+        ],
+        "name": "flask.scaffold",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\flask\\scaffold.py"
+    },
+    "flask.sessions": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "flask.app",
+            "flask.ctx",
+            "flask.globals",
+            "flask.testing"
+        ],
+        "imports": [
+            "flask.app",
+            "flask.helpers",
+            "flask.json",
+            "flask.json.tag",
+            "flask.wrappers",
+            "itsdangerous",
+            "itsdangerous.BadSignature",
+            "itsdangerous.URLSafeTimedSerializer",
+            "typing_extensions",
+            "werkzeug",
+            "werkzeug.datastructures"
+        ],
+        "name": "flask.sessions",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\flask\\sessions.py"
+    },
+    "flask.signals": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "flask",
+            "flask.app",
+            "flask.ctx",
+            "flask.helpers",
+            "flask.templating"
+        ],
+        "imports": [
+            "blinker"
+        ],
+        "name": "flask.signals",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\flask\\signals.py"
+    },
+    "flask.templating": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "flask",
+            "flask.app",
+            "flask.scaffold"
+        ],
+        "imports": [
+            "flask.app",
+            "flask.debughelpers",
+            "flask.globals",
+            "flask.scaffold",
+            "flask.signals",
+            "jinja2",
+            "jinja2.BaseLoader",
+            "jinja2.Environment",
+            "jinja2.Template",
+            "jinja2.TemplateNotFound"
+        ],
+        "name": "flask.templating",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\flask\\templating.py"
+    },
+    "flask.testing": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "flask.app"
+        ],
+        "imports": [
+            "click",
+            "click.testing",
+            "flask",
+            "flask._request_ctx_stack",
+            "flask.app",
+            "flask.cli",
+            "flask.json",
+            "flask.sessions",
+            "flask.wrappers",
+            "json.dumps",
+            "werkzeug",
+            "werkzeug.test",
+            "werkzeug.urls",
+            "werkzeug.wrappers",
+            "werkzeug.wrappers.Request"
+        ],
+        "name": "flask.testing",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\flask\\testing.py"
+    },
+    "flask.typing": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "flask.app",
+            "flask.blueprints",
+            "flask.ctx",
+            "flask.scaffold"
+        ],
+        "imports": [
+            "_typeshed.wsgi",
+            "flask.wrappers",
+            "typing_extensions",
+            "werkzeug",
+            "werkzeug.datastructures"
+        ],
+        "name": "flask.typing",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\flask\\typing.py"
+    },
+    "flask.wrappers": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "flask.app",
+            "flask.ctx",
+            "flask.globals",
+            "flask.helpers",
+            "flask.json",
+            "flask.scaffold",
+            "flask.sessions",
+            "flask.testing",
+            "flask.typing"
+        ],
+        "imports": [
+            "flask",
+            "flask.debughelpers",
+            "flask.globals",
+            "flask.helpers",
+            "flask.json",
+            "typing_extensions",
+            "werkzeug",
+            "werkzeug.exceptions",
+            "werkzeug.routing",
+            "werkzeug.wrappers",
+            "werkzeug.wrappers.Request",
+            "werkzeug.wrappers.Response"
+        ],
+        "name": "flask.wrappers",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\flask\\wrappers.py"
+    },
+    "gevent.monkey": {
+        "bacon": 2,
+        "imported_by": [
+            "werkzeug.local"
+        ],
+        "name": "gevent.monkey",
+        "path": null
+    },
+    "greenlet": {
+        "bacon": 2,
+        "imported_by": [
+            "werkzeug.local"
+        ],
+        "name": "greenlet",
+        "path": null
+    },
+    "html.escape": {
+        "bacon": 2,
+        "imported_by": [
+            "werkzeug.debug.console",
+            "werkzeug.debug.repr",
+            "werkzeug.debug.tbtools",
+            "werkzeug.exceptions"
+        ],
+        "name": "html.escape",
+        "path": null
+    },
+    "html.unescape": {
+        "bacon": 2,
+        "imported_by": [
+            "markupsafe"
+        ],
+        "name": "html.unescape",
+        "path": null
+    },
+    "http.HTTPStatus": {
+        "bacon": 2,
+        "imported_by": [
+            "werkzeug.sansio.response",
+            "werkzeug.wrappers.Response",
+            "werkzeug.wrappers.response"
+        ],
+        "name": "http.HTTPStatus",
+        "path": null
+    },
+    "idna": {
+        "bacon": 2,
+        "imported_by": [
+            "idna.core",
+            "requests.models",
+            "urllib3.contrib.pyopenssl",
+            "urllib3.util.url"
+        ],
+        "imports": [
+            "idna.core",
+            "idna.intranges",
+            "idna.package_data"
+        ],
+        "name": "idna",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\idna\\__init__.py"
+    },
+    "idna.core": {
+        "bacon": 3,
+        "imported_by": [
+            "idna"
+        ],
+        "imports": [
+            "idna",
+            "idna.intranges"
+        ],
+        "name": "idna.core",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\idna\\core.py"
+    },
+    "idna.intranges": {
+        "bacon": 3,
+        "imported_by": [
+            "idna",
+            "idna.core"
+        ],
+        "name": "idna.intranges",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\idna\\intranges.py"
+    },
+    "idna.package_data": {
+        "bacon": 3,
+        "imported_by": [
+            "idna"
+        ],
+        "name": "idna.package_data",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\idna\\package_data.py"
+    },
+    "importlib.import_module": {
+        "bacon": 2,
+        "imported_by": [
+            "importlib_metadata",
+            "jinja2.loaders"
+        ],
+        "name": "importlib.import_module",
+        "path": null
+    },
+    "importlib_metadata": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "click.decorators",
+            "importlib_metadata"
+        ],
+        "imports": [
+            "importlib.import_module",
+            "importlib_metadata",
+            "importlib_metadata._adapters",
+            "importlib_metadata._collections",
+            "importlib_metadata._compat",
+            "importlib_metadata._functools",
+            "importlib_metadata._itertools",
+            "importlib_metadata._meta",
+            "zipp"
+        ],
+        "name": "importlib_metadata",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\importlib_metadata\\__init__.py"
+    },
+    "importlib_metadata._adapters": {
+        "bacon": 2,
+        "imported_by": [
+            "importlib_metadata"
+        ],
+        "imports": [
+            "importlib_metadata._text"
+        ],
+        "name": "importlib_metadata._adapters",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\importlib_metadata\\_adapters.py"
+    },
+    "importlib_metadata._collections": {
+        "bacon": 2,
+        "imported_by": [
+            "importlib_metadata"
+        ],
+        "name": "importlib_metadata._collections",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\importlib_metadata\\_collections.py"
+    },
+    "importlib_metadata._compat": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "importlib_metadata",
+            "importlib_metadata._meta"
+        ],
+        "imports": [
+            "typing_extensions"
+        ],
+        "name": "importlib_metadata._compat",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\importlib_metadata\\_compat.py"
+    },
+    "importlib_metadata._functools": {
+        "bacon": 2,
+        "imported_by": [
+            "importlib_metadata",
+            "importlib_metadata._text"
+        ],
+        "name": "importlib_metadata._functools",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\importlib_metadata\\_functools.py"
+    },
+    "importlib_metadata._itertools": {
+        "bacon": 2,
+        "imported_by": [
+            "importlib_metadata"
+        ],
+        "name": "importlib_metadata._itertools",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\importlib_metadata\\_itertools.py"
+    },
+    "importlib_metadata._meta": {
+        "bacon": 2,
+        "imported_by": [
+            "importlib_metadata"
+        ],
+        "imports": [
+            "importlib_metadata._compat"
+        ],
+        "name": "importlib_metadata._meta",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\importlib_metadata\\_meta.py"
+    },
+    "importlib_metadata._text": {
+        "bacon": 3,
+        "imported_by": [
+            "importlib_metadata._adapters"
+        ],
+        "imports": [
+            "importlib_metadata._functools"
+        ],
+        "name": "importlib_metadata._text",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\importlib_metadata\\_text.py"
+    },
+    "itsdangerous": {
+        "bacon": 2,
+        "imported_by": [
+            "flask.sessions"
+        ],
+        "imports": [
+            "itsdangerous._json",
+            "itsdangerous.encoding",
+            "itsdangerous.exc",
+            "itsdangerous.jws",
+            "itsdangerous.serializer",
+            "itsdangerous.signer",
+            "itsdangerous.timed",
+            "itsdangerous.url_safe"
+        ],
+        "name": "itsdangerous",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\itsdangerous\\__init__.py"
+    },
+    "itsdangerous.BadSignature": {
+        "bacon": 2,
+        "imported_by": [
+            "flask.sessions"
+        ],
+        "name": "itsdangerous.BadSignature",
+        "path": null
+    },
+    "itsdangerous.URLSafeTimedSerializer": {
+        "bacon": 2,
+        "imported_by": [
+            "flask.sessions"
+        ],
+        "name": "itsdangerous.URLSafeTimedSerializer",
+        "path": null
+    },
+    "itsdangerous._json": {
+        "bacon": 3,
+        "imported_by": [
+            "itsdangerous",
+            "itsdangerous.jws",
+            "itsdangerous.url_safe"
+        ],
+        "name": "itsdangerous._json",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\itsdangerous\\_json.py"
+    },
+    "itsdangerous.encoding": {
+        "bacon": 2,
+        "imported_by": [
+            "itsdangerous",
+            "itsdangerous.jws",
+            "itsdangerous.serializer",
+            "itsdangerous.signer",
+            "itsdangerous.timed",
+            "itsdangerous.url_safe"
+        ],
+        "imports": [
+            "itsdangerous.exc"
+        ],
+        "name": "itsdangerous.encoding",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\itsdangerous\\encoding.py"
+    },
+    "itsdangerous.exc": {
+        "bacon": 2,
+        "imported_by": [
+            "itsdangerous",
+            "itsdangerous.encoding",
+            "itsdangerous.jws",
+            "itsdangerous.serializer",
+            "itsdangerous.signer",
+            "itsdangerous.timed",
+            "itsdangerous.url_safe"
+        ],
+        "name": "itsdangerous.exc",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\itsdangerous\\exc.py"
+    },
+    "itsdangerous.jws": {
+        "bacon": 3,
+        "imported_by": [
+            "itsdangerous"
+        ],
+        "imports": [
+            "itsdangerous._json",
+            "itsdangerous.encoding",
+            "itsdangerous.exc",
+            "itsdangerous.serializer",
+            "itsdangerous.signer"
+        ],
+        "name": "itsdangerous.jws",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\itsdangerous\\jws.py"
+    },
+    "itsdangerous.serializer": {
+        "bacon": 2,
+        "imported_by": [
+            "itsdangerous",
+            "itsdangerous.jws",
+            "itsdangerous.timed",
+            "itsdangerous.url_safe"
+        ],
+        "imports": [
+            "itsdangerous.encoding",
+            "itsdangerous.exc",
+            "itsdangerous.signer"
+        ],
+        "name": "itsdangerous.serializer",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\itsdangerous\\serializer.py"
+    },
+    "itsdangerous.signer": {
+        "bacon": 2,
+        "imported_by": [
+            "itsdangerous",
+            "itsdangerous.jws",
+            "itsdangerous.serializer",
+            "itsdangerous.timed"
+        ],
+        "imports": [
+            "itsdangerous.encoding",
+            "itsdangerous.exc"
+        ],
+        "name": "itsdangerous.signer",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\itsdangerous\\signer.py"
+    },
+    "itsdangerous.timed": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "itsdangerous",
+            "itsdangerous.url_safe"
+        ],
+        "imports": [
+            "itsdangerous.encoding",
+            "itsdangerous.exc",
+            "itsdangerous.serializer",
+            "itsdangerous.signer",
+            "typing_extensions"
+        ],
+        "name": "itsdangerous.timed",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\itsdangerous\\timed.py"
+    },
+    "itsdangerous.url_safe": {
+        "bacon": 3,
+        "imported_by": [
+            "itsdangerous"
+        ],
+        "imports": [
+            "itsdangerous._json",
+            "itsdangerous.encoding",
+            "itsdangerous.exc",
+            "itsdangerous.serializer",
+            "itsdangerous.timed"
+        ],
+        "name": "itsdangerous.url_safe",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\itsdangerous\\url_safe.py"
+    },
+    "jinja2": {
+        "bacon": 2,
+        "imported_by": [
+            "flask.json",
+            "flask.scaffold",
+            "flask.templating",
+            "jinja2.Environment",
+            "jinja2.compiler",
+            "jinja2.environment",
+            "jinja2.ext",
+            "jinja2.idtracking",
+            "jinja2.optimizer",
+            "jinja2.parser"
+        ],
+        "imports": [
+            "jinja2.bccache",
+            "jinja2.environment",
+            "jinja2.exceptions",
+            "jinja2.filters",
+            "jinja2.loaders",
+            "jinja2.runtime",
+            "jinja2.utils"
+        ],
+        "name": "jinja2",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\jinja2\\__init__.py"
+    },
+    "jinja2.BaseLoader": {
+        "bacon": 2,
+        "imported_by": [
+            "flask.templating"
+        ],
+        "name": "jinja2.BaseLoader",
+        "path": null
+    },
+    "jinja2.Environment": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "flask.templating"
+        ],
+        "imports": [
+            "collections.ChainMap",
+            "jinja2",
+            "jinja2.bccache",
+            "jinja2.compiler",
+            "jinja2.debug",
+            "jinja2.defaults",
+            "jinja2.exceptions",
+            "jinja2.ext",
+            "jinja2.lexer",
+            "jinja2.loaders",
+            "jinja2.nodes",
+            "jinja2.parser",
+            "jinja2.runtime",
+            "jinja2.utils",
+            "markupsafe",
+            "markupsafe.Markup",
+            "typing_extensions"
+        ],
+        "name": "jinja2.Environment",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\jinja2\\Environment.py"
+    },
+    "jinja2.FileSystemLoader": {
+        "bacon": 2,
+        "imported_by": [
+            "flask.scaffold"
+        ],
+        "name": "jinja2.FileSystemLoader",
+        "path": null
+    },
+    "jinja2.Template": {
+        "bacon": 2,
+        "imported_by": [
+            "flask.templating"
+        ],
+        "name": "jinja2.Template",
+        "path": null
+    },
+    "jinja2.TemplateNotFound": {
+        "bacon": 2,
+        "imported_by": [
+            "flask.templating"
+        ],
+        "name": "jinja2.TemplateNotFound",
+        "path": null
+    },
+    "jinja2._identifier": {
+        "bacon": 2,
+        "imported_by": [
+            "jinja2.lexer"
+        ],
+        "name": "jinja2._identifier",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\jinja2\\_identifier.py"
+    },
+    "jinja2.async_utils": {
+        "bacon": 2,
+        "imported_by": [
+            "jinja2.filters",
+            "jinja2.runtime"
+        ],
+        "imports": [
+            "jinja2.utils"
+        ],
+        "name": "jinja2.async_utils",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\jinja2\\async_utils.py"
+    },
+    "jinja2.bccache": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "jinja2",
+            "jinja2.Environment",
+            "jinja2.environment"
+        ],
+        "imports": [
+            "jinja2.environment",
+            "typing_extensions"
+        ],
+        "name": "jinja2.bccache",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\jinja2\\bccache.py"
+    },
+    "jinja2.compiler": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "jinja2.Environment",
+            "jinja2.environment",
+            "jinja2.nodes"
+        ],
+        "imports": [
+            "StringIO",
+            "jinja2",
+            "jinja2.environment",
+            "jinja2.exceptions",
+            "jinja2.idtracking",
+            "jinja2.nodes",
+            "jinja2.optimizer",
+            "jinja2.runtime",
+            "jinja2.utils",
+            "jinja2.visitor",
+            "markupsafe",
+            "markupsafe.Markup",
+            "markupsafe.escape",
+            "typing_extensions"
+        ],
+        "name": "jinja2.compiler",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\jinja2\\compiler.py"
+    },
+    "jinja2.constants": {
+        "bacon": 2,
+        "imported_by": [
+            "jinja2.utils"
+        ],
+        "name": "jinja2.constants",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\jinja2\\constants.py"
+    },
+    "jinja2.debug": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "jinja2.Environment",
+            "jinja2.environment"
+        ],
+        "imports": [
+            "jinja2.exceptions",
+            "jinja2.runtime",
+            "jinja2.utils",
+            "tputil"
+        ],
+        "name": "jinja2.debug",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\jinja2\\debug.py"
+    },
+    "jinja2.defaults": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "jinja2.Environment",
+            "jinja2.environment",
+            "jinja2.ext"
+        ],
+        "imports": [
+            "jinja2.filters",
+            "jinja2.tests",
+            "jinja2.utils",
+            "typing_extensions"
+        ],
+        "name": "jinja2.defaults",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\jinja2\\defaults.py"
+    },
+    "jinja2.environment": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "jinja2",
+            "jinja2.bccache",
+            "jinja2.compiler",
+            "jinja2.ext",
+            "jinja2.filters",
+            "jinja2.lexer",
+            "jinja2.loaders",
+            "jinja2.nodes",
+            "jinja2.optimizer",
+            "jinja2.parser",
+            "jinja2.runtime",
+            "jinja2.sandbox",
+            "jinja2.tests",
+            "jinja2.utils"
+        ],
+        "imports": [
+            "collections.ChainMap",
+            "jinja2",
+            "jinja2.bccache",
+            "jinja2.compiler",
+            "jinja2.debug",
+            "jinja2.defaults",
+            "jinja2.exceptions",
+            "jinja2.ext",
+            "jinja2.lexer",
+            "jinja2.loaders",
+            "jinja2.nodes",
+            "jinja2.parser",
+            "jinja2.runtime",
+            "jinja2.utils",
+            "markupsafe",
+            "markupsafe.Markup",
+            "typing_extensions"
+        ],
+        "name": "jinja2.environment",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\jinja2\\environment.py"
+    },
+    "jinja2.exceptions": {
+        "bacon": 2,
+        "imported_by": [
+            "jinja2",
+            "jinja2.Environment",
+            "jinja2.compiler",
+            "jinja2.debug",
+            "jinja2.environment",
+            "jinja2.ext",
+            "jinja2.filters",
+            "jinja2.lexer",
+            "jinja2.loaders",
+            "jinja2.parser",
+            "jinja2.runtime",
+            "jinja2.sandbox"
+        ],
+        "imports": [
+            "jinja2.runtime"
+        ],
+        "name": "jinja2.exceptions",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\jinja2\\exceptions.py"
+    },
+    "jinja2.ext": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "jinja2.Environment",
+            "jinja2.environment"
+        ],
+        "imports": [
+            "jinja2",
+            "jinja2.defaults",
+            "jinja2.environment",
+            "jinja2.exceptions",
+            "jinja2.lexer",
+            "jinja2.nodes",
+            "jinja2.parser",
+            "jinja2.runtime",
+            "jinja2.utils",
+            "markupsafe",
+            "markupsafe.Markup",
+            "typing_extensions"
+        ],
+        "name": "jinja2.ext",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\jinja2\\ext.py"
+    },
+    "jinja2.filters": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "jinja2",
+            "jinja2.defaults"
+        ],
+        "imports": [
+            "jinja2.async_utils",
+            "jinja2.environment",
+            "jinja2.exceptions",
+            "jinja2.nodes",
+            "jinja2.runtime",
+            "jinja2.sandbox",
+            "jinja2.utils",
+            "markupsafe",
+            "markupsafe.Markup",
+            "markupsafe.escape",
+            "markupsafe.soft_str",
+            "typing_extensions"
+        ],
+        "name": "jinja2.filters",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\jinja2\\filters.py"
+    },
+    "jinja2.idtracking": {
+        "bacon": 2,
+        "imported_by": [
+            "jinja2.compiler"
+        ],
+        "imports": [
+            "jinja2",
+            "jinja2.nodes",
+            "jinja2.visitor"
+        ],
+        "name": "jinja2.idtracking",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\jinja2\\idtracking.py"
+    },
+    "jinja2.lexer": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "jinja2.Environment",
+            "jinja2.environment",
+            "jinja2.ext",
+            "jinja2.parser",
+            "jinja2.utils"
+        ],
+        "imports": [
+            "collections.deque",
+            "jinja2._identifier",
+            "jinja2.environment",
+            "jinja2.exceptions",
+            "jinja2.utils",
+            "typing_extensions"
+        ],
+        "name": "jinja2.lexer",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\jinja2\\lexer.py"
+    },
+    "jinja2.loaders": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "jinja2",
+            "jinja2.Environment",
+            "jinja2.environment"
+        ],
+        "imports": [
+            "importlib.import_module",
+            "jinja2.environment",
+            "jinja2.exceptions",
+            "jinja2.utils"
+        ],
+        "name": "jinja2.loaders",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\jinja2\\loaders.py"
+    },
+    "jinja2.nodes": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "jinja2.Environment",
+            "jinja2.compiler",
+            "jinja2.environment",
+            "jinja2.ext",
+            "jinja2.filters",
+            "jinja2.idtracking",
+            "jinja2.optimizer",
+            "jinja2.parser",
+            "jinja2.runtime",
+            "jinja2.visitor"
+        ],
+        "imports": [
+            "collections.deque",
+            "jinja2.compiler",
+            "jinja2.environment",
+            "jinja2.utils",
+            "markupsafe",
+            "markupsafe.Markup",
+            "typing_extensions"
+        ],
+        "name": "jinja2.nodes",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\jinja2\\nodes.py"
+    },
+    "jinja2.optimizer": {
+        "bacon": 2,
+        "imported_by": [
+            "jinja2.compiler"
+        ],
+        "imports": [
+            "jinja2",
+            "jinja2.environment",
+            "jinja2.nodes",
+            "jinja2.visitor"
+        ],
+        "name": "jinja2.optimizer",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\jinja2\\optimizer.py"
+    },
+    "jinja2.parser": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "jinja2.Environment",
+            "jinja2.environment",
+            "jinja2.ext"
+        ],
+        "imports": [
+            "jinja2",
+            "jinja2.environment",
+            "jinja2.exceptions",
+            "jinja2.lexer",
+            "jinja2.nodes",
+            "typing_extensions"
+        ],
+        "name": "jinja2.parser",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\jinja2\\parser.py"
+    },
+    "jinja2.runtime": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "jinja2",
+            "jinja2.Environment",
+            "jinja2.compiler",
+            "jinja2.debug",
+            "jinja2.environment",
+            "jinja2.exceptions",
+            "jinja2.ext",
+            "jinja2.filters",
+            "jinja2.sandbox",
+            "jinja2.tests",
+            "jinja2.utils"
+        ],
+        "imports": [
+            "jinja2.async_utils",
+            "jinja2.environment",
+            "jinja2.exceptions",
+            "jinja2.nodes",
+            "jinja2.utils",
+            "markupsafe",
+            "markupsafe.Markup",
+            "markupsafe.escape",
+            "markupsafe.soft_str",
+            "typing_extensions"
+        ],
+        "name": "jinja2.runtime",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\jinja2\\runtime.py"
+    },
+    "jinja2.sandbox": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "jinja2.filters"
+        ],
+        "imports": [
+            "_string",
+            "collections.deque",
+            "jinja2.environment",
+            "jinja2.exceptions",
+            "jinja2.runtime",
+            "markupsafe",
+            "markupsafe.EscapeFormatter",
+            "markupsafe.Markup"
+        ],
+        "name": "jinja2.sandbox",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\jinja2\\sandbox.py"
+    },
+    "jinja2.tests": {
+        "bacon": 2,
+        "imported_by": [
+            "jinja2.defaults"
+        ],
+        "imports": [
+            "jinja2.environment",
+            "jinja2.runtime",
+            "jinja2.utils"
+        ],
+        "name": "jinja2.tests",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\jinja2\\tests.py"
+    },
+    "jinja2.utils": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "flask.json",
+            "jinja2",
+            "jinja2.Environment",
+            "jinja2.async_utils",
+            "jinja2.compiler",
+            "jinja2.debug",
+            "jinja2.defaults",
+            "jinja2.environment",
+            "jinja2.ext",
+            "jinja2.filters",
+            "jinja2.lexer",
+            "jinja2.loaders",
+            "jinja2.nodes",
+            "jinja2.runtime",
+            "jinja2.tests"
+        ],
+        "imports": [
+            "collections.deque",
+            "jinja2.constants",
+            "jinja2.environment",
+            "jinja2.lexer",
+            "jinja2.runtime",
+            "markupsafe",
+            "typing_extensions"
+        ],
+        "name": "jinja2.utils",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\jinja2\\utils.py"
+    },
+    "jinja2.visitor": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "jinja2.compiler",
+            "jinja2.idtracking",
+            "jinja2.optimizer"
+        ],
+        "imports": [
+            "jinja2.nodes",
+            "typing_extensions"
+        ],
+        "name": "jinja2.visitor",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\jinja2\\visitor.py"
+    },
+    "json.JSONDecodeError": {
+        "bacon": 2,
+        "imported_by": [
+            "requests.compat"
+        ],
+        "name": "json.JSONDecodeError",
+        "path": null
+    },
+    "json.JSONDecoder": {
+        "bacon": 2,
+        "imported_by": [
+            "flask.scaffold"
+        ],
+        "name": "json.JSONDecoder",
+        "path": null
+    },
+    "json.JSONEncoder": {
+        "bacon": 2,
+        "imported_by": [
+            "flask.scaffold"
+        ],
+        "name": "json.JSONEncoder",
+        "path": null
+    },
+    "json.dumps": {
+        "bacon": 2,
+        "imported_by": [
+            "charset_normalizer.models",
+            "flask.json.tag",
+            "flask.testing"
+        ],
+        "name": "json.dumps",
+        "path": null
+    },
+    "json.jsonify": {
+        "bacon": 2,
+        "imported_by": [
+            "flask",
+            "flask.app"
+        ],
+        "name": "json.jsonify",
+        "path": null
+    },
+    "json.loads": {
+        "bacon": 2,
+        "imported_by": [
+            "flask.json.tag"
+        ],
+        "name": "json.loads",
+        "path": null
+    },
+    "logging.NullHandler": {
+        "bacon": 2,
+        "imported_by": [
+            "requests",
+            "urllib3"
+        ],
+        "name": "logging.NullHandler",
+        "path": null
+    },
+    "main": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__"
+        ],
+        "imports": [
+            "setproctitle",
+            "utils",
+            "utils.logger",
+            "utils.settings",
+            "utils.utils",
+            "zone"
+        ],
+        "name": "main",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\main.py"
+    },
+    "markupsafe": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "flask",
+            "flask.json.tag",
+            "jinja2.Environment",
+            "jinja2.compiler",
+            "jinja2.environment",
+            "jinja2.ext",
+            "jinja2.filters",
+            "jinja2.nodes",
+            "jinja2.runtime",
+            "jinja2.sandbox",
+            "jinja2.utils",
+            "markupsafe._native"
+        ],
+        "imports": [
+            "html.unescape",
+            "markupsafe._native",
+            "markupsafe._speedups",
+            "typing_extensions"
+        ],
+        "name": "markupsafe",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\markupsafe\\__init__.py"
+    },
+    "markupsafe.EscapeFormatter": {
+        "bacon": 2,
+        "imported_by": [
+            "jinja2.sandbox"
+        ],
+        "name": "markupsafe.EscapeFormatter",
+        "path": null
+    },
+    "markupsafe.Markup": {
+        "bacon": 2,
+        "imported_by": [
+            "flask",
+            "flask.json.tag",
+            "jinja2.Environment",
+            "jinja2.compiler",
+            "jinja2.environment",
+            "jinja2.ext",
+            "jinja2.filters",
+            "jinja2.nodes",
+            "jinja2.runtime",
+            "jinja2.sandbox",
+            "markupsafe._native"
+        ],
+        "name": "markupsafe.Markup",
+        "path": null
+    },
+    "markupsafe._native": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "markupsafe"
+        ],
+        "imports": [
+            "markupsafe",
+            "markupsafe.Markup"
+        ],
+        "name": "markupsafe._native",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\markupsafe\\_native.py"
+    },
+    "markupsafe._speedups": {
+        "bacon": 2,
+        "imported_by": [
+            "markupsafe"
+        ],
+        "name": "markupsafe._speedups",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\markupsafe\\_speedups.cp39-win_amd64.pyd"
+    },
+    "markupsafe.escape": {
+        "bacon": 2,
+        "imported_by": [
+            "flask",
+            "jinja2.compiler",
+            "jinja2.filters",
+            "jinja2.runtime"
+        ],
+        "name": "markupsafe.escape",
+        "path": null
+    },
+    "markupsafe.soft_str": {
+        "bacon": 2,
+        "imported_by": [
+            "jinja2.filters",
+            "jinja2.runtime"
+        ],
+        "name": "markupsafe.soft_str",
+        "path": null
+    },
+    "packages.six.moves": {
+        "bacon": 2,
+        "imported_by": [
+            "urllib3.connectionpool",
+            "urllib3.util.queue",
+            "urllib3.util.response"
+        ],
+        "name": "packages.six.moves",
+        "path": null
+    },
+    "packages.six.moves.http_client": {
+        "bacon": 2,
+        "imported_by": [
+            "urllib3.connection",
+            "urllib3.exceptions"
+        ],
+        "name": "packages.six.moves.http_client",
+        "path": null
+    },
+    "packages.six.moves.urllib.parse": {
+        "bacon": 2,
+        "imported_by": [
+            "urllib3.poolmanager",
+            "urllib3.request"
+        ],
+        "name": "packages.six.moves.urllib.parse",
+        "path": null
+    },
+    "pkg_resources": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "flask.cli",
+            "pkg_resources"
+        ],
+        "imports": [
+            "__main__",
+            "_imp",
+            "pkg_resources",
+            "pkg_resources.extern",
+            "pkg_resources.extern.appdirs",
+            "pkg_resources.extern.packaging"
+        ],
+        "name": "pkg_resources",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\pkg_resources\\__init__.py"
+    },
+    "pkg_resources.extern": {
+        "bacon": 2,
+        "imported_by": [
+            "pkg_resources"
+        ],
+        "name": "pkg_resources.extern",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\pkg_resources\\extern\\__init__.py"
+    },
+    "pkg_resources.extern.appdirs": {
+        "bacon": 2,
+        "imported_by": [
+            "pkg_resources"
+        ],
+        "name": "pkg_resources.extern.appdirs",
+        "path": null
+    },
+    "pkg_resources.extern.packaging": {
+        "bacon": 2,
+        "imported_by": [
+            "pkg_resources"
+        ],
+        "name": "pkg_resources.extern.packaging",
+        "path": null
+    },
+    "plugins": {
+        "bacon": 3,
+        "imported_by": [
+            "zone"
+        ],
+        "name": "plugins",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\plugins\\__init__.py"
+    },
+    "plugins.plugins_manager": {
+        "bacon": 3,
+        "imported_by": [
+            "zone"
+        ],
+        "imports": [
+            "services",
+            "services.global_error_handler",
+            "services.global_error_handler.global_error_handler",
+            "utils",
+            "utils.logger"
+        ],
+        "name": "plugins.plugins_manager",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\plugins\\plugins_manager.py"
+    },
+    "psutil": {
+        "bacon": 2,
+        "imported_by": [
+            "utils.utils"
+        ],
+        "name": "psutil",
+        "path": null
+    },
+    "requests": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "requests",
+            "requests.api",
+            "requests.utils"
+        ],
+        "imports": [
+            "chardet",
+            "charset_normalizer",
+            "charset_normalizer.__version__",
+            "cryptography",
+            "logging.NullHandler",
+            "requests",
+            "requests.__version__",
+            "requests.api",
+            "requests.exceptions",
+            "requests.models",
+            "requests.packages",
+            "requests.sessions",
+            "requests.status_codes",
+            "requests.utils",
+            "urllib3",
+            "urllib3.contrib",
+            "urllib3.contrib.pyopenssl",
+            "urllib3.exceptions"
+        ],
+        "name": "requests",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\requests\\__init__.py"
+    },
+    "requests.__version__": {
+        "bacon": 2,
+        "imported_by": [
+            "requests",
+            "requests.utils"
+        ],
+        "name": "requests.__version__",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\requests\\__version__.py"
+    },
+    "requests._internal_utils": {
+        "bacon": 2,
+        "imported_by": [
+            "requests.auth",
+            "requests.cookies",
+            "requests.models",
+            "requests.sessions",
+            "requests.utils"
+        ],
+        "imports": [
+            "requests.compat"
+        ],
+        "name": "requests._internal_utils",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\requests\\_internal_utils.py"
+    },
+    "requests.adapters": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "requests.sessions"
+        ],
+        "imports": [
+            "requests.auth",
+            "requests.compat",
+            "requests.cookies",
+            "requests.exceptions",
+            "requests.models",
+            "requests.structures",
+            "requests.utils",
+            "urllib3",
+            "urllib3.contrib",
+            "urllib3.contrib.socks",
+            "urllib3.exceptions",
+            "urllib3.poolmanager",
+            "urllib3.response",
+            "urllib3.util",
+            "urllib3.util.Timeout",
+            "urllib3.util.parse_url",
+            "urllib3.util.retry",
+            "urlparse"
+        ],
+        "name": "requests.adapters",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\requests\\adapters.py"
+    },
+    "requests.api": {
+        "bacon": 2,
+        "imported_by": [
+            "requests"
+        ],
+        "imports": [
+            "requests",
+            "requests.sessions"
+        ],
+        "name": "requests.api",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\requests\\api.py"
+    },
+    "requests.auth": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "requests.adapters",
+            "requests.models",
+            "requests.sessions"
+        ],
+        "imports": [
+            "requests._internal_utils",
+            "requests.compat",
+            "requests.cookies",
+            "requests.utils",
+            "urlparse"
+        ],
+        "name": "requests.auth",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\requests\\auth.py"
+    },
+    "requests.certs": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "requests.utils"
+        ],
+        "imports": [
+            "certifi",
+            "certifi.where"
+        ],
+        "name": "requests.certs",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\requests\\certs.py"
+    },
+    "requests.compat": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "requests._internal_utils",
+            "requests.adapters",
+            "requests.auth",
+            "requests.cookies",
+            "requests.exceptions",
+            "requests.models",
+            "requests.sessions",
+            "requests.structures",
+            "requests.utils"
+        ],
+        "imports": [
+            "Cookie",
+            "StringIO",
+            "chardet",
+            "charset_normalizer",
+            "collections.Callable",
+            "collections.Mapping",
+            "collections.MutableMapping",
+            "collections.OrderedDict",
+            "cookielib",
+            "json.JSONDecodeError",
+            "simplejson",
+            "urllib.getproxies",
+            "urllib.getproxies_environment",
+            "urllib.proxy_bypass",
+            "urllib.proxy_bypass_environment",
+            "urllib.quote",
+            "urllib.quote_plus",
+            "urllib.unquote",
+            "urllib.unquote_plus",
+            "urllib.urlencode",
+            "urllib2",
+            "urlparse"
+        ],
+        "name": "requests.compat",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\requests\\compat.py"
+    },
+    "requests.cookies": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "requests.adapters",
+            "requests.auth",
+            "requests.models",
+            "requests.sessions",
+            "requests.utils"
+        ],
+        "imports": [
+            "cookielib",
+            "dummy_threading",
+            "requests._internal_utils",
+            "requests.compat",
+            "urlparse"
+        ],
+        "name": "requests.cookies",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\requests\\cookies.py"
+    },
+    "requests.exceptions": {
+        "bacon": 2,
+        "imported_by": [
+            "requests",
+            "requests.adapters",
+            "requests.models",
+            "requests.sessions",
+            "requests.utils"
+        ],
+        "imports": [
+            "requests.compat",
+            "urllib3",
+            "urllib3.exceptions"
+        ],
+        "name": "requests.exceptions",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\requests\\exceptions.py"
+    },
+    "requests.hooks": {
+        "bacon": 2,
+        "imported_by": [
+            "requests.models",
+            "requests.sessions"
+        ],
+        "name": "requests.hooks",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\requests\\hooks.py"
+    },
+    "requests.models": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "requests",
+            "requests.adapters",
+            "requests.sessions"
+        ],
+        "imports": [
+            "chardet",
+            "cookielib",
+            "idna",
+            "requests._internal_utils",
+            "requests.auth",
+            "requests.compat",
+            "requests.cookies",
+            "requests.exceptions",
+            "requests.hooks",
+            "requests.status_codes",
+            "requests.structures",
+            "requests.utils",
+            "urllib3",
+            "urllib3.exceptions",
+            "urllib3.fields",
+            "urllib3.filepost",
+            "urllib3.util",
+            "urllib3.util.parse_url"
+        ],
+        "name": "requests.models",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\requests\\models.py"
+    },
+    "requests.packages": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "requests"
+        ],
+        "imports": [
+            "chardet",
+            "charset_normalizer"
+        ],
+        "name": "requests.packages",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\requests\\packages.py"
+    },
+    "requests.sessions": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "requests",
+            "requests.api"
+        ],
+        "imports": [
+            "collections.OrderedDict",
+            "cookielib",
+            "requests._internal_utils",
+            "requests.adapters",
+            "requests.auth",
+            "requests.compat",
+            "requests.cookies",
+            "requests.exceptions",
+            "requests.hooks",
+            "requests.models",
+            "requests.status_codes",
+            "requests.structures",
+            "requests.utils",
+            "urlparse"
+        ],
+        "name": "requests.sessions",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\requests\\sessions.py"
+    },
+    "requests.status_codes": {
+        "bacon": 2,
+        "imported_by": [
+            "requests",
+            "requests.models",
+            "requests.sessions"
+        ],
+        "imports": [
+            "requests.structures"
+        ],
+        "name": "requests.status_codes",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\requests\\status_codes.py"
+    },
+    "requests.structures": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "requests.adapters",
+            "requests.models",
+            "requests.sessions",
+            "requests.status_codes",
+            "requests.utils"
+        ],
+        "imports": [
+            "collections.OrderedDict",
+            "requests.compat"
+        ],
+        "name": "requests.structures",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\requests\\structures.py"
+    },
+    "requests.utils": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "requests",
+            "requests.adapters",
+            "requests.auth",
+            "requests.models",
+            "requests.sessions"
+        ],
+        "imports": [
+            "collections.OrderedDict",
+            "requests",
+            "requests.__version__",
+            "requests._internal_utils",
+            "requests.certs",
+            "requests.compat",
+            "requests.cookies",
+            "requests.exceptions",
+            "requests.structures",
+            "urllib3",
+            "urllib3.util",
+            "urllib3.util.make_headers",
+            "urllib3.util.parse_url",
+            "urlparse"
+        ],
+        "name": "requests.utils",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\requests\\utils.py"
+    },
+    "serial": {
+        "bacon": 2,
+        "imported_by": [
+            "serial",
+            "serial.serialcli",
+            "serial.serialjava",
+            "serial.serialposix",
+            "serial.serialwin32",
+            "serial.tools.list_ports",
+            "serial.tools.list_ports_posix",
+            "serial.tools.list_ports_windows",
+            "utils.utils"
+        ],
+        "imports": [
+            "serial",
+            "serial.serialcli",
+            "serial.serialjava",
+            "serial.serialposix",
+            "serial.serialutil",
+            "serial.serialwin32"
+        ],
+        "name": "serial",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\serial\\__init__.py"
+    },
+    "serial.serialcli": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "serial"
+        ],
+        "imports": [
+            "System",
+            "System.IO.Ports",
+            "serial",
+            "serial.serialutil"
+        ],
+        "name": "serial.serialcli",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\serial\\serialcli.py"
+    },
+    "serial.serialjava": {
+        "bacon": 3,
+        "imported_by": [
+            "serial"
+        ],
+        "imports": [
+            "serial",
+            "serial.serialutil"
+        ],
+        "name": "serial.serialjava",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\serial\\serialjava.py"
+    },
+    "serial.serialposix": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "serial"
+        ],
+        "imports": [
+            "serial",
+            "serial.serialutil"
+        ],
+        "name": "serial.serialposix",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\serial\\serialposix.py"
+    },
+    "serial.serialutil": {
+        "bacon": 2,
+        "imported_by": [
+            "serial",
+            "serial.serialcli",
+            "serial.serialjava",
+            "serial.serialposix",
+            "serial.serialwin32"
+        ],
+        "name": "serial.serialutil",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\serial\\serialutil.py"
+    },
+    "serial.serialwin32": {
+        "bacon": 3,
+        "imported_by": [
+            "serial"
+        ],
+        "imports": [
+            "serial",
+            "serial.serialutil",
+            "serial.win32"
+        ],
+        "name": "serial.serialwin32",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\serial\\serialwin32.py"
+    },
+    "serial.tools": {
+        "bacon": 2,
+        "imported_by": [
+            "serial.tools.list_ports",
+            "serial.tools.list_ports_posix",
+            "serial.tools.list_ports_windows",
+            "utils.utils"
+        ],
+        "name": "serial.tools",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\serial\\tools\\__init__.py"
+    },
+    "serial.tools.list_ports": {
+        "bacon": 2,
+        "imported_by": [
+            "utils.utils"
+        ],
+        "imports": [
+            "serial",
+            "serial.tools",
+            "serial.tools.list_ports_posix",
+            "serial.tools.list_ports_windows"
+        ],
+        "name": "serial.tools.list_ports",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\serial\\tools\\list_ports.py"
+    },
+    "serial.tools.list_ports_common": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "serial.tools.list_ports_posix",
+            "serial.tools.list_ports_windows"
+        ],
+        "name": "serial.tools.list_ports_common",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\serial\\tools\\list_ports_common.py"
+    },
+    "serial.tools.list_ports_posix": {
+        "bacon": 3,
+        "imported_by": [
+            "serial.tools.list_ports"
+        ],
+        "imports": [
+            "serial",
+            "serial.tools",
+            "serial.tools.list_ports_common"
+        ],
+        "name": "serial.tools.list_ports_posix",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\serial\\tools\\list_ports_posix.py"
+    },
+    "serial.tools.list_ports_windows": {
+        "bacon": 3,
+        "imported_by": [
+            "serial.tools.list_ports"
+        ],
+        "imports": [
+            "serial",
+            "serial.tools",
+            "serial.tools.list_ports_common",
+            "serial.win32"
+        ],
+        "name": "serial.tools.list_ports_windows",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\serial\\tools\\list_ports_windows.py"
+    },
+    "serial.win32": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "serial.serialwin32",
+            "serial.tools.list_ports_windows"
+        ],
+        "imports": [
+            "ctypes.POINTER",
+            "ctypes.Structure",
+            "ctypes.Union",
+            "ctypes.WinDLL",
+            "ctypes.c_char",
+            "ctypes.c_int64",
+            "ctypes.c_ulong",
+            "ctypes.c_void_p",
+            "ctypes.sizeof"
+        ],
+        "name": "serial.win32",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\serial\\win32.py"
+    },
+    "services": {
+        "bacon": 2,
+        "imported_by": [
+            "bg_erp.server",
+            "data.registers",
+            "plugins.plugins_manager",
+            "services.global_error_handler.global_error_handler",
+            "utils.updater",
+            "zone"
+        ],
+        "name": "services",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\services\\__init__.py"
+    },
+    "services.evok": {
+        "bacon": 3,
+        "imported_by": [
+            "zone"
+        ],
+        "name": "services.evok",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\services\\evok\\__init__.py"
+    },
+    "services.evok.settings": {
+        "bacon": 3,
+        "imported_by": [
+            "zone"
+        ],
+        "name": "services.evok.settings",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\services\\evok\\settings.py"
+    },
+    "services.global_error_handler": {
+        "bacon": 3,
+        "imported_by": [
+            "data.registers",
+            "plugins.plugins_manager",
+            "services.global_error_handler.global_error_handler",
+            "utils.updater",
+            "zone"
+        ],
+        "name": "services.global_error_handler",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\services\\global_error_handler\\__init__.py"
+    },
+    "services.global_error_handler.global_error_handler": {
+        "bacon": 3,
+        "imported_by": [
+            "data.registers",
+            "plugins.plugins_manager",
+            "utils.updater",
+            "zone"
+        ],
+        "imports": [
+            "data",
+            "data.register",
+            "services",
+            "services.global_error_handler"
+        ],
+        "name": "services.global_error_handler.global_error_handler",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\services\\global_error_handler\\global_error_handler.py"
+    },
+    "services.http": {
+        "bacon": 2,
+        "imported_by": [
+            "bg_erp.server"
+        ],
+        "name": "services.http",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\services\\http\\__init__.py"
+    },
+    "services.http.server": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "bg_erp.server"
+        ],
+        "imports": [
+            "flask",
+            "flask.Flask",
+            "flask.request"
+        ],
+        "name": "services.http.server",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\services\\http\\server.py"
+    },
+    "setproctitle": {
+        "bacon": 2,
+        "imported_by": [
+            "main"
+        ],
+        "name": "setproctitle",
+        "path": null
+    },
+    "simplejson": {
+        "bacon": 2,
+        "imported_by": [
+            "requests.compat"
+        ],
+        "name": "simplejson",
+        "path": null
+    },
+    "socks": {
+        "bacon": 2,
+        "imported_by": [
+            "urllib3.contrib.socks"
+        ],
+        "name": "socks",
+        "path": null
+    },
+    "tputil": {
+        "bacon": 2,
+        "imported_by": [
+            "jinja2.debug"
+        ],
+        "name": "tputil",
+        "path": null
+    },
+    "typing_extensions": {
+        "bacon": 2,
+        "imported_by": [
+            "click.core",
+            "click.globals",
+            "click.parser",
+            "click.types",
+            "click.utils",
+            "flask.app",
+            "flask.sessions",
+            "flask.typing",
+            "flask.wrappers",
+            "importlib_metadata._compat",
+            "itsdangerous.timed",
+            "jinja2.Environment",
+            "jinja2.bccache",
+            "jinja2.compiler",
+            "jinja2.defaults",
+            "jinja2.environment",
+            "jinja2.ext",
+            "jinja2.filters",
+            "jinja2.lexer",
+            "jinja2.nodes",
+            "jinja2.parser",
+            "jinja2.runtime",
+            "jinja2.utils",
+            "jinja2.visitor",
+            "markupsafe",
+            "werkzeug.exceptions",
+            "werkzeug.http",
+            "werkzeug.routing",
+            "werkzeug.serving",
+            "werkzeug.wrappers.Request",
+            "werkzeug.wrappers.Response",
+            "werkzeug.wrappers.request",
+            "werkzeug.wrappers.response"
+        ],
+        "name": "typing_extensions",
+        "path": null
+    },
+    "unicodedata2": {
+        "bacon": 2,
+        "imported_by": [
+            "charset_normalizer.utils"
+        ],
+        "name": "unicodedata2",
+        "path": null
+    },
+    "urllib.getproxies": {
+        "bacon": 2,
+        "imported_by": [
+            "requests.compat"
+        ],
+        "name": "urllib.getproxies",
+        "path": null
+    },
+    "urllib.getproxies_environment": {
+        "bacon": 2,
+        "imported_by": [
+            "requests.compat"
+        ],
+        "name": "urllib.getproxies_environment",
+        "path": null
+    },
+    "urllib.proxy_bypass": {
+        "bacon": 2,
+        "imported_by": [
+            "requests.compat"
+        ],
+        "name": "urllib.proxy_bypass",
+        "path": null
+    },
+    "urllib.proxy_bypass_environment": {
+        "bacon": 2,
+        "imported_by": [
+            "requests.compat"
+        ],
+        "name": "urllib.proxy_bypass_environment",
+        "path": null
+    },
+    "urllib.quote": {
+        "bacon": 2,
+        "imported_by": [
+            "requests.compat"
+        ],
+        "name": "urllib.quote",
+        "path": null
+    },
+    "urllib.quote_plus": {
+        "bacon": 2,
+        "imported_by": [
+            "requests.compat"
+        ],
+        "name": "urllib.quote_plus",
+        "path": null
+    },
+    "urllib.unquote": {
+        "bacon": 2,
+        "imported_by": [
+            "requests.compat"
+        ],
+        "name": "urllib.unquote",
+        "path": null
+    },
+    "urllib.unquote_plus": {
+        "bacon": 2,
+        "imported_by": [
+            "requests.compat"
+        ],
+        "name": "urllib.unquote_plus",
+        "path": null
+    },
+    "urllib.urlencode": {
+        "bacon": 2,
+        "imported_by": [
+            "requests.compat"
+        ],
+        "name": "urllib.urlencode",
+        "path": null
+    },
+    "urllib2": {
+        "bacon": 2,
+        "imported_by": [
+            "requests.compat"
+        ],
+        "name": "urllib2",
+        "path": null
+    },
+    "urllib3": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "requests",
+            "requests.adapters",
+            "requests.exceptions",
+            "requests.models",
+            "requests.utils",
+            "urllib3",
+            "urllib3.contrib.pyopenssl"
+        ],
+        "imports": [
+            "logging.NullHandler",
+            "urllib3",
+            "urllib3._version",
+            "urllib3.connectionpool",
+            "urllib3.exceptions",
+            "urllib3.filepost",
+            "urllib3.poolmanager",
+            "urllib3.response",
+            "urllib3.util",
+            "urllib3.util.request",
+            "urllib3.util.retry",
+            "urllib3.util.timeout",
+            "urllib3.util.url"
+        ],
+        "name": "urllib3",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\urllib3\\__init__.py"
+    },
+    "urllib3._collections": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "urllib3.connection",
+            "urllib3.poolmanager",
+            "urllib3.response"
+        ],
+        "imports": [
+            "collections.Mapping",
+            "collections.MutableMapping",
+            "collections.OrderedDict",
+            "urllib3.exceptions",
+            "urllib3.packages",
+            "urllib3.packages.six"
+        ],
+        "name": "urllib3._collections",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\urllib3\\_collections.py"
+    },
+    "urllib3._version": {
+        "bacon": 2,
+        "imported_by": [
+            "urllib3",
+            "urllib3.connection"
+        ],
+        "name": "urllib3._version",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\urllib3\\_version.py"
+    },
+    "urllib3.connection": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "urllib3.connectionpool",
+            "urllib3.contrib.socks",
+            "urllib3.response"
+        ],
+        "imports": [
+            "packages.six.moves.http_client",
+            "urllib3._collections",
+            "urllib3._version",
+            "urllib3.exceptions",
+            "urllib3.packages",
+            "urllib3.packages.six",
+            "urllib3.util",
+            "urllib3.util.connection",
+            "urllib3.util.proxy",
+            "urllib3.util.ssl_",
+            "urllib3.util.ssl_match_hostname",
+            "util.SKIPPABLE_HEADERS",
+            "util.SKIP_HEADER"
+        ],
+        "name": "urllib3.connection",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\urllib3\\connection.py"
+    },
+    "urllib3.connectionpool": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "urllib3",
+            "urllib3.contrib.socks",
+            "urllib3.poolmanager"
+        ],
+        "imports": [
+            "packages.six.moves",
+            "urllib3.connection",
+            "urllib3.exceptions",
+            "urllib3.packages",
+            "urllib3.packages.six",
+            "urllib3.request",
+            "urllib3.response",
+            "urllib3.util",
+            "urllib3.util.connection",
+            "urllib3.util.proxy",
+            "urllib3.util.queue",
+            "urllib3.util.request",
+            "urllib3.util.response",
+            "urllib3.util.retry",
+            "urllib3.util.ssl_match_hostname",
+            "urllib3.util.timeout",
+            "urllib3.util.url"
+        ],
+        "name": "urllib3.connectionpool",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\urllib3\\connectionpool.py"
+    },
+    "urllib3.contrib": {
+        "bacon": 2,
+        "imported_by": [
+            "requests",
+            "requests.adapters",
+            "urllib3.util.connection"
+        ],
+        "name": "urllib3.contrib",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\urllib3\\contrib\\__init__.py"
+    },
+    "urllib3.contrib._appengine_environ": {
+        "bacon": 3,
+        "imported_by": [
+            "urllib3.util.connection"
+        ],
+        "name": "urllib3.contrib._appengine_environ",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\urllib3\\contrib\\_appengine_environ.py"
+    },
+    "urllib3.contrib.pyopenssl": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "requests"
+        ],
+        "imports": [
+            "OpenSSL.SSL",
+            "OpenSSL.crypto",
+            "cryptography",
+            "cryptography.hazmat.backends.openssl",
+            "cryptography.hazmat.backends.openssl.x509",
+            "cryptography.x509",
+            "cryptography.x509.extensions",
+            "idna",
+            "urllib3",
+            "urllib3.packages",
+            "urllib3.packages.backports",
+            "urllib3.packages.backports.makefile",
+            "urllib3.packages.six",
+            "urllib3.util",
+            "urllib3.util.ssl_"
+        ],
+        "name": "urllib3.contrib.pyopenssl",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\urllib3\\contrib\\pyopenssl.py"
+    },
+    "urllib3.contrib.socks": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "requests.adapters"
+        ],
+        "imports": [
+            "socks",
+            "urllib3.connection",
+            "urllib3.connectionpool",
+            "urllib3.exceptions",
+            "urllib3.poolmanager",
+            "urllib3.util",
+            "urllib3.util.url"
+        ],
+        "name": "urllib3.contrib.socks",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\urllib3\\contrib\\socks.py"
+    },
+    "urllib3.exceptions": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "requests",
+            "requests.adapters",
+            "requests.exceptions",
+            "requests.models",
+            "urllib3",
+            "urllib3._collections",
+            "urllib3.connection",
+            "urllib3.connectionpool",
+            "urllib3.contrib.socks",
+            "urllib3.poolmanager",
+            "urllib3.response",
+            "urllib3.util.Timeout",
+            "urllib3.util.connection",
+            "urllib3.util.request",
+            "urllib3.util.response",
+            "urllib3.util.retry",
+            "urllib3.util.ssl_",
+            "urllib3.util.ssltransport",
+            "urllib3.util.timeout",
+            "urllib3.util.url"
+        ],
+        "imports": [
+            "packages.six.moves.http_client",
+            "urllib3.packages",
+            "urllib3.packages.six"
+        ],
+        "name": "urllib3.exceptions",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\urllib3\\exceptions.py"
+    },
+    "urllib3.fields": {
+        "bacon": 2,
+        "imported_by": [
+            "requests.models",
+            "urllib3.filepost"
+        ],
+        "imports": [
+            "urllib3.packages",
+            "urllib3.packages.six"
+        ],
+        "name": "urllib3.fields",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\urllib3\\fields.py"
+    },
+    "urllib3.filepost": {
+        "bacon": 2,
+        "imported_by": [
+            "requests.models",
+            "urllib3",
+            "urllib3.request"
+        ],
+        "imports": [
+            "urllib3.fields",
+            "urllib3.packages",
+            "urllib3.packages.six"
+        ],
+        "name": "urllib3.filepost",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\urllib3\\filepost.py"
+    },
+    "urllib3.packages": {
+        "bacon": 2,
+        "imported_by": [
+            "urllib3._collections",
+            "urllib3.connection",
+            "urllib3.connectionpool",
+            "urllib3.contrib.pyopenssl",
+            "urllib3.exceptions",
+            "urllib3.fields",
+            "urllib3.filepost",
+            "urllib3.poolmanager",
+            "urllib3.request",
+            "urllib3.response",
+            "urllib3.util.connection",
+            "urllib3.util.queue",
+            "urllib3.util.request",
+            "urllib3.util.response",
+            "urllib3.util.retry",
+            "urllib3.util.ssl_",
+            "urllib3.util.ssltransport",
+            "urllib3.util.url"
+        ],
+        "name": "urllib3.packages",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\urllib3\\packages\\__init__.py"
+    },
+    "urllib3.packages.backports": {
+        "bacon": 2,
+        "imported_by": [
+            "urllib3.contrib.pyopenssl"
+        ],
+        "name": "urllib3.packages.backports",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\urllib3\\packages\\backports\\__init__.py"
+    },
+    "urllib3.packages.backports.makefile": {
+        "bacon": 2,
+        "imported_by": [
+            "urllib3.contrib.pyopenssl"
+        ],
+        "name": "urllib3.packages.backports.makefile",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\urllib3\\packages\\backports\\makefile.py"
+    },
+    "urllib3.packages.six": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "urllib3._collections",
+            "urllib3.connection",
+            "urllib3.connectionpool",
+            "urllib3.contrib.pyopenssl",
+            "urllib3.exceptions",
+            "urllib3.fields",
+            "urllib3.filepost",
+            "urllib3.poolmanager",
+            "urllib3.request",
+            "urllib3.response",
+            "urllib3.util.connection",
+            "urllib3.util.queue",
+            "urllib3.util.request",
+            "urllib3.util.response",
+            "urllib3.util.retry",
+            "urllib3.util.ssl_",
+            "urllib3.util.ssltransport",
+            "urllib3.util.url"
+        ],
+        "imports": [
+            "StringIO"
+        ],
+        "name": "urllib3.packages.six",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\urllib3\\packages\\six.py"
+    },
+    "urllib3.poolmanager": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "requests.adapters",
+            "urllib3",
+            "urllib3.contrib.socks"
+        ],
+        "imports": [
+            "packages.six.moves.urllib.parse",
+            "urllib3._collections",
+            "urllib3.connectionpool",
+            "urllib3.exceptions",
+            "urllib3.packages",
+            "urllib3.packages.six",
+            "urllib3.request",
+            "urllib3.util",
+            "urllib3.util.proxy",
+            "urllib3.util.retry",
+            "urllib3.util.url"
+        ],
+        "name": "urllib3.poolmanager",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\urllib3\\poolmanager.py"
+    },
+    "urllib3.request": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "urllib3.connectionpool",
+            "urllib3.poolmanager"
+        ],
+        "imports": [
+            "packages.six.moves.urllib.parse",
+            "urllib3.filepost",
+            "urllib3.packages",
+            "urllib3.packages.six"
+        ],
+        "name": "urllib3.request",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\urllib3\\request.py"
+    },
+    "urllib3.response": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "requests.adapters",
+            "urllib3",
+            "urllib3.connectionpool"
+        ],
+        "imports": [
+            "brotli",
+            "urllib3._collections",
+            "urllib3.connection",
+            "urllib3.exceptions",
+            "urllib3.packages",
+            "urllib3.packages.six",
+            "urllib3.util",
+            "urllib3.util.response"
+        ],
+        "name": "urllib3.response",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\urllib3\\response.py"
+    },
+    "urllib3.util": {
+        "bacon": 2,
+        "imported_by": [
+            "requests.adapters",
+            "requests.models",
+            "requests.utils",
+            "urllib3",
+            "urllib3.connection",
+            "urllib3.connectionpool",
+            "urllib3.contrib.pyopenssl",
+            "urllib3.contrib.socks",
+            "urllib3.poolmanager",
+            "urllib3.response"
+        ],
+        "imports": [
+            "urllib3.util.connection",
+            "urllib3.util.request",
+            "urllib3.util.response",
+            "urllib3.util.retry",
+            "urllib3.util.ssl_",
+            "urllib3.util.timeout",
+            "urllib3.util.url",
+            "urllib3.util.wait"
+        ],
+        "name": "urllib3.util",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\urllib3\\util\\__init__.py"
+    },
+    "urllib3.util.Timeout": {
+        "bacon": 2,
+        "imported_by": [
+            "requests.adapters"
+        ],
+        "imports": [
+            "urllib3.exceptions"
+        ],
+        "name": "urllib3.util.Timeout",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\urllib3\\util\\Timeout.py"
+    },
+    "urllib3.util.connection": {
+        "bacon": 2,
+        "imported_by": [
+            "urllib3.connection",
+            "urllib3.connectionpool",
+            "urllib3.util"
+        ],
+        "imports": [
+            "urllib3.contrib",
+            "urllib3.contrib._appengine_environ",
+            "urllib3.exceptions",
+            "urllib3.packages",
+            "urllib3.packages.six",
+            "urllib3.util.wait"
+        ],
+        "name": "urllib3.util.connection",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\urllib3\\util\\connection.py"
+    },
+    "urllib3.util.make_headers": {
+        "bacon": 2,
+        "imported_by": [
+            "requests.utils"
+        ],
+        "name": "urllib3.util.make_headers",
+        "path": null
+    },
+    "urllib3.util.parse_url": {
+        "bacon": 2,
+        "imported_by": [
+            "requests.adapters",
+            "requests.models",
+            "requests.utils"
+        ],
+        "name": "urllib3.util.parse_url",
+        "path": null
+    },
+    "urllib3.util.proxy": {
+        "bacon": 2,
+        "imported_by": [
+            "urllib3.connection",
+            "urllib3.connectionpool",
+            "urllib3.poolmanager"
+        ],
+        "imports": [
+            "urllib3.util.ssl_"
+        ],
+        "name": "urllib3.util.proxy",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\urllib3\\util\\proxy.py"
+    },
+    "urllib3.util.queue": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "urllib3.connectionpool"
+        ],
+        "imports": [
+            "packages.six.moves",
+            "urllib3.packages",
+            "urllib3.packages.six"
+        ],
+        "name": "urllib3.util.queue",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\urllib3\\util\\queue.py"
+    },
+    "urllib3.util.request": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "urllib3",
+            "urllib3.connectionpool",
+            "urllib3.util"
+        ],
+        "imports": [
+            "brotli",
+            "urllib3.exceptions",
+            "urllib3.packages",
+            "urllib3.packages.six"
+        ],
+        "name": "urllib3.util.request",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\urllib3\\util\\request.py"
+    },
+    "urllib3.util.response": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "urllib3.connectionpool",
+            "urllib3.response",
+            "urllib3.util"
+        ],
+        "imports": [
+            "packages.six.moves",
+            "urllib3.exceptions",
+            "urllib3.packages",
+            "urllib3.packages.six"
+        ],
+        "name": "urllib3.util.response",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\urllib3\\util\\response.py"
+    },
+    "urllib3.util.retry": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "requests.adapters",
+            "urllib3",
+            "urllib3.connectionpool",
+            "urllib3.poolmanager",
+            "urllib3.util"
+        ],
+        "imports": [
+            "collections.namedtuple",
+            "urllib3.exceptions",
+            "urllib3.packages",
+            "urllib3.packages.six"
+        ],
+        "name": "urllib3.util.retry",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\urllib3\\util\\retry.py"
+    },
+    "urllib3.util.ssl_": {
+        "bacon": 2,
+        "imported_by": [
+            "urllib3.connection",
+            "urllib3.contrib.pyopenssl",
+            "urllib3.util",
+            "urllib3.util.proxy"
+        ],
+        "imports": [
+            "urllib3.exceptions",
+            "urllib3.packages",
+            "urllib3.packages.six",
+            "urllib3.util.ssltransport",
+            "urllib3.util.url"
+        ],
+        "name": "urllib3.util.ssl_",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\urllib3\\util\\ssl_.py"
+    },
+    "urllib3.util.ssl_match_hostname": {
+        "bacon": 2,
+        "imported_by": [
+            "urllib3.connection",
+            "urllib3.connectionpool"
+        ],
+        "name": "urllib3.util.ssl_match_hostname",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\urllib3\\util\\ssl_match_hostname.py"
+    },
+    "urllib3.util.ssltransport": {
+        "bacon": 3,
+        "imported_by": [
+            "urllib3.util.ssl_"
+        ],
+        "imports": [
+            "urllib3.exceptions",
+            "urllib3.packages",
+            "urllib3.packages.six"
+        ],
+        "name": "urllib3.util.ssltransport",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\urllib3\\util\\ssltransport.py"
+    },
+    "urllib3.util.timeout": {
+        "bacon": 2,
+        "imported_by": [
+            "urllib3",
+            "urllib3.connectionpool",
+            "urllib3.util"
+        ],
+        "imports": [
+            "urllib3.exceptions"
+        ],
+        "name": "urllib3.util.timeout",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\urllib3\\util\\timeout.py"
+    },
+    "urllib3.util.url": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "urllib3",
+            "urllib3.connectionpool",
+            "urllib3.contrib.socks",
+            "urllib3.poolmanager",
+            "urllib3.util",
+            "urllib3.util.ssl_"
+        ],
+        "imports": [
+            "collections.namedtuple",
+            "idna",
+            "urllib3.exceptions",
+            "urllib3.packages",
+            "urllib3.packages.six"
+        ],
+        "name": "urllib3.util.url",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\urllib3\\util\\url.py"
+    },
+    "urllib3.util.wait": {
+        "bacon": 3,
+        "imported_by": [
+            "urllib3.util",
+            "urllib3.util.connection"
+        ],
+        "name": "urllib3.util.wait",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\urllib3\\util\\wait.py"
+    },
+    "urlparse": {
+        "bacon": 2,
+        "imported_by": [
+            "requests.adapters",
+            "requests.auth",
+            "requests.compat",
+            "requests.cookies",
+            "requests.sessions",
+            "requests.utils"
+        ],
+        "name": "urlparse",
+        "path": null
+    },
+    "util.SKIPPABLE_HEADERS": {
+        "bacon": 2,
+        "imported_by": [
+            "urllib3.connection"
+        ],
+        "name": "util.SKIPPABLE_HEADERS",
+        "path": null
+    },
+    "util.SKIP_HEADER": {
+        "bacon": 2,
+        "imported_by": [
+            "urllib3.connection"
+        ],
+        "name": "util.SKIP_HEADER",
+        "path": null
+    },
+    "utils": {
+        "bacon": 2,
+        "imported_by": [
+            "bg_erp.bg_erp",
+            "bg_erp.server",
+            "bg_erp.session",
+            "data.registers",
+            "main",
+            "plugins.plugins_manager",
+            "utils.logger",
+            "utils.updater",
+            "zone"
+        ],
+        "name": "utils",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\utils\\__init__.py"
+    },
+    "utils.logger": {
+        "bacon": 2,
+        "imported_by": [
+            "bg_erp.bg_erp",
+            "bg_erp.server",
+            "bg_erp.session",
+            "data.registers",
+            "main",
+            "plugins.plugins_manager",
+            "utils.updater",
+            "zone"
+        ],
+        "imports": [
+            "utils",
+            "utils.settings"
+        ],
+        "name": "utils.logger",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\utils\\logger.py"
+    },
+    "utils.logic": {
+        "bacon": 3,
+        "imported_by": [
+            "zone"
+        ],
+        "name": "utils.logic",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\utils\\logic\\__init__.py"
+    },
+    "utils.logic.state_machine": {
+        "bacon": 3,
+        "imported_by": [
+            "zone"
+        ],
+        "name": "utils.logic.state_machine",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\utils\\logic\\state_machine.py"
+    },
+    "utils.logic.timer": {
+        "bacon": 3,
+        "imported_by": [
+            "zone"
+        ],
+        "name": "utils.logic.timer",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\utils\\logic\\timer.py"
+    },
+    "utils.performance_profiler": {
+        "bacon": 3,
+        "imported_by": [
+            "zone"
+        ],
+        "name": "utils.performance_profiler",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\utils\\performance_profiler.py"
+    },
+    "utils.settings": {
+        "bacon": 2,
+        "imported_by": [
+            "main",
+            "utils.logger",
+            "zone"
+        ],
+        "name": "utils.settings",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\utils\\settings.py"
+    },
+    "utils.updater": {
+        "bacon": 3,
+        "imported_by": [
+            "zone"
+        ],
+        "imports": [
+            "services",
+            "services.global_error_handler",
+            "services.global_error_handler.global_error_handler",
+            "utils",
+            "utils.logger"
+        ],
+        "name": "utils.updater",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\utils\\updater.py"
+    },
+    "utils.utils": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "main"
+        ],
+        "imports": [
+            "psutil",
+            "serial",
+            "serial.tools",
+            "serial.tools.list_ports"
+        ],
+        "name": "utils.utils",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\utils\\utils.py"
+    },
+    "watchdog.events": {
+        "bacon": 2,
+        "imported_by": [
+            "werkzeug._reloader"
+        ],
+        "name": "watchdog.events",
+        "path": null
+    },
+    "watchdog.observers": {
+        "bacon": 2,
+        "imported_by": [
+            "werkzeug._reloader"
+        ],
+        "name": "watchdog.observers",
+        "path": null
+    },
+    "werkzeug": {
+        "bacon": 2,
+        "imported_by": [
+            "flask",
+            "flask.app",
+            "flask.cli",
+            "flask.config",
+            "flask.ctx",
+            "flask.globals",
+            "flask.helpers",
+            "flask.json",
+            "flask.json.tag",
+            "flask.logging",
+            "flask.scaffold",
+            "flask.sessions",
+            "flask.testing",
+            "flask.typing",
+            "flask.wrappers",
+            "werkzeug.datastructures",
+            "werkzeug.formparser",
+            "werkzeug.http",
+            "werkzeug.sansio.response",
+            "werkzeug.serving",
+            "werkzeug.urls",
+            "werkzeug.wrappers.Request",
+            "werkzeug.wrappers.Response",
+            "werkzeug.wrappers.request",
+            "werkzeug.wrappers.response"
+        ],
+        "imports": [
+            "werkzeug.serving",
+            "werkzeug.test",
+            "werkzeug.wrappers",
+            "werkzeug.wrappers.Request",
+            "werkzeug.wrappers.Response"
+        ],
+        "name": "werkzeug",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\werkzeug\\__init__.py"
+    },
+    "werkzeug.__version__": {
+        "bacon": 2,
+        "imported_by": [
+            "werkzeug.serving"
+        ],
+        "name": "werkzeug.__version__",
+        "path": null
+    },
+    "werkzeug._internal": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "werkzeug._reloader",
+            "werkzeug.datastructures",
+            "werkzeug.debug",
+            "werkzeug.debug.tbtools",
+            "werkzeug.exceptions",
+            "werkzeug.formparser",
+            "werkzeug.http",
+            "werkzeug.routing",
+            "werkzeug.sansio.multipart",
+            "werkzeug.sansio.request",
+            "werkzeug.sansio.response",
+            "werkzeug.sansio.utils",
+            "werkzeug.serving",
+            "werkzeug.test",
+            "werkzeug.urls",
+            "werkzeug.utils",
+            "werkzeug.wrappers.Request",
+            "werkzeug.wrappers.Response",
+            "werkzeug.wrappers.request",
+            "werkzeug.wrappers.response",
+            "werkzeug.wsgi"
+        ],
+        "imports": [
+            "_typeshed.wsgi",
+            "colorama",
+            "werkzeug.wrappers",
+            "werkzeug.wrappers.request"
+        ],
+        "name": "werkzeug._internal",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\werkzeug\\_internal.py"
+    },
+    "werkzeug._reloader": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "werkzeug.serving"
+        ],
+        "imports": [
+            "watchdog.events",
+            "watchdog.observers",
+            "werkzeug._internal"
+        ],
+        "name": "werkzeug._reloader",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\werkzeug\\_reloader.py"
+    },
+    "werkzeug.datastructures": {
+        "bacon": 2,
+        "imported_by": [
+            "flask.app",
+            "flask.sessions",
+            "flask.typing",
+            "werkzeug.exceptions",
+            "werkzeug.formparser",
+            "werkzeug.http",
+            "werkzeug.routing",
+            "werkzeug.sansio.multipart",
+            "werkzeug.sansio.request",
+            "werkzeug.sansio.response",
+            "werkzeug.test",
+            "werkzeug.urls",
+            "werkzeug.utils",
+            "werkzeug.wrappers.Request",
+            "werkzeug.wrappers.Response",
+            "werkzeug.wrappers.request",
+            "werkzeug.wrappers.response"
+        ],
+        "imports": [
+            "werkzeug",
+            "werkzeug._internal",
+            "werkzeug.exceptions",
+            "werkzeug.filesystem",
+            "werkzeug.http"
+        ],
+        "name": "werkzeug.datastructures",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\werkzeug\\datastructures.py"
+    },
+    "werkzeug.debug": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "werkzeug.serving"
+        ],
+        "imports": [
+            "_typeshed.wsgi",
+            "werkzeug._internal",
+            "werkzeug.debug.console",
+            "werkzeug.debug.tbtools",
+            "werkzeug.http",
+            "werkzeug.security",
+            "werkzeug.wrappers",
+            "werkzeug.wrappers.request",
+            "werkzeug.wrappers.response"
+        ],
+        "name": "werkzeug.debug",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\werkzeug\\debug\\__init__.py"
+    },
+    "werkzeug.debug.console": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "werkzeug.debug",
+            "werkzeug.debug.tbtools"
+        ],
+        "imports": [
+            "html.escape",
+            "werkzeug.debug.repr",
+            "werkzeug.debug.tbtools",
+            "werkzeug.local"
+        ],
+        "name": "werkzeug.debug.console",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\werkzeug\\debug\\console.py"
+    },
+    "werkzeug.debug.repr": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "werkzeug.debug.console"
+        ],
+        "imports": [
+            "collections.deque",
+            "html.escape"
+        ],
+        "name": "werkzeug.debug.repr",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\werkzeug\\debug\\repr.py"
+    },
+    "werkzeug.debug.tbtools": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "werkzeug.debug",
+            "werkzeug.debug.console",
+            "werkzeug.serving"
+        ],
+        "imports": [
+            "html.escape",
+            "werkzeug._internal",
+            "werkzeug.debug.console",
+            "werkzeug.filesystem",
+            "werkzeug.utils"
+        ],
+        "name": "werkzeug.debug.tbtools",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\werkzeug\\debug\\tbtools.py"
+    },
+    "werkzeug.exceptions": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "flask",
+            "flask.app",
+            "flask.ctx",
+            "flask.helpers",
+            "flask.scaffold",
+            "flask.wrappers",
+            "werkzeug.datastructures",
+            "werkzeug.formparser",
+            "werkzeug.routing",
+            "werkzeug.sansio.multipart",
+            "werkzeug.sansio.utils",
+            "werkzeug.serving",
+            "werkzeug.utils",
+            "werkzeug.wrappers.Request",
+            "werkzeug.wrappers.Response",
+            "werkzeug.wrappers.request",
+            "werkzeug.wrappers.response",
+            "werkzeug.wsgi"
+        ],
+        "imports": [
+            "_typeshed.wsgi",
+            "html.escape",
+            "typing_extensions",
+            "werkzeug._internal",
+            "werkzeug.datastructures",
+            "werkzeug.http",
+            "werkzeug.sansio",
+            "werkzeug.sansio.response",
+            "werkzeug.wrappers",
+            "werkzeug.wrappers.response"
+        ],
+        "name": "werkzeug.exceptions",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\werkzeug\\exceptions.py"
+    },
+    "werkzeug.filesystem": {
+        "bacon": 2,
+        "imported_by": [
+            "werkzeug.datastructures",
+            "werkzeug.debug.tbtools",
+            "werkzeug.middleware.shared_data"
+        ],
+        "name": "werkzeug.filesystem",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\werkzeug\\filesystem.py"
+    },
+    "werkzeug.formparser": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "werkzeug.wrappers.Request",
+            "werkzeug.wrappers.request"
+        ],
+        "imports": [
+            "_typeshed.wsgi",
+            "werkzeug",
+            "werkzeug._internal",
+            "werkzeug.datastructures",
+            "werkzeug.exceptions",
+            "werkzeug.http",
+            "werkzeug.sansio",
+            "werkzeug.sansio.multipart",
+            "werkzeug.urls",
+            "werkzeug.wsgi"
+        ],
+        "name": "werkzeug.formparser",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\werkzeug\\formparser.py"
+    },
+    "werkzeug.http": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "flask.json",
+            "flask.json.tag",
+            "werkzeug.datastructures",
+            "werkzeug.debug",
+            "werkzeug.exceptions",
+            "werkzeug.formparser",
+            "werkzeug.middleware.shared_data",
+            "werkzeug.sansio.multipart",
+            "werkzeug.sansio.request",
+            "werkzeug.sansio.response",
+            "werkzeug.test",
+            "werkzeug.wrappers.Response",
+            "werkzeug.wrappers.response"
+        ],
+        "imports": [
+            "_typeshed.wsgi",
+            "typing_extensions",
+            "werkzeug",
+            "werkzeug._internal",
+            "werkzeug.datastructures",
+            "werkzeug.urls"
+        ],
+        "name": "werkzeug.http",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\werkzeug\\http.py"
+    },
+    "werkzeug.local": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "flask.app",
+            "flask.globals",
+            "flask.logging",
+            "werkzeug.debug.console"
+        ],
+        "imports": [
+            "_typeshed.wsgi",
+            "gevent.monkey",
+            "greenlet",
+            "werkzeug.wsgi"
+        ],
+        "name": "werkzeug.local",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\werkzeug\\local.py"
+    },
+    "werkzeug.middleware": {
+        "bacon": 2,
+        "imported_by": [
+            "werkzeug.serving"
+        ],
+        "name": "werkzeug.middleware",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\werkzeug\\middleware\\__init__.py"
+    },
+    "werkzeug.middleware.shared_data": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "werkzeug.serving"
+        ],
+        "imports": [
+            "_typeshed.wsgi",
+            "werkzeug.filesystem",
+            "werkzeug.http",
+            "werkzeug.security",
+            "werkzeug.utils",
+            "werkzeug.wsgi"
+        ],
+        "name": "werkzeug.middleware.shared_data",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\werkzeug\\middleware\\shared_data.py"
+    },
+    "werkzeug.routing": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "flask.app",
+            "flask.helpers",
+            "flask.wrappers"
+        ],
+        "imports": [
+            "_typeshed.wsgi",
+            "typing_extensions",
+            "werkzeug._internal",
+            "werkzeug.datastructures",
+            "werkzeug.exceptions",
+            "werkzeug.urls",
+            "werkzeug.utils",
+            "werkzeug.wrappers",
+            "werkzeug.wrappers.response",
+            "werkzeug.wsgi"
+        ],
+        "name": "werkzeug.routing",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\werkzeug\\routing.py"
+    },
+    "werkzeug.sansio": {
+        "bacon": 2,
+        "imported_by": [
+            "werkzeug.exceptions",
+            "werkzeug.formparser",
+            "werkzeug.test",
+            "werkzeug.wrappers.Request",
+            "werkzeug.wrappers.Response",
+            "werkzeug.wrappers.request",
+            "werkzeug.wrappers.response",
+            "werkzeug.wsgi"
+        ],
+        "name": "werkzeug.sansio",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\werkzeug\\sansio\\__init__.py"
+    },
+    "werkzeug.sansio.multipart": {
+        "bacon": 2,
+        "imported_by": [
+            "werkzeug.formparser",
+            "werkzeug.test"
+        ],
+        "imports": [
+            "werkzeug._internal",
+            "werkzeug.datastructures",
+            "werkzeug.exceptions",
+            "werkzeug.http"
+        ],
+        "name": "werkzeug.sansio.multipart",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\werkzeug\\sansio\\multipart.py"
+    },
+    "werkzeug.sansio.request": {
+        "bacon": 2,
+        "imported_by": [
+            "werkzeug.wrappers.Request",
+            "werkzeug.wrappers.request"
+        ],
+        "imports": [
+            "werkzeug._internal",
+            "werkzeug.datastructures",
+            "werkzeug.http",
+            "werkzeug.sansio.utils",
+            "werkzeug.urls",
+            "werkzeug.user_agent",
+            "werkzeug.useragents",
+            "werkzeug.utils"
+        ],
+        "name": "werkzeug.sansio.request",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\werkzeug\\sansio\\request.py"
+    },
+    "werkzeug.sansio.response": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "werkzeug.exceptions",
+            "werkzeug.wrappers.Response",
+            "werkzeug.wrappers.response"
+        ],
+        "imports": [
+            "http.HTTPStatus",
+            "werkzeug",
+            "werkzeug._internal",
+            "werkzeug.datastructures",
+            "werkzeug.http",
+            "werkzeug.utils"
+        ],
+        "name": "werkzeug.sansio.response",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\werkzeug\\sansio\\response.py"
+    },
+    "werkzeug.sansio.utils": {
+        "bacon": 2,
+        "imported_by": [
+            "werkzeug.sansio.request",
+            "werkzeug.wsgi"
+        ],
+        "imports": [
+            "werkzeug._internal",
+            "werkzeug.exceptions",
+            "werkzeug.urls"
+        ],
+        "name": "werkzeug.sansio.utils",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\werkzeug\\sansio\\utils.py"
+    },
+    "werkzeug.security": {
+        "bacon": 2,
+        "imported_by": [
+            "werkzeug.debug",
+            "werkzeug.middleware.shared_data",
+            "werkzeug.utils"
+        ],
+        "name": "werkzeug.security",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\werkzeug\\security.py"
+    },
+    "werkzeug.serving": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "flask.app",
+            "flask.cli",
+            "werkzeug"
+        ],
+        "imports": [
+            "_typeshed.wsgi",
+            "cryptography",
+            "cryptography.hazmat.backends",
+            "cryptography.hazmat.primitives",
+            "cryptography.hazmat.primitives.asymmetric",
+            "cryptography.hazmat.primitives.asymmetric.rsa",
+            "cryptography.x509",
+            "cryptography.x509.oid",
+            "debug.DebuggedApplication",
+            "typing_extensions",
+            "werkzeug",
+            "werkzeug.__version__",
+            "werkzeug._internal",
+            "werkzeug._reloader",
+            "werkzeug.debug",
+            "werkzeug.debug.tbtools",
+            "werkzeug.exceptions",
+            "werkzeug.middleware",
+            "werkzeug.middleware.shared_data",
+            "werkzeug.urls",
+            "werkzeug.utils"
+        ],
+        "name": "werkzeug.serving",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\werkzeug\\serving.py"
+    },
+    "werkzeug.test": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "flask.testing",
+            "werkzeug",
+            "werkzeug.wrappers.Request",
+            "werkzeug.wrappers.Response",
+            "werkzeug.wrappers.request",
+            "werkzeug.wrappers.response"
+        ],
+        "imports": [
+            "_typeshed.wsgi",
+            "collections.defaultdict",
+            "werkzeug._internal",
+            "werkzeug.datastructures",
+            "werkzeug.http",
+            "werkzeug.sansio",
+            "werkzeug.sansio.multipart",
+            "werkzeug.urls",
+            "werkzeug.utils",
+            "werkzeug.wrappers",
+            "werkzeug.wrappers.request",
+            "werkzeug.wrappers.response",
+            "werkzeug.wsgi"
+        ],
+        "name": "werkzeug.test",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\werkzeug\\test.py"
+    },
+    "werkzeug.urls": {
+        "bacon": 2,
+        "imported_by": [
+            "flask.helpers",
+            "flask.testing",
+            "werkzeug.formparser",
+            "werkzeug.http",
+            "werkzeug.routing",
+            "werkzeug.sansio.request",
+            "werkzeug.sansio.utils",
+            "werkzeug.serving",
+            "werkzeug.test",
+            "werkzeug.utils",
+            "werkzeug.wrappers.Response",
+            "werkzeug.wrappers.response",
+            "werkzeug.wsgi"
+        ],
+        "imports": [
+            "werkzeug",
+            "werkzeug._internal",
+            "werkzeug.datastructures",
+            "werkzeug.wsgi"
+        ],
+        "name": "werkzeug.urls",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\werkzeug\\urls.py"
+    },
+    "werkzeug.user_agent": {
+        "bacon": 2,
+        "imported_by": [
+            "werkzeug.sansio.request",
+            "werkzeug.useragents"
+        ],
+        "name": "werkzeug.user_agent",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\werkzeug\\user_agent.py"
+    },
+    "werkzeug.useragents": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "werkzeug.sansio.request"
+        ],
+        "imports": [
+            "_typeshed.wsgi",
+            "werkzeug.user_agent"
+        ],
+        "name": "werkzeug.useragents",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\werkzeug\\useragents.py"
+    },
+    "werkzeug.utils": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "flask",
+            "flask.cli",
+            "flask.config",
+            "flask.helpers",
+            "werkzeug.debug.tbtools",
+            "werkzeug.middleware.shared_data",
+            "werkzeug.routing",
+            "werkzeug.sansio.request",
+            "werkzeug.sansio.response",
+            "werkzeug.serving",
+            "werkzeug.test",
+            "werkzeug.wrappers.Request",
+            "werkzeug.wrappers.Response",
+            "werkzeug.wrappers.request",
+            "werkzeug.wrappers.response"
+        ],
+        "imports": [
+            "_typeshed.wsgi",
+            "werkzeug._internal",
+            "werkzeug.datastructures",
+            "werkzeug.exceptions",
+            "werkzeug.security",
+            "werkzeug.urls",
+            "werkzeug.wrappers",
+            "werkzeug.wrappers.Response",
+            "werkzeug.wrappers.request",
+            "werkzeug.wrappers.response",
+            "werkzeug.wsgi"
+        ],
+        "name": "werkzeug.utils",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\werkzeug\\utils.py"
+    },
+    "werkzeug.wrappers": {
+        "bacon": 2,
+        "imported_by": [
+            "flask.app",
+            "flask.testing",
+            "flask.wrappers",
+            "werkzeug",
+            "werkzeug._internal",
+            "werkzeug.debug",
+            "werkzeug.exceptions",
+            "werkzeug.routing",
+            "werkzeug.test",
+            "werkzeug.utils"
+        ],
+        "imports": [
+            "werkzeug.wrappers.accept",
+            "werkzeug.wrappers.auth",
+            "werkzeug.wrappers.base_request",
+            "werkzeug.wrappers.base_response",
+            "werkzeug.wrappers.common_descriptors",
+            "werkzeug.wrappers.etag",
+            "werkzeug.wrappers.request",
+            "werkzeug.wrappers.response",
+            "werkzeug.wrappers.user_agent"
+        ],
+        "name": "werkzeug.wrappers",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\werkzeug\\wrappers\\__init__.py"
+    },
+    "werkzeug.wrappers.Request": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "flask.testing",
+            "flask.wrappers",
+            "werkzeug"
+        ],
+        "imports": [
+            "_typeshed.wsgi",
+            "typing_extensions",
+            "werkzeug",
+            "werkzeug._internal",
+            "werkzeug.datastructures",
+            "werkzeug.exceptions",
+            "werkzeug.formparser",
+            "werkzeug.sansio",
+            "werkzeug.sansio.request",
+            "werkzeug.test",
+            "werkzeug.utils",
+            "werkzeug.wsgi"
+        ],
+        "name": "werkzeug.wrappers.Request",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\werkzeug\\wrappers\\Request.py"
+    },
+    "werkzeug.wrappers.Response": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "flask.app",
+            "flask.wrappers",
+            "werkzeug",
+            "werkzeug.utils"
+        ],
+        "imports": [
+            "_typeshed.wsgi",
+            "http.HTTPStatus",
+            "typing_extensions",
+            "werkzeug",
+            "werkzeug._internal",
+            "werkzeug.datastructures",
+            "werkzeug.exceptions",
+            "werkzeug.http",
+            "werkzeug.sansio",
+            "werkzeug.sansio.response",
+            "werkzeug.test",
+            "werkzeug.urls",
+            "werkzeug.utils",
+            "werkzeug.wsgi"
+        ],
+        "name": "werkzeug.wrappers.Response",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\werkzeug\\wrappers\\Response.py"
+    },
+    "werkzeug.wrappers.accept": {
+        "bacon": 3,
+        "imported_by": [
+            "werkzeug.wrappers"
+        ],
+        "name": "werkzeug.wrappers.accept",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\werkzeug\\wrappers\\accept.py"
+    },
+    "werkzeug.wrappers.auth": {
+        "bacon": 3,
+        "imported_by": [
+            "werkzeug.wrappers"
+        ],
+        "name": "werkzeug.wrappers.auth",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\werkzeug\\wrappers\\auth.py"
+    },
+    "werkzeug.wrappers.base_request": {
+        "bacon": 3,
+        "imported_by": [
+            "werkzeug.wrappers"
+        ],
+        "imports": [
+            "werkzeug.wrappers.request"
+        ],
+        "name": "werkzeug.wrappers.base_request",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\werkzeug\\wrappers\\base_request.py"
+    },
+    "werkzeug.wrappers.base_response": {
+        "bacon": 3,
+        "imported_by": [
+            "werkzeug.wrappers"
+        ],
+        "imports": [
+            "werkzeug.wrappers.response"
+        ],
+        "name": "werkzeug.wrappers.base_response",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\werkzeug\\wrappers\\base_response.py"
+    },
+    "werkzeug.wrappers.common_descriptors": {
+        "bacon": 3,
+        "imported_by": [
+            "werkzeug.wrappers"
+        ],
+        "name": "werkzeug.wrappers.common_descriptors",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\werkzeug\\wrappers\\common_descriptors.py"
+    },
+    "werkzeug.wrappers.etag": {
+        "bacon": 3,
+        "imported_by": [
+            "werkzeug.wrappers"
+        ],
+        "name": "werkzeug.wrappers.etag",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\werkzeug\\wrappers\\etag.py"
+    },
+    "werkzeug.wrappers.request": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "werkzeug._internal",
+            "werkzeug.debug",
+            "werkzeug.test",
+            "werkzeug.utils",
+            "werkzeug.wrappers",
+            "werkzeug.wrappers.base_request"
+        ],
+        "imports": [
+            "_typeshed.wsgi",
+            "typing_extensions",
+            "werkzeug",
+            "werkzeug._internal",
+            "werkzeug.datastructures",
+            "werkzeug.exceptions",
+            "werkzeug.formparser",
+            "werkzeug.sansio",
+            "werkzeug.sansio.request",
+            "werkzeug.test",
+            "werkzeug.utils",
+            "werkzeug.wsgi"
+        ],
+        "name": "werkzeug.wrappers.request",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\werkzeug\\wrappers\\request.py"
+    },
+    "werkzeug.wrappers.response": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "werkzeug.debug",
+            "werkzeug.exceptions",
+            "werkzeug.routing",
+            "werkzeug.test",
+            "werkzeug.utils",
+            "werkzeug.wrappers",
+            "werkzeug.wrappers.base_response"
+        ],
+        "imports": [
+            "_typeshed.wsgi",
+            "http.HTTPStatus",
+            "typing_extensions",
+            "werkzeug",
+            "werkzeug._internal",
+            "werkzeug.datastructures",
+            "werkzeug.exceptions",
+            "werkzeug.http",
+            "werkzeug.sansio",
+            "werkzeug.sansio.response",
+            "werkzeug.test",
+            "werkzeug.urls",
+            "werkzeug.utils",
+            "werkzeug.wsgi"
+        ],
+        "name": "werkzeug.wrappers.response",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\werkzeug\\wrappers\\response.py"
+    },
+    "werkzeug.wrappers.user_agent": {
+        "bacon": 3,
+        "imported_by": [
+            "werkzeug.wrappers"
+        ],
+        "name": "werkzeug.wrappers.user_agent",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\werkzeug\\wrappers\\user_agent.py"
+    },
+    "werkzeug.wsgi": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "werkzeug.formparser",
+            "werkzeug.local",
+            "werkzeug.middleware.shared_data",
+            "werkzeug.routing",
+            "werkzeug.test",
+            "werkzeug.urls",
+            "werkzeug.utils",
+            "werkzeug.wrappers.Request",
+            "werkzeug.wrappers.Response",
+            "werkzeug.wrappers.request",
+            "werkzeug.wrappers.response"
+        ],
+        "imports": [
+            "_typeshed.wsgi",
+            "werkzeug._internal",
+            "werkzeug.exceptions",
+            "werkzeug.sansio",
+            "werkzeug.sansio.utils",
+            "werkzeug.urls"
+        ],
+        "name": "werkzeug.wsgi",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\werkzeug\\wsgi.py"
+    },
+    "zipp": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "importlib_metadata"
+        ],
+        "imports": [
+            "collections.OrderedDict"
+        ],
+        "name": "zipp",
+        "path": "C:\\Users\\POLYGONTeam\\Envs\\docs\\lib\\site-packages\\zipp.py"
+    },
+    "zone": {
+        "bacon": 2,
+        "imported_by": [
+            "main"
+        ],
+        "imports": [
+            "bg_erp",
+            "bg_erp.bg_erp",
+            "bg_erp.erp_state",
+            "controllers",
+            "controllers.controller_factory",
+            "data",
+            "data.register",
+            "data.registers",
+            "plugins",
+            "plugins.plugins_manager",
+            "services",
+            "services.evok",
+            "services.evok.settings",
+            "services.global_error_handler",
+            "services.global_error_handler.global_error_handler",
+            "utils",
+            "utils.logger",
+            "utils.logic",
+            "utils.logic.state_machine",
+            "utils.logic.timer",
+            "utils.performance_profiler",
+            "utils.settings",
+            "utils.updater"
+        ],
+        "name": "zone",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\zone.py"
+    }
+}

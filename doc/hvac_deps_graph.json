@@ -1,0 +1,446 @@
+{
+    "__main__": {
+        "bacon": 0,
+        "imports": [
+            "devices.vendors.hangzhou_airflow_electric_applications.f3p146ec072600.f3p146ec072600",
+            "plugins",
+            "plugins.hvac",
+            "plugins.hvac.hvac",
+            "plugins.hvac.zone"
+        ],
+        "name": "__main__",
+        "path": null
+    },
+    "collections.deque": {
+        "bacon": 2,
+        "imported_by": [
+            "plugins.hvac.zone"
+        ],
+        "name": "collections.deque",
+        "path": null
+    },
+    "data": {
+        "bacon": 2,
+        "imported_by": [
+            "data.registers",
+            "devices.tests.electrical_performance.electrical_performance",
+            "plugins.hvac.zone",
+            "services.global_error_handler.global_error_handler"
+        ],
+        "name": "data",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\data\\__init__.py"
+    },
+    "data.register": {
+        "bacon": 3,
+        "imported_by": [
+            "data.registers",
+            "services.global_error_handler.global_error_handler"
+        ],
+        "name": "data.register",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\data\\register.py"
+    },
+    "data.registers": {
+        "bacon": 3,
+        "imported_by": [
+            "devices.tests.electrical_performance.electrical_performance"
+        ],
+        "imports": [
+            "data",
+            "data.register",
+            "services",
+            "services.global_error_handler",
+            "services.global_error_handler.global_error_handler",
+            "utils",
+            "utils.logger"
+        ],
+        "name": "data.registers",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\data\\registers.py"
+    },
+    "data.thermal_mode": {
+        "bacon": 2,
+        "imported_by": [
+            "plugins.hvac.zone"
+        ],
+        "name": "data.thermal_mode",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\data\\thermal_mode.py"
+    },
+    "data.verbal_const": {
+        "bacon": 2,
+        "imported_by": [
+            "plugins.hvac.zone"
+        ],
+        "name": "data.verbal_const",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\data\\verbal_const.py"
+    },
+    "devices": {
+        "bacon": 2,
+        "imported_by": [
+            "devices.tests.electrical_performance.electrical_performance",
+            "devices.vendors.hangzhou_airflow_electric_applications.f3p146ec072600.f3p146ec072600",
+            "plugins.hvac.zone"
+        ],
+        "name": "devices",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\devices\\__init__.py"
+    },
+    "devices.factories.convectors.convectors_factory": {
+        "bacon": 2,
+        "imported_by": [
+            "plugins.hvac.zone"
+        ],
+        "name": "devices.factories.convectors.convectors_factory",
+        "path": null
+    },
+    "devices.factories.fans.base_fan": {
+        "bacon": 2,
+        "imported_by": [
+            "devices.vendors.hangzhou_airflow_electric_applications.f3p146ec072600.f3p146ec072600"
+        ],
+        "name": "devices.factories.fans.base_fan",
+        "path": null
+    },
+    "devices.factories.flowmeters.flowmeters_factory": {
+        "bacon": 2,
+        "imported_by": [
+            "plugins.hvac.zone"
+        ],
+        "name": "devices.factories.flowmeters.flowmeters_factory",
+        "path": null
+    },
+    "devices.factories.thermometers.thermometers_factory": {
+        "bacon": 2,
+        "imported_by": [
+            "plugins.hvac.zone"
+        ],
+        "name": "devices.factories.thermometers.thermometers_factory",
+        "path": null
+    },
+    "devices.factories.valve.valve_factory": {
+        "bacon": 2,
+        "imported_by": [
+            "plugins.hvac.zone"
+        ],
+        "name": "devices.factories.valve.valve_factory",
+        "path": null
+    },
+    "devices.tests": {
+        "bacon": 2,
+        "imported_by": [
+            "plugins.hvac.zone"
+        ],
+        "name": "devices.tests",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\devices\\tests\\__init__.py"
+    },
+    "devices.tests.electrical_performance": {
+        "bacon": 2,
+        "imported_by": [
+            "plugins.hvac.zone"
+        ],
+        "name": "devices.tests.electrical_performance",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\devices\\tests\\electrical_performance\\__init__.py"
+    },
+    "devices.tests.electrical_performance.electrical_performance": {
+        "bacon": 2,
+        "imported_by": [
+            "plugins.hvac.zone"
+        ],
+        "imports": [
+            "data",
+            "data.registers",
+            "devices",
+            "devices.vendors",
+            "devices.vendors.hangzhou_airflow_electric_applications",
+            "devices.vendors.hangzhou_airflow_electric_applications.f3p146ec072600",
+            "devices.vendors.hangzhou_airflow_electric_applications.f3p146ec072600.f3p146ec072600",
+            "utils",
+            "utils.logic",
+            "utils.logic.state_machine",
+            "utils.logic.timer"
+        ],
+        "name": "devices.tests.electrical_performance.electrical_performance",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\devices\\tests\\electrical_performance\\electrical_performance.py"
+    },
+    "devices.tests.leak_test": {
+        "bacon": 2,
+        "imported_by": [
+            "plugins.hvac.zone"
+        ],
+        "name": "devices.tests.leak_test",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\devices\\tests\\leak_test\\__init__.py"
+    },
+    "devices.tests.leak_test.leak_test": {
+        "bacon": 2,
+        "imported_by": [
+            "plugins.hvac.zone"
+        ],
+        "imports": [
+            "utils",
+            "utils.logic",
+            "utils.logic.state_machine",
+            "utils.logic.timer"
+        ],
+        "name": "devices.tests.leak_test.leak_test",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\devices\\tests\\leak_test\\leak_test.py"
+    },
+    "devices.vendors": {
+        "bacon": 3,
+        "imported_by": [
+            "devices.tests.electrical_performance.electrical_performance"
+        ],
+        "name": "devices.vendors",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\devices\\vendors\\__init__.py"
+    },
+    "devices.vendors.hangzhou_airflow_electric_applications": {
+        "bacon": 3,
+        "imported_by": [
+            "devices.tests.electrical_performance.electrical_performance"
+        ],
+        "name": "devices.vendors.hangzhou_airflow_electric_applications",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\devices\\vendors\\hangzhou_airflow_electric_applications\\__init__.py"
+    },
+    "devices.vendors.hangzhou_airflow_electric_applications.f3p146ec072600": {
+        "bacon": 3,
+        "imported_by": [
+            "devices.tests.electrical_performance.electrical_performance"
+        ],
+        "name": "devices.vendors.hangzhou_airflow_electric_applications.f3p146ec072600",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\devices\\vendors\\hangzhou_airflow_electric_applications\\f3p146ec072600\\__init__.py"
+    },
+    "devices.vendors.hangzhou_airflow_electric_applications.f3p146ec072600.f3p146ec072600": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "devices.tests.electrical_performance.electrical_performance"
+        ],
+        "imports": [
+            "devices",
+            "devices.factories.fans.base_fan",
+            "utils",
+            "utils.logger"
+        ],
+        "name": "devices.vendors.hangzhou_airflow_electric_applications.f3p146ec072600.f3p146ec072600",
+        "path": null
+    },
+    "plugins": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "plugins.hvac.hvac",
+            "plugins.hvac.zone"
+        ],
+        "name": "plugins",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\plugins\\__init__.py"
+    },
+    "plugins.base_plugin": {
+        "bacon": 2,
+        "imported_by": [
+            "plugins.hvac.hvac",
+            "plugins.hvac.zone"
+        ],
+        "imports": [
+            "utils",
+            "utils.configuarable",
+            "utils.logger"
+        ],
+        "name": "plugins.base_plugin",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\plugins\\base_plugin.py"
+    },
+    "plugins.hvac": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "plugins.hvac.hvac"
+        ],
+        "name": "plugins.hvac",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\plugins\\hvac\\__init__.py"
+    },
+    "plugins.hvac.hvac": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__"
+        ],
+        "imports": [
+            "plugins",
+            "plugins.base_plugin",
+            "plugins.hvac",
+            "plugins.hvac.zone",
+            "utils",
+            "utils.logger"
+        ],
+        "name": "plugins.hvac.hvac",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\plugins\\hvac\\hvac.py"
+    },
+    "plugins.hvac.zone": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "plugins.hvac.hvac"
+        ],
+        "imports": [
+            "collections.deque",
+            "data",
+            "data.thermal_mode",
+            "data.verbal_const",
+            "devices",
+            "devices.factories.convectors.convectors_factory",
+            "devices.factories.flowmeters.flowmeters_factory",
+            "devices.factories.thermometers.thermometers_factory",
+            "devices.factories.valve.valve_factory",
+            "devices.tests",
+            "devices.tests.electrical_performance",
+            "devices.tests.electrical_performance.electrical_performance",
+            "devices.tests.leak_test",
+            "devices.tests.leak_test.leak_test",
+            "plugins",
+            "plugins.base_plugin",
+            "services",
+            "services.global_error_handler",
+            "services.global_error_handler.global_error_handler",
+            "utils",
+            "utils.logger",
+            "utils.logic",
+            "utils.logic.functions",
+            "utils.logic.state_machine",
+            "utils.logic.temp_processor",
+            "utils.logic.timer"
+        ],
+        "name": "plugins.hvac.zone",
+        "path": null
+    },
+    "services": {
+        "bacon": 2,
+        "imported_by": [
+            "data.registers",
+            "plugins.hvac.zone",
+            "services.global_error_handler.global_error_handler"
+        ],
+        "name": "services",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\services\\__init__.py"
+    },
+    "services.global_error_handler": {
+        "bacon": 2,
+        "imported_by": [
+            "data.registers",
+            "plugins.hvac.zone",
+            "services.global_error_handler.global_error_handler"
+        ],
+        "name": "services.global_error_handler",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\services\\global_error_handler\\__init__.py"
+    },
+    "services.global_error_handler.error_codes": {
+        "bacon": 3,
+        "imported_by": [
+            "services.global_error_handler.global_error_handler"
+        ],
+        "name": "services.global_error_handler.error_codes",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\services\\global_error_handler\\error_codes.py"
+    },
+    "services.global_error_handler.global_error_handler": {
+        "bacon": 2,
+        "imported_by": [
+            "data.registers",
+            "plugins.hvac.zone"
+        ],
+        "imports": [
+            "data",
+            "data.register",
+            "services",
+            "services.global_error_handler",
+            "services.global_error_handler.error_codes"
+        ],
+        "name": "services.global_error_handler.global_error_handler",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\services\\global_error_handler\\global_error_handler.py"
+    },
+    "utils": {
+        "bacon": 2,
+        "imported_by": [
+            "data.registers",
+            "devices.tests.electrical_performance.electrical_performance",
+            "devices.tests.leak_test.leak_test",
+            "devices.vendors.hangzhou_airflow_electric_applications.f3p146ec072600.f3p146ec072600",
+            "plugins.base_plugin",
+            "plugins.hvac.hvac",
+            "plugins.hvac.zone",
+            "utils.logger"
+        ],
+        "name": "utils",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\utils\\__init__.py"
+    },
+    "utils.configuarable": {
+        "bacon": 3,
+        "imported_by": [
+            "plugins.base_plugin"
+        ],
+        "name": "utils.configuarable",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\utils\\configuarable.py"
+    },
+    "utils.logger": {
+        "bacon": 2,
+        "imported_by": [
+            "data.registers",
+            "devices.vendors.hangzhou_airflow_electric_applications.f3p146ec072600.f3p146ec072600",
+            "plugins.base_plugin",
+            "plugins.hvac.hvac",
+            "plugins.hvac.zone"
+        ],
+        "imports": [
+            "utils",
+            "utils.settings"
+        ],
+        "name": "utils.logger",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\utils\\logger.py"
+    },
+    "utils.logic": {
+        "bacon": 2,
+        "imported_by": [
+            "devices.tests.electrical_performance.electrical_performance",
+            "devices.tests.leak_test.leak_test",
+            "plugins.hvac.zone"
+        ],
+        "name": "utils.logic",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\utils\\logic\\__init__.py"
+    },
+    "utils.logic.functions": {
+        "bacon": 2,
+        "imported_by": [
+            "plugins.hvac.zone"
+        ],
+        "name": "utils.logic.functions",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\utils\\logic\\functions.py"
+    },
+    "utils.logic.state_machine": {
+        "bacon": 2,
+        "imported_by": [
+            "devices.tests.electrical_performance.electrical_performance",
+            "devices.tests.leak_test.leak_test",
+            "plugins.hvac.zone"
+        ],
+        "name": "utils.logic.state_machine",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\utils\\logic\\state_machine.py"
+    },
+    "utils.logic.temp_processor": {
+        "bacon": 2,
+        "imported_by": [
+            "plugins.hvac.zone"
+        ],
+        "name": "utils.logic.temp_processor",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\utils\\logic\\temp_processor.py"
+    },
+    "utils.logic.timer": {
+        "bacon": 2,
+        "imported_by": [
+            "devices.tests.electrical_performance.electrical_performance",
+            "devices.tests.leak_test.leak_test",
+            "plugins.hvac.zone"
+        ],
+        "name": "utils.logic.timer",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\utils\\logic\\timer.py"
+    },
+    "utils.settings": {
+        "bacon": 3,
+        "imported_by": [
+            "utils.logger"
+        ],
+        "name": "utils.settings",
+        "path": "C:\\Users\\POLYGONTeam\\Documents\\Git\\zontromat\\Zontromat\\utils\\settings.py"
+    }
+}
