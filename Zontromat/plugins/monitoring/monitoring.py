@@ -293,7 +293,7 @@ class Monitoring(BasePlugin):
 
         request = self.__power_analyser.generate_request(name)
         if request is not None:
-            response = self._controller.execute_mb_request(request)
+            response = self._controller.execute_mb_request(request, self.__power_analyser.uart)
             if not response.isError():
                 registers = {}
                 for index in range(request.address, request.address + request.count):
