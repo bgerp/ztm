@@ -14,7 +14,10 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 """
+
+from utils.logger import get_logger
 
 from devices.drivers.modbus.device import ModbusDevice
 from devices.drivers.modbus.parameter import Parameter
@@ -22,6 +25,8 @@ from devices.drivers.modbus.parameter_type import ParameterType
 from devices.drivers.modbus.register_type import RegisterType
 
 # (Request from mail: Eml6429)
+
+from services.global_error_handler.global_error_handler import GlobalErrorHandler
 
 #region File Attributes
 
@@ -54,12 +59,28 @@ __status__ = "Debug"
 
 #endregion
 
-class USHM(ModbusDevice):
+class USHMInlet(ModbusDevice):
     """Mainone - Ultrasonic Heat Metter.
     https://shmw1688.en.alibaba.com/product/62524917832-815102973/Supply_low_power_high_accuracy_ultrasonic_heat_meter_M_BUS_RS_485_NB_IOT_LoRa_wan_pulse_heat_output_brass_heat_meter.html?spm=a2700.shop_index.92937.6.6e3231d4ZOZIQX
     """
 
 #region Attributes
+
+    __logger = None
+    """Logger
+    """
+
+    __last_good_measurement = 0
+    """Last good known value from the thermometer.
+    """
+
+    __unsuccessful_times = 0
+    """Unsuccessful times counter.
+    """
+
+    __unsuccessful_times_limit = 5
+    """Unrestful times limit counter.
+    """
 
 #endregion
 
@@ -71,18 +92,64 @@ class USHM(ModbusDevice):
 
         super().__init__(config)
 
+        # Create logger.
+        self.__logger = get_logger(__name__)
+
         self._vendor = "Mainone"
 
-        self._model = "USHM"
+        self._model = "USHMInlet"
 
         self._parameters.append(
             Parameter(
                 "AccumulateHeatEnergy",
                 "kWh",
-                ParameterType.FLOAT,
+                ParameterType.UINT32_T,
                 [0, 1],
-                RegisterType.ReadCoil
+                RegisterType.ReadHoldingRegisters
             )
         )
 
 #endregion
+
+    def get_temp(self):
+        """Get temperature.
+
+        Returns:
+            float: Value of the temperature.
+        """
+
+        value = 0.0
+
+        # TODO: Split the device.
+
+        try:
+            request = self.generate_request("AccumulateHeatEnergy")
+            response = self._controller.execute_mb_request(request, self.uart)
+            if response is not None:
+                if not response.isError():
+                    value = response.registers[0] / 10
+
+                    # Dump good value.
+                    self.__last_good_measurement = value
+
+                    # Reset the counter.
+                    self.__unsuccessful_times = 0
+
+                else:
+                    self.__unsuccessful_times += 1
+                    value = self.__last_good_measurement
+
+            else:
+                self.__unsuccessful_times += 1
+                value = self.__last_good_measurement
+
+        except Exception:
+            self.__unsuccessful_times += 1
+            value = self.__last_good_measurement
+
+        if self.__unsuccessful_times >= self.__unsuccessful_times_limit:
+            GlobalErrorHandler.log_hardware_malfunction(
+                self.__logger, "Device: {}; ID: {}; Can not read the temperature value.".format(
+                    self.name, request.unit_id))
+
+        return value
