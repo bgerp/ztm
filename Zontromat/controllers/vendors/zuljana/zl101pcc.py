@@ -224,55 +224,6 @@ class ZL101PCC(BaseController):
 
 #region Private Methods
 
-    def __get_posix_machine_id(self):
-
-        # https://askubuntu.com/questions/1200357/an-unique-key-id-that-corresponds-to-only-one-combination-of-ubuntu-os-and-hardw
-
-        machine_id = ""
-
-        try:
-            machine_id = os.popen("cat /etc/machine-id").read().split()[-1]
-
-        except Exception:
-            pass
-
-        return machine_id
-
-    def __get_posix_uuid(self):
-
-        uuid = ""
-
-        # First try.
-        if uuid == "":
-            try:
-                import dmidecode
-                system = dmidecode.system()
-                for key in system:
-                    try:
-                        uuid = system[key]['data']['UUID']
-
-                    except(IndexError, KeyError):
-                        continue
-
-            except Exception:
-                uuid = ""
-                pass
-
-        # Second try
-        if uuid == "":
-            try:
-                uuid = os.popen("dmidecode | grep -i uuid").read().split()[-1]
-
-            except Exception:
-                uuid = ""
-                pass
-
-        # If bytes then covert to string.
-        if isinstance(uuid, bytes):
-            uuid = uuid.decode('utf-8')
-
-        return uuid
-
     def __get_hardware_id(self):
 
         uuid = ""
@@ -290,10 +241,12 @@ class ZL101PCC(BaseController):
 
         elif "posix" in os.name:
 
-            # uuid = self.__get_posix_uuid()
-            uuid = self.__get_posix_machine_id()
+            # https://askubuntu.com/questions/1200357/an-unique-key-id-that-corresponds-to-only-one-combination-of-ubuntu-os-and-hardw
+            try:
+                uuid = os.popen("cat /etc/machine-id").read().split()[-1]
 
-
+            except Exception:
+                pass
 
         return uuid
 
@@ -361,6 +314,10 @@ class ZL101PCC(BaseController):
 
             remote_gpio = self.parse_remote_gpio(pin)
 
+            if not remote_gpio["uart"] in self.__modbus_rtu_clients:
+                GlobalErrorHandler.log_missing_resource("Missing MODBUS-RTU UART{} interface".format(remote_gpio["uart"]))
+                return False
+
             read_response = self.self.__modbus_rtu_clients[remote_gpio["uart"]].read_discrete_inputs(
                 remote_gpio["io_reg"],
                 remote_gpio["io_index"]+1,
@@ -374,7 +331,7 @@ class ZL101PCC(BaseController):
                     response = not response
 
         else:
-            raise ValueError("Pin does not exists in pin map.")
+             GlobalErrorHandler.log_missing_resource("Pin does not exists in pin map.")
 
         return response
 
@@ -553,7 +510,7 @@ class ZL101PCC(BaseController):
 
         return state
 
-    def execute_mb_request(self, request, uarl):
+    def execute_mb_request(self, request, uart):
         """Execute modbus request.
 
         Args:
@@ -564,7 +521,7 @@ class ZL101PCC(BaseController):
         """
         response = None
 
-        if self.__modbus_rtu_client is not None:
-            response = self.__modbus_rtu_clients[0].execute(request)
+        if self.__modbus_rtu_clients is not None:
+            response = self.__modbus_rtu_clients[uart].execute(request)
 
         return response
