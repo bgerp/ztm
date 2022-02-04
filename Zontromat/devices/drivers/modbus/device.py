@@ -81,6 +81,10 @@ class ModbusDevice(BaseDevice):
     """Unit ID (MODBUS ID)
     """
 
+    _uart = 0
+    """UART (MODBUS serial interface)
+    """    
+
     #endregion
 
     #region Properties
@@ -129,6 +133,26 @@ class ModbusDevice(BaseDevice):
 
         self._unit = value
 
+    @property
+    def uart(self):
+        """UART (MODBUS serial interface)
+
+        Returns:
+            int: Index of the UART.
+        """
+
+        return self._uart
+
+    @uart.setter
+    def uart(self, value):
+        """UART (MODBUS serial interface)
+
+        Args:
+            value (int): Index of the UART.
+        """
+
+        self._uart = value
+
     #endregion
 
     #region Constructor
@@ -143,6 +167,10 @@ class ModbusDevice(BaseDevice):
 
         if "unit" in config:
             self._unit = config["unit"]
+
+        if "uart" in config:
+            self._uart = config["uart"]
+
 
     #endregion
 
