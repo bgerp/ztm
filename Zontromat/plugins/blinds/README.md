@@ -1,6 +1,6 @@
 # Dependency Graph
 
-![Dependency Graph](blinds.svg)
+![Dependency Graph](dep_graph.svg)
 
 # Registers
 

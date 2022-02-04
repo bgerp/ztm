@@ -1,6 +1,6 @@
 # Dependency Graph
 
-![Dependency Graph](ac.svg)
+![Dependency Graph](dep_graph.svg)
 
 # Registers
 

@@ -1,6 +1,6 @@
 # Dependency Graph
 
-![Dependency Graph](air_chambers.svg)
+![Dependency Graph](dep_graph.svg)
 
 # Registers
 
