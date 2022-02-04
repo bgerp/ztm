@@ -52,9 +52,6 @@ apt install net-tools -y
 # Install python env.
 apt install python3-pip -y
 
-# Install dmidecode.
-apt install python3-dmidecode -y
-
 # Install unclutter.
 apt install unclutter -y
 

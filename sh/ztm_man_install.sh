@@ -55,9 +55,6 @@ sudo apt install git -y
 # Install python env.
 sudo apt install python3-pip -y
 
-# Install dmidecode
-sudo apt install python3-dmidecode -y
-
 # Install unclutter 
 sudo apt install unclutter -y
 
