@@ -139,7 +139,7 @@ class BasePump(ModbusDevice):
 
         request = self.generate_request(name)
         if request is not None:
-            response = self._controller.execute_mb_request(request)
+            response = self._controller.execute_mb_request(request, self.uart)
             if not response.isError():
                 value = response.registers[0]
                 value = ControlMode(value)
@@ -162,7 +162,7 @@ class BasePump(ModbusDevice):
 
         request = self.generate_request(name, SetControlMode=mode.value)
         if request is not None:
-            response = self._controller.execute_mb_request(request)
+            response = self._controller.execute_mb_request(request, self.uart)
             if not response.isError():
                 registers = {}
                 for index in range(request.address, request.address + request.count):
@@ -184,7 +184,7 @@ class BasePump(ModbusDevice):
 
         request = self.generate_request(name)
         if request is not None:
-            response = self._controller.execute_mb_request(request)
+            response = self._controller.execute_mb_request(request, self.uart)
             if not response.isError():
                 value = response.registers[0] / 100
 
@@ -216,7 +216,7 @@ class BasePump(ModbusDevice):
 
         request = self.generate_request(name, SetSetpoint=temp_value)
         if request is not None:
-            response = self._controller.execute_mb_request(request)
+            response = self._controller.execute_mb_request(request, self.uart)
             if not response.isError():
                 registers = {}
                 for index in range(request.address, request.address + request.count):

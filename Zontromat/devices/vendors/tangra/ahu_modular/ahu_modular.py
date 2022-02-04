@@ -428,7 +428,7 @@ class AHUModular(ModbusDevice):
 
         try:
             request = self.generate_request("GlobalAlarm")
-            response = self._controller.execute_mb_request(request)
+            response = self._controller.execute_mb_request(request, self.uart)
             if response is not None:
                 if not response.isError():
                     value = response.registers[0] != 0
@@ -462,7 +462,7 @@ class AHUModular(ModbusDevice):
 
         try:
             request = self.generate_request("UnitStatus")
-            response = self._controller.execute_mb_request(request)
+            response = self._controller.execute_mb_request(request, self.uart)
             if response is not None:
                 if not response.isError():
                     value = response.registers[0]
@@ -494,10 +494,9 @@ class AHUModular(ModbusDevice):
 
         value = None
 
-
         try:
             request = self.generate_request("GetMode")
-            response = self._controller.execute_mb_request(request)
+            response = self._controller.execute_mb_request(request, self.uart)
             if response is not None:
                 if not response.isError():
                     value = response.registers[0]
@@ -567,7 +566,7 @@ class AHUModular(ModbusDevice):
 
         try:
             request = self.generate_request("FreshAir")
-            response = self._controller.execute_mb_request(request)
+            response = self._controller.execute_mb_request(request, self.uart)
             if response is not None:
                 if not response.isError():
                     value = response.registers[0]
@@ -654,10 +653,9 @@ class AHUModular(ModbusDevice):
 
         value = None
 
-
         try:
             request = self.generate_request("GetTemperatureSetpoint")
-            response = self._controller.execute_mb_request(request)
+            response = self._controller.execute_mb_request(request, self.uart)
             if response is not None:
                 if not response.isError():
                     value = response.registers[0]

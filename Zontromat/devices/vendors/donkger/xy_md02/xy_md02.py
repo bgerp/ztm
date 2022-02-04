@@ -163,9 +163,11 @@ class XYMD02(ModbusDevice):
 
         value = 0.0
 
+        # TODO: Split the device.
+
         try:
             request = self.generate_request("Temperature")
-            response = self._controller.execute_mb_request(request)
+            response = self._controller.execute_mb_request(request, self.uart)
             if response is not None:
                 if not response.isError():
                     value = response.registers[0] / 10
@@ -206,7 +208,7 @@ class XYMD02(ModbusDevice):
 
         try:
             request = self.generate_request("Humidity")
-            response = self._controller.execute_mb_request(request)
+            response = self._controller.execute_mb_request(request, self.uart)
             if response is not None:
                 if not response.isError():
                     value = response.registers[0] / 10
