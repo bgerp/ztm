@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from devices.vendors.dallas.ds18b20.ds18b20 import DS18B20
 from devices.vendors.sed_tronic.u1wtvs.u1wtvs import U1WTVS
 from devices.vendors.donkger.xy_md02.xy_md02 import XYMD02
+from devices.vendors.mainone.thermometer.ushm_inlet import USHMInlet
 
 #region File Attributes
 
@@ -123,7 +124,18 @@ class ThermometersFactory:
             device = XYMD02(
                 name=name,
                 controller=controller,
-                unit=config["options"]['mb_id']
+                unit=config["options"]['mb_id'],
+                uart=config["options"]['uart']
+            )
+
+        # Donkger / u1wtvs
+        elif vendor == "mainone" and model == "inlet_temp":
+
+            device = USHMInlet(
+                name=name,
+                controller=controller,
+                unit=config["options"]['mb_id'],
+                uart=config["options"]['uart']
             )
 
         else:
