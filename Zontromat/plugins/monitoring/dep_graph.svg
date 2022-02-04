@@ -14,15 +14,15 @@
 <polygon fill="none" stroke="black" points="8,-343.62 8,-418.62 154,-418.62 154,-343.62 8,-343.62"/>
 <text text-anchor="middle" x="81" y="-403.42" font-family="Times New Roman,serif" font-size="14.00">data</text>
 </g>
-<g id="clust2" class="cluster">
-<title>cluster_devices</title><style>.edge>path:hover{stroke-width:8}</style>
-<polygon fill="none" stroke="black" points="713,-209.64 713,-306.62 1708,-306.62 1708,-209.64 713,-209.64"/>
-<text text-anchor="middle" x="1210.5" y="-291.42" font-family="Times New Roman,serif" font-size="14.00">devices</text>
-</g>
 <g id="clust3" class="cluster">
 <title>cluster_plugins</title><style>.edge>path:hover{stroke-width:8}</style>
 <polygon fill="none" stroke="black" points="1668,-8 1668,-201.64 1776,-201.64 1776,-8 1668,-8"/>
 <text text-anchor="middle" x="1722" y="-186.44" font-family="Times New Roman,serif" font-size="14.00">plugins</text>
+</g>
+<g id="clust2" class="cluster">
+<title>cluster_devices</title><style>.edge>path:hover{stroke-width:8}</style>
+<polygon fill="none" stroke="black" points="713,-209.64 713,-306.62 1708,-306.62 1708,-209.64 713,-209.64"/>
+<text text-anchor="middle" x="1210.5" y="-291.42" font-family="Times New Roman,serif" font-size="14.00">devices</text>
 </g>
 <g id="clust5" class="cluster">
 <title>cluster_utils</title><style>.edge>path:hover{stroke-width:8}</style>

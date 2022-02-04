@@ -9,16 +9,6 @@
 <g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 500.85)">
 <title>G</title><style>.edge>path:hover{stroke-width:8}</style>
 <polygon fill="white" stroke="transparent" points="-4,4 -4,-500.85 1163,-500.85 1163,4 -4,4"/>
-<g id="clust3" class="cluster">
-<title>cluster_plugins</title><style>.edge>path:hover{stroke-width:8}</style>
-<polygon fill="none" stroke="black" points="812,-8 812,-236.64 942,-236.64 942,-8 812,-8"/>
-<text text-anchor="middle" x="877" y="-221.44" font-family="Times New Roman,serif" font-size="14.00">plugins</text>
-</g>
-<g id="clust4" class="cluster">
-<title>cluster_services</title><style>.edge>path:hover{stroke-width:8}</style>
-<polygon fill="none" stroke="black" points="260,-158.43 260,-322.85 648,-322.85 648,-158.43 260,-158.43"/>
-<text text-anchor="middle" x="454" y="-307.65" font-family="Times New Roman,serif" font-size="14.00">services</text>
-</g>
 <g id="clust1" class="cluster">
 <title>cluster_data</title><style>.edge>path:hover{stroke-width:8}</style>
 <polygon fill="none" stroke="black" points="8,-413.85 8,-488.85 256,-488.85 256,-413.85 8,-413.85"/>
@@ -28,6 +18,16 @@
 <title>cluster_numpy</title><style>.edge>path:hover{stroke-width:8}</style>
 <polygon fill="none" stroke="black" points="1081,-330.85 1081,-405.85 1151,-405.85 1151,-330.85 1081,-330.85"/>
 <text text-anchor="middle" x="1116" y="-390.65" font-family="Times New Roman,serif" font-size="14.00">numpy</text>
+</g>
+<g id="clust3" class="cluster">
+<title>cluster_plugins</title><style>.edge>path:hover{stroke-width:8}</style>
+<polygon fill="none" stroke="black" points="812,-8 812,-236.64 942,-236.64 942,-8 812,-8"/>
+<text text-anchor="middle" x="877" y="-221.44" font-family="Times New Roman,serif" font-size="14.00">plugins</text>
+</g>
+<g id="clust4" class="cluster">
+<title>cluster_services</title><style>.edge>path:hover{stroke-width:8}</style>
+<polygon fill="none" stroke="black" points="260,-158.43 260,-322.85 648,-322.85 648,-158.43 260,-158.43"/>
+<text text-anchor="middle" x="454" y="-307.65" font-family="Times New Roman,serif" font-size="14.00">services</text>
 </g>
 <g id="clust5" class="cluster">
 <title>cluster_utils</title><style>.edge>path:hover{stroke-width:8}</style>

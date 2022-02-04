@@ -14,15 +14,15 @@
 <polygon fill="none" stroke="black" points="8,-200 8,-275 154,-275 154,-200 8,-200"/>
 <text text-anchor="middle" x="81" y="-259.8" font-family="Times New Roman,serif" font-size="14.00">data</text>
 </g>
-<g id="clust3" class="cluster">
-<title>cluster_utils</title><style>.edge>path:hover{stroke-width:8}</style>
-<polygon fill="none" stroke="black" points="243,-117 243,-275 660,-275 660,-117 243,-117"/>
-<text text-anchor="middle" x="451.5" y="-259.8" font-family="Times New Roman,serif" font-size="14.00">utils</text>
-</g>
 <g id="clust2" class="cluster">
 <title>cluster_plugins</title><style>.edge>path:hover{stroke-width:8}</style>
 <polygon fill="none" stroke="black" points="139,-8 139,-192 235,-192 235,-8 139,-8"/>
 <text text-anchor="middle" x="187" y="-176.8" font-family="Times New Roman,serif" font-size="14.00">plugins</text>
+</g>
+<g id="clust3" class="cluster">
+<title>cluster_utils</title><style>.edge>path:hover{stroke-width:8}</style>
+<polygon fill="none" stroke="black" points="243,-117 243,-275 660,-275 660,-117 243,-117"/>
+<text text-anchor="middle" x="451.5" y="-259.8" font-family="Times New Roman,serif" font-size="14.00">utils</text>
 </g>
 <!-- data -->
 <g id="node1" class="node">

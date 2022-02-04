@@ -9,16 +9,6 @@
 <g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 592.28)">
 <title>G</title><style>.edge>path:hover{stroke-width:8}</style>
 <polygon fill="white" stroke="transparent" points="-4,4 -4,-592.28 1147,-592.28 1147,4 -4,4"/>
-<g id="clust4" class="cluster">
-<title>cluster_utils</title><style>.edge>path:hover{stroke-width:8}</style>
-<polygon fill="none" stroke="black" points="711,-337.64 711,-497.28 1135,-497.28 1135,-337.64 711,-337.64"/>
-<text text-anchor="middle" x="923" y="-482.08" font-family="Times New Roman,serif" font-size="14.00">utils</text>
-</g>
-<g id="clust3" class="cluster">
-<title>cluster_services</title><style>.edge>path:hover{stroke-width:8}</style>
-<polygon fill="none" stroke="black" points="139,-251.43 139,-415.85 527,-415.85 527,-251.43 139,-251.43"/>
-<text text-anchor="middle" x="333" y="-400.65" font-family="Times New Roman,serif" font-size="14.00">services</text>
-</g>
 <g id="clust1" class="cluster">
 <title>cluster_data</title><style>.edge>path:hover{stroke-width:8}</style>
 <polygon fill="none" stroke="black" points="8,-505.28 8,-580.28 154,-580.28 154,-505.28 8,-505.28"/>
@@ -28,6 +18,16 @@
 <title>cluster_plugins</title><style>.edge>path:hover{stroke-width:8}</style>
 <polygon fill="none" stroke="black" points="535,-64 535,-329.64 753,-329.64 753,-64 535,-64"/>
 <text text-anchor="middle" x="644" y="-314.44" font-family="Times New Roman,serif" font-size="14.00">plugins</text>
+</g>
+<g id="clust4" class="cluster">
+<title>cluster_utils</title><style>.edge>path:hover{stroke-width:8}</style>
+<polygon fill="none" stroke="black" points="711,-337.64 711,-497.28 1135,-497.28 1135,-337.64 711,-337.64"/>
+<text text-anchor="middle" x="923" y="-482.08" font-family="Times New Roman,serif" font-size="14.00">utils</text>
+</g>
+<g id="clust3" class="cluster">
+<title>cluster_services</title><style>.edge>path:hover{stroke-width:8}</style>
+<polygon fill="none" stroke="black" points="139,-251.43 139,-415.85 527,-415.85 527,-251.43 139,-251.43"/>
+<text text-anchor="middle" x="333" y="-400.65" font-family="Times New Roman,serif" font-size="14.00">services</text>
 </g>
 <!-- data -->
 <g id="node1" class="node">
