@@ -375,6 +375,20 @@ class Registers(list):
 
         return result
 
+    def get_groups(self):
+        """Return the groups.
+
+        Returns:
+            list: Names of the registers in list.
+        """
+
+        base_names = []
+        for register in self:
+            if not register.base_name in base_names:
+                base_names.append(register.base_name)
+
+        return base_names
+
     def keys(self):
         """Return keys.
 
@@ -421,8 +435,6 @@ class Registers(list):
             register.update_handlers = cb
             if "update" in kwargs:
                 register.update()
-
-    # TODO: Dump to file.
 
 #endregion
 
@@ -633,5 +645,69 @@ class Registers(list):
                 registers.append(register)
 
         return registers
+
+    @staticmethod
+    def to_md(registers, file_path="registers.md"):
+        
+        # Clear the tables.
+        md_tables = ""
+
+        # Add content.
+        groups = registers.get_groups()
+        for group in groups:
+
+            registers_group = registers.get_group(group)
+
+            # Clear the table.
+            md_table = ""
+
+            # Header
+            md_table += "\n\n\n## <a name='{}'>{}</a> Registers\n\n".format(registers_group[0].plugin_name.replace(" ", ""), registers_group[0].plugin_name)
+
+            # Global
+            md_table += " - **Global**" + 2*"\n"
+            md_table += "| Purpose | Register | Type | Value |\n"
+            md_table += "|----------|:-------------|:------|:------|\n"
+            for reg in registers_group:
+                if reg.scope == Scope.Global:
+                    md_table += "| {} | {} | {} | {} |\n".format(reg.description, reg.name, reg.data_type, reg.value)
+            md_table += "\n" 
+
+            # System
+            md_table += " - **System**" + 2*"\n"
+            md_table += "| Purpose | Register | Type | Value |\n"
+            md_table += "|----------|:-------------|:------|:------|\n"
+            for reg in registers_group:
+                if reg.scope == Scope.System:
+                    md_table += "| {} | {} | {} | {} |\n".format(reg.description, reg.name, reg.data_type, reg.value)
+            md_table += "\n"
+
+            # Device
+            md_table += " - **Device**" + 2*"\n"
+            md_table += "| Purpose | Register | Type | Value |\n"
+            md_table += "|----------|:-------------|:------|:------|\n"
+            for reg in registers_group:
+                if reg.scope == Scope.Device:
+                    md_table += "| {} | {} | {} | {} |\n".format(reg.description, reg.name, reg.data_type, reg.value)
+            md_table += "\n" 
+
+            # Both
+            md_table += " - **Both**" + 2*"\n"
+            md_table += "| Purpose | Register | Type | Value |\n"
+            md_table += "|----------|:-------------|:------|:------|\n"
+            for reg in registers_group:
+                if reg.scope == Scope.Both:
+                    md_table += "| {} | {} | {} | {} |\n".format(reg.description, reg.name, reg.data_type, reg.value)
+            md_table += "\n" 
+
+            # Footer
+            md_table += "* * *"
+
+            # Add the table.
+            md_tables += md_table
+
+        with open(file_path, "w") as md_file:
+            md_file.write(md_tables)
+            md_file.close()
 
 #endregion
