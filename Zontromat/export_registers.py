@@ -931,14 +931,14 @@ def __add_registers():
     register.description = "Loop 1 temperature sensor settings"
     register.range = __range["NONE"]
     register.value = {
-        "vendor": "Donkger",
-        "model": "XY-MD02",
+        "vendor": "mainone",
+        "model": "inlet_temp",
         "options":
         {
-            "uart": 0,
-            "mb_id": 3
+            "uart": 1,
+            "mb_id": 3,
         }
-    } # "Dallas/DS18B20/28FF2B70C11604B7" # temp/DS18B20/28FF2B70C11604B7
+    }
     __registers.append(register)
 
     register = Register("hvac.loop1_1.temp.value")
@@ -998,12 +998,12 @@ def __add_registers():
     register.description = "Loop 2 temperature sensor settings"
     register.range = __range["NONE"]
     register.value = {
-        "vendor": "Donkger",
-        "model": "XY-MD02",
+        "vendor": "mainone",
+        "model": "inlet_temp",
         "options":
         {
-            "uart": 0,
-            "mb_id": 5
+            "uart": 1,
+            "mb_id": 3,
         }
     }
     __registers.append(register)
@@ -3421,27 +3421,29 @@ def main():
     parser = argparse.ArgumentParser()
 
     # Add arguments.
-    # parser.add_argument("--action", type=str, default="w_json", help="Export type.")
-    parser.add_argument("--action", type=str, default="w_csv", help="Export type.")
+    # parser.add_argument("--action", type=str, default="w_json", help="Export JSON file.")
+    parser.add_argument("--action", type=str, default="w_csv", help="Export CSV file.")
     # parser.add_argument("--action", type=str, default="list_gpio", help="Export type.")
+    # parser.add_argument("--action", type=str, default="w_md", help="Export MD file.")
+    parser.add_argument("--path", type=str, default=".", help="Target file path.")
 
     # Take arguments.
     args = parser.parse_args()
 
     if args.action == "w_json":
-        Registers.to_json(__registers, "registers.json")
+        Registers.to_json(__registers, args.path) # "../Zontromat/registers.json"
 
     elif args.action == "r_json":
-        registers = Registers.from_json("registers.json")
+        registers = Registers.from_json(args.path) # "../Zontromat/registers.json") # 
 
         for register in registers:
             print(register)
 
     elif args.action == "w_csv":
-        Registers.to_csv(__registers, "registers.csv")
+        Registers.to_csv(__registers, args.path) # "../Zontromat/registers.csv")
 
     elif args.action == "r_csv":
-        registers = Registers.from_csv("registers.csv")
+        registers = Registers.from_csv(args.path) #"../Zontromat/registers.csv")
 
         for register in registers:
             print(register)
@@ -3451,6 +3453,10 @@ def main():
             if isinstance(register.value, dict):
                 if "options" in register.value.keys():
                     print("Register: {} -> {}".format(register.name, register.value["options"]))                    
+
+    elif args.action == "w_md":
+        Registers.to_md(__registers, args.path) #"../Zontromat/plugins/registers.md")
+
 
 if __name__ == "__main__":
     main()
