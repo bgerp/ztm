@@ -3243,7 +3243,7 @@ def __add_registers():
         "model": "f3p146ec072600",
         "options":
         {
-            "output": "AO1",
+            "output": "AO0",
         }
     }
     __registers.append(register)
