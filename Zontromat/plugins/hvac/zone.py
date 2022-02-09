@@ -1068,6 +1068,7 @@ class Zone(BasePlugin):
 
         self.__loop1_valve_dev.update()
         self.__loop2_valve_dev.update()
+        self.__convector_dev.update()
 
     def _shutdown(self):
         """Shutdown the tamper.
@@ -1076,7 +1077,13 @@ class Zone(BasePlugin):
         self.__logger.info("Shutting down the {} {}".format(self.name, self.__identifier))
         self.__set_thermal_force(0)
 
-        self.__loop1_valve_dev.shutdown()
-        self.__loop2_valve_dev.shutdown()
+        if not self.__loop1_valve_dev is None:
+            self.__loop1_valve_dev.shutdown()
+
+        if not self.__loop2_valve_dev is None:
+            self.__loop2_valve_dev.shutdown()
+
+        if not self.__convector_dev is None:
+            self.__convector_dev.shutdown()
 
 #endregion
