@@ -9,6 +9,11 @@
 <g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 592.05)">
 <title>G</title><style>.edge>path:hover{stroke-width:8}</style>
 <polygon fill="white" stroke="transparent" points="-4,4 -4,-592.05 1788,-592.05 1788,4 -4,4"/>
+<g id="clust2" class="cluster">
+<title>cluster_devices</title><style>.edge>path:hover{stroke-width:8}</style>
+<polygon fill="none" stroke="black" points="713,-209.64 713,-306.62 1708,-306.62 1708,-209.64 713,-209.64"/>
+<text text-anchor="middle" x="1210.5" y="-291.42" font-family="Times New Roman,serif" font-size="14.00">devices</text>
+</g>
 <g id="clust1" class="cluster">
 <title>cluster_data</title><style>.edge>path:hover{stroke-width:8}</style>
 <polygon fill="none" stroke="black" points="8,-343.62 8,-418.62 154,-418.62 154,-343.62 8,-343.62"/>
@@ -19,20 +24,15 @@
 <polygon fill="none" stroke="black" points="1668,-8 1668,-201.64 1776,-201.64 1776,-8 1668,-8"/>
 <text text-anchor="middle" x="1722" y="-186.44" font-family="Times New Roman,serif" font-size="14.00">plugins</text>
 </g>
-<g id="clust2" class="cluster">
-<title>cluster_devices</title><style>.edge>path:hover{stroke-width:8}</style>
-<polygon fill="none" stroke="black" points="713,-209.64 713,-306.62 1708,-306.62 1708,-209.64 713,-209.64"/>
-<text text-anchor="middle" x="1210.5" y="-291.42" font-family="Times New Roman,serif" font-size="14.00">devices</text>
+<g id="clust4" class="cluster">
+<title>cluster_services</title><style>.edge>path:hover{stroke-width:8}</style>
+<polygon fill="none" stroke="black" points="139,-123.43 139,-298.84 705,-298.84 705,-123.43 139,-123.43"/>
+<text text-anchor="middle" x="422" y="-283.64" font-family="Times New Roman,serif" font-size="14.00">services</text>
 </g>
 <g id="clust5" class="cluster">
 <title>cluster_utils</title><style>.edge>path:hover{stroke-width:8}</style>
 <polygon fill="none" stroke="black" points="837,-426.62 837,-580.05 1386,-580.05 1386,-426.62 837,-426.62"/>
 <text text-anchor="middle" x="1111.5" y="-564.85" font-family="Times New Roman,serif" font-size="14.00">utils</text>
-</g>
-<g id="clust4" class="cluster">
-<title>cluster_services</title><style>.edge>path:hover{stroke-width:8}</style>
-<polygon fill="none" stroke="black" points="139,-123.43 139,-298.84 705,-298.84 705,-123.43 139,-123.43"/>
-<text text-anchor="middle" x="422" y="-283.64" font-family="Times New Roman,serif" font-size="14.00">services</text>
 </g>
 <!-- data -->
 <g id="node1" class="node">

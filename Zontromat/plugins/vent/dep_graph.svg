@@ -24,30 +24,30 @@
 <polygon fill="none" stroke="black" points="1094,-189 1094,-364.42 1482,-364.42 1482,-189 1094,-189"/>
 <text text-anchor="middle" x="1288" y="-349.22" font-family="Times New Roman,serif" font-size="14.00">services</text>
 </g>
-<g id="clust3" class="cluster">
-<title>cluster_data</title><style>.edge>path:hover{stroke-width:8}</style>
-<polygon fill="none" stroke="black" points="834,-455.2 834,-530.2 1090,-530.2 1090,-455.2 834,-455.2"/>
-<text text-anchor="middle" x="962" y="-515" font-family="Times New Roman,serif" font-size="14.00">data</text>
-</g>
-<g id="clust5" class="cluster">
-<title>cluster_plugins</title><style>.edge>path:hover{stroke-width:8}</style>
-<polygon fill="none" stroke="black" points="920,-8 920,-267.21 1024,-267.21 1024,-8 920,-8"/>
-<text text-anchor="middle" x="972" y="-252.01" font-family="Times New Roman,serif" font-size="14.00">plugins</text>
-</g>
-<g id="clust6" class="cluster">
-<title>cluster_psutil</title><style>.edge>path:hover{stroke-width:8}</style>
-<polygon fill="none" stroke="black" points="542,-538.2 542,-613.2 612,-613.2 612,-538.2 542,-538.2"/>
-<text text-anchor="middle" x="577" y="-598" font-family="Times New Roman,serif" font-size="14.00">psutil</text>
+<g id="clust8" class="cluster">
+<title>cluster_utils</title><style>.edge>path:hover{stroke-width:8}</style>
+<polygon fill="none" stroke="black" points="514,-286.2 514,-447.2 1003,-447.2 1003,-286.2 514,-286.2"/>
+<text text-anchor="middle" x="758.5" y="-432" font-family="Times New Roman,serif" font-size="14.00">utils</text>
 </g>
 <g id="clust4" class="cluster">
 <title>cluster_devices</title><style>.edge>path:hover{stroke-width:8}</style>
 <polygon fill="none" stroke="black" points="1490,-275.21 1490,-372.2 1844,-372.2 1844,-275.21 1490,-275.21"/>
 <text text-anchor="middle" x="1667" y="-357" font-family="Times New Roman,serif" font-size="14.00">devices</text>
 </g>
-<g id="clust8" class="cluster">
-<title>cluster_utils</title><style>.edge>path:hover{stroke-width:8}</style>
-<polygon fill="none" stroke="black" points="514,-286.2 514,-447.2 1003,-447.2 1003,-286.2 514,-286.2"/>
-<text text-anchor="middle" x="758.5" y="-432" font-family="Times New Roman,serif" font-size="14.00">utils</text>
+<g id="clust3" class="cluster">
+<title>cluster_data</title><style>.edge>path:hover{stroke-width:8}</style>
+<polygon fill="none" stroke="black" points="732,-455.2 732,-530.2 1090,-530.2 1090,-455.2 732,-455.2"/>
+<text text-anchor="middle" x="911" y="-515" font-family="Times New Roman,serif" font-size="14.00">data</text>
+</g>
+<g id="clust6" class="cluster">
+<title>cluster_psutil</title><style>.edge>path:hover{stroke-width:8}</style>
+<polygon fill="none" stroke="black" points="542,-538.2 542,-613.2 612,-613.2 612,-538.2 542,-538.2"/>
+<text text-anchor="middle" x="577" y="-598" font-family="Times New Roman,serif" font-size="14.00">psutil</text>
+</g>
+<g id="clust5" class="cluster">
+<title>cluster_plugins</title><style>.edge>path:hover{stroke-width:8}</style>
+<polygon fill="none" stroke="black" points="920,-8 920,-267.21 1024,-267.21 1024,-8 920,-8"/>
+<text text-anchor="middle" x="972" y="-252.01" font-family="Times New Roman,serif" font-size="14.00">plugins</text>
 </g>
 <!-- System -->
 <g id="node1" class="node">
@@ -56,7 +56,7 @@
 <text text-anchor="middle" x="45" y="-846.11" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#ffffff">System</text>
 </g>
 <!-- serial -->
-<g id="node33" class="node">
+<g id="node34" class="node">
 <title>serial</title><style>.edge>path:hover{stroke-width:8}</style>
 <polygon fill="#0505c7" stroke="black" points="549,-657.2 546,-661.2 525,-661.2 522,-657.2 495,-657.2 495,-621.2 549,-621.2 549,-657.2"/>
 <text text-anchor="middle" x="522" y="-636.7" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#ffffff">serial</text>
@@ -198,7 +198,7 @@
 <text text-anchor="middle" x="1055" y="-478.7" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">data</text>
 </g>
 <!-- plugins_vent_zone -->
-<g id="node20" class="node">
+<g id="node21" class="node">
 <title>plugins_vent_zone</title><style>.edge>path:hover{stroke-width:8}</style>
 <ellipse fill="#267359" stroke="black" cx="982" cy="-106" rx="34.29" ry="18"/>
 <text text-anchor="middle" x="982" y="-103.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#ffffff">vent.zone</text>
@@ -210,7 +210,7 @@
 <polygon fill="#000000" stroke="black" points="1031.11,-176.46 1024,-168.61 1024.66,-179.18 1031.11,-176.46"/>
 </g>
 <!-- services_global_error_handler_global_error_handler -->
-<g id="node25" class="node">
+<g id="node26" class="node">
 <title>services_global_error_handler_global_error_handler</title><style>.edge>path:hover{stroke-width:8}</style>
 <ellipse fill="#794096" stroke="black" cx="1178" cy="-218.21" rx="75.82" ry="21.43"/>
 <text text-anchor="middle" x="1178" y="-221.21" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#ffffff">global_error_handler.</text>
@@ -234,8 +234,14 @@
 <ellipse fill="#95b653" stroke="black" cx="888" cy="-481.2" rx="45.83" ry="18"/>
 <text text-anchor="middle" x="888" y="-478.7" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">thermal_mode</text>
 </g>
-<!-- devices -->
+<!-- data_verbal_const -->
 <g id="node15" class="node">
+<title>data_verbal_const</title><style>.edge>path:hover{stroke-width:8}</style>
+<ellipse fill="#95b653" stroke="black" cx="782" cy="-481.2" rx="41.59" ry="18"/>
+<text text-anchor="middle" x="782" y="-478.7" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">verbal_const</text>
+</g>
+<!-- devices -->
+<g id="node16" class="node">
 <title>devices</title><style>.edge>path:hover{stroke-width:8}</style>
 <ellipse fill="#53b653" stroke="black" cx="1807" cy="-312.2" rx="28.69" ry="18"/>
 <text text-anchor="middle" x="1807" y="-309.7" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">devices</text>
@@ -247,7 +253,7 @@
 <polygon fill="#000000" stroke="black" points="1034.49,-110.33 1024,-111.82 1033.13,-117.2 1034.49,-110.33"/>
 </g>
 <!-- devices_factories_air_dampers_air_dampers_factory -->
-<g id="node16" class="node">
+<g id="node17" class="node">
 <title>devices_factories_air_dampers_air_dampers_factory</title><style>.edge>path:hover{stroke-width:8}</style>
 <ellipse fill="#53b653" stroke="black" cx="1687" cy="-312.2" rx="73.58" ry="28.98"/>
 <text text-anchor="middle" x="1687" y="-320.7" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">factories.</text>
@@ -255,7 +261,7 @@
 <text text-anchor="middle" x="1687" y="-298.7" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">air_dampers_factory</text>
 </g>
 <!-- devices_factories_fans_fans_factory -->
-<g id="node17" class="node">
+<g id="node18" class="node">
 <title>devices_factories_fans_fans_factory</title><style>.edge>path:hover{stroke-width:8}</style>
 <ellipse fill="#53b653" stroke="black" cx="1547" cy="-312.2" rx="48.58" ry="28.98"/>
 <text text-anchor="middle" x="1547" y="-320.7" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">factories.</text>
@@ -263,13 +269,13 @@
 <text text-anchor="middle" x="1547" y="-298.7" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">fans_factory</text>
 </g>
 <!-- plugins_base_plugin -->
-<g id="node18" class="node">
+<g id="node19" class="node">
 <title>plugins_base_plugin</title><style>.edge>path:hover{stroke-width:8}</style>
 <ellipse fill="#3ab089" stroke="black" cx="968" cy="-218.21" rx="40.06" ry="18"/>
 <text text-anchor="middle" x="968" y="-215.71" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">base_plugin</text>
 </g>
 <!-- plugins_vent_vent -->
-<g id="node19" class="node">
+<g id="node20" class="node">
 <title>plugins_vent_vent</title><style>.edge>path:hover{stroke-width:8}</style>
 <ellipse fill="#3d8f74" stroke="black" cx="982" cy="-34" rx="31.58" ry="18"/>
 <text text-anchor="middle" x="982" y="-31.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#ffffff">vent.vent</text>
@@ -293,13 +299,13 @@
 <polygon fill="#000000" stroke="black" points="985.5,-62.1 982,-52.1 978.5,-62.1 985.5,-62.1"/>
 </g>
 <!-- psutil -->
-<g id="node21" class="node">
+<g id="node22" class="node">
 <title>psutil</title><style>.edge>path:hover{stroke-width:8}</style>
 <ellipse fill="#5395b6" stroke="black" cx="577" cy="-564.2" rx="27" ry="18"/>
 <text text-anchor="middle" x="577" y="-561.7" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">psutil</text>
 </g>
 <!-- utils_utils -->
-<g id="node32" class="node">
+<g id="node33" class="node">
 <title>utils_utils</title><style>.edge>path:hover{stroke-width:8}</style>
 <ellipse fill="#a83883" stroke="black" cx="549" cy="-398.2" rx="27" ry="18"/>
 <text text-anchor="middle" x="549" y="-395.7" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#ffffff">utils</text>
@@ -311,7 +317,7 @@
 <polygon fill="#000000" stroke="black" points="562.33,-456.46 557.19,-447.19 555.43,-457.64 562.33,-456.46"/>
 </g>
 <!-- services -->
-<g id="node22" class="node">
+<g id="node23" class="node">
 <title>services</title><style>.edge>path:hover{stroke-width:8}</style>
 <ellipse fill="#9947c2" stroke="black" cx="1443" cy="-312.2" rx="30.72" ry="18"/>
 <text text-anchor="middle" x="1443" y="-309.7" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#ffffff">services</text>
@@ -323,13 +329,13 @@
 <polygon fill="#000000" stroke="black" points="1034.52,-114.29 1024,-115.55 1033,-121.13 1034.52,-114.29"/>
 </g>
 <!-- services_global_error_handler -->
-<g id="node23" class="node">
+<g id="node24" class="node">
 <title>services_global_error_handler</title><style>.edge>path:hover{stroke-width:8}</style>
 <ellipse fill="#9947c2" stroke="black" cx="1333" cy="-312.2" rx="61.44" ry="18"/>
 <text text-anchor="middle" x="1333" y="-309.7" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#ffffff">global_error_handler</text>
 </g>
 <!-- services_global_error_handler_error_codes -->
-<g id="node24" class="node">
+<g id="node25" class="node">
 <title>services_global_error_handler_error_codes</title><style>.edge>path:hover{stroke-width:8}</style>
 <ellipse fill="#9553b6" stroke="black" cx="1178" cy="-312.2" rx="75.82" ry="21.43"/>
 <text text-anchor="middle" x="1178" y="-315.2" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#ffffff">global_error_handler.</text>
@@ -342,7 +348,7 @@
 <polygon fill="#000000" stroke="black" points="1181.5,-249.57 1178,-239.57 1174.5,-249.57 1181.5,-249.57"/>
 </g>
 <!-- utils -->
-<g id="node26" class="node">
+<g id="node27" class="node">
 <title>utils</title><style>.edge>path:hover{stroke-width:8}</style>
 <ellipse fill="#db2fa1" stroke="black" cx="968" cy="-398.2" rx="27" ry="18"/>
 <text text-anchor="middle" x="968" y="-395.7" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#ffffff">utils</text>
@@ -354,31 +360,31 @@
 <polygon fill="#000000" stroke="black" points="971.5,-277.21 968,-267.21 964.5,-277.21 971.5,-277.21"/>
 </g>
 <!-- utils_configuarable -->
-<g id="node27" class="node">
+<g id="node28" class="node">
 <title>utils_configuarable</title><style>.edge>path:hover{stroke-width:8}</style>
 <ellipse fill="#b65395" stroke="black" cx="879" cy="-398.2" rx="43.62" ry="18"/>
 <text text-anchor="middle" x="879" y="-395.7" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#ffffff">configuarable</text>
 </g>
 <!-- utils_logger -->
-<g id="node28" class="node">
+<g id="node29" class="node">
 <title>utils_logger</title><style>.edge>path:hover{stroke-width:8}</style>
 <ellipse fill="#c43193" stroke="black" cx="624" cy="-312.2" rx="27" ry="18"/>
 <text text-anchor="middle" x="624" y="-309.7" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#ffffff">logger</text>
 </g>
 <!-- utils_logic -->
-<g id="node29" class="node">
+<g id="node30" class="node">
 <title>utils_logic</title><style>.edge>path:hover{stroke-width:8}</style>
 <ellipse fill="#b65395" stroke="black" cx="790" cy="-398.2" rx="27" ry="18"/>
 <text text-anchor="middle" x="790" y="-395.7" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#ffffff">logic</text>
 </g>
 <!-- utils_logic_timer -->
-<g id="node30" class="node">
+<g id="node31" class="node">
 <title>utils_logic_timer</title><style>.edge>path:hover{stroke-width:8}</style>
 <ellipse fill="#b65395" stroke="black" cx="709" cy="-398.2" rx="36.49" ry="18"/>
 <text text-anchor="middle" x="709" y="-395.7" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#ffffff">logic.timer</text>
 </g>
 <!-- utils_settings -->
-<g id="node31" class="node">
+<g id="node32" class="node">
 <title>utils_settings</title><style>.edge>path:hover{stroke-width:8}</style>
 <ellipse fill="#b65395" stroke="black" cx="624" cy="-398.2" rx="30.04" ry="18"/>
 <text text-anchor="middle" x="624" y="-395.7" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#ffffff">settings</text>
