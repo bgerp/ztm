@@ -82,6 +82,7 @@ __range = {
     "DI": "off|DI0|DI1|DI2|DI3|DI4|DI5|DI6|DI7|DI8|!DI0|!DI1|!DI2|!DI3|!DI4|!DI5|!DI6|!DI7|!DI8",
     "DO": "off|DO0|DO1|DO2|DO3|DO4|DO5|DO6|DO7|DO8|!DO0|!DO1|!DO2|!DO3|!DO4|!DO5|!DO6|!DO7|!DO8",
     "RO": "off|RO0|RO1|RO2|RO3|RO4|RO5|RO6|RO7|RO8|!RO0|!RO1|!RO2|!RO3|!RO4|!RO5|!RO6|!RO7|!RO8",
+    "DO|RO": "off|DO0|DO1|DO2|DO3|DO4|DO5|DO6|DO7|DO8|!DO0|!DO1|!DO2|!DO3|!DO4|!DO5|!DO6|!DO7|!DO8|RO0|RO1|RO2|RO3|RO4|RO5|RO6|RO7|RO8|!RO0|!RO1|!RO2|!RO3|!RO4|!RO5|!RO6|!RO7|!RO8",
     "AO": "off|AO0|AO1|AO2|AO3|AO4|AO5|AO6|AO7|AO8",
     "AI": "off|AI0|AI1|AI2|AI3|AI4|AI5|AI6|AI7|AI8",
     "LED": "off|LED0|LED1|LED2|LED3|!LED0|!LED1|!LED2|!LED3",
@@ -3267,9 +3268,17 @@ def __add_registers():
     register = Register("vent.lower_1.fan.speed")
     register.scope = Scope.System
     register.plugin_name = "Ventilation"
-    register.description = "Upper fan speed [%]"
+    register.description = "Lower fan speed [%]"
     register.range = __range["PERCENTAGE_F"]
     register.value = 0.0
+    __registers.append(register)
+
+    register = Register("vent.lower_1.fan.power_gpio")
+    register.scope = Scope.System
+    register.plugin_name = "Ventilation"
+    register.description = "Lower fan power GPIO."
+    register.range = __range["DO|RO"]
+    register.value = verbal_const.OFF
     __registers.append(register)
 
     # Upper fan
@@ -3310,6 +3319,14 @@ def __add_registers():
     register.description = "Upper fan maximum speed [%]"
     register.range = __range["PERCENTAGE_F"]
     register.value = 30.0
+    __registers.append(register)
+
+    register = Register("vent.upper_1.fan.power_gpio")
+    register.scope = Scope.System
+    register.plugin_name = "Ventilation"
+    register.description = "Upper fan power GPIO."
+    register.range = __range["DO|RO"]
+    register.value = verbal_const.OFF
     __registers.append(register)
 
     # Upper valve settings
