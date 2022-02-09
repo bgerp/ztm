@@ -58,10 +58,12 @@ __status__ = "Debug"
 
 #endregion
 
-class S83CN(ModbusDevice):
+class MB308V(ModbusDevice):
     """This class is dedicated to read/write data from S8-3CN GPIO expander.
 
-    See: http://bends.se/?page=notebook/hardware/gecon-tcp-508n"""
+     - See: http://bends.se/?page=notebook/hardware/gecon-tcp-508n
+     - See: http://www.comwintop.com/prod_view.aspx?nid=3&typeid=67&id=245
+    """
 
 #region Constructor
 

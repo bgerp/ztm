@@ -36,7 +36,8 @@ from utils.logic.functions import l_scale
 
 from controllers.base_controller import BaseController
 
-from devices.vendors.super.s8_3cn.s8_3cn import S83CN as BlackIsland
+# from devices.vendors.super.s8_3cn.s8_3cn import S83CN as BlackIsland
+from devices.vendors.cwt.mb308v.mb308v import MB308V as BlackIsland
 
 #region File Attributes
 
