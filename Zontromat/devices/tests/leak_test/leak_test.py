@@ -65,7 +65,7 @@ class TestState(Enum):
     TakeFirstMeasurement = 1
     TurnOffPeripheral = 2
     WaitForLeak = 3
-    TakeSecondMeasurement = 1
+    TakeSecondMeasurement = 4
 
 class LeakTest:
     """Leak test class."""
