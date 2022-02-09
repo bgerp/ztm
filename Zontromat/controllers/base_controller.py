@@ -150,9 +150,7 @@ class BaseController(Configuarable):
     def is_gpio_off(self, gpio):
         """Is not OFF"""
 
-        io_name = gpio.upper()
-
-        return io_name == verbal_const.OFF
+        return gpio == verbal_const.OFF
 
     def is_gpio_inverted(self, gpio):
         """Is the polarity inverted.
