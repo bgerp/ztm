@@ -55,7 +55,7 @@ __status__ = "Debug"
 #endregion
 
 class AirDamper1(BaseAirDamper):
-    """Fonyes - Model1.
+    """Fonyes - Model1. Fire damper
     """
 
 #region Attributes

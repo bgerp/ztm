@@ -24,7 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import traceback
 
-from utils.configuarable import Configuarable
+from utils.configurable import Configuarable
 
 from utils.logger import get_logger
 

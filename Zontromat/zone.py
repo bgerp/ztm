@@ -24,10 +24,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 import sys
+import time
 import traceback
 import os
-
-from enum import Enum
 
 from utils.settings import ApplicationSettings
 from utils.logger import get_logger, crate_log_file
@@ -35,6 +34,7 @@ from utils.performance_profiler import PerformanceProfiler
 from utils.logic.state_machine import StateMachine
 from utils.logic.timer import Timer
 from utils.updater import update as software_update
+from utils.utils import uptime
 
 from controllers.controller_factory import ControllerFactory
 
@@ -49,8 +49,6 @@ from plugins.plugins_manager import PluginsManager
 
 from services.evok.settings import EvokSettings
 from services.global_error_handler.global_error_handler import GlobalErrorHandler
-
-
 
 #region File Attributes
 
@@ -82,16 +80,6 @@ __status__ = "Debug"
 """File status."""
 
 #endregion
-
-class EnergyMode(Enum):
-    """Energy mode.
-        @see Zontromat document
-    """
-
-    Peak = 0 # peak (върхов)
-    Normal = 1 # normal (нормален)
-    Accumulate = 2 # accumulate (акумулиране)
-    Generator = 3 # generator (на генератор)
 
 class Zone():
     """Main zone class"""
@@ -195,7 +183,6 @@ class Zone():
         self.__app_settings.current_version = target_version_reg.value
         self.__app_settings.save()
 
-
     def __init_registers(self):
         """Setup registers source.
         """
@@ -222,6 +209,16 @@ class Zone():
         if target_version is not None:
             target_version.update_handlers = self.__target_version_cb
             # TODO: Will we ask for update on every start?
+
+        # Set boot time.
+        sys_boot_time = self.__registers.by_name("sys.time.boot")
+        if sys_boot_time is not None:
+            sys_boot_time.value = time.time() - uptime()
+
+        # Set startup time.
+        sys_startup_time = self.__registers.by_name("sys.time.startup")
+        if sys_startup_time is not None:
+            sys_startup_time.value = time.time()
 
 #endregion
 
@@ -533,6 +530,11 @@ class Zone():
         self.__plugin_manager.update()
 
         self.__update_erp()
+
+        # Update uptime.
+        sys_uptime_time = self.__registers.by_name("sys.time.uptime")
+        if sys_uptime_time is not None:
+            sys_uptime_time.value = uptime()
 
 #endregion
 

@@ -100,8 +100,8 @@ timeout = 0.1
 ; Zuljana Interface
 vendor = zuljana
 model = zl101pcc
-modbus_rtu_port = COM10
-modbus_rtu_baud = 9600
+modbus_rtu_port_1 = COM10
+modbus_rtu_baud_1 = 9600
 
 ; Remote ERP service.
 [ERP_SERVICE]

@@ -28,12 +28,11 @@ from plugins.base_plugin import BasePlugin
 
 # https://github.com/s-bear/sun-position
 # from sunposition import sunpos
-from plugins.envm.sunposition import sunpos
+# from plugins.envm.sunposition import sunpos
+from plugins.envm.sunposition2 import sunpos
 
 from utils.logger import get_logger
 from utils.logic.timer import Timer
-
-from data import verbal_const
 
 from services.global_error_handler.global_error_handler import GlobalErrorHandler
 
@@ -244,10 +243,7 @@ class Environment(BasePlugin):
 
 #region Private Methods
 
-    def __calculate_position(self):
-        """Calculate sun position.
-        """
-
+    def __old_sunpos(self):
         # https://www.suncalc.org/#/43.0781,25.5955,17/2021.05.07/11:09/1/1
 
         # Latitude of the target.
@@ -276,8 +272,36 @@ class Environment(BasePlugin):
         time_now = datetime.now()
 
         azm, zen, ra, dec, h = sunpos(time_now, lat, lon, elv, temp, presure, diff_time, mou)
-        elv_out = 90 - zen - 2
-        azm_out = azm
+
+        return azm.item(0), zen.item(0)
+
+    def __new_sunpos(self):
+        
+        now = datetime.now()
+        
+        # Close Encounters latitude, longitude
+        location = (self.__location_lat, self.__location_lon)
+        
+        # Fourth of July, 2022 at 11:20 am MDT (-6 hours)
+        when = (now.year, now.month, now.day, now.hour, now.minute, now.second, self.__time_zone) # ,,19/2022.08.04/16:31
+        
+        # Get the Sun's apparent location in the sky
+        azimuth, elevation = sunpos(when, location, True)
+        
+        # # Output the results
+        # print("\nWhen: ", when)
+        # print("Where: ", location)
+        # print("Azimuth: ", azimuth)
+        # print("Elevation: ", elevation)
+
+        return azimuth, elevation
+
+    def __calculate_position(self):
+        """Calculate sun position.
+        """
+
+        # elv_out, azm_out = self.__old_sunpos()
+        azm_out, elv_out = self.__new_sunpos()
 
         # self.__logger.info(f"Azimuth: {azm:.2f}; Elevation: {elv:.2f}")
         # print(f"SunPos -> Azm: {azm_out:.2f}; Elev: {elv_out:.2f}")

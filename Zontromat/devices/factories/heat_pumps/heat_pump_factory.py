@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 
-from devices.vendors.hstars_guangzhou_refrigerating_equipment_group.heat_pump import HeatPump
+from devices.vendors.hstars_guangzhou_refrigerating_equipment_group.heat_pump import HP_40STD_N420WHSB4
 
 #region File Attributes
 
@@ -96,10 +96,10 @@ class HeatPumpFactory:
         else:
             raise ValueError("No \"controller\" argument has been passed.")
 
-        # HstarsGuangzhouRefrigeratingEquipmentGroup / HeatPump / 0
-        if vendor == "HstarsGuangzhouRefrigeratingEquipmentGroup" and  model == "HeatPump":
+        # HstarsGuangzhouRefrigeratingEquipmentGroup / HP_40STD_N420WHSB4 / 0
+        if vendor == "HstarsGuangzhouRefrigeratingEquipmentGroup" and  model == "HP_40STD_N420WHSB4":
 
-            device = HeatPump(
+            device = HP_40STD_N420WHSB4(
                 name=name,
                 controller=controller,
                 unit=config["options"]["mb_id"]

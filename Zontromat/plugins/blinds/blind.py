@@ -101,6 +101,10 @@ class Blind(BasePlugin):
     """Object height [m]
     """
 
+    __object_orientation = 0.0
+    """Object orintation
+    """    
+
     __zone_occupation = False
     """Zone occupation flag.
     """
@@ -173,6 +177,16 @@ class Blind(BasePlugin):
         if self.__object_height != register.value:
             self.__object_height = register.value
 
+    def __object_orientation_cb(self, register):
+
+        # Check data type.
+        if not ((register.data_type == "float") or (register.data_type == "int")):
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
+            return
+
+        if self.__object_orientation != register.value:
+            self.__object_orientation = register.value
+
     def __sunspot_limit_cb(self, register):
 
         # Check data type.
@@ -209,6 +223,11 @@ class Blind(BasePlugin):
         if object_height is not None:
             object_height.update_handlers = self.__object_height_cb
             object_height.update()
+
+        object_orientation = self._registers.by_name("{}.blind_{}.object_orientation".format(self.key, self.__identifier))
+        if object_orientation is not None:
+            object_orientation.update_handlers = self.__object_orientation_cb
+            object_orientation.update()
 
         sunspot_limit = self._registers.by_name("{}.blind_{}.sunspot_limit".format(self.key, self.__identifier))
         if sunspot_limit is not None:
@@ -247,19 +266,19 @@ class Blind(BasePlugin):
     def __calc_sun_spot(self):
 
         if (self.__sun_azm > 0) and (self.__sun_elev > 0):
-            # print(f"Blinds -> Azm: {self.__sun_azm:03.2f}; Elev: {self.__sun_elev:03.2f}")
+            print(f"Blinds -> Azm: {self.__sun_azm:03.2f}; Elev: {self.__sun_elev:03.2f}")
 
             # Calculate the shadow length.
             shadow_l = shadow_length(self.__object_height, to_rad(self.__sun_elev))
-            # print(f"Blinds -> Shadow: {shadow_l:03.2f}")
+            print(f"Blinds -> Shadow: {shadow_l:03.2f}")
 
-            theta = 360 - (self.__sun_azm + 180)
-            # print(f"Blinds -> Theta: {theta:03.2f}")
+            theta = self.__sun_azm - self.__object_orientation # Orientation compensation
+            print(f"Blinds -> Theta: {theta:03.2f}")
 
             # Calculate cartesian
             x = shadow_l * math.cos(to_rad(abs(theta)))
             y = shadow_l * math.sin(to_rad(abs(theta)))
-            # print(f"Blinds -> X: {x:03.2f}; Y: {y:03.2f}")
+            print(f"Blinds -> X: {x:03.2f}; Y: {y:03.2f}")
 
             is_cloudy = False
             if (x > self.__sun_spot_limit or y > self.__sun_spot_limit) and not is_cloudy:

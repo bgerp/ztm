@@ -1,0 +1,944 @@
+---
+type: SDM630MCT
+modbus_register_blocks:
+    - board_index : 1
+      start_reg : 0
+      count : 2
+      frequency : 1
+      type: input
+    - board_index : 1
+      start_reg : 2
+      count : 2
+      frequency : 1
+      type: input
+    - board_index : 1
+      start_reg : 4
+      count : 2
+      frequency : 1
+      type: input
+    - board_index : 1
+      start_reg : 6
+      count : 2
+      frequency : 1
+      type: input
+    - board_index : 1
+      start_reg : 8
+      count : 2
+      frequency : 1
+      type: input
+    - board_index : 1
+      start_reg : 10
+      count : 2
+      frequency : 1
+      type: input
+    - board_index : 1
+      start_reg : 12
+      count : 2
+      frequency : 1
+      type: input
+    - board_index : 1
+      start_reg : 14
+      count : 2
+      frequency : 1
+      type: input
+    - board_index : 1
+      start_reg : 16
+      count : 2
+      frequency : 1
+      type: input
+    - board_index : 1
+      start_reg : 18
+      count : 2
+      frequency : 1
+      type: input
+    - board_index : 1
+      start_reg : 20
+      count : 2
+      frequency : 1
+      type: input
+    - board_index : 1
+      start_reg : 22
+      count : 2
+      frequency : 1
+      type: input
+    - board_index : 1
+      start_reg : 24
+      count : 2
+      frequency : 1
+      type: input
+    - board_index : 1
+      start_reg : 26
+      count : 2
+      frequency : 1
+      type: input
+    - board_index : 1
+      start_reg : 28
+      count : 2
+      frequency : 1
+      type: input
+    - board_index : 1
+      start_reg : 30
+      count : 2
+      frequency : 1
+      type: input
+    - board_index : 1
+      start_reg : 32
+      count : 2
+      frequency : 1
+      type: input
+    - board_index : 1
+      start_reg : 34
+      count : 2
+      frequency : 1
+      type: input
+    - board_index : 1
+      start_reg : 36
+      count : 2
+      frequency : 1
+      type: input
+    - board_index : 1
+      start_reg : 38
+      count : 2
+      frequency : 1
+      type: input
+    - board_index : 1
+      start_reg : 40
+      count : 2
+      frequency : 1
+      type: input
+    - board_index : 1
+      start_reg : 42
+      count : 2
+      frequency : 1
+      type: input
+    - board_index : 1
+      start_reg : 46
+      count : 2
+      frequency : 1
+      type: input
+    - board_index : 1
+      start_reg : 48
+      count : 2
+      frequency : 1
+      type: input
+    - board_index : 1
+      start_reg : 52
+      count : 2
+      frequency : 1
+      type: input
+    - board_index : 1
+      start_reg : 56
+      count : 2
+      frequency : 1
+      type: input
+    - board_index : 1
+      start_reg : 60
+      count : 2
+      frequency : 1
+      type: input
+    - board_index : 1
+      start_reg : 62
+      count : 2
+      frequency : 1
+      type: input
+    - board_index : 1
+      start_reg : 66
+      count : 2
+      frequency : 1
+      type: input
+    - board_index : 1
+      start_reg : 70
+      count : 2
+      frequency : 1
+      type: input
+    - board_index : 1
+      start_reg : 72
+      count : 2
+      frequency : 1
+      type: input
+    - board_index : 1
+      start_reg : 74
+      count : 2
+      frequency : 1
+      type: input
+    - board_index : 1
+      start_reg : 76
+      count : 2
+      frequency : 1
+      type: input
+    - board_index : 1
+      start_reg : 78
+      count : 2
+      frequency : 1
+      type: input
+    - board_index : 1
+      start_reg : 80
+      count : 2
+      frequency : 1
+      type: input
+    - board_index : 1
+      start_reg : 82
+      count : 2
+      frequency : 1
+      type: input
+    - board_index : 1
+      start_reg : 84
+      count : 2
+      frequency : 1
+      type: input
+    - board_index : 1
+      start_reg : 86
+      count : 2
+      frequency : 1
+      type: input
+    - board_index : 1
+      start_reg : 100
+      count : 2
+      frequency : 1
+      type: input
+    - board_index : 1
+      start_reg : 102
+      count : 2
+      frequency : 1
+      type: input
+    - board_index : 1
+      start_reg : 104
+      count : 2
+      frequency : 1
+      type: input
+    - board_index : 1
+      start_reg : 106
+      count : 2
+      frequency : 1
+      type: input
+    - board_index : 1
+      start_reg : 108
+      count : 2
+      frequency : 1
+      type: input
+    - board_index : 1
+      start_reg : 110
+      count : 2
+      frequency : 1
+      type: input
+    - board_index : 1
+      start_reg : 200
+      count : 2
+      frequency : 1
+      type: input
+    - board_index : 1
+      start_reg : 202
+      count : 2
+      frequency : 1
+      type: input
+    - board_index : 1
+      start_reg : 204
+      count : 2
+      frequency : 1
+      type: input
+    - board_index : 1
+      start_reg : 206
+      count : 2
+      frequency : 1
+      type: input
+    - board_index : 1
+      start_reg : 224
+      count : 2
+      frequency : 1
+      type: input
+    - board_index : 1
+      start_reg : 234
+      count : 2
+      frequency : 1
+      type: input
+    - board_index : 1
+      start_reg : 236
+      count : 2
+      frequency : 1
+      type: input
+    - board_index : 1
+      start_reg : 238
+      count : 2
+      frequency : 1
+      type: input
+    - board_index : 1
+      start_reg : 240
+      count : 2
+      frequency : 1
+      type: input
+    - board_index : 1
+      start_reg : 242
+      count : 2
+      frequency : 1
+      type: input
+    - board_index : 1
+      start_reg : 244
+      count : 2
+      frequency : 1
+      type: input
+    - board_index : 1
+      start_reg : 248
+      count : 2
+      frequency : 1
+      type: input
+    - board_index : 1
+      start_reg : 250
+      count : 2
+      frequency : 1
+      type: input
+    - board_index : 1
+      start_reg : 254
+      count : 2
+      frequency : 1
+      type: input
+    - board_index : 1
+      start_reg : 258
+      count : 2
+      frequency : 1
+      type: input
+    - board_index : 1
+      start_reg : 260
+      count : 2
+      frequency : 1
+      type: input
+    - board_index : 1
+      start_reg : 262
+      count : 2
+      frequency : 1
+      type: input
+    - board_index : 1
+      start_reg : 264
+      count : 2
+      frequency : 1
+      type: input
+    - board_index : 1
+      start_reg : 266
+      count : 2
+      frequency : 1
+      type: input
+    - board_index : 1
+      start_reg : 268
+      count : 2
+      frequency : 1
+      type: input
+    - board_index : 1
+      start_reg : 334
+      count : 2
+      frequency : 1
+      type: input
+    - board_index : 1
+      start_reg : 336
+      count : 2
+      frequency : 1
+      type: input
+    - board_index : 1
+      start_reg : 338
+      count : 2
+      frequency : 1
+      type: input
+    - board_index : 1
+      start_reg : 340
+      count : 2
+      frequency : 1
+      type: input
+    - board_index : 1
+      start_reg : 342
+      count : 2
+      frequency : 1
+      type: input
+    - board_index : 1
+      start_reg : 344
+      count : 2
+      frequency : 1
+      type: input
+    - board_index : 1
+      start_reg : 346
+      count : 2
+      frequency : 1
+      type: input
+    - board_index : 1
+      start_reg : 348
+      count : 2
+      frequency : 1
+      type: input
+    - board_index : 1
+      start_reg : 350
+      count : 2
+      frequency : 1
+      type: input
+    - board_index : 1
+      start_reg : 352
+      count : 2
+      frequency : 1
+      type: input
+    - board_index : 1
+      start_reg : 354
+      count : 2
+      frequency : 1
+      type: input
+    - board_index : 1
+      start_reg : 356
+      count : 2
+      frequency : 1
+      type: input
+    - board_index : 1
+      start_reg : 358
+      count : 2
+      frequency : 1
+      type: input
+    - board_index : 1
+      start_reg : 360
+      count : 2
+      frequency : 1
+      type: input
+    - board_index : 1
+      start_reg : 362
+      count : 2
+      frequency : 1
+      type: input
+    - board_index : 1
+      start_reg : 364
+      count : 2
+      frequency : 1
+      type: input
+    - board_index : 1
+      start_reg : 366
+      count : 2
+      frequency : 1
+      type: input
+    - board_index : 1
+      start_reg : 368
+      count : 2
+      frequency : 1
+      type: input
+    - board_index : 1
+      start_reg : 370
+      count : 2
+      frequency : 1
+      type: input
+    - board_index : 1
+      start_reg : 372
+      count : 2
+      frequency : 1
+      type: input
+    - board_index : 1
+      start_reg : 374
+      count : 2
+      frequency : 1
+      type: input
+    - board_index : 1
+      start_reg : 376
+      count : 2
+      frequency : 1
+      type: input
+    - board_index : 1
+      start_reg : 378
+      count : 2
+      frequency : 1
+      type: input
+    - board_index : 1
+      start_reg : 380
+      count : 2
+      frequency : 1
+      type: input
+    - board_index : 1
+      start_reg : 384
+      count : 2
+      frequency : 1
+      type: input
+    - board_index : 1
+      start_reg : 386
+      count : 2
+      frequency : 1
+      type: input
+    - board_index : 1
+      start_reg : 388
+      count : 2
+      frequency : 1
+      type: input
+    - board_index : 1
+      start_reg : 390
+      count : 2
+      frequency : 1
+      type: input
+    - board_index : 1
+      start_reg : 392
+      count : 2
+      frequency : 1
+      type: input
+    - board_index : 1
+      start_reg : 394
+      count : 2
+      frequency : 1
+      type: input
+modbus_features:
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 0
+      reg_type: input
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 2
+      reg_type: input
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 4
+      reg_type: input
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 6
+      reg_type: input
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 8
+      reg_type: input
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 10
+      reg_type: input
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 12
+      reg_type: input
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 14
+      reg_type: input
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 16
+      reg_type: input
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 18
+      reg_type: input
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 20
+      reg_type: input
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 22
+      reg_type: input
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 24
+      reg_type: input
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 26
+      reg_type: input
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 28
+      reg_type: input
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 30
+      reg_type: input
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 32
+      reg_type: input
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 34
+      reg_type: input
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 36
+      reg_type: input
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 38
+      reg_type: input
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 40
+      reg_type: input
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 42
+      reg_type: input
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 46
+      reg_type: input
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 48
+      reg_type: input
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 52
+      reg_type: input
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 56
+      reg_type: input
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 60
+      reg_type: input
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 62
+      reg_type: input
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 66
+      reg_type: input
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 70
+      reg_type: input
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 72
+      reg_type: input
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 74
+      reg_type: input
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 76
+      reg_type: input
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 78
+      reg_type: input
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 80
+      reg_type: input
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 82
+      reg_type: input
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 84
+      reg_type: input
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 86
+      reg_type: input
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 100
+      reg_type: input
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 102
+      reg_type: input
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 104
+      reg_type: input
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 106
+      reg_type: input
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 108
+      reg_type: input
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 110
+      reg_type: input
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 200
+      reg_type: input
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 202
+      reg_type: input
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 204
+      reg_type: input
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 206
+      reg_type: input
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 224
+      reg_type: input
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 234
+      reg_type: input
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 236
+      reg_type: input
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 238
+      reg_type: input
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 240
+      reg_type: input
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 242
+      reg_type: input
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 244
+      reg_type: input
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 248
+      reg_type: input
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 250
+      reg_type: input
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 254
+      reg_type: input
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 258
+      reg_type: input
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 260
+      reg_type: input
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 262
+      reg_type: input
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 264
+      reg_type: input
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 266
+      reg_type: input
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 268
+      reg_type: input
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 334
+      reg_type: input
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 336
+      reg_type: input
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 338
+      reg_type: input
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 340
+      reg_type: input
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 342
+      reg_type: input
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 344
+      reg_type: input
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 346
+      reg_type: input
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 348
+      reg_type: input
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 350
+      reg_type: input
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 352
+      reg_type: input
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 354
+      reg_type: input
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 356
+      reg_type: input
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 358
+      reg_type: input
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 360
+      reg_type: input
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 362
+      reg_type: input
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 364
+      reg_type: input
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 366
+      reg_type: input
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 368
+      reg_type: input
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 370
+      reg_type: input
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 372
+      reg_type: input
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 374
+      reg_type: input
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 376
+      reg_type: input
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 378
+      reg_type: input
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 380
+      reg_type: input
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 384
+      reg_type: input
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 386
+      reg_type: input
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 388
+      reg_type: input
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 390
+      reg_type: input
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 392
+      reg_type: input
+    - type : REGISTER
+      major_group : 1
+      count : 2
+      start_reg : 394
+      reg_type: input

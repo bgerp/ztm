@@ -208,3 +208,5 @@ class ACR122U(BaseCardReader):
 
         except Exception:
             self.__logger.error(traceback.format_exc())
+
+#endregion

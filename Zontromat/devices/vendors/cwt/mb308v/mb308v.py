@@ -136,6 +136,4 @@ class MB308V(ModbusDevice):
             )
         )
 
-
-
 #endregion

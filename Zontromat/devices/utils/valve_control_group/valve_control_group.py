@@ -28,7 +28,7 @@ from utils.logic.functions import l_scale
 from plugins.base_plugin import BasePlugin
 
 from devices.factories.valve.valve_factory import ValveFactory
-from devices.factories.pump.pump_factory import PumpFactory
+from devices.factories.pumps.pump_factory import PumpFactory
 from devices.utils.valve_control_group.valve_control_group_mode import ValveControlGroupMode
 
 # (Request from mail: Eml6429)

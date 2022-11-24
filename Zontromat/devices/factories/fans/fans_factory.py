@@ -102,7 +102,7 @@ class FansFactory:
             device = F3P146EC072600(
                 name=name,
                 controller=controller,
-                output=config["options"]["output"]
+                options=config["options"]
             )
 
         else:

@@ -24,7 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import re
 
-from utils.configuarable import Configuarable
+from utils.configurable import Configuarable
 from utils.utils import serial_ports
 
 from data import verbal_const
@@ -255,14 +255,14 @@ class BaseController(Configuarable):
         valid_uart_identifier = -1 < uart_identifier <= 247
 
         if not valid_uart_identifier:
-        #     raise ValueError("MODBUS identifier should be M1 to M247.")
+            # raise ValueError("MODBUS identifier should be M1 to M247.")
             return False
 
         # Check for MODBUS identifier.
         has_mb_identifier = "ID" in chunks[Identifiers.ID.value]
 
         if not has_mb_identifier:
-        #     raise SyntaxError("MODBUS identifier should be provided. (M1)")
+            # raise SyntaxError("MODBUS identifier should be provided. (M1)")
             return False
 
         # Get the MODBUS identifier.
@@ -325,6 +325,7 @@ class BaseController(Configuarable):
         io_name = gpio.upper()
 
         # Remove flip identification.
+        io_inverted = "!" in io_name
         io_name = io_name.replace("!", "")
 
         # Split in to chunks.
@@ -362,7 +363,13 @@ class BaseController(Configuarable):
         io_index = int("".join(filter(str.isdigit, io_identifier)))
 
         # Create data structure that holds the MODBUS identifier, IO type and IO index.
-        identifier = {"uart": uart, "mb_id": mb_id, "io_reg": io_reg, "io_type": io_type, "io_index": io_index}
+        identifier = {
+            "uart": uart,
+            "mb_id": mb_id,
+            "io_reg": io_reg,
+            "io_type": io_type,
+            "io_index": io_index, 
+            "io_inverted": io_inverted}
 
         return identifier
 

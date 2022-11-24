@@ -60,8 +60,8 @@
         "scope": "Device"
     },
     {
-        "data_type": "str",
-        "default": "off",
+        "data_type": "json",
+        "default": {},
         "description": "Card reader enabled",
         "limit": 0.0,
         "name": "ac.entry_reader_1.enabled",
@@ -70,51 +70,11 @@
         "scope": "System"
     },
     {
-        "data_type": "int",
-        "default": 9600,
-        "description": "Card reader port baud rate",
-        "limit": 0.0,
-        "name": "ac.entry_reader_1.port.baudrate",
-        "plugin": "Access Control",
-        "range": "300|600|1200|2400|4800|9600|19200|38400|57600|115200",
-        "scope": "System"
-    },
-    {
-        "data_type": "str",
-        "default": "COM11",
-        "description": "Card reader port name",
-        "limit": 0.0,
-        "name": "ac.entry_reader_1.port.name",
-        "plugin": "Access Control",
-        "range": "",
-        "scope": "System"
-    },
-    {
-        "data_type": "str",
-        "default": "off",
+        "data_type": "json",
+        "default": {},
         "description": "Card reader enabled",
         "limit": 0.0,
         "name": "ac.exit_reader_1.enabled",
-        "plugin": "Access Control",
-        "range": "",
-        "scope": "System"
-    },
-    {
-        "data_type": "int",
-        "default": 9600,
-        "description": "Card reader 1 port baud rate",
-        "limit": 0.0,
-        "name": "ac.exit_reader_1.port.baudrate",
-        "plugin": "Access Control",
-        "range": "300|600|1200|2400|4800|9600|19200|38400|57600|115200",
-        "scope": "System"
-    },
-    {
-        "data_type": "str",
-        "default": "COM5",
-        "description": "Card reader 1 port name",
-        "limit": 0.0,
-        "name": "ac.exit_reader_1.port.name",
         "plugin": "Access Control",
         "range": "",
         "scope": "System"
@@ -131,7 +91,7 @@
     },
     {
         "data_type": "str",
-        "default": "DO2",
+        "default": "off",
         "description": "Lock mechanism output",
         "limit": 0.0,
         "name": "ac.lock_mechanism_1.output",
@@ -170,8 +130,8 @@
         "scope": "Device"
     },
     {
-        "data_type": "str",
-        "default": "off",
+        "data_type": "json",
+        "default": {},
         "description": "Card reader settings",
         "limit": 0.0,
         "name": "ac.entry_reader_2.enabled",
@@ -180,51 +140,11 @@
         "scope": "System"
     },
     {
-        "data_type": "int",
-        "default": 9600,
-        "description": "Card reader port baud rate",
-        "limit": 0.0,
-        "name": "ac.entry_reader_2.port.baudrate",
-        "plugin": "Access Control",
-        "range": "300|600|1200|2400|4800|9600|19200|38400|57600|115200",
-        "scope": "System"
-    },
-    {
-        "data_type": "str",
-        "default": "COM8",
-        "description": "Card reader port name",
-        "limit": 0.0,
-        "name": "ac.entry_reader_2.port.name",
-        "plugin": "Access Control",
-        "range": "",
-        "scope": "System"
-    },
-    {
-        "data_type": "str",
-        "default": "off",
+        "data_type": "json",
+        "default": {},
         "description": "Card reader settings",
         "limit": 0.0,
         "name": "ac.exit_reader_2.enabled",
-        "plugin": "Access Control",
-        "range": "",
-        "scope": "System"
-    },
-    {
-        "data_type": "int",
-        "default": 9600,
-        "description": "Card reader port baud rate",
-        "limit": 0.0,
-        "name": "ac.exit_reader_2.port.baudrate",
-        "plugin": "Access Control",
-        "range": "300|600|1200|2400|4800|9600|19200|38400|57600|115200",
-        "scope": "System"
-    },
-    {
-        "data_type": "str",
-        "default": "COM9",
-        "description": "Card reader port name",
-        "limit": 0.0,
-        "name": "ac.exit_reader_2.port.name",
         "plugin": "Access Control",
         "range": "",
         "scope": "System"
@@ -420,33 +340,25 @@
         "scope": "Device"
     },
     {
-        "data_type": "str",
-        "default": "AI0",
-        "description": "Feedback input",
+        "data_type": "json",
+        "default": {
+            "model": "MODv1",
+            "options": {
+                "deg_per_sec": 10.0,
+                "feedback": "off",
+                "feedback_tresh": 0.093,
+                "max": 180,
+                "min": 0,
+                "output_ccw": "off",
+                "output_cw": "off"
+            },
+            "vendor": "PT"
+        },
+        "description": "Window 1 blinds mechanism",
         "limit": 0.0,
-        "name": "blinds.input_fb",
+        "name": "blinds.blind_1.mechanism",
         "plugin": "Blinds",
-        "range": "off|DI0|DI1|DI2|DI3|DI4|DI5|DI6|DI7|DI8|AI0|AI1|AI2|AI3|AI4|AI5|AI6|AI7|AI8",
-        "scope": "System"
-    },
-    {
-        "data_type": "str",
-        "default": "DO0",
-        "description": "CCW output",
-        "limit": 0.0,
-        "name": "blinds.output_ccw",
-        "plugin": "Blinds",
-        "range": "off|DO0|DO1|DO2|DO3|DO4|DO5|DO6|DO7|DO8|!DO0|!DO1|!DO2|!DO3|!DO4|!DO5|!DO6|!DO7|!DO8",
-        "scope": "System"
-    },
-    {
-        "data_type": "str",
-        "default": "DO1",
-        "description": "CW output",
-        "limit": 0.0,
-        "name": "blinds.output_cw",
-        "plugin": "Blinds",
-        "range": "off|DO0|DO1|DO2|DO3|DO4|DO5|DO6|DO7|DO8|!DO0|!DO1|!DO2|!DO3|!DO4|!DO5|!DO6|!DO7|!DO8",
+        "range": "",
         "scope": "System"
     },
     {
@@ -454,27 +366,17 @@
         "default": 0.0,
         "description": "Position [deg]",
         "limit": 0.0,
-        "name": "blinds.position",
+        "name": "blinds.blind_1.position",
         "plugin": "Blinds",
         "range": "0.0/180.0",
         "scope": "System"
     },
     {
         "data_type": "float",
-        "default": 10.0,
-        "description": "Degrees pre seconds ratio.",
+        "default": 2.0,
+        "description": "Object height [m].",
         "limit": 0.0,
-        "name": "blinds.deg_per_sec",
-        "plugin": "Blinds",
-        "range": "0.0/",
-        "scope": "System"
-    },
-    {
-        "data_type": "float",
-        "default": 0.093,
-        "description": "Feedback treshold level in [V].",
-        "limit": 0.0,
-        "name": "blinds.feedback_treshold",
+        "name": "blinds.blind_1.object_height",
         "plugin": "Blinds",
         "range": "0.0/",
         "scope": "System"
@@ -484,19 +386,19 @@
         "default": 1.0,
         "description": "Sun spot limit [m].",
         "limit": 0.0,
-        "name": "blinds.sunspot_limit",
+        "name": "blinds.blind_1.sunspot_limit",
         "plugin": "Blinds",
         "range": "0.0/",
         "scope": "System"
     },
     {
-        "data_type": "float",
-        "default": 2.0,
-        "description": "Object height [m].",
+        "data_type": "int",
+        "default": 1,
+        "description": "Number of blind controllers",
         "limit": 0.0,
-        "name": "blinds.object_height",
+        "name": "blinds.count",
         "plugin": "Blinds",
-        "range": "0.0/",
+        "range": "1/",
         "scope": "System"
     },
     {
@@ -510,23 +412,20 @@
         "scope": "System"
     },
     {
-        "data_type": "str",
-        "default": "off",
-        "description": "Cold water input flow meter",
+        "data_type": "json",
+        "default": {
+            "model": "flowmeter_dn20",
+            "options": {
+                "mb_id": 3,
+                "uart": 1
+            },
+            "vendor": "mainone"
+        },
+        "description": "Cold water flow meter",
         "limit": 0.0,
-        "name": "monitoring.cw.input",
+        "name": "monitoring.cw.flowmeter_settings",
         "plugin": "Monitoring",
-        "range": "off|DI0|DI1|DI2|DI3|DI4|DI5|DI6|DI7|DI8|!DI0|!DI1|!DI2|!DI3|!DI4|!DI5|!DI6|!DI7|!DI8",
-        "scope": "System"
-    },
-    {
-        "data_type": "float",
-        "default": 1.0,
-        "description": "Cold water tics per liter",
-        "limit": 0.0,
-        "name": "monitoring.cw.tpl",
-        "plugin": "Monitoring",
-        "range": "0.0/",
+        "range": "",
         "scope": "System"
     },
     {
@@ -550,23 +449,20 @@
         "scope": "Device"
     },
     {
-        "data_type": "str",
-        "default": "off",
+        "data_type": "json",
+        "default": {
+            "model": "flowmeter_dn20",
+            "options": {
+                "mb_id": 3,
+                "uart": 1
+            },
+            "vendor": "mainone"
+        },
         "description": "Hot water input flow meter",
         "limit": 0.0,
-        "name": "monitoring.hw.input",
+        "name": "monitoring.hw.flowmeter_settings",
         "plugin": "Monitoring",
-        "range": "off|DI0|DI1|DI2|DI3|DI4|DI5|DI6|DI7|DI8|!DI0|!DI1|!DI2|!DI3|!DI4|!DI5|!DI6|!DI7|!DI8",
-        "scope": "System"
-    },
-    {
-        "data_type": "float",
-        "default": 1.0,
-        "description": "Hot water tics per liter",
-        "limit": 0.0,
-        "name": "monitoring.hw.tpl",
-        "plugin": "Monitoring",
-        "range": "0.0/",
+        "range": "",
         "scope": "System"
     },
     {
@@ -590,8 +486,15 @@
         "scope": "Device"
     },
     {
-        "data_type": "str",
-        "default": "Eastron/SDM630/0/2",
+        "data_type": "json",
+        "default": {
+            "model": "SDM630",
+            "options": {
+                "mb_id": 2,
+                "uart": 0
+            },
+            "vendor": "Eastron"
+        },
         "description": "Power analyser settings",
         "limit": 0.0,
         "name": "monitoring.pa.settings",
@@ -904,7 +807,8 @@
         "default": {
             "model": "XY-MD02",
             "options": {
-                "mb_id": 4
+                "mb_id": 4,
+                "uart": 0
             },
             "vendor": "Donkger"
         },
@@ -930,7 +834,8 @@
         "default": {
             "model": "XY-MD02",
             "options": {
-                "mb_id": 3
+                "mb_id": 3,
+                "uart": 0
             },
             "vendor": "Donkger"
         },
@@ -956,7 +861,8 @@
         "default": {
             "model": "XY-MD02",
             "options": {
-                "mb_id": 5
+                "mb_id": 5,
+                "uart": 0
             },
             "vendor": "Donkger"
         },
@@ -982,9 +888,9 @@
         "default": {
             "model": "Klimafan",
             "options": {
-                "stage1": "RO4",
-                "stage2": "RO5",
-                "stage3": "RO6"
+                "stage1": "RO0",
+                "stage2": "RO1",
+                "stage3": "RO2"
             },
             "vendor": "Silpa"
         },
@@ -1026,33 +932,31 @@
         "scope": "System"
     },
     {
-        "data_type": "float",
-        "default": 1.0,
-        "description": "Loop 1 water flow meter ticks per liter scale",
-        "limit": 0.0,
-        "name": "hvac.loop1_1.cnt.tpl",
-        "plugin": "HVAC",
-        "range": "0.0/",
-        "scope": "System"
-    },
-    {
-        "data_type": "str",
-        "default": "off",
+        "data_type": "json",
+        "default": {
+            "model": "flowmeter_dn20",
+            "options": {
+                "mb_id": 3,
+                "uart": 1
+            },
+            "vendor": "mainone"
+        },
         "description": "Loop 1 water flow meter signal input",
         "limit": 0.0,
-        "name": "hvac.loop1_1.cnt.input",
+        "name": "hvac.loop1_1.flowmeter.settings",
         "plugin": "HVAC",
-        "range": "off|DI0|DI1|DI2|DI3|DI4|DI5|DI6|DI7|DI8|!DI0|!DI1|!DI2|!DI3|!DI4|!DI5|!DI6|!DI7|!DI8",
+        "range": "",
         "scope": "System"
     },
     {
         "data_type": "json",
         "default": {
-            "model": "XY-MD02",
+            "model": "inlet_temp",
             "options": {
-                "mb_id": 3
+                "mb_id": 3,
+                "uart": 1
             },
-            "vendor": "Donkger"
+            "vendor": "mainone"
         },
         "description": "Loop 1 temperature sensor settings",
         "limit": 0.0,
@@ -1082,8 +986,14 @@
         "scope": "System"
     },
     {
-        "data_type": "str",
-        "default": "Tonhe/a20m15b2c/RO2/off/0/100",
+        "data_type": "json",
+        "default": {
+            "model": "a20t20b2c",
+            "options": {
+                "output": "RO4"
+            },
+            "vendor": "Tonhe"
+        },
         "description": "Loop 1 valve settings",
         "limit": 0.0,
         "name": "hvac.loop1_1.valve.settings",
@@ -1092,33 +1002,31 @@
         "scope": "System"
     },
     {
-        "data_type": "float",
-        "default": 1.0,
+        "data_type": "json",
+        "default": {
+            "model": "flowmeter_dn20",
+            "options": {
+                "mb_id": 3,
+                "uart": 1
+            },
+            "vendor": "mainone"
+        },
         "description": "Loop 2 water flow meter ticks per liter scale",
         "limit": 0.0,
-        "name": "hvac.loop2_1.cnt.tpl",
+        "name": "hvac.loop2_1.flowmeter.settings",
         "plugin": "HVAC",
-        "range": "0.0/",
-        "scope": "System"
-    },
-    {
-        "data_type": "str",
-        "default": "off",
-        "description": "Loop 1 water flow meter signal input",
-        "limit": 0.0,
-        "name": "hvac.loop2_1.cnt.input",
-        "plugin": "HVAC",
-        "range": "off|DI0|DI1|DI2|DI3|DI4|DI5|DI6|DI7|DI8|!DI0|!DI1|!DI2|!DI3|!DI4|!DI5|!DI6|!DI7|!DI8",
+        "range": "",
         "scope": "System"
     },
     {
         "data_type": "json",
         "default": {
-            "model": "XY-MD02",
+            "model": "inlet_temp",
             "options": {
-                "mb_id": 5
+                "mb_id": 3,
+                "uart": 1
             },
-            "vendor": "Donkger"
+            "vendor": "mainone"
         },
         "description": "Loop 2 temperature sensor settings",
         "limit": 0.0,
@@ -1138,8 +1046,14 @@
         "scope": "System"
     },
     {
-        "data_type": "str",
-        "default": "Tonhe/a20m15b2c/RO3/off/0/100",
+        "data_type": "json",
+        "default": {
+            "model": "a20t20b2c",
+            "options": {
+                "output": "RO5"
+            },
+            "vendor": "Tonhe"
+        },
         "description": "Loop 2 valve settings",
         "limit": 0.0,
         "name": "hvac.loop2_1.valve.settings",
@@ -1526,10 +1440,10 @@
         "default": {
             "model": "FLX-05F",
             "options": {
-                "limit_ccw": "U1:ID1:R0:DI1",
-                "limit_cw": "U1:ID1:R0:DI0",
-                "output_ccw": "U1:ID1:R0:DO1",
-                "output_cw": "U1:ID1:R0:DO0"
+                "limit_ccw": "off",
+                "limit_cw": "off",
+                "output_ccw": "off",
+                "output_cw": "off"
             },
             "vendor": "Flowx"
         },
@@ -1565,10 +1479,10 @@
         "default": {
             "model": "FLX-05F",
             "options": {
-                "limit_ccw": "U1:ID1:R0:DI1",
-                "limit_cw": "U1:ID1:R0:DI0",
-                "output_ccw": "U1:ID1:R0:DO1",
-                "output_cw": "U1:ID1:R0:DO0"
+                "limit_ccw": "off",
+                "limit_cw": "off",
+                "output_ccw": "off",
+                "output_cw": "off"
             },
             "vendor": "Flowx"
         },
@@ -1604,10 +1518,10 @@
         "default": {
             "model": "FLX-05F",
             "options": {
-                "limit_ccw": "U1:ID1:R0:DI1",
-                "limit_cw": "U1:ID1:R0:DI0",
-                "output_ccw": "U1:ID1:R0:DO1",
-                "output_cw": "U1:ID1:R0:DO0"
+                "limit_ccw": "off",
+                "limit_cw": "off",
+                "output_ccw": "off",
+                "output_cw": "off"
             },
             "vendor": "Flowx"
         },
@@ -1643,10 +1557,10 @@
         "default": {
             "model": "FLX-05F",
             "options": {
-                "limit_ccw": "U1:ID1:R0:DI1",
-                "limit_cw": "U1:ID1:R0:DI0",
-                "output_ccw": "U1:ID1:R0:DO1",
-                "output_cw": "U1:ID1:R0:DO0"
+                "limit_ccw": "off",
+                "limit_cw": "off",
+                "output_ccw": "off",
+                "output_cw": "off"
             },
             "vendor": "Flowx"
         },
@@ -1682,10 +1596,10 @@
         "default": {
             "model": "FLX-05F",
             "options": {
-                "limit_ccw": "U1:ID1:R0:DI1",
-                "limit_cw": "U1:ID1:R0:DI0",
-                "output_ccw": "U1:ID1:R0:DO1",
-                "output_cw": "U1:ID1:R0:DO0"
+                "limit_ccw": "off",
+                "limit_cw": "off",
+                "output_ccw": "off",
+                "output_cw": "off"
             },
             "vendor": "Flowx"
         },
@@ -1721,10 +1635,10 @@
         "default": {
             "model": "FLX-05F",
             "options": {
-                "limit_ccw": "U1:ID1:R0:DI1",
-                "limit_cw": "U1:ID1:R0:DI0",
-                "output_ccw": "U1:ID1:R0:DO1",
-                "output_cw": "U1:ID1:R0:DO0"
+                "limit_ccw": "off",
+                "limit_cw": "off",
+                "output_ccw": "off",
+                "output_cw": "off"
             },
             "vendor": "Flowx"
         },
@@ -1760,10 +1674,10 @@
         "default": {
             "model": "FLX-05F",
             "options": {
-                "limit_ccw": "U1:ID1:R0:DI1",
-                "limit_cw": "U1:ID1:R0:DI0",
-                "output_ccw": "U1:ID1:R0:DO1",
-                "output_cw": "U1:ID1:R0:DO0"
+                "limit_ccw": "off",
+                "limit_cw": "off",
+                "output_ccw": "off",
+                "output_cw": "off"
             },
             "vendor": "Flowx"
         },
@@ -1799,10 +1713,10 @@
         "default": {
             "model": "FLX-05F",
             "options": {
-                "limit_ccw": "U1:ID1:R0:DI1",
-                "limit_cw": "U1:ID1:R0:DI0",
-                "output_ccw": "U1:ID1:R0:DO1",
-                "output_cw": "U1:ID1:R0:DO0"
+                "limit_ccw": "off",
+                "limit_cw": "off",
+                "output_ccw": "off",
+                "output_cw": "off"
             },
             "vendor": "Flowx"
         },
@@ -1838,10 +1752,10 @@
         "default": {
             "model": "FLX-05F",
             "options": {
-                "limit_ccw": "U1:ID1:R0:DI1",
-                "limit_cw": "U1:ID1:R0:DI0",
-                "output_ccw": "U1:ID1:R0:DO1",
-                "output_cw": "U1:ID1:R0:DO0"
+                "limit_ccw": "off",
+                "limit_cw": "off",
+                "output_ccw": "off",
+                "output_cw": "off"
             },
             "vendor": "Flowx"
         },
@@ -1877,10 +1791,10 @@
         "default": {
             "model": "FLX-05F",
             "options": {
-                "limit_ccw": "U1:ID1:R0:DI1",
-                "limit_cw": "U1:ID1:R0:DI0",
-                "output_ccw": "U1:ID1:R0:DO1",
-                "output_cw": "U1:ID1:R0:DO0"
+                "limit_ccw": "off",
+                "limit_cw": "off",
+                "output_ccw": "off",
+                "output_cw": "off"
             },
             "vendor": "Flowx"
         },
@@ -1894,9 +1808,10 @@
     {
         "data_type": "json",
         "default": {
-            "model": "Pump",
+            "model": "MAGNA1_80_100_F_360_1x230V_PN6",
             "options": {
-                "mb_id": 5
+                "mb_id": 0,
+                "uart": 0
             },
             "vendor": "Grundfos"
         },
@@ -1922,10 +1837,10 @@
         "default": {
             "model": "FLX-05F",
             "options": {
-                "limit_ccw": "U1:ID1:R0:DI1",
-                "limit_cw": "U1:ID1:R0:DI0",
-                "output_ccw": "U1:ID1:R0:DO1",
-                "output_cw": "U1:ID1:R0:DO0"
+                "limit_ccw": "off",
+                "limit_cw": "off",
+                "output_ccw": "off",
+                "output_cw": "off"
             },
             "vendor": "Flowx"
         },
@@ -1941,10 +1856,10 @@
         "default": {
             "model": "FLX-05F",
             "options": {
-                "limit_ccw": "U1:ID1:R0:DI1",
-                "limit_cw": "U1:ID1:R0:DI0",
-                "output_ccw": "U1:ID1:R0:DO1",
-                "output_cw": "U1:ID1:R0:DO0"
+                "limit_ccw": "off",
+                "limit_cw": "off",
+                "output_ccw": "off",
+                "output_cw": "off"
             },
             "vendor": "Flowx"
         },
@@ -1960,10 +1875,10 @@
         "default": {
             "model": "FLX-05F",
             "options": {
-                "limit_ccw": "U1:ID1:R0:DI1",
-                "limit_cw": "U1:ID1:R0:DI0",
-                "output_ccw": "U1:ID1:R0:DO1",
-                "output_cw": "U1:ID1:R0:DO0"
+                "limit_ccw": "off",
+                "limit_cw": "off",
+                "output_ccw": "off",
+                "output_cw": "off"
             },
             "vendor": "Flowx"
         },
@@ -1979,10 +1894,10 @@
         "default": {
             "model": "FLX-05F",
             "options": {
-                "limit_ccw": "U1:ID1:R0:DI1",
-                "limit_cw": "U1:ID1:R0:DI0",
-                "output_ccw": "U1:ID1:R0:DO1",
-                "output_cw": "U1:ID1:R0:DO0"
+                "limit_ccw": "off",
+                "limit_cw": "off",
+                "output_ccw": "off",
+                "output_cw": "off"
             },
             "vendor": "Flowx"
         },
@@ -1996,9 +1911,10 @@
     {
         "data_type": "json",
         "default": {
-            "model": "Pump",
+            "model": "MAGNA1_80_100_F_360_1x230V_PN6",
             "options": {
-                "mb_id": 5
+                "mb_id": 0,
+                "uart": 0
             },
             "vendor": "Grundfos"
         },
@@ -2024,10 +1940,10 @@
         "default": {
             "model": "FLX-05F",
             "options": {
-                "limit_ccw": "U1:ID1:R0:DI1",
-                "limit_cw": "U1:ID1:R0:DI0",
-                "output_ccw": "U1:ID1:R0:DO1",
-                "output_cw": "U1:ID1:R0:DO0"
+                "limit_ccw": "off",
+                "limit_cw": "off",
+                "output_ccw": "off",
+                "output_cw": "off"
             },
             "vendor": "Flowx"
         },
@@ -2043,10 +1959,10 @@
         "default": {
             "model": "FLX-05F",
             "options": {
-                "limit_ccw": "U1:ID1:R0:DI1",
-                "limit_cw": "U1:ID1:R0:DI0",
-                "output_ccw": "U1:ID1:R0:DO1",
-                "output_cw": "U1:ID1:R0:DO0"
+                "limit_ccw": "off",
+                "limit_cw": "off",
+                "output_ccw": "off",
+                "output_cw": "off"
             },
             "vendor": "Flowx"
         },
@@ -2062,10 +1978,10 @@
         "default": {
             "model": "FLX-05F",
             "options": {
-                "limit_ccw": "U1:ID1:R0:DI1",
-                "limit_cw": "U1:ID1:R0:DI0",
-                "output_ccw": "U1:ID1:R0:DO1",
-                "output_cw": "U1:ID1:R0:DO0"
+                "limit_ccw": "off",
+                "limit_cw": "off",
+                "output_ccw": "off",
+                "output_cw": "off"
             },
             "vendor": "Flowx"
         },
@@ -2081,10 +1997,10 @@
         "default": {
             "model": "FLX-05F",
             "options": {
-                "limit_ccw": "U1:ID1:R0:DI1",
-                "limit_cw": "U1:ID1:R0:DI0",
-                "output_ccw": "U1:ID1:R0:DO1",
-                "output_cw": "U1:ID1:R0:DO0"
+                "limit_ccw": "off",
+                "limit_cw": "off",
+                "output_ccw": "off",
+                "output_cw": "off"
             },
             "vendor": "Flowx"
         },
@@ -2098,9 +2014,10 @@
     {
         "data_type": "json",
         "default": {
-            "model": "Pump",
+            "model": "MAGNA1_80_100_F_360_1x230V_PN6",
             "options": {
-                "mb_id": 5
+                "mb_id": 0,
+                "uart": 0
             },
             "vendor": "Grundfos"
         },
@@ -2126,10 +2043,10 @@
         "default": {
             "model": "FLX-05F",
             "options": {
-                "limit_ccw": "U1:ID1:R0:DI1",
-                "limit_cw": "U1:ID1:R0:DI0",
-                "output_ccw": "U1:ID1:R0:DO1",
-                "output_cw": "U1:ID1:R0:DO0"
+                "limit_ccw": "off",
+                "limit_cw": "off",
+                "output_ccw": "off",
+                "output_cw": "off"
             },
             "vendor": "Flowx"
         },
@@ -2145,10 +2062,10 @@
         "default": {
             "model": "FLX-05F",
             "options": {
-                "limit_ccw": "U1:ID1:R0:DI1",
-                "limit_cw": "U1:ID1:R0:DI0",
-                "output_ccw": "U1:ID1:R0:DO1",
-                "output_cw": "U1:ID1:R0:DO0"
+                "limit_ccw": "off",
+                "limit_cw": "off",
+                "output_ccw": "off",
+                "output_cw": "off"
             },
             "vendor": "Flowx"
         },
@@ -2164,10 +2081,10 @@
         "default": {
             "model": "FLX-05F",
             "options": {
-                "limit_ccw": "U1:ID1:R0:DI1",
-                "limit_cw": "U1:ID1:R0:DI0",
-                "output_ccw": "U1:ID1:R0:DO1",
-                "output_cw": "U1:ID1:R0:DO0"
+                "limit_ccw": "off",
+                "limit_cw": "off",
+                "output_ccw": "off",
+                "output_cw": "off"
             },
             "vendor": "Flowx"
         },
@@ -2183,10 +2100,10 @@
         "default": {
             "model": "FLX-05F",
             "options": {
-                "limit_ccw": "U1:ID1:R0:DI1",
-                "limit_cw": "U1:ID1:R0:DI0",
-                "output_ccw": "U1:ID1:R0:DO1",
-                "output_cw": "U1:ID1:R0:DO0"
+                "limit_ccw": "off",
+                "limit_cw": "off",
+                "output_ccw": "off",
+                "output_cw": "off"
             },
             "vendor": "Flowx"
         },
@@ -2200,9 +2117,10 @@
     {
         "data_type": "json",
         "default": {
-            "model": "Pump",
+            "model": "MAGNA1_80_100_F_360_1x230V_PN6",
             "options": {
-                "mb_id": 5
+                "mb_id": 0,
+                "uart": 0
             },
             "vendor": "Grundfos"
         },
@@ -2228,10 +2146,10 @@
         "default": {
             "model": "FLX-05F",
             "options": {
-                "limit_ccw": "U1:ID1:R0:DI1",
-                "limit_cw": "U1:ID1:R0:DI0",
-                "output_ccw": "U1:ID1:R0:DO1",
-                "output_cw": "U1:ID1:R0:DO0"
+                "limit_ccw": "off",
+                "limit_cw": "off",
+                "output_ccw": "off",
+                "output_cw": "off"
             },
             "vendor": "Flowx"
         },
@@ -2247,10 +2165,10 @@
         "default": {
             "model": "FLX-05F",
             "options": {
-                "limit_ccw": "U1:ID1:R0:DI1",
-                "limit_cw": "U1:ID1:R0:DI0",
-                "output_ccw": "U1:ID1:R0:DO1",
-                "output_cw": "U1:ID1:R0:DO0"
+                "limit_ccw": "off",
+                "limit_cw": "off",
+                "output_ccw": "off",
+                "output_cw": "off"
             },
             "vendor": "Flowx"
         },
@@ -2266,10 +2184,10 @@
         "default": {
             "model": "FLX-05F",
             "options": {
-                "limit_ccw": "U1:ID1:R0:DI1",
-                "limit_cw": "U1:ID1:R0:DI0",
-                "output_ccw": "U1:ID1:R0:DO1",
-                "output_cw": "U1:ID1:R0:DO0"
+                "limit_ccw": "off",
+                "limit_cw": "off",
+                "output_ccw": "off",
+                "output_cw": "off"
             },
             "vendor": "Flowx"
         },
@@ -2285,10 +2203,10 @@
         "default": {
             "model": "FLX-05F",
             "options": {
-                "limit_ccw": "U1:ID1:R0:DI1",
-                "limit_cw": "U1:ID1:R0:DI0",
-                "output_ccw": "U1:ID1:R0:DO1",
-                "output_cw": "U1:ID1:R0:DO0"
+                "limit_ccw": "off",
+                "limit_cw": "off",
+                "output_ccw": "off",
+                "output_cw": "off"
             },
             "vendor": "Flowx"
         },
@@ -2302,9 +2220,10 @@
     {
         "data_type": "json",
         "default": {
-            "model": "Pump",
+            "model": "MAGNA1_80_100_F_360_1x230V_PN6",
             "options": {
-                "mb_id": 5
+                "mb_id": 0,
+                "uart": 0
             },
             "vendor": "Grundfos"
         },
@@ -2330,10 +2249,10 @@
         "default": {
             "model": "FLX-05F",
             "options": {
-                "limit_ccw": "U1:ID1:R0:DI1",
-                "limit_cw": "U1:ID1:R0:DI0",
-                "output_ccw": "U1:ID1:R0:DO1",
-                "output_cw": "U1:ID1:R0:DO0"
+                "limit_ccw": "off",
+                "limit_cw": "off",
+                "output_ccw": "off",
+                "output_cw": "off"
             },
             "vendor": "Flowx"
         },
@@ -2349,10 +2268,10 @@
         "default": {
             "model": "FLX-05F",
             "options": {
-                "limit_ccw": "U1:ID1:R0:DI1",
-                "limit_cw": "U1:ID1:R0:DI0",
-                "output_ccw": "U1:ID1:R0:DO1",
-                "output_cw": "U1:ID1:R0:DO0"
+                "limit_ccw": "off",
+                "limit_cw": "off",
+                "output_ccw": "off",
+                "output_cw": "off"
             },
             "vendor": "Flowx"
         },
@@ -2368,10 +2287,10 @@
         "default": {
             "model": "FLX-05F",
             "options": {
-                "limit_ccw": "U1:ID1:R0:DI1",
-                "limit_cw": "U1:ID1:R0:DI0",
-                "output_ccw": "U1:ID1:R0:DO1",
-                "output_cw": "U1:ID1:R0:DO0"
+                "limit_ccw": "off",
+                "limit_cw": "off",
+                "output_ccw": "off",
+                "output_cw": "off"
             },
             "vendor": "Flowx"
         },
@@ -2387,10 +2306,10 @@
         "default": {
             "model": "FLX-05F",
             "options": {
-                "limit_ccw": "U1:ID1:R0:DI1",
-                "limit_cw": "U1:ID1:R0:DI0",
-                "output_ccw": "U1:ID1:R0:DO1",
-                "output_cw": "U1:ID1:R0:DO0"
+                "limit_ccw": "off",
+                "limit_cw": "off",
+                "output_ccw": "off",
+                "output_cw": "off"
             },
             "vendor": "Flowx"
         },
@@ -2404,9 +2323,10 @@
     {
         "data_type": "json",
         "default": {
-            "model": "Pump",
+            "model": "MAGNA1_80_100_F_360_1x230V_PN6",
             "options": {
-                "mb_id": 5
+                "mb_id": 0,
+                "uart": 0
             },
             "vendor": "Grundfos"
         },
@@ -2432,10 +2352,10 @@
         "default": {
             "model": "FLX-05F",
             "options": {
-                "limit_ccw": "U1:ID1:R0:DI1",
-                "limit_cw": "U1:ID1:R0:DI0",
-                "output_ccw": "U1:ID1:R0:DO1",
-                "output_cw": "U1:ID1:R0:DO0"
+                "limit_ccw": "off",
+                "limit_cw": "off",
+                "output_ccw": "off",
+                "output_cw": "off"
             },
             "vendor": "Flowx"
         },
@@ -2451,10 +2371,10 @@
         "default": {
             "model": "FLX-05F",
             "options": {
-                "limit_ccw": "U1:ID1:R0:DI1",
-                "limit_cw": "U1:ID1:R0:DI0",
-                "output_ccw": "U1:ID1:R0:DO1",
-                "output_cw": "U1:ID1:R0:DO0"
+                "limit_ccw": "off",
+                "limit_cw": "off",
+                "output_ccw": "off",
+                "output_cw": "off"
             },
             "vendor": "Flowx"
         },
@@ -2470,10 +2390,10 @@
         "default": {
             "model": "FLX-05F",
             "options": {
-                "limit_ccw": "U1:ID1:R0:DI1",
-                "limit_cw": "U1:ID1:R0:DI0",
-                "output_ccw": "U1:ID1:R0:DO1",
-                "output_cw": "U1:ID1:R0:DO0"
+                "limit_ccw": "off",
+                "limit_cw": "off",
+                "output_ccw": "off",
+                "output_cw": "off"
             },
             "vendor": "Flowx"
         },
@@ -2489,10 +2409,10 @@
         "default": {
             "model": "FLX-05F",
             "options": {
-                "limit_ccw": "U1:ID1:R0:DI1",
-                "limit_cw": "U1:ID1:R0:DI0",
-                "output_ccw": "U1:ID1:R0:DO1",
-                "output_cw": "U1:ID1:R0:DO0"
+                "limit_ccw": "off",
+                "limit_cw": "off",
+                "output_ccw": "off",
+                "output_cw": "off"
             },
             "vendor": "Flowx"
         },
@@ -2506,9 +2426,10 @@
     {
         "data_type": "json",
         "default": {
-            "model": "Pump",
+            "model": "MAGNA1_80_100_F_360_1x230V_PN6",
             "options": {
-                "mb_id": 5
+                "mb_id": 0,
+                "uart": 0
             },
             "vendor": "Grundfos"
         },
@@ -2534,10 +2455,10 @@
         "default": {
             "model": "FLX-05F",
             "options": {
-                "limit_ccw": "U1:ID1:R0:DI1",
-                "limit_cw": "U1:ID1:R0:DI0",
-                "output_ccw": "U1:ID1:R0:DO1",
-                "output_cw": "U1:ID1:R0:DO0"
+                "limit_ccw": "off",
+                "limit_cw": "off",
+                "output_ccw": "off",
+                "output_cw": "off"
             },
             "vendor": "Flowx"
         },
@@ -2553,10 +2474,10 @@
         "default": {
             "model": "FLX-05F",
             "options": {
-                "limit_ccw": "U1:ID1:R0:DI1",
-                "limit_cw": "U1:ID1:R0:DI0",
-                "output_ccw": "U1:ID1:R0:DO1",
-                "output_cw": "U1:ID1:R0:DO0"
+                "limit_ccw": "off",
+                "limit_cw": "off",
+                "output_ccw": "off",
+                "output_cw": "off"
             },
             "vendor": "Flowx"
         },
@@ -2572,10 +2493,10 @@
         "default": {
             "model": "FLX-05F",
             "options": {
-                "limit_ccw": "U1:ID1:R0:DI1",
-                "limit_cw": "U1:ID1:R0:DI0",
-                "output_ccw": "U1:ID1:R0:DO1",
-                "output_cw": "U1:ID1:R0:DO0"
+                "limit_ccw": "off",
+                "limit_cw": "off",
+                "output_ccw": "off",
+                "output_cw": "off"
             },
             "vendor": "Flowx"
         },
@@ -2591,10 +2512,10 @@
         "default": {
             "model": "FLX-05F",
             "options": {
-                "limit_ccw": "U1:ID1:R0:DI1",
-                "limit_cw": "U1:ID1:R0:DI0",
-                "output_ccw": "U1:ID1:R0:DO1",
-                "output_cw": "U1:ID1:R0:DO0"
+                "limit_ccw": "off",
+                "limit_cw": "off",
+                "output_ccw": "off",
+                "output_cw": "off"
             },
             "vendor": "Flowx"
         },
@@ -2608,9 +2529,10 @@
     {
         "data_type": "json",
         "default": {
-            "model": "Pump",
+            "model": "MAGNA1_80_100_F_360_1x230V_PN6",
             "options": {
-                "mb_id": 5
+                "mb_id": 0,
+                "uart": 0
             },
             "vendor": "Grundfos"
         },
@@ -2636,10 +2558,10 @@
         "default": {
             "model": "FLX-05F",
             "options": {
-                "limit_ccw": "U1:ID1:R0:DI1",
-                "limit_cw": "U1:ID1:R0:DI0",
-                "output_ccw": "U1:ID1:R0:DO1",
-                "output_cw": "U1:ID1:R0:DO0"
+                "limit_ccw": "off",
+                "limit_cw": "off",
+                "output_ccw": "off",
+                "output_cw": "off"
             },
             "vendor": "Flowx"
         },
@@ -2655,10 +2577,10 @@
         "default": {
             "model": "FLX-05F",
             "options": {
-                "limit_ccw": "U1:ID1:R0:DI1",
-                "limit_cw": "U1:ID1:R0:DI0",
-                "output_ccw": "U1:ID1:R0:DO1",
-                "output_cw": "U1:ID1:R0:DO0"
+                "limit_ccw": "off",
+                "limit_cw": "off",
+                "output_ccw": "off",
+                "output_cw": "off"
             },
             "vendor": "Flowx"
         },
@@ -2674,10 +2596,10 @@
         "default": {
             "model": "FLX-05F",
             "options": {
-                "limit_ccw": "U1:ID1:R0:DI1",
-                "limit_cw": "U1:ID1:R0:DI0",
-                "output_ccw": "U1:ID1:R0:DO1",
-                "output_cw": "U1:ID1:R0:DO0"
+                "limit_ccw": "off",
+                "limit_cw": "off",
+                "output_ccw": "off",
+                "output_cw": "off"
             },
             "vendor": "Flowx"
         },
@@ -2693,10 +2615,10 @@
         "default": {
             "model": "FLX-05F",
             "options": {
-                "limit_ccw": "U1:ID1:R0:DI1",
-                "limit_cw": "U1:ID1:R0:DI0",
-                "output_ccw": "U1:ID1:R0:DO1",
-                "output_cw": "U1:ID1:R0:DO0"
+                "limit_ccw": "off",
+                "limit_cw": "off",
+                "output_ccw": "off",
+                "output_cw": "off"
             },
             "vendor": "Flowx"
         },
@@ -2710,9 +2632,10 @@
     {
         "data_type": "json",
         "default": {
-            "model": "Pump",
+            "model": "MAGNA1_80_100_F_360_1x230V_PN6",
             "options": {
-                "mb_id": 5
+                "mb_id": 0,
+                "uart": 0
             },
             "vendor": "Grundfos"
         },
@@ -2738,10 +2661,10 @@
         "default": {
             "model": "FLX-05F",
             "options": {
-                "limit_ccw": "U1:ID1:R0:DI1",
-                "limit_cw": "U1:ID1:R0:DI0",
-                "output_ccw": "U1:ID1:R0:DO1",
-                "output_cw": "U1:ID1:R0:DO0"
+                "limit_ccw": "off",
+                "limit_cw": "off",
+                "output_ccw": "off",
+                "output_cw": "off"
             },
             "vendor": "Flowx"
         },
@@ -2757,10 +2680,10 @@
         "default": {
             "model": "FLX-05F",
             "options": {
-                "limit_ccw": "U1:ID1:R0:DI1",
-                "limit_cw": "U1:ID1:R0:DI0",
-                "output_ccw": "U1:ID1:R0:DO1",
-                "output_cw": "U1:ID1:R0:DO0"
+                "limit_ccw": "off",
+                "limit_cw": "off",
+                "output_ccw": "off",
+                "output_cw": "off"
             },
             "vendor": "Flowx"
         },
@@ -2776,10 +2699,10 @@
         "default": {
             "model": "FLX-05F",
             "options": {
-                "limit_ccw": "U1:ID1:R0:DI1",
-                "limit_cw": "U1:ID1:R0:DI0",
-                "output_ccw": "U1:ID1:R0:DO1",
-                "output_cw": "U1:ID1:R0:DO0"
+                "limit_ccw": "off",
+                "limit_cw": "off",
+                "output_ccw": "off",
+                "output_cw": "off"
             },
             "vendor": "Flowx"
         },
@@ -2795,10 +2718,10 @@
         "default": {
             "model": "FLX-05F",
             "options": {
-                "limit_ccw": "U1:ID1:R0:DI1",
-                "limit_cw": "U1:ID1:R0:DI0",
-                "output_ccw": "U1:ID1:R0:DO1",
-                "output_cw": "U1:ID1:R0:DO0"
+                "limit_ccw": "off",
+                "limit_cw": "off",
+                "output_ccw": "off",
+                "output_cw": "off"
             },
             "vendor": "Flowx"
         },
@@ -2812,9 +2735,10 @@
     {
         "data_type": "json",
         "default": {
-            "model": "Pump",
+            "model": "MAGNA1_80_100_F_360_1x230V_PN6",
             "options": {
-                "mb_id": 5
+                "mb_id": 0,
+                "uart": 0
             },
             "vendor": "Grundfos"
         },
@@ -2840,10 +2764,10 @@
         "default": {
             "model": "FLX-05F",
             "options": {
-                "limit_ccw": "U1:ID1:R0:DI1",
-                "limit_cw": "U1:ID1:R0:DI0",
-                "output_ccw": "U1:ID1:R0:DO1",
-                "output_cw": "U1:ID1:R0:DO0"
+                "limit_ccw": "off",
+                "limit_cw": "off",
+                "output_ccw": "off",
+                "output_cw": "off"
             },
             "vendor": "Flowx"
         },
@@ -2859,10 +2783,10 @@
         "default": {
             "model": "FLX-05F",
             "options": {
-                "limit_ccw": "U1:ID1:R0:DI1",
-                "limit_cw": "U1:ID1:R0:DI0",
-                "output_ccw": "U1:ID1:R0:DO1",
-                "output_cw": "U1:ID1:R0:DO0"
+                "limit_ccw": "off",
+                "limit_cw": "off",
+                "output_ccw": "off",
+                "output_cw": "off"
             },
             "vendor": "Flowx"
         },
@@ -2878,10 +2802,10 @@
         "default": {
             "model": "FLX-05F",
             "options": {
-                "limit_ccw": "U1:ID1:R0:DI1",
-                "limit_cw": "U1:ID1:R0:DI0",
-                "output_ccw": "U1:ID1:R0:DO1",
-                "output_cw": "U1:ID1:R0:DO0"
+                "limit_ccw": "off",
+                "limit_cw": "off",
+                "output_ccw": "off",
+                "output_cw": "off"
             },
             "vendor": "Flowx"
         },
@@ -2897,10 +2821,10 @@
         "default": {
             "model": "FLX-05F",
             "options": {
-                "limit_ccw": "U1:ID1:R0:DI1",
-                "limit_cw": "U1:ID1:R0:DI0",
-                "output_ccw": "U1:ID1:R0:DO1",
-                "output_cw": "U1:ID1:R0:DO0"
+                "limit_ccw": "off",
+                "limit_cw": "off",
+                "output_ccw": "off",
+                "output_cw": "off"
             },
             "vendor": "Flowx"
         },
@@ -2914,9 +2838,10 @@
     {
         "data_type": "json",
         "default": {
-            "model": "Pump",
+            "model": "MAGNA1_80_100_F_360_1x230V_PN6",
             "options": {
-                "mb_id": 5
+                "mb_id": 0,
+                "uart": 0
             },
             "vendor": "Grundfos"
         },
@@ -3042,10 +2967,10 @@
         "default": {
             "model": "FLX-05F",
             "options": {
-                "limit_ccw": "U1:ID1:R0:DI1",
-                "limit_cw": "U1:ID1:R0:DI0",
-                "output_ccw": "U1:ID1:R0:DO1",
-                "output_cw": "U1:ID1:R0:DO0"
+                "limit_ccw": "off",
+                "limit_cw": "off",
+                "output_ccw": "off",
+                "output_cw": "off"
             },
             "vendor": "Flowx"
         },
@@ -3061,10 +2986,10 @@
         "default": {
             "model": "FLX-05F",
             "options": {
-                "limit_ccw": "U1:ID1:R0:DI1",
-                "limit_cw": "U1:ID1:R0:DI0",
-                "output_ccw": "U1:ID1:R0:DO1",
-                "output_cw": "U1:ID1:R0:DO0"
+                "limit_ccw": "off",
+                "limit_cw": "off",
+                "output_ccw": "off",
+                "output_cw": "off"
             },
             "vendor": "Flowx"
         },
@@ -3080,10 +3005,10 @@
         "default": {
             "model": "FLX-05F",
             "options": {
-                "limit_ccw": "U1:ID1:R0:DI1",
-                "limit_cw": "U1:ID1:R0:DI0",
-                "output_ccw": "U1:ID1:R0:DO1",
-                "output_cw": "U1:ID1:R0:DO0"
+                "limit_ccw": "off",
+                "limit_cw": "off",
+                "output_ccw": "off",
+                "output_cw": "off"
             },
             "vendor": "Flowx"
         },
@@ -3268,9 +3193,10 @@
     {
         "data_type": "json",
         "default": {
-            "model": "Pump",
+            "model": "MAGNA1_80_100_F_360_1x230V_PN6",
             "options": {
-                "mb_id": 2
+                "mb_id": 2,
+                "uart": 0
             },
             "vendor": "Grundfos"
         },
@@ -3284,9 +3210,10 @@
     {
         "data_type": "json",
         "default": {
-            "model": "Pump",
+            "model": "MAGNA1_80_100_F_360_1x230V_PN6",
             "options": {
-                "mb_id": 3
+                "mb_id": 3,
+                "uart": 0
             },
             "vendor": "Grundfos"
         },
@@ -3300,9 +3227,10 @@
     {
         "data_type": "json",
         "default": {
-            "model": "Pump",
+            "model": "MAGNA1_80_100_F_360_1x230V_PN6",
             "options": {
-                "mb_id": 4
+                "mb_id": 0,
+                "uart": 0
             },
             "vendor": "Grundfos"
         },
@@ -3316,9 +3244,10 @@
     {
         "data_type": "json",
         "default": {
-            "model": "Pump",
+            "model": "MAGNA1_80_100_F_360_1x230V_PN6",
             "options": {
-                "mb_id": 5
+                "mb_id": 0,
+                "uart": 0
             },
             "vendor": "Grundfos"
         },
@@ -3332,9 +3261,10 @@
     {
         "data_type": "json",
         "default": {
-            "model": "HeatPump",
+            "model": "40STD-N420WHSB4",
             "options": {
-                "mb_id": 5
+                "mb_id": 0,
+                "uart": 0
             },
             "vendor": "HstarsGuangzhouRefrigeratingEquipmentGroup"
         },
@@ -3390,7 +3320,7 @@
         "default": {
             "model": "f3p146ec072600",
             "options": {
-                "output": "AO1"
+                "output": "AO0"
             },
             "vendor": "HangzhouAirflowElectricApplications"
         },
@@ -3424,11 +3354,21 @@
     {
         "data_type": "float",
         "default": 0.0,
-        "description": "Upper fan speed [%]",
+        "description": "Lower fan speed [%]",
         "limit": 0.0,
         "name": "vent.lower_1.fan.speed",
         "plugin": "Ventilation",
         "range": "0.0/100.0",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "off",
+        "description": "Lower fan power GPIO.",
+        "limit": 0.0,
+        "name": "vent.lower_1.fan.power_gpio",
+        "plugin": "Ventilation",
+        "range": "off|DO0|DO1|DO2|DO3|DO4|DO5|DO6|DO7|DO8|!DO0|!DO1|!DO2|!DO3|!DO4|!DO5|!DO6|!DO7|!DO8|RO0|RO1|RO2|RO3|RO4|RO5|RO6|RO7|RO8|!RO0|!RO1|!RO2|!RO3|!RO4|!RO5|!RO6|!RO7|!RO8",
         "scope": "System"
     },
     {
@@ -3478,18 +3418,28 @@
         "scope": "System"
     },
     {
+        "data_type": "str",
+        "default": "off",
+        "description": "Upper fan power GPIO.",
+        "limit": 0.0,
+        "name": "vent.upper_1.fan.power_gpio",
+        "plugin": "Ventilation",
+        "range": "off|DO0|DO1|DO2|DO3|DO4|DO5|DO6|DO7|DO8|!DO0|!DO1|!DO2|!DO3|!DO4|!DO5|!DO6|!DO7|!DO8|RO0|RO1|RO2|RO3|RO4|RO5|RO6|RO7|RO8|!RO0|!RO1|!RO2|!RO3|!RO4|!RO5|!RO6|!RO7|!RO8",
+        "scope": "System"
+    },
+    {
         "data_type": "json",
         "default": {
-            "model": "Model1",
+            "model": "model_1",
             "options": {
-                "closing": "DO8",
-                "opening": "DO9"
+                "output_ccw": "off",
+                "output_cw": "off"
             },
-            "vendor": "FONYES"
+            "vendor": "fonyes"
         },
-        "description": "Lower valve settings",
+        "description": "Lower air damper settings",
         "limit": 0.0,
-        "name": "vent.upper_1.valve.settings",
+        "name": "vent.upper_1.air_damper.settings",
         "plugin": "Ventilation",
         "range": "",
         "scope": "System"
@@ -3497,16 +3447,16 @@
     {
         "data_type": "json",
         "default": {
-            "model": "Model1",
+            "model": "model_1",
             "options": {
-                "closing": "DO10",
-                "opening": "DO11"
+                "output_ccw": "off",
+                "output_cw": "off"
             },
-            "vendor": "FONYES"
+            "vendor": "fonyes"
         },
-        "description": "Upper valve settings",
+        "description": "Upper air damper settings",
         "limit": 0.0,
-        "name": "vent.lower_1.valve.settings",
+        "name": "vent.lower_1.air_damper.settings",
         "plugin": "Ventilation",
         "range": "",
         "scope": "System"
@@ -3532,8 +3482,8 @@
         "scope": "System"
     },
     {
-        "data_type": "str",
-        "default": "",
+        "data_type": "json",
+        "default": {},
         "description": "Alarm module sound device settings.",
         "limit": 0.0,
         "name": "alarm.device.sound.settings",
@@ -3542,8 +3492,8 @@
         "scope": "System"
     },
     {
-        "data_type": "str",
-        "default": "",
+        "data_type": "json",
+        "default": {},
         "description": "Alarm module visual device settings.",
         "limit": 0.0,
         "name": "alarm.device.visual.settings",
@@ -3563,11 +3513,21 @@
     },
     {
         "data_type": "bool",
-        "default": true,
+        "default": false,
         "description": "Statistics module enable flag.",
         "limit": 0.0,
         "name": "stat.enabled",
         "plugin": "Statistics",
+        "range": "true|false",
+        "scope": "System"
+    },
+    {
+        "data_type": "bool",
+        "default": false,
+        "description": "Office conference hall module enable flag.",
+        "limit": 0.0,
+        "name": "oc_hall.enabled",
+        "plugin": "Office Conference Hall",
         "range": "true|false",
         "scope": "System"
     }

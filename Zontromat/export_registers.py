@@ -1121,6 +1121,22 @@ def __add_registers():
     register.value = "AO3"
     __registers.append(register)
 
+    register = Register("light.hallway_lighting.output")
+    register.scope = Scope.System
+    register.plugin_name = "Light"
+    register.description = "Hallway lighting digital output."
+    register.range = __range["DO|RO"]
+    register.value = "DO8"
+    __registers.append(register)
+
+    register = Register("light.hallway_lighting.time")
+    register.scope = Scope.System
+    register.plugin_name = "Light"
+    register.description = "Hallway lighting wait time."
+    register.range = "0.0/"
+    register.value = 60.0
+    __registers.append(register)
+
     register = Register("light.sensor.settings")
     register.scope = Scope.System
     register.plugin_name = "Light"
@@ -1195,6 +1211,30 @@ def __add_registers():
     register.scope = Scope.Device
     register.plugin_name = "System"
     register.description = "Application time cycle"
+    register.range = "0.0/"
+    register.value = 0.0
+    __registers.append(register)
+
+    register = Register("sys.time.boot")
+    register.scope = Scope.Device
+    register.plugin_name = "System"
+    register.description = "OS boot time."
+    register.range = "0.0/"
+    register.value = 0.0
+    __registers.append(register)
+
+    register = Register("sys.time.uptime")
+    register.scope = Scope.Device
+    register.plugin_name = "System"
+    register.description = "OS uptime."
+    register.range = "0.0/"
+    register.value = 0.0
+    __registers.append(register)
+
+    register = Register("sys.time.startup")
+    register.scope = Scope.Device
+    register.plugin_name = "System"
+    register.description = "Application startup time."
     register.range = "0.0/"
     register.value = 0.0
     __registers.append(register)
@@ -3183,7 +3223,7 @@ def __add_registers():
     register.range = __range["NONE"]
     register.value = {
         "vendor": "HstarsGuangzhouRefrigeratingEquipmentGroup",
-        "model": "HeatPump",
+        "model": "40STD-N420WHSB4",
         "options":
         {
             "uart": 0,
@@ -3421,6 +3461,19 @@ def __add_registers():
     register.scope = Scope.System
     register.plugin_name = "Statistics"
     register.description = "Statistics module enable flag."
+    register.range = __range["BOOL"]
+    register.value = False
+    __registers.append(register)
+
+#endregion
+
+#region Office Conference Hall (oc_hall)
+
+    # Enable
+    register = Register("oc_hall.enabled")
+    register.scope = Scope.System
+    register.plugin_name = "Office Conference Hall"
+    register.description = "Office conference hall module enable flag."
     register.range = __range["BOOL"]
     register.value = False
     __registers.append(register)

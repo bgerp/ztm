@@ -1,4 +1,3 @@
-
 #!/usr/bin/env python3
 # -*- coding: utf8 -*-
 
@@ -23,9 +22,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 
-from utils.logger import get_logger
+from services.global_error_handler.global_error_handler import GlobalErrorHandler
 
-from devices.factories.fans.base_fan import BaseFan
+from data import verbal_const
+
+from devices.factories.blinds.base_blind import BaseBlind
+
+from utils.logger import get_logger
+from utils.logic.functions import l_scale
 
 #region File Attributes
 
@@ -58,90 +62,64 @@ __status__ = "Debug"
 
 #endregion
 
-class F3P146EC072600(BaseFan):
-    """Model: F3P146-EC072-600
-
-    See http://www.shidaqian.com/Upload/SDQ_ECqqlxfj/F3P146-EC072-600.PDF"""
+class Blinds(BaseBlind):
+    """Electronic blinds"""
 
 #region Attributes
 
-    __logger = None
-    """Logger
-    """
-
-    __analog_output = "AO0"
-    """Output physical signal.
-    """
-
-    __power_output = "RO6"
-    """Output power signal.
-    """
-
-    __speed = -1
-    """Output speed value.
-    """
+    __new_position = 0
+    """New position of the blinds."""
 
 #endregion
 
-#region Properties
-
-#endregion
-
-#region Constructor
+#region constructor / Destructor
 
     def __init__(self, **config):
-        """Constructor
-        """
+        """Constructor"""
 
         super().__init__(config)
 
-        self._vendor = "HangzhouAirflowElectricApplications"
+        self._vendor = "YIHAO"
 
-        self._model = "F3P146EC072600"
+        self._model = "Blinds"
 
         self.__logger = get_logger(__name__)
-
-        if "output" in self._config["options"]:
-            self.__analog_output = self._config["options"]["output"]
-
-        if "power" in self._config["options"]:
-            self.__power_output = self._config["options"]["power"]
 
 #endregion
 
 #region Public Methods
 
     def init(self):
-        """Init
-        """
-
-        self.shutdown()
+        pass
 
     def update(self):
-        """Update device.
-        """
-
-        if self.__speed == self.speed:
-            return
-
-        self.__speed = self.speed
-
-        # Enable power of the fan if the setpoint is greater then 0.
-        if self.__speed > 0.0:
-            self._controller.digital_write(self.__power_output, 1)
-        else:
-            self._controller.digital_write(self.__power_output, 0)
-
-        # Set the speed.
-        value_speed = self.speed / 10
-        self._controller.analog_write(self.__analog_output, value_speed)
-        self.__logger.debug(self)
+        pass
 
     def shutdown(self):
-        """Shutdown"""
+        pass
 
-        self.min_speed = 0
-        self.speed = 0
-        self.update()
+    def set_position(self, position):
+        """Set position of the blinds.
+
+        Args:
+            position (float): Position of the blinds.
+        """
+
+        if self.__new_position == position:
+            return
+
+        if position > 180:
+            position = 180
+
+        elif position < 0:
+            position = 0
+
+        scaled_position = l_scale(position, [0, 180], [0, 100])
+
+        # TODO: Calculations.
+
+        restored_position = l_scale(scaled_position, [0, 100], [0, 180])
+
+        self.__new_position = restored_position
 
 #endregion

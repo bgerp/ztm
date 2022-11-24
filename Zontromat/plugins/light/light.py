@@ -22,13 +22,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 
+import time
 from utils.logger import get_logger
 from utils.logic.timer import Timer
 from utils.logic.functions import l_scale
 
 from plugins.base_plugin import BasePlugin
 
-from devices.factories.light_sensor.light_sensor_factory import LightSensorFactory
+from devices.factories.luxmeters.luxmeters_factory import LuxmeterFactory
 
 from data import verbal_const
 
@@ -93,6 +94,10 @@ class Light(BasePlugin):
     """Analog voltage output 2.
     """
 
+    __hallway_lighting_output = verbal_const.OFF
+    """Digital output for controlling hallway lighting.
+    """  
+
     __target_illumination = 50.0
     """Target illumination. [Lux]
     """
@@ -111,6 +116,10 @@ class Light(BasePlugin):
 
     __output = 0
     """Main output. [V]
+    """
+
+    __hallway_lighting_time = 0
+    """Hallway lighting time. [s]
     """
 
 #endregion
@@ -136,7 +145,7 @@ class Light(BasePlugin):
 
         if register.value != {} and self.__light_sensor is None:
 
-            self.__light_sensor = LightSensorFactory.create(
+            self.__light_sensor = LuxmeterFactory.create(
                 controller=self._controller,
                 name="Room light sensor.",
                 vendor=register.value['vendor'],
@@ -168,6 +177,15 @@ class Light(BasePlugin):
 
         self.__v2_output = register.value
 
+    def __hallway_lighting_output_cb(self, register):
+
+        # Check data type.
+        if not register.data_type == "str":
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        self.__hallway_lighting_output = register.value
+
     def __target_illum_cb(self, register):
 
         # Check data type.
@@ -177,6 +195,16 @@ class Light(BasePlugin):
 
         if self.__target_illumination != register.value:
             self.__target_illumination = register.value
+
+    def __hallway_lighting_time_cb(self, register):
+
+        # Check data type.
+        if not (register.data_type == "float" or register.data_type == "int"):
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
+            return
+
+        if self.__hallway_lighting_time != register.value:
+            self.__hallway_lighting_time = register.value
 
     def __init_registers(self):
 
@@ -195,6 +223,11 @@ class Light(BasePlugin):
             v2_output.update_handlers = self.__v2_output_cb
             v2_output.update()
 
+        hallway_lighting_output = self._registers.by_name(self.key + ".hallway_lighting.output")
+        if hallway_lighting_output is not None:
+            hallway_lighting_output.update_handlers = self.__hallway_lighting_output_cb
+            hallway_lighting_output.update()
+
         error_gain = self._registers.by_name(self.key + ".error_gain")
         if error_gain is not None:
             error_gain.update_handlers = self.__error_gain_cb
@@ -203,6 +236,11 @@ class Light(BasePlugin):
         target_illum = self._registers.by_name(self.key + ".target_illum")
         if target_illum is not None:
             target_illum.update_handlers = self.__target_illum_cb
+            target_illum.update()
+
+        target_illum = self._registers.by_name(self.key + ".hallway_lighting.time")
+        if target_illum is not None:
+            target_illum.update_handlers = self.__hallway_lighting_time_cb
             target_illum.update()
 
     def __is_empty(self):
@@ -380,11 +418,29 @@ class Light(BasePlugin):
 
         self.__init_registers()
 
-        self.__set_voltages(0, 0)
+        # self.__set_voltages(0, 0)
 
     def _update(self):
         """Update the plugin.
         """
+
+        # Calculate hallway lighting time.
+        startup_time = 0
+        startup_time = self._registers.by_name("sys.time.startup")
+        if startup_time is not None:
+            startup_pass_time = time.time() - startup_time.value
+
+        state = "OFF"
+        if startup_pass_time <= self.__hallway_lighting_time:
+            state = "OFF"
+            
+        else:
+            state = "ON"
+    
+        
+        print(f"Wait time {self.__hallway_lighting_time - startup_pass_time}; State: {state}")
+
+        return
 
         # Update sensor data.
         self.__light_sensor.update()

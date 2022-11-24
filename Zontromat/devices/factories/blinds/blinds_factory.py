@@ -104,5 +104,15 @@ class BlindsFactory:
                 controller=controller,
                 options=config["options"])
 
+        # Yihao / Blinds
+        elif vendor == "Yihao" and  model == "Blinds":
+
+            from devices.vendors.yihao.blinds.blinds import Blinds
+
+            device = Blinds(
+                name=name,
+                controller=controller,
+                options=config["options"])
+
         # Return the instance.
         return device

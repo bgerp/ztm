@@ -29,12 +29,12 @@ from utils.logic.functions import rotate_list
 
 from plugins.base_plugin import BasePlugin
 
-from devices.vendors.hstars_guangzhou_refrigerating_equipment_group.heat_pump import HeatPump, HeatPumpMode
+from devices.vendors.hstars_guangzhou_refrigerating_equipment_group.heat_pump import HP_40STD_N420WHSB4, HeatPumpMode
 from devices.utils.valve_control_group.valve_control_group import ValveControlGroup
 from devices.utils.valve_control_group.valve_control_group_mode import ValveControlGroupMode
 
-from devices.factories.pump.pump_factory import PumpFactory
-from devices.factories.heat_pump.heat_pump_factory import HeatPumpFactory
+from devices.factories.pumps.pump_factory import PumpFactory
+from devices.factories.heat_pumps.heat_pump_factory import HeatPumpFactory
 from services.global_error_handler.global_error_handler import GlobalErrorHandler
 
 # (Request from mail: Eml6429)

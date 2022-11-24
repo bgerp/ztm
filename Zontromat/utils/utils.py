@@ -32,6 +32,8 @@ import serial.tools.list_ports
 if os.name == "posix":
     import psutil
 
+if os.name == "nt":
+    import ctypes
 
 #region File Attributes
 
@@ -193,3 +195,36 @@ def serial_ports():
     ports = serial.tools.list_ports.comports()
     names = [port.name for port in ports]
     return names
+
+def uptime():
+    """Gets uptime of the machine since last restart.
+
+    Raises:
+        Exception: Can not get uptime of the host.
+
+    Returns:
+        float: Uptime in seconds.
+    """
+
+    uptime_seconds = 0
+ 
+    if os.name == "posix":
+
+        # Open uptime file and just read it.
+        with open('/proc/uptime', 'r') as f:
+            uptime_seconds = float(f.readline().split()[0])
+
+    elif os.name == "nt":
+
+        # getting the library in which GetTickCount64() resides
+        lib = ctypes.windll.kernel32
+        
+        # calling the function and storing the return value
+        t = lib.GetTickCount64()
+
+        uptime_seconds = t / 1000
+
+    else:
+        raise Exception("Can not get uptime of the host.")
+
+    return uptime_seconds

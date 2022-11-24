@@ -69,7 +69,7 @@ class HeatPumpMode(Enum):
     Summer = 1
     Winter = 2
 
-class HeatPump(BaseDevice):
+class HP_40STD_N420WHSB4(BaseDevice):
     """Heat pump description. (40STD-N420WHSB4)
     """
 
