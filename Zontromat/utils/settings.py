@@ -263,6 +263,18 @@ class ApplicationSettings:
                     "timeout": 5,
                     }
 
+        # This will be added by the setup script.
+        # # Default UI service.
+        if self.__config is not None:
+            if "UI" not in self.__config:
+                self.__config["UI"] = {
+                    "enabled": "True",
+                    "host": "http://ztmui.local",
+                    "email": "zontromat@bcvt.eu",
+                    "password": "Zontromat010203",
+                    "timeout": 5,
+                    }
+
         if not self.exists:
             with open(self.__file_name, "w") as stream:
                 self.__config.write(stream)
