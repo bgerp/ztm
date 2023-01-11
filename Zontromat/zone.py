@@ -50,6 +50,8 @@ from plugins.plugins_manager import PluginsManager
 from services.evok.settings import EvokSettings
 from services.global_error_handler.global_error_handler import GlobalErrorHandler
 
+from ztm_ui.ztm_ui import ZtmUI
+
 #region File Attributes
 
 __author__ = "Orlin Dimitrov"
@@ -134,6 +136,18 @@ class Zone():
     # (Request to stop the queue from MG @ 15.01.2021)
     # __registers_snapshot = None
     # """Registers snapshot."""
+
+    __ztm_ui = None
+    """Zontromat UI
+    """
+
+    __ztm_ui_temp_data = None
+    """UI data
+    """
+
+    __ztm_ui_update_timer = None
+    """ZtmUI update timer.
+    """
 
 #endregion
 
@@ -355,8 +369,8 @@ class Zone():
         """
 
         # Take ERP info from settings.
-        erp_host = self.__app_settings.get_erp_service["host"]
-        erp_timeout = self.__app_settings.get_erp_service["timeout"]
+        erp_host = self.__app_settings.erp_service["host"]
+        erp_timeout = self.__app_settings.erp_service["timeout"]
 
         # Create ERP.
         self.__erp = bgERP(host=erp_host, timeout=erp_timeout)
@@ -382,13 +396,13 @@ class Zone():
             serial_number=self.__controller.serial_number,
             model=self.__controller.model,
             version=self.__controller.version,
-            config_time=self.__app_settings.get_erp_service["config_time"],
-            bgerp_id=self.__app_settings.get_erp_service["erp_id"])
+            config_time=self.__app_settings.erp_service["config_time"],
+            bgerp_id=self.__app_settings.erp_service["erp_id"])
 
         if login_state:
             # Rewrite the ERP service ID.
-            if self.__app_settings.get_erp_service["erp_id"] != self.__erp.erp_id:
-                self.__app_settings.get_erp_service["erp_id"] = self.__erp.erp_id
+            if self.__app_settings.erp_service["erp_id"] != self.__erp.erp_id:
+                self.__app_settings.erp_service["erp_id"] = self.__erp.erp_id
                 self.__app_settings.save()
 
             self.__erp_state_machine.set_state(ERPState.Update)
@@ -451,6 +465,60 @@ class Zone():
 
         elif self.__erp_state_machine.is_state(ERPState.NONE):
             self.__erp_state_machine.set_state(ERPState.Login)
+
+#endregion
+
+#region Private Methods (ZtmUI)
+
+    def __init_ztmui(self):
+
+        # Check is it enabled.
+        if self.__app_settings.ui["enabled"] == "True":
+
+            self.__ztm_ui = ZtmUI(host = self.__app_settings.ui["host"],
+                email = self.__app_settings.ui["email"],
+                password = self.__app_settings.ui["password"],
+                timeout = self.__app_settings.ui["timeout"])
+
+            self.__ztm_ui_update_timer = Timer(1)
+
+
+    def __update_ztmui(self):
+
+        # names = ["hvac.adjust_temp_1", "light.target_illum", "vent.op_setpoint_1", "blinds.blind_1.position"]
+
+        # Check is it enabled.
+        if self.__app_settings.ui["enabled"] == "True":
+
+            # Update periodically bgERP.
+            self.__ztm_ui_update_timer.update()
+            if self.__ztm_ui_update_timer.expired:
+                self.__ztm_ui_update_timer.clear()
+
+                # Check is it logged in.
+                if self.__ztm_ui.is_logged_in():
+
+                    # Check UI data and send only if changes ocured.
+                    registers_ui = self.__ztm_ui.get()
+                    if registers_ui != []:
+                        if self.__ztm_ui_temp_data != registers_ui:
+                            self.__ztm_ui_temp_data = registers_ui
+                            # print(registers_ui)
+                            # Update changes.
+                            for register in registers_ui:
+                                if register["name"] != "":
+                                    # print(register["name"])
+                                    target_register = self.__registers.by_name(register["name"])
+                                    if target_register is not None:
+                                        if target_register.data_type == "float":
+                                            target_register.value = float(register["value"])
+                                        elif target_register.data_type == "int":
+                                            target_register.value = int(register["value"])
+                                        # print(target_register)
+
+                # If not, login.
+                else:
+                    self.__ztm_ui.login()
 
 #endregion
 
@@ -519,6 +587,9 @@ class Zone():
         # Create log if if it does not.
         crate_log_file()
 
+        # Update Zontromat UI.
+        self.__update_ztmui()
+
         # Update the neuron.
         state = self.__controller.update()
         if not state:
@@ -562,6 +633,9 @@ class Zone():
 
             # Setup the ERP.
             self.__init_erp()
+
+            # Setup the ZtmUI
+            self.__init_ztmui()
 
             # Initialize the performance profiler.
             self.__init_performance_profiler()

@@ -57,13 +57,13 @@ __status__ = "Debug"
 #endregion
 
 class Scope(Enum):
-    """Registers scope."""
-
+    """Registers scope.
+    """
     NONE = 0
     Global = 1 # Global is like system.
     Device = 2 #
-    System = 3 #
-    Both = 4 #
+    System = 4 #
+    Both = 7 #
 
 class Register:
     """Register"""

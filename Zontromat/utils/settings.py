@@ -118,7 +118,7 @@ class ApplicationSettings:
         return self.__config["CONTROLLER"]
 
     @property
-    def get_erp_service(self):
+    def erp_service(self):
         """ERP service domain.
 
         Returns
@@ -150,6 +150,16 @@ class ApplicationSettings:
         #     d[k].pop('__name__', None)
 
         return current_version
+
+    @property
+    def ui(self):
+        """Zontromt UI.
+
+        Returns:
+            dict: Current version dictionary.
+        """
+
+        return self.__config["UI"]
 
     @current_version.setter
     def current_version(self, value):

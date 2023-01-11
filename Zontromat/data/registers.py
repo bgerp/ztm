@@ -229,7 +229,7 @@ class Registers(list):
         result = Registers()
 
         for register in self:
-            if scope == register.scope:
+            if (scope.value & register.scope.value) > 0:
                 result.append(register)
 
         return result

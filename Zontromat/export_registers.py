@@ -412,7 +412,7 @@ def __add_registers():
     __registers.append(register)
 
     register = Register("blinds.blind_1.position")
-    register.scope = Scope.System
+    register.scope = Scope.Both
     register.plugin_name = "Blinds"
     register.description = "Position [deg]"
     register.range = "0.0/180.0"
@@ -780,7 +780,7 @@ def __add_registers():
     __registers.append(register)
 
     register = Register("hvac.adjust_temp_1")
-    register.scope = Scope.System
+    register.scope = Scope.Both
     register.plugin_name = "HVAC"
     register.description = "Adjust temperature"
     register.range = "-50.0/50.0"
@@ -1153,7 +1153,7 @@ def __add_registers():
     __registers.append(register)
 
     register = Register("light.target_illum")
-    register.scope = Scope.System
+    register.scope = Scope.Both
     register.plugin_name = "Light"
     register.description = "Target illumination"
     register.range = "0.0/10000.0"
@@ -3248,7 +3248,7 @@ def __add_registers():
 
     # Operator panel setpoint.
     register = Register("vent.op_setpoint_1")
-    register.scope = Scope.System
+    register.scope = Scope.Both
     register.plugin_name = "Ventilation"
     register.description = "Operators panel set point"
     register.range = "0.0/100.0"
