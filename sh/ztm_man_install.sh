@@ -77,20 +77,20 @@ sudo python3 /opt/ztm/Zontromat/main.py
 
 # Preset for the test BCVT envirenmont.
 # ========================================================================
-settings_file="/opt/ztm/settings.ini"
-ts=$(sudo date +%s)
-section="[ERP_SERVICE]"
-host="host = https://test.bcvt.eu/"
-config_time="config_time = "$ts
-erp_id="erp_id = 0082-4140-0042-4216"
-timeout="timeout = 5"
+# settings_file="/opt/ztm/settings.ini"
+# ts=$(sudo date +%s)
+# section="[ERP_SERVICE]"
+# host="host = https://test.bcvt.eu/"
+# config_time="config_time = "$ts
+# erp_id="erp_id = 0082-4140-0042-4216"
+# timeout="timeout = 5"
 
-# Add settings for the ERP.
-sudo echo $section >> $settings_file
-sudo echo $host >> $settings_file
-sudo echo $config_time >> $settings_file
-sudo echo $erp_id >> $settings_file
-sudo echo $timeout >> $settings_file
+# # Add settings for the ERP.
+# sudo echo $section >> $settings_file
+# sudo echo $host >> $settings_file
+# sudo echo $config_time >> $settings_file
+# sudo echo $erp_id >> $settings_file
+# sudo echo $timeout >> $settings_file
 
 # Go to home dir.
 # ========================================================================

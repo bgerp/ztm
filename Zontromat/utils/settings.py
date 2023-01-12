@@ -269,7 +269,7 @@ class ApplicationSettings:
             if "UI" not in self.__config:
                 self.__config["UI"] = {
                     "enabled": "True",
-                    "host": "http://ztmui.local",
+                    "host": "http://localhost",
                     "email": "zontromat@bcvt.eu",
                     "password": "Zontromat010203",
                     "timeout": 5,
