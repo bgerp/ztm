@@ -28,6 +28,7 @@ from functools import wraps
 import tracemalloc
 import shutil
 import serial.tools.list_ports
+import locale
 
 if os.name == "posix":
     import psutil
@@ -228,3 +229,14 @@ def uptime():
         raise Exception("Can not get uptime of the host.")
 
     return uptime_seconds
+
+def get_decimal_dilimiter():
+    localeconv = locale.localeconv()
+    decimal_point = localeconv["decimal_point"]
+    return decimal_point
+
+def fix_decimal_delimiter(value):
+    decimal_dilimiter = get_decimal_dilimiter()
+    fixed_value = value.replace(",", decimal_dilimiter)
+    fixed_value = value.replace(".", decimal_dilimiter)
+    return fixed_value

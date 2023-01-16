@@ -508,22 +508,20 @@ class Zone():
                     if registers_ui != []:
                         if self.__ztm_ui_temp_data != registers_ui:
                             self.__ztm_ui_temp_data = registers_ui
-                            # print(registers_ui)
                             # Update changes.
                             for register in registers_ui:
-                                if register["name"] != "":
-                                    # print(register["name"])
+                                try:
                                     target_register = self.__registers.by_name(register["name"])
                                     if target_register is not None:
                                         if target_register.data_type == "float":
                                             target_register.value = float(register["value"])
                                         elif target_register.data_type == "int":
-                                            target_register.value = int(register["value"])
-                                        # print(target_register)
+                                            target_register.value = float(register["value"])
+                                        print(target_register)
+                                except Exception as e:
+                                    self.__logger.error(e)
 
-                                self.__update_min_max(register)
-
-                    
+                                # self.__update_min_max(register)
 
                 # If not, login.
                 else:

@@ -262,6 +262,12 @@ class Registers(list):
             list: Registers with name.
         """
 
+        if name is None:
+            raise ValueError("Name can not be None.")
+
+        if name == "":
+            raise ValueError("Name can not be empty string.")
+
         result = None
 
         for register in self:
