@@ -779,7 +779,7 @@ def __add_registers():
     register.value = 1
     __registers.append(register)
 
-    register = Register("hvac.adjust_temp_1")
+    register = Register("hvac.temp_1.adjust")
     register.scope = Scope.Both
     register.plugin_name = "HVAC"
     register.description = "Adjust temperature"

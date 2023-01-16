@@ -188,7 +188,7 @@
 | Purpose | Register | Type | Value |
 |----------|:-------------|:------|:------|
 | Count of the HVAC zones. | hvac.zones_count | int | 1 |
-| Adjust temperature | hvac.adjust_temp_1 | float | 0.0 |
+| Adjust temperature | hvac.temp_1.adjust | float | 0.0 |
 | Air temperature sensor center settings | hvac.air_temp_cent_1.settings | json | {'vendor': 'Donkger', 'model': 'XY-MD02', 'options': {'uart': 0, 'mb_id': 4}} |
 | Air temperature sensor center value | hvac.air_temp_cent_1.value | float | 0.0 |
 | Air temperature sensor lower settings | hvac.air_temp_lower_1.settings | json | {'vendor': 'Donkger', 'model': 'XY-MD02', 'options': {'uart': 0, 'mb_id': 3}} |

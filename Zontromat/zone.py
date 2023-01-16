@@ -483,9 +483,14 @@ class Zone():
             self.__ztm_ui_update_timer = Timer(1)
 
 
-    def __update_ztmui(self):
+    def __update_min_max(self, register):
 
-        # names = ["hvac.adjust_temp_1", "light.target_illum", "vent.op_setpoint_1", "blinds.blind_1.position"]
+        target_register = self.__registers.by_name(register["name"])
+        if target_register is not None:
+            print(target_register.name)
+            print()
+
+    def __update_ztmui(self):
 
         # Check is it enabled.
         if self.__app_settings.ui["enabled"] == "True":
@@ -515,6 +520,10 @@ class Zone():
                                         elif target_register.data_type == "int":
                                             target_register.value = int(register["value"])
                                         # print(target_register)
+
+                                self.__update_min_max(register)
+
+                    
 
                 # If not, login.
                 else:
