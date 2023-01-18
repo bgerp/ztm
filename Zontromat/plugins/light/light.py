@@ -438,7 +438,7 @@ class Light(BasePlugin):
             state = "ON"
     
         
-        print(f"Wait time {self.__hallway_lighting_time - startup_pass_time}; State: {state}")
+        self.__logger.debug(f"Wait time {self.__hallway_lighting_time - startup_pass_time}; State: {state}")
 
         return
 
