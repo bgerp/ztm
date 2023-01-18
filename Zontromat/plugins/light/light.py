@@ -425,22 +425,22 @@ class Light(BasePlugin):
         """
 
         # Calculate hallway lighting time.
-        startup_time = 0
-        startup_time = self._registers.by_name("sys.time.startup")
-        if startup_time is not None:
-            startup_pass_time = time.time() - startup_time.value
+        # startup_time = 0
+        # startup_time = self._registers.by_name("sys.time.startup")
+        # if startup_time is not None:
+        #     startup_pass_time = time.time() - startup_time.value
 
-        state = "OFF"
-        if startup_pass_time <= self.__hallway_lighting_time:
-            state = "OFF"
+        # state = "OFF"
+        # if startup_pass_time <= self.__hallway_lighting_time:
+        #     state = "OFF"
             
-        else:
-            state = "ON"
+        # else:
+        #     state = "ON"
     
         
-        self.__logger.debug(f"Wait time {self.__hallway_lighting_time - startup_pass_time}; State: {state}")
+        # self.__logger.debug(f"Wait time {self.__hallway_lighting_time - startup_pass_time}; State: {state}")
 
-        return
+        # return
 
         # Update sensor data.
         self.__light_sensor.update()
