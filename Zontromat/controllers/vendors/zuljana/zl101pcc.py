@@ -459,13 +459,13 @@ class ZL101PCC(BaseController):
 
             self.__logger.debug(f"GPIO: {remote_gpio}")
 
-            # write_response = self.__modbus_rtu_clients[remote_gpio["uart"]].write_coil(
-            #     remote_gpio["io_reg"]+remote_gpio["io_index"],
-            #     state,
-            #     unit=remote_gpio["mb_id"])
+            write_response = self.__modbus_rtu_clients[remote_gpio["uart"]].write_register(
+                remote_gpio["io_reg"]+remote_gpio["io_index"],
+                value,
+                unit=remote_gpio["mb_id"])
 
-            # if not write_response.isError():
-            #     response = True
+            if not write_response.isError():
+                response = True
 
         else:
             raise ValueError("Pin does not exists in pin map.")
