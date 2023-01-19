@@ -443,7 +443,8 @@ class Light(BasePlugin):
         # return
 
         # Update sensor data.
-        self.__light_sensor.update()
+        if self.__light_sensor is not None:
+            self.__light_sensor.update()
 
         self.__update_timer.update()
         if self.__update_timer.expired:
