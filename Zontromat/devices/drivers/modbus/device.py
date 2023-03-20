@@ -27,7 +27,7 @@ from struct import pack, unpack
 from devices.base_device import BaseDevice
 
 from devices.drivers.modbus.parameter_type import ParameterType
-from devices.drivers.modbus.register_type import RegisterType
+from devices.drivers.modbus.function_code import FunctionCode
 
 from devices.drivers.modbus.requests.read_device_coils import ReadDeviceCoils
 from devices.drivers.modbus.requests.read_device_discrete_inputs import ReadDeviceDiscreteInputs
@@ -332,39 +332,39 @@ class ModbusDevice(BaseDevice):
         if param is None:
             return param
 
-        if param.register_type == RegisterType.ReadCoil:
+        if param.function_code == FunctionCode.ReadCoil:
             count = len(param.addresses)
             address = min(param.addresses)
             request = ReadDeviceCoils(self.unit, address, count)
 
-        elif param.register_type == RegisterType.ReadDiscreteInput:
+        elif param.function_code == FunctionCode.ReadDiscreteInput:
             count = len(param.addresses)
             address = min(param.addresses)
             request = ReadDeviceDiscreteInputs(self.unit, address, count)
 
-        elif param.register_type == RegisterType.ReadHoldingRegisters:
+        elif param.function_code == FunctionCode.ReadHoldingRegisters:
             count = len(param.addresses)
             address = min(param.addresses)
             request = ReadDeviceHoldingRegisters(self.unit, address, count)
 
-        elif param.register_type == RegisterType.ReadInputRegisters:
+        elif param.function_code == FunctionCode.ReadInputRegisters:
             count = len(param.addresses)
             address = min(param.addresses)
             request = ReadDeviceInputRegisters(self.unit, address, count)
 
-        elif param.register_type == RegisterType.WriteSingleHoldingRegister:
+        elif param.function_code == FunctionCode.WriteSingleHoldingRegister:
             if name in config:
                 values = config[name]
                 address = min(param.addresses)
                 request = WriteDeviceRegisters(self.unit, address, [values])
 
-        elif param.register_type == RegisterType.WriteMultipleCoils:
+        elif param.function_code == FunctionCode.WriteMultipleCoils:
             if name in config:
                 values = config[name]
                 address = min(param.addresses)
                 request = WriteDeviceCoils(self.unit, address, values)
 
-        elif param.register_type == RegisterType.WriteMultipleHoldingRegisters:
+        elif param.function_code == FunctionCode.WriteMultipleHoldingRegisters:
             if name in config:
                 values = config[name]
                 address = min(param.addresses)

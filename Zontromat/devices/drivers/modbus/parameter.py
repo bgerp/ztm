@@ -70,8 +70,11 @@ class Parameter:
     __addresses = []
     """Modbus addresses."""
 
-    __register_type = ""
+    __function_code = ""
     """Register type."""
+
+    __limits = []
+    """Limits."""    
 
 #endregion
 
@@ -148,26 +151,42 @@ class Parameter:
         self.__addresses = addresses
 
     @property
-    def register_type(self):
+    def function_code(self):
         """Register type."""
 
-        return self.__register_type
+        return self.__function_code
 
-    @register_type.setter
-    def register_type(self, register_type):
+    @function_code.setter
+    def function_code(self, function_code):
         """Register type.
 
         Args:
-            register_type (string): Register type.
+            function_code (string): Register type.
         """
 
-        self.__register_type = register_type
+        self.__function_code = function_code
+
+    @property
+    def limits(self):
+        """Limits"""
+
+        return self.__limits
+
+    @limits.setter
+    def limits(self, limits):
+        """Limits
+
+        Args:
+            limits (list): Limits values.
+        """
+
+        self.__limits = limits
 
 #endregion
 
 #region Constructor
 
-    def __init__(self, parameter_name, mou, data_type, addresses, register_type):
+    def __init__(self, parameter_name, mou, data_type, addresses, function_code, limits=[0, 100]):
         """Constructor
 
         Args:
@@ -175,13 +194,14 @@ class Parameter:
             mou (string): Measure of unit.
             data_type (string): Data type.
             addresses (list): Modbus addresses.
-            register_type (string)
+            function_code (string)
         """
 
         self.parameter_name = parameter_name
         self.mou = mou
         self.data_type = data_type
         self.addresses = addresses
-        self.register_type = register_type
+        self.function_code = function_code
+        self.limits = limits
 
 #endregion
