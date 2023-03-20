@@ -25,7 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import argparse
 
 # from pymodbus.client.sync import ModbusTcpClient as ModbusClient
-from pymodbus.client.sync import ModbusSerialClient as ModbusClient
+from pymodbus.client.serial import ModbusSerialClient as ModbusClient
 
 from devices.vendors.donkger.xy_md02.xy_md02 import XYMD02 as Thermometer
 

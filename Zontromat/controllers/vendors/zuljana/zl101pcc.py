@@ -25,10 +25,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import subprocess
 import os
 
-# Import MODBUS clients.
-# from pymodbus.client.sync import ModbusTcpClient as ModbusClient
-# from pymodbus.client.sync import ModbusUdpClient as ModbusClient
-from pymodbus.client.sync import ModbusSerialClient as ModbusClient
 from services.global_error_handler.global_error_handler import GlobalErrorHandler
 
 from utils.logger import get_logger
@@ -38,6 +34,13 @@ from controllers.base_controller import BaseController
 
 # from devices.vendors.super.s8_3cn.s8_3cn import S83CN as BlackIsland
 from devices.vendors.cwt.mb308v.mb308v import MB308V as BlackIsland
+from devices.drivers.modbus.function_code import FunctionCode
+
+# Import MODBUS clients.
+# from pymodbus.client.sync import ModbusTcpClient as ModbusClient
+# from pymodbus.client.sync import ModbusUdpClient as ModbusClient
+# from pymodbus.client.sync import ModbusSerialClient as ModbusClient
+from pymodbus.client.serial import ModbusSerialClient as ModbusClient
 
 #region File Attributes
 
@@ -142,6 +145,9 @@ class ZL101PCC(BaseController):
     """Analog outputs.
     """
 
+    __analog_limits = [0.0, 10.0]
+    """Analog I/O volts."""
+
 #endregion
 
 #region Properties
@@ -218,8 +224,10 @@ class ZL101PCC(BaseController):
                     )
             else:
                 self.show_valid_serial_ports(modbus_rtu_cfg["port"])
-
-        self.__black_island = BlackIsland(unit=1)
+        
+            # This hot fix is mandatory, because "black island" is part of the logical body of the master controller.
+            if index == 0:
+                self.__black_island = BlackIsland(unit=modbus_rtu_cfg["unit"])
 
 #endregion
 
@@ -433,15 +441,15 @@ class ZL101PCC(BaseController):
         # Local GPIO.
         if self.is_gpio_local(pin):
 
-            value = l_scale(value, [0, 10], [0, 50000])
-
-            value = int(value)
-
-            self.__AO[self._gpio_map[pin]] = value
+            # Transform values from 0-10V to device specific values.
+            param_name = "SetAnalogOutputs"
+            parameter = self.__black_island.get_parameter_by_name(param_name)
+            result_value = l_scale(value, self.__analog_limits, parameter.limits)
+            self.__AO[self._gpio_map[pin]] = int(result_value)
 
             # Write device analog outputs.
             request = self.__black_island\
-                .generate_request("SetAnalogOutputs", SetAnalogOutputs=self.__AO)
+                .generate_request(param_name, SetAnalogOutputs=self.__AO)
             hrw_response = self.__modbus_rtu_clients[0].execute(request)
             if hrw_response is not None:
                 if not hrw_response.isError():
@@ -459,13 +467,28 @@ class ZL101PCC(BaseController):
 
             self.__logger.debug(f"GPIO: {remote_gpio}")
 
-            write_response = self.__modbus_rtu_clients[remote_gpio["uart"]].write_register(
-                remote_gpio["io_reg"]+remote_gpio["io_index"],
-                value,
-                unit=remote_gpio["mb_id"])
+            if remote_gpio["mb_id"] == FunctionCode.WriteSingleHoldingRegister.value:
+                write_response = self.__modbus_rtu_clients[remote_gpio["uart"]].write_register(
+                    remote_gpio["io_reg"]+remote_gpio["io_index"],
+                    value,
+                    unit=remote_gpio["mb_id"])
 
-            if not write_response.isError():
-                response = True
+                if not write_response.isError():
+                    response = True
+                else:
+                    GlobalErrorHandler.log_hardware_malfunction(self.__logger, "GPIO: {} @ {} malfunctioning, check modbus cables and connections.".format(pin, self))
+
+            elif remote_gpio["mb_id"] == FunctionCode.WriteMultipleHoldingRegisters.value:
+                write_response = self.__modbus_rtu_clients[remote_gpio["uart"]].write_registers(
+                    remote_gpio["io_reg"]+remote_gpio["io_index"],
+                    [value],
+                    unit=remote_gpio["mb_id"])
+
+                if not write_response.isError():
+                    response = True
+                else:
+                    GlobalErrorHandler.log_hardware_malfunction(self.__logger, "GPIO: {} @ {} malfunctioning, check modbus cables and connections.".format(pin, self))
+
 
         else:
             raise ValueError("Pin does not exists in pin map.")
@@ -502,7 +525,8 @@ class ZL101PCC(BaseController):
         if self.is_gpio_local(pin):
 
             # Read device analog inputs.
-            request = self.__black_island.generate_request("GetAnalogInputs")
+            param_name = "GetAnalogInputs"
+            request = self.__black_island.generate_request(param_name)
             irr_response = self.__modbus_rtu_clients[0].execute(request)
             if irr_response is not None:
                 if not irr_response.isError():
@@ -512,11 +536,10 @@ class ZL101PCC(BaseController):
             else:
                 GlobalErrorHandler.log_hardware_malfunction(self.__logger, "GPIO: {} @ {} malfunctioning, check modbus cables and connections.".format(pin, self))
 
-            value = self.__AI[self._gpio_map[pin]]
-
-            value = l_scale(value, [0, 50000], [0, 10])
-
-            state["value"] = value
+            # Scale analog inputs value in 0 to 10 volts.
+            input_value = self.__AI[self._gpio_map[pin]]
+            param = self.__black_island.get_parameter_by_name(param_name)
+            state["value"] = l_scale(input_value, param.limits, self.__analog_limits)
 
             # self.__logger.debug("analog_read({}, {})".format(self.model, pin))
 
@@ -554,3 +577,5 @@ class ZL101PCC(BaseController):
             response = self.__modbus_rtu_clients[uart].execute(request)
 
         return response
+
+#endregion
