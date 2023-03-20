@@ -392,7 +392,6 @@ class Light(BasePlugin):
         out_to_v1 = voltage_1 * to_voltage_scale
         out_to_v2 = voltage_2 * to_voltage_scale
 
-
         # If the zone is empty, turn the lights off.
         if is_empty:
             pass
@@ -402,6 +401,19 @@ class Light(BasePlugin):
 
         self.__logger.debug("TRG {:3.3f}\tINP {:3.3f}\tERR: {:3.3f}\tOUT1: {:3.3f}\tOUT2: {:3.3f}"\
             .format(target_illumination, current_illumination, delta, out_to_v1, out_to_v2))
+
+    def __test_update(self):
+
+        self.__output = self.__target_illumination
+
+        # Convert to volgate.
+        to_voltage_scale = 0.1 # Magic number!!!
+        voltage_1, voltage_2 = self.__flood_fade(self.__output)
+        out_to_v1 = voltage_1 * to_voltage_scale
+        out_to_v2 = voltage_2 * to_voltage_scale
+
+        # set the voltage.
+        self.__set_voltages(out_to_v1, out_to_v2)
 
 #endregion
 
@@ -414,7 +426,7 @@ class Light(BasePlugin):
         self.__logger = get_logger(__name__)
         self.__logger.info("Starting up the {}".format(self.name))
 
-        self.__update_timer = Timer(1)
+        self.__update_timer = Timer(0.05)
 
         self.__init_registers()
 
@@ -450,7 +462,9 @@ class Light(BasePlugin):
         if self.__update_timer.expired:
             self.__update_timer.clear()
 
-            self.__calculate()
+            # self.__calculate()
+
+            self.__test_update()
 
     def _shutdown(self):
         """Shutting down the plugin.
