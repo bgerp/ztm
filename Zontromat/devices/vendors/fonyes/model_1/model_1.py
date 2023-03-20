@@ -58,6 +58,8 @@ class AirDamper1(BaseAirDamper):
     """Fonyes - Model1. Fire damper
     """
 
+    __example_settings = {"vendor": "fonyes", "model": "model_1", "options": {"output_cw": "off", "output_ccw": "off"}}
+
 #region Attributes
 
 #endregion
