@@ -3273,6 +3273,14 @@ def __add_registers():
     register.value = 0
     __registers.append(register)
 
+    register = Register("vent.fan.power_gpio")
+    register.scope = Scope.System
+    register.plugin_name = "Ventilation"
+    register.description = "Fans power GPIO."
+    register.range = __range["NONE"]
+    register.value = "U0:ID2:FC16:R0:BIT3"
+    __registers.append(register)
+
     # Upper fan
     register = Register("vent.lower_1.fan.settings")
     register.scope = Scope.System
@@ -3311,14 +3319,6 @@ def __add_registers():
     register.description = "Lower fan speed [%]"
     register.range = __range["PERCENTAGE_F"]
     register.value = 0.0
-    __registers.append(register)
-
-    register = Register("vent.lower_1.fan.power_gpio")
-    register.scope = Scope.System
-    register.plugin_name = "Ventilation"
-    register.description = "Lower fan power GPIO."
-    register.range = __range["DO|RO"]
-    register.value = verbal_const.OFF
     __registers.append(register)
 
     # Upper fan
@@ -3361,29 +3361,13 @@ def __add_registers():
     register.value = 30.0
     __registers.append(register)
 
-    register = Register("vent.upper_1.fan.power_gpio")
-    register.scope = Scope.System
-    register.plugin_name = "Ventilation"
-    register.description = "Upper fan power GPIO."
-    register.range = __range["DO|RO"]
-    register.value = verbal_const.OFF
-    __registers.append(register)
-
     # Upper valve settings
     register = Register("vent.upper_1.air_damper.settings")
     register.scope = Scope.System
     register.plugin_name = "Ventilation"
     register.description = "Lower air damper settings"
     register.range = __range["NONE"]
-    register.value = {
-        "vendor": "fonyes",
-        "model": "model_1",
-        "options":
-        {
-            "output_cw": verbal_const.OFF,
-            "output_ccw": verbal_const.OFF
-        }
-    }
+    register.value = verbal_const.OFF
     __registers.append(register)
 
     # Lower valve settings
@@ -3392,15 +3376,7 @@ def __add_registers():
     register.plugin_name = "Ventilation"
     register.description = "Upper air damper settings"
     register.range = __range["NONE"]
-    register.value = {
-        "vendor": "fonyes",
-        "model": "model_1",
-        "options":
-        {
-            "output_cw": verbal_const.OFF,
-            "output_ccw": verbal_const.OFF,
-        }
-    }
+    register.value = verbal_const.OFF
     __registers.append(register)
 
     # Zones count.
