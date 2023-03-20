@@ -90,13 +90,13 @@
 <ellipse fill="#a2b653" stroke="black" cx="1504" cy="-246.63" rx="48.04" ry="18"/>
 <text text-anchor="middle" x="1504" y="-244.13" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">drivers.modbus</text>
 </g>
-<!-- devices_drivers_modbus_register_type -->
+<!-- devices_drivers_modbus_function_code -->
 <g id="node6" class="node">
-<title>devices_drivers_modbus_register_type</title><style>.edge>path:hover{stroke-width:8}</style>
+<title>devices_drivers_modbus_function_code</title><style>.edge>path:hover{stroke-width:8}</style>
 <ellipse fill="#a2b653" stroke="black" cx="1386" cy="-246.63" rx="51.74" ry="28.98"/>
 <text text-anchor="middle" x="1386" y="-255.13" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">drivers.</text>
 <text text-anchor="middle" x="1386" y="-244.13" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">modbus.</text>
-<text text-anchor="middle" x="1386" y="-233.13" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">register_type</text>
+<text text-anchor="middle" x="1386" y="-233.13" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">function_code</text>
 </g>
 <!-- devices_factories_flowmeters_flowmeters_factory -->
 <g id="node7" class="node">
