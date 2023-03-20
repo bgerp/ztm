@@ -32,6 +32,8 @@ from data import verbal_const
 from controllers.utils.resource_identifiers import Identifiers
 from controllers.utils.pin_modes import PinModes
 
+from devices.drivers.modbus.function_code import FunctionCode
+
 #region File Attributes
 
 __author__ = "Orlin Dimitrov"
@@ -72,6 +74,8 @@ class BaseController(Configuarable):
     """GPIO map"""
 
     _delimiter = ":"
+
+    _remote_gpio_chunks_count = 5
 
 #endregion
 
@@ -223,7 +227,7 @@ class BaseController(Configuarable):
         has_delimiter = (self._delimiter in io_name)
 
         if not has_delimiter:
-        #     raise SyntaxError("No delimiter symbol included.")
+            # raise SyntaxError("No delimiter symbol included.")
             return False
 
         # Split the target in to chunks.
@@ -232,7 +236,7 @@ class BaseController(Configuarable):
         # Get the chunks length.
         chunks_count = len(chunks)
 
-        if chunks_count != 4:
+        if chunks_count != self._remote_gpio_chunks_count:
             # raise SyntaxError("Invalid chunks count must be 3. OR Invalid place of the delimiter.")
             return False
 
@@ -251,12 +255,13 @@ class BaseController(Configuarable):
 
         uart_identifier = int(uart_identifier)
 
-        # Validate the MODBUS range.
+        # Validate the UART range.
         valid_uart_identifier = -1 < uart_identifier <= 247
 
         if not valid_uart_identifier:
-            # raise ValueError("MODBUS identifier should be M1 to M247.")
+            # raise ValueError("UART identifier should be U0 to U255.")
             return False
+
 
         # Check for MODBUS identifier.
         has_mb_identifier = "ID" in chunks[Identifiers.ID.value]
@@ -269,7 +274,7 @@ class BaseController(Configuarable):
         mb_identifier = chunks[Identifiers.ID.value].replace("ID", "")
 
         if mb_identifier == "":
-        #     raise ValueError("MODBUS identifier should be M1 to M254.")
+            # raise ValueError("MODBUS identifier should be M1 to M254.")
             return False
 
         mb_identifier = int(mb_identifier)
@@ -278,7 +283,23 @@ class BaseController(Configuarable):
         valid_mb_identifier = 0 < mb_identifier <= 247
 
         if not valid_mb_identifier:
-        #     raise ValueError("MODBUS identifier should be M1 to M254.")
+            # raise ValueError("MODBUS identifier should be M1 to M254.")
+            return False
+
+        # Get the MODBUS function code.
+        mb_function_code = chunks[Identifiers.FC.value].replace("FC", "")
+
+        if mb_function_code == "":
+            # raise ValueError("MODBUS function code should be FC1 to M254.")
+            return False
+
+        mb_function_code = int(mb_function_code)
+
+        # Validate the FC range.
+        valid_mb_function_code = FunctionCode.is_valid(mb_function_code)
+
+        if not valid_mb_function_code:
+            # raise ValueError("MODBUS function code should be part of FunctionCode.")
             return False
 
         # Disable mapping check.
@@ -292,13 +313,15 @@ class BaseController(Configuarable):
                 break
 
         if not (has_io_identifier or disable_mapping):
-        #     raise ValueError("Target IO is not part of the mapping.")
+            # raise ValueError("Target IO is not part of the mapping.")
             return False
 
         # Combine all requirements to one expresion.
-        valid = has_delimiter and (chunks_count == 4) and \
+        valid = has_delimiter and \
+            (chunks_count == self._remote_gpio_chunks_count) and \
             has_uart_identifier and valid_uart_identifier and \
-            has_mb_identifier and valid_mb_identifier and (has_io_identifier or disable_mapping)
+            has_mb_identifier and valid_mb_identifier and\
+            (has_io_identifier or disable_mapping) and valid_mb_function_code
 
         # Return the result.
         return valid
@@ -339,6 +362,10 @@ class BaseController(Configuarable):
         mb_id = chunks[Identifiers.ID.value].replace("ID", "")
         mb_id = int(mb_id)
 
+        # Get MODBUS function code.
+        mb_fc = chunks[Identifiers.FC.value].replace("FC", "")
+        mb_fc = int(mb_fc)
+
         # Get MODBUS register.
         io_reg = chunks[Identifiers.REG.value].replace("R", "")
         io_reg = int(io_reg)
@@ -366,6 +393,7 @@ class BaseController(Configuarable):
         identifier = {
             "uart": uart,
             "mb_id": mb_id,
+            "mb_fc": mb_fc,
             "io_reg": io_reg,
             "io_type": io_type,
             "io_index": io_index, 
@@ -402,6 +430,11 @@ class BaseController(Configuarable):
                 configuration["bytesize"] = int(cfg.string[0])
                 configuration["parity"] = cfg.string[1]
                 configuration["stopbits"] = int(cfg.string[2])
+
+        unit = "modbus_rtu_unit_{}".format(index)
+        if unit in self._config:
+            configuration["unit"] = int(self._config[unit])
+
 
         return configuration
 
@@ -585,7 +618,7 @@ class BaseController(Configuarable):
             State of the device.
         """
 
-    def read_mb_registers(self, uart, dev_id, registers, register_type=None):
+    def read_mb_registers(self, uart, dev_id, registers, function_code=None):
         """Read MODBUS register.
 
         Parameters
@@ -599,7 +632,7 @@ class BaseController(Configuarable):
         registers : array
             Registers IDs.
 
-        register_type : str
+        function_code : str
             Registers types.
 
         Returns
