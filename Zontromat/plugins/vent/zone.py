@@ -254,7 +254,7 @@ class Zone(BasePlugin):
 
         self.__set_point_op = temp_value
 
-        self.__logger.info("Ventilation OP set point: {}".format(self.__set_point_op))
+        # self.__logger.info("Ventilation OP set point: {}".format(self.__set_point_op))
 
     def __hvac_setpoint_cb(self, register: Register):
 
