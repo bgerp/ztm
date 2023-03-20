@@ -72,7 +72,6 @@
 | Purpose | Register | Type | Value |
 |----------|:-------------|:------|:------|
 | Window 1 blinds mechanism | blinds.blind_1.mechanism | json | {'vendor': 'PT', 'model': 'MODv1', 'options': {'output_cw': 'off', 'output_ccw': 'off', 'feedback': 'off', 'feedback_tresh': 0.093, 'min': 0, 'max': 180, 'deg_per_sec': 10.0}} |
-| Position [deg] | blinds.blind_1.position | float | 0.0 |
 | Object height [m]. | blinds.blind_1.object_height | float | 2.0 |
 | Sun spot limit [m]. | blinds.blind_1.sunspot_limit | float | 1.0 |
 | Number of blind controllers | blinds.count | int | 1 |
@@ -87,6 +86,7 @@
 
 | Purpose | Register | Type | Value |
 |----------|:-------------|:------|:------|
+| Position [deg] | blinds.blind_1.position | float | 0.0 |
 
 * * *
 
@@ -188,7 +188,6 @@
 | Purpose | Register | Type | Value |
 |----------|:-------------|:------|:------|
 | Count of the HVAC zones. | hvac.zones_count | int | 1 |
-| Adjust temperature | hvac.temp_1.adjust | float | 0.0 |
 | Air temperature sensor center settings | hvac.air_temp_cent_1.settings | json | {'vendor': 'Donkger', 'model': 'XY-MD02', 'options': {'uart': 0, 'mb_id': 4}} |
 | Air temperature sensor center value | hvac.air_temp_cent_1.value | float | 0.0 |
 | Air temperature sensor lower settings | hvac.air_temp_lower_1.settings | json | {'vendor': 'Donkger', 'model': 'XY-MD02', 'options': {'uart': 0, 'mb_id': 3}} |
@@ -224,6 +223,7 @@
 
 | Purpose | Register | Type | Value |
 |----------|:-------------|:------|:------|
+| Adjust temperature | hvac.temp_1.adjust | float | 0.0 |
 
 * * *
 
@@ -241,10 +241,11 @@
 |----------|:-------------|:------|:------|
 | Minimum limit | light.min | float | 800.0 |
 | Maximum limit | light.max | float | 10000.0 |
-| Analog output 1 | light.v1.output | str | AO2 |
-| Analog output 2 | light.v2.output | str | AO3 |
+| Analog output 1. U1:ID2:R0:AO2 | light.v1.output | str | off |
+| Analog output 2. U1:ID2:R0:AO3 | light.v2.output | str | off |
+| Hallway lighting digital output. U1:ID2:R0:DO3 | light.hallway_lighting.output | str | off |
+| Hallway lighting wait time. | light.hallway_lighting.time | float | 60.0 |
 | Sensor settings | light.sensor.settings | json | {'vendor': 'PT', 'model': 'light_sensor', 'options': {'input': 'AI2'}} |
-| Target illumination | light.target_illum | float | 0.0 |
 | Error gain | light.error_gain | float | 0.01 |
 | Plugin enabled | light.enabled | bool | False |
 
@@ -257,6 +258,7 @@
 
 | Purpose | Register | Type | Value |
 |----------|:-------------|:------|:------|
+| Target illumination | light.target_illum | float | 0.0 |
 
 * * *
 
@@ -291,6 +293,9 @@
 | Current consumed RAM | sys.ram.current | int | 0 |
 | Peek of consumed RAM | sys.ram.peak | int | 0 |
 | Application time cycle | sys.time.usage | float | 0.0 |
+| OS boot time. | sys.time.boot | float | 0.0 |
+| OS uptime. | sys.time.uptime | float | 0.0 |
+| Application startup time. | sys.time.startup | float | 0.0 |
 | Total disc space | sys.disc.total | int | 0 |
 | Used disc space | sys.disc.used | int | 0 |
 | Free disc space | sys.disc.free | int | 0 |
@@ -484,7 +489,7 @@
 | Heat Pump Control Group / Water Pump / Hot | echp.hpcg.wp_hot.settings | json | {'vendor': 'Grundfos', 'model': 'MAGNA1_80_100_F_360_1x230V_PN6', 'options': {'uart': 0, 'mb_id': 3}} |
 | Heat Pump Control Group / Water Pump / Warm | echp.hpcg.wp_warm_p.settings | json | {'vendor': 'Grundfos', 'model': 'MAGNA1_80_100_F_360_1x230V_PN6', 'options': {'uart': 0, 'mb_id': 0}} |
 | Heat Pump Control Group / Water Pump / Warm | echp.hpcg.wp_warm_g.settings | json | {'vendor': 'Grundfos', 'model': 'MAGNA1_80_100_F_360_1x230V_PN6', 'options': {'uart': 0, 'mb_id': 0}} |
-| Heat Pump Control Group / Heat Pump | echp.hpcg.hp.settings | json | {'vendor': 'HstarsGuangzhouRefrigeratingEquipmentGroup', 'model': 'HeatPump', 'options': {'uart': 0, 'mb_id': 0}} |
+| Heat Pump Control Group / Heat Pump | echp.hpcg.hp.settings | json | {'vendor': 'HstarsGuangzhouRefrigeratingEquipmentGroup', 'model': '40STD-N420WHSB4', 'options': {'uart': 0, 'mb_id': 0}} |
 | Plugin enabled | echp.enabled | bool | False |
 
  - **Device**
@@ -512,19 +517,19 @@
 
 | Purpose | Register | Type | Value |
 |----------|:-------------|:------|:------|
-| Operators panel set point | vent.op_setpoint_1 | int | 0 |
 | HVAC set point | vent.hvac_setpoint_1 | int | 0 |
 | AC set point | vent.ac_setpoint_1 | int | 0 |
-| Lower fan settings | vent.lower_1.fan.settings | json | {'vendor': 'HangzhouAirflowElectricApplications', 'model': 'f3p146ec072600', 'options': {'output': 'AO1'}} |
+| Fans power GPIO. | vent.fan.power_gpio | str | U0:ID2:FC16:R0:BIT3 |
+| Lower fan settings | vent.lower_1.fan.settings | json | {'vendor': 'HangzhouAirflowElectricApplications', 'model': 'f3p146ec072600', 'options': {'output': 'AO0'}} |
 | Lower fan minimum speed [%] | vent.lower_1.fan.min_speed | float | 0.0 |
 | Lower fan maximum speed [%] | vent.lower_1.fan.max_speed | float | 30.0 |
-| Upper fan speed [%] | vent.lower_1.fan.speed | float | 0.0 |
+| Lower fan speed [%] | vent.lower_1.fan.speed | float | 0.0 |
 | Upper fan settings | vent.upper_1.fan.settings | json | {'vendor': 'HangzhouAirflowElectricApplications', 'model': 'f3p146ec072600', 'options': {'output': 'AO1'}} |
 | Upper fan minimum speed [%] | vent.upper_1.fan.min_speed | float | 0.0 |
 | Upper fan speed [%] | vent.upper_1.fan.speed | float | 0.0 |
 | Upper fan maximum speed [%] | vent.upper_1.fan.max_speed | float | 30.0 |
-| Lower air damper settings | vent.upper_1.air_damper.settings | json | {'vendor': 'fonyes', 'model': 'model_1', 'options': {'output_cw': 'off', 'output_ccw': 'off'}} |
-| Upper air damper settings | vent.lower_1.air_damper.settings | json | {'vendor': 'fonyes', 'model': 'model_1', 'options': {'output_cw': 'off', 'output_ccw': 'off'}} |
+| Lower air damper settings | vent.upper_1.air_damper.settings | str | off |
+| Upper air damper settings | vent.lower_1.air_damper.settings | str | off |
 | Count of the ventilation zones. | vent.zones_count | int | 1 |
 | Ventilation enable flag. | vent.enabled | bool | False |
 
@@ -537,6 +542,7 @@
 
 | Purpose | Register | Type | Value |
 |----------|:-------------|:------|:------|
+| Operators panel set point | vent.op_setpoint_1 | int | 0 |
 
 * * *
 
@@ -581,6 +587,32 @@
 | Purpose | Register | Type | Value |
 |----------|:-------------|:------|:------|
 | Statistics module enable flag. | stat.enabled | bool | False |
+
+ - **Device**
+
+| Purpose | Register | Type | Value |
+|----------|:-------------|:------|:------|
+
+ - **Both**
+
+| Purpose | Register | Type | Value |
+|----------|:-------------|:------|:------|
+
+* * *
+
+
+## <a name='OfficeConferenceHall'>Office Conference Hall</a> Registers
+
+ - **Global**
+
+| Purpose | Register | Type | Value |
+|----------|:-------------|:------|:------|
+
+ - **System**
+
+| Purpose | Register | Type | Value |
+|----------|:-------------|:------|:------|
+| Office conference hall module enable flag. | oc_hall.enabled | bool | False |
 
  - **Device**
 
