@@ -27,7 +27,7 @@ from utils.logger import get_logger
 from devices.drivers.modbus.device import ModbusDevice
 from devices.drivers.modbus.parameter import Parameter
 from devices.drivers.modbus.parameter_type import ParameterType
-from devices.drivers.modbus.register_type import RegisterType
+from devices.drivers.modbus.function_code import FunctionCode
 
 from devices.vendors.grundfos.control_mode import ControlMode
 
@@ -108,19 +108,19 @@ class BasePump(ModbusDevice):
 
         self._parameters.append(
             Parameter("GetControlMode", "Enum",\
-            ParameterType.UINT16_T, [102], RegisterType.ReadInputRegisters))
+            ParameterType.UINT16_T, [102], FunctionCode.ReadInputRegisters))
 
         self._parameters.append(
             Parameter("SetControlMode", "Enum",\
-            ParameterType.UINT16_T, [102], RegisterType.WriteSingleHoldingRegister))
+            ParameterType.UINT16_T, [102], FunctionCode.WriteSingleHoldingRegister))
 
         self._parameters.append(
             Parameter("GetSetpoint", "%",\
-            ParameterType.UINT16_T, [104], RegisterType.ReadInputRegisters))
+            ParameterType.UINT16_T, [104], FunctionCode.ReadInputRegisters))
 
         self._parameters.append(
             Parameter("SetSetpoint", "%",\
-            ParameterType.UINT16_T, [104], RegisterType.WriteSingleHoldingRegister))
+            ParameterType.UINT16_T, [104], FunctionCode.WriteSingleHoldingRegister))
 
 #endregion
 

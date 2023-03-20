@@ -25,7 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from devices.drivers.modbus.device import ModbusDevice
 from devices.drivers.modbus.parameter import Parameter
 from devices.drivers.modbus.parameter_type import ParameterType
-from devices.drivers.modbus.register_type import RegisterType
+from devices.drivers.modbus.function_code import FunctionCode
 
 #region File Attributes
 
@@ -80,7 +80,7 @@ class HHCR4I4D(ModbusDevice):
                 "Bits",
                 ParameterType.INT16_T,
                 [16, 17, 18, 19],
-                RegisterType.ReadCoil
+                FunctionCode.ReadCoil
             )
         )
 
@@ -90,7 +90,7 @@ class HHCR4I4D(ModbusDevice):
                 "Bits",
                 ParameterType.INT16_T,
                 [32, 33, 34, 35],
-                RegisterType.ReadDiscreteInput
+                FunctionCode.ReadDiscreteInput
             )
         )
 
@@ -100,7 +100,7 @@ class HHCR4I4D(ModbusDevice):
                 "Bits",
                 ParameterType.INT16_T,
                 [16, 17, 18, 19],
-                RegisterType.WriteMultipleCoils
+                FunctionCode.WriteMultipleCoils
             )
         )
 

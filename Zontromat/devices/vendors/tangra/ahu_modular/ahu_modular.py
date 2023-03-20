@@ -25,7 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from devices.drivers.modbus.device import ModbusDevice
 from devices.drivers.modbus.parameter import Parameter
 from devices.drivers.modbus.parameter_type import ParameterType
-from devices.drivers.modbus.register_type import RegisterType
+from devices.drivers.modbus.function_code import FunctionCode
 
 from services.global_error_handler.global_error_handler import GlobalErrorHandler
 
@@ -99,7 +99,7 @@ class AHUModular(ModbusDevice):
                 "Bits",
                 ParameterType.UINT16_T,
                 [0],
-                RegisterType.ReadDiscreteInput
+                FunctionCode.ReadDiscreteInput
             )
         )
 
@@ -109,7 +109,7 @@ class AHUModular(ModbusDevice):
                 "Bits",
                 ParameterType.UINT16_T,
                 [5],
-                RegisterType.ReadDiscreteInput
+                FunctionCode.ReadDiscreteInput
             )
         )
 
@@ -119,7 +119,7 @@ class AHUModular(ModbusDevice):
                 "Bits",
                 ParameterType.UINT16_T,
                 [6],
-                RegisterType.ReadDiscreteInput
+                FunctionCode.ReadDiscreteInput
             )
         )
 
@@ -129,7 +129,7 @@ class AHUModular(ModbusDevice):
                 "Bits",
                 ParameterType.UINT16_T,
                 [7],
-                RegisterType.ReadDiscreteInput
+                FunctionCode.ReadDiscreteInput
             )
         )
 
@@ -139,7 +139,7 @@ class AHUModular(ModbusDevice):
                 "Bits",
                 ParameterType.UINT16_T,
                 [8],
-                RegisterType.ReadDiscreteInput
+                FunctionCode.ReadDiscreteInput
             )
         )
 
@@ -149,7 +149,7 @@ class AHUModular(ModbusDevice):
                 "Bits",
                 ParameterType.UINT16_T,
                 [9],
-                RegisterType.ReadDiscreteInput
+                FunctionCode.ReadDiscreteInput
             )
         )
 
@@ -159,7 +159,7 @@ class AHUModular(ModbusDevice):
                 "Bits",
                 ParameterType.UINT16_T,
                 [10],
-                RegisterType.ReadDiscreteInput
+                FunctionCode.ReadDiscreteInput
             )
         )
 
@@ -169,7 +169,7 @@ class AHUModular(ModbusDevice):
                 "Bits",
                 ParameterType.UINT16_T,
                 [11],
-                RegisterType.ReadDiscreteInput
+                FunctionCode.ReadDiscreteInput
             )
         )
 
@@ -179,7 +179,7 @@ class AHUModular(ModbusDevice):
                 "Bits",
                 ParameterType.UINT16_T,
                 [12],
-                RegisterType.ReadDiscreteInput
+                FunctionCode.ReadDiscreteInput
             )
         )
 
@@ -189,7 +189,7 @@ class AHUModular(ModbusDevice):
                 "State", # 0->Stop, 1->Cool, 2->Heat, 3->Fan, 4->Auto, 5->Dry
                 ParameterType.UINT16_T,
                 [0],
-                RegisterType.ReadHoldingRegisters
+                FunctionCode.ReadHoldingRegisters
             )
         )
 
@@ -199,7 +199,7 @@ class AHUModular(ModbusDevice):
                 "State", # 0->Stop, 1->Cool, 2->Heat, 3->Fan, 4->Auto, 5->Dry
                 ParameterType.UINT16_T,
                 [0],
-                RegisterType.ReadHoldingRegisters
+                FunctionCode.ReadHoldingRegisters
             )
         )
 
@@ -209,7 +209,7 @@ class AHUModular(ModbusDevice):
                 "degC", # TODO: Give possible values.
                 ParameterType.UINT16_T,
                 [1],
-                RegisterType.ReadHoldingRegisters
+                FunctionCode.ReadHoldingRegisters
             )
         )
 
@@ -219,7 +219,7 @@ class AHUModular(ModbusDevice):
                 "degC", # TODO: Give possible values.
                 ParameterType.UINT16_T,
                 [1],
-                RegisterType.WriteMultipleHoldingRegisters
+                FunctionCode.WriteMultipleHoldingRegisters
             )
         )
 
@@ -229,7 +229,7 @@ class AHUModular(ModbusDevice):
                 "State", # 0..10->Manual (0..100%), 11->Auto,
                 ParameterType.UINT16_T,
                 [2],
-                RegisterType.ReadHoldingRegisters
+                FunctionCode.ReadHoldingRegisters
             )
         )
 
@@ -239,7 +239,7 @@ class AHUModular(ModbusDevice):
                 "State", # How to choice fan speed: 0-Together, 1-Individually
                 ParameterType.UINT16_T,
                 [3],
-                RegisterType.ReadHoldingRegisters
+                FunctionCode.ReadHoldingRegisters
             )
         )
 
@@ -249,7 +249,7 @@ class AHUModular(ModbusDevice):
                 "State", # 0..10->Manual (0..100%), 11->Auto,
                 ParameterType.UINT16_T,
                 [4],
-                RegisterType.ReadHoldingRegisters
+                FunctionCode.ReadHoldingRegisters
             )
         )
 
@@ -259,7 +259,7 @@ class AHUModular(ModbusDevice):
                 "State", # 0..10->Manual (0..100%), 11->Auto
                 ParameterType.UINT16_T,
                 [5],
-                RegisterType.ReadHoldingRegisters
+                FunctionCode.ReadHoldingRegisters
             )
         )
 
@@ -269,7 +269,7 @@ class AHUModular(ModbusDevice):
                 "State", # 0..10->Manual (0..100%), 11->Auto
                 ParameterType.UINT16_T,
                 [6],
-                RegisterType.ReadHoldingRegisters
+                FunctionCode.ReadHoldingRegisters
             )
         )
 
@@ -279,7 +279,7 @@ class AHUModular(ModbusDevice):
                 "State", # TODO: Give the states,
                 ParameterType.UINT16_T,
                 [0],
-                RegisterType.ReadInputRegisters
+                FunctionCode.ReadInputRegisters
             )
         )
 
@@ -289,7 +289,7 @@ class AHUModular(ModbusDevice):
                 "degC",
                 ParameterType.REAL,
                 [1],
-                RegisterType.ReadInputRegisters
+                FunctionCode.ReadInputRegisters
             )
         )
 
@@ -299,7 +299,7 @@ class AHUModular(ModbusDevice):
                 "degC",
                 ParameterType.REAL,
                 [2],
-                RegisterType.ReadInputRegisters
+                FunctionCode.ReadInputRegisters
             )
         )
 
@@ -309,7 +309,7 @@ class AHUModular(ModbusDevice):
                 "degC",
                 ParameterType.REAL,
                 [3],
-                RegisterType.ReadInputRegisters
+                FunctionCode.ReadInputRegisters
             )
         )
 
@@ -319,7 +319,7 @@ class AHUModular(ModbusDevice):
                 "",
                 ParameterType.REAL,
                 [4],
-                RegisterType.ReadInputRegisters
+                FunctionCode.ReadInputRegisters
             )
         )
 
@@ -329,7 +329,7 @@ class AHUModular(ModbusDevice):
                 "",
                 ParameterType.REAL,
                 [5],
-                RegisterType.ReadInputRegisters
+                FunctionCode.ReadInputRegisters
             )
         )
 
@@ -339,7 +339,7 @@ class AHUModular(ModbusDevice):
                 "Percentage",
                 ParameterType.UINT16_T,
                 [18],
-                RegisterType.ReadInputRegisters
+                FunctionCode.ReadInputRegisters
             )
         )
 
@@ -349,7 +349,7 @@ class AHUModular(ModbusDevice):
                 "Percentage",
                 ParameterType.UINT16_T,
                 [19],
-                RegisterType.ReadInputRegisters
+                FunctionCode.ReadInputRegisters
             )
         )
 
@@ -359,7 +359,7 @@ class AHUModular(ModbusDevice):
                 "Percentage",
                 ParameterType.UINT16_T,
                 [20],
-                RegisterType.ReadInputRegisters
+                FunctionCode.ReadInputRegisters
             )
         )
 
@@ -369,7 +369,7 @@ class AHUModular(ModbusDevice):
                 "Percentage",
                 ParameterType.UINT16_T,
                 [21],
-                RegisterType.ReadInputRegisters
+                FunctionCode.ReadInputRegisters
             )
         )
 
@@ -379,7 +379,7 @@ class AHUModular(ModbusDevice):
                 "Percentage",
                 ParameterType.UINT16_T,
                 [22],
-                RegisterType.ReadInputRegisters
+                FunctionCode.ReadInputRegisters
             )
         )
 
@@ -389,7 +389,7 @@ class AHUModular(ModbusDevice):
                 "Percentage",
                 ParameterType.UINT16_T,
                 [23],
-                RegisterType.ReadInputRegisters
+                FunctionCode.ReadInputRegisters
             )
         )
 
@@ -399,7 +399,7 @@ class AHUModular(ModbusDevice):
                 "Percentage",
                 ParameterType.UINT16_T,
                 [24],
-                RegisterType.ReadInputRegisters
+                FunctionCode.ReadInputRegisters
             )
         )
 
@@ -409,7 +409,7 @@ class AHUModular(ModbusDevice):
                 "Percentage",
                 ParameterType.UINT16_T,
                 [25],
-                RegisterType.ReadInputRegisters
+                FunctionCode.ReadInputRegisters
             )
         )
 

@@ -25,7 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from devices.drivers.modbus.device import ModbusDevice
 from devices.drivers.modbus.parameter import Parameter
 from devices.drivers.modbus.parameter_type import ParameterType
-from devices.drivers.modbus.register_type import RegisterType
+from devices.drivers.modbus.function_code import FunctionCode
 
 #region File Attributes
 
@@ -59,10 +59,10 @@ __status__ = "Debug"
 #endregion
 
 class MB308V(ModbusDevice):
-    """This class is dedicated to read/write data from S8-3CN GPIO expander.
+    """This class is dedicated to read/write data from MB308V GPIO expander.
 
      - See: http://bends.se/?page=notebook/hardware/gecon-tcp-508n
-     - See: http://www.comwintop.com/prod_view.aspx?nid=3&typeid=67&id=245
+     - See: http://www.comwintop.com/index.php?s=index/show/index&id=239
     """
 
 #region Constructor
@@ -72,9 +72,9 @@ class MB308V(ModbusDevice):
 
         super().__init__(config)
 
-        self._vendor = "Super"
+        self._vendor = "COMWINTOP"
 
-        self._model = "S8_3CN"
+        self._model = "MB308V"
 
         self._parameters.append(
             Parameter(
@@ -82,7 +82,8 @@ class MB308V(ModbusDevice):
                 "Bits",
                 ParameterType.INT16_T,
                 [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
-                RegisterType.ReadCoil
+                FunctionCode.ReadCoil,
+                [0, 1]
             )
         )
 
@@ -92,7 +93,8 @@ class MB308V(ModbusDevice):
                 "Bits",
                 ParameterType.INT16_T,
                 [0, 1, 2, 3, 4, 5, 6, 7],
-                RegisterType.ReadDiscreteInput
+                FunctionCode.ReadDiscreteInput,
+                [0, 1]
             )
         )
 
@@ -102,7 +104,8 @@ class MB308V(ModbusDevice):
                 "Registers",
                 ParameterType.INT16_T,
                 [0, 1, 2, 3],
-                RegisterType.ReadHoldingRegisters
+                FunctionCode.ReadHoldingRegisters,
+                [0, 1]
             )
         )
 
@@ -112,7 +115,8 @@ class MB308V(ModbusDevice):
                 "Registers",
                 ParameterType.INT16_T,
                 [0, 1, 2, 3, 4, 5, 6, 7],
-                RegisterType.ReadInputRegisters
+                FunctionCode.ReadInputRegisters,
+                [0, 10216]
             )
         )
 
@@ -122,7 +126,8 @@ class MB308V(ModbusDevice):
                 "Bits",
                 ParameterType.INT16_T,
                 [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
-                RegisterType.WriteMultipleCoils
+                FunctionCode.WriteMultipleCoils,
+                [0, 1]
             )
         )
 
@@ -132,7 +137,8 @@ class MB308V(ModbusDevice):
                 "Registers",
                 ParameterType.INT16_T,
                 [0, 1, 2, 3],
-                RegisterType.WriteMultipleHoldingRegisters
+                FunctionCode.WriteMultipleHoldingRegisters,
+                [0, 24000]
             )
         )
 

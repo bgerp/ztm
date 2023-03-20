@@ -27,7 +27,7 @@ from utils.logger import get_logger
 from devices.drivers.modbus.device import ModbusDevice
 from devices.drivers.modbus.parameter import Parameter
 from devices.drivers.modbus.parameter_type import ParameterType
-from devices.drivers.modbus.register_type import RegisterType
+from devices.drivers.modbus.function_code import FunctionCode
 
 from services.global_error_handler.global_error_handler import GlobalErrorHandler
 
@@ -112,43 +112,43 @@ class XYMD02(ModbusDevice):
 
         self._parameters.append(
             Parameter("Temperature", "C",\
-            ParameterType.INT16_T, [0x0001], RegisterType.ReadInputRegisters))
+            ParameterType.INT16_T, [0x0001], FunctionCode.ReadInputRegisters))
 
         self._parameters.append(\
             Parameter("Humidity", "Rh%",\
-            ParameterType.INT16_T, [0x0002], RegisterType.ReadInputRegisters))
+            ParameterType.INT16_T, [0x0002], FunctionCode.ReadInputRegisters))
 
         self._parameters.append(\
             Parameter("GetDeviceAddress", "Enum",\
-            ParameterType.INT16_T, [0x0101], RegisterType.ReadHoldingRegisters))
+            ParameterType.INT16_T, [0x0101], FunctionCode.ReadHoldingRegisters))
 
         self._parameters.append(\
             Parameter("GetBaudRate", "Enum",\
-            ParameterType.INT16_T, [0x0102], RegisterType.ReadHoldingRegisters))
+            ParameterType.INT16_T, [0x0102], FunctionCode.ReadHoldingRegisters))
 
         self._parameters.append(\
             Parameter("GetTemperatureCorrection", "C",\
-            ParameterType.INT16_T, [0x0103], RegisterType.ReadHoldingRegisters))
+            ParameterType.INT16_T, [0x0103], FunctionCode.ReadHoldingRegisters))
 
         self._parameters.append(\
             Parameter("GetHumidityCorrection", "Rh%",\
-            ParameterType.INT16_T, [0x0104], RegisterType.ReadHoldingRegisters))
+            ParameterType.INT16_T, [0x0104], FunctionCode.ReadHoldingRegisters))
 
         self._parameters.append(\
             Parameter("SetDeviceAddress", "Enum",\
-            ParameterType.INT16_T, [0x0101], RegisterType.WriteSingleHoldingRegister))
+            ParameterType.INT16_T, [0x0101], FunctionCode.WriteSingleHoldingRegister))
 
         self._parameters.append(\
             Parameter("SetBaudRate", "Enum",\
-            ParameterType.INT16_T, [0x0102], RegisterType.WriteSingleHoldingRegister))
+            ParameterType.INT16_T, [0x0102], FunctionCode.WriteSingleHoldingRegister))
 
         self._parameters.append(\
             Parameter("SetTemperatureCorrection", "C",\
-            ParameterType.INT16_T, [0x0103], RegisterType.WriteSingleHoldingRegister))
+            ParameterType.INT16_T, [0x0103], FunctionCode.WriteSingleHoldingRegister))
 
         self._parameters.append(\
             Parameter("SetHumidityCorrection", "Rh%",\
-            ParameterType.INT16_T, [0x0104], RegisterType.WriteSingleHoldingRegister))
+            ParameterType.INT16_T, [0x0104], FunctionCode.WriteSingleHoldingRegister))
 
 #endregion
 

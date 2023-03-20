@@ -32,7 +32,7 @@ from utils.logger import get_logger
 from controllers.base_controller import BaseController
 from controllers.vendors.unipi.evok.server import Server
 
-from devices.drivers.modbus.register_type import RegisterType
+from devices.drivers.modbus.function_code import FunctionCode
 
 #region File Attributes
 
@@ -402,7 +402,7 @@ class Evok(BaseController):
 
         return circuits
 
-    def _get_uart_register(self, uart, dev_id, register, register_type=None):
+    def _get_uart_register(self, uart, dev_id, register, function_code=None):
         """Get register data of the device.
 
         Parameters
@@ -413,7 +413,7 @@ class Evok(BaseController):
             Device ID
         register : int
             Register
-        register_type : Modbus.ParameterType
+        function_code : Modbus.ParameterType
             Register type
 
         Returns
@@ -424,7 +424,7 @@ class Evok(BaseController):
 
         device = None
         value = None
-        circuit = Evok.generate_uart_circuit(uart, dev_id, register, register_type)
+        circuit = Evok.generate_uart_circuit(uart, dev_id, register, function_code)
         device = self.get_device("register", circuit)
 
         if device is not None:
@@ -433,7 +433,7 @@ class Evok(BaseController):
 
         return value
 
-    def _get_uart_registers(self, uart, dev_id, registers, register_type=None):
+    def _get_uart_registers(self, uart, dev_id, registers, function_code=None):
         """ Get registers data of the UART device.
 
         Parameters
@@ -446,7 +446,7 @@ class Evok(BaseController):
             Register
         register : int
             Register
-        register_type : int
+        function_code : int
             Register type.
 
         Returns
@@ -461,7 +461,7 @@ class Evok(BaseController):
             raise Exception("Invalid registers.")
 
         for register in registers:
-            values[register] = self._get_uart_register(uart, dev_id, register, register_type)
+            values[register] = self._get_uart_register(uart, dev_id, register, function_code)
 
         return values
 
@@ -846,7 +846,7 @@ class Evok(BaseController):
         return circuit
 
     @staticmethod
-    def generate_uart_circuit(uart, dev_id, register, register_type=None):
+    def generate_uart_circuit(uart, dev_id, register, function_code=None):
         """Generate a device circuit for major, minor  index for.
 
         This method is directly related to the EVOK REST API.
@@ -860,7 +860,7 @@ class Evok(BaseController):
             Modbus device ID.
         register : int
             MODBUS register ID.
-        register_type : str
+        function_code : str
             Register type.
 
         Returns
@@ -871,9 +871,9 @@ class Evok(BaseController):
 
         key = ""
 
-        if register_type is not None:
+        if function_code is not None:
 
-            if register_type.value is RegisterType.ReadDiscreteInput.value:
+            if function_code.value is FunctionCode.ReadDiscreteInput.value:
                 key = "UART_" + str(uart) + "_" + str(dev_id) + "_" + \
                     str(register) + "_" + "inp"
 
@@ -1458,7 +1458,7 @@ class Evok(BaseController):
 
         return value
 
-    def read_mb_registers(self, uart, dev_id, registers, register_type=None):
+    def read_mb_registers(self, uart, dev_id, registers, function_code=None):
         """Read MODBUS register.
 
         Parameters
@@ -1472,7 +1472,7 @@ class Evok(BaseController):
         registers : array
             Registers IDs.
 
-        register_type : str
+        function_code : str
             Registers types.
 
         Returns
@@ -1481,7 +1481,7 @@ class Evok(BaseController):
             State of the device.
         """
 
-        return self._get_uart_registers(uart, dev_id, registers, register_type)
+        return self._get_uart_registers(uart, dev_id, registers, function_code)
 
     def get_1w_devices(self):
         """Get 1W device from the list of all.

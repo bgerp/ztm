@@ -336,7 +336,7 @@ class Dummy(BaseController):
 
         return 0
 
-    def read_mb_registers(self, uart, dev_id, registers, register_type=None):
+    def read_mb_registers(self, uart, dev_id, registers, function_code=None):
         """Read MODBUS register.
 
         Parameters
@@ -350,7 +350,7 @@ class Dummy(BaseController):
         registers : array
             Registers IDs.
 
-        register_type : str
+        function_code : str
             Registers types.
 
         Returns

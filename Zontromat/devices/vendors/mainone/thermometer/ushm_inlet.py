@@ -22,7 +22,7 @@ from utils.logger import get_logger
 from devices.drivers.modbus.device import ModbusDevice
 from devices.drivers.modbus.parameter import Parameter
 from devices.drivers.modbus.parameter_type import ParameterType
-from devices.drivers.modbus.register_type import RegisterType
+from devices.drivers.modbus.function_code import FunctionCode
 
 # (Request from mail: Eml6429)
 
@@ -105,7 +105,7 @@ class USHMInlet(ModbusDevice):
                 "kWh",
                 ParameterType.UINT32_T,
                 [0, 1],
-                RegisterType.ReadHoldingRegisters
+                FunctionCode.ReadHoldingRegisters
             )
         )
 
