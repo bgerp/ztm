@@ -34,7 +34,7 @@ from plugins.base_plugin import BasePlugin
 from devices.tests.leak_test.leak_test import LeakTest
 from devices.factories.power_analyzers.power_analyser_factory import PowerAnalyserFactory
 from devices.factories.flowmeters.flowmeters_factory import FlowmetersFactory
-from devices.drivers.modbus.register_type import RegisterType
+from devices.drivers.modbus.function_code import FunctionCode
 
 from services.evok.settings import EvokSettings
 
@@ -312,7 +312,7 @@ class Monitoring(BasePlugin):
             self.__uart, \
             self.__dev_id, \
             registers_ids, \
-            RegisterType.ReadInputRegisters)
+            FunctionCode.ReadInputRegisters)
 
         # Convert values to human readable.
         parameters_values = self.__power_analyser.get_parameters_values(registers_values)
