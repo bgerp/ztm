@@ -1,0 +1,289 @@
+{
+    "__main__": {
+        "bacon": 0,
+        "imports": [
+            "plugins",
+            "plugins.monitoring",
+            "plugins.monitoring.monitoring"
+        ],
+        "name": "__main__",
+        "path": null
+    },
+    "data": {
+        "bacon": 3,
+        "imported_by": [
+            "services.global_error_handler.global_error_handler"
+        ],
+        "name": "data",
+        "path": "C:\\Users\\User\\Documents\\Git\\zontromat\\Zontromat\\data\\__init__.py"
+    },
+    "data.register": {
+        "bacon": 3,
+        "imported_by": [
+            "services.global_error_handler.global_error_handler"
+        ],
+        "name": "data.register",
+        "path": "C:\\Users\\User\\Documents\\Git\\zontromat\\Zontromat\\data\\register.py"
+    },
+    "devices": {
+        "bacon": 2,
+        "imported_by": [
+            "plugins.monitoring.monitoring"
+        ],
+        "name": "devices",
+        "path": "C:\\Users\\User\\Documents\\Git\\zontromat\\Zontromat\\devices\\__init__.py"
+    },
+    "devices.drivers": {
+        "bacon": 2,
+        "imported_by": [
+            "plugins.monitoring.monitoring"
+        ],
+        "name": "devices.drivers",
+        "path": "C:\\Users\\User\\Documents\\Git\\zontromat\\Zontromat\\devices\\drivers\\__init__.py"
+    },
+    "devices.drivers.modbus": {
+        "bacon": 2,
+        "imported_by": [
+            "plugins.monitoring.monitoring"
+        ],
+        "name": "devices.drivers.modbus",
+        "path": "C:\\Users\\User\\Documents\\Git\\zontromat\\Zontromat\\devices\\drivers\\modbus\\__init__.py"
+    },
+    "devices.drivers.modbus.function_code": {
+        "bacon": 2,
+        "imported_by": [
+            "plugins.monitoring.monitoring"
+        ],
+        "name": "devices.drivers.modbus.function_code",
+        "path": "C:\\Users\\User\\Documents\\Git\\zontromat\\Zontromat\\devices\\drivers\\modbus\\function_code.py"
+    },
+    "devices.factories.flowmeters.flowmeters_factory": {
+        "bacon": 2,
+        "imported_by": [
+            "plugins.monitoring.monitoring"
+        ],
+        "name": "devices.factories.flowmeters.flowmeters_factory",
+        "path": null
+    },
+    "devices.factories.power_analyzers.power_analyser_factory": {
+        "bacon": 2,
+        "imported_by": [
+            "plugins.monitoring.monitoring"
+        ],
+        "name": "devices.factories.power_analyzers.power_analyser_factory",
+        "path": null
+    },
+    "devices.tests": {
+        "bacon": 2,
+        "imported_by": [
+            "plugins.monitoring.monitoring"
+        ],
+        "name": "devices.tests",
+        "path": "C:\\Users\\User\\Documents\\Git\\zontromat\\Zontromat\\devices\\tests\\__init__.py"
+    },
+    "devices.tests.leak_test": {
+        "bacon": 2,
+        "imported_by": [
+            "plugins.monitoring.monitoring"
+        ],
+        "name": "devices.tests.leak_test",
+        "path": "C:\\Users\\User\\Documents\\Git\\zontromat\\Zontromat\\devices\\tests\\leak_test\\__init__.py"
+    },
+    "devices.tests.leak_test.leak_test": {
+        "bacon": 2,
+        "imported_by": [
+            "plugins.monitoring.monitoring"
+        ],
+        "imports": [
+            "utils",
+            "utils.logic",
+            "utils.logic.state_machine",
+            "utils.logic.timer"
+        ],
+        "name": "devices.tests.leak_test.leak_test",
+        "path": "C:\\Users\\User\\Documents\\Git\\zontromat\\Zontromat\\devices\\tests\\leak_test\\leak_test.py"
+    },
+    "plugins": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "plugins.monitoring.monitoring"
+        ],
+        "name": "plugins",
+        "path": "C:\\Users\\User\\Documents\\Git\\zontromat\\Zontromat\\plugins\\__init__.py"
+    },
+    "plugins.base_plugin": {
+        "bacon": 2,
+        "imported_by": [
+            "plugins.monitoring.monitoring"
+        ],
+        "imports": [
+            "utils",
+            "utils.configurable",
+            "utils.logger"
+        ],
+        "name": "plugins.base_plugin",
+        "path": "C:\\Users\\User\\Documents\\Git\\zontromat\\Zontromat\\plugins\\base_plugin.py"
+    },
+    "plugins.monitoring": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__"
+        ],
+        "name": "plugins.monitoring",
+        "path": "C:\\Users\\User\\Documents\\Git\\zontromat\\Zontromat\\plugins\\monitoring\\__init__.py"
+    },
+    "plugins.monitoring.monitoring": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__"
+        ],
+        "imports": [
+            "devices",
+            "devices.drivers",
+            "devices.drivers.modbus",
+            "devices.drivers.modbus.function_code",
+            "devices.factories.flowmeters.flowmeters_factory",
+            "devices.factories.power_analyzers.power_analyser_factory",
+            "devices.tests",
+            "devices.tests.leak_test",
+            "devices.tests.leak_test.leak_test",
+            "plugins",
+            "plugins.base_plugin",
+            "services",
+            "services.evok",
+            "services.evok.settings",
+            "services.global_error_handler",
+            "services.global_error_handler.global_error_handler",
+            "utils",
+            "utils.logger",
+            "utils.logic",
+            "utils.logic.timer"
+        ],
+        "name": "plugins.monitoring.monitoring",
+        "path": "C:\\Users\\User\\Documents\\Git\\zontromat\\Zontromat\\plugins\\monitoring\\monitoring.py"
+    },
+    "services": {
+        "bacon": 2,
+        "imported_by": [
+            "plugins.monitoring.monitoring",
+            "services.global_error_handler.global_error_handler"
+        ],
+        "name": "services",
+        "path": "C:\\Users\\User\\Documents\\Git\\zontromat\\Zontromat\\services\\__init__.py"
+    },
+    "services.evok": {
+        "bacon": 2,
+        "imported_by": [
+            "plugins.monitoring.monitoring"
+        ],
+        "name": "services.evok",
+        "path": "C:\\Users\\User\\Documents\\Git\\zontromat\\Zontromat\\services\\evok\\__init__.py"
+    },
+    "services.evok.settings": {
+        "bacon": 2,
+        "imported_by": [
+            "plugins.monitoring.monitoring"
+        ],
+        "name": "services.evok.settings",
+        "path": "C:\\Users\\User\\Documents\\Git\\zontromat\\Zontromat\\services\\evok\\settings.py"
+    },
+    "services.global_error_handler": {
+        "bacon": 2,
+        "imported_by": [
+            "plugins.monitoring.monitoring",
+            "services.global_error_handler.global_error_handler"
+        ],
+        "name": "services.global_error_handler",
+        "path": "C:\\Users\\User\\Documents\\Git\\zontromat\\Zontromat\\services\\global_error_handler\\__init__.py"
+    },
+    "services.global_error_handler.error_codes": {
+        "bacon": 3,
+        "imported_by": [
+            "services.global_error_handler.global_error_handler"
+        ],
+        "name": "services.global_error_handler.error_codes",
+        "path": "C:\\Users\\User\\Documents\\Git\\zontromat\\Zontromat\\services\\global_error_handler\\error_codes.py"
+    },
+    "services.global_error_handler.global_error_handler": {
+        "bacon": 2,
+        "imported_by": [
+            "plugins.monitoring.monitoring"
+        ],
+        "imports": [
+            "data",
+            "data.register",
+            "services",
+            "services.global_error_handler",
+            "services.global_error_handler.error_codes"
+        ],
+        "name": "services.global_error_handler.global_error_handler",
+        "path": "C:\\Users\\User\\Documents\\Git\\zontromat\\Zontromat\\services\\global_error_handler\\global_error_handler.py"
+    },
+    "utils": {
+        "bacon": 2,
+        "imported_by": [
+            "devices.tests.leak_test.leak_test",
+            "plugins.base_plugin",
+            "plugins.monitoring.monitoring",
+            "utils.logger"
+        ],
+        "name": "utils",
+        "path": "C:\\Users\\User\\Documents\\Git\\zontromat\\Zontromat\\utils\\__init__.py"
+    },
+    "utils.configurable": {
+        "bacon": 3,
+        "imported_by": [
+            "plugins.base_plugin"
+        ],
+        "name": "utils.configurable",
+        "path": "C:\\Users\\User\\Documents\\Git\\zontromat\\Zontromat\\utils\\configurable.py"
+    },
+    "utils.logger": {
+        "bacon": 2,
+        "imported_by": [
+            "plugins.base_plugin",
+            "plugins.monitoring.monitoring"
+        ],
+        "imports": [
+            "utils",
+            "utils.settings"
+        ],
+        "name": "utils.logger",
+        "path": "C:\\Users\\User\\Documents\\Git\\zontromat\\Zontromat\\utils\\logger.py"
+    },
+    "utils.logic": {
+        "bacon": 2,
+        "imported_by": [
+            "devices.tests.leak_test.leak_test",
+            "plugins.monitoring.monitoring"
+        ],
+        "name": "utils.logic",
+        "path": "C:\\Users\\User\\Documents\\Git\\zontromat\\Zontromat\\utils\\logic\\__init__.py"
+    },
+    "utils.logic.state_machine": {
+        "bacon": 3,
+        "imported_by": [
+            "devices.tests.leak_test.leak_test"
+        ],
+        "name": "utils.logic.state_machine",
+        "path": "C:\\Users\\User\\Documents\\Git\\zontromat\\Zontromat\\utils\\logic\\state_machine.py"
+    },
+    "utils.logic.timer": {
+        "bacon": 2,
+        "imported_by": [
+            "devices.tests.leak_test.leak_test",
+            "plugins.monitoring.monitoring"
+        ],
+        "name": "utils.logic.timer",
+        "path": "C:\\Users\\User\\Documents\\Git\\zontromat\\Zontromat\\utils\\logic\\timer.py"
+    },
+    "utils.settings": {
+        "bacon": 3,
+        "imported_by": [
+            "utils.logger"
+        ],
+        "name": "utils.settings",
+        "path": "C:\\Users\\User\\Documents\\Git\\zontromat\\Zontromat\\utils\\settings.py"
+    }
+}

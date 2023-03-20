@@ -1,0 +1,131 @@
+{
+    "__main__": {
+        "bacon": 0,
+        "imports": [
+            "plugins",
+            "plugins.air_chambers",
+            "plugins.air_chambers.air_chambers"
+        ],
+        "name": "__main__",
+        "path": null
+    },
+    "data": {
+        "bacon": 2,
+        "imported_by": [
+            "plugins.air_chambers.air_chambers"
+        ],
+        "name": "data",
+        "path": "C:\\Users\\User\\Documents\\Git\\zontromat\\Zontromat\\data\\__init__.py"
+    },
+    "data.register": {
+        "bacon": 2,
+        "imported_by": [
+            "plugins.air_chambers.air_chambers"
+        ],
+        "name": "data.register",
+        "path": "C:\\Users\\User\\Documents\\Git\\zontromat\\Zontromat\\data\\register.py"
+    },
+    "plugins": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "plugins.air_chambers.air_chambers"
+        ],
+        "name": "plugins",
+        "path": "C:\\Users\\User\\Documents\\Git\\zontromat\\Zontromat\\plugins\\__init__.py"
+    },
+    "plugins.air_chambers": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__"
+        ],
+        "name": "plugins.air_chambers",
+        "path": "C:\\Users\\User\\Documents\\Git\\zontromat\\Zontromat\\plugins\\air_chambers\\__init__.py"
+    },
+    "plugins.air_chambers.air_chambers": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__"
+        ],
+        "imports": [
+            "data",
+            "data.register",
+            "plugins",
+            "plugins.base_plugin",
+            "utils",
+            "utils.logger",
+            "utils.logic",
+            "utils.logic.timer"
+        ],
+        "name": "plugins.air_chambers.air_chambers",
+        "path": "C:\\Users\\User\\Documents\\Git\\zontromat\\Zontromat\\plugins\\air_chambers\\air_chambers.py"
+    },
+    "plugins.base_plugin": {
+        "bacon": 2,
+        "imported_by": [
+            "plugins.air_chambers.air_chambers"
+        ],
+        "imports": [
+            "utils",
+            "utils.configurable",
+            "utils.logger"
+        ],
+        "name": "plugins.base_plugin",
+        "path": "C:\\Users\\User\\Documents\\Git\\zontromat\\Zontromat\\plugins\\base_plugin.py"
+    },
+    "utils": {
+        "bacon": 2,
+        "imported_by": [
+            "plugins.air_chambers.air_chambers",
+            "plugins.base_plugin",
+            "utils.logger"
+        ],
+        "name": "utils",
+        "path": "C:\\Users\\User\\Documents\\Git\\zontromat\\Zontromat\\utils\\__init__.py"
+    },
+    "utils.configurable": {
+        "bacon": 3,
+        "imported_by": [
+            "plugins.base_plugin"
+        ],
+        "name": "utils.configurable",
+        "path": "C:\\Users\\User\\Documents\\Git\\zontromat\\Zontromat\\utils\\configurable.py"
+    },
+    "utils.logger": {
+        "bacon": 2,
+        "imported_by": [
+            "plugins.air_chambers.air_chambers",
+            "plugins.base_plugin"
+        ],
+        "imports": [
+            "utils",
+            "utils.settings"
+        ],
+        "name": "utils.logger",
+        "path": "C:\\Users\\User\\Documents\\Git\\zontromat\\Zontromat\\utils\\logger.py"
+    },
+    "utils.logic": {
+        "bacon": 2,
+        "imported_by": [
+            "plugins.air_chambers.air_chambers"
+        ],
+        "name": "utils.logic",
+        "path": "C:\\Users\\User\\Documents\\Git\\zontromat\\Zontromat\\utils\\logic\\__init__.py"
+    },
+    "utils.logic.timer": {
+        "bacon": 2,
+        "imported_by": [
+            "plugins.air_chambers.air_chambers"
+        ],
+        "name": "utils.logic.timer",
+        "path": "C:\\Users\\User\\Documents\\Git\\zontromat\\Zontromat\\utils\\logic\\timer.py"
+    },
+    "utils.settings": {
+        "bacon": 3,
+        "imported_by": [
+            "utils.logger"
+        ],
+        "name": "utils.settings",
+        "path": "C:\\Users\\User\\Documents\\Git\\zontromat\\Zontromat\\utils\\settings.py"
+    }
+}

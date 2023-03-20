@@ -1,0 +1,113 @@
+{
+    "__main__": {
+        "bacon": 0,
+        "imports": [
+            "plugins",
+            "plugins.template_plugin",
+            "plugins.template_plugin.template_plugin"
+        ],
+        "name": "__main__",
+        "path": null
+    },
+    "plugins": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "plugins.template_plugin.template_plugin"
+        ],
+        "name": "plugins",
+        "path": "C:\\Users\\User\\Documents\\Git\\zontromat\\Zontromat\\plugins\\__init__.py"
+    },
+    "plugins.base_plugin": {
+        "bacon": 2,
+        "imported_by": [
+            "plugins.template_plugin.template_plugin"
+        ],
+        "imports": [
+            "utils",
+            "utils.configurable",
+            "utils.logger"
+        ],
+        "name": "plugins.base_plugin",
+        "path": "C:\\Users\\User\\Documents\\Git\\zontromat\\Zontromat\\plugins\\base_plugin.py"
+    },
+    "plugins.template_plugin": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__"
+        ],
+        "name": "plugins.template_plugin",
+        "path": "C:\\Users\\User\\Documents\\Git\\zontromat\\Zontromat\\plugins\\template_plugin\\__init__.py"
+    },
+    "plugins.template_plugin.template_plugin": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__"
+        ],
+        "imports": [
+            "plugins",
+            "plugins.base_plugin",
+            "utils",
+            "utils.logger",
+            "utils.logic",
+            "utils.logic.timer"
+        ],
+        "name": "plugins.template_plugin.template_plugin",
+        "path": "C:\\Users\\User\\Documents\\Git\\zontromat\\Zontromat\\plugins\\template_plugin\\template_plugin.py"
+    },
+    "utils": {
+        "bacon": 2,
+        "imported_by": [
+            "plugins.base_plugin",
+            "plugins.template_plugin.template_plugin",
+            "utils.logger"
+        ],
+        "name": "utils",
+        "path": "C:\\Users\\User\\Documents\\Git\\zontromat\\Zontromat\\utils\\__init__.py"
+    },
+    "utils.configurable": {
+        "bacon": 3,
+        "imported_by": [
+            "plugins.base_plugin"
+        ],
+        "name": "utils.configurable",
+        "path": "C:\\Users\\User\\Documents\\Git\\zontromat\\Zontromat\\utils\\configurable.py"
+    },
+    "utils.logger": {
+        "bacon": 2,
+        "imported_by": [
+            "plugins.base_plugin",
+            "plugins.template_plugin.template_plugin"
+        ],
+        "imports": [
+            "utils",
+            "utils.settings"
+        ],
+        "name": "utils.logger",
+        "path": "C:\\Users\\User\\Documents\\Git\\zontromat\\Zontromat\\utils\\logger.py"
+    },
+    "utils.logic": {
+        "bacon": 2,
+        "imported_by": [
+            "plugins.template_plugin.template_plugin"
+        ],
+        "name": "utils.logic",
+        "path": "C:\\Users\\User\\Documents\\Git\\zontromat\\Zontromat\\utils\\logic\\__init__.py"
+    },
+    "utils.logic.timer": {
+        "bacon": 2,
+        "imported_by": [
+            "plugins.template_plugin.template_plugin"
+        ],
+        "name": "utils.logic.timer",
+        "path": "C:\\Users\\User\\Documents\\Git\\zontromat\\Zontromat\\utils\\logic\\timer.py"
+    },
+    "utils.settings": {
+        "bacon": 3,
+        "imported_by": [
+            "utils.logger"
+        ],
+        "name": "utils.settings",
+        "path": "C:\\Users\\User\\Documents\\Git\\zontromat\\Zontromat\\utils\\settings.py"
+    }
+}

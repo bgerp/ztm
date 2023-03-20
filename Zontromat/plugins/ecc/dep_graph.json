@@ -1,0 +1,214 @@
+{
+    "__main__": {
+        "bacon": 0,
+        "imports": [
+            "plugins",
+            "plugins.ecc",
+            "plugins.ecc.ecc"
+        ],
+        "name": "__main__",
+        "path": null
+    },
+    "data": {
+        "bacon": 3,
+        "imported_by": [
+            "services.global_error_handler.global_error_handler"
+        ],
+        "name": "data",
+        "path": "C:\\Users\\User\\Documents\\Git\\zontromat\\Zontromat\\data\\__init__.py"
+    },
+    "data.register": {
+        "bacon": 3,
+        "imported_by": [
+            "services.global_error_handler.global_error_handler"
+        ],
+        "name": "data.register",
+        "path": "C:\\Users\\User\\Documents\\Git\\zontromat\\Zontromat\\data\\register.py"
+    },
+    "devices": {
+        "bacon": 2,
+        "imported_by": [
+            "devices.vendors.no_vendor_6.boiler",
+            "plugins.ecc.ecc"
+        ],
+        "name": "devices",
+        "path": "C:\\Users\\User\\Documents\\Git\\zontromat\\Zontromat\\devices\\__init__.py"
+    },
+    "devices.base_device": {
+        "bacon": 3,
+        "imported_by": [
+            "devices.vendors.no_vendor_6.boiler"
+        ],
+        "imports": [
+            "utils",
+            "utils.configurable"
+        ],
+        "name": "devices.base_device",
+        "path": "C:\\Users\\User\\Documents\\Git\\zontromat\\Zontromat\\devices\\base_device.py"
+    },
+    "devices.vendors": {
+        "bacon": 2,
+        "imported_by": [
+            "plugins.ecc.ecc"
+        ],
+        "name": "devices.vendors",
+        "path": "C:\\Users\\User\\Documents\\Git\\zontromat\\Zontromat\\devices\\vendors\\__init__.py"
+    },
+    "devices.vendors.no_vendor_6": {
+        "bacon": 2,
+        "imported_by": [
+            "plugins.ecc.ecc"
+        ],
+        "name": "devices.vendors.no_vendor_6",
+        "path": "C:\\Users\\User\\Documents\\Git\\zontromat\\Zontromat\\devices\\vendors\\no_vendor_6\\__init__.py"
+    },
+    "devices.vendors.no_vendor_6.boiler": {
+        "bacon": 2,
+        "imported_by": [
+            "plugins.ecc.ecc"
+        ],
+        "imports": [
+            "devices",
+            "devices.base_device",
+            "utils",
+            "utils.logger"
+        ],
+        "name": "devices.vendors.no_vendor_6.boiler",
+        "path": "C:\\Users\\User\\Documents\\Git\\zontromat\\Zontromat\\devices\\vendors\\no_vendor_6\\boiler.py"
+    },
+    "plugins": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__",
+            "plugins.ecc.ecc"
+        ],
+        "name": "plugins",
+        "path": "C:\\Users\\User\\Documents\\Git\\zontromat\\Zontromat\\plugins\\__init__.py"
+    },
+    "plugins.base_plugin": {
+        "bacon": 2,
+        "imported_by": [
+            "plugins.ecc.ecc"
+        ],
+        "imports": [
+            "utils",
+            "utils.configurable",
+            "utils.logger"
+        ],
+        "name": "plugins.base_plugin",
+        "path": "C:\\Users\\User\\Documents\\Git\\zontromat\\Zontromat\\plugins\\base_plugin.py"
+    },
+    "plugins.ecc": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__"
+        ],
+        "name": "plugins.ecc",
+        "path": "C:\\Users\\User\\Documents\\Git\\zontromat\\Zontromat\\plugins\\ecc\\__init__.py"
+    },
+    "plugins.ecc.ecc": {
+        "bacon": 1,
+        "imported_by": [
+            "__main__"
+        ],
+        "imports": [
+            "devices",
+            "devices.vendors",
+            "devices.vendors.no_vendor_6",
+            "devices.vendors.no_vendor_6.boiler",
+            "plugins",
+            "plugins.base_plugin",
+            "services",
+            "services.global_error_handler",
+            "services.global_error_handler.global_error_handler",
+            "utils",
+            "utils.logger"
+        ],
+        "name": "plugins.ecc.ecc",
+        "path": "C:\\Users\\User\\Documents\\Git\\zontromat\\Zontromat\\plugins\\ecc\\ecc.py"
+    },
+    "services": {
+        "bacon": 2,
+        "imported_by": [
+            "plugins.ecc.ecc",
+            "services.global_error_handler.global_error_handler"
+        ],
+        "name": "services",
+        "path": "C:\\Users\\User\\Documents\\Git\\zontromat\\Zontromat\\services\\__init__.py"
+    },
+    "services.global_error_handler": {
+        "bacon": 2,
+        "imported_by": [
+            "plugins.ecc.ecc",
+            "services.global_error_handler.global_error_handler"
+        ],
+        "name": "services.global_error_handler",
+        "path": "C:\\Users\\User\\Documents\\Git\\zontromat\\Zontromat\\services\\global_error_handler\\__init__.py"
+    },
+    "services.global_error_handler.error_codes": {
+        "bacon": 3,
+        "imported_by": [
+            "services.global_error_handler.global_error_handler"
+        ],
+        "name": "services.global_error_handler.error_codes",
+        "path": "C:\\Users\\User\\Documents\\Git\\zontromat\\Zontromat\\services\\global_error_handler\\error_codes.py"
+    },
+    "services.global_error_handler.global_error_handler": {
+        "bacon": 2,
+        "imported_by": [
+            "plugins.ecc.ecc"
+        ],
+        "imports": [
+            "data",
+            "data.register",
+            "services",
+            "services.global_error_handler",
+            "services.global_error_handler.error_codes"
+        ],
+        "name": "services.global_error_handler.global_error_handler",
+        "path": "C:\\Users\\User\\Documents\\Git\\zontromat\\Zontromat\\services\\global_error_handler\\global_error_handler.py"
+    },
+    "utils": {
+        "bacon": 2,
+        "imported_by": [
+            "devices.base_device",
+            "devices.vendors.no_vendor_6.boiler",
+            "plugins.base_plugin",
+            "plugins.ecc.ecc",
+            "utils.logger"
+        ],
+        "name": "utils",
+        "path": "C:\\Users\\User\\Documents\\Git\\zontromat\\Zontromat\\utils\\__init__.py"
+    },
+    "utils.configurable": {
+        "bacon": 3,
+        "imported_by": [
+            "devices.base_device",
+            "plugins.base_plugin"
+        ],
+        "name": "utils.configurable",
+        "path": "C:\\Users\\User\\Documents\\Git\\zontromat\\Zontromat\\utils\\configurable.py"
+    },
+    "utils.logger": {
+        "bacon": 2,
+        "imported_by": [
+            "devices.vendors.no_vendor_6.boiler",
+            "plugins.base_plugin",
+            "plugins.ecc.ecc"
+        ],
+        "imports": [
+            "utils",
+            "utils.settings"
+        ],
+        "name": "utils.logger",
+        "path": "C:\\Users\\User\\Documents\\Git\\zontromat\\Zontromat\\utils\\logger.py"
+    },
+    "utils.settings": {
+        "bacon": 3,
+        "imported_by": [
+            "utils.logger"
+        ],
+        "name": "utils.settings",
+        "path": "C:\\Users\\User\\Documents\\Git\\zontromat\\Zontromat\\utils\\settings.py"
+    }
+}
