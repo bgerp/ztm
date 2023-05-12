@@ -69,6 +69,17 @@ class Klimafan(BaseConvector):
     __state = -1
     """State of the convector."""
 
+    __example_settings = {
+        "vendor": "Silpa",
+        "model": "Klimafan",
+        "options":
+        {
+            "stage1": "U0:ID6:FC16:R0:RO0",
+            "stage2": "U0:ID6:FC16:R0:RO1",
+            "stage3": "U0:ID6:FC16:R0:RO2",
+        }
+    }
+
 #endregion
 
 #region Constructor
@@ -84,6 +95,8 @@ class Klimafan(BaseConvector):
         self._model = "Klimafan"
 
         self.__logger = get_logger(__name__)
+
+#endregion
 
 #region Public Methods
 
@@ -134,7 +147,7 @@ class Klimafan(BaseConvector):
             self._controller.digital_write(self._config["stage2"], 0)
             self._controller.digital_write(self._config["stage3"], 1)
 
-        self.__logger.debug("{} @ {}".format(self.name, self.__state))
+        # self.__logger.debug("{} @ {}".format(self.name, self.__state))
 
     def shutdown(self):
 

@@ -72,7 +72,17 @@ class FlowmeterDN20(BaseFlowmeter):
 
     __mb_id = 0
     """Modbus ID
-    """         
+    """
+
+    __example_settings = {
+        "vendor": "mainone",
+        "model": "flowmeter_dn20",
+        "options":
+        {
+            "uart": 1,
+            "mb_id": 3,
+        }
+    }
 
 #endregion
 

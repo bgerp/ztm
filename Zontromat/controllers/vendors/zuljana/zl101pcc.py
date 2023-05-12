@@ -330,7 +330,7 @@ class ZL101PCC(BaseController):
             read_response = self.self.__modbus_rtu_clients[remote_gpio["uart"]].read_discrete_inputs(
                 remote_gpio["io_reg"],
                 remote_gpio["io_index"]+1,
-                unit=remote_gpio["mb_id"])
+                remote_gpio["mb_id"])
 
             if not read_response.isError():
                 response = read_response.bits[remote_gpio["io_index"]]
@@ -401,9 +401,9 @@ class ZL101PCC(BaseController):
             remote_gpio = self.parse_remote_gpio(pin)
 
             write_response = self.__modbus_rtu_clients[remote_gpio["uart"]].write_coil(
-                remote_gpio["io_reg"]+remote_gpio["io_index"],
-                state,
-                unit=remote_gpio["mb_id"])
+                remote_gpio["io_reg"]+remote_gpio["io_index"], # Coil index
+                state, # State
+                remote_gpio["mb_id"]) # Unit ID
 
             if not write_response.isError():
                 response = True
@@ -471,7 +471,7 @@ class ZL101PCC(BaseController):
                 write_response = self.__modbus_rtu_clients[remote_gpio["uart"]].write_register(
                     remote_gpio["io_reg"]+remote_gpio["io_index"],
                     value,
-                    unit=remote_gpio["mb_id"])
+                    remote_gpio["mb_id"])
 
                 if not write_response.isError():
                     response = True
@@ -482,7 +482,7 @@ class ZL101PCC(BaseController):
                 write_response = self.__modbus_rtu_clients[remote_gpio["uart"]].write_registers(
                     remote_gpio["io_reg"]+remote_gpio["io_index"],
                     [value],
-                    unit=remote_gpio["mb_id"])
+                    remote_gpio["mb_id"])
 
                 if not write_response.isError():
                     response = True
@@ -552,7 +552,7 @@ class ZL101PCC(BaseController):
             # write_response = self.__modbus_rtu_clients[remote_gpio["uart"]].write_coil(
             #     remote_gpio["io_reg"]+remote_gpio["io_index"],
             #     state,
-            #     unit=remote_gpio["mb_id"])
+            #     remote_gpio["mb_id"])
 
             # if not write_response.isError():
             #     response = True

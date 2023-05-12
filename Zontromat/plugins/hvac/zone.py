@@ -936,41 +936,8 @@ class Zone(BasePlugin):
             conv_tf = int(conv_tf)
             self.__convector_dev.set_state(conv_tf)
 
-#endregion
-
-#region Protected Methods
-
-    def _init(self):
-        """Initialize the module.
-        """
-
-        self.__logger = get_logger(__name__)
-        self.__logger.info("Starting up the {} {}".format(self.name, self.__identifier))
-
-        # Create thermal mode.
-        self.__thermal_mode = StateMachine(ThermalMode.NONE)
-        self.__thermal_mode.on_change(self.__thermal_mode_on_change)
-
-        # Create update timer.
-        self.__update_timer = Timer(5)
-
-        # Stop timer.
-        self.__stop_timer = Timer(10)
-
-        # Create temperature processor.
-        self.__temp_proc = TemperatureProcessor()
-
-        # Create temperature queue.
-        self.__queue_temperatures = deque([], maxlen=20)
-
-        # Create registers callbacks.
-        self.__init_registers()
-
-        # Shutting down all the devices.
-        self.__set_thermal_force(0)
-
-    def _update(self):
-        """ Update cycle.
+    def __calc(self):
+        """_summary_
         """
 
         # Update thermometres values.
@@ -1069,6 +1036,45 @@ class Zone(BasePlugin):
         self.__loop1_valve_dev.update()
         self.__loop2_valve_dev.update()
         self.__convector_dev.update()
+
+#endregion
+
+#region Protected Methods
+
+    def _init(self):
+        """Initialize the module.
+        """
+
+        self.__logger = get_logger(__name__)
+        self.__logger.info("Starting up the {} {}".format(self.name, self.__identifier))
+
+        # Create thermal mode.
+        self.__thermal_mode = StateMachine(ThermalMode.NONE)
+        self.__thermal_mode.on_change(self.__thermal_mode_on_change)
+
+        # Create update timer.
+        self.__update_timer = Timer(5)
+
+        # Stop timer.
+        self.__stop_timer = Timer(10)
+
+        # Create temperature processor.
+        self.__temp_proc = TemperatureProcessor()
+
+        # Create temperature queue.
+        self.__queue_temperatures = deque([], maxlen=20)
+
+        # Create registers callbacks.
+        self.__init_registers()
+
+        # Shutting down all the devices.
+        self.__set_thermal_force(0)
+
+    def _update(self):
+        """ Update cycle.
+        """
+
+        pass
 
     def _shutdown(self):
         """Shutdown the tamper.

@@ -72,6 +72,15 @@ class A20T20B2C(BaseValve):
     __output = None
     """Output physical signal."""
 
+    __example_settings = {
+        "vendor": "Tonhe",
+        "model": "a20t20b2c",
+        "options":
+        {
+            "output": "RO1",
+        }
+    }
+
 #endregion
 
 #region Properties

@@ -127,12 +127,8 @@ class Zone(BasePlugin):
     """Lower fan.
     """
 
-    __upper_fan_power_gpio = verbal_const.OFF
-    """Upper fan power controll GPIO.
-    """
-
-    __lower_fan_power_gpio = verbal_const.OFF
-    """Upper fan power controll GPIO.
+    __fans_power_gpio_name = verbal_const.OFF
+    """Fana power controll GPIO.
     """
 
 #endregion
@@ -187,6 +183,16 @@ class Zone(BasePlugin):
 #endregion
 
 #region Private Methods (Registers)
+
+    # Fans power GPIO controll.
+    def __fans_power_gpio(self, register: Register):
+
+        # Check data type.
+        if not (register.data_type == "str"):
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        self.__fans_power_gpio_name = register.value
 
     # Upper air damper.
     def __upper_air_damper_settings_cb(self, register: Register):
@@ -360,26 +366,8 @@ class Zone(BasePlugin):
         else:
             self.__set_upper_air_damper(0)
 
-        # Set the power to the fans.
-        if abs(register.value) > 0:
-            self._controller.digital_write(self.__lower_fan_power_gpio, 0)
-            self._controller.digital_write(self.__upper_fan_power_gpio, 1)
-        else:
-            self._controller.digital_write(self.__upper_fan_power_gpio, 0)
-
         # Set the speed of the fan.
         self.__set_upper_fan(register.value)
-
-
-    def __upper_fan_power_gpio_cb(self, register: Register):
-
-        # Check data type.
-        if not (register.data_type == "str"):
-            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
-            return
-
-        self.__upper_fan_power_gpio = register.value
-
 
     # Lower fan
     def __lower_fan_settings_cb(self, register: Register):
@@ -447,29 +435,17 @@ class Zone(BasePlugin):
         else:
             self.__set_lower_air_damper(0)
 
-        # Set the power to the fans.
-        if abs(register.value) > 0:
-            self._controller.digital_write(self.__upper_fan_power_gpio, 0)
-            self._controller.digital_write(self.__lower_fan_power_gpio, 1)
-        else:
-            self._controller.digital_write(self.__lower_fan_power_gpio, 0)
-
         # Set the speed of the fan.
         self.__set_lower_fan(register.value)
 
-
-    def __lower_fan_power_gpio_cb(self, register: Register):
-
-        # Check data type.
-        if not (register.data_type == "str"):
-            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
-            return
-
-        self.__lower_fan_power_gpio = register.value
-
-
     # Init
     def __init_registers(self):
+
+        # Fans power GPIO
+        upper_power_gpio = self._registers.by_name("{}.power_gpio_{}".format(self.key, self.__identifier))
+        if upper_power_gpio is not None:
+            upper_power_gpio.update_handlers = self.__fans_power_gpio
+            upper_power_gpio.update()
 
         # Operator setpoint.
         op_setpoint = self._registers.by_name("{}.op_setpoint_{}".format(self.key, self.__identifier))
@@ -510,11 +486,6 @@ class Zone(BasePlugin):
             upper_fan_max.update_handlers = self.__upper_fan_max_cb
             upper_fan_max.update()
 
-        upper_power_gpio = self._registers.by_name("{}.upper_{}.fan.power_gpio".format(self.key, self.__identifier))
-        if upper_power_gpio is not None:
-            upper_power_gpio.update_handlers = self.__upper_fan_power_gpio_cb
-            upper_power_gpio.update()
-
         # Air damper lower.
         lower_air_damper_settings = self._registers.by_name("{}.lower_{}.air_damper.settings".format(self.key, self.__identifier))
         if lower_air_damper_settings is not None:
@@ -536,11 +507,6 @@ class Zone(BasePlugin):
         if lower_fan_max is not None:
             lower_fan_max.update_handlers = self.__lower_fan_max_cb
             lower_fan_max.update()
-
-        lower_power_gpio = self._registers.by_name("{}.lower_{}.fan.power_gpio".format(self.key, self.__identifier))
-        if lower_power_gpio is not None:
-            lower_power_gpio.update_handlers = self.__lower_fan_power_gpio_cb
-            lower_power_gpio.update()
 
         # Speeds
         upper_fan_speed = self._registers.by_name("{}.upper_{}.fan.speed".format(self.key, self.__identifier))
@@ -577,23 +543,9 @@ class Zone(BasePlugin):
 
 #endregion
 
-#region Public Methods
+#region Private Methods
 
-    def _init(self):
-        """Initialize the plugin."""
-
-        # Create logger.
-        self.__logger = get_logger(__name__)
-        self.__logger.info("Starting up the {}".format(self.name))
-
-        # Initialize the registers.
-        self.__init_registers()
-
-        # Manually set to automatic mode on wake up.
-        self.__set_point_op = 50.0
-
-    def _update(self):
-        """Runtime of the plugin."""
+    def __calc(self):
 
         #
         speed_upper = 0
@@ -659,11 +611,70 @@ class Zone(BasePlugin):
         if not self.__lower_air_damper_dev is None:
             self.__lower_air_damper_dev.update()
 
+#endregion
+
+#region Public Methods
+
+    def _init(self):
+        """Initialize the plugin."""
+
+        # Create logger.
+        self.__logger = get_logger(__name__)
+        self.__logger.info("Starting up the {}".format(self.name))
+
+        # Initialize the registers.
+        self.__init_registers()
+
+        # Manually set to automatic mode on wake up.
+        self.__set_point_op = 50.0
+
+        # Turn OFF the power for initial step.
+        if not self.__fans_power_gpio_name is None:
+            self._controller.digital_write(self.__fans_power_gpio_name, 0)
+
+    def _update(self):
+        """Runtime of the plugin."""
+
+        # Power ON/OFF the power of the fans.
+        if self.__set_point_op > 0:
+            self._controller.digital_write(self.__fans_power_gpio_name, 1)
+        else:
+            self._controller.digital_write(self.__fans_power_gpio_name, 0)
+
+        # Set the value of the speeds.
+        speed_upper = self.__set_point_op
+        speed_lower = self.__set_point_op
+
+        lower_fan_speed = self._registers.by_name("{}.lower_{}.fan.speed".format(self.key, self.__identifier))
+        if lower_fan_speed is not None:
+            lower_fan_speed.value = speed_lower
+
+        upper_fan_speed = self._registers.by_name("{}.upper_{}.fan.speed".format(self.key, self.__identifier))
+        if upper_fan_speed is not None:
+            upper_fan_speed.value = speed_upper
+
+        # Update devices.
+        if not self.__upper_fan_dev is None:
+            self.__upper_fan_dev.update()
+        
+        if not self.__lower_fan_dev is None:
+            self.__lower_fan_dev.update()
+        
+        if not self.__upper_air_damper_dev is None:
+            self.__upper_air_damper_dev.update()
+        
+        if not self.__lower_air_damper_dev is None:
+            self.__lower_air_damper_dev.update()
+
     def _shutdown(self):
         """Shutting down the blinds.
         """
 
         self.__logger.info("Shutting down the {}".format(self.name))
+
+        # Turn OFF the power affter usage.
+        if not self.__fans_power_gpio_name is None:
+            self._controller.digital_write(self.__fans_power_gpio_name, 0)
 
         if not self.__upper_fan_dev is None:
             self.__upper_fan_dev.shutdown()

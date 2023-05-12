@@ -517,7 +517,6 @@ class Zone():
                                             target_register.value = float(register["value"])
                                         elif target_register.data_type == "int":
                                             target_register.value = float(register["value"])
-                                        target_register.update()
                                 except Exception as e:
                                     self.__logger.error(e)
 

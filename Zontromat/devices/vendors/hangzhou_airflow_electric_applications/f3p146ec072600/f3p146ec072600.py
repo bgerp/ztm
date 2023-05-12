@@ -73,10 +73,6 @@ class F3P146EC072600(BaseFan):
     """Output physical signal.
     """
 
-    __power_output = "RO6"
-    """Output power signal.
-    """
-
     __speed = -1
     """Output speed value.
     """
@@ -104,9 +100,6 @@ class F3P146EC072600(BaseFan):
         if "output" in self._config["options"]:
             self.__analog_output = self._config["options"]["output"]
 
-        if "power" in self._config["options"]:
-            self.__power_output = self._config["options"]["power"]
-
 #endregion
 
 #region Public Methods
@@ -126,16 +119,10 @@ class F3P146EC072600(BaseFan):
 
         self.__speed = self.speed
 
-        # Enable power of the fan if the setpoint is greater then 0.
-        if self.__speed > 0.0:
-            self._controller.digital_write(self.__power_output, 1)
-        else:
-            self._controller.digital_write(self.__power_output, 0)
-
         # Set the speed.
         value_speed = self.speed / 10
         self._controller.analog_write(self.__analog_output, value_speed)
-        self.__logger.debug(self)
+        # self.__logger.debug(self)
 
     def shutdown(self):
         """Shutdown"""
