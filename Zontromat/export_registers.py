@@ -771,6 +771,16 @@ def __add_registers():
 
 #region HVAC (hvac)
 
+    # HVAC Enabled.
+    register = Register("hvac.enabled")
+    register.scope = Scope.System
+    register.plugin_name = "HVAC"
+    register.description = "Plugin enabled"
+    register.range = __range["BOOL"]
+    register.value = False
+    __registers.append(register)
+
+    # Zones count.
     register = Register("hvac.zones_count")
     register.scope = Scope.System
     register.plugin_name = "HVAC"
@@ -779,29 +789,13 @@ def __add_registers():
     register.value = 1
     __registers.append(register)
 
-    register = Register("hvac.temp_1.adjust")
-    register.scope = Scope.Both
-    register.plugin_name = "HVAC"
-    register.description = "Adjust temperature"
-    register.range = "-50.0/50.0"
-    register.value = 0.0
-    __registers.append(register)
-
     # Air temp central.
     register = Register("hvac.air_temp_cent_1.settings")
     register.scope = Scope.System
     register.plugin_name = "HVAC"
     register.description = "Air temperature sensor center settings"
     register.range = __range["NONE"]
-    register.value = {
-        "vendor": "Donkger",
-        "model": "XY-MD02",
-        "options":
-        {
-            "uart": 0,
-            "mb_id": 4
-        }
-    } # Dallas/DS18B20/28FFFCD0001703AE # temp/DS18B20/28FFFCD0001703AE
+    register.value = verbal_const.OFF # Dallas/DS18B20/28FFFCD0001703AE # temp/DS18B20/28FFFCD0001703AE
     __registers.append(register)
 
     register = Register("hvac.air_temp_cent_1.value")
@@ -824,7 +818,7 @@ def __add_registers():
         "options":
         {
             "uart": 0,
-            "mb_id": 3
+            "mb_id": 5
         }
     } # "Dallas/DS18B20/28FFC4EE00170349" # temp/DS18B20/28FFC4EE00170349
     __registers.append(register)
@@ -849,7 +843,7 @@ def __add_registers():
         "options":
         {
             "uart": 0,
-            "mb_id": 5
+            "mb_id": 4
         }
     } # Dallas/DS18B20/28FF2B70C11604B7 # "Dallas/DS18B20/28FF2B70C11604B7" # "temp/DS18B20/28FF2B70C11604B7"
     __registers.append(register)
@@ -873,40 +867,12 @@ def __add_registers():
         "model": "Klimafan",
         "options":
         {
-            "stage1": "RO0",
-            "stage2": "RO1",
-            "stage3": "RO2",
+            "stage1": "U0:ID6:FC16:R0:RO0",
+            "stage2": "U0:ID6:FC16:R0:RO1",
+            "stage3": "U0:ID6:FC16:R0:RO2",
         }
     }
     __registers.append(register)
-
-    # Delta time.
-    register = Register("hvac.delta_time_1")
-    register.scope = Scope.System
-    register.plugin_name = "HVAC"
-    register.description = "Measuring delta time"
-    register.range = "0.0/"
-    register.value = 5.0
-    __registers.append(register)
-
-    # HVAC Enabled.
-    register = Register("hvac.enabled")
-    register.scope = Scope.System
-    register.plugin_name = "HVAC"
-    register.description = "Plugin enabled"
-    register.range = __range["BOOL"]
-    register.value = False
-    __registers.append(register)
-
-    # Goal building temp.
-    register = Register("hvac.goal_building_temp")
-    register.scope = Scope.System
-    register.plugin_name = "HVAC"
-    register.description = "Goal of the building temperature"
-    register.range = "-50.0/50.0"
-    register.value = 20.0
-    __registers.append(register)
-
 
     # Loop 1 flowmeter.
     register = Register("hvac.loop1_1.flowmeter.settings")
@@ -970,7 +936,7 @@ def __add_registers():
         "model": "a20t20b2c",
         "options":
         {
-            "output": "RO4",
+            "output": "RO0",
         }
     }
     __registers.append(register)
@@ -1028,9 +994,35 @@ def __add_registers():
         "model": "a20t20b2c",
         "options":
         {
-            "output": "RO5",
+            "output": "RO1",
         }
     }
+    __registers.append(register)
+
+    register = Register("hvac.temp_1.adjust")
+    register.scope = Scope.Both
+    register.plugin_name = "HVAC"
+    register.description = "Adjust temperature"
+    register.range = "-50.0/50.0"
+    register.value = 0.0
+    __registers.append(register)
+
+    # Delta time.
+    register = Register("hvac.delta_time_1")
+    register.scope = Scope.System
+    register.plugin_name = "HVAC"
+    register.description = "Measuring delta time"
+    register.range = "0.0/"
+    register.value = 5.0
+    __registers.append(register)
+
+    # Goal building temp.
+    register = Register("hvac.goal_building_temp")
+    register.scope = Scope.System
+    register.plugin_name = "HVAC"
+    register.description = "Goal of the building temperature"
+    register.range = "-50.0/50.0"
+    register.value = 20.0
     __registers.append(register)
 
     # Temperature actual
@@ -3273,12 +3265,12 @@ def __add_registers():
     register.value = 0
     __registers.append(register)
 
-    register = Register("vent.fan.power_gpio")
+    register = Register("vent.power_gpio_1")
     register.scope = Scope.System
     register.plugin_name = "Ventilation"
     register.description = "Fans power GPIO."
     register.range = __range["NONE"]
-    register.value = "U0:ID2:FC16:R0:BIT3"
+    register.value = "U0:ID6:FC16:R0:RO3"
     __registers.append(register)
 
     # Upper fan

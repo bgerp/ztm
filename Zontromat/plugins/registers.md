@@ -187,26 +187,26 @@
 
 | Purpose | Register | Type | Value |
 |----------|:-------------|:------|:------|
-| Count of the HVAC zones. | hvac.zones_count | int | 1 |
-| Air temperature sensor center settings | hvac.air_temp_cent_1.settings | json | {'vendor': 'Donkger', 'model': 'XY-MD02', 'options': {'uart': 0, 'mb_id': 4}} |
-| Air temperature sensor center value | hvac.air_temp_cent_1.value | float | 0.0 |
-| Air temperature sensor lower settings | hvac.air_temp_lower_1.settings | json | {'vendor': 'Donkger', 'model': 'XY-MD02', 'options': {'uart': 0, 'mb_id': 3}} |
-| Air temperature sensor lower value | hvac.air_temp_lower_1.value | float | 0.0 |
-| Air temperature sensor upper settings | hvac.air_temp_upper_1.settings | json | {'vendor': 'Donkger', 'model': 'XY-MD02', 'options': {'uart': 0, 'mb_id': 5}} |
-| Air temperature sensor upper value | hvac.air_temp_upper_1.value | float | 0.0 |
-| Convector settings | hvac.convector_1.settings | json | {'vendor': 'Silpa', 'model': 'Klimafan', 'options': {'stage1': 'RO0', 'stage2': 'RO1', 'stage3': 'RO2'}} |
-| Measuring delta time | hvac.delta_time_1 | float | 5.0 |
 | Plugin enabled | hvac.enabled | bool | False |
-| Goal of the building temperature | hvac.goal_building_temp | float | 20.0 |
+| Count of the HVAC zones. | hvac.zones_count | int | 1 |
+| Air temperature sensor center settings | hvac.air_temp_cent_1.settings | str | off |
+| Air temperature sensor center value | hvac.air_temp_cent_1.value | float | 0.0 |
+| Air temperature sensor lower settings | hvac.air_temp_lower_1.settings | json | {'vendor': 'Donkger', 'model': 'XY-MD02', 'options': {'uart': 0, 'mb_id': 5}} |
+| Air temperature sensor lower value | hvac.air_temp_lower_1.value | float | 0.0 |
+| Air temperature sensor upper settings | hvac.air_temp_upper_1.settings | json | {'vendor': 'Donkger', 'model': 'XY-MD02', 'options': {'uart': 0, 'mb_id': 4}} |
+| Air temperature sensor upper value | hvac.air_temp_upper_1.value | float | 0.0 |
+| Convector settings | hvac.convector_1.settings | json | {'vendor': 'Silpa', 'model': 'Klimafan', 'options': {'stage1': 'U0:ID6:FC16:R0:RO0', 'stage2': 'U0:ID6:FC16:R0:RO1', 'stage3': 'U0:ID6:FC16:R0:RO2'}} |
 | Loop 1 water flow meter signal input | hvac.loop1_1.flowmeter.settings | json | {'vendor': 'mainone', 'model': 'flowmeter_dn20', 'options': {'uart': 1, 'mb_id': 3}} |
 | Loop 1 temperature sensor settings | hvac.loop1_1.temp.settings | json | {'vendor': 'mainone', 'model': 'inlet_temp', 'options': {'uart': 1, 'mb_id': 3}} |
 | Loop 1 temperature sensor value | hvac.loop1_1.temp.value | float | 0.0 |
 | Loop 1 temperature down limit | hvac.loop1_1.temp.down_limit | int | 15 |
-| Loop 1 valve settings | hvac.loop1_1.valve.settings | json | {'vendor': 'Tonhe', 'model': 'a20t20b2c', 'options': {'output': 'RO4'}} |
+| Loop 1 valve settings | hvac.loop1_1.valve.settings | json | {'vendor': 'Tonhe', 'model': 'a20t20b2c', 'options': {'output': 'RO0'}} |
 | Loop 2 water flow meter ticks per liter scale | hvac.loop2_1.flowmeter.settings | json | {'vendor': 'mainone', 'model': 'flowmeter_dn20', 'options': {'uart': 1, 'mb_id': 3}} |
 | Loop 2 temperature sensor settings | hvac.loop2_1.temp.settings | json | {'vendor': 'mainone', 'model': 'inlet_temp', 'options': {'uart': 1, 'mb_id': 3}} |
 | Loop 1 temperature sensor value | hvac.loop2_1.temp.value | float | 0.0 |
-| Loop 2 valve settings | hvac.loop2_1.valve.settings | json | {'vendor': 'Tonhe', 'model': 'a20t20b2c', 'options': {'output': 'RO5'}} |
+| Loop 2 valve settings | hvac.loop2_1.valve.settings | json | {'vendor': 'Tonhe', 'model': 'a20t20b2c', 'options': {'output': 'RO1'}} |
+| Measuring delta time | hvac.delta_time_1 | float | 5.0 |
+| Goal of the building temperature | hvac.goal_building_temp | float | 20.0 |
 | Actual temperature | hvac.temp_1.actual | float | 0.0 |
 | Maximum achievable | hvac.temp_1.max | float | 30.0 |
 | Minimum achievable | hvac.temp_1.min | float | 20.0 |
@@ -519,7 +519,7 @@
 |----------|:-------------|:------|:------|
 | HVAC set point | vent.hvac_setpoint_1 | int | 0 |
 | AC set point | vent.ac_setpoint_1 | int | 0 |
-| Fans power GPIO. | vent.fan.power_gpio | str | U0:ID2:FC16:R0:BIT3 |
+| Fans power GPIO. | vent.power_gpio_1 | str | U0:ID6:FC16:R0:RO3 |
 | Lower fan settings | vent.lower_1.fan.settings | json | {'vendor': 'HangzhouAirflowElectricApplications', 'model': 'f3p146ec072600', 'options': {'output': 'AO0'}} |
 | Lower fan minimum speed [%] | vent.lower_1.fan.min_speed | float | 0.0 |
 | Lower fan maximum speed [%] | vent.lower_1.fan.max_speed | float | 30.0 |
