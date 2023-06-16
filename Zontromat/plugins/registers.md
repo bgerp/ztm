@@ -71,7 +71,7 @@
 
 | Purpose | Register | Type | Value |
 |----------|:-------------|:------|:------|
-| Window 1 blinds mechanism | blinds.blind_1.mechanism | json | {'vendor': 'PT', 'model': 'MODv1', 'options': {'output_cw': 'off', 'output_ccw': 'off', 'feedback': 'off', 'feedback_tresh': 0.093, 'min': 0, 'max': 180, 'deg_per_sec': 10.0}} |
+| Window 1 blinds mechanism | blinds.blind_1.mechanism | json | {'vendor': 'PT', 'model': 'MODv2', 'options': {'output_cw': 'off', 'output_ccw': 'off', 'feedback': 'off', 'feedback_tresh': 0.093, 'min': 0, 'max': 180, 'deg_per_sec': 10.0}} |
 | Object height [m]. | blinds.blind_1.object_height | float | 2.0 |
 | Sun spot limit [m]. | blinds.blind_1.sunspot_limit | float | 1.0 |
 | Number of blind controllers | blinds.count | int | 1 |

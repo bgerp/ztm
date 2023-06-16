@@ -397,7 +397,7 @@ def __add_registers():
     register.range = __range["NONE"]
     register.value = {
         "vendor": "PT",
-        "model": "MODv1",
+        "model": "MODv2",
         "options":
         {
             "output_cw": verbal_const.OFF,
