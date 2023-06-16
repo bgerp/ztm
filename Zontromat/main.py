@@ -79,12 +79,12 @@ __time_to_stop = False
 
 #endregion
 
-def interupt_handler(signum, frame):
-    """Interupt handler.
+def interrupt_handler(signum, frame):
+    """Interrupt handler.
 
     Args:
-        signum (int): Interupt signal type (number).
-        frame (frame): Frame when this is happend.
+        signum (int): Interrupt signal type (number).
+        frame (frame): Frame when this is happened.
     """
 
     global __zone, __logger, __time_to_stop
@@ -122,8 +122,8 @@ def main():
         setproctitle.setproctitle(process_title)
 
     # Add signal handler.
-    signal.signal(signal.SIGINT, interupt_handler)
-    signal.signal(signal.SIGTERM, interupt_handler)
+    signal.signal(signal.SIGINT, interrupt_handler)
+    signal.signal(signal.SIGTERM, interrupt_handler)
 
     settings = ApplicationSettings.get_instance()
 

@@ -78,7 +78,7 @@ class Blind(BasePlugin):
     """
 
     __blind_mechanism = None
-    """Blkind mechanism
+    """Blind mechanism.
     """
 
     __sun_spot_update_timer = None
@@ -102,7 +102,7 @@ class Blind(BasePlugin):
     """
 
     __object_orientation = 0.0
-    """Object orintation
+    """Object orientation.
     """    
 
     __zone_occupation = False
