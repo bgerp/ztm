@@ -396,8 +396,8 @@ def __add_registers():
     register.description = "Window 1 blinds mechanism"
     register.range = __range["NONE"]
     register.value = {
-        "vendor": "PT",
-        "model": "MODv2",
+        "vendor": "Yihao",
+        "model": "BlindsV2",
         "options":
         {
             "output_cw": verbal_const.OFF,
