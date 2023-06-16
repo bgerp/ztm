@@ -309,6 +309,8 @@ class Blind(BasePlugin):
         """Update the plugin.
         """
 
+        return
+
         # Update occupation flags.
         if not self.__zone_occupation:
             if not self.__blind_mechanism is None:

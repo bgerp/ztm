@@ -104,12 +104,22 @@ class BlindsFactory:
                 controller=controller,
                 options=config["options"])
 
-        # Yihao / Blinds
-        elif vendor == "Yihao" and  model == "Blinds":
+        # Yihao / Blinds version 1
+        elif vendor == "Yihao" and  model == "BlindsV1":
 
-            from devices.vendors.yihao.blinds.blinds import Blinds
+            from devices.vendors.yihao.blinds_v1.blinds_v1 import BlindsV1
 
-            device = Blinds(
+            device = BlindsV1(
+                name=name,
+                controller=controller,
+                options=config["options"])
+
+        # Yihao / Blinds version 2
+        elif vendor == "Yihao" and  model == "BlindsV2":
+
+            from devices.vendors.yihao.blinds_v2.blinds_v2 import BlindsV2
+
+            device = BlindsV2(
                 name=name,
                 controller=controller,
                 options=config["options"])

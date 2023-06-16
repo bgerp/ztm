@@ -62,7 +62,7 @@ __status__ = "Debug"
 
 #endregion
 
-class Blinds(BaseBlind):
+class BlindsV1(BaseBlind):
     """Electronic blinds"""
 
 #region Attributes
@@ -81,7 +81,7 @@ class Blinds(BaseBlind):
 
         self._vendor = "YIHAO"
 
-        self._model = "Blinds"
+        self._model = "BlindsV1"
 
         self.__logger = get_logger(__name__)
 

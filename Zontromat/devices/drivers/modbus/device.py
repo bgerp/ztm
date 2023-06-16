@@ -165,6 +165,9 @@ class ModbusDevice(BaseDevice):
         """
         super().__init__(config)
 
+        if "mb_id" in config:
+            self._unit = config["mb_id"]
+
         if "unit" in config:
             self._unit = config["unit"]
 
