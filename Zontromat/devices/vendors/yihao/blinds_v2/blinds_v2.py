@@ -93,23 +93,20 @@ class BlindsV2(BaseBlind, ModbusDevice):
 
         self.__logger = get_logger(__name__)
 
-#endregion
-
-#region Private Methods
-
-    def __set_mb_registers(self):
-
         self._parameters.append(
             Parameter("Position", "%",\
             ParameterType.UINT16_T, [0x9C43], FunctionCode.WriteSingleHoldingRegister))
 
 #endregion
 
+#region Private Methods
+
+#endregion
+
 #region Public Methods
 
     def init(self):
-
-        self.__set_mb_registers()
+        pass
 
     def update(self):
         pass
