@@ -302,9 +302,6 @@ class Blind(BasePlugin):
 
         self.__init_registers()
 
-        if not self.__blind_mechanism is None:
-            self.__blind_mechanism.set_position(90)
-
     def _update(self):
         """Update the plugin.
         """
