@@ -407,6 +407,8 @@ def __add_registers():
             "min": 0,
             "max": 180,
             "deg_per_sec": 10.0,
+            "uart": 0,
+            "mb_id": 11
         }
     }
     __registers.append(register)
