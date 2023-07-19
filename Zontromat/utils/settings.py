@@ -225,7 +225,7 @@ class ApplicationSettings:
         # default debug level.
         if self.__config is not None:
             if "APPLICATION" not in self.__config:
-                self.__config["APPLICATION"] = {"debug_level": 10}
+                self.__config["APPLICATION"] = {"debug_level": 20}
 
         # Default controller.
         if self.__config is not None:
