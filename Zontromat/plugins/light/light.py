@@ -94,6 +94,15 @@ class Light(BasePlugin):
     """Analog voltage output 2.
     """
 
+    __r1_output = verbal_const.OFF
+    """Relay output R1.
+    """
+
+    __r2_output = verbal_const.OFF
+    """Relay output R2.
+    """
+
+
     __hallway_lighting_output = verbal_const.OFF
     """Digital output for controlling hallway lighting.
     """  
@@ -120,6 +129,16 @@ class Light(BasePlugin):
 
     __hallway_lighting_time = 0
     """Hallway lighting time. [s]
+    """
+
+    __r1_limit = 0.5
+    """Resistor current limit.
+    note: This value is level when the resistors should be turned on and off. [%]
+    """
+
+    __r2_limit = 0.5
+    """Resistor current limit.
+    note: This value is level when the resistors should be turned on and off. [%]
     """
 
 #endregion
@@ -177,6 +196,24 @@ class Light(BasePlugin):
 
         self.__v2_output = register.value
 
+    def __r1_output_cb(self, register):
+
+        # Check data type.
+        if not register.data_type == "str":
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        self.__r1_output = register.value
+
+    def __r2_output_cb(self, register):
+
+        # Check data type.
+        if not register.data_type == "str":
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        self.__r2_output = register.value
+
     def __hallway_lighting_output_cb(self, register):
 
         # Check data type.
@@ -221,6 +258,16 @@ class Light(BasePlugin):
         v2_output = self._registers.by_name(self.key + ".v2.output")
         if v2_output is not None:
             v2_output.update_handlers = self.__v2_output_cb
+            v2_output.update()
+
+        r1_output = self._registers.by_name(self.key + ".r1.output")
+        if v1_output is not None:
+            v1_output.update_handlers = self.__r1_output_cb
+            v1_output.update()
+
+        r2_output = self._registers.by_name(self.key + ".r2.output")
+        if v2_output is not None:
+            v2_output.update_handlers = self.__r2_output_cb
             v2_output.update()
 
         hallway_lighting_output = self._registers.by_name(self.key + ".hallway_lighting.output")
@@ -284,12 +331,29 @@ class Light(BasePlugin):
         if value_v2 < 0:
             value_v2 = 0
 
-
+        # Control the AO2.
         if self._controller.is_valid_gpio(self.__v1_output):
             self._controller.analog_write(self.__v1_output, value_v1)
 
+        # Control the AO3.
         if self._controller.is_valid_gpio(self.__v2_output):
             self._controller.analog_write(self.__v2_output, value_v2)
+
+        # Turn ON and OFF the load resistor of the group 1.
+        if value_v1 < self.__r1_limit:
+            if self._controller.is_valid_gpio(self.__r1_output):
+                self._controller.analog_write(self.__r1_output, 1)
+        else:
+            if self._controller.is_valid_gpio(self.__r1_output):
+                self._controller.analog_write(self.__r1_output, 0)
+
+        # Turn ON and OFF the load resistor of the group 2.
+        if value_v2 < self.__r2_limit:
+            if self._controller.is_valid_gpio(self.__r2_output):
+                self._controller.analog_write(self.__r2_output, 1)
+        else:
+            if self._controller.is_valid_gpio(self.__r2_output):
+                self._controller.analog_write(self.__r2_output, 0)
 
 #endregion
 
@@ -406,7 +470,9 @@ class Light(BasePlugin):
 
         self.__output = self.__target_illumination
 
-        # Convert to volgate.
+        # TODO: If value is les then 0.5 then turn on the relay with the resistor.
+
+        # Convert to voltage.
         to_voltage_scale = 0.1 # Magic number!!!
         voltage_1, voltage_2 = self.__flood_fade(self.__output)
         out_to_v1 = voltage_1 * to_voltage_scale

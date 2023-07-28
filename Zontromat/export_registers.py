@@ -1102,17 +1102,33 @@ def __add_registers():
     register = Register("light.v1.output")
     register.scope = Scope.System
     register.plugin_name = "Light"
-    register.description = "Analog output 1. U1:ID2:R0:AO2"
+    register.description = "Analog output 1. U0:ID2:FC16:R0:AO2"
     register.range = __range["NONE"]
-    register.value = verbal_const.OFF # U1:ID2:R0:AO2
+    register.value = verbal_const.OFF # U0:ID2:FC16:R0:AO2
     __registers.append(register)
 
     register = Register("light.v2.output")
     register.scope = Scope.System
     register.plugin_name = "Light"
-    register.description = "Analog output 2. U1:ID2:R0:AO3"
+    register.description = "Analog output 2. U0:ID2:FC16:R0:AO3"
     register.range = __range["NONE"]
-    register.value = verbal_const.OFF # U1:ID2:R0:AO3
+    register.value = verbal_const.OFF # U0:ID2:FC16:R0:AO3
+    __registers.append(register)
+
+    register = Register("light.r1.output")
+    register.scope = Scope.System
+    register.plugin_name = "Light"
+    register.description = "Digital output 1. U0:ID2:FC1:R0:DO7"
+    register.range = __range["NONE"]
+    register.value = verbal_const.OFF # U0:ID2:FC1:R0:DO7
+    __registers.append(register)
+
+    register = Register("light.r2.output")
+    register.scope = Scope.System
+    register.plugin_name = "Light"
+    register.description = "Digital output 2. U0:ID2:FC1:R0:DO6"
+    register.range = __range["NONE"]
+    register.value = verbal_const.OFF # U0:ID2:FC1:R0:DO6
     __registers.append(register)
 
     register = Register("light.hallway_lighting.output")

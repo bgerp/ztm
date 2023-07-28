@@ -241,8 +241,10 @@
 |----------|:-------------|:------|:------|
 | Minimum limit | light.min | float | 800.0 |
 | Maximum limit | light.max | float | 10000.0 |
-| Analog output 1. U1:ID2:R0:AO2 | light.v1.output | str | off |
-| Analog output 2. U1:ID2:R0:AO3 | light.v2.output | str | off |
+| Analog output 1. U0:ID2:FC16:R0:AO2 | light.v1.output | str | off |
+| Analog output 2. U0:ID2:FC16:R0:AO3 | light.v2.output | str | off |
+| Digital output 1. U0:ID2:FC1:R0:DO7 | light.r1.output | str | off |
+| Digital output 2. U0:ID2:FC1:R0:DO6 | light.r2.output | str | off |
 | Hallway lighting digital output. U1:ID2:R0:DO3 | light.hallway_lighting.output | str | off |
 | Hallway lighting wait time. | light.hallway_lighting.time | float | 60.0 |
 | Sensor settings | light.sensor.settings | json | {'vendor': 'PT', 'model': 'light_sensor', 'options': {'input': 'AI2'}} |
