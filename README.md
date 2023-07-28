@@ -196,6 +196,24 @@ debug_level = 10
 ; NOTSET 0
 ```
 
+
+## Modbus calls
+
+Description
+
+```
+!U0:ID2:FC16:R0:AO3
+||  |   |    |  |
+||  |   |    |  \--> Analog Output 3
+||  |   |    \-----> Register 0
+||  |   \----------> Function Code 16
+||  \--------------> Identification 2
+|\-----------------> UART 0
+\------------------> Inversion Flag
+```
+
+This syntax is used when device is located outside the controller body IOs.
+
 ## Application dependency graph
 
 ![](app_deps_graph.svg)
