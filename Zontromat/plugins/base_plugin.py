@@ -24,7 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import traceback
 
-from utils.configurable import Configuarable
+from utils.configurable import Configurable
 
 from utils.logger import get_logger
 
@@ -59,7 +59,7 @@ __status__ = "Debug"
 
 #endregion
 
-class BasePlugin(Configuarable):
+class BasePlugin(Configurable):
     """This class is dedicated to be base class for every zone plugin."""
 
 #region Attributes

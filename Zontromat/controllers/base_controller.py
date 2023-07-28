@@ -24,7 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import re
 
-from utils.configurable import Configuarable
+from utils.configurable import Configurable
 from utils.utils import serial_ports
 
 from data import verbal_const
@@ -65,7 +65,7 @@ __status__ = "Debug"
 
 #endregion
 
-class BaseController(Configuarable):
+class BaseController(Configurable):
     """Base controller"""
 
 #region Attributes

@@ -58,7 +58,7 @@ __status__ = "Debug"
 #endregion
 
 class CurrentConsuption:
-    """Curent consumptnio."""
+    """Current consumption."""
 
     __max_mem = 0
     __min_mem = 0
@@ -80,7 +80,7 @@ class PerformanceProfiler:
     """Enable memory profiler."""
 
     __enable_time_profile = False
-    """Enable time consumption prifiler."""
+    """Enable time consumption profiler."""
 
     __on_memory_change_callback = None
     """On memory change callback."""

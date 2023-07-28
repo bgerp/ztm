@@ -103,12 +103,12 @@ class Client:
 
     @property
     def host(self):
-        """Returns Host URL of the servie.
+        """Returns Host URL of the service.
 
         Returns
         -------
         str
-            Host URL of the servie.
+            Host URL of the service.
         """
         return self.__host
 
@@ -119,7 +119,7 @@ class Client:
         Parameters
         ----------
         host : str
-            Host URL of the servie.
+            Host URL of the service.
         """
 
         host_no_slash = host

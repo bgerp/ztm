@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 
-from utils.configurable import Configuarable
+from utils.configurable import Configurable
 
 #region File Attributes
 
@@ -55,7 +55,7 @@ __status__ = "Debug"
 
 #endregion
 
-class BaseDevice(Configuarable):
+class BaseDevice(Configurable):
     """Base device class doc."""
 
 #region Attributes

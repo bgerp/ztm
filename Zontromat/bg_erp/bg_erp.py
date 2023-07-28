@@ -97,12 +97,12 @@ class bgERP:
 
     @property
     def host(self):
-        """Returns Host URL of the servie.
+        """Returns Host URL of the service.
 
         Returns
         -------
         str
-            Host URL of the servie.
+            Host URL of the service.
         """
         return self.__client.host
 
@@ -113,7 +113,7 @@ class bgERP:
         Parameters
         ----------
         host : str
-            Host URL of the servie.
+            Host URL of the service.
         """
 
         self.__client.host = host

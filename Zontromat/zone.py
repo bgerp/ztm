@@ -503,7 +503,7 @@ class Zone():
                 # Check is it logged in.
                 if self.__ztm_ui.is_logged_in():
 
-                    # Check UI data and send only if changes ocured.
+                    # Check UI data and send only if changes ocurred.
                     registers_ui = self.__ztm_ui.get()
                     if registers_ui != []:
                         if self.__ztm_ui_temp_data != registers_ui:
@@ -521,6 +521,9 @@ class Zone():
                                     self.__logger.error(e)
 
                                 # self.__update_min_max(register)
+
+                    # TODO: Send heart beat.
+                    self.__ztm_ui.heart_beat()
 
                 # If not, login.
                 else:

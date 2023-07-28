@@ -53,7 +53,7 @@ __status__ = "Debug"
 
 #endregion
 
-class Configuarable:
+class Configurable:
     """This class is dedicated to be base for each configurable class."""
 
 #region Attributes
