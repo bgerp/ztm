@@ -155,6 +155,11 @@ session*.txt
 settings.ini
 settings*.ini
 
+### UUID
+# UUID for the application
+uuid.txt
+uuid*.txt
+
 ### Evok Software
 # Evok Software application settings.
 evok.conf
