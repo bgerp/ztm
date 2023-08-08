@@ -29,6 +29,7 @@ from services.global_error_handler.global_error_handler import GlobalErrorHandle
 
 from utils.logger import get_logger
 from utils.logic.functions import l_scale
+from utils.generate_uuid import UUID
 
 from controllers.base_controller import BaseController
 
@@ -146,7 +147,12 @@ class ZL101PCC(BaseController):
     """
 
     __analog_limits = [0.0, 10.0]
-    """Analog I/O volts."""
+    """Analog I/O volts.
+    """
+
+    __uuid = None
+    """UUID handler.
+    """
 
 #endregion
 
@@ -229,35 +235,41 @@ class ZL101PCC(BaseController):
             if index == 0:
                 self.__black_island = BlackIsland(unit=modbus_rtu_cfg["unit"])
 
+            self.__uuid = UUID()
+
 #endregion
 
 #region Private Methods
 
     def __get_hardware_id(self):
 
-        uuid = ""
+        self.__uuid.generate()
+        return self.__uuid.uuid_value
 
-        if "nt" in os.name:
-            result = subprocess.check_output("wmic csproduct get uuid")
 
-            if result is not None:
-                result = result.decode("utf-8")
-                result = result.replace(" ", "")
-                result = result.replace("\n", "")
-                split_result = result.split("\r")
+        # uuid = ""
 
-                uuid = split_result[2]
+        # if "nt" in os.name:
+        #     result = subprocess.check_output("wmic csproduct get uuid")
 
-        elif "posix" in os.name:
+        #     if result is not None:
+        #         result = result.decode("utf-8")
+        #         result = result.replace(" ", "")
+        #         result = result.replace("\n", "")
+        #         split_result = result.split("\r")
 
-            # https://askubuntu.com/questions/1200357/an-unique-key-id-that-corresponds-to-only-one-combination-of-ubuntu-os-and-hardw
-            try:
-                uuid = os.popen("cat /etc/machine-id").read().split()[-1]
+        #         uuid = split_result[2]
 
-            except Exception:
-                pass
+        # elif "posix" in os.name:
 
-        return uuid
+        #     # https://askubuntu.com/questions/1200357/an-unique-key-id-that-corresponds-to-only-one-combination-of-ubuntu-os-and-hardw
+        #     try:
+        #         uuid = os.popen("cat /etc/machine-id").read().split()[-1]
+
+        #     except Exception:
+        #         pass
+
+        # return uuid
 
 #endregion
 
