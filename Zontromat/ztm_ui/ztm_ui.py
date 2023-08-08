@@ -22,11 +22,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 
+import sys
 import json
 import time
 from urllib.parse import urlparse
 
 from utils.logger import get_logger, crate_log_file
+from utils.logic.timer import Timer
 
 from ztm_ui.login_state import LoginState
 
@@ -85,15 +87,23 @@ class ZtmUI():
     """
 
     __api_login = "/api/login"
-    """Notify bgERP about the zone state API call.
+    """Login to ZtmUI.
     """
 
     __api_data_get = "/api/data/get"
-    """Notify bgERP about the zone state API call.
+    """Get data from ZtmUI.
     """
 
     __api_data_set = "/api/data/set"
-    """Notify bgERP about the zone state API call.
+    """Set data to ZtmUI.
+    """
+
+    __api_settings_get = "/api/settings/get"
+    """Get settings ZtmUI.
+    """
+
+    __api_settings_post = "/api/settings/post"
+    """Get settings ZtmUI.
     """
 
     __timeout = 5
@@ -111,6 +121,8 @@ class ZtmUI():
     __token = ""
     """Access token.
     """
+
+    __heart_beat_timer = None
 
 #endregion
 
@@ -253,6 +265,8 @@ class ZtmUI():
 
         self.timeout = timeout
 
+        self.__heart_beat_timer = Timer(60)
+
 #endregion
 
 #region Private Methods
@@ -338,10 +352,8 @@ class ZtmUI():
     def get(self):
         """Get UI registers.
 
-        Returns
-        -------
-        bool
-            Success
+        Returns:
+            dict: Response
         """
 
         response_registers = []
@@ -416,7 +428,7 @@ class ZtmUI():
         # payload = {"token": self.__session.session,\
         #     "registers": str_registers, "last_sync": self.__last_sync}
 
-        # self.__logger.info("SYNC; To bgERP: {}".format(payload))
+        # self.__logger.info("SYNC; To ZtmUI: {}".format(payload))
 
         # Headers
         headers = {"Accept": "application/json"}
@@ -433,7 +445,7 @@ class ZtmUI():
 
                     response_registers = json.loads(response.text)
 
-                    # self.__logger.info("SYNC; From bgERP: {}".format(response_registers))
+                    # self.__logger.info("SYNC; From ZtmUI: {}".format(response_registers))
 
                     # Update last successful time.
                     self.__last_sync = time.time()
@@ -446,5 +458,117 @@ class ZtmUI():
             response_registers = None
 
         return response_registers
+
+    def set_settings(self, data):
+
+        response_registers = []
+
+        # URI
+        uri = self.host + self.__api_settings_post
+
+        # Headers
+        headers = {"Authorization": "Bearer {}".format(self.__token), 'Accept': 'application/json',}
+
+        try:
+            # The request.
+            response = requests.post(uri, headers=headers, json=data, timeout=self.timeout)
+
+            if response is not None:
+
+                if response.status_code == 200:
+
+                    if response.text != "":
+
+                        json_response = json.loads(response.text)
+
+                        if "data" in json_response:
+                            data = json_response["data"]
+
+                            # Convert to registers.
+                            response_registers = data
+
+                            # Update last successful time.
+                            self.__last_sync = time.time()
+
+                        else:
+                            raise ValueError("No field data.")
+                    else:
+                        raise ValueError("Invalid response body.")
+                else:
+                    self.__login_state = LoginState.Wait
+                    raise ValueError("Invalid response code: {}".format(response.status_code))
+            else:
+                raise ValueError("Invalid response.")
+
+        except Exception as e:
+            
+            self.__logger.error(e)
+
+        return response_registers
+
+    def get_settings(self):
+
+        response_registers = []
+
+        # URI
+        uri = self.host + self.__api_settings_get
+
+        # Headers
+        headers = {"Authorization": "Bearer {}".format(self.__token)}
+
+        try:
+            # The request.
+            response = requests.get(uri, headers=headers, timeout=self.timeout)
+
+            if response is not None:
+
+                if response.status_code == 200:
+
+                    if response.text != "":
+
+                        json_response = json.loads(response.text)
+
+                        if "data" in json_response:
+                            data = json_response["data"]
+
+                            # Convert to registers.
+                            response_registers = data
+
+                            # Update last successful time.
+                            self.__last_sync = time.time()
+
+                        else:
+                            raise ValueError("No field data.")
+                    else:
+                        raise ValueError("Invalid response body.")
+                else:
+                    self.__login_state = LoginState.Wait
+                    raise ValueError("Invalid response code: {}".format(response.status_code))
+            else:
+                raise ValueError("Invalid response.")
+
+        except Exception as e:
+            
+            self.__logger.error(e)
+
+        return response_registers
+
+    def heart_beat(self):
+
+        # settings = self.get_settings()
+
+        self.__heart_beat_timer.update()
+
+        if self.__heart_beat_timer.expired:
+            self.__heart_beat_timer.clear()
+
+            ztm_last_sync = time.time()
+
+            data = [
+                {'parameter_name': 'ztm_last_sync', 'parameter_value': ztm_last_sync, 'bgerp_sync': 0}, # Last update time.
+                {'parameter_name': 'python_version', 'parameter_value': str(sys.version), 'bgerp_sync': 0}  # Python version.
+                ]
+            
+            self.set_settings(data)
 
 #endregion
