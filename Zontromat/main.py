@@ -92,7 +92,7 @@ def interrupt_handler(signum, frame):
     __time_to_stop = True
 
     if signum == 2:
-        __logger.warning("Stopped by interupt.")
+        __logger.warning("Stopped by interrupt.")
 
     elif signum == 15:
         __logger.warning("Stopped by termination.")

@@ -230,13 +230,13 @@ def uptime():
 
     return uptime_seconds
 
-def get_decimal_dilimiter():
+def get_decimal_delimiter():
     localeconv = locale.localeconv()
     decimal_point = localeconv["decimal_point"]
     return decimal_point
 
 def fix_decimal_delimiter(value):
-    decimal_dilimiter = get_decimal_dilimiter()
-    fixed_value = value.replace(",", decimal_dilimiter)
-    fixed_value = value.replace(".", decimal_dilimiter)
+    decimal_delimiter = get_decimal_delimiter()
+    fixed_value = value.replace(",", decimal_delimiter)
+    fixed_value = value.replace(".", decimal_delimiter)
     return fixed_value
