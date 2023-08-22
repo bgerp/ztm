@@ -29,7 +29,7 @@ from services.global_error_handler.global_error_handler import GlobalErrorHandle
 
 from utils.logger import get_logger
 from utils.logic.functions import l_scale
-from utils.generate_uuid import UUID
+from .utils.generate_uuid import UUID
 
 from controllers.base_controller import BaseController
 
@@ -359,69 +359,102 @@ class ZL101PCC(BaseController):
     def digital_write(self, pin, value):
         """Write the digital output pin.
 
-        Parameters
-        ----------
-        pin : str
-            Pin index.
+        Args:
+            pin (str, list): Pin
+            value (_type_): Value for the output pin.
 
-        value : int
-            Value for the output pin.
+        Raises:
+            ValueError: _description_
+            ValueError: _description_
 
-        Returns
-        -------
-        mixed
-            State of the pin.
+        Returns:
+            any: State of the pin.
         """
-
-        response = False
-        state = False
-
-        if self.is_gpio_off(pin):
-            return False
-
-        if self.is_gpio_nothing(pin):
-            raise ValueError("Pin can not be None or empty string.")
         
-        # Make is bool.
-        state = bool(value)
-
-        # Inversion
-        if self.is_gpio_inverted(pin):
-            state = not state
-
+        response = False
+        
         # Local GPIO.
-        if self.is_gpio_local(pin):
+        def set_local_gpio(pin, state):
+
+            state = False
+
+            if self.is_gpio_off(pin):
+                return False
+
+            if self.is_gpio_nothing(pin):
+                raise ValueError("Pin can not be None or empty string.")
+
+            # Make is bool.
+            state = bool(value)
+
+            # Inversion
+            if self.is_gpio_inverted(pin):
+                state = not state
 
             gpio = self._gpio_map[pin]
             self.__DORO[gpio] = state
-
             # Write device digital & relay outputs.
             request = self.__black_island.generate_request("SetRelays", SetRelays=self.__DORO)
             cw_response = self.__modbus_rtu_clients[0].execute(request)
-            if cw_response is not None:
-                if not cw_response.isError():
-                    response = True
-                else:
-                    GlobalErrorHandler.log_hardware_malfunction(self.__logger, "GPIO: {} @ {} malfunctioning, check modbus cables and connections.".format(pin, self))
-            else:
-                GlobalErrorHandler.log_hardware_malfunction(self.__logger, "GPIO: {} @ {} malfunctioning, check modbus cables and connections.".format(pin, self))
 
+            if cw_response is not None:
+                if cw_response.isError():
+                    GlobalErrorHandler.log_hardware_malfunction(self.__logger, "Local GPIO: {} @ {} malfunctioning, check modbus cables and connections.".format(pin, self))
+                    return False
+            else:
+                GlobalErrorHandler.log_hardware_malfunction(self.__logger, "Local GPIO: {} @ {} malfunctioning, check modbus cables and connections.".format(pin, self))
+                return False
+            
             # self.__logger.debug("digital_write({}, {}, {})".format(self.model, pin, value))
+            return True
 
         # Remote GPIO.
-        elif self.is_gpio_remote(pin):
-            remote_gpio = self.parse_remote_gpio(pin)
+        def set_remote_gpio(pin, state):
 
+            state = False
+
+            if self.is_gpio_off(pin):
+                return False
+
+            if self.is_gpio_nothing(pin):
+                raise ValueError("Pin can not be None or empty string.")
+
+            # Make is bool.
+            state = bool(value)
+
+            # Inversion
+            if self.is_gpio_inverted(pin):
+                state = not state
+
+            remote_gpio = self.parse_remote_gpio(pin)
             write_response = self.__modbus_rtu_clients[remote_gpio["uart"]].write_coil(
                 remote_gpio["io_reg"]+remote_gpio["io_index"], # Coil index
                 state, # State
                 remote_gpio["mb_id"]) # Unit ID
 
-            if not write_response.isError():
-                response = True
+            if write_response.isError():
+                GlobalErrorHandler.log_hardware_malfunction(self.__logger, "Remote GPIO: {} @ {} malfunctioning, check modbus cables and connections.".format(pin, self))
+                return False
+            
+            return True
 
-        else:
-            raise ValueError("Pin does not exists in pin map.")
+        if isinstance(pin, str):
+            if self.is_gpio_local(pin):
+                response = set_local_gpio(pin, value)
+            elif self.is_gpio_remote(pin):
+                response = set_remote_gpio(pin, value)
+            else:
+                GlobalErrorHandler.log_hardware_malfunction(self.__logger, "Remote GPIO: {} @ {} Pin does not exists in pin map.".format(pin, self))
+
+        elif isinstance(pin, list):
+            # Go trough all pins.
+            for p in pin:
+                if self.is_gpio_local(p):
+                    response = set_local_gpio(p, value)
+                elif self.is_gpio_remote(p):
+                    response = set_remote_gpio(p, value)
+                else:
+                    GlobalErrorHandler.log_hardware_malfunction(self.__logger, "Remote GPIO: {} @ {} Pin does not exists in pin map.".format(pin, self))
 
         return response
 
