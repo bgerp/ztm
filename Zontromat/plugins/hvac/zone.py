@@ -38,7 +38,6 @@ from devices.factories.convectors.convectors_factory import ConvectorsFactory
 from devices.factories.flowmeters.flowmeters_factory import FlowmetersFactory
 from devices.factories.thermometers.thermometers_factory import ThermometersFactory
 
-from devices.tests.leak_test.leak_test import LeakTest
 from devices.tests.electrical_performance.electrical_performance import ElectricalPerformance
 
 from data import verbal_const
@@ -110,30 +109,24 @@ class Zone(BasePlugin):
     """Convector device."""
 
 
-    __loop1_temp_dev = None
-    """Loop 2 thermometer."""
+    __floor_temp_dev = None
+    """Floor thermometer device."""
 
-    __loop1_valve_dev = None
-    """Loop 1 valve device."""
+    __floor_valve_dev = None
+    """Floor valve device."""
 
-    __loop1_flowmeter = None
-    """Loop 1 flow metter."""
-
-    __loop1_leak_test = None
-    """Loop 1 leak test."""
+    __floor_heat_meter_dev = None
+    """Floor heat meter."""
 
 
-    __loop2_temp_dev = None
-    """Loop 2 thermometer."""
+    __convector_temp_dev = None
+    """Convector thermometer."""
 
-    __loop2_valve_dev = None
-    """Loop 2 valve device."""
+    __convector_valve_dev = None
+    """Convector valve device."""
 
-    __loop2_flowmeter = None
-    """Loop 2 flow metter."""
-
-    __loop2_leak_teat = None
-    """Loop 2 leak test."""
+    __convector_heat_meter_dev = None
+    """Convector heat meter."""
 
 
     __update_timer = None
@@ -193,23 +186,23 @@ class Zone(BasePlugin):
     def __del__(self):
         """Destructor"""
 
-        if self.__loop1_temp_dev is not None:
-            del self.__loop1_temp_dev
+        if self.__floor_temp_dev is not None:
+            del self.__floor_temp_dev
 
-        if self.__loop1_valve_dev is not None:
-            del self.__loop1_valve_dev
+        if self.__floor_valve_dev is not None:
+            del self.__floor_valve_dev
 
-        if self.__loop1_flowmeter is not None:
-            del self.__loop1_flowmeter
+        if self.__floor_heat_meter_dev is not None:
+            del self.__floor_heat_meter_dev
 
-        if self.__loop2_temp_dev is not None:
-            del self.__loop2_temp_dev
+        if self.__convector_temp_dev is not None:
+            del self.__convector_temp_dev
 
-        if self.__loop2_valve_dev is not None:
-            del self.__loop2_valve_dev
+        if self.__convector_valve_dev is not None:
+            del self.__convector_valve_dev
 
-        if self.__loop2_flowmeter is not None:
-            del self.__loop2_flowmeter
+        if self.__convector_heat_meter_dev is not None:
+            del self.__convector_heat_meter_dev
 
         if self.__thermal_mode is not None:
             del self.__thermal_mode
@@ -219,12 +212,6 @@ class Zone(BasePlugin):
 
         if self.__stop_timer is not None:
             del self.__stop_timer
-
-        if self.__loop1_leak_test is not None:
-            del self.__loop1_leak_test
-
-        if self.__loop2_leak_teat is not None:
-            del self.__loop2_leak_teat
 
         if self.__queue_temperatures is not None:
             del self.__queue_temperatures
@@ -491,121 +478,113 @@ class Zone(BasePlugin):
 
 #endregion
 
-#region Private Methods (Registers Loop 1)
+#region Private Methods (Registers Floor Loop)
 
-    def __loop1_flowmeter_settings_cb(self, register):
-
-        # Check data type.
-        if not register.data_type == "json":
-            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
-            return
-
-        if register.value != {} and self.__loop1_flowmeter is None:
-            self.__loop1_flowmeter = FlowmetersFactory.create(
-                name="Loop 1 flowmeter",
-                controller=self._controller,
-                vendor=register.value['vendor'],
-                model=register.value['model'],
-                options=register.value['options'])
-
-            if self.__loop1_flowmeter is not None:
-                self.__loop1_flowmeter.init()
-
-                # 20 seconds is time for leak testing.
-                self.__loop1_leak_test = LeakTest(self.__loop1_flowmeter, 20)
-                self.__loop1_leak_test.on_result(self.__loop1_leaktest_result)
-
-        elif register.value == {} and self.__loop1_flowmeter is not None:
-            self.__loop1_flowmeter.shutdown()
-            del self.__loop1_flowmeter
-            del self.__loop1_leak_test
-
-    def __loop1_temp_settings_cb(self, register):
+    def __floor_flowmeter_settings_cb(self, register):
 
         # Check data type.
         if not register.data_type == "json":
             GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
             return
 
-        if register.value != {} and self.__loop1_temp_dev is None:
-
-            self.__loop1_temp_dev = ThermometersFactory.create(
+        if register.value != {} and self.__floor_heat_meter_dev is None:
+            self.__floor_heat_meter_dev = FlowmetersFactory.create(
+                name="Floor loop flowmeter",
                 controller=self._controller,
-                name="Loop 1 temperature",
                 vendor=register.value['vendor'],
                 model=register.value['model'],
                 options=register.value['options'])
 
-            if self.__loop1_temp_dev is not None:
-                self.__loop1_temp_dev.init()
+            if self.__floor_heat_meter_dev is not None:
+                self.__floor_heat_meter_dev.init()
 
-        elif register.value == {} and self.__loop1_temp_dev is not None:
-            self.__loop1_temp_dev.shutdown()
-            del self.__loop1_temp_dev
+        elif register.value == {} and self.__floor_heat_meter_dev is not None:
+            self.__floor_heat_meter_dev.shutdown()
+            del self.__floor_heat_meter_dev
 
-    def __loop1_valve_settings_cb(self, register):
+
+    def __floor_temp_settings_cb(self, register):
 
         # Check data type.
         if not register.data_type == "json":
             GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
             return
 
-        if register.value != {} and self.__loop1_valve_dev is None:
+        if register.value != {} and self.__floor_temp_dev is None:
 
-            self.__loop1_valve_dev = ValveFactory.create(
-                name="Loop 1 valve",
+            self.__floor_temp_dev = ThermometersFactory.create(
+                controller=self._controller,
+                name="Floor temperature",
+                vendor=register.value['vendor'],
+                model=register.value['model'],
+                options=register.value['options'])
+
+            if self.__floor_temp_dev is not None:
+                self.__floor_temp_dev.init()
+
+        elif register.value == {} and self.__floor_temp_dev is not None:
+            self.__floor_temp_dev.shutdown()
+            del self.__floor_temp_dev
+
+    def __floor_valve_settings_cb(self, register):
+
+        # Check data type.
+        if not register.data_type == "json":
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        if register.value != {} and self.__floor_valve_dev is None:
+
+            self.__floor_valve_dev = ValveFactory.create(
+                name="Floor valve",
                 controller=self._controller,
                 vendor=register.value['vendor'],
                 model=register.value['model'],
                 options=register.value['options'])
 
-            if self.__loop1_valve_dev is not None:
-                self.__loop1_valve_dev.init()
+            if self.__floor_valve_dev is not None:
+                self.__floor_valve_dev.init()
 
-        elif register.value == {} and self.__loop1_valve_dev is not None:
-            self.__loop1_valve_dev.shutdown()
-            del self.__loop1_valve_dev
+        elif register.value == {} and self.__floor_valve_dev is not None:
+            self.__floor_valve_dev.shutdown()
+            del self.__floor_valve_dev
 
 #endregion
 
-#region Private Methods (Registers Loop 2)
+#region Private Methods (Registers Convector Loop)
 
-    def __loop2_flowmeter_settings_cb(self, register):
+    def __convector_heat_meter_dev_settings_cb(self, register):
 
         # Check data type.
         if not register.data_type == "json":
             GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
             return
 
-        if register.value != {} and self.__loop2_flowmeter is None:
-            self.__loop2_flowmeter = FlowmetersFactory.create(
+        if register.value != {} and self.__convector_heat_meter_dev is None:
+            self.__convector_heat_meter_dev = FlowmetersFactory.create(
                 name="Loop 2 flowmeter",
                 controller=self._controller,
                 vendor=register.value['vendor'],
                 model=register.value['model'],
                 options=register.value['options'])
 
-            if self.__loop2_flowmeter is not None:
-                self.__loop2_flowmeter.init()
+            if self.__convector_heat_meter_dev is not None:
+                self.__convector_heat_meter_dev.init()
 
-                self.__loop2_leak_teat = LeakTest(self.__loop2_flowmeter, 20)
-                self.__loop2_leak_teat.on_result(self.__loop2_leaktest_result)
+        elif register.value == {} and self.__convector_heat_meter_dev is not None:
+            self.__convector_heat_meter_dev.shutdown()
+            del self.__convector_heat_meter_dev
 
-        elif register.value == {} and self.__loop2_flowmeter is not None:
-            self.__loop2_flowmeter.shutdown()
-            del self.__loop2_flowmeter
-            del self.__loop2_leak_teat
-
-    def __loop2_temp_settings_cb(self, register):
+    def __convector_temp_settings_cb(self, register):
 
         # Check data type.
         if not register.data_type == "json":
             GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
             return
 
-        if register.value != {} and self.__loop2_temp_dev is None:
+        if register.value != {} and self.__convector_temp_dev is None:
 
-            self.__loop2_temp_dev = ThermometersFactory.create(
+            self.__convector_temp_dev = ThermometersFactory.create(
                 controller=self._controller,
                 name="Loop 2 temperature",
                 vendor=register.value['vendor'],
@@ -613,35 +592,35 @@ class Zone(BasePlugin):
                 options=register.value['options'])
 
 
-            if self.__loop2_temp_dev is not None:
-                self.__loop2_temp_dev.init()
+            if self.__convector_temp_dev is not None:
+                self.__convector_temp_dev.init()
 
-        elif register.value == {} and self.__loop2_temp_dev is not None:
-            self.__loop2_temp_dev.shutdown()
-            del self.__loop2_temp_dev
+        elif register.value == {} and self.__convector_temp_dev is not None:
+            self.__convector_temp_dev.shutdown()
+            del self.__convector_temp_dev
 
-    def __loop2_valve_settings_cb(self, register):
+    def __convector_valve_settings_cb(self, register):
 
         # Check data type.
         if not register.data_type == "json":
             GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
             return
 
-        if register.value != {} and self.__loop2_valve_dev is None:
+        if register.value != {} and self.__convector_valve_dev is None:
 
-            self.__loop2_valve_dev = ValveFactory.create(
-                name="Loop 2 valve",
+            self.__convector_valve_dev = ValveFactory.create(
+                name="Convector valve",
                 controller=self._controller,
                 vendor=register.value['vendor'],
                 model=register.value['model'],
                 options=register.value['options'])
 
-            if self.__loop2_valve_dev is not None:
-                self.__loop2_valve_dev.init()
+            if self.__convector_valve_dev is not None:
+                self.__convector_valve_dev.init()
 
-        elif register.value == {} and self.__loop2_valve_dev is not None:
-            self.__loop2_valve_dev.shutdown()
-            del self.__loop2_valve_dev
+        elif register.value == {} and self.__convector_valve_dev is not None:
+            self.__convector_valve_dev.shutdown()
+            del self.__convector_valve_dev
 
 #endregion
 
@@ -691,42 +670,42 @@ class Zone(BasePlugin):
             air_temp_upper_settings.update()
 
         # Convector
-        convector_enable = self._registers.by_name("{}.convector_{}.settings".format(self.key, self.__identifier))
-        if convector_enable is not None:
-            convector_enable.update_handlers = self.__convector_settings_cb
-            convector_enable.update()
+        convector_settings = self._registers.by_name("{}.convector_{}.settings".format(self.key, self.__identifier))
+        if convector_settings is not None:
+            convector_settings.update_handlers = self.__convector_settings_cb
+            convector_settings.update()
 
-        # Loop 1
-        loop1_flowmeter = self._registers.by_name("{}.loop1_{}.flowmeter.settings".format(self.key, self.__identifier))
-        if loop1_flowmeter is not None:
-            loop1_flowmeter.update_handlers = self.__loop1_flowmeter_settings_cb
-            loop1_flowmeter.update()
+        # Floor loop
+        floor_flowmeter_settings = self._registers.by_name("{}.floor_loop_{}.flowmeter.settings".format(self.key, self.__identifier))
+        if floor_flowmeter_settings is not None:
+            floor_flowmeter_settings.update_handlers = self.__floor_flowmeter_settings_cb
+            floor_flowmeter_settings.update()
 
-        loop1_temp_settings = self._registers.by_name("{}.loop1_{}.temp.settings".format(self.key, self.__identifier))
-        if loop1_temp_settings is not None:
-            loop1_temp_settings.update_handlers = self.__loop1_temp_settings_cb
-            loop1_temp_settings.update()
+        floor_temp_settings = self._registers.by_name("{}.floor_loop_{}.temp.settings".format(self.key, self.__identifier))
+        if floor_temp_settings is not None:
+            floor_temp_settings.update_handlers = self.__floor_temp_settings_cb
+            floor_temp_settings.update()
 
-        loop1_valve_enabled = self._registers.by_name("{}.loop1_{}.valve.settings".format(self.key, self.__identifier))
-        if loop1_valve_enabled is not None:
-            loop1_valve_enabled.update_handlers = self.__loop1_valve_settings_cb
-            loop1_valve_enabled.update()
+        floor_valve_settings = self._registers.by_name("{}.floor_loop_{}.valve.settings".format(self.key, self.__identifier))
+        if floor_valve_settings is not None:
+            floor_valve_settings.update_handlers = self.__floor_valve_settings_cb
+            floor_valve_settings.update()
 
-        # Loop 2
-        loop2_flowmeter_settings = self._registers.by_name("{}.loop2_{}.flowmeter.settings".format(self.key, self.__identifier))
-        if loop2_flowmeter_settings is not None:
-            loop2_flowmeter_settings.update_handlers = self.__loop2_flowmeter_settings_cb
-            loop2_flowmeter_settings.update()
+        # Convector loop.
+        convector_heat_meter_dev_settings = self._registers.by_name("{}.conv_loop_{}.flowmeter.settings".format(self.key, self.__identifier))
+        if convector_heat_meter_dev_settings is not None:
+            convector_heat_meter_dev_settings.update_handlers = self.__convector_heat_meter_dev_settings_cb
+            convector_heat_meter_dev_settings.update()
 
-        loop2_temp_settings = self._registers.by_name("{}.loop2_{}.temp.settings".format(self.key, self.__identifier))
-        if loop2_temp_settings is not None:
-            loop2_temp_settings.update_handlers = self.__loop2_temp_settings_cb
-            loop2_temp_settings.update()
+        convector_temp_settings = self._registers.by_name("{}.conv_loop_{}.temp.settings".format(self.key, self.__identifier))
+        if convector_temp_settings is not None:
+            convector_temp_settings.update_handlers = self.__convector_temp_settings_cb
+            convector_temp_settings.update()
 
-        loop2_valve_settings = self._registers.by_name("{}.loop2_{}.valve.settings".format(self.key, self.__identifier))
-        if loop2_valve_settings is not None:
-            loop2_valve_settings.update_handlers = self.__loop2_valve_settings_cb
-            loop2_valve_settings.update()
+        convector_valve_settings = self._registers.by_name("{}.conv_loop_{}.valve.settings".format(self.key, self.__identifier))
+        if convector_valve_settings is not None:
+            convector_valve_settings.update_handlers = self.__convector_valve_settings_cb
+            convector_valve_settings.update()
 
         # Create window closed sensor.
         window_closed_input = self._registers.by_name("{}.window_closed_{}.input".format("ac", self.__identifier))
@@ -755,7 +734,7 @@ class Zone(BasePlugin):
             thermal_force_limit.update_handlers = self.__thermal_force_limit_cb
             thermal_force_limit.update()
 
-        adjust_temp = self._registers.by_name("{}.adjust_temp_{}".format(self.key, self.__identifier))
+        adjust_temp = self._registers.by_name("{}.temp_{}.adjust".format(self.key, self.__identifier))
         if adjust_temp is not None:
             adjust_temp.update_handlers = self.__adjust_temp_cb
             adjust_temp.update()
@@ -789,14 +768,14 @@ class Zone(BasePlugin):
             air_temp_upper_value = self.__air_temp_upper_dev.get_temp()
 
         # 1. If thermometer is available, gets its value.
-        loop1_temp_value = 0
-        if self.__loop1_temp_dev is not None:
-            loop1_temp_value = self.__loop1_temp_dev.get_temp()
+        floor_temp_value = 0
+        if self.__floor_temp_dev is not None:
+            floor_temp_value = self.__floor_temp_dev.get_temp()
 
         # 1. If thermometer is available, gets its value.
-        loop2_temp_value = 0
-        if self.__loop2_temp_dev is not None:
-            loop2_temp_value = self.__loop2_temp_dev.get_temp()
+        convector_temp_value = 0
+        if self.__convector_temp_dev is not None:
+            convector_temp_value = self.__convector_temp_dev.get_temp()
 
         # 2. If the folowing register is available then set ist value to the thermometers value.
         self._registers.write("{}.air_temp_lower_{}.value".format(self.key, self.__identifier), air_temp_lower_value)
@@ -808,10 +787,10 @@ class Zone(BasePlugin):
         self._registers.write("{}.air_temp_upper_{}.value".format(self.key, self.__identifier), air_temp_upper_value)
 
         # 2. If the folowing register is available then set ist value to the thermometers value.
-        self._registers.write("{}.loop1_{}.temp.value".format(self.key, self.__identifier), loop1_temp_value)
+        self._registers.write("{}.floor_{}.temp.value".format(self.key, self.__identifier), floor_temp_value)
 
         # 2. If the folowing register is available then set ist value to the thermometers value.
-        self._registers.write("{}.loop2_{}.temp.value".format(self.key, self.__identifier), loop2_temp_value)
+        self._registers.write("{}.convector_{}.temp.value".format(self.key, self.__identifier), convector_temp_value)
 
     def __is_empty(self):
 
@@ -828,7 +807,7 @@ class Zone(BasePlugin):
         # Request: Eml6419
         value = 10
 
-        down_limit = self._registers.by_name("{}.loop1_{}.temp.down_limit".format(self.key, self.__identifier))
+        down_limit = self._registers.by_name("{}.floor_{}.temp.down_limit".format(self.key, self.__identifier))
         if down_limit is not None:
             down_limit_value = down_limit.value
 
@@ -852,18 +831,6 @@ class Zone(BasePlugin):
 
 #endregion
 
-#region Private Methods (Leak tests)
-
-    def __loop1_leaktest_result(self, leaked_liters):
-        if leaked_liters > 0:
-            self.__logger.error("Loop 1 leak detected liters: {}".format(leaked_liters))
-
-    def __loop2_leaktest_result(self, leaked_liters):
-        if leaked_liters > 0:
-            self.__logger.error("Loop 2 leak detected liters: {}".format(leaked_liters))
-
-#endregion
-
 #region Private Methods
 
     def __is_hot_water(self):
@@ -871,8 +838,8 @@ class Zone(BasePlugin):
         down_limit_value = self.__get_down_limit_temp()
 
         temperature = 0
-        if self.__loop1_temp_dev is not None:
-            temperature = self.__loop1_temp_dev.get_temp()
+        if self.__floor_temp_dev is not None:
+            temperature = self.__floor_temp_dev.get_temp()
 
         return temperature >= down_limit_value
 
@@ -900,30 +867,30 @@ class Zone(BasePlugin):
 
         if self.__thermal_mode.is_state(ThermalMode.ColdSeason):
             if thermal_force > 0:
-                self.__loop1_valve_dev.target_position = 0
-                self.__loop2_valve_dev.target_position = 0
+                self.__floor_valve_dev.target_position = 0
+                self.__convector_valve_dev.target_position = 0
             elif thermal_force <= 0:
-                self.__loop1_valve_dev.target_position = 100
-                self.__loop2_valve_dev.target_position = 100
+                self.__floor_valve_dev.target_position = 100
+                self.__convector_valve_dev.target_position = 100
 
         elif self.__thermal_mode.is_state(ThermalMode.TransisionSeason):
             if thermal_force < 0:
-                self.__loop1_valve_dev.target_position = 100
-                self.__loop2_valve_dev.target_position = 0
+                self.__floor_valve_dev.target_position = 100
+                self.__convector_valve_dev.target_position = 0
             elif thermal_force > 0:
-                self.__loop1_valve_dev.target_position = 0
-                self.__loop2_valve_dev.target_position = 100
+                self.__floor_valve_dev.target_position = 0
+                self.__convector_valve_dev.target_position = 100
             else:
-                self.__loop1_valve_dev.target_position = 0
-                self.__loop2_valve_dev.target_position = 0
+                self.__floor_valve_dev.target_position = 0
+                self.__convector_valve_dev.target_position = 0
 
         elif self.__thermal_mode.is_state(ThermalMode.WarmSeason):
             if thermal_force < 0:
-                self.__loop1_valve_dev.target_position = 100
-                self.__loop2_valve_dev.target_position = 100
+                self.__floor_valve_dev.target_position = 100
+                self.__convector_valve_dev.target_position = 100
             elif thermal_force > 0:
-                self.__loop1_valve_dev.target_position = 0
-                self.__loop2_valve_dev.target_position = 0
+                self.__floor_valve_dev.target_position = 0
+                self.__convector_valve_dev.target_position = 0
 
         # If thermal mode set properly apply thermal force
         if not self.__thermal_mode.is_state(ThermalMode.NONE):
@@ -1012,16 +979,6 @@ class Zone(BasePlugin):
             # Apply the integrated force.
             self.__set_thermal_force(self.__thermal_force)
 
-            if self.__loop1_valve_dev is not None:
-                if self.__loop1_valve_dev.current_position <= 0:
-                    if self.__loop1_leak_test is not None:
-                        self.__loop1_leak_test.run()
-
-            if self.__loop2_valve_dev is not None:
-                if self.__loop2_valve_dev.current_position <= 0:
-                    if self.__loop2_leak_teat is not None:
-                        self.__loop2_leak_teat.run()
-
             self._registers.write("{}.temp_{}.actual".format(self.key, self.__identifier), temperature)
 
         # Recalculate delta time.
@@ -1033,9 +990,60 @@ class Zone(BasePlugin):
         #     # Update current time.
         #     self.__lastupdate_delta_time = time.time()
 
-        self.__loop1_valve_dev.update()
-        self.__loop2_valve_dev.update()
+        self.__floor_valve_dev.update()
+        self.__convector_valve_dev.update()
         self.__convector_dev.update()
+
+    def __test_update(self):
+        """_summary_
+        """
+
+        # Update thermometres values.
+        self.__update_thermometers_values()
+
+        # Update occupation flags.
+        is_empty = self.__is_empty()
+
+        # If the window is opened, just turn off the HVAC.
+        window_tamper_state = self.__read_window_tamper()
+
+        # If temperature is less then 10 deg on loop 1.
+        is_hot_water = self.__is_hot_water()
+
+        # Take all necessary condition for normal operation of the HVAC.
+        # stop_flag = (not is_empty or not window_tamper_state or not is_hot_water)
+        stop_flag = False
+
+        if stop_flag:
+            self.__stop_timer.update()
+            if self.__stop_timer.expired:
+                self.__stop_timer.clear()
+                if self.__stop_flag != stop_flag:
+                    self.__stop_flag = stop_flag
+                    self.__set_thermal_force(0)
+
+        if not stop_flag:
+            self.__stop_flag = False
+            self.__stop_timer.update_last_time()
+
+        # Main update rate at ~ 20 second.
+        # На всеки 20 секунди се правят следните стъпки:
+        self.__update_timer.update()
+        if self.__update_timer.expired and not self.__stop_flag:
+            self.__update_timer.clear()
+
+            # Recalculate the temperatures.
+            self.__temp_proc.update()
+
+            self.__logger.debug(self.__adjust_temp)
+
+            # Apply the integrated force.
+            self.__set_thermal_force(self.__thermal_force)
+
+        self.__floor_valve_dev.update()
+        self.__convector_valve_dev.update()
+        self.__convector_dev.update()
+
 
 #endregion
 
@@ -1074,7 +1082,7 @@ class Zone(BasePlugin):
         """ Update cycle.
         """
 
-        pass
+        self.__test_update()
 
     def _shutdown(self):
         """Shutdown the tamper.
@@ -1083,11 +1091,11 @@ class Zone(BasePlugin):
         self.__logger.info("Shutting down the {} {}".format(self.name, self.__identifier))
         self.__set_thermal_force(0)
 
-        if not self.__loop1_valve_dev is None:
-            self.__loop1_valve_dev.shutdown()
+        if not self.__floor_valve_dev is None:
+            self.__floor_valve_dev.shutdown()
 
-        if not self.__loop2_valve_dev is None:
-            self.__loop2_valve_dev.shutdown()
+        if not self.__convector_valve_dev is None:
+            self.__convector_valve_dev.shutdown()
 
         if not self.__convector_dev is None:
             self.__convector_dev.shutdown()
