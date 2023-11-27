@@ -331,18 +331,18 @@ class Light(BasePlugin):
         # Turn ON and OFF the load resistor of the group 1.
         if value_v1 < self.__r1_limit:
             if self._controller.is_valid_gpio(self.__r1_output):
-                self._controller.analog_write(self.__r1_output, 1)
+                self._controller.digital_write(self.__r1_output, 1)
         else:
             if self._controller.is_valid_gpio(self.__r1_output):
-                self._controller.analog_write(self.__r1_output, 0)
+                self._controller.digital_write(self.__r1_output, 0)
 
         # Turn ON and OFF the load resistor of the group 2.
         if value_v2 < self.__r2_limit:
             if self._controller.is_valid_gpio(self.__r2_output):
-                self._controller.analog_write(self.__r2_output, 1)
+                self._controller.digital_write(self.__r2_output, 1)
         else:
             if self._controller.is_valid_gpio(self.__r2_output):
-                self._controller.analog_write(self.__r2_output, 0)
+                self._controller.digital_write(self.__r2_output, 0)
 
         # Control the AO2.
         if self._controller.is_valid_gpio(self.__v1_output):
