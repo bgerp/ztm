@@ -608,14 +608,13 @@ class Registers(list):
 
             rows = csv.DictReader(csv_file, delimiter=",", quoting=2)
             for row in rows:
-
                 register = Register(row["name"])
                 register.range = row["range"]
                 register.plugin_name = row["plugin"]
                 register.scope = Registers.__to_scope(row["scope"])
                 register.value = Registers.__to_value(row["type"], row["default"])
                 register.description = row["description"]
-
+                
                 registers.append(register)
 
         return registers
