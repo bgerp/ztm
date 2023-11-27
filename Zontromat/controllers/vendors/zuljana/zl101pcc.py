@@ -427,15 +427,29 @@ class ZL101PCC(BaseController):
                 state = not state
 
             remote_gpio = self.parse_remote_gpio(pin)
-            write_response = self.__modbus_rtu_clients[remote_gpio["uart"]].write_coil(
-                remote_gpio["io_reg"]+remote_gpio["io_index"], # Coil index
-                state, # State
-                remote_gpio["mb_id"]) # Unit ID
 
-            if write_response.isError():
-                GlobalErrorHandler.log_hardware_malfunction(self.__logger, "Remote GPIO: {} @ {} malfunctioning, check modbus cables and connections.".format(pin, self))
-                return False
-            
+            if remote_gpio["mb_fc"] == FunctionCode.WriteSingleCoil.value:
+                write_response = self.__modbus_rtu_clients[remote_gpio["uart"]].write_coil(
+                    remote_gpio["io_reg"]+remote_gpio["io_index"],
+                    value,
+                    remote_gpio["mb_id"])
+
+                if not write_response.isError():
+                    response = True
+                else:
+                    GlobalErrorHandler.log_hardware_malfunction(self.__logger, "GPIO: {} @ {} malfunctioning, check modbus cables and connections.".format(pin, self))
+
+            elif remote_gpio["mb_fc"] == FunctionCode.WriteMultipleCoils.value:
+                write_response = self.__modbus_rtu_clients[remote_gpio["uart"]].write_coils(
+                    remote_gpio["io_reg"]+remote_gpio["io_index"],
+                    [value],
+                    remote_gpio["mb_id"])
+
+                if not write_response.isError():
+                    response = True
+                else:
+                    GlobalErrorHandler.log_hardware_malfunction(self.__logger, "GPIO: {} @ {} malfunctioning, check modbus cables and connections.".format(pin, self))
+
             return True
 
         if isinstance(pin, str):
@@ -514,33 +528,10 @@ class ZL101PCC(BaseController):
 
             # self.__logger.debug(f"GPIO: {remote_gpio}")
 
-            if remote_gpio["mb_fc"] == FunctionCode.WriteSingleCoil.value:
-                write_response = self.__modbus_rtu_clients[remote_gpio["uart"]].write_coil(
-                    remote_gpio["io_reg"]+remote_gpio["io_index"],
-                    value,
-                    remote_gpio["mb_id"])
-
-                if not write_response.isError():
-                    response = True
-                else:
-                    GlobalErrorHandler.log_hardware_malfunction(self.__logger, "GPIO: {} @ {} malfunctioning, check modbus cables and connections.".format(pin, self))
-
-
-            elif remote_gpio["mb_fc"] == FunctionCode.WriteSingleHoldingRegister.value:
+            if remote_gpio["mb_fc"] == FunctionCode.WriteSingleHoldingRegister.value:
                 write_response = self.__modbus_rtu_clients[remote_gpio["uart"]].write_register(
                     remote_gpio["io_reg"]+remote_gpio["io_index"],
                     value,
-                    remote_gpio["mb_id"])
-
-                if not write_response.isError():
-                    response = True
-                else:
-                    GlobalErrorHandler.log_hardware_malfunction(self.__logger, "GPIO: {} @ {} malfunctioning, check modbus cables and connections.".format(pin, self))
-
-            elif remote_gpio["mb_fc"] == FunctionCode.WriteMultipleCoils.value:
-                write_response = self.__modbus_rtu_clients[remote_gpio["uart"]].write_coils(
-                    remote_gpio["io_reg"]+remote_gpio["io_index"],
-                    [value],
                     remote_gpio["mb_id"])
 
                 if not write_response.isError():
@@ -560,7 +551,6 @@ class ZL101PCC(BaseController):
                     response = True
                 else:
                     GlobalErrorHandler.log_hardware_malfunction(self.__logger, "GPIO: {} @ {} malfunctioning, check modbus cables and connections.".format(pin, self))
-
 
         else:
             raise ValueError("Pin does not exists in pin map.")
