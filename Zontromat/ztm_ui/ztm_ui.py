@@ -362,7 +362,7 @@ class ZtmUI():
         uri = self.host + self.__api_data_get
 
         # Headers
-        headers = {"Authorization": "Bearer {}".format(self.__token)}
+        headers = {"Accept": "application/json", "Authorization": "Bearer {}".format(self.__token)}
 
         try:
             # The request.
@@ -431,7 +431,7 @@ class ZtmUI():
         # self.__logger.info("SYNC; To ZtmUI: {}".format(payload))
 
         # Headers
-        headers = {"Accept": "application/json"}
+        headers = {"Accept": "application/json", "Authorization": "Bearer {}".format(self.__token)}
 
         # The request.
         response = requests.get(uri, headers=headers, data=payload, timeout=self.timeout)
@@ -467,7 +467,7 @@ class ZtmUI():
         uri = self.host + self.__api_settings_post
 
         # Headers
-        headers = {"Authorization": "Bearer {}".format(self.__token), 'Accept': 'application/json',}
+        headers = {'Accept': 'application/json', "Authorization": "Bearer {}".format(self.__token)}
 
         try:
             # The request.
@@ -514,7 +514,7 @@ class ZtmUI():
         uri = self.host + self.__api_settings_get
 
         # Headers
-        headers = {"Authorization": "Bearer {}".format(self.__token)}
+        headers = {'Accept': 'application/json', "Authorization": "Bearer {}".format(self.__token)}
 
         try:
             # The request.
