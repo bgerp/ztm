@@ -261,14 +261,14 @@ class Light(BasePlugin):
             v2_output.update()
 
         r1_output = self._registers.by_name(self.key + ".r1.output")
-        if v1_output is not None:
-            v1_output.update_handlers = self.__r1_output_cb
-            v1_output.update()
+        if r1_output is not None:
+            r1_output.update_handlers = self.__r1_output_cb
+            r1_output.update()
 
         r2_output = self._registers.by_name(self.key + ".r2.output")
-        if v2_output is not None:
-            v2_output.update_handlers = self.__r2_output_cb
-            v2_output.update()
+        if r2_output is not None:
+            r2_output.update_handlers = self.__r2_output_cb
+            r2_output.update()
 
         hallway_lighting_output = self._registers.by_name(self.key + ".hallway_lighting.output")
         if hallway_lighting_output is not None:
@@ -307,12 +307,9 @@ class Light(BasePlugin):
     def __set_voltages(self, voltage_1, voltage_2):
         """Set the voltage outputs.
 
-        Parameters
-        ----------
-        voltage_1 : float
-            Voltage 1.
-        voltage_2 : float
-            Voltage 2.
+        Args:
+            voltage_1 (float): Voltage 1.
+            voltage_2 (float): Voltage 2.
         """
 
         value_v1 = voltage_1
@@ -331,14 +328,6 @@ class Light(BasePlugin):
         if value_v2 < 0:
             value_v2 = 0
 
-        # Control the AO2.
-        if self._controller.is_valid_gpio(self.__v1_output):
-            self._controller.analog_write(self.__v1_output, value_v1)
-
-        # Control the AO3.
-        if self._controller.is_valid_gpio(self.__v2_output):
-            self._controller.analog_write(self.__v2_output, value_v2)
-
         # Turn ON and OFF the load resistor of the group 1.
         if value_v1 < self.__r1_limit:
             if self._controller.is_valid_gpio(self.__r1_output):
@@ -354,6 +343,14 @@ class Light(BasePlugin):
         else:
             if self._controller.is_valid_gpio(self.__r2_output):
                 self._controller.analog_write(self.__r2_output, 0)
+
+        # Control the AO2.
+        if self._controller.is_valid_gpio(self.__v1_output):
+            self._controller.analog_write(self.__v1_output, value_v1)
+
+        # Control the AO3.
+        if self._controller.is_valid_gpio(self.__v2_output):
+            self._controller.analog_write(self.__v2_output, value_v2)
 
 #endregion
 
@@ -468,18 +465,20 @@ class Light(BasePlugin):
 
     def __test_update(self):
 
+        # If there is no one at the zone, just turn off the lights.
+        is_empty = self.__is_empty()
+
+        # Read sensor.
+        if self.__light_sensor is not None:
+            current_illumination = self.__light_sensor.get_value()
+            current_illumination = l_scale(current_illumination, [0.0, self.__output_limit], [0.0, 100.0])
+
+        # Variate from 0 to 100%.
         self.__output = self.__target_illumination
-
-        # TODO: If value is les then 0.5 then turn on the relay with the resistor.
-
-        # Convert to voltage.
-        to_voltage_scale = 0.1 # Magic number!!!
-        voltage_1, voltage_2 = self.__flood_fade(self.__output)
-        out_to_v1 = voltage_1 * to_voltage_scale
-        out_to_v2 = voltage_2 * to_voltage_scale
-
-        # set the voltage.
-        self.__set_voltages(out_to_v1, out_to_v2)
+        fade_data = self.__flood_fade(self.__output)
+        result_v1 = l_scale(fade_data[0], [0, 100], [0, 10])
+        result_v2 = l_scale(fade_data[1], [0, 100], [0, 10])
+        self.__set_voltages(result_v1, result_v2)
 
 #endregion
 
@@ -496,7 +495,7 @@ class Light(BasePlugin):
 
         self.__init_registers()
 
-        # self.__set_voltages(0, 0)
+        self.__set_voltages(0, 0)
 
     def _update(self):
         """Update the plugin.
