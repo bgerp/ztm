@@ -442,10 +442,10 @@ class Zone(BasePlugin):
     def __init_registers(self):
 
         # Fans power GPIO
-        upper_power_gpio = self._registers.by_name("{}.power_gpio_{}".format(self.key, self.__identifier))
-        if upper_power_gpio is not None:
-            upper_power_gpio.update_handlers = self.__fans_power_gpio
-            upper_power_gpio.update()
+        fans_power_gpio = self._registers.by_name("{}.power_gpio_{}".format(self.key, self.__identifier))
+        if fans_power_gpio is not None:
+            fans_power_gpio.update_handlers = self.__fans_power_gpio
+            fans_power_gpio.update()
 
         # Operator setpoint.
         op_setpoint = self._registers.by_name("{}.op_setpoint_{}".format(self.key, self.__identifier))
@@ -471,10 +471,10 @@ class Zone(BasePlugin):
 
 
         # Upper fan
-        upper_fan_enabled = self._registers.by_name("{}.upper_{}.fan.settings".format(self.key, self.__identifier))
-        if upper_fan_enabled is not None:
-            upper_fan_enabled.update_handlers = self.__upper_fan_settings_cb
-            upper_fan_enabled.update()
+        upper_fan_settings = self._registers.by_name("{}.upper_{}.fan.settings".format(self.key, self.__identifier))
+        if upper_fan_settings is not None:
+            upper_fan_settings.update_handlers = self.__upper_fan_settings_cb
+            upper_fan_settings.update()
 
         upper_fan_min = self._registers.by_name("{}.upper_{}.fan.min_speed".format(self.key, self.__identifier))
         if upper_fan_min is not None:
@@ -493,10 +493,10 @@ class Zone(BasePlugin):
             lower_air_damper_settings.update()
 
         # Lower fan
-        lower_fan_enabled = self._registers.by_name("{}.lower_{}.fan.settings".format(self.key, self.__identifier))
-        if lower_fan_enabled is not None:
-            lower_fan_enabled.update_handlers = self.__lower_fan_settings_cb
-            lower_fan_enabled.update()
+        lower_fan_settings = self._registers.by_name("{}.lower_{}.fan.settings".format(self.key, self.__identifier))
+        if lower_fan_settings is not None:
+            lower_fan_settings.update_handlers = self.__lower_fan_settings_cb
+            lower_fan_settings.update()
 
         lower_fan_min = self._registers.by_name("{}.lower_{}.fan.min_speed".format(self.key, self.__identifier))
         if lower_fan_min is not None:
@@ -626,7 +626,7 @@ class Zone(BasePlugin):
         self.__init_registers()
 
         # Manually set to automatic mode on wake up.
-        self.__set_point_op = 50.0
+        self.__set_point_op = 0.0
 
         # Turn OFF the power for initial step.
         if not self.__fans_power_gpio_name is None:
@@ -642,8 +642,8 @@ class Zone(BasePlugin):
             self._controller.digital_write(self.__fans_power_gpio_name, 0)
 
         # Set the value of the speeds.
-        speed_upper = self.__set_point_op
         speed_lower = self.__set_point_op
+        speed_upper = self.__set_point_op
 
         lower_fan_speed = self._registers.by_name("{}.lower_{}.fan.speed".format(self.key, self.__identifier))
         if lower_fan_speed is not None:
@@ -654,12 +654,12 @@ class Zone(BasePlugin):
             upper_fan_speed.value = speed_upper
 
         # Update devices.
-        if not self.__upper_fan_dev is None:
-            self.__upper_fan_dev.update()
-        
         if not self.__lower_fan_dev is None:
             self.__lower_fan_dev.update()
-        
+
+        if not self.__upper_fan_dev is None:
+            self.__upper_fan_dev.update()
+                
         if not self.__upper_air_damper_dev is None:
             self.__upper_air_damper_dev.update()
         
