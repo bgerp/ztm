@@ -1017,12 +1017,12 @@ class Zone(BasePlugin):
             elif self.__experimental_counter == 10:
                 self.__convector_dev.set_state(1)
 
+            # Increment
+            self.__experimental_counter += 1
+
             # Reset
             if self.__experimental_counter == 10:
                 self.__experimental_counter = 0
-
-            # Increment
-            self.__experimental_counter += 1
 
         self.__floor_valve_dev.update()
         self.__convector_valve_dev.update()
