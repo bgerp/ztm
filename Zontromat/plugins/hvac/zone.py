@@ -1021,7 +1021,7 @@ class Zone(BasePlugin):
             self.__experimental_counter += 1
 
             # Reset
-            if self.__experimental_counter == 10:
+            if self.__experimental_counter > 10:
                 self.__experimental_counter = 0
 
         self.__floor_valve_dev.update()
