@@ -135,6 +135,11 @@ class Zone(BasePlugin):
     __stop_timer = None
     """Stop timer."""
 
+    __experimental_update_timer = None
+    """Experimental timer."""
+
+    __experimental_counter = 0
+    """Experimental timer."""
 
     __thermal_mode = None
     """Thermal mode of the HVAC."""
@@ -215,6 +220,9 @@ class Zone(BasePlugin):
 
         if self.__queue_temperatures is not None:
             del self.__queue_temperatures
+
+        if self.__experimental_update_timer is not None:
+            del self.__experimental_update_timer
 
         super().__del__()
 
@@ -995,55 +1003,30 @@ class Zone(BasePlugin):
         self.__convector_dev.update()
 
     def __test_update(self):
-        """_summary_
-        """
 
-        # Update thermometres values.
-        self.__update_thermometers_values()
+        self.__experimental_update_timer.update()
+        if self.__experimental_update_timer.expired:
+            self.__experimental_update_timer.clear()
 
-        # Update occupation flags.
-        is_empty = self.__is_empty()
+            if self.__experimental_counter == 0:
+                self.__floor_valve_dev.target_position = 100
 
-        # If the window is opened, just turn off the HVAC.
-        window_tamper_state = self.__read_window_tamper()
+            elif self.__experimental_counter == 5:
+                self.__convector_valve_dev.target_position = 100
+            
+            elif self.__experimental_counter == 10:
+                self.__convector_dev.set_state(1)
 
-        # If temperature is less then 10 deg on loop 1.
-        is_hot_water = self.__is_hot_water()
+            # Reset
+            if self.__experimental_counter == 10:
+                self.__experimental_counter = 0
 
-        # Take all necessary condition for normal operation of the HVAC.
-        # stop_flag = (not is_empty or not window_tamper_state or not is_hot_water)
-        stop_flag = False
-
-        if stop_flag:
-            self.__stop_timer.update()
-            if self.__stop_timer.expired:
-                self.__stop_timer.clear()
-                if self.__stop_flag != stop_flag:
-                    self.__stop_flag = stop_flag
-                    self.__set_thermal_force(0)
-
-        if not stop_flag:
-            self.__stop_flag = False
-            self.__stop_timer.update_last_time()
-
-        # Main update rate at ~ 20 second.
-        # На всеки 20 секунди се правят следните стъпки:
-        self.__update_timer.update()
-        if self.__update_timer.expired and not self.__stop_flag:
-            self.__update_timer.clear()
-
-            # Recalculate the temperatures.
-            self.__temp_proc.update()
-
-            self.__logger.debug(self.__adjust_temp)
-
-            # Apply the integrated force.
-            self.__set_thermal_force(self.__thermal_force)
+            # Increment
+            self.__experimental_counter += 1
 
         self.__floor_valve_dev.update()
         self.__convector_valve_dev.update()
         self.__convector_dev.update()
-
 
 #endregion
 
@@ -1065,6 +1048,9 @@ class Zone(BasePlugin):
 
         # Stop timer.
         self.__stop_timer = Timer(10)
+
+        # Only for test.
+        self.__experimental_update_timer = Timer(1)
 
         # Create temperature processor.
         self.__temp_proc = TemperatureProcessor()
