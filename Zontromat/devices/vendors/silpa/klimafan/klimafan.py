@@ -123,8 +123,8 @@ class Klimafan(BaseConvector):
             value (int): Output value.
         """
 
-        if self.__state == state:
-            return
+        # if self.__state == state:
+        #     return
 
         self.__state = state
 

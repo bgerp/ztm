@@ -195,8 +195,8 @@ class BaseValve(BaseDevice):
             position (int): Position of the valve.
         """
 
-        if position == self.__target_position:
-            return
+        # if position == self.__target_position:
+        #     return
 
         if self.target_position > 100:
             position = 100
