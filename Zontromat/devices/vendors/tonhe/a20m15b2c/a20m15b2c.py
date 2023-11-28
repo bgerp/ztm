@@ -172,8 +172,9 @@ class A20M15B2C(BaseValve):
 
         # Else just update the current position.
         else:
-            if self._current_position != self.target_position:
-                self._current_position = self.target_position
+            # if self._current_position != self.target_position:
+            #     self._current_position = self.target_position
+            self._current_position = self.target_position
 
         # If it is time then move the valve.
         if self._state.is_state(ValveState.Prepare):

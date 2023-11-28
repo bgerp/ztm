@@ -114,8 +114,8 @@ class F3P146EC072600(BaseFan):
         """Update device.
         """
 
-        if self.__speed == self.speed:
-            return
+        # if self.__speed == self.speed:
+        #     return
 
         self.__speed = self.speed
 
