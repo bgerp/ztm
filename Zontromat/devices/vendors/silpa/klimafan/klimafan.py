@@ -128,24 +128,25 @@ class Klimafan(BaseConvector):
 
         self.__state = state
 
-        self._controller.digital_write(self._config["stage1"], 0)
-        self._controller.digital_write(self._config["stage2"], 0)
-        self._controller.digital_write(self._config["stage3"], 0)
-
         if self.__state == 1:
-            self._controller.digital_write(self._config["stage1"], 1)
             self._controller.digital_write(self._config["stage2"], 0)
             self._controller.digital_write(self._config["stage3"], 0)
+            self._controller.digital_write(self._config["stage1"], 1)
 
         elif self.__state == 2:
             self._controller.digital_write(self._config["stage1"], 0)
-            self._controller.digital_write(self._config["stage2"], 1)
             self._controller.digital_write(self._config["stage3"], 0)
+            self._controller.digital_write(self._config["stage2"], 1)
 
         elif self.__state == 3:
             self._controller.digital_write(self._config["stage1"], 0)
             self._controller.digital_write(self._config["stage2"], 0)
             self._controller.digital_write(self._config["stage3"], 1)
+
+        else:
+            self._controller.digital_write(self._config["stage1"], 0)
+            self._controller.digital_write(self._config["stage2"], 0)
+            self._controller.digital_write(self._config["stage3"], 0)
 
         # self.__logger.debug("{} @ {}".format(self.name, self.__state))
 
