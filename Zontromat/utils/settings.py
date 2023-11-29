@@ -260,8 +260,10 @@ class ApplicationSettings:
             if "ERP_SERVICE" not in self.__config:
                 self.__config["ERP_SERVICE"] = {
                     "config_time": int(time.time()),
-                    "erp_id": "0082-4140-0042-4216",
-                    "host": "https://test.bcvt.eu/",
+                    # "erp_id": "0082-4140-0042-4216",
+                    # "host": "https://test.bcvt.eu/",
+                    "erp_id": "0091-7140-2539-6010",
+                    "host": "https://bcvt.eu/",
                     "timeout": 1,
                     }
 
