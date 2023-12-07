@@ -304,12 +304,12 @@ class Light(BasePlugin):
 
 #region Private Methods (Controller Interface)
 
-    def __set_voltages(self, voltage_1, voltage_2):
+    def __set_voltages(self, voltage_2, voltage_1):
         """Set the voltage outputs.
 
         Args:
-            voltage_1 (float): Voltage 1.
             voltage_2 (float): Voltage 2.
+            voltage_1 (float): Voltage 1.
         """
 
         value_v1 = voltage_1
