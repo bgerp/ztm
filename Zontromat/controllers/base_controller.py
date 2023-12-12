@@ -223,7 +223,7 @@ class BaseController(Configurable):
         # Remove flip sign.
         io_name = io_name.replace("!", "")
 
-        # Chaeck for splitter symbiol.
+        # Check for splitter symbol.
         has_delimiter = (self._delimiter in io_name)
 
         if not has_delimiter:
