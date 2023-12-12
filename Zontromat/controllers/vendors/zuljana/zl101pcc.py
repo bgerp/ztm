@@ -379,7 +379,7 @@ class ZL101PCC(BaseController):
             state = False
 
             if self.is_gpio_off(pin):
-                return False
+                state = False
 
             if self.is_gpio_nothing(pin):
                 raise ValueError("Pin can not be None or empty string.")
@@ -400,13 +400,13 @@ class ZL101PCC(BaseController):
             if cw_response is not None:
                 if cw_response.isError():
                     GlobalErrorHandler.log_hardware_malfunction(self.__logger, "Local GPIO: {} @ {} malfunctioning, check modbus cables and connections.".format(pin, self))
-                    return False
+                    state = False
             else:
                 GlobalErrorHandler.log_hardware_malfunction(self.__logger, "Local GPIO: {} @ {} malfunctioning, check modbus cables and connections.".format(pin, self))
-                return False
+                state = False
             
             # self.__logger.debug("digital_write({}, {}, {})".format(self.model, pin, value))
-            return True
+            return state
 
         # Remote GPIO.
         def set_remote_gpio(pin, state):
@@ -450,7 +450,7 @@ class ZL101PCC(BaseController):
                 else:
                     GlobalErrorHandler.log_hardware_malfunction(self.__logger, "GPIO: {} @ {} malfunctioning, check modbus cables and connections.".format(pin, self))
 
-            return True
+            return state
 
         if isinstance(pin, str):
             if self.is_gpio_local(pin):
