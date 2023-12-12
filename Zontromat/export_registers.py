@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import argparse
 import json
+import os
 
 from data.register import Register
 from data.register import Scope
@@ -477,7 +478,7 @@ def __add_registers():
     register = Register("monitoring.cw.value")
     register.scope = Scope.Device
     register.plugin_name = "Monitoring"
-    register.description = "Cold water liters"
+    register.description = "Cold water volume"
     register.range = "0.0/"
     register.value = 0.0
     __registers.append(register)
@@ -779,7 +780,7 @@ def __add_registers():
     register.plugin_name = "HVAC"
     register.description = "Plugin enabled"
     register.range = __range["BOOL"]
-    register.value = False
+    register.value = True
     __registers.append(register)
 
     # Zones count.
@@ -795,15 +796,15 @@ def __add_registers():
     register = Register("hvac.air_temp_cent_1.settings")
     register.scope = Scope.System
     register.plugin_name = "HVAC"
-    register.description = "Air temperature sensor center settings"
+    register.description = "Air temperature sensor center settings."
     register.range = __range["NONE"]
-    register.value = verbal_const.OFF # Dallas/DS18B20/28FFFCD0001703AE # temp/DS18B20/28FFFCD0001703AE
+    register.value = {} # Dallas/DS18B20/28FFFCD0001703AE # temp/DS18B20/28FFFCD0001703AE
     __registers.append(register)
 
     register = Register("hvac.air_temp_cent_1.value")
     register.scope = Scope.System
     register.plugin_name = "HVAC"
-    register.description = "Air temperature sensor center value"
+    register.description = "Air temperature sensor center value."
     register.range = "/"
     register.value = 0.0
     __registers.append(register)
@@ -869,134 +870,142 @@ def __add_registers():
         "model": "Klimafan",
         "options":
         {
-            "stage1": "U0:ID6:FC16:R0:RO0",
-            "stage2": "U0:ID6:FC16:R0:RO1",
-            "stage3": "U0:ID6:FC16:R0:RO2",
+            "stage1": "U0:ID6:FC5:R0:RO0",
+            "stage2": "U0:ID6:FC5:R0:RO1",
+            "stage3": "U0:ID6:FC5:R0:RO2",
         }
     }
     __registers.append(register)
 
     # Loop 1 flowmeter.
-    register = Register("hvac.loop1_1.flowmeter.settings")
+    register = Register("hvac.floor_loop_1.flowmeter.settings")
     register.scope = Scope.System
     register.plugin_name = "HVAC"
-    register.description = "Loop 1 water flow meter signal input"
+    register.description = "Loop 1 water flow meter signal input."
     register.range = __range["NONE"]
     register.value = {
-        "vendor": "mainone",
-        "model": "flowmeter_dn20",
-        "options":
-        {
-            "uart": 1,
-            "mb_id": 3,
-        }
+        # "vendor": "mainone",
+        # "model": "flowmeter_dn20",
+        # "options":
+        # {
+        #     "uart": 1,
+        #     "mb_id": 3,
+        # }
     }
     __registers.append(register)
 
     # Loop 1 Temperature
-    register = Register("hvac.loop1_1.temp.settings")
+    register = Register("hvac.floor_loop_1.temp.settings")
     register.scope = Scope.System
     register.plugin_name = "HVAC"
-    register.description = "Loop 1 temperature sensor settings"
+    register.description = "Loop 1 temperature sensor settings."
     register.range = __range["NONE"]
     register.value = {
-        "vendor": "mainone",
-        "model": "inlet_temp",
-        "options":
-        {
-            "uart": 1,
-            "mb_id": 3,
-        }
+        # "vendor": "mainone",
+        # "model": "inlet_temp",
+        # "options":
+        # {
+        #     "uart": 1,
+        #     "mb_id": 3,
+        # }
     }
     __registers.append(register)
 
-    register = Register("hvac.loop1_1.temp.value")
+    register = Register("hvac.floor_loop_1.temp.value")
     register.scope = Scope.System
     register.plugin_name = "HVAC"
-    register.description = "Loop 1 temperature sensor value"
+    register.description = "Loop 1 temperature sensor value."
     register.range = "/"
     register.value = 0.0
     __registers.append(register)
 
     # Loop 1 Down Limit Temperature # Request: Eml6419
-    register = Register("hvac.loop1_1.temp.down_limit")
+    register = Register("hvac.floor_loop_1.temp.down_limit")
     register.scope = Scope.System
     register.plugin_name = "HVAC"
-    register.description = "Loop 1 temperature down limit"
+    register.description = "Loop 1 temperature down limit."
     register.range = "0.0/"
     register.value = 15
     __registers.append(register)
 
     # Loop 1 valve.
-    register = Register("hvac.loop1_1.valve.settings")
+    register = Register("hvac.floor_loop_1.valve.settings")
     register.scope = Scope.System
     register.plugin_name = "HVAC"
-    register.description = "Loop 1 valve settings"
+    register.description = "Loop 1 valve settings."
     register.range = __range["NONE"]
     register.value = {
         "vendor": "Tonhe",
         "model": "a20t20b2c",
         "options":
         {
-            "output": "RO0",
+            "output": "U0:ID2:FC5:R0:RO0",
         }
     }
     __registers.append(register)
 
     # Loop 2 flowmeter
-    register = Register("hvac.loop2_1.flowmeter.settings")
+    register = Register("hvac.conv_loop_1.flowmeter.settings")
     register.scope = Scope.System
     register.plugin_name = "HVAC"
-    register.description = "Loop 2 water flow meter ticks per liter scale"
+    register.description = "Loop 2 water flow meter ticks per liter scale."
     register.range = __range["NONE"]
     register.value = {
-        "vendor": "mainone",
-        "model": "flowmeter_dn20",
-        "options":
-        {
-            "uart": 1,
-            "mb_id": 3,
-        }
+        # "vendor": "mainone",
+        # "model": "flowmeter_dn20",
+        # "options":
+        # {
+        #     "uart": 1,
+        #     "mb_id": 3,
+        # }
     }
     __registers.append(register)
 
     # Loop 2 Temperature
-    register = Register("hvac.loop2_1.temp.settings")
+    register = Register("hvac.conv_loop_1.temp.settings")
     register.scope = Scope.System
     register.plugin_name = "HVAC"
-    register.description = "Loop 2 temperature sensor settings"
+    register.description = "Loop 2 temperature sensor settings."
     register.range = __range["NONE"]
     register.value = {
-        "vendor": "mainone",
-        "model": "inlet_temp",
-        "options":
-        {
-            "uart": 1,
-            "mb_id": 3,
-        }
+        # "vendor": "mainone",
+        # "model": "inlet_temp",
+        # "options":
+        # {
+        #     "uart": 1,
+        #     "mb_id": 3,
+        # }
     }
     __registers.append(register)
 
-    register = Register("hvac.loop2_1.temp.value")
+    register = Register("hvac.conv_loop_1.temp.value")
     register.scope = Scope.System
     register.plugin_name = "HVAC"
-    register.description = "Loop 1 temperature sensor value"
+    register.description = "Loop 1 temperature down limit."
+    register.range = "0.0/"
+    register.value = 15.0
+    __registers.append(register)
+
+    register = Register("hvac.conv_loop_1.temp.down_limit")
+    register.scope = Scope.System
+    register.plugin_name = "HVAC"
+    register.description = "Loop 1 temperature sensor value."
     register.range = "/"
     register.value = 0.0
     __registers.append(register)
 
     # Loop 2 valve.
-    register = Register("hvac.loop2_1.valve.settings")
+    register = Register("hvac.conv_loop_1.valve.settings")
     register.scope = Scope.System
     register.plugin_name = "HVAC"
-    register.description = "Loop 2 valve settings"
+    register.description = "Loop 2 valve settings."
     register.range = __range["NONE"]
     register.value = {
         "vendor": "Tonhe",
         "model": "a20t20b2c",
         "options":
         {
-            "output": "RO1",
+            "output": "U0:ID2:FC5:R0:RO1",
         }
     }
     __registers.append(register)
@@ -1076,7 +1085,7 @@ def __add_registers():
     register.plugin_name = "HVAC"
     register.description = "Update rate of the plugin [s]"
     register.range = "0.0/"
-    register.value = 5.0
+    register.value = 1.0
     __registers.append(register)
 
 #endregion
@@ -1102,33 +1111,33 @@ def __add_registers():
     register = Register("light.v1.output")
     register.scope = Scope.System
     register.plugin_name = "Light"
-    register.description = "Analog output 1. U0:ID2:FC16:R0:AO2"
+    register.description = "Analog output 0. U0:ID2:FC16:R0:AO0"
     register.range = __range["NONE"]
-    register.value = verbal_const.OFF # U0:ID2:FC16:R0:AO2
+    register.value = "U0:ID2:FC16:R0:AO0"
     __registers.append(register)
 
     register = Register("light.v2.output")
     register.scope = Scope.System
     register.plugin_name = "Light"
-    register.description = "Analog output 2. U0:ID2:FC16:R0:AO3"
+    register.description = "Analog output 1. U0:ID2:FC16:R0:AO1"
     register.range = __range["NONE"]
-    register.value = verbal_const.OFF # U0:ID2:FC16:R0:AO3
+    register.value = "U0:ID2:FC16:R0:AO1"
     __registers.append(register)
 
     register = Register("light.r1.output")
     register.scope = Scope.System
     register.plugin_name = "Light"
-    register.description = "Digital output 1. U0:ID2:FC1:R0:DO7"
+    register.description = "Digital output 6. U0:ID2:FC5:R0:DO6"
     register.range = __range["NONE"]
-    register.value = verbal_const.OFF # U0:ID2:FC1:R0:DO7
+    register.value = "U0:ID2:FC5:R0:DO6"
     __registers.append(register)
 
     register = Register("light.r2.output")
     register.scope = Scope.System
     register.plugin_name = "Light"
-    register.description = "Digital output 2. U0:ID2:FC1:R0:DO6"
+    register.description = "Digital output 7. U0:ID2:FC5:R0:DO7"
     register.range = __range["NONE"]
-    register.value = verbal_const.OFF # U0:ID2:FC1:R0:DO6
+    register.value = "U0:ID2:FC5:R0:DO7"
     __registers.append(register)
 
     register = Register("light.hallway_lighting.output")
@@ -1183,7 +1192,7 @@ def __add_registers():
     register.plugin_name = "Light"
     register.description = "Plugin enabled"
     register.range = __range["BOOL"]
-    register.value = False
+    register.value = True
     __registers.append(register)
 
 #endregion
@@ -3288,7 +3297,7 @@ def __add_registers():
     register.plugin_name = "Ventilation"
     register.description = "Fans power GPIO."
     register.range = __range["NONE"]
-    register.value = "U0:ID6:FC16:R0:RO3"
+    register.value = "U0:ID6:FC5:R0:RO3"
     __registers.append(register)
 
     # Upper fan
@@ -3302,7 +3311,7 @@ def __add_registers():
         "model": "f3p146ec072600",
         "options":
         {
-            "output": "AO0",
+            "output": "U0:ID2:FC16:R0:AO3",
         }
     }
     __registers.append(register)
@@ -3320,7 +3329,7 @@ def __add_registers():
     register.plugin_name = "Ventilation"
     register.description = "Lower fan maximum speed [%]"
     register.range = __range["PERCENTAGE_F"]
-    register.value = 30.0
+    register.value = 100.0
     __registers.append(register)
 
     register = Register("vent.lower_1.fan.speed")
@@ -3342,7 +3351,7 @@ def __add_registers():
         "model": "f3p146ec072600",
         "options":
         {
-            "output": "AO1",
+            "output": "U0:ID2:FC16:R0:AO2",
         }
     }
     __registers.append(register)
@@ -3368,7 +3377,7 @@ def __add_registers():
     register.plugin_name = "Ventilation"
     register.description = "Upper fan maximum speed [%]"
     register.range = __range["PERCENTAGE_F"]
-    register.value = 30.0
+    register.value = 100.0
     __registers.append(register)
 
     # Upper valve settings
@@ -3404,7 +3413,7 @@ def __add_registers():
     register.plugin_name = "Ventilation"
     register.description = "Ventilation enable flag."
     register.range = __range["NONE"]
-    register.value = False
+    register.value = True
     __registers.append(register)
 
 #endregion
@@ -3469,6 +3478,12 @@ def __add_registers():
 def main():
     global __registers, __range
 
+
+    # Current file path. & Go to file.
+    cwf = os.path.dirname(os.path.abspath(__file__))
+    file_name = os.path.join(cwf, "..", "registers.csv")
+
+
     __registers = Registers()
 
     __add_registers()
@@ -3481,7 +3496,7 @@ def main():
     parser.add_argument("--action", type=str, default="w_csv", help="Export CSV file.")
     # parser.add_argument("--action", type=str, default="list_gpio", help="Export type.")
     # parser.add_argument("--action", type=str, default="w_md", help="Export MD file.")
-    parser.add_argument("--path", type=str, default=".", help="Target file path.")
+    parser.add_argument("--path", type=str, default=file_name, help="Target file path.")
 
     # Take arguments.
     args = parser.parse_args()
