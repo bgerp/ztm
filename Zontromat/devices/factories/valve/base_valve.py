@@ -180,7 +180,7 @@ class BaseValve(BaseDevice):
 
     @property
     def target_position(self):
-        """Target postion.
+        """Target position.
 
         Returns:
             float: Target position [%]
