@@ -106,16 +106,15 @@ class A20T20B2C(BaseValve):
 
 #region Private Methods
 
-    def __set_postion(self, position):
+    def __set_position(self, position):
 
-        # Determin is it analog or digital output.
-        if ("D" in self.__output) or ("R" in self.__output):
+        # Determine is it analog or digital output.
+        # if ("D" in self.__output) or ("R" in self.__output):
 
-            if position > 0:
-                self._controller.digital_write(self.__output, True)
-
-            else:
-                self._controller.digital_write(self.__output, False)
+        if position > 0:
+            self._controller.digital_write(self.__output, True)
+        else:
+            self._controller.digital_write(self.__output, False)
 
 #endregion
 
@@ -137,7 +136,7 @@ class A20T20B2C(BaseValve):
 
         # If it is time then move the valve.
         if self._state.is_state(ValveState.Prepare):
-            self.__set_postion(self.target_position)
+            self.__set_position(self.target_position)
             self.__logger.debug("{} @ {}".format(self.name, self.target_position))
             self._state.set_state(ValveState.Wait)
 
