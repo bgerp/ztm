@@ -532,10 +532,10 @@ class Monitoring(BasePlugin):
         """
 
         # Update cold water flow meter.
-        self.__update_cw()
+        # self.__update_cw()
 
         # Update hot water flow meter.
-        self.__update_hw()
+        # self.__update_hw()
 
         # Check is it time to measure.
         self.__demand_timer.update()
