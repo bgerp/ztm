@@ -465,20 +465,20 @@ def __add_registers():
     register.description = "Cold water flow meter"
     register.range = __range["NONE"]
     register.value = {
-        "vendor": "mainone",
-        "model": "flowmeter_dn20",
-        "options":
-        {
-            "uart": 1,
-            "mb_id": 3,
-        }
+        # "vendor": "mainone",
+        # "model": "flowmeter_dn20",
+        # "options":
+        # {
+        #     "uart": 1,
+        #     "mb_id": 3,
+        # }
     }
     __registers.append(register)
 
     register = Register("monitoring.cw.value")
     register.scope = Scope.Device
     register.plugin_name = "Monitoring"
-    register.description = "Cold water volume"
+    register.description = "Cold water liters"
     register.range = "0.0/"
     register.value = 0.0
     __registers.append(register)
@@ -498,13 +498,13 @@ def __add_registers():
     register.description = "Hot water input flow meter"
     register.range = __range["NONE"]
     register.value = {
-        "vendor": "mainone",
-        "model": "flowmeter_dn20",
-        "options":
-        {
-            "uart": 1,
-            "mb_id": 3,
-        }
+        # "vendor": "mainone",
+        # "model": "flowmeter_dn20",
+        # "options":
+        # {
+        #     "uart": 1,
+        #     "mb_id": 3,
+        # }
     }
     __registers.append(register)
 
@@ -524,19 +524,19 @@ def __add_registers():
     register.value = 1.0
     __registers.append(register)
 
-    # Power analyser.
+    # Power analyzer.
     register = Register("monitoring.pa.settings")
     register.scope = Scope.System
     register.plugin_name = "Monitoring"
-    register.description = "Power analyser settings"
+    register.description = "Power analyzer settings"
     register.range = __range["NONE"]
     register.value = {
         "vendor": "Eastron",
-        "model": "SDM630",
+        "model": "SDM120",
         "options":
         {
             "uart": 0,
-            "mb_id": 2,
+            "mb_id": 1,
         }
     } # "Eastron/SDM120/2/3"
     __registers.append(register)
@@ -544,7 +544,7 @@ def __add_registers():
     register = Register("monitoring.pa.measurements")
     register.scope = Scope.Device
     register.plugin_name = "Monitoring"
-    register.description = "Power analyser measurements"
+    register.description = "Power analyzer measurements"
     register.range = __range["NONE"]
     register.value = []
     __registers.append(register)
@@ -552,7 +552,7 @@ def __add_registers():
     register = Register("monitoring.pa.demand_time")
     register.scope = Scope.Device
     register.plugin_name = "Monitoring"
-    register.description = "Power analyser measuring demand"
+    register.description = "Power analyzer measuring demand"
     register.range = "0.0/"
     register.value = 3600.0 # Every hour to measure the consumed electricity.
     __registers.append(register)
@@ -563,7 +563,7 @@ def __add_registers():
     register.plugin_name = "Monitoring"
     register.description = "Plugin enabled"
     register.range = __range["BOOL"]
-    register.value = False
+    register.value = True
     __registers.append(register)
 
 #endregion
