@@ -56,13 +56,13 @@ __status__ = "Debug"
 
 #endregion
 
-class PowerAnalyserFactory:
-    """Power analyser factory class.
+class PowerAnalyzerFactory:
+    """Power analyzer factory class.
     """
 
     @staticmethod
     def create(**config):
-        """Create device instace.
+        """Create device instance.
         """
 
         # The device instance.
@@ -92,10 +92,10 @@ class PowerAnalyserFactory:
         # Unit
         unit = None
         if "options" in config:
-            unit = int(config["options"]['unit'])
+            unit = int(config["options"]['mb_id'])
 
         else:
-            raise ValueError("No \"unit\" argument has been passed.")
+            raise ValueError("No \"mb_id\" argument has been passed.")
 
 
         # Controller

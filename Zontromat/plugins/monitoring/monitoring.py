@@ -32,7 +32,7 @@ from utils.logic.timer import Timer
 from plugins.base_plugin import BasePlugin
 
 from devices.tests.leak_test.leak_test import LeakTest
-from devices.factories.power_analyzers.power_analyser_factory import PowerAnalyserFactory
+from devices.factories.power_analyzers.power_analyser_factory import PowerAnalyzerFactory
 from devices.factories.flowmeters.flowmeters_factory import FlowmetersFactory
 from devices.drivers.modbus.function_code import FunctionCode
 
@@ -335,7 +335,7 @@ class Monitoring(BasePlugin):
 
         if register.value != {} and self.__power_analyser is None:
 
-            self.__power_analyser = PowerAnalyserFactory.create(
+            self.__power_analyser = PowerAnalyzerFactory.create(
                 controller=self._controller,
                 name="Zone Power analyser",
                 vendor=register.value['vendor'],
