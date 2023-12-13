@@ -872,21 +872,15 @@ def __add_registers():
         {
             "stage1": 
             [
-                "U0:ID6:FC5:R0:RO0",
-                "U0:ID7:FC5:R0:RO0",
-                "U0:ID8:FC5:R0:RO0",
+                "U0:ID6:FC5:R0:RO0"
             ],
             "stage2":
             [
-                "U0:ID6:FC5:R0:RO1",
-                "U0:ID7:FC5:R0:RO1",
-                "U0:ID8:FC5:R0:RO1",
+                "U0:ID6:FC5:R0:RO1"
             ],
             "stage3": 
             [
-                "U0:ID6:FC5:R0:RO2",
-                "U0:ID7:FC5:R0:RO2",
-                "U0:ID8:FC5:R0:RO2",
+                "U0:ID6:FC5:R0:RO2"
             ]
         }
     }
@@ -954,12 +948,7 @@ def __add_registers():
         "model": "a20t20b2c",
         "options":
         {
-            "output": 
-            [
-                "U0:ID2:FC5:R0:RO0",
-                "U0:ID2:FC5:R0:RO1",
-                "U0:ID2:FC5:R0:RO2",
-            ]
+            "output": "U0:ID2:FC5:R0:RO0",
         }
     }
     __registers.append(register)
@@ -1025,12 +1014,7 @@ def __add_registers():
         "model": "a20t20b2c",
         "options":
         {
-            "output": 
-            [
-                "U0:ID6:FC5:R0:RO4",
-                "U0:ID7:FC5:R0:RO4",
-                "U0:ID8:FC5:R0:RO4",
-            ]
+            "output": "U0:ID2:FC5:R0:RO1",
         }
     }
     __registers.append(register)
