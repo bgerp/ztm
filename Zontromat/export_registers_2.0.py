@@ -465,13 +465,13 @@ def __add_registers():
     register.description = "Cold water flow meter"
     register.range = __range["NONE"]
     register.value = {
-        "vendor": "mainone",
-        "model": "flowmeter_dn20",
-        "options":
-        {
-            "uart": 1,
-            "mb_id": 3,
-        }
+        # "vendor": "mainone",
+        # "model": "flowmeter_dn20",
+        # "options":
+        # {
+        #     "uart": 1,
+        #     "mb_id": 3,
+        # }
     }
     __registers.append(register)
 
@@ -498,13 +498,13 @@ def __add_registers():
     register.description = "Hot water input flow meter"
     register.range = __range["NONE"]
     register.value = {
-        "vendor": "mainone",
-        "model": "flowmeter_dn20",
-        "options":
-        {
-            "uart": 1,
-            "mb_id": 3,
-        }
+        # "vendor": "mainone",
+        # "model": "flowmeter_dn20",
+        # "options":
+        # {
+        #     "uart": 1,
+        #     "mb_id": 3,
+        # }
     }
     __registers.append(register)
 
@@ -536,7 +536,7 @@ def __add_registers():
         "options":
         {
             "uart": 0,
-            "mb_id": 2,
+            "mb_id": 1,
         }
     } # "Eastron/SDM120/2/3"
     __registers.append(register)
@@ -563,7 +563,7 @@ def __add_registers():
     register.plugin_name = "Monitoring"
     register.description = "Plugin enabled"
     register.range = __range["BOOL"]
-    register.value = False
+    register.value = True
     __registers.append(register)
 
 #endregion
