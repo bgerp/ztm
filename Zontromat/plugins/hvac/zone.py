@@ -1015,7 +1015,8 @@ class Zone(BasePlugin):
                 self.__convector_valve_dev.target_position = 100
             
             elif self.__experimental_counter == 10:
-                self.__convector_dev.set_state(1)
+                # self.__convector_dev.set_state(1)
+                pass
 
             # Increment
             self.__experimental_counter += 1
