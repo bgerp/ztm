@@ -902,7 +902,7 @@ def __add_registers():
     register.range = __range["NONE"]
     register.value = {
         "vendor": "mainone",
-        "model": "inlet_temp",
+        "model": "flowmeter_dn20",
         "options":
         {
             "uart": 1,
@@ -948,33 +948,33 @@ def __add_registers():
     register = Register("hvac.conv_loop_1.flowmeter.settings")
     register.scope = Scope.System
     register.plugin_name = "HVAC"
-    register.description = "Loop 2 water flow meter ticks per liter scale."
+    register.description = "Convector 1 heat meter"
     register.range = __range["NONE"]
     register.value = {
-        # "vendor": "mainone",
-        # "model": "flowmeter_dn20",
-        # "options":
-        # {
-        #     "uart": 1,
-        #     "mb_id": 3,
-        # }
+        "vendor": "mainone",
+        "model": "flowmeter_dn20",
+        "options":
+        {
+            "uart": 1,
+            "mb_id": 99,
+        }
     }
     __registers.append(register)
 
     # Loop 2 Temperature
-    register = Register("hvac.conv_loop_1.temp.settings")
+    register = Register("hvac.floor_loop_1.temp.settings")
     register.scope = Scope.System
     register.plugin_name = "HVAC"
-    register.description = "Loop 2 temperature sensor settings."
+    register.description = "Floor 1 heat meter"
     register.range = __range["NONE"]
     register.value = {
-        # "vendor": "mainone",
-        # "model": "inlet_temp",
-        # "options":
-        # {
-        #     "uart": 1,
-        #     "mb_id": 3,
-        # }
+        "vendor": "mainone",
+        "model": "flowmeter_dn20",
+        "options":
+        {
+            "uart": 1,
+            "mb_id": 66,
+        }
     }
     __registers.append(register)
 
@@ -3481,7 +3481,7 @@ def main():
 
     # Current file path. & Go to file.
     cwf = os.path.dirname(os.path.abspath(__file__))
-    file_name = os.path.join(cwf, "..", "registers.csv")
+    file_name = os.path.join(cwf, "..", "registers.json")
 
 
     __registers = Registers()
