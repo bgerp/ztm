@@ -148,7 +148,7 @@ class XYMD02(ModbusDevice):
 
         self._parameters.append(\
             Parameter("SetHumidityCorrection", "Rh%",\
-            ParameterType.INT16_T_LE_LE, [0x0104], FunctionCode.WriteSingleHoldingRegister))
+            ParameterType.INT16_T_LE, [0x0104], FunctionCode.WriteSingleHoldingRegister))
 
 #endregion
 
