@@ -1014,10 +1014,8 @@ class Zone(BasePlugin):
                 # self.__convector_valve_dev.target_position = 100
                 # self.__convector_dev.set_state(1)
                 if self.__convector_heat_meter_dev != None:
-                    energy = self.__convector_heat_meter_dev.get_pcenergy()
-                    print(energy)
-                    energy = self.__floor_heat_meter_dev.get_pcenergy()
-                    print(energy)
+                    print(self.__convector_heat_meter_dev.get_pcenergy())
+                    # print(self.__floor_heat_meter_dev.get_pcenergy())
                 pass
             
             # Increment
