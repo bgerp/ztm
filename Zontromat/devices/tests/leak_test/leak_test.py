@@ -135,10 +135,12 @@ class LeakTest:
 
             elif self.__test_state.is_state(TestState.TakeFirstMeasurement):
                 self.__first_measurement = self.__flowmeter_dev.get_liters()
+                print(self.__first_measurement)
                 self.__test_state.set_state(TestState.WaitForLeak)
 
             elif self.__test_state.is_state(TestState.TakeSecondMeasurement):
                 self.__second_measurement = self.__flowmeter_dev.get_liters()
+                print(self.__second_measurement)
                 self.__test_state.set_state(TestState.WaitForLeak)
 
             leak_liters = abs(self.__second_measurement - self.__first_measurement)
