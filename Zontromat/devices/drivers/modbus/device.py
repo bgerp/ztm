@@ -255,6 +255,35 @@ class ModbusDevice(BaseDevice):
 
         return value
 
+    def get_value(self, parameter):
+        """Returns parameter value.
+
+        Parameters
+        ----------
+        parameter : str
+            Parameter name.
+        registers : array
+            Registers data.
+
+        Returns
+        -------
+        float
+            Parameter value.
+        """
+
+        value = None
+
+        request = self.generate_request(parameter)
+        if request is not None:
+            response = self._controller.execute_mb_request(request, self.uart)
+            if not response.isError():
+                registers = {}
+                for index in range(request.address, request.address + request.count):
+                    registers[index] = response.registers[index - request.address]
+                value = self.get_parameter_value(parameter, registers)
+
+        return value
+
     def get_parameters_mous(self):
         """Returns parameters measuring units.
 
@@ -437,7 +466,12 @@ class ModbusDevice(BaseDevice):
             raise Exception("Not implemented")
 
         elif parameter_type == ParameterType.UINT32_T:
-            raise Exception("Not implemented")
+            bin_data = None
+            bin_data = pack(
+                ">HH",
+                registers_data[registers[0]],
+                registers_data[registers[1]])
+            value = unpack("i", bin_data)[0]
 
         elif parameter_type == ParameterType.FLOAT:
             #/** @var array Packet binary data. bin_data */
