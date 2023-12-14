@@ -105,7 +105,7 @@ class FlowmeterDN20(ModbusDevice):
 
         self._parameters.append(
             Parameter("PositiveCumulativeEnergy", "KW/h",\
-            ParameterType.UINT32_T_BE, [0x204, 0x205], FunctionCode.ReadHoldingRegisters))
+            ParameterType.UINT32_T_BE, [0x00, 0x01], FunctionCode.ReadHoldingRegisters))
 
         # self._parameters.append(
         #     Parameter("InstantaneousFlow", "mL/h",\
