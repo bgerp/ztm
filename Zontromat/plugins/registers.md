@@ -111,9 +111,9 @@
 
 | Purpose | Register | Type | Value |
 |----------|:-------------|:------|:------|
-| Cold water liters | monitoring.cw.value | float | 0.0 |
+| Cold water liters | monitoring.cw.measurements | json | 0.0 |
 | Cold water leaked liters | monitoring.cw.leak | float | 1.0 |
-| Hot water liters | monitoring.hw.value | float | 0.0 |
+| Hot water liters | monitoring.hw.measurements | json | 0.0 |
 | Hot water leaked liters | monitoring.hw.leak | float | 1.0 |
 | Power analyser measurements | monitoring.pa.measurements | json | [] |
 | Power analyser measuring demand | monitoring.pa.demand_time | float | 3600.0 |
