@@ -1014,6 +1014,10 @@ class Zone(BasePlugin):
             elif self.__experimental_counter == 5:
                 # self.__convector_valve_dev.target_position = 100
                 # self.__convector_dev.set_state(1)
+                energy = self.__convector_heat_meter_dev.get_pcenergy()
+                print(energy)
+                energy = self.__floor_heat_meter_dev.get_pcenergy()
+                print(energy)
                 pass
             
             # Increment

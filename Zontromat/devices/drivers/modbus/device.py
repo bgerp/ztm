@@ -456,21 +456,29 @@ class ModbusDevice(BaseDevice):
         #/** @var object Unpacked float value. value */
         value = None
 
-        if parameter_type == ParameterType.INT16_T:
+        if parameter_type == ParameterType.INT16_T_LE:
             value = registers_data[registers[0]]
 
-        elif parameter_type == ParameterType.UINT16_T:
+        elif parameter_type == ParameterType.UINT16_T_LE:
             value = registers_data[registers[0]]
 
-        elif parameter_type == ParameterType.INT32_T:
+        elif parameter_type == ParameterType.INT32_T_LE:
             raise Exception("Not implemented")
 
-        elif parameter_type == ParameterType.UINT32_T:
+        elif parameter_type == ParameterType.UINT32_T_LE:
             bin_data = None
             bin_data = pack(
                 ">HH",
                 registers_data[registers[0]],
                 registers_data[registers[1]])
+            value = unpack("i", bin_data)[0]
+
+        elif parameter_type == ParameterType.UINT32_T_BE:
+            bin_data = None
+            bin_data = pack(
+                "<HH",
+                registers_data[registers[1]],
+                registers_data[registers[0]])
             value = unpack("i", bin_data)[0]
 
         elif parameter_type == ParameterType.FLOAT:

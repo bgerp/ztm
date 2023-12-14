@@ -103,7 +103,7 @@ class USHMInlet(ModbusDevice):
             Parameter(
                 "AccumulateHeatEnergy",
                 "kWh",
-                ParameterType.UINT32_T,
+                ParameterType.UINT32_T_LE,
                 [0, 1],
                 FunctionCode.ReadHoldingRegisters
             )

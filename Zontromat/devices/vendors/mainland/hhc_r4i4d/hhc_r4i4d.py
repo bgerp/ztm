@@ -78,7 +78,7 @@ class HHCR4I4D(ModbusDevice):
             Parameter(
                 "GetRelays",
                 "Bits",
-                ParameterType.INT16_T,
+                ParameterType.INT16_T_LE,
                 [16, 17, 18, 19],
                 FunctionCode.ReadCoil
             )
@@ -88,7 +88,7 @@ class HHCR4I4D(ModbusDevice):
             Parameter(
                 "GetDigitalInputs",
                 "Bits",
-                ParameterType.INT16_T,
+                ParameterType.INT16_T_LE,
                 [32, 33, 34, 35],
                 FunctionCode.ReadDiscreteInput
             )
@@ -98,7 +98,7 @@ class HHCR4I4D(ModbusDevice):
             Parameter(
                 "SetRelays",
                 "Bits",
-                ParameterType.INT16_T,
+                ParameterType.INT16_T_LE,
                 [16, 17, 18, 19],
                 FunctionCode.WriteMultipleCoils
             )

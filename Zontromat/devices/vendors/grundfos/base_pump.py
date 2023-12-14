@@ -108,19 +108,19 @@ class BasePump(ModbusDevice):
 
         self._parameters.append(
             Parameter("GetControlMode", "Enum",\
-            ParameterType.UINT16_T, [102], FunctionCode.ReadInputRegisters))
+            ParameterType.UINT16_T_LE, [102], FunctionCode.ReadInputRegisters))
 
         self._parameters.append(
             Parameter("SetControlMode", "Enum",\
-            ParameterType.UINT16_T, [102], FunctionCode.WriteSingleHoldingRegister))
+            ParameterType.UINT16_T_LE, [102], FunctionCode.WriteSingleHoldingRegister))
 
         self._parameters.append(
             Parameter("GetSetpoint", "%",\
-            ParameterType.UINT16_T, [104], FunctionCode.ReadInputRegisters))
+            ParameterType.UINT16_T_LE, [104], FunctionCode.ReadInputRegisters))
 
         self._parameters.append(
             Parameter("SetSetpoint", "%",\
-            ParameterType.UINT16_T, [104], FunctionCode.WriteSingleHoldingRegister))
+            ParameterType.UINT16_T_LE, [104], FunctionCode.WriteSingleHoldingRegister))
 
 #endregion
 

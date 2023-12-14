@@ -80,7 +80,7 @@ class MB308V(ModbusDevice):
             Parameter(
                 "GetRelays",
                 "Bits",
-                ParameterType.INT16_T,
+                ParameterType.INT16_T_LE,
                 [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
                 FunctionCode.ReadCoil,
                 [0, 1]
@@ -91,7 +91,7 @@ class MB308V(ModbusDevice):
             Parameter(
                 "GetDigitalInputs",
                 "Bits",
-                ParameterType.INT16_T,
+                ParameterType.INT16_T_LE,
                 [0, 1, 2, 3, 4, 5, 6, 7],
                 FunctionCode.ReadDiscreteInput,
                 [0, 1]
@@ -102,7 +102,7 @@ class MB308V(ModbusDevice):
             Parameter(
                 "GetAnalogOutputs",
                 "Registers",
-                ParameterType.INT16_T,
+                ParameterType.INT16_T_LE,
                 [0, 1, 2, 3],
                 FunctionCode.ReadHoldingRegisters,
                 [0, 1]
@@ -113,7 +113,7 @@ class MB308V(ModbusDevice):
             Parameter(
                 "GetAnalogInputs",
                 "Registers",
-                ParameterType.INT16_T,
+                ParameterType.INT16_T_LE,
                 [0, 1, 2, 3, 4, 5, 6, 7],
                 FunctionCode.ReadInputRegisters,
                 [0, 10216]
@@ -124,7 +124,7 @@ class MB308V(ModbusDevice):
             Parameter(
                 "SetRelays",
                 "Bits",
-                ParameterType.INT16_T,
+                ParameterType.INT16_T_LE,
                 [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
                 FunctionCode.WriteMultipleCoils,
                 [0, 1]
@@ -135,7 +135,7 @@ class MB308V(ModbusDevice):
             Parameter(
                 "SetAnalogOutputs",
                 "Registers",
-                ParameterType.INT16_T,
+                ParameterType.INT16_T_LE,
                 [0, 1, 2, 3],
                 FunctionCode.WriteMultipleHoldingRegisters,
                 [0, 24000]

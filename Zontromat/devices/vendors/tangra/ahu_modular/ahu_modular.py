@@ -97,7 +97,7 @@ class AHUModular(ModbusDevice):
             Parameter(
                 "GlobalAlarm",
                 "Bits",
-                ParameterType.UINT16_T,
+                ParameterType.UINT16_T_LE,
                 [0],
                 FunctionCode.ReadDiscreteInput
             )
@@ -107,7 +107,7 @@ class AHUModular(ModbusDevice):
             Parameter(
                 "RotaryREC_R_Device",
                 "Bits",
-                ParameterType.UINT16_T,
+                ParameterType.UINT16_T_LE,
                 [5],
                 FunctionCode.ReadDiscreteInput
             )
@@ -117,7 +117,7 @@ class AHUModular(ModbusDevice):
             Parameter(
                 "PreHeater_R_Device",
                 "Bits",
-                ParameterType.UINT16_T,
+                ParameterType.UINT16_T_LE,
                 [6],
                 FunctionCode.ReadDiscreteInput
             )
@@ -127,7 +127,7 @@ class AHUModular(ModbusDevice):
             Parameter(
                 "EF_R_Device",
                 "Bits",
-                ParameterType.UINT16_T,
+                ParameterType.UINT16_T_LE,
                 [7],
                 FunctionCode.ReadDiscreteInput
             )
@@ -137,7 +137,7 @@ class AHUModular(ModbusDevice):
             Parameter(
                 "Heater_Supply_R_Device",
                 "Bits",
-                ParameterType.UINT16_T,
+                ParameterType.UINT16_T_LE,
                 [8],
                 FunctionCode.ReadDiscreteInput
             )
@@ -147,7 +147,7 @@ class AHUModular(ModbusDevice):
             Parameter(
                 "PJR_Baypas_Rec_R_Device",
                 "Bits",
-                ParameterType.UINT16_T,
+                ParameterType.UINT16_T_LE,
                 [9],
                 FunctionCode.ReadDiscreteInput
             )
@@ -157,7 +157,7 @@ class AHUModular(ModbusDevice):
             Parameter(
                 "PJR_In_Out_FreshAir_R_Device",
                 "Bits",
-                ParameterType.UINT16_T,
+                ParameterType.UINT16_T_LE,
                 [10],
                 FunctionCode.ReadDiscreteInput
             )
@@ -167,7 +167,7 @@ class AHUModular(ModbusDevice):
             Parameter(
                 "PJR_Recirculation_R_Device",
                 "Bits",
-                ParameterType.UINT16_T,
+                ParameterType.UINT16_T_LE,
                 [11],
                 FunctionCode.ReadDiscreteInput
             )
@@ -177,7 +177,7 @@ class AHUModular(ModbusDevice):
             Parameter(
                 "SF_R_Device",
                 "Bits",
-                ParameterType.UINT16_T,
+                ParameterType.UINT16_T_LE,
                 [12],
                 FunctionCode.ReadDiscreteInput
             )
@@ -187,7 +187,7 @@ class AHUModular(ModbusDevice):
             Parameter(
                 "GetMode",
                 "State", # 0->Stop, 1->Cool, 2->Heat, 3->Fan, 4->Auto, 5->Dry
-                ParameterType.UINT16_T,
+                ParameterType.UINT16_T_LE,
                 [0],
                 FunctionCode.ReadHoldingRegisters
             )
@@ -197,7 +197,7 @@ class AHUModular(ModbusDevice):
             Parameter(
                 "SetMode",
                 "State", # 0->Stop, 1->Cool, 2->Heat, 3->Fan, 4->Auto, 5->Dry
-                ParameterType.UINT16_T,
+                ParameterType.UINT16_T_LE,
                 [0],
                 FunctionCode.ReadHoldingRegisters
             )
@@ -207,7 +207,7 @@ class AHUModular(ModbusDevice):
             Parameter(
                 "GetTemperatureSetpoint",
                 "degC", # TODO: Give possible values.
-                ParameterType.UINT16_T,
+                ParameterType.UINT16_T_LE,
                 [1],
                 FunctionCode.ReadHoldingRegisters
             )
@@ -217,7 +217,7 @@ class AHUModular(ModbusDevice):
             Parameter(
                 "SetTemperatureSetpoint",
                 "degC", # TODO: Give possible values.
-                ParameterType.UINT16_T,
+                ParameterType.UINT16_T_LE,
                 [1],
                 FunctionCode.WriteMultipleHoldingRegisters
             )
@@ -227,7 +227,7 @@ class AHUModular(ModbusDevice):
             Parameter(
                 "FreshAir",
                 "State", # 0..10->Manual (0..100%), 11->Auto,
-                ParameterType.UINT16_T,
+                ParameterType.UINT16_T_LE,
                 [2],
                 FunctionCode.ReadHoldingRegisters
             )
@@ -237,7 +237,7 @@ class AHUModular(ModbusDevice):
             Parameter(
                 "StateSpeedSFEF",
                 "State", # How to choice fan speed: 0-Together, 1-Individually
-                ParameterType.UINT16_T,
+                ParameterType.UINT16_T_LE,
                 [3],
                 FunctionCode.ReadHoldingRegisters
             )
@@ -247,7 +247,7 @@ class AHUModular(ModbusDevice):
             Parameter(
                 "ValueSpeedSFEF",
                 "State", # 0..10->Manual (0..100%), 11->Auto,
-                ParameterType.UINT16_T,
+                ParameterType.UINT16_T_LE,
                 [4],
                 FunctionCode.ReadHoldingRegisters
             )
@@ -257,7 +257,7 @@ class AHUModular(ModbusDevice):
             Parameter(
                 "SpeedSF",
                 "State", # 0..10->Manual (0..100%), 11->Auto
-                ParameterType.UINT16_T,
+                ParameterType.UINT16_T_LE,
                 [5],
                 FunctionCode.ReadHoldingRegisters
             )
@@ -267,7 +267,7 @@ class AHUModular(ModbusDevice):
             Parameter(
                 "SpeedEF",
                 "State", # 0..10->Manual (0..100%), 11->Auto
-                ParameterType.UINT16_T,
+                ParameterType.UINT16_T_LE,
                 [6],
                 FunctionCode.ReadHoldingRegisters
             )
@@ -277,7 +277,7 @@ class AHUModular(ModbusDevice):
             Parameter(
                 "UnitStatus",
                 "State", # TODO: Give the states,
-                ParameterType.UINT16_T,
+                ParameterType.UINT16_T_LE_LE,
                 [0],
                 FunctionCode.ReadInputRegisters
             )
@@ -337,7 +337,7 @@ class AHUModular(ModbusDevice):
             Parameter(
                 "PreHeaterPower",
                 "Percentage",
-                ParameterType.UINT16_T,
+                ParameterType.UINT16_T_LE,
                 [18],
                 FunctionCode.ReadInputRegisters
             )
@@ -347,7 +347,7 @@ class AHUModular(ModbusDevice):
             Parameter(
                 "RotaryRECPower",
                 "Percentage",
-                ParameterType.UINT16_T,
+                ParameterType.UINT16_T_LE,
                 [19],
                 FunctionCode.ReadInputRegisters
             )
@@ -357,7 +357,7 @@ class AHUModular(ModbusDevice):
             Parameter(
                 "SFPower",
                 "Percentage",
-                ParameterType.UINT16_T,
+                ParameterType.UINT16_T_LE,
                 [20],
                 FunctionCode.ReadInputRegisters
             )
@@ -367,7 +367,7 @@ class AHUModular(ModbusDevice):
             Parameter(
                 "EFPower",
                 "Percentage",
-                ParameterType.UINT16_T,
+                ParameterType.UINT16_T_LE,
                 [21],
                 FunctionCode.ReadInputRegisters
             )
@@ -377,7 +377,7 @@ class AHUModular(ModbusDevice):
             Parameter(
                 "PJRInOutFreshAirPower",
                 "Percentage",
-                ParameterType.UINT16_T,
+                ParameterType.UINT16_T_LE,
                 [22],
                 FunctionCode.ReadInputRegisters
             )
@@ -387,7 +387,7 @@ class AHUModular(ModbusDevice):
             Parameter(
                 "PJRRecirculationPower",
                 "Percentage",
-                ParameterType.UINT16_T,
+                ParameterType.UINT16_T_LE,
                 [23],
                 FunctionCode.ReadInputRegisters
             )
@@ -397,7 +397,7 @@ class AHUModular(ModbusDevice):
             Parameter(
                 "PJRBaypasRecPower",
                 "Percentage",
-                ParameterType.UINT16_T,
+                ParameterType.UINT16_T_LE,
                 [24],
                 FunctionCode.ReadInputRegisters
             )
@@ -407,7 +407,7 @@ class AHUModular(ModbusDevice):
             Parameter(
                 "HeaterSupplyPower",
                 "Percentage",
-                ParameterType.UINT16_T,
+                ParameterType.UINT16_T_LE,
                 [25],
                 FunctionCode.ReadInputRegisters
             )

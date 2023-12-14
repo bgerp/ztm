@@ -95,7 +95,7 @@ class BlindsV2(BaseBlind, ModbusDevice):
 
         self._parameters.append(
             Parameter("Position", "%",\
-            ParameterType.UINT16_T, [0x9C43], FunctionCode.WriteSingleHoldingRegister))
+            ParameterType.UINT16_T_LE, [0x9C43], FunctionCode.WriteSingleHoldingRegister))
 
 #endregion
 

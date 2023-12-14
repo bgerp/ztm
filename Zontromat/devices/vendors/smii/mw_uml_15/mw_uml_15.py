@@ -76,28 +76,28 @@ class MW_UML_15(ModbusDevice):
 
         self._parameters.append(
             Parameter("CumulativeTraffic", "mL",\
-            ParameterType.UINT32_T, [0x204, 0x205], FunctionCode.ReadHoldingRegisters))
+            ParameterType.UINT32_T_LE, [0x204, 0x205], FunctionCode.ReadHoldingRegisters))
 
         self._parameters.append(
             Parameter("InstantaneousFlow", "mL/h",\
-            ParameterType.UINT32_T, [0x206, 0x207], FunctionCode.ReadHoldingRegisters))
+            ParameterType.UINT32_T_LE, [0x206, 0x207], FunctionCode.ReadHoldingRegisters))
 
         self._parameters.append(
             Parameter("WaterTemperature", "0.01",\
-            ParameterType.UINT16_T, [0x20B], FunctionCode.ReadHoldingRegisters))
+            ParameterType.UINT16_T_LE, [0x20B], FunctionCode.ReadHoldingRegisters))
 
         self._parameters.append(
             Parameter("BatteryVoltage", "0.1",\
-            ParameterType.UINT16_T, [0x80C], FunctionCode.ReadHoldingRegisters))
+            ParameterType.UINT16_T_LE, [0x80C], FunctionCode.ReadHoldingRegisters))
 
 
     # ===== Settings =====
-    # 40001: ["Seconds", 2, PT.UINT16_T, "", None, FC.WriteSingleRegister, [0x000, 0x001]],
-    # 40002: ["Minute", 2, PT.UINT16_T, "", None, FC.WriteSingleRegister, [0x000, 0x002]],
-    # 40003: ["Hour", 2, PT.UINT16_T, "", None, FC.WriteSingleRegister, [0x000, 0x003]],
-    # 40004: ["Day", 2, PT.UINT16_T, "", None, FC.WriteSingleRegister, [0x000, 0x004]],
-    # 40005: ["Month", 2, PT.UINT16_T, "", None, FC.WriteSingleRegister, [0x000, 0x005]],
-    # 40006: ["Hears", 2, PT.UINT16_T, "", None, FC.WriteSingleRegister, [0x000, 0x006]],
+    # 40001: ["Seconds", 2, PT.UINT16_T_LE, "", None, FC.WriteSingleRegister, [0x000, 0x001]],
+    # 40002: ["Minute", 2, PT.UINT16_T_LE, "", None, FC.WriteSingleRegister, [0x000, 0x002]],
+    # 40003: ["Hour", 2, PT.UINT16_T_LE, "", None, FC.WriteSingleRegister, [0x000, 0x003]],
+    # 40004: ["Day", 2, PT.UINT16_T_LE, "", None, FC.WriteSingleRegister, [0x000, 0x004]],
+    # 40005: ["Month", 2, PT.UINT16_T_LE, "", None, FC.WriteSingleRegister, [0x000, 0x005]],
+    # 40006: ["Hears", 2, PT.UINT16_T_LE, "", None, FC.WriteSingleRegister, [0x000, 0x006]],
 
     # 40512: ["Reverse traffic", 4, PT.UINT32_T_LE, "Unit: mL (according to the customer's own needs to read the data to choose mL or 0.1L)", FC.ReadHoldingRegisters, None, [0x00, 0x200]],
 
@@ -107,49 +107,49 @@ class MW_UML_15(ModbusDevice):
 
     # 40518: ["Cumulative traffic", 4, PT.FLOAT, "Unit: mL (according to the customer's own needs to read the data to choose mL or 0.1L)", FC.ReadHoldingRegisters, None, [0x000, 0x206]],
 
-    # 40520: ["Instrument status word", 2, PT.UINT16_T, "Bitwise parsing", FC.ReadHoldingRegisters, None, [0x000, 0x208]],
+    # 40520: ["Instrument status word", 2, PT.UINT16_T_LE, "Bitwise parsing", FC.ReadHoldingRegisters, None, [0x000, 0x208]],
 
     # 40521: ["Instantaneous flow", 4, PT.UINT32_T_LE, "Unit： 1 mL/h", FC.ReadHoldingRegisters, None, [0x000, 0x209]],
-    # # 40001: ["The Low 16 bits of the instantaneous flow", 2, PT.UINT16_T, "Unit： 1 mL/h", FC.ReadHoldingRegisters, None, 0x000, 0x20A],
+    # # 40001: ["The Low 16 bits of the instantaneous flow", 2, PT.UINT16_T_LE, "Unit： 1 mL/h", FC.ReadHoldingRegisters, None, 0x000, 0x20A],
 
-    # 40523: ["Current water meter temperature", 2, PT.UINT16_T, "Unit: 0.01", FC.ReadHoldingRegisters, None, [0x000, 0x20B]],
+    # 40523: ["Current water meter temperature", 2, PT.UINT16_T_LE, "Unit: 0.01", FC.ReadHoldingRegisters, None, [0x000, 0x20B]],
 
     # 40524: ["Date", 12, PT.ARRAY, "Date and time", FC.ReadHoldingRegisters, None, [0x000, 0x20C]],
-    # # 40524: ["Seconds", 2, PT.UINT16_T, "", FC.ReadHoldingRegisters, None, [0x000, 0x20C]],
-    # # 40525: ["Minute", 2, PT.UINT16_T, "", FC.ReadHoldingRegisters, None, [0x000, 0x20D]],
-    # # 40526: ["Hour", 2, PT.UINT16_T, "", FC.ReadHoldingRegisters, None, [0x000, 0x20E]],
-    # # 40527: ["Day", 2, PT.UINT16_T, "", FC.ReadHoldingRegisters, None, [0x000, 0x20F]],
-    # # 40528: ["Month", 2, PT.UINT16_T, "", FC.ReadHoldingRegisters, None, [0x000, 0x210]],
-    # # 40529: ["Hears", 2, PT.UINT16_T, "", FC.ReadHoldingRegisters, None, [0x000, 0x211]],
+    # # 40524: ["Seconds", 2, PT.UINT16_T_LE, "", FC.ReadHoldingRegisters, None, [0x000, 0x20C]],
+    # # 40525: ["Minute", 2, PT.UINT16_T_LE, "", FC.ReadHoldingRegisters, None, [0x000, 0x20D]],
+    # # 40526: ["Hour", 2, PT.UINT16_T_LE, "", FC.ReadHoldingRegisters, None, [0x000, 0x20E]],
+    # # 40527: ["Day", 2, PT.UINT16_T_LE, "", FC.ReadHoldingRegisters, None, [0x000, 0x20F]],
+    # # 40528: ["Month", 2, PT.UINT16_T_LE, "", FC.ReadHoldingRegisters, None, [0x000, 0x210]],
+    # # 40529: ["Hears", 2, PT.UINT16_T_LE, "", FC.ReadHoldingRegisters, None, [0x000, 0x211]],
 
-    # 40530: ["The battery voltage", 2, PT.UINT16_T, "0.01V", FC.ReadHoldingRegisters, None, [0x000, 0x212]],
+    # 40530: ["The battery voltage", 2, PT.UINT16_T_LE, "0.01V", FC.ReadHoldingRegisters, None, [0x000, 0x212]],
 
-    # 40540: ["Additional status word", 2, PT.UINT16_T, "", FC.ReadHoldingRegisters, None, [0x000, 0x213]],
+    # 40540: ["Additional status word", 2, PT.UINT16_T_LE, "", FC.ReadHoldingRegisters, None, [0x000, 0x213]],
 
-    # 40541: ["Water meter address", 2, PT.UINT16_T, "", FC.ReadHoldingRegisters, None, [0x000, 0x214]],
+    # 40541: ["Water meter address", 2, PT.UINT16_T_LE, "", FC.ReadHoldingRegisters, None, [0x000, 0x214]],
 
-    # 40542: ["Program version number 1", 2, PT.UINT16_T, "", FC.ReadHoldingRegisters, None, [0x000, 0x215]],
+    # 40542: ["Program version number 1", 2, PT.UINT16_T_LE, "", FC.ReadHoldingRegisters, None, [0x000, 0x215]],
 
-    # 40543: ["Program version No. 2", 2, PT.UINT16_T, "", FC.ReadHoldingRegisters, None, [0x000, 0x216]],
+    # 40543: ["Program version No. 2", 2, PT.UINT16_T_LE, "", FC.ReadHoldingRegisters, None, [0x000, 0x216]],
 
     # 42048: ["Reverse traffic", 4, PT.FLOAT, "Unit: 0.1L", FC.ReadHoldingRegisters, None, [0x000, 0x800]],
-    # # 40001: ["The Low 16 bits of reverse traffic", 2, PT.UINT16_T, "Unit: 0.1L", FC.ReadHoldingRegisters, None, 0x000, 0x801],
+    # # 40001: ["The Low 16 bits of reverse traffic", 2, PT.UINT16_T_LE, "Unit: 0.1L", FC.ReadHoldingRegisters, None, 0x000, 0x801],
 
     # 42050: ["Accumulated traffic", 4, PT.FLOAT, "Unit: 0.1L", FC.ReadHoldingRegisters, None, [0x000, 0x802]],
-    # # 40001: ["The Low 16 bits of accumulated traffic", 2, PT.UINT16_T, "Unit: 0.1L", FC.ReadHoldingRegisters, None, 0x000, 0x803],
+    # # 40001: ["The Low 16 bits of accumulated traffic", 2, PT.UINT16_T_LE, "Unit: 0.1L", FC.ReadHoldingRegisters, None, 0x000, 0x803],
 
-    # 42052: ["Instrument status word", 2, PT.UINT16_T, "Bitwise parsing", FC.ReadHoldingRegisters, None, [0x000, 0x804]],
-    # 42053: ["Instantaneous flow", 2, PT.UINT16_T, "Unit: 1L/h", FC.ReadHoldingRegisters, None, [0x000, 0x805]],
-    # 42054: ["Current water meter temperature", 2, PT.UINT16_T, "Unit: 0.01", FC.ReadHoldingRegisters, None, [0x000, 0x806]],
-    # 42055: ["Minutes and hours", 2, PT.UINT16_T, "Minutes and hours each occupy a byte", FC.ReadHoldingRegisters, None, [0x000, 0x807]],
-    # 42056: ["Day and month", 4, PT.UINT16_T, "Day and month are one byte each", FC.ReadHoldingRegisters, None, [0x000, 0x808]],
-    # 42057: ["years", 2, PT.UINT16_T, "Day and month are one byte each", FC.ReadHoldingRegisters, None, [0x000, 0x809]],
+    # 42052: ["Instrument status word", 2, PT.UINT16_T_LE, "Bitwise parsing", FC.ReadHoldingRegisters, None, [0x000, 0x804]],
+    # 42053: ["Instantaneous flow", 2, PT.UINT16_T_LE, "Unit: 1L/h", FC.ReadHoldingRegisters, None, [0x000, 0x805]],
+    # 42054: ["Current water meter temperature", 2, PT.UINT16_T_LE, "Unit: 0.01", FC.ReadHoldingRegisters, None, [0x000, 0x806]],
+    # 42055: ["Minutes and hours", 2, PT.UINT16_T_LE, "Minutes and hours each occupy a byte", FC.ReadHoldingRegisters, None, [0x000, 0x807]],
+    # 42056: ["Day and month", 4, PT.UINT16_T_LE, "Day and month are one byte each", FC.ReadHoldingRegisters, None, [0x000, 0x808]],
+    # 42057: ["years", 2, PT.UINT16_T_LE, "Day and month are one byte each", FC.ReadHoldingRegisters, None, [0x000, 0x809]],
     # 42058: ["Accumulated working time", 4, PT.UINT32_T_BE, "", FC.ReadHoldingRegisters, None, [0x000, 0x80A]],
-    # 42060: ["Battery voltage", 2, PT.UINT16_T, "0.01V", FC.ReadHoldingRegisters, None, [0x000, 0x80C]],
-    # 42061: ["Additional status word", 2, PT.UINT16_T, "Bitwise parsing", FC.ReadHoldingRegisters, None, [0x000, 0x80D]],
-    # 42062: ["Water meter address", 2, PT.UINT16_T, "int", FC.ReadHoldingRegisters, None, [0x000, 0x80E]],
-    # 42063: ["Program version number 1", 2, PT.UINT16_T, "int", FC.ReadHoldingRegisters, None, [0x000, 0x80F]],
-    # 42064: ["Program version No. 2", 2, PT.UINT16_T, "int", FC.ReadHoldingRegisters, None, [0x000, 0x810]],
+    # 42060: ["Battery voltage", 2, PT.UINT16_T_LE, "0.01V", FC.ReadHoldingRegisters, None, [0x000, 0x80C]],
+    # 42061: ["Additional status word", 2, PT.UINT16_T_LE, "Bitwise parsing", FC.ReadHoldingRegisters, None, [0x000, 0x80D]],
+    # 42062: ["Water meter address", 2, PT.UINT16_T_LE, "int", FC.ReadHoldingRegisters, None, [0x000, 0x80E]],
+    # 42063: ["Program version number 1", 2, PT.UINT16_T_LE, "int", FC.ReadHoldingRegisters, None, [0x000, 0x80F]],
+    # 42064: ["Program version No. 2", 2, PT.UINT16_T_LE, "int", FC.ReadHoldingRegisters, None, [0x000, 0x810]],
 
 #endregion
 

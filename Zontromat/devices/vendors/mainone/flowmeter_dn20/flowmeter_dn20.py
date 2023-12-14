@@ -22,9 +22,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 
-from utils.logger import get_logger
+from devices.drivers.modbus.device import ModbusDevice
+from devices.drivers.modbus.parameter import Parameter
+from devices.drivers.modbus.parameter_type import ParameterType
+from devices.drivers.modbus.function_code import FunctionCode
 
-from devices.factories.flowmeters.base_flowmeter import BaseFlowmeter
+from utils.logger import get_logger
 
 #region File Attributes
 
@@ -57,7 +60,7 @@ __status__ = "Debug"
 
 #endregion
 
-class FlowmeterDN20(BaseFlowmeter):
+class FlowmeterDN20(ModbusDevice):
     """Flowmeter input device Flowmeter DN20."""
 
 #region Attributes
@@ -100,30 +103,32 @@ class FlowmeterDN20(BaseFlowmeter):
 
         self._model = "FlowmeterDN20"
 
-        self.__logger = get_logger(__name__)
+        self._parameters.append(
+            Parameter("PositiveCumulativeEnergy", "KW/h",\
+            ParameterType.UINT32_T_BE, [0x204, 0x205], FunctionCode.ReadHoldingRegisters))
 
-        if "uart" in self._config:
-            self.__uart = self._config["uart"]
+        # self._parameters.append(
+        #     Parameter("InstantaneousFlow", "mL/h",\
+        #     ParameterType.UINT32_T_LE, [0x206, 0x207], FunctionCode.ReadHoldingRegisters))
 
-        if "mb_id" in self._config:
-            self.__mb_id = self._config["mb_id"]
+        # self._parameters.append(
+        #     Parameter("WaterTemperature", "0.01",\
+        #     ParameterType.UINT16_T_LE, [0x20B], FunctionCode.ReadHoldingRegisters))
+
+        # self._parameters.append(
+        #     Parameter("BatteryVoltage", "0.1",\
+        #     ParameterType.UINT16_T_LE, [0x80C], FunctionCode.ReadHoldingRegisters))
+
+    # # ===== Settings =====
+    # 40001: ["Positive cumulative energy",                     4, PT.UINT32_T_BE, "KW/h",            FC.ReadHoldingRegisters, None, [0x00, 0x00]],
+    # 40005: ["Inlet temperature",                              4, PT.UINT32_T_BE, "⁰C",              FC.ReadHoldingRegisters, None, [0x00, 0x04]],
+    # 40007: ["Return water temperature",                       4, PT.UINT32_T_BE, "⁰C",              FC.ReadHoldingRegisters, None, [0x00, 0x06]],
 
 #endregion
 
 #region Public Methods
 
-    def init(self):
-
-        pass
-
-
-    def get_liters(self):
-        """Get value."""
-
-        # TODO: Read the device.
-        # 0x000A	Int	0x03	Positive cumulative flow (unit: 1 / 100m³) 16 bits higher 	Read only
-        # 0x000B	Int	0x03	Positive cumulative flow (unit: 1 / 100m³) lower 16 bits 	Read only
-        # self._controller
-        return 0
+    def get_pcenergy(self):
+        return self.get_value("PositiveCumulativeEnergy")
 
 #endregion
