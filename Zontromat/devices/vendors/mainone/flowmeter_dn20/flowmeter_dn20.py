@@ -129,6 +129,7 @@ class FlowmeterDN20(ModbusDevice):
 #region Public Methods
 
     def get_pcenergy(self):
+        print(self.uart)
         return self.get_value("PositiveCumulativeEnergy")
 
     def get_temp(self):
