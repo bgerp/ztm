@@ -889,7 +889,7 @@ def __add_registers():
         "options":
         {
             "uart": 1,
-            "mb_id": 99,
+            "mb_id": 66,
         }
     }
     __registers.append(register)

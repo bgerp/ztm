@@ -510,7 +510,6 @@ class Zone(BasePlugin):
             self.__floor_heat_meter_dev.shutdown()
             del self.__floor_heat_meter_dev
 
-
     def __floor_temp_settings_cb(self, register):
 
         # Check data type.
