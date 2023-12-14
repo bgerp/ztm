@@ -205,7 +205,7 @@ class Zone():
 
         # Current file path. & Go to file.
         cwf = os.path.dirname(os.path.abspath(__file__))
-        registers_file = os.path.join(cwf, "..", "registers.csv")
+        registers_file = os.path.join(cwf, "..", "registers.json")
 
         # Load depending of file format.
         if registers_file.endswith('json'):
