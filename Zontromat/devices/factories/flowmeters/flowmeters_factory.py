@@ -57,7 +57,7 @@ __status__ = "Debug"
 
 #endregion
 
-class FlowmetersFactory:
+class FlowmeterFactory:
     """Flowmeters factory.
     """
 
@@ -108,7 +108,7 @@ class FlowmetersFactory:
             )
 
         # mainone / flowmeter_dn20
-        if vendor == "mainone" and  model == "flowmeter_dn20":
+        elif vendor == "mainone" and  model == "flowmeter_dn20":
 
             device = FlowmeterDN20(
                 name=name,
@@ -119,7 +119,7 @@ class FlowmetersFactory:
 
         # Shanghai Mingwan Inteligent Instrument Com.Ltd. / MW-UML-15
         # Wattmeter subcontractor of Mainone.
-        if vendor == "smii" and model == "mw_uml_15":
+        elif vendor == "smii" and model == "mw_uml_15":
 
             device = MW_UML_15(
                 name=name,

@@ -33,7 +33,7 @@ from plugins.base_plugin import BasePlugin
 
 from devices.tests.leak_test.leak_test import LeakTest
 from devices.factories.power_analyzers.power_analyser_factory import PowerAnalyzerFactory
-from devices.factories.flowmeters.flowmeters_factory import FlowmetersFactory
+from devices.factories.flowmeters.flowmeters_factory import FlowmeterFactory
 from devices.drivers.modbus.function_code import FunctionCode
 
 from services.evok.settings import EvokSettings
@@ -156,7 +156,7 @@ class Monitoring(BasePlugin):
             return
 
         if register.value != {} and self.__cw_flowmeter_dev is None:
-            self.__cw_flowmeter_dev = FlowmetersFactory.create(
+            self.__cw_flowmeter_dev = FlowmeterFactory.create(
                 name="Cold water flowmeter",
                 controller=self._controller,
                 vendor=register.value['vendor'],
@@ -248,7 +248,7 @@ class Monitoring(BasePlugin):
             return
 
         if register.value != {} and self.__hw_flowmeter_dev is None:
-            self.__hw_flowmeter_dev = FlowmetersFactory.create(
+            self.__hw_flowmeter_dev = FlowmeterFactory.create(
                 name="Hot water flowmeter",
                 controller=self._controller,
                 vendor=register.value['vendor'],

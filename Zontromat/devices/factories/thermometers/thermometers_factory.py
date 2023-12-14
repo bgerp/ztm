@@ -26,6 +26,8 @@ from devices.vendors.dallas.ds18b20.ds18b20 import DS18B20
 from devices.vendors.sed_tronic.u1wtvs.u1wtvs import U1WTVS
 from devices.vendors.donkger.xy_md02.xy_md02 import XYMD02
 from devices.vendors.mainone.thermometer.ushm_inlet import USHMInlet
+from devices.vendors.mainone.flowmeter_dn20.flowmeter_dn20 import FlowmeterDN20
+
 
 #region File Attributes
 
@@ -64,7 +66,7 @@ class ThermometersFactory:
 
     @staticmethod
     def create(**config):
-        """Create thermal device factory instace."""
+        """Create thermal device factory instance."""
 
         # The device.
         device = None
@@ -128,14 +130,14 @@ class ThermometersFactory:
                 uart=config["options"]['uart']
             )
 
-        # Donkger / u1wtvs
-        elif vendor == "mainone" and model == "inlet_temp":
+        # mainone / flowmeter_dn20
+        elif vendor == "mainone" and  model == "flowmeter_dn20":
 
-            device = USHMInlet(
+            device = FlowmeterDN20(
                 name=name,
                 controller=controller,
-                unit=config["options"]['mb_id'],
-                uart=config["options"]['uart']
+                uart=config["options"]["uart"],
+                mb_id=config["options"]["mb_id"]
             )
 
         else:

@@ -197,12 +197,12 @@
 | Air temperature sensor upper value | hvac.air_temp_upper_1.value | float | 0.0 |
 | Convector settings | hvac.convector_1.settings | json | {'vendor': 'Silpa', 'model': 'Klimafan', 'options': {'stage1': 'U0:ID6:FC16:R0:RO0', 'stage2': 'U0:ID6:FC16:R0:RO1', 'stage3': 'U0:ID6:FC16:R0:RO2'}} |
 | Loop 1 water flow meter signal input | hvac.loop1_1.flowmeter.settings | json | {'vendor': 'mainone', 'model': 'flowmeter_dn20', 'options': {'uart': 1, 'mb_id': 3}} |
-| Loop 1 temperature sensor settings | hvac.loop1_1.temp.settings | json | {'vendor': 'mainone', 'model': 'inlet_temp', 'options': {'uart': 1, 'mb_id': 3}} |
+| Loop 1 temperature sensor settings | hvac.loop1_1.temp.settings | json | {'vendor': 'mainone', 'model': 'flowmeter_dn20', 'options': {'uart': 1, 'mb_id': 3}} |
 | Loop 1 temperature sensor value | hvac.loop1_1.temp.value | float | 0.0 |
 | Loop 1 temperature down limit | hvac.loop1_1.temp.down_limit | int | 15 |
 | Loop 1 valve settings | hvac.loop1_1.valve.settings | json | {'vendor': 'Tonhe', 'model': 'a20t20b2c', 'options': {'output': 'RO0'}} |
 | Loop 2 water flow meter ticks per liter scale | hvac.loop2_1.flowmeter.settings | json | {'vendor': 'mainone', 'model': 'flowmeter_dn20', 'options': {'uart': 1, 'mb_id': 3}} |
-| Loop 2 temperature sensor settings | hvac.loop2_1.temp.settings | json | {'vendor': 'mainone', 'model': 'inlet_temp', 'options': {'uart': 1, 'mb_id': 3}} |
+| Loop 2 temperature sensor settings | hvac.loop2_1.temp.settings | json | {'vendor': 'mainone', 'model': 'flowmeter_dn20', 'options': {'uart': 1, 'mb_id': 3}} |
 | Loop 1 temperature sensor value | hvac.loop2_1.temp.value | float | 0.0 |
 | Loop 2 valve settings | hvac.loop2_1.valve.settings | json | {'vendor': 'Tonhe', 'model': 'a20t20b2c', 'options': {'output': 'RO1'}} |
 | Measuring delta time | hvac.delta_time_1 | float | 5.0 |

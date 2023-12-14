@@ -136,16 +136,19 @@ class LeakTest:
             elif self.__test_state.is_state(TestState.TakeFirstMeasurement):
                 if self.__flowmeter_dev != None:
                     self.__first_measurement = self.__flowmeter_dev.get_liters()
-                    self.__test_state.set_state(TestState.WaitForLeak)
+                    if self.__first_measurement != None:
+                        self.__test_state.set_state(TestState.WaitForLeak)
 
             elif self.__test_state.is_state(TestState.TakeSecondMeasurement):
                 if self.__flowmeter_dev != None:
                     self.__second_measurement = self.__flowmeter_dev.get_liters()
-                    self.__test_state.set_state(TestState.WaitForLeak)
+                    if self.__second_measurement != None:
+                        self.__test_state.set_state(TestState.WaitForLeak)
 
-            leak_liters = abs(self.__second_measurement - self.__first_measurement)
+            if self.__first_measurement != None and self.__second_measurement != None:
+                leak_liters = abs(self.__second_measurement - self.__first_measurement)
 
-            if self.__result_cb is not None:
-                self.__result_cb(leak_liters)
+                if self.__result_cb is not None:
+                    self.__result_cb(leak_liters)
 
 #endregion

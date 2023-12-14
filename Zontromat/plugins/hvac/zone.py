@@ -35,7 +35,7 @@ from plugins.base_plugin import BasePlugin
 
 from devices.factories.valve.valve_factory import ValveFactory
 from devices.factories.convectors.convectors_factory import ConvectorsFactory
-from devices.factories.flowmeters.flowmeters_factory import FlowmetersFactory
+from devices.factories.flowmeters.flowmeters_factory import FlowmeterFactory
 from devices.factories.thermometers.thermometers_factory import ThermometersFactory
 
 from devices.tests.electrical_performance.electrical_performance import ElectricalPerformance
@@ -496,7 +496,7 @@ class Zone(BasePlugin):
             return
 
         if register.value != {} and self.__floor_heat_meter_dev is None:
-            self.__floor_heat_meter_dev = FlowmetersFactory.create(
+            self.__floor_heat_meter_dev = FlowmeterFactory.create(
                 name="Floor loop flowmeter",
                 controller=self._controller,
                 vendor=register.value['vendor'],
@@ -569,8 +569,8 @@ class Zone(BasePlugin):
             return
 
         if register.value != {} and self.__convector_heat_meter_dev is None:
-            self.__convector_heat_meter_dev = FlowmetersFactory.create(
-                name="Loop 2 flowmeter",
+            self.__convector_heat_meter_dev = FlowmeterFactory.create(
+                name="Convector heat meter",
                 controller=self._controller,
                 vendor=register.value['vendor'],
                 model=register.value['model'],
@@ -1014,10 +1014,11 @@ class Zone(BasePlugin):
             elif self.__experimental_counter == 5:
                 # self.__convector_valve_dev.target_position = 100
                 # self.__convector_dev.set_state(1)
-                energy = self.__convector_heat_meter_dev.get_pcenergy()
-                print(energy)
-                energy = self.__floor_heat_meter_dev.get_pcenergy()
-                print(energy)
+                if self.__convector_heat_meter_dev != None:
+                    energy = self.__convector_heat_meter_dev.get_pcenergy()
+                    print(energy)
+                    energy = self.__floor_heat_meter_dev.get_pcenergy()
+                    print(energy)
                 pass
             
             # Increment
