@@ -190,10 +190,43 @@ class Monitoring(BasePlugin):
 
     def __update_cw(self):
 
-        fm_state = self._registers.by_name(self.key + ".cw.value")
-        if self.__cw_flowmeter_dev is not None and\
-            fm_state is not None:
-            fm_state.value = self.__cw_flowmeter_dev.get_liters()
+        if self.__cw_flowmeter_dev is None:
+            return
+
+        measurement = {
+            "CumulativeTraffic": 0.0,
+            "InstantaneousFlow": 0.0,
+            "WaterTemperature" : 0.0,
+            "BatteryVoltage" : 0.0,
+            "ts": 0,
+        }
+
+        if self.__cw_flowmeter_dev.model == "MW-UML-15":
+            if self._controller.vendor == "UniPi":
+                values = self.__read_unipi_mb_master()
+                for item in measurement:
+                    measurement[item] = values[item]
+
+            else:
+                for item in measurement:
+                    if item == "ts":
+                        pass
+                    measurement[item] = self.__cw_flowmeter_dev.get_value(item)
+
+        else:
+            self.__logger.error("Unknown power water meter")
+
+        # Set the time of the measurement.
+        measurement["ts"] = time.time()
+
+        # Add measurement to the tail.
+        self.__measurements.append(measurement)
+
+        # This magical number represents seconds for 24 hours.
+        self.__filter_measurements_by_time(self.__measurements, 86400)
+
+        # Update parameters in the registers.
+        self._registers.write("{}.hw.measurements".format(self.key), json.dumps(self.__measurements))
 
         # If the zone is empty check for leaks.
         is_empty = self._registers.by_name("envm.is_empty")
@@ -248,10 +281,43 @@ class Monitoring(BasePlugin):
 
     def __update_hw(self):
 
-        fm_state = self._registers.by_name("{}.hw.value".foamrat(self.key))
-        if self.__hw_flowmeter_dev is not None and\
-            fm_state is not None:
-            fm_state.value = self.__hw_flowmeter_dev.get_liters()
+        if self.__hw_flowmeter_dev is None:
+            return
+
+        measurement = {
+            "CumulativeTraffic": 0.0,
+            "InstantaneousFlow": 0.0,
+            "WaterTemperature" : 0.0,
+            "BatteryVoltage" : 0.0,
+            "ts": 0,
+        }
+
+        if self.__hw_flowmeter_dev.model == "MW-UML-15":
+            if self._controller.vendor == "UniPi":
+                values = self.__read_unipi_mb_master()
+                for item in measurement:
+                    measurement[item] = values[item]
+
+            else:
+                for item in measurement:
+                    if item == "ts":
+                        pass
+                    measurement[item] = self.__hw_flowmeter_dev.get_value(item)
+
+        else:
+            self.__logger.error("Unknown power water meter")
+
+        # Set the time of the measurement.
+        measurement["ts"] = time.time()
+
+        # Add measurement to the tail.
+        self.__measurements.append(measurement)
+
+        # This magical number represents seconds for 24 hours.
+        self.__filter_measurements_by_time(self.__measurements, 86400)
+
+        # Update parameters in the registers.
+        self._registers.write("{}.hw.measurements".format(self.key), json.dumps(self.__measurements))
 
         # If the zone is empty check for leaks.
         is_empty = self._registers.by_name("envm.is_empty")
@@ -264,43 +330,6 @@ class Monitoring(BasePlugin):
 #endregion
 
 #region Private Methods (Power Analyser)
-
-    def __read_all_parameters(self):
-
-        black_list = [
-            "GetRelays",
-            "GetDigitalInputs",
-            "GetAnalogOutputs",
-            "GetAnalogInputs",
-            "SetRelays",
-            "SetAnalogOutputs",
-        ]
-
-        for parameter in self.__power_analyser.parameters:
-
-            name = parameter.parameter_name
-
-            if name in black_list:
-                continue
-
-            value = self.__read_local_parameter(name)
-
-            print("{}: {}".format(name, value))
-
-    def __read_local_parameter(self, name):
-
-        value = 0.0
-
-        request = self.__power_analyser.generate_request(name)
-        if request is not None:
-            response = self._controller.execute_mb_request(request, self.__power_analyser.uart)
-            if not response.isError():
-                registers = {}
-                for index in range(request.address, request.address + request.count):
-                    registers[index] = response.registers[index - request.address]
-                value = self.__power_analyser.get_parameter_value(name, registers)
-
-        return value
 
     def __read_unipi_mb_master(self):
 
@@ -463,11 +492,11 @@ class Monitoring(BasePlugin):
                 measurement["Phase1Current"] = values["Current"]
 
             else:
-                measurement["ImportActiveEnergy"] = self.__read_local_parameter("ImportActiveEnergy")
-                measurement["ExportActiveEnergy"] = self.__read_local_parameter("ExportActiveEnergy")
-                measurement["ImportReactiveEnergy"] = self.__read_local_parameter("ImportReactiveEnergy")
-                measurement["ExportReactiveEnergy"] = self.__read_local_parameter("ExportReactiveEnergy")
-                measurement["Phase1Current"] = self.__read_local_parameter("Current")
+                measurement["ImportActiveEnergy"] = self.__power_analyser.get_value("ImportActiveEnergy")
+                measurement["ExportActiveEnergy"] = self.__power_analyser.get_value("ExportActiveEnergy")
+                measurement["ImportReactiveEnergy"] = self.__power_analyser.get_value("ImportReactiveEnergy")
+                measurement["ExportReactiveEnergy"] = self.__power_analyser.get_value("ExportReactiveEnergy")
+                measurement["Phase1Current"] = self.__power_analyser.get_value("Current")
 
         elif self.__power_analyser.model == "SDM630":
 
@@ -482,13 +511,13 @@ class Monitoring(BasePlugin):
                 measurement["Phase3Current"] = values["Phase3Current"]
 
             else:
-                measurement["ImportActiveEnergy"] = self.__read_local_parameter("TotalImportkWh")
-                measurement["ExportActiveEnergy"] = self.__read_local_parameter("TotalExportkWh")
-                measurement["ImportReactiveEnergy"] = self.__read_local_parameter("TotalImportkVArh")
-                measurement["ExportReactiveEnergy"] = self.__read_local_parameter("TotalExportkVArh")
-                measurement["Phase1Current"] = self.__read_local_parameter("Phase1Current")
-                measurement["Phase2Current"] = self.__read_local_parameter("Phase2Current")
-                measurement["Phase3Current"] = self.__read_local_parameter("Phase3Current")
+                measurement["ImportActiveEnergy"] = self.__power_analyser.get_value("TotalImportkWh")
+                measurement["ExportActiveEnergy"] = self.__power_analyser.get_value("TotalExportkWh")
+                measurement["ImportReactiveEnergy"] = self.__power_analyser.get_value("TotalImportkVArh")
+                measurement["ExportReactiveEnergy"] = self.__power_analyser.get_value("TotalExportkVArh")
+                measurement["Phase1Current"] = self.__power_analyser.get_value("Phase1Current")
+                measurement["Phase2Current"] = self.__power_analyser.get_value("Phase2Current")
+                measurement["Phase3Current"] = self.__power_analyser.get_value("Phase3Current")
 
         else:
             self.__logger.error("Unknown power analyser")
@@ -532,10 +561,10 @@ class Monitoring(BasePlugin):
         """
 
         # Update cold water flow meter.
-        # self.__update_cw()
+        self.__update_cw()
 
         # Update hot water flow meter.
-        # self.__update_hw()
+        self.__update_hw()
 
         # Check is it time to measure.
         self.__demand_timer.update()
