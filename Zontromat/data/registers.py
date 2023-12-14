@@ -645,7 +645,7 @@ class Registers(list):
                 register.range = row["range"]
                 register.plugin_name = row["plugin"]
                 register.scope = Registers.__to_scope(row["scope"])
-                register.value = Registers.__to_value(row["type"], row["default"])
+                register.value = Registers.__to_value(row["data_type"], row["default"])
 
                 registers.append(register)
 
