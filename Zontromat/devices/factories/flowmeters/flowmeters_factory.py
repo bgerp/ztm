@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from devices.vendors.enbra.sk09 import SK09
 from devices.vendors.mainone.flowmeter_dn20.flowmeter_dn20 import FlowmeterDN20
+from devices.vendors.smii.mw_uml_15.mw_uml_15 import MW_UML_15
 
 #region File Attributes
 
@@ -110,6 +111,17 @@ class FlowmetersFactory:
         if vendor == "mainone" and  model == "flowmeter_dn20":
 
             device = FlowmeterDN20(
+                name=name,
+                controller=controller,
+                uart=config["options"]["uart"],
+                mb_id=config["options"]["mb_id"]
+            )
+
+        # Shanghai Mingwan Inteligent Instrument Com.Ltd. / MW-UML-15
+        # Wattmeter subcontractor of Mainone.
+        if vendor == "smii" and model == "mw_uml_15":
+
+            device = MW_UML_15(
                 name=name,
                 controller=controller,
                 uart=config["options"]["uart"],
