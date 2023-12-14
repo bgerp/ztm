@@ -77,6 +77,11 @@ class BaseFlowmeter(BaseDevice):
 
 #region Protected Methods
 
+#endregion
+
 #region Public Methods
+
+    def get_liters(self):
+        pass
 
 #endregion
