@@ -169,4 +169,8 @@ evok*.conf
 # Statistics module log files.
 statistics
 
+### Registers
+# REgisters settings file
+registers.json
+
 # End of https://www.gitignore.io/api/python,visualstudiocode
