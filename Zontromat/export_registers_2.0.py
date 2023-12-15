@@ -475,7 +475,7 @@ def __add_registers():
     }
     __registers.append(register)
 
-    register = Register("monitoring.cw.value")
+    register = Register("monitoring.cw.measurements")
     register.scope = Scope.Device
     register.plugin_name = "Monitoring"
     register.description = "Cold water liters"
@@ -508,7 +508,7 @@ def __add_registers():
     }
     __registers.append(register)
 
-    register = Register("monitoring.hw.value")
+    register = Register("monitoring.hw.measurements")
     register.scope = Scope.Device
     register.plugin_name = "Monitoring"
     register.description = "Hot water liters"
@@ -798,15 +798,15 @@ def __add_registers():
     register.plugin_name = "HVAC"
     register.description = "Air temperature sensor center settings."
     register.range = __range["NONE"]
-    register.value = {} # Dallas/DS18B20/28FFFCD0001703AE # temp/DS18B20/28FFFCD0001703AE
+    register.value = {}
     __registers.append(register)
 
     register = Register("hvac.air_temp_cent_1.value")
-    register.scope = Scope.System
+    register.scope = Scope.Device
     register.plugin_name = "HVAC"
     register.description = "Air temperature sensor center value."
-    register.range = "/"
-    register.value = 0.0
+    register.range = __range["NONE"]
+    register.value = {}
     __registers.append(register)
 
     # Air temp lower
@@ -827,11 +827,11 @@ def __add_registers():
     __registers.append(register)
 
     register = Register("hvac.air_temp_lower_1.value")
-    register.scope = Scope.System
+    register.scope = Scope.Device
     register.plugin_name = "HVAC"
     register.description = "Air temperature sensor lower value"
-    register.range = "/"
-    register.value = 0.0
+    register.range = __range["NONE"]
+    register.value = {}
     __registers.append(register)
 
     # Air temp upper.
@@ -852,11 +852,11 @@ def __add_registers():
     __registers.append(register)
 
     register = Register("hvac.air_temp_upper_1.value")
-    register.scope = Scope.System
+    register.scope = Scope.Device
     register.plugin_name = "HVAC"
     register.description = "Air temperature sensor upper value"
-    register.range = "/"
-    register.value = 0.0
+    register.range = __range["NONE"]
+    register.value = {}
     __registers.append(register)
 
     # Convector
@@ -899,13 +899,13 @@ def __add_registers():
     register.description = "Loop 1 water flow meter signal input."
     register.range = __range["NONE"]
     register.value = {
-        # "vendor": "mainone",
-        # "model": "flowmeter_dn20",
-        # "options":
-        # {
-        #     "uart": 1,
-        #     "mb_id": 3,
-        # }
+        "vendor": "mainone",
+        "model": "flowmeter_dn20",
+        "options":
+        {
+            "uart": 1,
+            "mb_id": 57,
+        }
     }
     __registers.append(register)
 
@@ -916,22 +916,22 @@ def __add_registers():
     register.description = "Loop 1 temperature sensor settings."
     register.range = __range["NONE"]
     register.value = {
-        # "vendor": "mainone",
-        # "model": "inlet_temp",
-        # "options":
-        # {
-        #     "uart": 1,
-        #     "mb_id": 3,
-        # }
+        "vendor": "mainone",
+        "model": "flowmeter_dn20",
+        "options":
+        {
+            "uart": 1,
+            "mb_id": 57,
+        }
     }
     __registers.append(register)
 
     register = Register("hvac.floor_loop_1.temp.value")
-    register.scope = Scope.System
+    register.scope = Scope.Device
     register.plugin_name = "HVAC"
     register.description = "Loop 1 temperature sensor value."
-    register.range = "/"
-    register.value = 0.0
+    register.range = __range["NONE"]
+    register.value = {}
     __registers.append(register)
 
     # Loop 1 Down Limit Temperature # Request: Eml6419
@@ -971,13 +971,13 @@ def __add_registers():
     register.description = "Loop 2 water flow meter ticks per liter scale."
     register.range = __range["NONE"]
     register.value = {
-        # "vendor": "mainone",
-        # "model": "flowmeter_dn20",
-        # "options":
-        # {
-        #     "uart": 1,
-        #     "mb_id": 3,
-        # }
+        "vendor": "mainone",
+        "model": "flowmeter_dn20",
+        "options":
+        {
+            "uart": 1,
+            "mb_id": 101,
+        }
     }
     __registers.append(register)
 
@@ -988,22 +988,22 @@ def __add_registers():
     register.description = "Loop 2 temperature sensor settings."
     register.range = __range["NONE"]
     register.value = {
-        # "vendor": "mainone",
-        # "model": "inlet_temp",
-        # "options":
-        # {
-        #     "uart": 1,
-        #     "mb_id": 3,
-        # }
+        "vendor": "mainone",
+        "model": "flowmeter_dn20",
+        "options":
+        {
+            "uart": 1,
+            "mb_id": 101,
+        }
     }
     __registers.append(register)
 
     register = Register("hvac.conv_loop_1.temp.value")
-    register.scope = Scope.System
+    register.scope = Scope.Device
     register.plugin_name = "HVAC"
     register.description = "Loop 1 temperature down limit"
-    register.range = "0.0/"
-    register.value = 15.0
+    register.range = __range["NONE"]
+    register.value = {}
     __registers.append(register)
 
     register = Register("hvac.conv_loop_1.temp.down_limit")
@@ -3506,7 +3506,7 @@ def main():
 
     # Current file path. & Go to file.
     cwf = os.path.dirname(os.path.abspath(__file__))
-    file_name = os.path.join(cwf, "..", "registers.csv")
+    file_name = os.path.join(cwf, "..", "registers.json")
 
 
     __registers = Registers()
@@ -3517,8 +3517,8 @@ def main():
     parser = argparse.ArgumentParser()
 
     # Add arguments.
-    # parser.add_argument("--action", type=str, default="w_json", help="Export JSON file.")
-    parser.add_argument("--action", type=str, default="w_csv", help="Export CSV file.")
+    parser.add_argument("--action", type=str, default="w_json", help="Export JSON file.")
+    # parser.add_argument("--action", type=str, default="w_csv", help="Export CSV file.")
     # parser.add_argument("--action", type=str, default="list_gpio", help="Export type.")
     # parser.add_argument("--action", type=str, default="w_md", help="Export MD file.")
     parser.add_argument("--path", type=str, default=file_name, help="Target file path.")
@@ -3526,19 +3526,19 @@ def main():
     # Take arguments.
     args = parser.parse_args()
 
-    if args.action == "w_json":
+    if args.action == "w_json" and file_name.endswith("json"):
         Registers.to_json(__registers, args.path) # "../Zontromat/registers.json"
 
-    elif args.action == "r_json":
+    elif args.action == "r_json" and file_name.endswith("json"):
         registers = Registers.from_json(args.path) # "../Zontromat/registers.json") # 
 
         for register in registers:
             print(register)
 
-    elif args.action == "w_csv":
+    elif args.action == "w_csv" and file_name.endswith("csv"):
         Registers.to_csv(__registers, args.path) # "../Zontromat/registers.csv")
 
-    elif args.action == "r_csv":
+    elif args.action == "r_csv" and file_name.endswith("csv"):
         registers = Registers.from_csv(args.path) #"../Zontromat/registers.csv")
 
         for register in registers:
@@ -3552,7 +3552,6 @@ def main():
 
     elif args.action == "w_md":
         Registers.to_md(__registers, args.path) #"../Zontromat/plugins/registers.md")
-
 
 if __name__ == "__main__":
     main()
