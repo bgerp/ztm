@@ -782,7 +782,6 @@ class Zone(BasePlugin):
             air_temp_upper_value = self.__air_temp_upper_dev.get_temp()
 
         # 1. If thermometer is available, gets its value.
-        floor_temp_value = 0
         if self.__floor_temp_dev is not None and self.__floor_heat_meter_dev is not None:
             floor_temp_data["temp"] = self.__floor_temp_dev.get_temp()
             floor_temp_data["positive_cumulative_energy"] = self.__floor_heat_meter_dev.get_pcenergy()
@@ -800,7 +799,6 @@ class Zone(BasePlugin):
             # print(air_temp_lower_value)
             # print(air_temp_cent_value)
             # print(air_temp_upper_value)
-            # print(floor_temp_value)
             print(floor_temp_data)
 
         # 2. If the following register is available then set ist value to the thermometers value.
