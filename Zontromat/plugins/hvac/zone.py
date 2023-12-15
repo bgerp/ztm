@@ -1007,6 +1007,9 @@ class Zone(BasePlugin):
         if self.__experimental_update_timer.expired:
             self.__experimental_update_timer.clear()
 
+            # Update thermometers values.
+            self.__update_thermometers_values()
+
             if self.__experimental_counter == 0:
                 self.__floor_valve_dev.target_position = 100
 
