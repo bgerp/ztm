@@ -784,6 +784,18 @@ class Zone(BasePlugin):
         if self.__convector_temp_dev is not None:
             convector_temp_value = self.__convector_temp_dev.get_temp()
 
+        
+        if self.__convector_heat_meter_dev != None and self.__floor_heat_meter_dev != None:
+            # print(self.__convector_heat_meter_dev.get_pcenergy())
+            # print(self.__floor_heat_meter_dev.get_pcenergy())
+            print(air_temp_lower_value)
+            print(air_temp_cent_value)
+            print(air_temp_upper_value)
+            print(floor_temp_value)
+            print(convector_temp_value)
+
+
+
         # 2. If the following register is available then set ist value to the thermometers value.
         self._registers.write("{}.air_temp_lower_{}.value".format(self.key, self.__identifier), air_temp_lower_value)
 
@@ -1016,9 +1028,6 @@ class Zone(BasePlugin):
             elif self.__experimental_counter == 5:
                 # self.__convector_valve_dev.target_position = 100
                 # self.__convector_dev.set_state(1)
-                if self.__convector_heat_meter_dev != None and self.__floor_heat_meter_dev != None:
-                    print(self.__convector_heat_meter_dev.get_pcenergy())
-                    print(self.__floor_heat_meter_dev.get_pcenergy())
                 pass
             
             # Increment
