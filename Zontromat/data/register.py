@@ -215,6 +215,11 @@ class Register:
         if value == self.__value:
             return
 
+        if "hvac.floor_loop_1.temp.value" == self.name:
+            print(f"self.value: {self.value}")
+            print(f"value: {value}")
+            print(f"self.limit: {self.limit}")
+
         if self.data_type == "float":
             if abs(self.value - value) < self.limit:
                 return
