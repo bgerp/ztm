@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 import time
+import json
 from collections import deque
 
 from utils.logger import get_logger
@@ -786,6 +787,7 @@ class Zone(BasePlugin):
             floor_temp_data["temp"] = self.__floor_temp_dev.get_temp()
             floor_temp_data["positive_cumulative_energy"] = self.__floor_heat_meter_dev.get_pcenergy()
             floor_temp_data["ts"] = time.time()
+            floor_temp_data = json.dumps(floor_temp_data)
 
         # 1. If thermometer is available, gets its value.
         convector_temp_value = 0
