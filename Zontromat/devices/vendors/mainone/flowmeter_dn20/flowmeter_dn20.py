@@ -107,19 +107,14 @@ class FlowmeterDN20(ModbusDevice):
             Parameter("PositiveCumulativeEnergy", "KW/h",\
             ParameterType.UINT32_T_BE, [0x00, 0x01], FunctionCode.ReadHoldingRegisters))
 
-        # self._parameters.append(
-        #     Parameter("InstantaneousFlow", "mL/h",\
-        #     ParameterType.UINT32_T_LE, [0x206, 0x207], FunctionCode.ReadHoldingRegisters))
+        self._parameters.append(
+            Parameter("InletWaterTemperature", "⁰C",\
+            ParameterType.UINT32_T_BE, [0x04, 0x05], FunctionCode.ReadHoldingRegisters))
 
-        # self._parameters.append(
-        #     Parameter("WaterTemperature", "0.01",\
-        #     ParameterType.UINT16_T_LE, [0x20B], FunctionCode.ReadHoldingRegisters))
+        self._parameters.append(
+            Parameter("ReturnWaterTemperature", "⁰C",\
+            ParameterType.UINT32_T_BE, [0x06, 0x07], FunctionCode.ReadHoldingRegisters))
 
-        # self._parameters.append(
-        #     Parameter("BatteryVoltage", "0.1",\
-        #     ParameterType.UINT16_T_LE, [0x80C], FunctionCode.ReadHoldingRegisters))
-
-    # # ===== Settings =====
     # 40001: ["Positive cumulative energy",                     4, PT.UINT32_T_BE, "KW/h",            FC.ReadHoldingRegisters, None, [0x00, 0x00]],
     # 40005: ["Inlet temperature",                              4, PT.UINT32_T_BE, "⁰C",              FC.ReadHoldingRegisters, None, [0x00, 0x04]],
     # 40007: ["Return water temperature",                       4, PT.UINT32_T_BE, "⁰C",              FC.ReadHoldingRegisters, None, [0x00, 0x06]],
@@ -129,8 +124,11 @@ class FlowmeterDN20(ModbusDevice):
 #region Public Methods
 
     def get_pcenergy(self):
-        
-        print(self.unit)
+        """Get positive cumulative energy.
+
+        Returns:
+            float: kW/h
+        """
 
         value = self.get_value("PositiveCumulativeEnergy")
 
@@ -146,6 +144,11 @@ class FlowmeterDN20(ModbusDevice):
             float: Value of the temperature.
         """
 
-        return 20.0
+        value = self.get_value("InletWaterTemperature")
+
+        if value != None:
+            value = value / 1.0
+
+        return value
 
 #endregion

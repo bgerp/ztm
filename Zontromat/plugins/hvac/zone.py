@@ -784,19 +784,19 @@ class Zone(BasePlugin):
         if self.__convector_temp_dev is not None:
             convector_temp_value = self.__convector_temp_dev.get_temp()
 
-        # 2. If the folowing register is available then set ist value to the thermometers value.
+        # 2. If the following register is available then set ist value to the thermometers value.
         self._registers.write("{}.air_temp_lower_{}.value".format(self.key, self.__identifier), air_temp_lower_value)
 
-        # 2. If the folowing register is available then set ist value to the thermometers value.
+        # 2. If the following register is available then set ist value to the thermometers value.
         self._registers.write("{}.air_temp_cent_{}.value".format(self.key, self.__identifier), air_temp_cent_value)
 
-        # 2. If the folowing register is available then set ist value to the thermometers value.
+        # 2. If the following register is available then set ist value to the thermometers value.
         self._registers.write("{}.air_temp_upper_{}.value".format(self.key, self.__identifier), air_temp_upper_value)
 
-        # 2. If the folowing register is available then set ist value to the thermometers value.
+        # 2. If the following register is available then set ist value to the thermometers value.
         self._registers.write("{}.floor_{}.temp.value".format(self.key, self.__identifier), floor_temp_value)
 
-        # 2. If the folowing register is available then set ist value to the thermometers value.
+        # 2. If the following register is available then set ist value to the thermometers value.
         self._registers.write("{}.convector_{}.temp.value".format(self.key, self.__identifier), convector_temp_value)
 
     def __is_empty(self):
@@ -914,7 +914,7 @@ class Zone(BasePlugin):
         """_summary_
         """
 
-        # Update thermometres values.
+        # Update thermometers values.
         self.__update_thermometers_values()
 
         # Update occupation flags.
