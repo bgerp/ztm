@@ -802,7 +802,7 @@ def __add_registers():
     __registers.append(register)
 
     register = Register("hvac.air_temp_cent_1.value")
-    register.scope = Scope.System
+    register.scope = Scope.Device
     register.plugin_name = "HVAC"
     register.description = "Air temperature sensor center value."
     register.range = "/"
@@ -827,7 +827,7 @@ def __add_registers():
     __registers.append(register)
 
     register = Register("hvac.air_temp_lower_1.value")
-    register.scope = Scope.System
+    register.scope = Scope.Device
     register.plugin_name = "HVAC"
     register.description = "Air temperature sensor lower value"
     register.range = "/"
@@ -852,7 +852,7 @@ def __add_registers():
     __registers.append(register)
 
     register = Register("hvac.air_temp_upper_1.value")
-    register.scope = Scope.System
+    register.scope = Scope.Device
     register.plugin_name = "HVAC"
     register.description = "Air temperature sensor upper value"
     register.range = "/"
@@ -912,7 +912,7 @@ def __add_registers():
     __registers.append(register)
 
     register = Register("hvac.floor_loop_1.temp.value")
-    register.scope = Scope.System
+    register.scope = Scope.Device
     register.plugin_name = "HVAC"
     register.description = "Loop 1 temperature sensor value."
     register.range = "/"
