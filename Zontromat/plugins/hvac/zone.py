@@ -760,11 +760,11 @@ class Zone(BasePlugin):
 
     def __update_measurements(self):
 
-        floor_temp_data = [
-            "temp": 0.0,
-            "positive_cumulative_energy": 0.0,
-            "ts": 0.0,
-        ]
+        floor_temp_data = {
+            "temp": 0,
+            "positive_cumulative_energy": 0,
+            "ts": 0
+        }
 
         # 1. If thermometer is available, gets its value.
         air_temp_lower_value = 0
