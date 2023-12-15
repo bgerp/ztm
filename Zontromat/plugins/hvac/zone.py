@@ -802,13 +802,13 @@ class Zone(BasePlugin):
             conv_energy_data["ts"] = time.time()
             conv_energy_data = json.dumps(conv_energy_data)
         
-        if self.__convector_heat_meter_dev != None and self.__floor_heat_meter_dev != None:
-            # print(self.__convector_heat_meter_dev.get_pcenergy())
-            # print(self.__floor_heat_meter_dev.get_pcenergy())
-            # print(air_temp_lower_value)
-            # print(air_temp_cent_value)
-            print(conv_energy_data)
-            # print(floor_energy_data)
+        # if self.__convector_heat_meter_dev != None and self.__floor_heat_meter_dev != None:
+        #     print(self.__convector_heat_meter_dev.get_pcenergy())
+        #     print(self.__floor_heat_meter_dev.get_pcenergy())
+        #     print(air_temp_lower_value)
+        #     print(air_temp_cent_value)
+        #     print(conv_energy_data)
+        #     print(floor_energy_data)
 
         # 2. If the following register is available then set ist value to the thermometers value.
         self._registers.write("{}.air_temp_lower_{}.value".format(self.key, self.__identifier), air_temp_lower_value)
