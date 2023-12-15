@@ -147,7 +147,7 @@ class FlowmeterDN20(ModbusDevice):
         value = self.get_value("InletWaterTemperature")
 
         if value != None:
-            value = value / 1.0
+            value = value / 100.0
 
         return value
 
