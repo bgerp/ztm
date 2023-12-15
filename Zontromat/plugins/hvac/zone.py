@@ -813,10 +813,10 @@ class Zone(BasePlugin):
         self._registers.write("{}.air_temp_upper_{}.value".format(self.key, self.__identifier), air_temp_upper_value)
 
         # 2. If the following register is available then set ist value to the thermometers value.
-        self._registers.write("{}.floor_{}.temp.value".format(self.key, self.__identifier), floor_temp_data)
+        self._registers.write("{}.floor_loop_{}.temp.value".format(self.key, self.__identifier), floor_temp_data)
 
         # 2. If the following register is available then set ist value to the thermometers value.
-        self._registers.write("{}.convector_{}.temp.value".format(self.key, self.__identifier), convector_temp_value)
+        self._registers.write("{}.convector_loop_{}.temp.value".format(self.key, self.__identifier), convector_temp_value)
 
     def __is_empty(self):
 
