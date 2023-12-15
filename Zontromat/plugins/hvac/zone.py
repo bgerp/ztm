@@ -761,7 +761,13 @@ class Zone(BasePlugin):
 
     def __update_measurements(self):
 
-        floor_temp_data = {
+        floor_energy_data = {
+            "temp": 0,
+            "positive_cumulative_energy": 0,
+            "ts": 0
+        }
+
+        conv_energy_data = {
             "temp": 0,
             "positive_cumulative_energy": 0,
             "ts": 0
@@ -784,24 +790,25 @@ class Zone(BasePlugin):
 
         # 1. If thermometer is available, gets its value.
         if self.__floor_temp_dev is not None and self.__floor_heat_meter_dev is not None:
-            floor_temp_data["temp"] = self.__floor_temp_dev.get_temp()
-            floor_temp_data["positive_cumulative_energy"] = self.__floor_heat_meter_dev.get_pcenergy()
-            floor_temp_data["ts"] = time.time()
-            floor_temp_data = json.dumps(floor_temp_data)
+            floor_energy_data["temp"] = self.__floor_temp_dev.get_temp()
+            floor_energy_data["positive_cumulative_energy"] = self.__floor_heat_meter_dev.get_pcenergy()
+            floor_energy_data["ts"] = time.time()
+            floor_energy_data = json.dumps(floor_energy_data)
 
         # 1. If thermometer is available, gets its value.
-        convector_temp_value = 0
         if self.__convector_temp_dev is not None:
-            convector_temp_value = self.__convector_temp_dev.get_temp()
-
+            conv_energy_data["temp"] = self.__convector_heat_meter_dev.get_temp()
+            conv_energy_data["positive_cumulative_energy"] = self.__convector_temp_dev.get_pcenergy()
+            conv_energy_data["ts"] = time.time()
+            conv_energy_data = json.dumps(conv_energy_data)
         
         if self.__convector_heat_meter_dev != None and self.__floor_heat_meter_dev != None:
             # print(self.__convector_heat_meter_dev.get_pcenergy())
             # print(self.__floor_heat_meter_dev.get_pcenergy())
             # print(air_temp_lower_value)
             # print(air_temp_cent_value)
-            # print(air_temp_upper_value)
-            print(floor_temp_data)
+            print(conv_energy_data)
+            # print(floor_energy_data)
 
         # 2. If the following register is available then set ist value to the thermometers value.
         self._registers.write("{}.air_temp_lower_{}.value".format(self.key, self.__identifier), air_temp_lower_value)
@@ -813,10 +820,10 @@ class Zone(BasePlugin):
         self._registers.write("{}.air_temp_upper_{}.value".format(self.key, self.__identifier), air_temp_upper_value)
 
         # 2. If the following register is available then set ist value to the thermometers value.
-        self._registers.write("{}.floor_loop_{}.temp.value".format(self.key, self.__identifier), floor_temp_data)
+        self._registers.write("{}.floor_loop_{}.temp.value".format(self.key, self.__identifier), floor_energy_data)
 
         # 2. If the following register is available then set ist value to the thermometers value.
-        self._registers.write("{}.convector_loop_{}.temp.value".format(self.key, self.__identifier), convector_temp_value)
+        self._registers.write("{}.conv_loop_{}.temp.value".format(self.key, self.__identifier), conv_energy_data)
 
     def __is_empty(self):
 
