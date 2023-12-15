@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 
+import time
 from collections import deque
 
 from utils.logger import get_logger
@@ -757,7 +758,13 @@ class Zone(BasePlugin):
             envm_energy.update_handlers = self.__envm_energy_cb
             envm_energy.update()
 
-    def __update_thermometers_values(self):
+    def __update_measurements(self):
+
+        floor_temp_data = [
+            "temp": 0.0,
+            "positive_cumulative_energy": 0.0,
+            "ts": 0.0,
+        ]
 
         # 1. If thermometer is available, gets its value.
         air_temp_lower_value = 0
@@ -776,8 +783,10 @@ class Zone(BasePlugin):
 
         # 1. If thermometer is available, gets its value.
         floor_temp_value = 0
-        if self.__floor_temp_dev is not None:
-            floor_temp_value = self.__floor_temp_dev.get_temp()
+        if self.__floor_temp_dev is not None and self.__floor_heat_meter_dev is not None:
+            floor_temp_data["temp"] = self.__floor_temp_dev.get_temp()
+            floor_temp_data["positive_cumulative_energy"] = self.__floor_heat_meter_dev.get_pcenergy()
+            floor_temp_data["ts"] = time.time()
 
         # 1. If thermometer is available, gets its value.
         convector_temp_value = 0
@@ -788,13 +797,11 @@ class Zone(BasePlugin):
         if self.__convector_heat_meter_dev != None and self.__floor_heat_meter_dev != None:
             # print(self.__convector_heat_meter_dev.get_pcenergy())
             # print(self.__floor_heat_meter_dev.get_pcenergy())
-            print(air_temp_lower_value)
-            print(air_temp_cent_value)
-            print(air_temp_upper_value)
-            print(floor_temp_value)
-            print(convector_temp_value)
-
-
+            # print(air_temp_lower_value)
+            # print(air_temp_cent_value)
+            # print(air_temp_upper_value)
+            # print(floor_temp_value)
+            print(floor_temp_data)
 
         # 2. If the following register is available then set ist value to the thermometers value.
         self._registers.write("{}.air_temp_lower_{}.value".format(self.key, self.__identifier), air_temp_lower_value)
@@ -806,7 +813,7 @@ class Zone(BasePlugin):
         self._registers.write("{}.air_temp_upper_{}.value".format(self.key, self.__identifier), air_temp_upper_value)
 
         # 2. If the following register is available then set ist value to the thermometers value.
-        self._registers.write("{}.floor_{}.temp.value".format(self.key, self.__identifier), floor_temp_value)
+        self._registers.write("{}.floor_{}.temp.value".format(self.key, self.__identifier), floor_temp_data)
 
         # 2. If the following register is available then set ist value to the thermometers value.
         self._registers.write("{}.convector_{}.temp.value".format(self.key, self.__identifier), convector_temp_value)
@@ -927,7 +934,7 @@ class Zone(BasePlugin):
         """
 
         # Update thermometers values.
-        self.__update_thermometers_values()
+        self.__update_measurements()
 
         # Update occupation flags.
         is_empty = self.__is_empty()
@@ -1020,7 +1027,7 @@ class Zone(BasePlugin):
             self.__experimental_update_timer.clear()
 
             # Update thermometers values.
-            self.__update_thermometers_values()
+            self.__update_measurements()
 
             if self.__experimental_counter == 0:
                 self.__floor_valve_dev.target_position = 100
