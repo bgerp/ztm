@@ -497,8 +497,6 @@ class Monitoring(BasePlugin):
         # Add measurement to the tail.
         self.__pa_measurements.append(measurement)
 
-        print(self.__pa_measurements)
-
         # This magical number represents seconds for 24 hours.
         filter_measurements_by_time(self.__pa_measurements, 86400)
 

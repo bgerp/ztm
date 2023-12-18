@@ -122,7 +122,9 @@ class Zone(BasePlugin):
 
     __floor_heat_meter_measurements = []
     """Floor heat meter measurements.
-    """    
+    """
+
+    __fl_demand_timer = None
 
     __convector_temp_dev = None
     """Convector thermometer."""
@@ -493,7 +495,7 @@ class Zone(BasePlugin):
 
 #region Private Methods (Registers Floor Loop)
 
-    def __update_floor_loop_measurements(self):
+    def __fl_update_measurements(self):
 
         if self.__floor_temp_dev is None and self.__floor_heat_meter_dev is None:
             return
@@ -512,7 +514,7 @@ class Zone(BasePlugin):
         # This magical number represents seconds for 24 hours.
         filter_measurements_by_time(self.__floor_heat_meter_measurements, 86400)
 
-        # print(self.__floor_heat_meter_measurements)
+        print(self.__floor_heat_meter_measurements)
 
 
         # 2. If the following register is available then set ist value to the thermometers value.
@@ -1043,11 +1045,16 @@ class Zone(BasePlugin):
 
     def __test_update(self):
 
+        self.__fl_demand_timer.update()
+        if self.__fl_demand_timer.expired:
+            self.__fl_demand_timer.clear()
+
+            self.__fl_update_measurements()
+
+
         self.__experimental_update_timer.update()
         if self.__experimental_update_timer.expired:
             self.__experimental_update_timer.clear()
-
-            self.__update_floor_loop_measurements()
 
             # Update thermometers values.
             self.__update_measurements()
@@ -1095,6 +1102,8 @@ class Zone(BasePlugin):
 
         # Only for test.
         self.__experimental_update_timer = Timer(1)
+
+        self.__fl_demand_timer = Timer(3600)
 
         # Create temperature processor.
         self.__temp_proc = TemperatureProcessor()
