@@ -506,13 +506,14 @@ class Zone(BasePlugin):
         # Set the time of the measurement.
         measurement["ts"] = time.time()
 
-        print(measurement)
-
         # Add measurement to the tail.
         self.__floor_heat_meter_measurements.append(measurement)
 
         # This magical number represents seconds for 24 hours.
         filter_measurements_by_time(self.__floor_heat_meter_measurements, 86400)
+
+        print(self.__floor_heat_meter_measurements)
+
 
         # 2. If the following register is available then set ist value to the thermometers value.
         self._registers.write("{}.floor_loop_{}.temp.measurements".format(self.key, self.__identifier), json.dumps(self.__floor_heat_meter_measurements))
