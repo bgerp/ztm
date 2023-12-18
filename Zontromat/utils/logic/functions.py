@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 import math
+import time
 
 #region File Attributes
 
@@ -132,3 +133,27 @@ def rotate_list(target_list, rotations):
     """
 
     return target_list[-rotations:] + target_list[:-rotations]
+
+def filter_measurements_by_time(measurements, time_sec: int):
+    # Create filter list.
+    filtered_measurements = measurements.copy()
+    filtered_measurements.clear()
+    # Reset delete flag.
+    delete_flag = False
+    # Now!
+    time_now = time.time()
+    # Filter all records.
+    for measurement in measurements:
+        # Calculate delta time.
+        delta_t = time_now - measurement["ts"]
+        # Filter
+        if delta_t < time_sec:
+            filtered_measurements.append(measurement)
+        # Else mark for deletion.
+        else:
+            delete_flag = True
+    # Execute the flag.
+    if delete_flag:
+        measurements.clear()
+        for measurement in filtered_measurements:
+            measurements.append(measurement)
