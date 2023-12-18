@@ -225,6 +225,8 @@ class Monitoring(BasePlugin):
         # This magical number represents seconds for 24 hours.
         self.__filter_measurements_by_time(self.__measurements, 86400)
 
+        print(self.__measurements)
+
         # Update parameters in the registers.
         self._registers.write("{}.hw.measurements".format(self.key), json.dumps(self.__measurements))
 
