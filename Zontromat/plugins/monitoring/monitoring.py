@@ -225,8 +225,6 @@ class Monitoring(BasePlugin):
         # This magical number represents seconds for 24 hours.
         self.__filter_measurements_by_time(self.__measurements, 86400)
 
-        print(self.__measurements)
-
         # Update parameters in the registers.
         self._registers.write("{}.hw.measurements".format(self.key), json.dumps(self.__measurements))
 
@@ -530,6 +528,8 @@ class Monitoring(BasePlugin):
         # Add measurement to the tail.
         self.__measurements.append(measurement)
 
+        print(self.__measurements)
+
         # This magical number represents seconds for 24 hours.
         self.__filter_measurements_by_time(self.__measurements, 86400)
 
@@ -563,10 +563,10 @@ class Monitoring(BasePlugin):
         """
 
         # Update cold water flow meter.
-        self.__update_cw()
+        # self.__update_cw()
 
         # Update hot water flow meter.
-        self.__update_hw()
+        # self.__update_hw()
 
         # Check is it time to measure.
         self.__demand_timer.update()
