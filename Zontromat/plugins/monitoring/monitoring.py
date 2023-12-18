@@ -28,6 +28,7 @@ import time
 
 from utils.logger import get_logger
 from utils.logic.timer import Timer
+from utils.logic.functions import filter_measurements_by_time
 
 from plugins.base_plugin import BasePlugin
 
@@ -104,45 +105,13 @@ class Monitoring(BasePlugin):
     """Power analyzer measurements.
     """
 
-    __demand_timer = None
+    __pa_demand_timer = None
     """Demand measuring timer.
     """
 
 #endregion
 
 #region Private Methods
-
-    def __filter_measurements_by_time(self, measurements, time_sec: int):
-
-        # Create filter list.
-        filtered_measurements = measurements.copy()
-        filtered_measurements.clear()
-
-        # Reset delete flag.
-        delete_flag = False
-
-        # Now!
-        time_now = time.time()
-
-        # Filter all records.
-        for measurement in measurements:
-
-            # Calculate delta time.
-            delta_t = time_now - measurement["ts"]
-
-            # Filter
-            if delta_t < time_sec:
-                filtered_measurements.append(measurement)
-
-            # Else mark for deletion.
-            else:
-                delete_flag = True
-
-        # Execute the flag.
-        if delete_flag:
-            measurements.clear()
-            for measurement in filtered_measurements:
-                measurements.append(measurement)
 
 #endregion
 
@@ -446,8 +415,8 @@ class Monitoring(BasePlugin):
             GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
 
-        if self.__demand_timer is not None:
-            self.__demand_timer.expiration_time = register.value
+        if self.__pa_demand_timer is not None:
+            self.__pa_demand_timer.expiration_time = register.value
 
     def __init_pa(self):
 
@@ -531,7 +500,7 @@ class Monitoring(BasePlugin):
         print(self.__pa_measurements)
 
         # This magical number represents seconds for 24 hours.
-        self.__filter_measurements_by_time(self.__pa_measurements, 86400)
+        filter_measurements_by_time(self.__pa_measurements, 86400)
 
         # Update parameters in the registers.
         self._registers.write("{}.pa.measurements".format(self.key), json.dumps(self.__pa_measurements))
@@ -547,7 +516,7 @@ class Monitoring(BasePlugin):
         self.__logger = get_logger(__name__)
         self.__logger.info("Starting up the {}".format(self.name))
 
-        self.__demand_timer = Timer(3600)
+        self.__pa_demand_timer = Timer(3600)
 
         # Init cold water flow meter.
         self.__init_cw()
@@ -569,11 +538,11 @@ class Monitoring(BasePlugin):
         # self.__update_hw()
 
         # Check is it time to measure.
-        self.__demand_timer.update()
-        if self.__demand_timer.expired:
+        self.__pa_demand_timer.update()
+        if self.__pa_demand_timer.expired:
 
             # Clear the timer.
-            self.__demand_timer.clear()
+            self.__pa_demand_timer.clear()
 
             # Update power analyser.
             self.__update_pa()
