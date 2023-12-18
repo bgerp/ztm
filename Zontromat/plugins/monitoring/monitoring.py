@@ -100,8 +100,8 @@ class Monitoring(BasePlugin):
     __evok_setting = None
     """EVOK settings."""
 
-    __measurements = []
-    """Power analyser measurements.
+    __pa_measurements = []
+    """Power analyzer measurements.
     """
 
     __demand_timer = None
@@ -140,9 +140,9 @@ class Monitoring(BasePlugin):
 
         # Execute the flag.
         if delete_flag:
-            self.__measurements.clear()
+            measurements.clear()
             for measurement in filtered_measurements:
-                self.__measurements.append(measurement)
+                measurements.append(measurement)
 
 #endregion
 
@@ -220,13 +220,13 @@ class Monitoring(BasePlugin):
         measurement["ts"] = time.time()
 
         # Add measurement to the tail.
-        self.__measurements.append(measurement)
+        self.__pa_measurements.append(measurement)
 
         # This magical number represents seconds for 24 hours.
-        self.__filter_measurements_by_time(self.__measurements, 86400)
+        self.__filter_measurements_by_time(self.__pa_measurements, 86400)
 
         # Update parameters in the registers.
-        self._registers.write("{}.hw.measurements".format(self.key), json.dumps(self.__measurements))
+        self._registers.write("{}.hw.measurements".format(self.key), json.dumps(self.__pa_measurements))
 
         # If the zone is empty check for leaks.
         is_empty = self._registers.by_name("envm.is_empty")
@@ -311,13 +311,13 @@ class Monitoring(BasePlugin):
         measurement["ts"] = time.time()
 
         # Add measurement to the tail.
-        self.__measurements.append(measurement)
+        self.__pa_measurements.append(measurement)
 
         # This magical number represents seconds for 24 hours.
-        self.__filter_measurements_by_time(self.__measurements, 86400)
+        self.__filter_measurements_by_time(self.__pa_measurements, 86400)
 
         # Update parameters in the registers.
-        self._registers.write("{}.hw.measurements".format(self.key), json.dumps(self.__measurements))
+        self._registers.write("{}.hw.measurements".format(self.key), json.dumps(self.__pa_measurements))
 
         # If the zone is empty check for leaks.
         is_empty = self._registers.by_name("envm.is_empty")
@@ -526,15 +526,15 @@ class Monitoring(BasePlugin):
         measurement["ts"] = time.time()
 
         # Add measurement to the tail.
-        self.__measurements.append(measurement)
+        self.__pa_measurements.append(measurement)
 
-        print(self.__measurements)
+        print(self.__pa_measurements)
 
         # This magical number represents seconds for 24 hours.
-        self.__filter_measurements_by_time(self.__measurements, 86400)
+        self.__filter_measurements_by_time(self.__pa_measurements, 86400)
 
         # Update parameters in the registers.
-        self._registers.write("{}.pa.measurements".format(self.key), json.dumps(self.__measurements))
+        self._registers.write("{}.pa.measurements".format(self.key), json.dumps(self.__pa_measurements))
 
 #endregion
 
