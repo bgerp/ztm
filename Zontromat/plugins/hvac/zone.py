@@ -506,6 +506,8 @@ class Zone(BasePlugin):
         # Set the time of the measurement.
         measurement["ts"] = time.time()
 
+        print(measurement)
+
         # Add measurement to the tail.
         self.__floor_heat_meter_measurements.append(measurement)
 
