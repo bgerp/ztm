@@ -465,13 +465,12 @@ def __add_registers():
     register.description = "Cold water flow meter"
     register.range = __range["NONE"]
     register.value = {
-        # "vendor": "mainone",
-        # "model": "flowmeter_dn20",
-        # "options":
-        # {
-        #     "uart": 1,
-        #     "mb_id": 3,
-        # }
+        "model": "mw_uml_15",
+        "options": {
+            "mb_id": 96,
+            "uart": 1
+        },
+        "vendor": "smii"
     }
     __registers.append(register)
 
@@ -479,8 +478,8 @@ def __add_registers():
     register.scope = Scope.Device
     register.plugin_name = "Monitoring"
     register.description = "Cold water liters"
-    register.range = "0.0/"
-    register.value = 0.0
+    register.range = __range["NONE"]
+    register.value = []
     __registers.append(register)
 
     register = Register("monitoring.cw.leak")
@@ -498,13 +497,12 @@ def __add_registers():
     register.description = "Hot water input flow meter"
     register.range = __range["NONE"]
     register.value = {
-        # "vendor": "mainone",
-        # "model": "flowmeter_dn20",
-        # "options":
-        # {
-        #     "uart": 1,
-        #     "mb_id": 3,
-        # }
+        "model": "mw_uml_15",
+        "options": {
+            "mb_id": 96,
+            "uart": 1
+        },
+        "vendor": "smii"
     }
     __registers.append(register)
 
@@ -512,8 +510,8 @@ def __add_registers():
     register.scope = Scope.Device
     register.plugin_name = "Monitoring"
     register.description = "Hot water liters"
-    register.range = "0.0/"
-    register.value = 0.0
+    register.range = __range["NONE"]
+    register.value = []
     __registers.append(register)
 
     register = Register("monitoring.hw.leak")
@@ -904,7 +902,7 @@ def __add_registers():
         "options":
         {
             "uart": 1,
-            "mb_id": 57,
+            "mb_id": 41,
         }
     }
     __registers.append(register)
@@ -921,12 +919,12 @@ def __add_registers():
         "options":
         {
             "uart": 1,
-            "mb_id": 57,
+            "mb_id": 41,
         }
     }
     __registers.append(register)
 
-    register = Register("hvac.floor_loop_1.temp.value")
+    register = Register("hvac.floor_loop_1.temp.measurements")
     register.scope = Scope.Device
     register.plugin_name = "HVAC"
     register.description = "Loop 1 temperature sensor value."
@@ -976,7 +974,7 @@ def __add_registers():
         "options":
         {
             "uart": 1,
-            "mb_id": 101,
+            "mb_id": 41,
         }
     }
     __registers.append(register)
@@ -993,12 +991,12 @@ def __add_registers():
         "options":
         {
             "uart": 1,
-            "mb_id": 101,
+            "mb_id": 41,
         }
     }
     __registers.append(register)
 
-    register = Register("hvac.conv_loop_1.temp.value")
+    register = Register("hvac.conv_loop_1.temp.measurements")
     register.scope = Scope.Device
     register.plugin_name = "HVAC"
     register.description = "Loop 1 temperature down limit"

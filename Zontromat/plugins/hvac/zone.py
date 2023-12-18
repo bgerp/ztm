@@ -28,7 +28,7 @@ from collections import deque
 
 from utils.logger import get_logger
 
-from utils.logic.functions import l_scale
+from utils.logic.functions import l_scale, filter_measurements_by_time
 from utils.logic.state_machine import StateMachine
 from utils.logic.timer import Timer
 from utils.logic.temp_processor import TemperatureProcessor
@@ -120,6 +120,9 @@ class Zone(BasePlugin):
     __floor_heat_meter_dev = None
     """Floor heat meter."""
 
+    __floor_heat_meter_measurements = []
+    """Floor heat meter measurements.
+    """    
 
     __convector_temp_dev = None
     """Convector thermometer."""
@@ -490,6 +493,29 @@ class Zone(BasePlugin):
 
 #region Private Methods (Registers Floor Loop)
 
+    def __update_floor_loop_measurements(self):
+
+        if self.__floor_temp_dev is None and self.__floor_heat_meter_dev is None:
+            return
+
+        measurement = {}
+
+        measurement["temp"] = self.__floor_temp_dev.get_temp()
+        measurement["positive_cumulative_energy"] = self.__floor_heat_meter_dev.get_pcenergy()
+
+        # Set the time of the measurement.
+        measurement["ts"] = time.time()
+
+        # Add measurement to the tail.
+        self.__floor_heat_meter_measurements.append(measurement)
+
+        # This magical number represents seconds for 24 hours.
+        filter_measurements_by_time(self.__floor_heat_meter_measurements, 86400)
+
+        # 2. If the following register is available then set ist value to the thermometers value.
+        self._registers.write("{}.floor_loop_{}.temp.measurements".format(self.key, self.__identifier), json.dumps(self.__floor_heat_meter_measurements))
+
+
     def __floor_flowmeter_settings_cb(self, register):
 
         # Check data type.
@@ -761,12 +787,6 @@ class Zone(BasePlugin):
 
     def __update_measurements(self):
 
-        floor_energy_data = {
-            "temp": 0,
-            "positive_cumulative_energy": 0,
-            "ts": 0
-        }
-
         conv_energy_data = {
             "temp": 0,
             "positive_cumulative_energy": 0,
@@ -788,12 +808,6 @@ class Zone(BasePlugin):
         if self.__air_temp_upper_dev is not None:
             air_temp_upper_value = self.__air_temp_upper_dev.get_temp()
 
-        # 1. If thermometer is available, gets its value.
-        if self.__floor_temp_dev is not None and self.__floor_heat_meter_dev is not None:
-            floor_energy_data["temp"] = self.__floor_temp_dev.get_temp()
-            floor_energy_data["positive_cumulative_energy"] = self.__floor_heat_meter_dev.get_pcenergy()
-            floor_energy_data["ts"] = time.time()
-            floor_energy_data = json.dumps(floor_energy_data)
 
         # 1. If thermometer is available, gets its value.
         if self.__convector_temp_dev is not None:
@@ -818,9 +832,6 @@ class Zone(BasePlugin):
 
         # 2. If the following register is available then set ist value to the thermometers value.
         self._registers.write("{}.air_temp_upper_{}.value".format(self.key, self.__identifier), air_temp_upper_value)
-
-        # 2. If the following register is available then set ist value to the thermometers value.
-        self._registers.write("{}.floor_loop_{}.temp.value".format(self.key, self.__identifier), floor_energy_data)
 
         # 2. If the following register is available then set ist value to the thermometers value.
         self._registers.write("{}.conv_loop_{}.temp.value".format(self.key, self.__identifier), conv_energy_data)
@@ -939,6 +950,8 @@ class Zone(BasePlugin):
     def __calc(self):
         """_summary_
         """
+
+        self.__update_floor_loop_measurements()
 
         # Update thermometers values.
         self.__update_measurements()
