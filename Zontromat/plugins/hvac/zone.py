@@ -953,8 +953,6 @@ class Zone(BasePlugin):
         """_summary_
         """
 
-        self.__update_floor_loop_measurements()
-
         # Update thermometers values.
         self.__update_measurements()
 
@@ -1048,8 +1046,11 @@ class Zone(BasePlugin):
         if self.__experimental_update_timer.expired:
             self.__experimental_update_timer.clear()
 
+            self.__update_floor_loop_measurements()
+
             # Update thermometers values.
             self.__update_measurements()
+
 
             if self.__experimental_counter == 0:
                 self.__floor_valve_dev.target_position = 100
