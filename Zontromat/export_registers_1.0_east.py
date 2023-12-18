@@ -911,7 +911,7 @@ def __add_registers():
     }
     __registers.append(register)
 
-    register = Register("hvac.floor_loop_1.temp.value")
+    register = Register("hvac.floor_loop_1.temp.measurements")
     register.scope = Scope.Device
     register.plugin_name = "HVAC"
     register.description = "Loop 1 temperature sensor value."
@@ -978,7 +978,7 @@ def __add_registers():
     }
     __registers.append(register)
 
-    register = Register("hvac.conv_loop_1.temp.value")
+    register = Register("hvac.conv_loop_1.temp.measurements")
     register.scope = Scope.Device
     register.plugin_name = "HVAC"
     register.description = "Loop 1 temperature down limit."
