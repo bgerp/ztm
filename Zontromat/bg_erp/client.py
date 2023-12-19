@@ -304,7 +304,8 @@ class Client:
             if response.status_code == 200:
 
                 if response.text != "":
-
+                    
+                    # TODO: To check if it is HTML!
                     response_registers = json.loads(response.text)
 
                     # self.__logger.info("SYNC; From bgERP: {}".format(response_registers))
