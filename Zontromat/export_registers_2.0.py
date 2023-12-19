@@ -3791,7 +3791,7 @@ def main():
 
     # Current file path. & Go to file.
     cwf = os.path.dirname(os.path.abspath(__file__))
-    file_name = os.path.join(cwf, "..", "registers.csv")
+    file_name = os.path.join(cwf, "..", "registers.json")
 
 
     __registers = Registers()
@@ -3802,8 +3802,8 @@ def main():
     parser = argparse.ArgumentParser()
 
     # Add arguments.
-    # parser.add_argument("--action", type=str, default="w_json", help="Export JSON file.")
-    parser.add_argument("--action", type=str, default="w_csv", help="Export CSV file.")
+    parser.add_argument("--action", type=str, default="w_json", help="Export JSON file.")
+    # parser.add_argument("--action", type=str, default="w_csv", help="Export CSV file.")
     # parser.add_argument("--action", type=str, default="list_gpio", help="Export type.")
     # parser.add_argument("--action", type=str, default="w_md", help="Export MD file.")
     parser.add_argument("--path", type=str, default=file_name, help="Target file path.")
