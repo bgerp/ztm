@@ -471,8 +471,8 @@ class Monitoring(BasePlugin):
             GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
 
-        if self.__demand_timer is not None:
-            self.__demand_timer.expiration_time = register.value
+        # if self.__demand_timer is not None:
+        #     self.__demand_timer.expiration_time = register.value
 
     def __init_pa(self):
 
