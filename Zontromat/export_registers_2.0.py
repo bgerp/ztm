@@ -548,7 +548,7 @@ def __add_registers():
     __registers.append(register)
 
     register = Register("monitoring.pa.demand_time")
-    register.scope = Scope.Device
+    register.scope = Scope.System
     register.plugin_name = "Monitoring"
     register.description = "Power analyzer measuring demand"
     register.range = "0.0/"
