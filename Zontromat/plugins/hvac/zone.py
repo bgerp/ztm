@@ -1649,27 +1649,27 @@ class Zone(BasePlugin):
                 if self.__fl_1_vlv_dev is not None:
                     self.__fl_1_vlv_dev.target_position = 100
 
-            elif self.__experimental_counter == 2:
+            elif self.__experimental_counter == 5:
                 if self.__fl_2_vlv_dev is not None:
                     self.__fl_2_vlv_dev.target_position = 100
 
-            elif self.__experimental_counter == 4:
+            elif self.__experimental_counter == 10:
                 if self.__fl_3_vlv_dev is not None:
                     self.__fl_3_vlv_dev.target_position = 100
 
-            elif self.__experimental_counter == 6:
+            elif self.__experimental_counter == 15:
                 if self.__cl_1_vlv_dev is not None:
                     self.__cl_1_vlv_dev.target_position = 100
                     self.__conv_1_dev.set_state(1)
                     pass
 
-            elif self.__experimental_counter == 8:
+            elif self.__experimental_counter == 20:
                 if self.__cl_2_vlv_dev is not None:
                     self.__cl_2_vlv_dev.target_position = 100
                     self.__conv_2_dev.set_state(1)
                     pass
 
-            elif self.__experimental_counter == 10:
+            elif self.__experimental_counter == 25:
                 if self.__cl_3_vlv_dev is not None:
                     self.__cl_3_vlv_dev.target_position = 100
                     self.__conv_3_dev.set_state(1)
@@ -1679,7 +1679,7 @@ class Zone(BasePlugin):
             self.__experimental_counter += 1
 
             # Reset
-            if self.__experimental_counter > 10:
+            if self.__experimental_counter > 25:
                 self.__experimental_counter = 0
 
         if self.__fl_1_vlv_dev is not None:
