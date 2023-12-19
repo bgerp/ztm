@@ -865,7 +865,7 @@ class Zone(BasePlugin):
         filter_measurements_by_time(self.__cl_1_hm_measurements, 86400)
 
         # 2. If the following register is available then set ist value to the thermometers value.
-        self._registers.write("{}.conv_loop_{}.temp.measurements".format(self.key, self.__identifier), json.dumps(self.__cl_1_hm_measurements))
+        self._registers.write(f"{self.key}.conv_loop_1.temp.measurements", json.dumps(self.__cl_1_hm_measurements))
 
     def __conv_1_settings_cb(self, register):
 
@@ -982,7 +982,7 @@ class Zone(BasePlugin):
         filter_measurements_by_time(self.__cl_2_hm_measurements, 86400)
 
         # 2. If the following register is available then set ist value to the thermometers value.
-        self._registers.write("{self.key}.conv_loop_2.temp.measurements", json.dumps(self.__cl_2_hm_measurements))
+        self._registers.write(f"{self.key}.conv_loop_2.temp.measurements", json.dumps(self.__cl_2_hm_measurements))
 
     def __conv_2_settings_cb(self, register):
 
@@ -1100,7 +1100,7 @@ class Zone(BasePlugin):
         filter_measurements_by_time(self.__cl_3_hm_measurements, 86400)
 
         # 2. If the following register is available then set ist value to the thermometers value.
-        self._registers.write("{self.key}.conv_loop_3.temp.measurements", json.dumps(self.__cl_3_hm_measurements))
+        self._registers.write(f"{self.key}.conv_loop_3.temp.measurements", json.dumps(self.__cl_3_hm_measurements))
 
     def __conv_3_settings_cb(self, register):
 
