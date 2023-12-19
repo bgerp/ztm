@@ -722,7 +722,7 @@ class Zone(BasePlugin):
         print(f"{self.__fl_2_hm_dev}")
 
         # 2. If the following register is available then set ist value to the thermometers value.
-        self._registers.write("{}.floor_loop_{}.temp.measurements".format(self.key, self.__identifier), json.dumps(self.__fl_2_hm_measurements))
+        self._registers.write(f"{self.key}.floor_loop_2.temp.measurements", json.dumps(self.__fl_2_hm_measurements))
 
     def __fl_hm_2_settings_cb(self, register):
 
@@ -858,7 +858,7 @@ class Zone(BasePlugin):
         print(f"{self.__fl_3_hm_dev}")
 
         # 2. If the following register is available then set ist value to the thermometers value.
-        self._registers.write("{}.floor_loop_{}.temp.measurements".format(self.key, self.__identifier), json.dumps(self.__fl_3_hm_measurements))
+        self._registers.write(f"{self.key}.floor_loop_3.temp.measurements", json.dumps(self.__fl_3_hm_measurements))
 
     def __fl_hm_3_settings_cb(self, register):
 
