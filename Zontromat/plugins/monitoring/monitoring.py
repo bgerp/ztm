@@ -226,9 +226,6 @@ class Monitoring(BasePlugin):
         # This magical number represents seconds for 24 hours.
         filter_measurements_by_time(self.__cw_measurements, 86400)
 
-        print(f"{self.__cw_flowmeter_dev}")
-        print(f"HW: {self.__cw_measurements}")
-
         # Update parameters in the registers.
         self._registers.write("{}.hw.measurements".format(self.key), json.dumps(self.__cw_measurements))
 
@@ -337,9 +334,6 @@ class Monitoring(BasePlugin):
 
         # This magical number represents seconds for 24 hours.
         filter_measurements_by_time(self.__hw_measurements, 86400)
-        
-        print(f"{self.__hw_flowmeter_dev}")
-        print(f"HW: {self.__hw_measurements}")
 
         # Update parameters in the registers.
         self._registers.write("{}.hw.measurements".format(self.key), json.dumps(self.__hw_measurements))
@@ -471,8 +465,8 @@ class Monitoring(BasePlugin):
             GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
 
-        # if self.__demand_timer is not None:
-        #     self.__demand_timer.expiration_time = register.value
+        if self.__demand_timer is not None:
+            self.__demand_timer.expiration_time = register.value
 
     def __init_pa(self):
 
@@ -570,7 +564,7 @@ class Monitoring(BasePlugin):
         self.__logger = get_logger(__name__)
         self.__logger.info("Starting up the {}".format(self.name))
 
-        self.__demand_timer = Timer(5) # 3600
+        self.__demand_timer = Timer(3600)
 
         # Init cold water flow meter.
         self.__init_cw()
