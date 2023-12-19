@@ -210,6 +210,7 @@ class Monitoring(BasePlugin):
         filter_measurements_by_time(self.__cw_measurements, 86400)
 
         print(f"CW: {self.__cw_measurements}")
+        print(f"{self.__cw_flowmeter_dev}")
 
         # Update parameters in the registers.
         self._registers.write("{}.hw.measurements".format(self.key), json.dumps(self.__cw_measurements))
@@ -303,6 +304,7 @@ class Monitoring(BasePlugin):
         filter_measurements_by_time(self.__hw_measurements, 86400)
 
         print(f"HW: {self.__hw_measurements}")
+        print(f"{self.__hw_flowmeter_dev}")
 
         # Update parameters in the registers.
         self._registers.write("{}.hw.measurements".format(self.key), json.dumps(self.__hw_measurements))
