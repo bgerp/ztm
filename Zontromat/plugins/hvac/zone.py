@@ -579,9 +579,6 @@ class Zone(BasePlugin):
         # Add measurement to the tail.
         self.__fl_1_hm_measurements.append(measurement)
 
-        print(f"fl_1_hm: {self.__fl_1_hm_measurements}")
-        print(f"{self.__fl_1_hm_dev}")
-
         # This magical number represents seconds for 24 hours.
         filter_measurements_by_time(self.__fl_1_hm_measurements, 86400)
 
@@ -718,9 +715,6 @@ class Zone(BasePlugin):
         # This magical number represents seconds for 24 hours.
         filter_measurements_by_time(self.__fl_2_hm_measurements, 86400)
 
-        print(f"fl_2_hm: {self.__fl_2_hm_measurements}")
-        print(f"{self.__fl_2_hm_dev}")
-
         # 2. If the following register is available then set ist value to the thermometers value.
         self._registers.write(f"{self.key}.floor_loop_2.temp.measurements", json.dumps(self.__fl_2_hm_measurements))
 
@@ -854,9 +848,6 @@ class Zone(BasePlugin):
         # This magical number represents seconds for 24 hours.
         filter_measurements_by_time(self.__fl_3_hm_measurements, 86400)
 
-        print(f"fl_3_hm: {self.__fl_3_hm_measurements}")
-        print(f"{self.__fl_3_hm_dev}")
-
         # 2. If the following register is available then set ist value to the thermometers value.
         self._registers.write(f"{self.key}.floor_loop_3.temp.measurements", json.dumps(self.__fl_3_hm_measurements))
 
@@ -988,9 +979,6 @@ class Zone(BasePlugin):
 
         # This magical number represents seconds for 24 hours.
         filter_measurements_by_time(self.__cl_1_hm_measurements, 86400)
-
-        print(f"cl_1_hm: {self.__cl_1_hm_measurements}")
-        print(f"{self.__cl_1_hm_dev}")
 
         # 2. If the following register is available then set ist value to the thermometers value.
         self._registers.write(f"{self.key}.conv_loop_1.temp.measurements", json.dumps(self.__cl_1_hm_measurements))
@@ -1161,9 +1149,6 @@ class Zone(BasePlugin):
         # This magical number represents seconds for 24 hours.
         filter_measurements_by_time(self.__cl_2_hm_measurements, 86400)
 
-        print(f"cl_2_hm: {self.__cl_2_hm_measurements}")
-        print(f"{self.__cl_2_hm_dev}")
-
         # 2. If the following register is available then set ist value to the thermometers value.
         self._registers.write(f"{self.key}.conv_loop_2.temp.measurements", json.dumps(self.__cl_2_hm_measurements))
 
@@ -1332,9 +1317,6 @@ class Zone(BasePlugin):
 
         # This magical number represents seconds for 24 hours.
         filter_measurements_by_time(self.__cl_3_hm_measurements, 86400)
-
-        print(f"cl_3_hm: {self.__cl_3_hm_measurements}")
-        print(f"{self.__cl_3_hm_dev}")
 
         # 2. If the following register is available then set ist value to the thermometers value.
         self._registers.write(f"{self.key}.conv_loop_3.temp.measurements", json.dumps(self.__cl_3_hm_measurements))
@@ -2015,7 +1997,7 @@ class Zone(BasePlugin):
         # Only for test.
         self.__experimental_update_timer = Timer(1)
 
-        self.__hm_demand_timer = Timer(5) # 3600
+        self.__hm_demand_timer = Timer(3600)
 
         # Create temperature processor.
         self.__temp_proc = TemperatureProcessor()
