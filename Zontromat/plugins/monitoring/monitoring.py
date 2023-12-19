@@ -81,31 +81,46 @@ class Monitoring(BasePlugin):
 #region Attributes
 
     __logger = None
-    """Logger"""
+    """Logger
+    """
 
     __cw_flowmeter_dev = None
-    """Cold water flow meter."""
+    """Cold water flow meter.
+    """
 
     __cw_leak_test = None
-    """Cold water leak test."""
+    """Cold water leak test.
+    """
+
+    __cw_measurements = []
+    """How water measurements.
+    """
 
     __hw_flowmeter_dev = None
-    """Hot water flow meter."""
+    """Hot water flow meter.
+    """
 
     __hw_leak_test = None
-    """Hot water leak test."""
+    """Hot water leak test.
+    """
 
-    __power_analyser = None
-    """Power analyser."""
+    __hw_measurements = []
+    """How water measurements.
+    """
+
+    __power_analyzer = None
+    """Power analyzer.
+    """
 
     __evok_setting = None
-    """EVOK settings."""
+    """EVOK settings.
+    """
 
     __pa_measurements = []
     """Power analyzer measurements.
     """
 
-    __pa_demand_timer = None
+    __demand_timer = None
     """Demand measuring timer.
     """
 
@@ -189,13 +204,13 @@ class Monitoring(BasePlugin):
         measurement["ts"] = time.time()
 
         # Add measurement to the tail.
-        self.__pa_measurements.append(measurement)
+        self.__cw_measurements.append(measurement)
 
         # This magical number represents seconds for 24 hours.
-        self.__filter_measurements_by_time(self.__pa_measurements, 86400)
+        filter_measurements_by_time(self.__cw_measurements, 86400)
 
         # Update parameters in the registers.
-        self._registers.write("{}.hw.measurements".format(self.key), json.dumps(self.__pa_measurements))
+        self._registers.write("{}.hw.measurements".format(self.key), json.dumps(self.__cw_measurements))
 
         # If the zone is empty check for leaks.
         is_empty = self._registers.by_name("envm.is_empty")
@@ -280,10 +295,10 @@ class Monitoring(BasePlugin):
         measurement["ts"] = time.time()
 
         # Add measurement to the tail.
-        self.__pa_measurements.append(measurement)
+        self.__hw_measurements.append(measurement)
 
         # This magical number represents seconds for 24 hours.
-        self.__filter_measurements_by_time(self.__pa_measurements, 86400)
+        filter_measurements_by_time(self.__hw_measurements, 86400)
 
         # Update parameters in the registers.
         self._registers.write("{}.hw.measurements".format(self.key), json.dumps(self.__pa_measurements))
@@ -298,12 +313,12 @@ class Monitoring(BasePlugin):
 
 #endregion
 
-#region Private Methods (Power Analyser)
+#region Private Methods (Power Analyzer)
 
     def __read_unipi_mb_master(self):
 
         # Get structure data.
-        registers_ids = self.__power_analyser.get_registers_ids()
+        registers_ids = self.__power_analyzer.get_registers_ids()
 
         # Get values by the structure.
         registers_values = self._controller.read_mb_registers(\
@@ -313,7 +328,7 @@ class Monitoring(BasePlugin):
             FunctionCode.ReadInputRegisters)
 
         # Convert values to human readable.
-        parameters_values = self.__power_analyser.get_parameters_values(registers_values)
+        parameters_values = self.__power_analyzer.get_parameters_values(registers_values)
 
         # Format the floating points.
         for parameter_value in parameters_values:
@@ -331,9 +346,9 @@ class Monitoring(BasePlugin):
         if not register.data_type == "json":
             return
 
-        if register.value != {} and self.__power_analyser is None:
+        if register.value != {} and self.__power_analyzer is None:
 
-            self.__power_analyser = PowerAnalyzerFactory.create(
+            self.__power_analyzer = PowerAnalyzerFactory.create(
                 controller=self._controller,
                 name="Zone Power analyser",
                 vendor=register.value['vendor'],
@@ -387,8 +402,8 @@ class Monitoring(BasePlugin):
                         EvokSettings.restart()
                         self.__logger.debug("Restart the EVOK service.")
 
-        elif register.value == {} and self.__power_analyser is not None:
-            self.__power_analyser = None
+        elif register.value == {} and self.__power_analyzer is not None:
+            self.__power_analyzer = None
 
             if self._controller.vendor == "UniPi":
 
@@ -415,8 +430,8 @@ class Monitoring(BasePlugin):
             GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
 
-        if self.__pa_demand_timer is not None:
-            self.__pa_demand_timer.expiration_time = register.value
+        if self.__demand_timer is not None:
+            self.__demand_timer.expiration_time = register.value
 
     def __init_pa(self):
 
@@ -432,7 +447,7 @@ class Monitoring(BasePlugin):
 
     def __update_pa(self):
 
-        if self.__power_analyser is None:
+        if self.__power_analyzer is None:
             return
 
         # self.__read_all_parameters()
@@ -448,7 +463,7 @@ class Monitoring(BasePlugin):
             "ts": 0,
         }
 
-        if self.__power_analyser.model == "SDM120":
+        if self.__power_analyzer.model == "SDM120":
 
             if self._controller.vendor == "UniPi":
 
@@ -461,13 +476,13 @@ class Monitoring(BasePlugin):
                 measurement["Phase1Current"] = values["Current"]
 
             else:
-                measurement["ImportActiveEnergy"] = self.__power_analyser.get_value("ImportActiveEnergy")
-                measurement["ExportActiveEnergy"] = self.__power_analyser.get_value("ExportActiveEnergy")
-                measurement["ImportReactiveEnergy"] = self.__power_analyser.get_value("ImportReactiveEnergy")
-                measurement["ExportReactiveEnergy"] = self.__power_analyser.get_value("ExportReactiveEnergy")
-                measurement["Phase1Current"] = self.__power_analyser.get_value("Current")
+                measurement["ImportActiveEnergy"] = self.__power_analyzer.get_value("ImportActiveEnergy")
+                measurement["ExportActiveEnergy"] = self.__power_analyzer.get_value("ExportActiveEnergy")
+                measurement["ImportReactiveEnergy"] = self.__power_analyzer.get_value("ImportReactiveEnergy")
+                measurement["ExportReactiveEnergy"] = self.__power_analyzer.get_value("ExportReactiveEnergy")
+                measurement["Phase1Current"] = self.__power_analyzer.get_value("Current")
 
-        elif self.__power_analyser.model == "SDM630":
+        elif self.__power_analyzer.model == "SDM630":
 
             if self._controller.vendor == "UniPi":
                 values = self.__read_unipi_mb_master()
@@ -480,13 +495,13 @@ class Monitoring(BasePlugin):
                 measurement["Phase3Current"] = values["Phase3Current"]
 
             else:
-                measurement["ImportActiveEnergy"] = self.__power_analyser.get_value("TotalImportkWh")
-                measurement["ExportActiveEnergy"] = self.__power_analyser.get_value("TotalExportkWh")
-                measurement["ImportReactiveEnergy"] = self.__power_analyser.get_value("TotalImportkVArh")
-                measurement["ExportReactiveEnergy"] = self.__power_analyser.get_value("TotalExportkVArh")
-                measurement["Phase1Current"] = self.__power_analyser.get_value("Phase1Current")
-                measurement["Phase2Current"] = self.__power_analyser.get_value("Phase2Current")
-                measurement["Phase3Current"] = self.__power_analyser.get_value("Phase3Current")
+                measurement["ImportActiveEnergy"] = self.__power_analyzer.get_value("TotalImportkWh")
+                measurement["ExportActiveEnergy"] = self.__power_analyzer.get_value("TotalExportkWh")
+                measurement["ImportReactiveEnergy"] = self.__power_analyzer.get_value("TotalImportkVArh")
+                measurement["ExportReactiveEnergy"] = self.__power_analyzer.get_value("TotalExportkVArh")
+                measurement["Phase1Current"] = self.__power_analyzer.get_value("Phase1Current")
+                measurement["Phase2Current"] = self.__power_analyzer.get_value("Phase2Current")
+                measurement["Phase3Current"] = self.__power_analyzer.get_value("Phase3Current")
 
         else:
             self.__logger.error("Unknown power analyser")
@@ -514,7 +529,7 @@ class Monitoring(BasePlugin):
         self.__logger = get_logger(__name__)
         self.__logger.info("Starting up the {}".format(self.name))
 
-        self.__pa_demand_timer = Timer(3600)
+        self.__demand_timer = Timer(3600)
 
         # Init cold water flow meter.
         self.__init_cw()
@@ -522,27 +537,27 @@ class Monitoring(BasePlugin):
         # Init hot water flow meter.
         self.__init_hw()
 
-        # Init power analyser.
+        # Init power analyzer.
         self.__init_pa()
 
     def _update(self):
         """Update the plugin.
         """
 
-        # Update cold water flow meter.
-        # self.__update_cw()
-
-        # Update hot water flow meter.
-        # self.__update_hw()
-
         # Check is it time to measure.
-        self.__pa_demand_timer.update()
-        if self.__pa_demand_timer.expired:
+        self.__demand_timer.update()
+        if self.__demand_timer.expired:
 
             # Clear the timer.
-            self.__pa_demand_timer.clear()
+            self.__demand_timer.clear()
 
-            # Update power analyser.
+            # Update cold water flow meter.
+            self.__update_cw()
+
+            # Update hot water flow meter.
+            self.__update_hw()
+
+            # Update power analyzer.
             self.__update_pa()
 
     def _shutdown(self):
