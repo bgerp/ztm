@@ -301,7 +301,7 @@ class Monitoring(BasePlugin):
         filter_measurements_by_time(self.__hw_measurements, 86400)
 
         # Update parameters in the registers.
-        self._registers.write("{}.hw.measurements".format(self.key), json.dumps(self.__pa_measurements))
+        self._registers.write("{}.hw.measurements".format(self.key), json.dumps(self.__hw_measurements))
 
         # If the zone is empty check for leaks.
         is_empty = self._registers.by_name("envm.is_empty")
