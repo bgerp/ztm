@@ -535,7 +535,7 @@ class Monitoring(BasePlugin):
         self.__logger = get_logger(__name__)
         self.__logger.info("Starting up the {}".format(self.name))
 
-        self.__demand_timer = Timer(3600)
+        self.__demand_timer = Timer(5) # 3600
 
         # Init cold water flow meter.
         self.__init_cw()
