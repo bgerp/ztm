@@ -154,6 +154,23 @@ class Monitoring(BasePlugin):
                 self.__cw_leak_test = LeakTest(self.__cw_flowmeter_dev, 20)
                 self.__cw_leak_test.on_result(self.__cw_leaktest_result)
 
+        elif register.value != {} and self.__cw_flowmeter_dev is not None:
+            self.__cw_flowmeter_dev.shutdown()
+            del self.__cw_flowmeter_dev
+            del self.__cw_leak_test
+            self.__cw_flowmeter_dev = FlowmeterFactory.create(
+                name="Cold water flowmeter",
+                controller=self._controller,
+                vendor=register.value['vendor'],
+                model=register.value['model'],
+                options=register.value['options'])
+
+            if self.__cw_flowmeter_dev is not None:
+                self.__cw_flowmeter_dev.init()
+
+                # 20 seconds is time for leak testing.
+                self.__cw_leak_test = LeakTest(self.__cw_flowmeter_dev, 20)
+                self.__cw_leak_test.on_result(self.__cw_leaktest_result)
 
         elif register.value == {} and self.__cw_flowmeter_dev is not None:
             self.__cw_flowmeter_dev.shutdown()
@@ -209,9 +226,6 @@ class Monitoring(BasePlugin):
         # This magical number represents seconds for 24 hours.
         filter_measurements_by_time(self.__cw_measurements, 86400)
 
-        print(f"CW: {self.__cw_measurements}")
-        print(f"{self.__cw_flowmeter_dev}")
-
         # Update parameters in the registers.
         self._registers.write("{}.hw.measurements".format(self.key), json.dumps(self.__cw_measurements))
 
@@ -237,6 +251,24 @@ class Monitoring(BasePlugin):
         if register.value != {} and self.__hw_flowmeter_dev is None:
             self.__hw_flowmeter_dev = FlowmeterFactory.create(
                 name="Hot water flowmeter",
+                controller=self._controller,
+                vendor=register.value['vendor'],
+                model=register.value['model'],
+                options=register.value['options'])
+
+            if self.__hw_flowmeter_dev is not None:
+                self.__hw_flowmeter_dev.init()
+
+                # 20 seconds is time for leak testing.
+                self.__hw_leak_test = LeakTest(self.__hw_flowmeter_dev, 20)
+                self.__hw_leak_test.on_result(self.__hw_leaktest_result)
+
+        elif register.value != {} and self.__hw_flowmeter_dev is not None:
+            self.__hw_flowmeter_dev.shutdown()
+            del self.__hw_flowmeter_dev
+            del self.__hw_leak_test
+            self.__hw_flowmeter_dev = FlowmeterFactory.create(
+                name="Cold water flowmeter",
                 controller=self._controller,
                 vendor=register.value['vendor'],
                 model=register.value['model'],
@@ -302,9 +334,6 @@ class Monitoring(BasePlugin):
 
         # This magical number represents seconds for 24 hours.
         filter_measurements_by_time(self.__hw_measurements, 86400)
-
-        print(f"HW: {self.__hw_measurements}")
-        print(f"{self.__hw_flowmeter_dev}")
 
         # Update parameters in the registers.
         self._registers.write("{}.hw.measurements".format(self.key), json.dumps(self.__hw_measurements))
