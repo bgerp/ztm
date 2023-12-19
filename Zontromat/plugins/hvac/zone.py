@@ -908,8 +908,22 @@ class Zone(BasePlugin):
         if not register.data_type == "json":
             GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
             return
+        
+        print("++++++++++++++++++++++++ NEW +++++++++++++++++++++++++")
 
         if register.value != {} and self.__cl_1_hm_dev is None:
+            self.__cl_1_hm_dev = FlowmeterFactory.create(
+                name=register.description,
+                controller=self._controller,
+                vendor=register.value['vendor'],
+                model=register.value['model'],
+                options=register.value['options'])
+
+        if register.value != {} and self.__cl_1_hm_dev is not None:
+            self.__cl_1_hm_dev.shutdown()
+
+            del(self.__cl_1_hm_dev)
+
             self.__cl_1_hm_dev = FlowmeterFactory.create(
                 name=register.description,
                 controller=self._controller,
