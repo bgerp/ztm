@@ -88,7 +88,6 @@ class MW_UML_15(ModbusDevice):
             Parameter("BatteryVoltage", "0.1",\
             ParameterType.UINT16_T_LE, [0x80C], FunctionCode.ReadHoldingRegisters))
 
-
     # ===== Settings =====
     # 40001: ["Seconds", 2, PT.UINT16_T_LE, "", None, FC.WriteSingleRegister, [0x000, 0x001]],
     # 40002: ["Minute", 2, PT.UINT16_T_LE, "", None, FC.WriteSingleRegister, [0x000, 0x002]],
