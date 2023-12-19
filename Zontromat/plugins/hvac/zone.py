@@ -606,6 +606,19 @@ class Zone(BasePlugin):
             if self.__fl_1_hm_dev is not None:
                 self.__fl_1_hm_dev.init()
 
+        elif register.value != {} and self.__fl_1_hm_dev is not None:
+            self.__fl_1_hm_dev.shutdown()
+            del self.__fl_1_hm_dev
+            self.__fl_1_hm_dev = FlowmeterFactory.create(
+                name=register.description,
+                controller=self._controller,
+                vendor=register.value['vendor'],
+                model=register.value['model'],
+                options=register.value['options'])
+
+            if self.__fl_1_hm_dev is not None:
+                self.__fl_1_hm_dev.init()
+
         elif register.value == {} and self.__fl_1_hm_dev is not None:
             self.__fl_1_hm_dev.shutdown()
             del self.__fl_1_hm_dev
@@ -629,6 +642,19 @@ class Zone(BasePlugin):
             if self.__fl_1_temp_dev is not None:
                 self.__fl_1_temp_dev.init()
 
+        elif register.value != {} and self.__fl_1_temp_dev is not None:
+            self.__fl_1_temp_dev.shutdown()
+            del self.__fl_1_temp_dev
+            self.__fl_1_temp_dev = ThermometersFactory.create(
+                controller=self._controller,
+                name=register.description,
+                vendor=register.value['vendor'],
+                model=register.value['model'],
+                options=register.value['options'])
+
+            if self.__fl_1_temp_dev is not None:
+                self.__fl_1_temp_dev.init()
+
         elif register.value == {} and self.__fl_1_temp_dev is not None:
             self.__fl_1_temp_dev.shutdown()
             del self.__fl_1_temp_dev
@@ -642,6 +668,19 @@ class Zone(BasePlugin):
 
         if register.value != {} and self.__fl_1_vlv_dev is None:
 
+            self.__fl_1_vlv_dev = ValveFactory.create(
+                name=register.description,
+                controller=self._controller,
+                vendor=register.value['vendor'],
+                model=register.value['model'],
+                options=register.value['options'])
+
+            if self.__fl_1_vlv_dev is not None:
+                self.__fl_1_vlv_dev.init()
+
+        elif register.value != {} and self.__fl_1_vlv_dev is not None:
+            self.__fl_1_vlv_dev.shutdown()
+            del self.__fl_1_vlv_dev
             self.__fl_1_vlv_dev = ValveFactory.create(
                 name=register.description,
                 controller=self._controller,
@@ -703,6 +742,19 @@ class Zone(BasePlugin):
             if self.__fl_2_hm_dev is not None:
                 self.__fl_2_hm_dev.init()
 
+        elif register.value != {} and self.__fl_2_hm_dev is not None:
+            self.__fl_2_hm_dev.shutdown()
+            del self.__fl_2_hm_dev
+            self.__fl_2_hm_dev = FlowmeterFactory.create(
+                name=register.description,
+                controller=self._controller,
+                vendor=register.value['vendor'],
+                model=register.value['model'],
+                options=register.value['options'])
+
+            if self.__fl_2_hm_dev is not None:
+                self.__fl_2_hm_dev.init()
+
         elif register.value == {} and self.__fl_2_hm_dev is not None:
             self.__fl_2_hm_dev.shutdown()
             del self.__fl_2_hm_dev
@@ -726,6 +778,19 @@ class Zone(BasePlugin):
             if self.__fl_2_temp_dev is not None:
                 self.__fl_2_temp_dev.init()
 
+        elif register.value != {} and self.__fl_2_temp_dev is not None:
+            self.__fl_2_temp_dev.shutdown()
+            del self.__fl_2_temp_dev
+            self.__fl_2_temp_dev = ThermometersFactory.create(
+                controller=self._controller,
+                name=register.description,
+                vendor=register.value['vendor'],
+                model=register.value['model'],
+                options=register.value['options'])
+
+            if self.__fl_2_temp_dev is not None:
+                self.__fl_2_temp_dev.init()
+
         elif register.value == {} and self.__fl_2_temp_dev is not None:
             self.__fl_2_temp_dev.shutdown()
             del self.__fl_2_temp_dev
@@ -739,6 +804,19 @@ class Zone(BasePlugin):
 
         if register.value != {} and self.__fl_2_vlv_dev is None:
 
+            self.__fl_2_vlv_dev = ValveFactory.create(
+                name=register.description,
+                controller=self._controller,
+                vendor=register.value['vendor'],
+                model=register.value['model'],
+                options=register.value['options'])
+
+            if self.__fl_2_vlv_dev is not None:
+                self.__fl_2_vlv_dev.init()
+
+        elif register.value != {} and self.__fl_2_vlv_dev is not None:
+            self.__fl_2_vlv_dev.shutdown()
+            del self.__fl_2_vlv_dev
             self.__fl_2_vlv_dev = ValveFactory.create(
                 name=register.description,
                 controller=self._controller,
@@ -799,6 +877,19 @@ class Zone(BasePlugin):
 
             if self.__fl_3_hm_dev is not None:
                 self.__fl_3_hm_dev.init()
+        
+        elif register.value != {} and self.__fl_3_hm_dev is not None:
+            self.__fl_3_hm_dev.shutdown()
+            del self.__fl_3_hm_dev
+            self.__fl_3_hm_dev = FlowmeterFactory.create(
+                name=register.description,
+                controller=self._controller,
+                vendor=register.value['vendor'],
+                model=register.value['model'],
+                options=register.value['options'])
+
+            if self.__fl_3_hm_dev is not None:
+                self.__fl_3_hm_dev.init()
 
         elif register.value == {} and self.__fl_3_hm_dev is not None:
             self.__fl_3_hm_dev.shutdown()
@@ -823,6 +914,19 @@ class Zone(BasePlugin):
             if self.__fl_3_temp_dev is not None:
                 self.__fl_3_temp_dev.init()
 
+        elif register.value != {} and self.__fl_3_temp_dev is not None:
+            self.__fl_3_temp_dev.shutdown()
+            del self.__fl_3_temp_dev
+            self.__fl_3_temp_dev = ThermometersFactory.create(
+                controller=self._controller,
+                name=register.description,
+                vendor=register.value['vendor'],
+                model=register.value['model'],
+                options=register.value['options'])
+
+            if self.__fl_3_temp_dev is not None:
+                self.__fl_3_temp_dev.init()
+
         elif register.value == {} and self.__fl_3_temp_dev is not None:
             self.__fl_3_temp_dev.shutdown()
             del self.__fl_3_temp_dev
@@ -835,7 +939,19 @@ class Zone(BasePlugin):
             return
 
         if register.value != {} and self.__fl_3_vlv_dev is None:
+            self.__fl_3_vlv_dev = ValveFactory.create(
+                name=register.description,
+                controller=self._controller,
+                vendor=register.value['vendor'],
+                model=register.value['model'],
+                options=register.value['options'])
 
+            if self.__fl_3_vlv_dev is not None:
+                self.__fl_3_vlv_dev.init()
+
+        if register.value != {} and self.__fl_3_vlv_dev is None:
+            self.__fl_3_vlv_dev.shutdown()
+            del self.__fl_3_vlv_dev
             self.__fl_3_vlv_dev = ValveFactory.create(
                 name=register.description,
                 controller=self._controller,
@@ -898,6 +1014,19 @@ class Zone(BasePlugin):
             if self.__conv_1_dev is not None:
                 self.__conv_1_dev.init()
 
+        elif register.value != {} and self.__conv_1_dev is not None:
+            self.__conv_1_dev.shutdown()
+            del self.__conv_1_dev
+            self.__conv_1_dev = ConvectorsFactory.create(
+                name=register.description,
+                controller=self._controller,
+                vendor=register.value['vendor'],
+                model=register.value['model'],
+                options=register.value['options'])
+
+            if self.__conv_1_dev is not None:
+                self.__conv_1_dev.init()
+
         elif register.value == {} and self.__conv_1_dev is not None:
             self.__conv_1_dev.shutdown()
             del self.__conv_1_dev
@@ -908,8 +1037,6 @@ class Zone(BasePlugin):
         if not register.data_type == "json":
             GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
             return
-        
-        print("++++++++++++++++++++++++ NEW +++++++++++++++++++++++++")
 
         if register.value != {} and self.__cl_1_hm_dev is None:
             self.__cl_1_hm_dev = FlowmeterFactory.create(
@@ -919,11 +1046,12 @@ class Zone(BasePlugin):
                 model=register.value['model'],
                 options=register.value['options'])
 
+            if self.__cl_1_hm_dev is not None:
+                self.__cl_1_hm_dev.init()
+
         elif register.value != {} and self.__cl_1_hm_dev is not None:
             self.__cl_1_hm_dev.shutdown()
-
-            del(self.__cl_1_hm_dev)
-
+            del self.__cl_1_hm_dev
             self.__cl_1_hm_dev = FlowmeterFactory.create(
                 name=register.description,
                 controller=self._controller,
@@ -957,6 +1085,19 @@ class Zone(BasePlugin):
             if self.__cl_1_temp_dev is not None:
                 self.__cl_1_temp_dev.init()
 
+        elif register.value != {} and self.__cl_1_temp_dev is None:
+            self.__cl_1_temp_dev.shutdown()
+            del self.__cl_1_temp_dev
+            self.__cl_1_temp_dev = ThermometersFactory.create(
+                controller=self._controller,
+                name=register.description,
+                vendor=register.value['vendor'],
+                model=register.value['model'],
+                options=register.value['options'])
+
+            if self.__cl_1_temp_dev is not None:
+                self.__cl_1_temp_dev.init()
+
         elif register.value == {} and self.__cl_1_temp_dev is not None:
             self.__cl_1_temp_dev.shutdown()
             del self.__cl_1_temp_dev
@@ -970,6 +1111,19 @@ class Zone(BasePlugin):
 
         if register.value != {} and self.__cl_1_vlv_dev is None:
 
+            self.__cl_1_vlv_dev = ValveFactory.create(
+                name=register.description,
+                controller=self._controller,
+                vendor=register.value['vendor'],
+                model=register.value['model'],
+                options=register.value['options'])
+
+            if self.__cl_1_vlv_dev is not None:
+                self.__cl_1_vlv_dev.init()
+
+        elif register.value != {} and self.__cl_1_vlv_dev is not None:
+            self.__cl_1_vlv_dev.shutdown()
+            del self.__cl_1_vlv_dev
             self.__cl_1_vlv_dev = ValveFactory.create(
                 name=register.description,
                 controller=self._controller,
@@ -1032,6 +1186,19 @@ class Zone(BasePlugin):
             if self.__conv_2_dev is not None:
                 self.__conv_2_dev.init()
 
+        elif register.value != {} and self.__conv_2_dev is not None:
+            self.__conv_2_dev.shutdown()
+            del self.__conv_2_dev
+            self.__conv_2_dev = ConvectorsFactory.create(
+                name=register.description,
+                controller=self._controller,
+                vendor=register.value['vendor'],
+                model=register.value['model'],
+                options=register.value['options'])
+
+            if self.__conv_2_dev is not None:
+                self.__conv_2_dev.init()
+
         elif register.value == {} and self.__conv_2_dev is not None:
             self.__conv_2_dev.shutdown()
             del self.__conv_2_dev
@@ -1044,6 +1211,19 @@ class Zone(BasePlugin):
             return
 
         if register.value != {} and self.__cl_2_hm_dev is None:
+            self.__cl_2_hm_dev = FlowmeterFactory.create(
+                name=register.description,
+                controller=self._controller,
+                vendor=register.value['vendor'],
+                model=register.value['model'],
+                options=register.value['options'])
+
+            if self.__cl_2_hm_dev is not None:
+                self.__cl_2_hm_dev.init()
+
+        elif register.value != {} and self.__cl_2_hm_dev is not None:
+            self.__cl_2_hm_dev.shutdown()
+            del self.__cl_2_hm_dev
             self.__cl_2_hm_dev = FlowmeterFactory.create(
                 name=register.description,
                 controller=self._controller,
@@ -1074,6 +1254,18 @@ class Zone(BasePlugin):
                 model=register.value['model'],
                 options=register.value['options'])
 
+            if self.__cl_2_temp_dev is not None:
+                self.__cl_2_temp_dev.init()
+
+        elif register.value != {} and self.__cl_2_temp_dev is not None:
+            self.__cl_2_temp_dev.shutdown()
+            del self.__cl_2_temp_dev
+            self.__cl_2_temp_dev = ThermometersFactory.create(
+                controller=self._controller,
+                name=register.description,
+                vendor=register.value['vendor'],
+                model=register.value['model'],
+                options=register.value['options'])
 
             if self.__cl_2_temp_dev is not None:
                 self.__cl_2_temp_dev.init()
@@ -1101,13 +1293,26 @@ class Zone(BasePlugin):
             if self.__cl_2_vlv_dev is not None:
                 self.__cl_2_vlv_dev.init()
 
+        elif register.value != {} and self.__cl_2_vlv_dev is not None:
+            self.__cl_2_vlv_dev.shutdown()
+            del self.__cl_2_vlv_dev
+            self.__cl_2_vlv_dev = ValveFactory.create(
+                name=register.description,
+                controller=self._controller,
+                vendor=register.value['vendor'],
+                model=register.value['model'],
+                options=register.value['options'])
+
+            if self.__cl_2_vlv_dev is not None:
+                self.__cl_2_vlv_dev.init()
+
         elif register.value == {} and self.__cl_2_vlv_dev is not None:
             self.__cl_2_vlv_dev.shutdown()
             del self.__cl_2_vlv_dev
 
 #endregion
 
-#region Private Methods (Registers Convector Loop 2)
+#region Private Methods (Registers Convector Loop 3)
 
     def __cl_3_update_measurements(self):
 
@@ -1153,6 +1358,19 @@ class Zone(BasePlugin):
             if self.__conv_3_dev is not None:
                 self.__conv_3_dev.init()
 
+        elif register.value != {} and self.__conv_3_dev is not None:
+            self.__conv_3_dev.shutdown()
+            del self.__conv_3_dev
+            self.__conv_3_dev = ConvectorsFactory.create(
+                name=register.description,
+                controller=self._controller,
+                vendor=register.value['vendor'],
+                model=register.value['model'],
+                options=register.value['options'])
+
+            if self.__conv_3_dev is not None:
+                self.__conv_3_dev.init()
+
         elif register.value == {} and self.__conv_3_dev is not None:
             self.__conv_3_dev.shutdown()
             del self.__conv_3_dev
@@ -1165,6 +1383,19 @@ class Zone(BasePlugin):
             return
 
         if register.value != {} and self.__cl_3_hm_dev is None:
+            self.__cl_3_hm_dev = FlowmeterFactory.create(
+                name=register.description,
+                controller=self._controller,
+                vendor=register.value['vendor'],
+                model=register.value['model'],
+                options=register.value['options'])
+
+            if self.__cl_3_hm_dev is not None:
+                self.__cl_3_hm_dev.init()
+
+        elif register.value != {} and self.__cl_3_hm_dev is not None:
+            self.__cl_3_hm_dev.shutdown()
+            del self.__cl_3_hm_dev
             self.__cl_3_hm_dev = FlowmeterFactory.create(
                 name=register.description,
                 controller=self._controller,
@@ -1198,6 +1429,19 @@ class Zone(BasePlugin):
             if self.__cl_3_temp_dev is not None:
                 self.__cl_3_temp_dev.init()
 
+        elif register.value != {} and self.__cl_3_temp_dev is not None:
+            self.__cl_3_temp_dev.shutdown()
+            del self.__cl_3_temp_dev
+            self.__cl_3_temp_dev = ThermometersFactory.create(
+                controller=self._controller,
+                name=register.description,
+                vendor=register.value['vendor'],
+                model=register.value['model'],
+                options=register.value['options'])
+
+            if self.__cl_3_temp_dev is not None:
+                self.__cl_3_temp_dev.init()
+
         elif register.value == {} and self.__cl_3_temp_dev is not None:
             self.__cl_3_temp_dev.shutdown()
             del self.__cl_3_temp_dev
@@ -1211,6 +1455,19 @@ class Zone(BasePlugin):
 
         if register.value != {} and self.__cl_3_vlv_dev is None:
 
+            self.__cl_3_vlv_dev = ValveFactory.create(
+                name=register.description,
+                controller=self._controller,
+                vendor=register.value['vendor'],
+                model=register.value['model'],
+                options=register.value['options'])
+
+            if self.__cl_3_vlv_dev is not None:
+                self.__cl_3_vlv_dev.init()
+
+        if register.value != {} and self.__cl_3_vlv_dev is not None:
+            self.__cl_3_vlv_dev.shutdown()
+            del self.__cl_3_vlv_dev
             self.__cl_3_vlv_dev = ValveFactory.create(
                 name=register.description,
                 controller=self._controller,
