@@ -796,15 +796,23 @@ def __add_registers():
     register.plugin_name = "HVAC"
     register.description = "Air temperature sensor center settings."
     register.range = __range["NONE"]
-    register.value = {}
+    register.value = {
+        # "vendor": "Donkger",
+        # "model": "XY-MD02",
+        # "options":
+        # {
+        #     "uart": 0,
+        #     "mb_id": 5
+        # }
+    }
     __registers.append(register)
 
     register = Register("hvac.air_temp_cent_1.value")
     register.scope = Scope.Device
     register.plugin_name = "HVAC"
     register.description = "Air temperature sensor center value."
-    register.range = __range["NONE"]
-    register.value = {}
+    register.range = "0.0/"
+    register.value = 0.0
     __registers.append(register)
 
     # Air temp lower
@@ -828,8 +836,8 @@ def __add_registers():
     register.scope = Scope.Device
     register.plugin_name = "HVAC"
     register.description = "Air temperature sensor lower value"
-    register.range = __range["NONE"]
-    register.value = {}
+    register.range = "0.0/"
+    register.value = 0.0
     __registers.append(register)
 
     # Air temp upper.
@@ -853,8 +861,8 @@ def __add_registers():
     register.scope = Scope.Device
     register.plugin_name = "HVAC"
     register.description = "Air temperature sensor upper value"
-    register.range = __range["NONE"]
-    register.value = {}
+    register.range = "0.0/"
+    register.value = 0.0
     __registers.append(register)
 
     # Floor loop 1 flowmeter.
