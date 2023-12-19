@@ -919,7 +919,7 @@ class Zone(BasePlugin):
                 model=register.value['model'],
                 options=register.value['options'])
 
-        if register.value != {} and self.__cl_1_hm_dev is not None:
+        elif register.value != {} and self.__cl_1_hm_dev is not None:
             self.__cl_1_hm_dev.shutdown()
 
             del(self.__cl_1_hm_dev)
@@ -1007,7 +1007,7 @@ class Zone(BasePlugin):
         # This magical number represents seconds for 24 hours.
         filter_measurements_by_time(self.__cl_2_hm_measurements, 86400)
 
-        print(f"cl_1_hm: {self.__cl_2_hm_measurements}")
+        print(f"cl_2_hm: {self.__cl_2_hm_measurements}")
         print(f"{self.__cl_2_hm_dev}")
 
         # 2. If the following register is available then set ist value to the thermometers value.
