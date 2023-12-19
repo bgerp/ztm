@@ -59,9 +59,7 @@ __status__ = "Debug"
 #endregion
 
 class MW_UML_15(ModbusDevice):
-    """This class is dedicated to read data from SDM120 energy meter.
-
-    See: https://www.eastroneurope.com/images/uploads/products/protocol/SDM120-MODBUS_Protocol.pdf"""
+    """This class is dedicated to read data from MU-UML-15 flow meter."""
 
 #region Constructor
 

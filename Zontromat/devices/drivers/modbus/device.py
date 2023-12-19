@@ -258,17 +258,11 @@ class ModbusDevice(BaseDevice):
     def get_value(self, parameter):
         """Returns parameter value.
 
-        Parameters
-        ----------
-        parameter : str
-            Parameter name.
-        registers : array
-            Registers data.
+        Args:
+            parameter (str): Parameter name.
 
-        Returns
-        -------
-        float
-            Parameter value.
+        Returns:
+            mixed: Parameter value.
         """
 
         value = None
@@ -413,6 +407,7 @@ class ModbusDevice(BaseDevice):
         Returns:
             dict: REquests objects.
         """
+
         requests = {}
         names = self.get_parameters_names()
 
@@ -445,7 +440,7 @@ class ModbusDevice(BaseDevice):
         """
 
         if ParameterType.is_valid(parameter_type) is not True:
-            raise Exception("Modbus data type missmatch.")
+            raise Exception("Modbus data type mismatch.")
 
         if not registers:
             raise Exception("Invalid registers length.")
