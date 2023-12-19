@@ -174,6 +174,15 @@ class ModbusDevice(BaseDevice):
         if "uart" in config:
             self._uart = config["uart"]
 
+    def __str__(self):
+        """Returns device vendor and model as string.
+
+        Returns:
+            str: Short description.
+        """
+        return f"Device vendor({self.vendor}) / model({self.model}) / uart({self.uart}) / unit({self.unit})"
+
+    __repr__ = __str__
 
     #endregion
 
