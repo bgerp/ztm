@@ -226,6 +226,9 @@ class Monitoring(BasePlugin):
         # This magical number represents seconds for 24 hours.
         filter_measurements_by_time(self.__cw_measurements, 86400)
 
+        print(f"{self.__cw_flowmeter_dev}")
+        print(f"HW: {self.__cw_measurements}")
+
         # Update parameters in the registers.
         self._registers.write("{}.hw.measurements".format(self.key), json.dumps(self.__cw_measurements))
 
@@ -334,6 +337,9 @@ class Monitoring(BasePlugin):
 
         # This magical number represents seconds for 24 hours.
         filter_measurements_by_time(self.__hw_measurements, 86400)
+        
+        print(f"{self.__hw_flowmeter_dev}")
+        print(f"HW: {self.__hw_measurements}")
 
         # Update parameters in the registers.
         self._registers.write("{}.hw.measurements".format(self.key), json.dumps(self.__hw_measurements))
