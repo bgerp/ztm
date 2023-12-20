@@ -229,8 +229,8 @@ class Monitoring(BasePlugin):
         # Update parameters in the registers.
         self._registers.write("{}.cw.measurements".format(self.key), json.dumps(self.__cw_measurements))
 
-        print(f"{self.__cw_flowmeter_dev}")
-        print(f"CW: {self.__cw_measurements}")
+        # print(f"{self.__cw_flowmeter_dev}")
+        # print(f"CW: {self.__cw_measurements}")
 
         # If the zone is empty check for leaks.
         is_empty = self._registers.by_name("envm.is_empty")
@@ -468,8 +468,8 @@ class Monitoring(BasePlugin):
             GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
 
-        # if self.__demand_timer is not None:
-        #     self.__demand_timer.expiration_time = register.value
+        if self.__demand_timer is not None:
+            self.__demand_timer.expiration_time = register.value
 
     def __init_pa(self):
 
@@ -567,7 +567,7 @@ class Monitoring(BasePlugin):
         self.__logger = get_logger(__name__)
         self.__logger.info("Starting up the {}".format(self.name))
 
-        self.__demand_timer = Timer(5) # 3600
+        self.__demand_timer = Timer(3600)
 
         # Init cold water flow meter.
         self.__init_cw()
