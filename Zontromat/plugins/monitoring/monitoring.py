@@ -229,6 +229,9 @@ class Monitoring(BasePlugin):
         # Update parameters in the registers.
         self._registers.write("{}.cw.measurements".format(self.key), json.dumps(self.__cw_measurements))
 
+        print(f"{self.__cw_flowmeter_dev}")
+        print(f"CW: {self.__cw_measurements}")
+
         # If the zone is empty check for leaks.
         is_empty = self._registers.by_name("envm.is_empty")
         if self.__cw_flowmeter_dev is not None and\
