@@ -227,7 +227,7 @@ class Monitoring(BasePlugin):
         filter_measurements_by_time(self.__cw_measurements, 86400)
 
         # Update parameters in the registers.
-        self._registers.write("{}.hw.measurements".format(self.key), json.dumps(self.__cw_measurements))
+        self._registers.write("{}.cw.measurements".format(self.key), json.dumps(self.__cw_measurements))
 
         # If the zone is empty check for leaks.
         is_empty = self._registers.by_name("envm.is_empty")
@@ -564,7 +564,7 @@ class Monitoring(BasePlugin):
         self.__logger = get_logger(__name__)
         self.__logger.info("Starting up the {}".format(self.name))
 
-        self.__demand_timer = Timer(3600)
+        self.__demand_timer = Timer(5) # 3600
 
         # Init cold water flow meter.
         self.__init_cw()
