@@ -193,7 +193,7 @@ class XYMD02(ModbusDevice):
         if self.__unsuccessful_times >= self.__unsuccessful_times_limit:
             GlobalErrorHandler.log_hardware_malfunction(
                 self.__logger, "Device: {}; ID: {}; Can not read the temperature value.".format(
-                    self.name, request.unit_id))
+                    self.name, request.unit))
 
         return value
 
