@@ -1929,8 +1929,8 @@ class Zone(BasePlugin):
 
             elif self.__experimental_counter == 15:
                 if self.__cl_1_vlv_dev is not None:
-                    # self.__cl_1_vlv_dev.target_position = 100
-                    # self.__conv_1_dev.set_state(1)
+                    self.__cl_1_vlv_dev.target_position = 100
+                    self.__conv_1_dev.set_state(1)
                     pass
 
             elif self.__experimental_counter == 20:
