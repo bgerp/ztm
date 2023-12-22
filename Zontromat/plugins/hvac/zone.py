@@ -1997,7 +1997,7 @@ class Zone(BasePlugin):
         # Only for test.
         self.__experimental_update_timer = Timer(1)
 
-        self.__hm_demand_timer = Timer(3600)
+        self.__hm_demand_timer = Timer(5) # 3600
 
         # Create temperature processor.
         self.__temp_proc = TemperatureProcessor()
