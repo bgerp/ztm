@@ -932,13 +932,13 @@ def __add_registers():
     register.description = "Floor loop 2 flowmeter."
     register.range = __range["NONE"]
     register.value = {
-        "vendor": "mainone",
-        "model": "flowmeter_dn20",
-        "options":
-        {
-            "uart": 1,
-            "mb_id": 41,
-        }
+        # "vendor": "mainone",
+        # "model": "flowmeter_dn20",
+        # "options":
+        # {
+        #     "uart": 1,
+        #     "mb_id": 41,
+        # }
     }
     __registers.append(register)
 
@@ -948,13 +948,13 @@ def __add_registers():
     register.description = "Floor loop 2 thermometer."
     register.range = __range["NONE"]
     register.value = {
-        "vendor": "mainone",
-        "model": "flowmeter_dn20",
-        "options":
-        {
-            "uart": 1,
-            "mb_id": 41,
-        }
+        # "vendor": "mainone",
+        # "model": "flowmeter_dn20",
+        # "options":
+        # {
+        #     "uart": 1,
+        #     "mb_id": 41,
+        # }
     }
     __registers.append(register)
 
@@ -991,13 +991,13 @@ def __add_registers():
     register.description = "Floor loop 3 flowmeter."
     register.range = __range["NONE"]
     register.value = {
-        "vendor": "mainone",
-        "model": "flowmeter_dn20",
-        "options":
-        {
-            "uart": 1,
-            "mb_id": 41,
-        }
+        # "vendor": "mainone",
+        # "model": "flowmeter_dn20",
+        # "options":
+        # {
+        #     "uart": 1,
+        #     "mb_id": 41,
+        # }
     }
     __registers.append(register)
 
@@ -1007,13 +1007,13 @@ def __add_registers():
     register.description = "Floor loop 3 thermometer."
     register.range = __range["NONE"]
     register.value = {
-        "vendor": "mainone",
-        "model": "flowmeter_dn20",
-        "options":
-        {
-            "uart": 1,
-            "mb_id": 41,
-        }
+        # "vendor": "mainone",
+        # "model": "flowmeter_dn20",
+        # "options":
+        # {
+        #     "uart": 1,
+        #     "mb_id": 41,
+        # }
     }
     __registers.append(register)
 
@@ -1162,13 +1162,13 @@ def __add_registers():
     register.description = "Convector loop 2 flowmeter"
     register.range = __range["NONE"]
     register.value = {
-        "vendor": "mainone",
-        "model": "flowmeter_dn20",
-        "options":
-        {
-            "uart": 1,
-            "mb_id": 41,
-        }
+        # "vendor": "mainone",
+        # "model": "flowmeter_dn20",
+        # "options":
+        # {
+        #     "uart": 1,
+        #     "mb_id": 41,
+        # }
     }
     __registers.append(register)
 
@@ -1179,13 +1179,13 @@ def __add_registers():
     register.description = "Convector loop 2 thermometer"
     register.range = __range["NONE"]
     register.value = {
-        "vendor": "mainone",
-        "model": "flowmeter_dn20",
-        "options":
-        {
-            "uart": 1,
-            "mb_id": 41,
-        }
+        # "vendor": "mainone",
+        # "model": "flowmeter_dn20",
+        # "options":
+        # {
+        #     "uart": 1,
+        #     "mb_id": 41,
+        # }
     }
     __registers.append(register)
 
@@ -1249,13 +1249,13 @@ def __add_registers():
     register.description = "Convector loop 3 flowmeter"
     register.range = __range["NONE"]
     register.value = {
-        "vendor": "mainone",
-        "model": "flowmeter_dn20",
-        "options":
-        {
-            "uart": 1,
-            "mb_id": 41,
-        }
+        # "vendor": "mainone",
+        # "model": "flowmeter_dn20",
+        # "options":
+        # {
+        #     "uart": 1,
+        #     "mb_id": 41,
+        # }
     }
     __registers.append(register)
 
@@ -1266,13 +1266,13 @@ def __add_registers():
     register.description = "Convector loop 3 thermometer"
     register.range = __range["NONE"]
     register.value = {
-        "vendor": "mainone",
-        "model": "flowmeter_dn20",
-        "options":
-        {
-            "uart": 1,
-            "mb_id": 41,
-        }
+    #     "vendor": "mainone",
+    #     "model": "flowmeter_dn20",
+    #     "options":
+    #     {
+    #         "uart": 1,
+    #         "mb_id": 41,
+    #     }
     }
     __registers.append(register)
 
