@@ -112,9 +112,6 @@ class Zone():
     __update_timer = None
     """Update timer."""
 
-    __erp_service_update_rate = 5
-    """ERP service update rate in seconds."""
-
     __erp_service_update_timer = None
     """ERP update timer."""
 
@@ -381,7 +378,7 @@ class Zone():
             set_cb=self.__erp_set_registers)
 
         # Set the ERP update timer.
-        self.__erp_service_update_timer = Timer(self.__erp_service_update_rate)
+        self.__erp_service_update_timer = Timer(int(self.__app_settings.erp_service["update_rate"]))
 
         # Set zone state machine.
         self.__erp_state_machine = StateMachine()
@@ -429,7 +426,7 @@ class Zone():
 
                 if self.__registers is not None:
                     self.__registers.update(update_state)
-                    # Clear the last atendies. (Eml6287)
+                    # Clear the last attendees. (Eml6287)
                     self.__registers.write("ac.last_update_attendees", str([]))
 
                 # (Eml6287)
