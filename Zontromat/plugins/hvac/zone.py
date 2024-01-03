@@ -489,23 +489,33 @@ class Zone(BasePlugin):
             return
 
         if register.value != {} and self.__air_temp_cent_dev is None:
-
             self.__air_temp_cent_dev = ThermometersFactory.create(
-                name="Air temperature center",
                 controller=self._controller,
+                name=register.description,
                 vendor=register.value['vendor'],
                 model=register.value['model'],
                 options=register.value['options'])
 
-            if self.__air_temp_cent_dev is not None:
-                self.__air_temp_cent_dev.init()
-                self.__temp_proc.add(self.__air_temp_cent_dev)
-
-        elif register.value == {} and self.__air_temp_cent_dev is not None:
-
-            self.__temp_proc.add(self.__air_temp_cent_dev)
+        elif register.value != {} and self.__air_temp_cent_dev is not None:
+            self.__temp_proc.remove(self.__air_temp_cent_dev)
             self.__air_temp_cent_dev.shutdown()
             del self.__air_temp_cent_dev
+            self.__air_temp_cent_dev = ThermometersFactory.create(
+                controller=self._controller,
+                name=register.description,
+                vendor=register.value['vendor'],
+                model=register.value['model'],
+                options=register.value['options'])
+
+        elif register.value == {} and self.__air_temp_cent_dev is not None:
+            self.__temp_proc.remove(self.__air_temp_cent_dev)
+            self.__air_temp_cent_dev.shutdown()
+            del self.__air_temp_cent_dev
+
+        if self.__air_temp_cent_dev is not None:
+            self.__air_temp_cent_dev.init()
+            self.__temp_proc.add(self.__air_temp_cent_dev)
+
 
     def __air_temp_lower_settings_cb(self, register):
 
@@ -515,23 +525,32 @@ class Zone(BasePlugin):
             return
 
         if register.value != {} and self.__air_temp_lower_dev is None:
-
             self.__air_temp_lower_dev = ThermometersFactory.create(
                 controller=self._controller,
-                name="Air temperature lower",
+                name=register.description,
                 vendor=register.value['vendor'],
                 model=register.value['model'],
                 options=register.value['options'])
 
-            if self.__air_temp_lower_dev is not None:
-                self.__air_temp_lower_dev.init()
-                self.__temp_proc.add(self.__air_temp_lower_dev)
-
-        elif register.value == {} and self.__air_temp_lower_dev is not None:
-
+        elif register.value != {} and self.__air_temp_lower_dev is not None:
             self.__temp_proc.remove(self.__air_temp_lower_dev)
             self.__air_temp_lower_dev.shutdown()
             del self.__air_temp_lower_dev
+            self.__air_temp_lower_dev = ThermometersFactory.create(
+                controller=self._controller,
+                name=register.description,
+                vendor=register.value['vendor'],
+                model=register.value['model'],
+                options=register.value['options'])
+
+        elif register.value == {} and self.__air_temp_lower_dev is not None:
+            self.__temp_proc.remove(self.__air_temp_lower_dev)
+            self.__air_temp_lower_dev.shutdown()
+            del self.__air_temp_lower_dev
+
+        if self.__air_temp_lower_dev is not None:
+            self.__air_temp_lower_dev.init()
+            self.__temp_proc.add(self.__air_temp_lower_dev)
 
     def __air_temp_upper_settings_cb(self, register):
 
@@ -541,23 +560,32 @@ class Zone(BasePlugin):
             return
 
         if register.value != {} and self.__air_temp_upper_dev is None:
-
             self.__air_temp_upper_dev = ThermometersFactory.create(
                 controller=self._controller,
-                name="Air temperature upper",
+                name=register.description,
                 vendor=register.value['vendor'],
                 model=register.value['model'],
                 options=register.value['options'])
 
-            if self.__air_temp_upper_dev is not None:
-                self.__air_temp_upper_dev.init()
-                self.__temp_proc.add(self.__air_temp_upper_dev)
-
-        elif register.value == {} and self.__air_temp_upper_dev is not None:
-
+        elif register.value != {} and self.__air_temp_upper_dev is not None:
             self.__temp_proc.remove(self.__air_temp_upper_dev)
             self.__air_temp_upper_dev.shutdown()
             del self.__air_temp_upper_dev
+            self.__air_temp_upper_dev = ThermometersFactory.create(
+                controller=self._controller,
+                name=register.description,
+                vendor=register.value['vendor'],
+                model=register.value['model'],
+                options=register.value['options'])
+
+        elif register.value == {} and self.__air_temp_upper_dev is not None:
+            self.__temp_proc.remove(self.__air_temp_upper_dev)
+            self.__air_temp_upper_dev.shutdown()
+            del self.__air_temp_upper_dev
+
+        if self.__air_temp_upper_dev is not None:
+            self.__air_temp_upper_dev.init()
+            self.__temp_proc.add(self.__air_temp_upper_dev)
 
 #endregion
 
@@ -1928,10 +1956,11 @@ class Zone(BasePlugin):
                     self.__fl_3_vlv_dev.target_position = 100
 
             elif self.__experimental_counter == 15:
-                if self.__cl_1_vlv_dev is not None:
-                    self.__cl_1_vlv_dev.target_position = 100
-                if self.__conv_1_dev is not None:
-                    self.__conv_1_dev.set_state(1)
+                # if self.__cl_1_vlv_dev is not None:
+                #     self.__cl_1_vlv_dev.target_position = 100
+                # if self.__conv_1_dev is not None:
+                #     self.__conv_1_dev.set_state(1)
+                pass
 
             elif self.__experimental_counter == 20:
                 if self.__cl_2_vlv_dev is not None:
@@ -1940,10 +1969,11 @@ class Zone(BasePlugin):
                     self.__conv_2_dev.set_state(1)
 
             elif self.__experimental_counter == 25:
-                if self.__cl_3_vlv_dev is not None:
-                    self.__cl_3_vlv_dev.target_position = 100
-                if self.__conv_3_dev is not None:
-                    self.__conv_3_dev.set_state(1)
+                # if self.__cl_3_vlv_dev is not None:
+                #     self.__cl_3_vlv_dev.target_position = 100
+                # if self.__conv_3_dev is not None:
+                #     self.__conv_3_dev.set_state(1)
+                pass
 
             # Increment
             self.__experimental_counter += 1
