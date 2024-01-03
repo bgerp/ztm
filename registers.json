@@ -344,14 +344,7 @@
         "default": {
             "model": "BlindsV2",
             "options": {
-                "deg_per_sec": 10.0,
-                "feedback": "off",
-                "feedback_tresh": 0.093,
-                "max": 180,
                 "mb_id": 11,
-                "min": 0,
-                "output_ccw": "off",
-                "output_cw": "off",
                 "uart": 0
             },
             "vendor": "Yihao"
@@ -381,7 +374,7 @@
         "name": "blinds.blind_1.object_height",
         "plugin": "Blinds",
         "range": "0.0/",
-        "scope": "System"
+        "scope": "Both"
     },
     {
         "data_type": "float",
@@ -391,7 +384,127 @@
         "name": "blinds.blind_1.sunspot_limit",
         "plugin": "Blinds",
         "range": "0.0/",
+        "scope": "Both"
+    },
+    {
+        "data_type": "json",
+        "default": {},
+        "description": "Window 2 blinds mechanism",
+        "limit": 0.0,
+        "name": "blinds.blind_2.mechanism",
+        "plugin": "Blinds",
+        "range": "",
         "scope": "System"
+    },
+    {
+        "data_type": "float",
+        "default": 0.0,
+        "description": "Position [deg]",
+        "limit": 0.0,
+        "name": "blinds.blind_2.position",
+        "plugin": "Blinds",
+        "range": "0.0/180.0",
+        "scope": "Both"
+    },
+    {
+        "data_type": "float",
+        "default": 2.0,
+        "description": "Object height [m].",
+        "limit": 0.0,
+        "name": "blinds.blind_2.object_height",
+        "plugin": "Blinds",
+        "range": "0.0/",
+        "scope": "Both"
+    },
+    {
+        "data_type": "float",
+        "default": 1.0,
+        "description": "Sun spot limit [m].",
+        "limit": 0.0,
+        "name": "blinds.blind_2.sunspot_limit",
+        "plugin": "Blinds",
+        "range": "0.0/",
+        "scope": "Both"
+    },
+    {
+        "data_type": "json",
+        "default": {},
+        "description": "Window 3 blinds mechanism",
+        "limit": 0.0,
+        "name": "blinds.blind_3.mechanism",
+        "plugin": "Blinds",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "float",
+        "default": 0.0,
+        "description": "Position [deg]",
+        "limit": 0.0,
+        "name": "blinds.blind_3.position",
+        "plugin": "Blinds",
+        "range": "0.0/180.0",
+        "scope": "Both"
+    },
+    {
+        "data_type": "float",
+        "default": 2.0,
+        "description": "Object height [m].",
+        "limit": 0.0,
+        "name": "blinds.blind_3.object_height",
+        "plugin": "Blinds",
+        "range": "0.0/",
+        "scope": "Both"
+    },
+    {
+        "data_type": "float",
+        "default": 1.0,
+        "description": "Sun spot limit [m].",
+        "limit": 0.0,
+        "name": "blinds.blind_3.sunspot_limit",
+        "plugin": "Blinds",
+        "range": "0.0/",
+        "scope": "Both"
+    },
+    {
+        "data_type": "json",
+        "default": {},
+        "description": "Window 4 blinds mechanism",
+        "limit": 0.0,
+        "name": "blinds.blind_4.mechanism",
+        "plugin": "Blinds",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "float",
+        "default": 0.0,
+        "description": "Position [deg]",
+        "limit": 0.0,
+        "name": "blinds.blind_4.position",
+        "plugin": "Blinds",
+        "range": "0.0/180.0",
+        "scope": "Both"
+    },
+    {
+        "data_type": "float",
+        "default": 2.0,
+        "description": "Object height [m].",
+        "limit": 0.0,
+        "name": "blinds.blind_4.object_height",
+        "plugin": "Blinds",
+        "range": "0.0/",
+        "scope": "Both"
+    },
+    {
+        "data_type": "float",
+        "default": 1.0,
+        "description": "Sun spot limit [m].",
+        "limit": 0.0,
+        "name": "blinds.blind_4.sunspot_limit",
+        "plugin": "Blinds",
+        "range": "0.0/",
+        "scope": "Both"
     },
     {
         "data_type": "int",
@@ -405,7 +518,7 @@
     },
     {
         "data_type": "bool",
-        "default": false,
+        "default": true,
         "description": "Plugin enabled",
         "limit": 0.0,
         "name": "blinds.enabled",
@@ -419,7 +532,7 @@
             "model": "mw_uml_15",
             "options": {
                 "mb_id": 96,
-                "uart": 0
+                "uart": 1
             },
             "vendor": "smii"
         },
@@ -456,7 +569,7 @@
             "model": "mw_uml_15",
             "options": {
                 "mb_id": 96,
-                "uart": 0
+                "uart": 1
             },
             "vendor": "smii"
         },
@@ -522,7 +635,7 @@
         "name": "monitoring.pa.demand_time",
         "plugin": "Monitoring",
         "range": "0.0/",
-        "scope": "Device"
+        "scope": "System"
     },
     {
         "data_type": "bool",
@@ -821,8 +934,8 @@
         "limit": 0.0,
         "name": "hvac.air_temp_cent_1.value",
         "plugin": "HVAC",
-        "range": "/",
-        "scope": "System"
+        "range": "0.0/",
+        "scope": "Device"
     },
     {
         "data_type": "json",
@@ -848,8 +961,8 @@
         "limit": 0.0,
         "name": "hvac.air_temp_lower_1.value",
         "plugin": "HVAC",
-        "range": "/",
-        "scope": "System"
+        "range": "0.0/",
+        "scope": "Device"
     },
     {
         "data_type": "json",
@@ -875,31 +988,20 @@
         "limit": 0.0,
         "name": "hvac.air_temp_upper_1.value",
         "plugin": "HVAC",
-        "range": "/",
-        "scope": "System"
+        "range": "0.0/",
+        "scope": "Device"
     },
     {
         "data_type": "json",
         "default": {
-            "model": "Klimafan",
+            "model": "flowmeter_dn20",
             "options": {
-                "stage1": "U0:ID6:FC5:R0:RO0",
-                "stage2": "U0:ID6:FC5:R0:RO1",
-                "stage3": "U0:ID6:FC5:R0:RO2"
+                "mb_id": 41,
+                "uart": 1
             },
-            "vendor": "Silpa"
+            "vendor": "mainone"
         },
-        "description": "Convector settings",
-        "limit": 0.0,
-        "name": "hvac.convector_1.settings",
-        "plugin": "HVAC",
-        "range": "",
-        "scope": "System"
-    },
-    {
-        "data_type": "json",
-        "default": {},
-        "description": "Loop 1 water flow meter signal input.",
+        "description": "Floor loop 1 flowmeter.",
         "limit": 0.0,
         "name": "hvac.floor_loop_1.flowmeter.settings",
         "plugin": "HVAC",
@@ -908,8 +1010,15 @@
     },
     {
         "data_type": "json",
-        "default": {},
-        "description": "Loop 1 temperature sensor settings.",
+        "default": {
+            "model": "flowmeter_dn20",
+            "options": {
+                "mb_id": 41,
+                "uart": 1
+            },
+            "vendor": "mainone"
+        },
+        "description": "Floor loop 1 thermometer.",
         "limit": 0.0,
         "name": "hvac.floor_loop_1.temp.settings",
         "plugin": "HVAC",
@@ -917,13 +1026,297 @@
         "scope": "System"
     },
     {
-        "data_type": "float",
-        "default": 0.0,
-        "description": "Loop 1 temperature sensor value.",
+        "data_type": "json",
+        "default": {},
+        "description": "Floor loop 1 measurements.",
         "limit": 0.0,
-        "name": "hvac.floor_loop_1.temp.value",
+        "name": "hvac.floor_loop_1.temp.measurements",
         "plugin": "HVAC",
-        "range": "/",
+        "range": "",
+        "scope": "Device"
+    },
+    {
+        "data_type": "json",
+        "default": {
+            "model": "a20t20b2c",
+            "options": {
+                "output": [
+                    "U0:ID2:FC5:R0:RO0"
+                ]
+            },
+            "vendor": "Tonhe"
+        },
+        "description": "Floor loop 1 valve",
+        "limit": 0.0,
+        "name": "hvac.floor_loop_1.valve.settings",
+        "plugin": "HVAC",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "json",
+        "default": {},
+        "description": "Floor loop 2 flowmeter.",
+        "limit": 0.0,
+        "name": "hvac.floor_loop_2.flowmeter.settings",
+        "plugin": "HVAC",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "json",
+        "default": {},
+        "description": "Floor loop 2 thermometer.",
+        "limit": 0.0,
+        "name": "hvac.floor_loop_2.temp.settings",
+        "plugin": "HVAC",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "json",
+        "default": [],
+        "description": "Floor loop 2 measurements.",
+        "limit": 0.0,
+        "name": "hvac.floor_loop_2.temp.measurements",
+        "plugin": "HVAC",
+        "range": "",
+        "scope": "Device"
+    },
+    {
+        "data_type": "json",
+        "default": {},
+        "description": "Floor loop 2 valve",
+        "limit": 0.0,
+        "name": "hvac.floor_loop_2.valve.settings",
+        "plugin": "HVAC",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "json",
+        "default": {},
+        "description": "Floor loop 3 flowmeter.",
+        "limit": 0.0,
+        "name": "hvac.floor_loop_3.flowmeter.settings",
+        "plugin": "HVAC",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "json",
+        "default": {},
+        "description": "Floor loop 3 thermometer.",
+        "limit": 0.0,
+        "name": "hvac.floor_loop_3.temp.settings",
+        "plugin": "HVAC",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "json",
+        "default": {},
+        "description": "Floor loop 2 measurements.",
+        "limit": 0.0,
+        "name": "hvac.floor_loop_3.temp.measurements",
+        "plugin": "HVAC",
+        "range": "",
+        "scope": "Device"
+    },
+    {
+        "data_type": "json",
+        "default": {},
+        "description": "Floor loop 3 valve",
+        "limit": 0.0,
+        "name": "hvac.floor_loop_3.valve.settings",
+        "plugin": "HVAC",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "json",
+        "default": {
+            "model": "Klimafan",
+            "options": {
+                "stage1": [
+                    "U0:ID6:FC5:R0:RO0"
+                ],
+                "stage2": [
+                    "U0:ID6:FC5:R0:RO1"
+                ],
+                "stage3": [
+                    "U0:ID6:FC5:R0:RO2"
+                ]
+            },
+            "vendor": "Silpa"
+        },
+        "description": "Convector 1",
+        "limit": 0.0,
+        "name": "hvac.convector_1.settings",
+        "plugin": "HVAC",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "json",
+        "default": {
+            "model": "flowmeter_dn20",
+            "options": {
+                "mb_id": 41,
+                "uart": 1
+            },
+            "vendor": "mainone"
+        },
+        "description": "Convector loop 1 heat meter.",
+        "limit": 0.0,
+        "name": "hvac.conv_loop_1.flowmeter.settings",
+        "plugin": "HVAC",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "json",
+        "default": {
+            "model": "flowmeter_dn20",
+            "options": {
+                "mb_id": 41,
+                "uart": 1
+            },
+            "vendor": "mainone"
+        },
+        "description": "Convector loop 1 thermometer.",
+        "limit": 0.0,
+        "name": "hvac.conv_loop_1.temp.settings",
+        "plugin": "HVAC",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "json",
+        "default": {},
+        "description": "Convector loop 1 measurements.",
+        "limit": 0.0,
+        "name": "hvac.conv_loop_1.temp.measurements",
+        "plugin": "HVAC",
+        "range": "",
+        "scope": "Device"
+    },
+    {
+        "data_type": "json",
+        "default": {
+            "model": "a20t20b2c",
+            "options": {
+                "output": [
+                    "U0:ID2:FC5:R0:RO0"
+                ]
+            },
+            "vendor": "Tonhe"
+        },
+        "description": "Convector loop 1 valve",
+        "limit": 0.0,
+        "name": "hvac.conv_loop_1.valve.settings",
+        "plugin": "HVAC",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "json",
+        "default": {},
+        "description": "Convector 2",
+        "limit": 0.0,
+        "name": "hvac.convector_2.settings",
+        "plugin": "HVAC",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "json",
+        "default": {},
+        "description": "Convector loop 2 flowmeter",
+        "limit": 0.0,
+        "name": "hvac.conv_loop_2.flowmeter.settings",
+        "plugin": "HVAC",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "json",
+        "default": {},
+        "description": "Convector loop 2 thermometer",
+        "limit": 0.0,
+        "name": "hvac.conv_loop_2.temp.settings",
+        "plugin": "HVAC",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "json",
+        "default": {},
+        "description": "Convector loop 2 measurements",
+        "limit": 0.0,
+        "name": "hvac.conv_loop_2.temp.measurements",
+        "plugin": "HVAC",
+        "range": "",
+        "scope": "Device"
+    },
+    {
+        "data_type": "json",
+        "default": {},
+        "description": "Convector loop 2 valve",
+        "limit": 0.0,
+        "name": "hvac.conv_loop_2.valve.settings",
+        "plugin": "HVAC",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "json",
+        "default": {},
+        "description": "Convector 3",
+        "limit": 0.0,
+        "name": "hvac.convector_3.settings",
+        "plugin": "HVAC",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "json",
+        "default": {},
+        "description": "Convector loop 3 flowmeter",
+        "limit": 0.0,
+        "name": "hvac.conv_loop_3.flowmeter.settings",
+        "plugin": "HVAC",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "json",
+        "default": {},
+        "description": "Convector loop 3 thermometer",
+        "limit": 0.0,
+        "name": "hvac.conv_loop_3.temp.settings",
+        "plugin": "HVAC",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "json",
+        "default": {},
+        "description": "Convector loop 3 measurements",
+        "limit": 0.0,
+        "name": "hvac.conv_loop_3.temp.measurements",
+        "plugin": "HVAC",
+        "range": "",
+        "scope": "Device"
+    },
+    {
+        "data_type": "json",
+        "default": {},
+        "description": "Convector loop 3 valve",
+        "limit": 0.0,
+        "name": "hvac.conv_loop_3.valve.settings",
+        "plugin": "HVAC",
+        "range": "",
         "scope": "System"
     },
     {
@@ -937,52 +1330,6 @@
         "scope": "System"
     },
     {
-        "data_type": "json",
-        "default": {
-            "model": "a20t20b2c",
-            "options": {
-                "output": "U0:ID2:FC5:R0:RO0"
-            },
-            "vendor": "Tonhe"
-        },
-        "description": "Loop 1 valve settings.",
-        "limit": 0.0,
-        "name": "hvac.floor_loop_1.valve.settings",
-        "plugin": "HVAC",
-        "range": "",
-        "scope": "System"
-    },
-    {
-        "data_type": "json",
-        "default": {},
-        "description": "Loop 2 water flow meter ticks per liter scale.",
-        "limit": 0.0,
-        "name": "hvac.conv_loop_1.flowmeter.settings",
-        "plugin": "HVAC",
-        "range": "",
-        "scope": "System"
-    },
-    {
-        "data_type": "json",
-        "default": {},
-        "description": "Loop 2 temperature sensor settings.",
-        "limit": 0.0,
-        "name": "hvac.conv_loop_1.temp.settings",
-        "plugin": "HVAC",
-        "range": "",
-        "scope": "System"
-    },
-    {
-        "data_type": "float",
-        "default": 15.0,
-        "description": "Loop 1 temperature down limit.",
-        "limit": 0.0,
-        "name": "hvac.conv_loop_1.temp.value",
-        "plugin": "HVAC",
-        "range": "0.0/",
-        "scope": "System"
-    },
-    {
         "data_type": "float",
         "default": 0.0,
         "description": "Loop 1 temperature sensor value.",
@@ -990,22 +1337,6 @@
         "name": "hvac.conv_loop_1.temp.down_limit",
         "plugin": "HVAC",
         "range": "/",
-        "scope": "System"
-    },
-    {
-        "data_type": "json",
-        "default": {
-            "model": "a20t20b2c",
-            "options": {
-                "output": "U0:ID2:FC5:R0:RO1"
-            },
-            "vendor": "Tonhe"
-        },
-        "description": "Loop 2 valve settings.",
-        "limit": 0.0,
-        "name": "hvac.conv_loop_1.valve.settings",
-        "plugin": "HVAC",
-        "range": "",
         "scope": "System"
     },
     {
