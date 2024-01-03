@@ -265,7 +265,8 @@ class ApplicationSettings:
                     "erp_id": "0091-7140-2539-6010",
                     "host": "https://bcvt.eu/",
                     "timeout": 1,
-                    "update_rate": 60
+                    "update_rate": 60,
+                    "serial_number": 0
                     }
 
         # This will be added by the setup script.

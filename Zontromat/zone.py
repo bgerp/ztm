@@ -377,8 +377,12 @@ class Zone():
             get_cb=self.__erp_get_registers,
             set_cb=self.__erp_set_registers)
 
+        # (Eml9649)
         # Set the ERP update timer.
-        self.__erp_service_update_timer = Timer(int(self.__app_settings.erp_service["update_rate"]))
+        self.__erp_service_update_timer = Timer(
+            int(self.__app_settings.erp_service["update_rate"]) + 
+                # Add phase shift time for reducing the self DDoS attack to the server.
+                int(self.__app_settings.erp_service["serial_number"]) * 0.5)
 
         # Set zone state machine.
         self.__erp_state_machine = StateMachine()
@@ -415,6 +419,18 @@ class Zone():
         self.__erp_service_update_timer.update()
         if self.__erp_service_update_timer.expired:
             self.__erp_service_update_timer.clear()
+
+            # (Eml9649)
+            # This check does it pass first time.
+            # This will coss a initial delay that will allow to phase shift by the time of 0.5 seconds,
+            # to reduce chance of  self DDoS attack.
+            if self.__erp_service_update_timer.expiration_time != \
+                int(self.__app_settings.erp_service["update_rate"]):
+                # After first pass.
+                # change the time to the standard update time and it will
+                #  do the same intervals again as required.
+                self.__erp_service_update_timer.expiration_time = \
+                int(self.__app_settings.erp_service["update_rate"])
 
             ztm_regs = self.__registers.by_scope(Scope.Device)
             ztm_regs = ztm_regs.new_then(60)
