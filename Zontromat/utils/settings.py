@@ -237,12 +237,12 @@ class ApplicationSettings:
                     "modbus_rtu_port_0": "/dev/ttyUSB0",
                     "modbus_rtu_baud_0": 9600,
                     "modbus_rtu_cfg_0": "8N1",
-                    "modbus_rtu_timeout_0": 0.1,
+                    "modbus_rtu_timeout_0": 0.6,
                     "modbus_rtu_unit_0": 2,
                     "modbus_rtu_port_1": "/dev/ttyS0",
                     "modbus_rtu_baud_1": 9600,
                     "modbus_rtu_cfg_1": "8N1",
-                    "modbus_rtu_timeout_1": 0.1,
+                    "modbus_rtu_timeout_1": 0.6,
                 }
 
         # # Default software version as current version.
