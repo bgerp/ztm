@@ -401,13 +401,6 @@ def __add_registers():
         "model": "BlindsV2",
         "options":
         {
-            "output_cw": verbal_const.OFF,
-            "output_ccw": verbal_const.OFF,
-            "feedback": verbal_const.OFF,
-            "feedback_tresh": 0.093,
-            "min": 0,
-            "max": 180,
-            "deg_per_sec": 10.0,
             "uart": 0,
             "mb_id": 11
         }
@@ -423,7 +416,7 @@ def __add_registers():
     __registers.append(register)
 
     register = Register("blinds.blind_1.object_height")
-    register.scope = Scope.System
+    register.scope = Scope.Both
     register.plugin_name = "Blinds"
     register.description = "Object height [m]."
     register.range = "0.0/"
@@ -431,12 +424,136 @@ def __add_registers():
     __registers.append(register)
 
     register = Register("blinds.blind_1.sunspot_limit")
-    register.scope = Scope.System
+    register.scope = Scope.Both
     register.plugin_name = "Blinds"
     register.description = "Sun spot limit [m]."
     register.range = "0.0/"
     register.value = 1.0
     __registers.append(register)
+
+
+    register = Register("blinds.blind_2.mechanism")
+    register.scope = Scope.System
+    register.plugin_name = "Blinds"
+    register.description = "Window 2 blinds mechanism"
+    register.range = __range["NONE"]
+    register.value = {
+        "vendor": "Yihao",
+        "model": "BlindsV2",
+        "options":
+        {
+            "uart": 0,
+            "mb_id": 12
+        }
+    }
+    __registers.append(register)
+
+    register = Register("blinds.blind_2.position")
+    register.scope = Scope.Both
+    register.plugin_name = "Blinds"
+    register.description = "Position [deg]"
+    register.range = "0.0/180.0"
+    register.value = 0.0
+    __registers.append(register)
+
+    register = Register("blinds.blind_2.object_height")
+    register.scope = Scope.Both
+    register.plugin_name = "Blinds"
+    register.description = "Object height [m]."
+    register.range = "0.0/"
+    register.value = 2.0
+    __registers.append(register)
+
+    register = Register("blinds.blind_2.sunspot_limit")
+    register.scope = Scope.Both
+    register.plugin_name = "Blinds"
+    register.description = "Sun spot limit [m]."
+    register.range = "0.0/"
+    register.value = 1.0
+    __registers.append(register)
+
+
+    register = Register("blinds.blind_3.mechanism")
+    register.scope = Scope.System
+    register.plugin_name = "Blinds"
+    register.description = "Window 3 blinds mechanism"
+    register.range = __range["NONE"]
+    register.value = {
+        "vendor": "Yihao",
+        "model": "BlindsV2",
+        "options":
+        {
+            "uart": 0,
+            "mb_id": 13
+        }
+    }
+    __registers.append(register)
+
+    register = Register("blinds.blind_3.position")
+    register.scope = Scope.Both
+    register.plugin_name = "Blinds"
+    register.description = "Position [deg]"
+    register.range = "0.0/180.0"
+    register.value = 0.0
+    __registers.append(register)
+
+    register = Register("blinds.blind_3.object_height")
+    register.scope = Scope.Both
+    register.plugin_name = "Blinds"
+    register.description = "Object height [m]."
+    register.range = "0.0/"
+    register.value = 2.0
+    __registers.append(register)
+
+    register = Register("blinds.blind_3.sunspot_limit")
+    register.scope = Scope.Both
+    register.plugin_name = "Blinds"
+    register.description = "Sun spot limit [m]."
+    register.range = "0.0/"
+    register.value = 1.0
+    __registers.append(register)
+
+
+    register = Register("blinds.blind_4.mechanism")
+    register.scope = Scope.System
+    register.plugin_name = "Blinds"
+    register.description = "Window 4 blinds mechanism"
+    register.range = __range["NONE"]
+    register.value = {
+        # "vendor": "Yihao",
+        # "model": "BlindsV2",
+        # "options":
+        # {
+        #     "uart": 0,
+        #     "mb_id": 14
+        # }
+    }
+    __registers.append(register)
+
+    register = Register("blinds.blind_4.position")
+    register.scope = Scope.Both
+    register.plugin_name = "Blinds"
+    register.description = "Position [deg]"
+    register.range = "0.0/180.0"
+    register.value = 0.0
+    __registers.append(register)
+
+    register = Register("blinds.blind_4.object_height")
+    register.scope = Scope.Both
+    register.plugin_name = "Blinds"
+    register.description = "Object height [m]."
+    register.range = "0.0/"
+    register.value = 2.0
+    __registers.append(register)
+
+    register = Register("blinds.blind_4.sunspot_limit")
+    register.scope = Scope.Both
+    register.plugin_name = "Blinds"
+    register.description = "Sun spot limit [m]."
+    register.range = "0.0/"
+    register.value = 1.0
+    __registers.append(register)
+
 
     register = Register("blinds.count")
     register.scope = Scope.System
@@ -451,7 +568,7 @@ def __add_registers():
     register.plugin_name = "Blinds"
     register.description = "Plugin enabled"
     register.range = __range["BOOL"]
-    register.value = False
+    register.value = True
     __registers.append(register)
 
 #endregion
@@ -3788,11 +3905,7 @@ def __add_registers():
 def main():
     global __registers, __range
 
-
-    # Current file path. & Go to file.
-    cwf = os.path.dirname(os.path.abspath(__file__))
-    file_name = os.path.join(cwf, "..", "registers.json")
-
+    __f_ext = ""
 
     __registers = Registers()
 
@@ -3806,25 +3919,35 @@ def main():
     # parser.add_argument("--action", type=str, default="w_csv", help="Export CSV file.")
     # parser.add_argument("--action", type=str, default="list_gpio", help="Export type.")
     # parser.add_argument("--action", type=str, default="w_md", help="Export MD file.")
-    parser.add_argument("--path", type=str, default=file_name, help="Target file path.")
+    # parser.add_argument("--path", type=str, default=file_name, help="Target file path.")
 
     # Take arguments.
     args = parser.parse_args()
 
-    if args.action == "w_json" and file_name.endswith("json"):
-        Registers.to_json(__registers, args.path) # "../Zontromat/registers.json"
+    if args.action.endswith("json"):
+        __f_ext = "json"
+    if args.action.endswith("csv"):
+        __f_ext = "csv"
 
-    elif args.action == "r_json" and file_name.endswith("json"):
-        registers = Registers.from_json(args.path) # "../Zontromat/registers.json") # 
+    # Current file path. & Go to file.
+    cwf = os.path.dirname(os.path.abspath(__file__))
+    file_name = os.path.join(cwf, "..", f"registers.{__f_ext}")
+
+
+    if args.action == "w_json":
+        Registers.to_json(__registers, file_name) # "../Zontromat/registers.json"
+
+    elif args.action == "r_json":
+        registers = Registers.from_json(file_name) # "../Zontromat/registers.json") # 
 
         for register in registers:
             print(register)
 
-    elif args.action == "w_csv" and file_name.endswith("csv"):
-        Registers.to_csv(__registers, args.path) # "../Zontromat/registers.csv")
+    elif args.action == "w_csv":
+        Registers.to_csv(__registers, file_name) # "../Zontromat/registers.csv")
 
-    elif args.action == "r_csv" and file_name.endswith("csv"):
-        registers = Registers.from_csv(args.path) #"../Zontromat/registers.csv")
+    elif args.action == "r_csv":
+        registers = Registers.from_csv(file_name) #"../Zontromat/registers.csv")
 
         for register in registers:
             print(register)
