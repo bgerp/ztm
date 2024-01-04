@@ -669,7 +669,7 @@
     },
     {
         "data_type": "float",
-        "default": 20.0,
+        "default": 0.0,
         "description": "Actual outside temperature [C]",
         "limit": 0.0,
         "name": "envm.temp.actual",
@@ -679,7 +679,17 @@
     },
     {
         "data_type": "float",
-        "default": 30.0,
+        "default": 0.0,
+        "description": "Actual outside temperature for 3 hours [C]",
+        "limit": 0.0,
+        "name": "envm.temp.a3",
+        "plugin": "Environment",
+        "range": "-50/50",
+        "scope": "System"
+    },
+    {
+        "data_type": "float",
+        "default": 0.0,
         "description": "Actual outside temperature for 6 hours [C]",
         "limit": 0.0,
         "name": "envm.temp.a6",
@@ -689,7 +699,7 @@
     },
     {
         "data_type": "float",
-        "default": 20.0,
+        "default": 0.0,
         "description": "Minimum outside temperature for 24 hours [C]",
         "limit": 0.0,
         "name": "envm.temp.min24",
@@ -699,7 +709,7 @@
     },
     {
         "data_type": "float",
-        "default": 36.0,
+        "default": 0.0,
         "description": "Maximum outside temperature for 24 hours [C]",
         "limit": 0.0,
         "name": "envm.temp.max24",
@@ -709,18 +719,8 @@
     },
     {
         "data_type": "float",
-        "default": 60.0,
-        "description": "Actual outside relative humidity [%]",
-        "limit": 0.0,
-        "name": "envm.rh",
-        "plugin": "Environment",
-        "range": "0.0/100.0",
-        "scope": "System"
-    },
-    {
-        "data_type": "float",
-        "default": 3.0,
-        "description": "Actual wind [m/sec]",
+        "default": 0.0,
+        "description": "Actual wind now [m/sec]",
         "limit": 0.0,
         "name": "envm.wind.actual",
         "plugin": "Environment",
@@ -729,12 +729,72 @@
     },
     {
         "data_type": "float",
-        "default": 6.0,
-        "description": "Maximum wind for 12 hours [m/sec]",
+        "default": 0.0,
+        "description": "Actual wind for 3 hours [m/sec]",
         "limit": 0.0,
-        "name": "envm.wind.max12",
+        "name": "envm.wind.a3",
         "plugin": "Environment",
         "range": "0.0/",
+        "scope": "System"
+    },
+    {
+        "data_type": "float",
+        "default": 0.0,
+        "description": "Actual wind for 6 hours [m/sec]",
+        "limit": 0.0,
+        "name": "envm.wind.a6",
+        "plugin": "Environment",
+        "range": "0.0/",
+        "scope": "System"
+    },
+    {
+        "data_type": "float",
+        "default": 0.0,
+        "description": "Minimum wind for 24 hours [m/sec]",
+        "limit": 0.0,
+        "name": "envm.wind.min24",
+        "plugin": "Environment",
+        "range": "0.0/",
+        "scope": "System"
+    },
+    {
+        "data_type": "float",
+        "default": 0.0,
+        "description": "Maximum wind for 24 hours [m/sec]",
+        "limit": 0.0,
+        "name": "envm.wind.max24",
+        "plugin": "Environment",
+        "range": "0.0/",
+        "scope": "System"
+    },
+    {
+        "data_type": "float",
+        "default": 0.0,
+        "description": "Actual outside relative humidity [%]",
+        "limit": 0.0,
+        "name": "envm.rh.actual",
+        "plugin": "Environment",
+        "range": "0.0/100.0",
+        "scope": "System"
+    },
+    {
+        "data_type": "float",
+        "default": 0.0,
+        "description": "Actual outside relative humidity for 3 hours [%]",
+        "limit": 0.0,
+        "name": "envm.rh.a3",
+        "plugin": "Environment",
+        "range": "0.0/100.0",
+        "scope": "System"
+    },
+    {
+        "data_type": "float",
+        "default": 0.0,
+        "description": "Actual outside relative humidity for 6 hours [%]",
+        "limit": 0.0,
+        "name": "envm.rh.a6",
+        "plugin": "Environment",
+        "range": "0.0/100.0",
         "scope": "System"
     },
     {
