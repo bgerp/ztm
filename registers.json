@@ -919,7 +919,14 @@
     },
     {
         "data_type": "json",
-        "default": {},
+        "default": {
+            "model": "Envse",
+            "options": {
+                "mb_id": 3,
+                "uart": 0
+            },
+            "vendor": "Gemho"
+        },
         "description": "Air temperature sensor center settings.",
         "limit": 0.0,
         "name": "hvac.air_temp_cent_1.settings",
