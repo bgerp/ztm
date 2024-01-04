@@ -111,8 +111,8 @@ class XYMD02(ModbusDevice):
     def __set_registers(self):
 
         self._parameters.append(
-            Parameter("Temperature", "C",\
-            ParameterType.INT16_T_LE, [0x0001], FunctionCode.ReadInputRegisters))
+            Parameter("Temperature", "ºC",\
+            ParameterType.INT16_T_LE, [0x00, 0x01], FunctionCode.ReadInputRegisters))
 
         self._parameters.append(\
             Parameter("Humidity", "Rh%",\
