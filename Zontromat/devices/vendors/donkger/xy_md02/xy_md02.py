@@ -161,39 +161,11 @@ class XYMD02(ModbusDevice):
             float: Value of the temperature.
         """
 
-        value = 0.0
+        value = self.get_value("Temperature")
 
-        # TODO: Split the device.
+        if value != None:
+            value = value / 10.0
 
-        try:
-            request = self.generate_request("Temperature")
-            response = self._controller.execute_mb_request(request, self.uart)
-            if response is not None:
-                if not response.isError():
-                    value = response.registers[0] / 10
-
-                    # Dump good value.
-                    self.__last_good_measurement = value
-
-                    # Reset the counter.
-                    self.__unsuccessful_times = 0
-
-                else:
-                    self.__unsuccessful_times += 1
-                    value = self.__last_good_measurement
-
-            else:
-                self.__unsuccessful_times += 1
-                value = self.__last_good_measurement
-
-        except Exception:
-            self.__unsuccessful_times += 1
-            value = self.__last_good_measurement
-
-        if self.__unsuccessful_times >= self.__unsuccessful_times_limit:
-            GlobalErrorHandler.log_hardware_malfunction(
-                self.__logger,
-                f"Device: {self.name}; Can not read the temperature value.")
         return value
 
     def get_hum(self):
