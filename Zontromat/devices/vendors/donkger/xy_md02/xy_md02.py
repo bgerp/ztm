@@ -161,10 +161,15 @@ class XYMD02(ModbusDevice):
             float: Value of the temperature.
         """
 
-        value = self.get_value("Temperature")
+        value = 0.0
 
-        if value != None:
-            value = value / 10.0
+        try:
+            value = self.get_value("Temperature")
+
+            if value != None:
+                value = value / 10.0
+        except Exception as e:
+            pass
 
         return value
 
