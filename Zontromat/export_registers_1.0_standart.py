@@ -653,7 +653,7 @@ def __add_registers():
             "uart": 0,
             "mb_id": 1,
         }
-    } # "Eastron/SDM120/2/3"
+    }
     __registers.append(register)
 
     register = Register("monitoring.pa.measurements")
@@ -914,13 +914,13 @@ def __add_registers():
     register.description = "Air temperature sensor center settings."
     register.range = __range["NONE"]
     register.value = {
-        # "vendor": "Donkger",
-        # "model": "XY-MD02",
-        # "options":
-        # {
-        #     "uart": 0,
-        #     "mb_id": 5
-        # }
+        "vendor": "Gemho",
+        "model": "Envse",
+        "options":
+        {
+            "uart": 0,
+            "mb_id": 3
+        }
     }
     __registers.append(register)
 
