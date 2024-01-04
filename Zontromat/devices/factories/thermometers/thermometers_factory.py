@@ -27,7 +27,7 @@ from devices.vendors.sed_tronic.u1wtvs.u1wtvs import U1WTVS
 from devices.vendors.donkger.xy_md02.xy_md02 import XYMD02
 from devices.vendors.mainone.thermometer.ushm_inlet import USHMInlet
 from devices.vendors.mainone.flowmeter_dn20.flowmeter_dn20 import FlowmeterDN20
-
+from devices.vendors.gemho.envse.envse import Envse
 
 #region File Attributes
 
@@ -134,6 +134,16 @@ class ThermometersFactory:
         elif vendor == "mainone" and  model == "flowmeter_dn20":
 
             device = FlowmeterDN20(
+                name=name,
+                controller=controller,
+                uart=config["options"]["uart"],
+                mb_id=config["options"]["mb_id"]
+            )
+
+        # Gemho / Envse
+        elif vendor == "Gemho" and  model == "Envse":
+
+            device = Envse(
                 name=name,
                 controller=controller,
                 uart=config["options"]["uart"],
