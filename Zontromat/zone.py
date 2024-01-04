@@ -495,7 +495,6 @@ class Zone():
 
             self.__ztm_ui_update_timer = Timer(1)
 
-
     def __update_min_max(self, register):
 
         target_register = self.__registers.by_name(register["name"])
