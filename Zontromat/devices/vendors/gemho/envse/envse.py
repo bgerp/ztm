@@ -89,7 +89,18 @@ class Envse(ModbusDevice):
 #region Public Methods
 
     def get_temp(self):
-        return self.get_value("Temperature")
+        """Get temperature.
+
+        Returns:
+            float: Value of the temperature.
+        """
+
+        value = self.get_value("Temperature")
+
+        if value != None:
+            value = value / 10.0
+
+        return value
 
     def get_hum(self):
         return self.get_value("Humidity")
