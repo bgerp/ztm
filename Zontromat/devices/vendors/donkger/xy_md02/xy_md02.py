@@ -112,7 +112,7 @@ class XYMD02(ModbusDevice):
 
         self._parameters.append(
             Parameter("Temperature", "ºC",\
-            ParameterType.INT16_T_LE, [0x00, 0x01], FunctionCode.ReadInputRegisters))
+            ParameterType.INT16_T_LE, [0x0001], FunctionCode.ReadInputRegisters))
 
         self._parameters.append(\
             Parameter("Humidity", "Rh%",\
