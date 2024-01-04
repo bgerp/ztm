@@ -164,9 +164,11 @@ class XYMD02(ModbusDevice):
         value = 0.0
 
         value = self.get_value("Temperature")
-        print(f"VALUE: {value}")
+
         if value != None:
             value = value / 10.0
+        else:
+            value = 0.0
 
         return value
 
