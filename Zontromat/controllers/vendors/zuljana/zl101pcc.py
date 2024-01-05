@@ -233,7 +233,7 @@ class ZL101PCC(BaseController):
         
             # This hot fix is mandatory, because "black island" is part of the logical body of the master controller.
             if index == 0:
-                self.__black_island = BlackIsland(unit=modbus_rtu_cfg["unit"])
+                self.__black_island = BlackIsland(mb_id=modbus_rtu_cfg["mb_id"])
 
             self.__uuid = UUID()
 

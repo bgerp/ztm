@@ -431,9 +431,9 @@ class BaseController(Configurable):
                 configuration["parity"] = cfg.string[1]
                 configuration["stopbits"] = int(cfg.string[2])
 
-        unit = "modbus_rtu_unit_{}".format(index)
-        if unit in self._config:
-            configuration["unit"] = int(self._config[unit])
+        mb_id = "modbus_rtu_unit_{}".format(index)
+        if mb_id in self._config:
+            configuration["mb_id"] = int(self._config[mb_id])
 
 
         return configuration
