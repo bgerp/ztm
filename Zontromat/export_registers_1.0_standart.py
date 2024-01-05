@@ -918,7 +918,7 @@ def __add_registers():
     register.plugin_name = "Environment"
     register.description = "Plugin enabled"
     register.range = __range["BOOL"]
-    register.value = False
+    register.value = True
     __registers.append(register)
 
     register = Register("envm.sun.azimuth")
