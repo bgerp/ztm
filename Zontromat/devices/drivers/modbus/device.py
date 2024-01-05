@@ -71,22 +71,6 @@ __status__ = "Debug"
 class ModbusDevice(BaseDevice):
     """Base class MODBUS devices."""
 
-    #region Attributes
-
-    _parameters = []
-    """Device parameters.
-    """
-
-    _unit = 0
-    """Unit ID (MODBUS ID)
-    """
-
-    _uart = 0
-    """UART (MODBUS serial interface)
-    """    
-
-    #endregion
-
     #region Properties
 
     @property
@@ -164,6 +148,10 @@ class ModbusDevice(BaseDevice):
             config (dict): Configuration.
         """
         super().__init__(config)
+
+        self._parameters = []
+        self._unit = 0
+        self._uart = 0
 
         if "mb_id" in config:
             self._unit = config["mb_id"]

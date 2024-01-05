@@ -68,32 +68,17 @@ class XYMD02(ModbusDevice):
 
     See: http://sahel.rs/media/sah/techdocs/xy-md02-manual.pdf"""
 
-#region Attributes
-
-    __logger = None
-    """Logger
-    """
-
-    __last_good_measurement = 0
-    """Last good known value from the thermometer.
-    """
-
-    __unsuccessful_times = 0
-    """Unsuccessful times counter.
-    """
-
-    __unsuccessful_times_limit = 5
-    """Unrestful times limit counter.
-    """
-
-#endregion
-
 #region Constructor
 
     def __init__(self, **config):
         """Constructor"""
 
         super().__init__(config)
+
+
+        self.__last_good_measurement = 0
+        self.__unsuccessful_times = 0
+        self.__unsuccessful_times_limit = 5
 
         # Create logger.
         self.__logger = get_logger(__name__)
@@ -110,43 +95,43 @@ class XYMD02(ModbusDevice):
 
     def __set_registers(self):
 
-        self._parameters.append(
+        self.parameters.append(
             Parameter("Temperature", "ºC",\
             ParameterType.INT16_T_LE, [0x0001], FunctionCode.ReadInputRegisters))
 
-        self._parameters.append(\
+        self.parameters.append(\
             Parameter("Humidity", "Rh%",\
             ParameterType.INT16_T_LE, [0x0002], FunctionCode.ReadInputRegisters))
 
-        self._parameters.append(\
+        self.parameters.append(\
             Parameter("GetDeviceAddress", "Enum",\
             ParameterType.INT16_T_LE, [0x0101], FunctionCode.ReadHoldingRegisters))
 
-        self._parameters.append(\
+        self.parameters.append(\
             Parameter("GetBaudRate", "Enum",\
             ParameterType.INT16_T_LE, [0x0102], FunctionCode.ReadHoldingRegisters))
 
-        self._parameters.append(\
+        self.parameters.append(\
             Parameter("GetTemperatureCorrection", "C",\
             ParameterType.INT16_T_LE, [0x0103], FunctionCode.ReadHoldingRegisters))
 
-        self._parameters.append(\
+        self.parameters.append(\
             Parameter("GetHumidityCorrection", "Rh%",\
             ParameterType.INT16_T_LE, [0x0104], FunctionCode.ReadHoldingRegisters))
 
-        self._parameters.append(\
+        self.parameters.append(\
             Parameter("SetDeviceAddress", "Enum",\
             ParameterType.INT16_T_LE, [0x0101], FunctionCode.WriteSingleHoldingRegister))
 
-        self._parameters.append(\
+        self.parameters.append(\
             Parameter("SetBaudRate", "Enum",\
             ParameterType.INT16_T_LE, [0x0102], FunctionCode.WriteSingleHoldingRegister))
 
-        self._parameters.append(\
+        self.parameters.append(\
             Parameter("SetTemperatureCorrection", "C",\
             ParameterType.INT16_T_LE, [0x0103], FunctionCode.WriteSingleHoldingRegister))
 
-        self._parameters.append(\
+        self.parameters.append(\
             Parameter("SetHumidityCorrection", "Rh%",\
             ParameterType.INT16_T_LE, [0x0104], FunctionCode.WriteSingleHoldingRegister))
 
@@ -167,8 +152,6 @@ class XYMD02(ModbusDevice):
 
         if value != None:
             value = value / 10.0
-        else:
-            value = 0.0
 
         return value
 

@@ -69,14 +69,7 @@ __status__ = "Debug"
 class BlindsV2(BaseBlind, ModbusDevice):
     """Electronic blinds"""
 
-#region Attributes
-
-    __new_position = 0
-    """New position of the blinds."""
-
-#endregion
-
-#region constructor / Destructor
+#region Constructor / Destructor
 
     def __init__(self, **config):
         """Constructor"""
@@ -86,6 +79,8 @@ class BlindsV2(BaseBlind, ModbusDevice):
         config["mb_id"] = config["options"]["mb_id"]
 
         super().__init__(config)
+
+        self.__new_position = 0
 
         self._vendor = "YIHAO"
 

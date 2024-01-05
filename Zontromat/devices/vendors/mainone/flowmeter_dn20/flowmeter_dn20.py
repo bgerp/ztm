@@ -63,36 +63,6 @@ __status__ = "Debug"
 class FlowmeterDN20(ModbusDevice):
     """Flowmeter input device Flowmeter DN20."""
 
-#region Attributes
-
-    __logger = None
-    """Logger
-    """
-
-    __uart = 0
-    """UART index.
-    """
-
-    __mb_id = 0
-    """Modbus ID
-    """
-
-    __example_settings = {
-        "vendor": "mainone",
-        "model": "flowmeter_dn20",
-        "options":
-        {
-            "uart": 1,
-            "mb_id": 3,
-        }
-    }
-
-#endregion
-
-#region Properties
-
-#endregion
-
 #region Constructor
 
     def __init__(self, **config):
@@ -115,9 +85,19 @@ class FlowmeterDN20(ModbusDevice):
             Parameter("ReturnWaterTemperature", "⁰C",\
             ParameterType.UINT32_T_BE, [0x06, 0x07], FunctionCode.ReadHoldingRegisters))
 
-    # 40001: ["Positive cumulative energy",                     4, PT.UINT32_T_BE, "KW/h",            FC.ReadHoldingRegisters, None, [0x00, 0x00]],
-    # 40005: ["Inlet temperature",                              4, PT.UINT32_T_BE, "⁰C",              FC.ReadHoldingRegisters, None, [0x00, 0x04]],
-    # 40007: ["Return water temperature",                       4, PT.UINT32_T_BE, "⁰C",              FC.ReadHoldingRegisters, None, [0x00, 0x06]],
+        # 40001: ["Positive cumulative energy",                     4, PT.UINT32_T_BE, "KW/h",            FC.ReadHoldingRegisters, None, [0x00, 0x00]],
+        # 40005: ["Inlet temperature",                              4, PT.UINT32_T_BE, "⁰C",              FC.ReadHoldingRegisters, None, [0x00, 0x04]],
+        # 40007: ["Return water temperature",                       4, PT.UINT32_T_BE, "⁰C",              FC.ReadHoldingRegisters, None, [0x00, 0x06]],
+
+        self.__example_settings = {
+            "vendor": "mainone",
+            "model": "flowmeter_dn20",
+            "options":
+            {
+                "uart": 1,
+                "mb_id": 3,
+            }
+        }
 
 #endregion
 

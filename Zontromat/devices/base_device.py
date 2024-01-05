@@ -58,22 +58,6 @@ __status__ = "Debug"
 class BaseDevice(Configurable):
     """Base device class doc."""
 
-#region Attributes
-
-    _controller = None
-    """Controller
-    """
-
-    _vendor = ""
-    """Vendor
-    """
-
-    _model = ""
-    """Model
-    """
-
-#endregion
-
 #region Properties
 
     @property
@@ -112,6 +96,10 @@ class BaseDevice(Configurable):
         """
 
         super().__init__(config)
+
+        self._controller = None
+        self._vendor = ""
+        self._model = ""
 
         if "controller" in config:
             self._controller = self._config["controller"]        

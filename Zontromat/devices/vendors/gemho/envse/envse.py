@@ -74,15 +74,15 @@ class Envse(ModbusDevice):
 
         self._parameters.append(
             Parameter("Temperature", "ºC",\
-            ParameterType.UINT16_T_LE, [0x00, 0x01], FunctionCode.ReadHoldingRegisters))
+            ParameterType.UINT16_T_LE, [0x00], FunctionCode.ReadHoldingRegisters))
 
         self._parameters.append(
             Parameter("Humidity", "Rh",\
-            ParameterType.UINT16_T_LE, [0x02, 0x03], FunctionCode.ReadHoldingRegisters))
+            ParameterType.UINT16_T_LE, [0x01], FunctionCode.ReadHoldingRegisters))
 
         self._parameters.append(
             Parameter("Lux", "Lux",\
-            ParameterType.UINT16_T_LE, [0x04, 0x05], FunctionCode.ReadHoldingRegisters))
+            ParameterType.UINT16_T_LE, [0x02], FunctionCode.ReadHoldingRegisters))
 
 #endregion
 

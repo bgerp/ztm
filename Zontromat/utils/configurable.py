@@ -58,18 +58,6 @@ class Configurable:
 
 #region Attributes
 
-    _config = None
-    """Configuration.
-    """
-
-    __key = ""
-    """Key of the plugin.
-    """
-
-    __name = ""
-    """Name
-    """
-
 #endregion
 
 #region Properties
@@ -105,6 +93,9 @@ class Configurable:
             config (mixed): Device configuration.
         """
 
+        self.__name = ""
+        self.__key = ""
+    
         self._config = config
 
         if "name" in self._config:

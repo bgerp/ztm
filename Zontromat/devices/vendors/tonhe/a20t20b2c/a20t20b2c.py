@@ -64,25 +64,6 @@ __status__ = "Debug"
 class A20T20B2C(BaseValve):
     """Hydro Valve. Model: A20-T20-B2-C"""
 
-#region Attributes
-
-    __logger = None
-    """Logger"""
-
-    __output = None
-    """Output physical signal."""
-
-    __example_settings = {
-        "vendor": "Tonhe",
-        "model": "a20t20b2c",
-        "options":
-        {
-            "output": "RO1",
-        }
-    }
-
-#endregion
-
 #region Properties
 
 #endregion
@@ -92,6 +73,18 @@ class A20T20B2C(BaseValve):
     def __init__(self, **config):
 
         super().__init__(config)
+
+        self.__logger = None
+        self.__output = None
+        self.__example_settings = {
+            "vendor": "Tonhe",
+            "model": "a20t20b2c",
+            "options":
+            {
+                "output": "RO1",
+            }
+        }
+
 
         self._vendor = "Tonhe"
 
