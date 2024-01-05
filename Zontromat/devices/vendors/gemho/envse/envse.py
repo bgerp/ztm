@@ -99,6 +99,8 @@ class Envse(ModbusDevice):
 
         if value != None:
             value = value / 10.0
+        else:
+            value = 0.0
 
         return value
 
