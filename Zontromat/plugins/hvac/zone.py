@@ -609,7 +609,7 @@ class Zone(BasePlugin):
         self.__fl_1_hm_measurements.append(measurement)
 
         # This magical number represents seconds for 24 hours.
-        filter_measurements_by_time(self.__fl_1_hm_measurements, 86400)
+        # filter_measurements_by_time(self.__fl_1_hm_measurements, 86400)
 
         # 2. If the following register is available then set ist value to the thermometers value.
         self._registers.write("{}.floor_loop_{}.temp.measurements".format(self.key, self.__identifier), json.dumps(self.__fl_1_hm_measurements))
