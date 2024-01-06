@@ -115,7 +115,7 @@ class FlowmeterDN20(ModbusDevice):
         if value != None:
             value = value / 100.0
 
-        print(f"UNIT: {self.unit} -> PositiveCumulativeEnergy: {value}")
+        # print(f"UNIT: {self.unit} -> PositiveCumulativeEnergy: {value}")
 
         return value
 
@@ -131,7 +131,7 @@ class FlowmeterDN20(ModbusDevice):
         if value != None:
             value = value / 100.0
 
-        print(f"UNIT: {self.unit} -> InletWaterTemperature: {value}")
+        # print(f"UNIT: {self.unit} -> InletWaterTemperature: {value}")
 
         return value
 
@@ -147,7 +147,7 @@ class FlowmeterDN20(ModbusDevice):
         if value != None:
             value = value / 100.0
 
-        print(f"UNIT: {self.unit} -> ReturnWaterTemperature: {value}")
+        # print(f"UNIT: {self.unit} -> ReturnWaterTemperature: {value}")
 
         return value
 
