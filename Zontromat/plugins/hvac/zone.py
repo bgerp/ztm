@@ -598,8 +598,9 @@ class Zone(BasePlugin):
 
         measurement = {}
 
-        measurement["temp"] = self.__fl_1_temp_dev.get_temp()
-        measurement["positive_cumulative_energy"] = self.__fl_1_hm_dev.get_pcenergy()
+        measurement["PositiveCumulativeEnergy"] = self.__fl_1_hm_dev.get_pcenergy()
+        measurement["InletWaterTemperature"] = self.__fl_1_hm_dev.get_inlet_temp()
+        measurement["ReturnWaterTemperature"] = self.__fl_1_hm_dev.get_return_temp()
 
         # Set the time of the measurement.
         measurement["ts"] = time.time()
@@ -731,8 +732,9 @@ class Zone(BasePlugin):
 
         measurement = {}
 
-        measurement["temp"] = self.__fl_2_temp_dev.get_temp()
-        measurement["positive_cumulative_energy"] = self.__fl_2_hm_dev.get_pcenergy()
+        measurement["PositiveCumulativeEnergy"] = self.__fl_2_hm_dev.get_pcenergy()
+        measurement["InletWaterTemperature"] = self.__fl_2_hm_dev.get_inlet_temp()
+        measurement["ReturnWaterTemperature"] = self.__fl_2_hm_dev.get_return_temp()
 
         # Set the time of the measurement.
         measurement["ts"] = time.time()
@@ -864,8 +866,9 @@ class Zone(BasePlugin):
 
         measurement = {}
 
-        measurement["temp"] = self.__fl_3_temp_dev.get_temp()
-        measurement["positive_cumulative_energy"] = self.__fl_3_hm_dev.get_pcenergy()
+        measurement["PositiveCumulativeEnergy"] = self.__fl_3_hm_dev.get_pcenergy()
+        measurement["InletWaterTemperature"] = self.__fl_3_hm_dev.get_inlet_temp()
+        measurement["ReturnWaterTemperature"] = self.__fl_3_hm_dev.get_return_temp()
 
         # Set the time of the measurement.
         measurement["ts"] = time.time()
@@ -996,8 +999,9 @@ class Zone(BasePlugin):
 
         measurement = {}
 
-        measurement["temp"] = self.__cl_1_temp_dev.get_temp()
-        measurement["positive_cumulative_energy"] = self.__cl_1_hm_dev.get_pcenergy()
+        measurement["PositiveCumulativeEnergy"] = self.__cl_1_hm_dev.get_pcenergy()
+        measurement["InletWaterTemperature"] = self.__cl_1_hm_dev.get_inlet_temp()
+        measurement["ReturnWaterTemperature"] = self.__cl_1_hm_dev.get_return_temp()
 
         # Set the time of the measurement.
         measurement["ts"] = time.time()
@@ -1165,8 +1169,9 @@ class Zone(BasePlugin):
 
         measurement = {}
 
-        measurement["temp"] = self.__cl_2_temp_dev.get_temp()
-        measurement["positive_cumulative_energy"] = self.__cl_2_hm_dev.get_pcenergy()
+        measurement["PositiveCumulativeEnergy"] = self.__cl_2_hm_dev.get_pcenergy()
+        measurement["InletWaterTemperature"] = self.__cl_2_hm_dev.get_inlet_temp()
+        measurement["ReturnWaterTemperature"] = self.__cl_2_hm_dev.get_return_temp()
 
         # Set the time of the measurement.
         measurement["ts"] = time.time()
@@ -1334,8 +1339,9 @@ class Zone(BasePlugin):
 
         measurement = {}
 
-        measurement["temp"] = self.__cl_3_temp_dev.get_temp()
-        measurement["positive_cumulative_energy"] = self.__cl_3_hm_dev.get_pcenergy()
+        measurement["PositiveCumulativeEnergy"] = self.__cl_3_hm_dev.get_pcenergy()
+        measurement["InletWaterTemperature"] = self.__cl_3_hm_dev.get_inlet_temp()
+        measurement["ReturnWaterTemperature"] = self.__cl_3_hm_dev.get_return_temp()
 
         # Set the time of the measurement.
         measurement["ts"] = time.time()
