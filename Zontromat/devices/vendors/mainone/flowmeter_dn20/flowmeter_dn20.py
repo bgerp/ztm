@@ -75,7 +75,7 @@ class FlowmeterDN20(ModbusDevice):
 
         self._parameters.append(
             Parameter("PositiveCumulativeEnergy", "KW/h",\
-            ParameterType.UINT32_T_BE, [0x00, 0x01], FunctionCode.ReadHoldingRegisters))
+            ParameterType.UINT32_T_BE, [0x00, 0x02], FunctionCode.ReadHoldingRegisters))
 
         self._parameters.append(
             Parameter("InletWaterTemperature", "⁰C",\
@@ -111,13 +111,15 @@ class FlowmeterDN20(ModbusDevice):
         """
 
         value = self.get_value("PositiveCumulativeEnergy")
+        print(f"PositiveCumulativeEnergy: {value}")
+
 
         if value != None:
             value = value / 100.0
 
         return value
 
-    def get_temp(self):
+    def get_inlet_temp(self):
         """Get temperature.
 
         Returns:
@@ -125,10 +127,27 @@ class FlowmeterDN20(ModbusDevice):
         """
 
         value = self.get_value("InletWaterTemperature")
+        print(f"InletWaterTemperature: {value}")
 
         if value != None:
             value = value / 100.0
 
         return value
+
+    def get_return_temp(self):
+        """Get temperature.
+
+        Returns:
+            float: Value of the temperature.
+        """
+
+        value = self.get_value("ReturnWaterTemperature")
+        print(f"ReturnWaterTemperature: {value}")
+
+        if value != None:
+            value = value / 100.0
+
+        return value
+
 
 #endregion
