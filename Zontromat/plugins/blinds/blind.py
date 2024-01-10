@@ -142,6 +142,21 @@ class Blind(BasePlugin):
 
         # Create
         if register.value != {} and self.__blind_mechanism is None:
+            self.__blind_mechanism = BlindsFactory.create(
+                controller=self._controller,
+                name="Blind",
+                vendor=register.value['vendor'],
+                model=register.value['model'],
+                options=register.value['options'])
+
+            if self.__blind_mechanism is not None:
+                self.__blind_mechanism.init()
+
+        # Recreate
+        if register.value != {} and self.__blind_mechanism is not None:
+            self.__blind_mechanism.shutdown()
+
+            del self.__blind_mechanism
 
             self.__blind_mechanism = BlindsFactory.create(
                 controller=self._controller,
@@ -234,7 +249,7 @@ class Blind(BasePlugin):
             sunspot_limit.update_handlers = self.__sunspot_limit_cb
             sunspot_limit.update()
 
-        ac_zone_occupied = self._registers.by_name("ac.zone_{}_occupied".format(self.__identifier))
+        ac_zone_occupied = self._registers.by_name("ac.zone_1_occupied")
         if ac_zone_occupied is not None:
             ac_zone_occupied.update_handlers = self.__zone_occupation_cb
             ac_zone_occupied.update()
@@ -323,6 +338,7 @@ class Blind(BasePlugin):
 
         if not self.__blind_mechanism is None:
             self.__blind_mechanism.update()
+
 
     def _shutdown(self):
         """Shutting down the plugin.
