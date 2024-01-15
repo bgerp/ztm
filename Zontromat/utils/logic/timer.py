@@ -176,7 +176,7 @@ class Timer:
                 self.__callback(self)
 
             # Update current time.
-            self.__last_time = time.time()
+            self.update_last_time()
 
     def clear(self):
         """Clear"""

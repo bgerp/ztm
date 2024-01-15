@@ -453,7 +453,9 @@ class ZL101PCC(BaseController):
             return state
 
         if isinstance(pin, str):
-            if self.is_gpio_local(pin):
+            if self.is_gpio_off(pin):
+                return response
+            elif self.is_gpio_local(pin):
                 response = set_local_gpio(pin, value)
             elif self.is_gpio_remote(pin):
                 response = set_remote_gpio(pin, value)
@@ -463,7 +465,9 @@ class ZL101PCC(BaseController):
         elif isinstance(pin, list):
             # Go trough all pins.
             for p in pin:
-                if self.is_gpio_local(p):
+                if self.is_gpio_off(p):
+                    break
+                elif self.is_gpio_local(p):
                     response = set_local_gpio(p, value)
                 elif self.is_gpio_remote(p):
                     response = set_remote_gpio(p, value)

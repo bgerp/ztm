@@ -75,8 +75,13 @@ __status__ = "Debug"
 
 #region Variables
 
+__parser = None
+"""Create parser.
+"""
+
 __registers = None
-"""Registers"""
+"""Registers
+"""
 
 __range = {
     "NONE": "",
@@ -95,6 +100,61 @@ __range = {
 }
 
 #endregion
+
+def __set_parser():
+    global __parser
+
+    # Add arguments.
+    __parser.add_argument("--action", type=str, default="w_json", help="Export JSON file.")
+    # parser.add_argument("--action", type=str, default="w_csv", help="Export CSV file.")
+    # parser.add_argument("--action", type=str, default="list_gpio", help="Export type.")
+    # parser.add_argument("--action", type=str, default="w_md", help="Export MD file.")
+    # parser.add_argument("--path", type=str, default=file_name, help="Target file path.")
+
+    # Add args parameters
+    __parser.add_argument("--pa", type=int, default=1, help="Power analyzer modbus ID.")
+    __parser.add_argument("--hw", type=int, default=-1, help="How water flow meter modbus ID.")
+    __parser.add_argument("--cw", type=int, default=-1, help="Cold water flow meter modbus ID.")
+    __parser.add_argument("--fl_1_hm", type=int, default=-1, help="Floor loop 1 heat meter modbus ID.")
+    __parser.add_argument("--fl_2_hm", type=int, default=-1, help="Floor loop 2 heat meter modbus ID.")
+    __parser.add_argument("--fl_3_hm", type=int, default=-1, help="Floor loop 3 heat meter modbus ID.")
+    __parser.add_argument("--cl_1_hm", type=int, default=-1, help="Convector loop 1 heat meter modbus ID.")
+    __parser.add_argument("--cl_2_hm", type=int, default=-1, help="Convector loop 2 heat meter modbus ID.")
+    __parser.add_argument("--cl_3_hm", type=int, default=-1, help="Convector loop 3 heat meter modbus ID.")
+    __parser.add_argument("--temp_upper", type=int, default=4, help="Upper thermometer modbus ID.")
+    __parser.add_argument("--temp_lower", type=int, default=5, help="Lower thermometer modbus ID.") 
+    __parser.add_argument("--temp_cent", type=int, default=3, help="Central thermometer modbus ID.")
+    __parser.add_argument("--pir_1", type=int, default=16, help="PIR 1 modbus ID.")
+    __parser.add_argument("--blinds_1", type=int, default=11, help="Blinds mechanism 1 modbus ID.")
+    __parser.add_argument("--blinds_2", type=int, default=-1, help="Blinds mechanism 2 modbus ID.")
+    __parser.add_argument("--blinds_3", type=int, default=-1, help="Blinds mechanism 3 modbus ID.")
+    __parser.add_argument("--blinds_4", type=int, default=-1, help="Blinds mechanism 4 modbus ID.")
+    __parser.add_argument("--bi_1", type=int, default=2, help="Black island 1 modbus ID.")
+    __parser.add_argument("--conv_1", type=int, default=6, help="Convector 1 modbus ID.")
+    __parser.add_argument("--conv_2", type=int, default=-1, help="Convector 2 modbus ID.")
+    __parser.add_argument("--conv_3", type=int, default=-1, help="Convector 3 modbus ID.")
+    __parser.add_argument("--ip", type=str, default="127.0.0.1", help="IP address of the device")
+    __parser.add_argument("--fl_vlv_1", type=str, default="OFF", help="Floor loop 1 GPIO.")
+    __parser.add_argument("--fl_vlv_2", type=str, default="OFF", help="Floor loop 2 GPIO.")
+    __parser.add_argument("--fl_vlv_3", type=str, default="OFF", help="Floor loop 3 GPIO.")
+    __parser.add_argument("--cl_vlv_1", type=str, default="OFF", help="Convector loop 1 GPIO.")
+    __parser.add_argument("--cl_vlv_2", type=str, default="OFF", help="Convector loop 2 GPIO.")
+    __parser.add_argument("--cl_vlv_3", type=str, default="OFF", help="Convector loop 3 GPIO.")
+    __parser.add_argument("--conv_1_s1", type=str, default="OFF", help="Convector loop 1 GPIO.")
+    __parser.add_argument("--conv_1_s2", type=str, default="OFF", help="Convector loop 2 GPIO.")
+    __parser.add_argument("--conv_1_s3", type=str, default="OFF", help="Convector loop 3 GPIO.")
+    __parser.add_argument("--conv_2_s1", type=str, default="OFF", help="Convector loop 1 GPIO.")
+    __parser.add_argument("--conv_2_s2", type=str, default="OFF", help="Convector loop 2 GPIO.")
+    __parser.add_argument("--conv_2_s3", type=str, default="OFF", help="Convector loop 3 GPIO.")
+    __parser.add_argument("--conv_3_s1", type=str, default="OFF", help="Convector loop 1 GPIO.")
+    __parser.add_argument("--conv_3_s2", type=str, default="OFF", help="Convector loop 2 GPIO.")
+    __parser.add_argument("--conv_3_s3", type=str, default="OFF", help="Convector loop 3 GPIO.")
+    __parser.add_argument("--pa_model", type=str, default="SDM120", help="Model of the power analyzer.")
+
+    # Take arguments.
+    args = __parser.parse_args()
+
+    return args
 
 def __add_registers(args):
 
@@ -396,15 +456,18 @@ def __add_registers(args):
     register.plugin_name = "Blinds"
     register.description = "Window 1 blinds mechanism"
     register.range = __range["NONE"]
-    register.value = {
-        "vendor": "Yihao",
-        "model": "BlindsV2",
-        "options":
-        {
-            "uart": 0,
-            "mb_id": 11
+    if args.blinds_1 > -1:
+        register.value = {
+            "vendor": "Yihao",
+            "model": "BlindsV2",
+            "options":
+            {
+                "uart": 0,
+                "mb_id": args.blinds_1
+            }
         }
-    }
+    else:
+        register.value = {}
     __registers.append(register)
 
     register = Register("blinds.blind_1.position")
@@ -437,15 +500,18 @@ def __add_registers(args):
     register.plugin_name = "Blinds"
     register.description = "Window 2 blinds mechanism"
     register.range = __range["NONE"]
-    register.value = {
-        # "vendor": "Yihao",
-        # "model": "BlindsV2",
-        # "options":
-        # {
-        #     "uart": 0,
-        #     "mb_id": 12
-        # }
-    }
+    if args.blinds_2 > -1:
+        register.value = {
+            "vendor": "Yihao",
+            "model": "BlindsV2",
+            "options":
+            {
+                "uart": 0,
+                "mb_id": args.blinds_2
+            }
+        }
+    else:
+        register.value = {}
     __registers.append(register)
 
     register = Register("blinds.blind_2.position")
@@ -478,15 +544,18 @@ def __add_registers(args):
     register.plugin_name = "Blinds"
     register.description = "Window 3 blinds mechanism"
     register.range = __range["NONE"]
-    register.value = {
-        # "vendor": "Yihao",
-        # "model": "BlindsV2",
-        # "options":
-        # {
-        #     "uart": 0,
-        #     "mb_id": 13
-        # }
-    }
+    if args.blinds_3 > -1:
+        register.value = {
+            "vendor": "Yihao",
+            "model": "BlindsV2",
+            "options":
+            {
+                "uart": 0,
+                "mb_id": args.blinds_3
+            }
+        }
+    else:
+        register.valve = {}
     __registers.append(register)
 
     register = Register("blinds.blind_3.position")
@@ -519,15 +588,18 @@ def __add_registers(args):
     register.plugin_name = "Blinds"
     register.description = "Window 4 blinds mechanism"
     register.range = __range["NONE"]
-    register.value = {
-        # "vendor": "Yihao",
-        # "model": "BlindsV2",
-        # "options":
-        # {
-        #     "uart": 0,
-        #     "mb_id": 14
-        # }
-    }
+    if args.blinds_4 > -1:
+        register.value = {
+            "vendor": "Yihao",
+            "model": "BlindsV2",
+            "options":
+            {
+                "uart": 0,
+                "mb_id": args.blinds_4
+            }
+        }
+    else:
+        register.value = {}
     __registers.append(register)
 
     register = Register("blinds.blind_4.position")
@@ -575,20 +647,32 @@ def __add_registers(args):
 
 #region Monitoring (mon)
 
+    # Enable flag.
+    register = Register("monitoring.enabled")
+    register.scope = Scope.System
+    register.plugin_name = "Monitoring"
+    register.description = "Plugin enabled"
+    register.range = __range["BOOL"]
+    register.value = True
+    __registers.append(register)
+
     # Cold water flow meter.
     register = Register("monitoring.cw.flowmeter_settings")
     register.scope = Scope.System
     register.plugin_name = "Monitoring"
     register.description = "Cold water flow meter"
     register.range = __range["NONE"]
-    register.value = {
-        "model": "mw_uml_15",
-        "options": {
-            "mb_id": 96,
-            "uart": 1
-        },
-        "vendor": "smii"
-    }
+    if args.cw > -1:
+        register.value = {
+            "model": "mw_uml_15",
+            "options": {
+                "mb_id": args.cw,
+                "uart": 1
+            },
+            "vendor": "smii"
+        }
+    else:
+        register.value = {}
     __registers.append(register)
 
     register = Register("monitoring.cw.measurements")
@@ -614,14 +698,17 @@ def __add_registers(args):
     register.plugin_name = "Monitoring"
     register.description = "Hot water input flow meter"
     register.range = __range["NONE"]
-    register.value = {
-        "model": "mw_uml_15",
-        "options": {
-            "mb_id": 96,
-            "uart": 1
-        },
-        "vendor": "smii"
-    }
+    if args.hw > -1:
+        register.value = {
+            "model": "mw_uml_15",
+            "options": {
+                "mb_id": args.hw,
+                "uart": 1
+            },
+            "vendor": "smii"
+        }
+    else:
+        register.value = {}
     __registers.append(register)
 
     register = Register("monitoring.hw.measurements")
@@ -647,15 +734,18 @@ def __add_registers(args):
     register.plugin_name = "Monitoring"
     register.description = "Power analyzer settings"
     register.range = __range["NONE"]
-    register.value = {
-        "vendor": "Eastron",
-        "model": "SDM120",
-        "options":
-        {
-            "uart": 0,
-            "mb_id": 1,
+    if args.pa > -1:
+        register.value = {
+            "vendor": "Eastron",
+            "model": args.pa_model,
+            "options":
+            {
+                "uart": 0,
+                "mb_id": args.pa,
+            }
         }
-    }
+    else:
+        register.value = {}
     __registers.append(register)
 
     register = Register("monitoring.pa.measurements")
@@ -664,15 +754,6 @@ def __add_registers(args):
     register.description = "Power analyzer measurements"
     register.range = __range["NONE"]
     register.value = []
-    __registers.append(register)
-
-    # Enable flag.
-    register = Register("monitoring.enabled")
-    register.scope = Scope.System
-    register.plugin_name = "Monitoring"
-    register.description = "Plugin enabled"
-    register.range = __range["BOOL"]
-    register.value = True
     __registers.append(register)
 
     # ====================== NEW ======================
@@ -691,15 +772,18 @@ def __add_registers(args):
     register.plugin_name = "HVAC"
     register.description = "Floor loop 1 heat meter settings."
     register.range = __range["NONE"]
-    register.value = {
-        # "vendor": "mainone",
-        # "model": "flowmeter_dn20",
-        # "options":
-        # {
-        #     "uart": 1,
-        #     "mb_id": 41,
-        # }
-    }
+    if args.fl_1_hm > -1:
+        register.value = {
+            "vendor": "mainone",
+            "model": "flowmeter_dn20",
+            "options":
+            {
+                "uart": 1,
+                "mb_id": args.fl_1_hm,
+            }
+        }
+    else:
+        register.value = {}
     __registers.append(register)
 
     register = Register("monitoring.fl_1.hm.measurements")
@@ -716,15 +800,18 @@ def __add_registers(args):
     register.plugin_name = "Monitoring"
     register.description = "Floor loop 2 heat meter settings."
     register.range = __range["NONE"]
-    register.value = {
-        # "vendor": "mainone",
-        # "model": "flowmeter_dn20",
-        # "options":
-        # {
-        #     "uart": 1,
-        #     "mb_id": 41,
-        # }
-    }
+    if args.fl_2_hm > -1:
+        register.value = {
+            "vendor": "mainone",
+            "model": "flowmeter_dn20",
+            "options":
+            {
+                "uart": 1,
+                "mb_id": args.fl_2_hm,
+            }
+        }
+    else:
+        register.value = {}
     __registers.append(register)
 
 
@@ -742,15 +829,18 @@ def __add_registers(args):
     register.plugin_name = "Monitoring"
     register.description = "Floor loop 3 heat meter settings."
     register.range = __range["NONE"]
-    register.value = {
-        # "vendor": "mainone",
-        # "model": "flowmeter_dn20",
-        # "options":
-        # {
-        #     "uart": 1,
-        #     "mb_id": 41,
-        # }
-    }
+    if args.fl_3_hm > -1:
+        register.value = {
+            "vendor": "mainone",
+            "model": "flowmeter_dn20",
+            "options":
+            {
+                "uart": 1,
+                "mb_id": args.fl_3_hm,
+            }
+        }
+    else:
+        register.value = {}
     __registers.append(register)
 
     register = Register("monitoring.fl_3.hm.measurements")
@@ -767,15 +857,18 @@ def __add_registers(args):
     register.plugin_name = "Monitoring"
     register.description = "Convector loop 1 heat meter settings."
     register.range = __range["NONE"]
-    register.value = {
-        # "vendor": "mainone",
-        # "model": "flowmeter_dn20",
-        # "options":
-        # {
-        #     "uart": 1,
-        #     "mb_id": 41,
-        # }
-    }
+    if args.cl_1_hm > -1:
+        register.value = {
+            "vendor": "mainone",
+            "model": "flowmeter_dn20",
+            "options":
+            {
+                "uart": 1,
+                "mb_id": args.cl_1_hm,
+            }
+        }
+    else:
+        register.value = {}
     __registers.append(register)
 
     register = Register("monitoring.cl_1.hm.measurements")
@@ -792,15 +885,18 @@ def __add_registers(args):
     register.plugin_name = "Monitoring"
     register.description = "Convector loop 2 heat meter settings."
     register.range = __range["NONE"]
-    register.value = {
-        # "vendor": "mainone",
-        # "model": "flowmeter_dn20",
-        # "options":
-        # {
-        #     "uart": 1,
-        #     "mb_id": 41,
-        # }
-    }
+    if args.cl_2_hm > -1:
+        register.value = {
+            "vendor": "mainone",
+            "model": "flowmeter_dn20",
+            "options":
+            {
+                "uart": 1,
+                "mb_id": args.cl_2_hm,
+            }
+        }
+    else:
+        register.value = {}
     __registers.append(register)
 
     register = Register("monitoring.cl_2.hm.measurements")
@@ -817,15 +913,18 @@ def __add_registers(args):
     register.plugin_name = "Monitoring"
     register.description = "Convector loop 3 heat meter settings."
     register.range = __range["NONE"]
-    register.value = {
-        # "vendor": "mainone",
-        # "model": "flowmeter_dn20",
-        # "options":
-        # {
-        #     "uart": 1,
-        #     "mb_id": 41,
-        # }
-    }
+    if args.cl_3_hm > -1:
+        register.value = {
+            "vendor": "mainone",
+            "model": "flowmeter_dn20",
+            "options":
+            {
+                "uart": 1,
+                "mb_id": args.cl_3_hm,
+            }
+        }
+    else:
+        register.value = {}
     __registers.append(register)
 
     register = Register("monitoring.cl_3.hm.measurements")
@@ -1131,15 +1230,18 @@ def __add_registers(args):
     register.plugin_name = "HVAC"
     register.description = "Air temperature sensor center settings."
     register.range = __range["NONE"]
-    register.value = {
-        "vendor": "Gemho",
-        "model": "Envse",
-        "options":
-        {
-            "uart": 0,
-            "mb_id": 3
+    if args.temp_cent > -1:
+        register.value = {
+            "vendor": "Gemho",
+            "model": "Envse",
+            "options":
+            {
+                "uart": 0,
+                "mb_id": args.temp_cent
+            }
         }
-    }
+    else:
+        register.value = {}
     __registers.append(register)
 
     register = Register("hvac.air_temp_cent_1.value")
@@ -1156,15 +1258,18 @@ def __add_registers(args):
     register.plugin_name = "HVAC"
     register.description = "Air temperature sensor lower settings"
     register.range = __range["NONE"]
-    register.value = {
-        "vendor": "Donkger",
-        "model": "XY-MD02",
-        "options":
-        {
-            "uart": 0,
-            "mb_id": 5
+    if  args.temp_lower > -1:
+        register.value = {
+            "vendor": "Donkger",
+            "model": "XY-MD02",
+            "options":
+            {
+                "uart": 0,
+                "mb_id": args.temp_lower
+            }
         }
-    } # "Dallas/DS18B20/28FFC4EE00170349" # temp/DS18B20/28FFC4EE00170349
+    else:
+        register.value = {}
     __registers.append(register)
 
     register = Register("hvac.air_temp_lower_1.value")
@@ -1181,15 +1286,18 @@ def __add_registers(args):
     register.plugin_name = "HVAC"
     register.description = "Air temperature sensor upper settings"
     register.range = __range["NONE"]
-    register.value = {
-        "vendor": "Donkger",
-        "model": "XY-MD02",
-        "options":
-        {
-            "uart": 0,
-            "mb_id": 4
+    if args.temp_upper > -1:
+        register.value = {
+            "vendor": "Donkger",
+            "model": "XY-MD02",
+            "options":
+            {
+                "uart": 0,
+                "mb_id": args.temp_upper
+            }
         }
-    } # Dallas/DS18B20/28FF2B70C11604B7 # "Dallas/DS18B20/28FF2B70C11604B7" # "temp/DS18B20/28FF2B70C11604B7"
+    else:
+        register.value = {}
     __registers.append(register)
 
     register = Register("hvac.air_temp_upper_1.value")
@@ -1212,7 +1320,7 @@ def __add_registers(args):
         {
             "output": 
             [
-                "U0:ID2:FC5:R0:RO0",
+                args.fl_vlv_1 #"U0:ID2:FC5:R0:RO0",
             ]
         }
     }
@@ -1224,15 +1332,15 @@ def __add_registers(args):
     register.description = "Floor loop 2 valve"
     register.range = __range["NONE"]
     register.value = {
-        # "vendor": "Tonhe",
-        # "model": "a20t20b2c",
-        # "options":
-        # {
-        #     "output": 
-        #     [
-        #         "U0:ID2:FC5:R0:RO1",
-        #     ]
-        # }
+        "vendor": "Tonhe",
+        "model": "a20t20b2c",
+        "options":
+        {
+            "output": 
+            [
+                args.fl_vlv_2 #"U0:ID2:FC5:R0:RO1",
+            ]
+        }
     }
     __registers.append(register)
 
@@ -1242,15 +1350,15 @@ def __add_registers(args):
     register.description = "Floor loop 3 valve"
     register.range = __range["NONE"]
     register.value = {
-        # "vendor": "Tonhe",
-        # "model": "a20t20b2c",
-        # "options":
-        # {
-        #     "output": 
-        #     [
-        #         "U0:ID2:FC5:R0:RO2",
-        #     ]
-        # }
+        "vendor": "Tonhe",
+        "model": "a20t20b2c",
+        "options":
+        {
+            "output": 
+            [
+                args.fl_vlv_3 #"U0:ID2:FC5:R0:RO2",
+            ]
+        }
     }
     __registers.append(register)
 
@@ -1267,15 +1375,15 @@ def __add_registers(args):
         {
             "stage1": 
             [
-                "U0:ID6:FC5:R0:RO0",
+                args.conv_1_s1 #"U0:ID6:FC5:R0:RO0",
             ],
             "stage2":
             [
-                "U0:ID6:FC5:R0:RO1",
+                args.conv_1_s2 #"U0:ID6:FC5:R0:RO1",
             ],
             "stage3": 
             [
-                "U0:ID6:FC5:R0:RO2",
+                args.conv_1_s3 #"U0:ID6:FC5:R0:RO2",
             ]
         }
     }
@@ -1293,7 +1401,7 @@ def __add_registers(args):
         {
             "output": 
             [
-                "U0:ID2:FC5:R0:RO0",
+                args.cl_vlv_1 #"U0:ID2:FC5:R0:RO0",
             ]
         }
     }
@@ -1306,23 +1414,23 @@ def __add_registers(args):
     register.description = "Convector 2"
     register.range = __range["NONE"]
     register.value = {
-        # "vendor": "Silpa",
-        # "model": "Klimafan",
-        # "options":
-        # {
-        #     "stage1": 
-        #     [
-        #         "U0:ID7:FC5:R0:RO0",
-        #     ],
-        #     "stage2":
-        #     [
-        #         "U0:ID7:FC5:R0:RO1",
-        #     ],
-        #     "stage3": 
-        #     [
-        #         "U0:ID7:FC5:R0:RO2",
-        #     ]
-        # }
+        "vendor": "Silpa",
+        "model": "Klimafan",
+        "options":
+        {
+            "stage1": 
+            [
+                args.conv_2_s1 #"U0:ID7:FC5:R0:RO0",
+            ],
+            "stage2":
+            [
+                args.conv_2_s2 #"U0:ID7:FC5:R0:RO1",
+            ],
+            "stage3": 
+            [
+                args.conv_2_s3 #"U0:ID7:FC5:R0:RO2",
+            ]
+        }
     }
     __registers.append(register)
 
@@ -1332,15 +1440,15 @@ def __add_registers(args):
     register.description = "Convector loop 2 valve"
     register.range = __range["NONE"]
     register.value = {
-        # "vendor": "Tonhe",
-        # "model": "a20t20b2c",
-        # "options":
-        # {
-        #     "output": 
-        #     [
-        #         "U0:ID7:FC5:R0:RO4",
-        #     ]
-        # }
+        "vendor": "Tonhe",
+        "model": "a20t20b2c",
+        "options":
+        {
+            "output": 
+            [
+                args.cl_vlv_2 #"U0:ID7:FC5:R0:RO4",
+            ]
+        }
     }
     __registers.append(register)
 
@@ -1351,23 +1459,23 @@ def __add_registers(args):
     register.description = "Convector 3"
     register.range = __range["NONE"]
     register.value = {
-        # "vendor": "Silpa",
-        # "model": "Klimafan",
-        # "options":
-        # {
-        #     "stage1": 
-        #     [
-        #         "U0:ID8:FC5:R0:RO0",
-        #     ],
-        #     "stage2":
-        #     [
-        #         "U0:ID8:FC5:R0:RO1",
-        #     ],
-        #     "stage3": 
-        #     [
-        #         "U0:ID8:FC5:R0:RO2",
-        #     ]
-        # }
+        "vendor": "Silpa",
+        "model": "Klimafan",
+        "options":
+        {
+            "stage1": 
+            [
+                args.conv_3_s1 #"U0:ID8:FC5:R0:RO0",
+            ],
+            "stage2":
+            [
+                args.conv_3_s2 #"U0:ID8:FC5:R0:RO1",
+            ],
+            "stage3": 
+            [
+                args.conv_3_s3 #"U0:ID8:FC5:R0:RO2",
+            ]
+        }
     }
     __registers.append(register)
 
@@ -1377,15 +1485,15 @@ def __add_registers(args):
     register.description = "Convector loop 3 valve"
     register.range = __range["NONE"]
     register.value = {
-    #     "vendor": "Tonhe",
-    #     "model": "a20t20b2c",
-    #     "options":
-    #     {
-    #         "output": 
-    #         [
-    #             "U0:ID8:FC5:R0:RO4",
-    #         ]
-    #     }
+        "vendor": "Tonhe",
+        "model": "a20t20b2c",
+        "options":
+        {
+            "output": 
+            [
+                args.cl_vlv_3 #"U0:ID8:FC5:R0:RO4",
+            ]
+        }
     }
     __registers.append(register)
 
@@ -1493,13 +1601,13 @@ def __add_registers(args):
     register.description = "Convector loop 1 heat meter."
     register.range = __range["NONE"]
     register.value = {
-        "vendor": "mainone",
-        "model": "flowmeter_dn20",
-        "options":
-        {
-            "uart": 1,
-            "mb_id": 41,
-        }
+        # "vendor": "mainone",
+        # "model": "flowmeter_dn20",
+        # "options":
+        # {
+        #     "uart": 1,
+        #     "mb_id": 41,
+        # }
     }
     __registers.append(register)
 
@@ -1509,13 +1617,13 @@ def __add_registers(args):
     register.description = "Convector loop 1 thermometer."
     register.range = __range["NONE"]
     register.value = {
-        "vendor": "mainone",
-        "model": "flowmeter_dn20",
-        "options":
-        {
-            "uart": 1,
-            "mb_id": 41,
-        }
+        # "vendor": "mainone",
+        # "model": "flowmeter_dn20",
+        # "options":
+        # {
+        #     "uart": 1,
+        #     "mb_id": 41,
+        # }
     }
     __registers.append(register)
 
@@ -1580,13 +1688,13 @@ def __add_registers(args):
     register.description = "Floor loop 1 flowmeter."
     register.range = __range["NONE"]
     register.value = {
-        "vendor": "mainone",
-        "model": "flowmeter_dn20",
-        "options":
-        {
-            "uart": 1,
-            "mb_id": 41,
-        }
+        # "vendor": "mainone",
+        # "model": "flowmeter_dn20",
+        # "options":
+        # {
+        #     "uart": 1,
+        #     "mb_id": 41,
+        # }
     }
     __registers.append(register)
 
@@ -1598,13 +1706,13 @@ def __add_registers(args):
     register.description = "Floor loop 1 thermometer."
     register.range = __range["NONE"]
     register.value = {
-        "vendor": "mainone",
-        "model": "flowmeter_dn20",
-        "options":
-        {
-            "uart": 1,
-            "mb_id": 41,
-        }
+        # "vendor": "mainone",
+        # "model": "flowmeter_dn20",
+        # "options":
+        # {
+        #     "uart": 1,
+        #     "mb_id": 41,
+        # }
     }
     __registers.append(register)
 
@@ -2009,7 +2117,7 @@ def __add_registers(args):
     register.plugin_name = "System"
     register.description = "Plugin enabled"
     register.range = __range["BOOL"]
-    register.value = False
+    register.value = True
     __registers.append(register)
 
     # Enable info messages.
@@ -4130,49 +4238,16 @@ def __add_registers(args):
 #endregion
 
 def main():
-    global __registers, __range
+    global __registers, __range, __parser
+
+    __parser = argparse.ArgumentParser()
 
     __registers = Registers()
-
-    # Create parser.
-    parser = argparse.ArgumentParser()
 
     # File extetion.
     __f_ext = ""
 
-    # Add arguments.
-    parser.add_argument("--action", type=str, default="w_json", help="Export JSON file.")
-    # parser.add_argument("--action", type=str, default="w_csv", help="Export CSV file.")
-    # parser.add_argument("--action", type=str, default="list_gpio", help="Export type.")
-    # parser.add_argument("--action", type=str, default="w_md", help="Export MD file.")
-    # parser.add_argument("--path", type=str, default=file_name, help="Target file path.")
-
-    # Add args parameters
-    parser.add_argument("--pa", type=int, default=1, help="Power analyzer default modbus ID.")
-    parser.add_argument("--hw", type=int, default=-1, help="How water flow meter default modbus ID.")
-    parser.add_argument("--cw", type=int, default=-1, help="Cold water flow meter default modbus ID.")
-    parser.add_argument("--fl_1_hm", type=int, default=-1, help="Floor loop 1 heat meter default modbus ID.")
-    parser.add_argument("--fl_2_hm", type=int, default=-1, help="Floor loop 2 heat meter default modbus ID.")
-    parser.add_argument("--fl_3_hm", type=int, default=-1, help="Floor loop 3 heat meter default modbus ID.")
-    parser.add_argument("--cl_1_hm", type=int, default=-1, help="Floor loop 1 heat meter default modbus ID.")
-    parser.add_argument("--cl_2_hm", type=int, default=-1, help="Floor loop 2 heat meter default modbus ID.")
-    parser.add_argument("--cl_3_hm", type=int, default=-1, help="Floor loop 3 heat meter default modbus ID.")
-    parser.add_argument("--temp_upper", type=int, default=4, help="Upper termometr default modbus ID.")
-    parser.add_argument("--temp_lower", type=int, default=5, help="Lower termometr default modbus ID.") 
-    parser.add_argument("--temp_cent", type=int, default=3, help="Central termometer default modbus ID.")
-    parser.add_argument("--pir_1", type=int, default=16, help="PIR 1 default modbus ID.")
-    parser.add_argument("--blinds_1", type=int, default=11, help="Blinds mechanism 1 default modbus ID.")
-    parser.add_argument("--blinds_2", type=int, default=-1, help="Blinds mechanism 2 default modbus ID.")
-    parser.add_argument("--blinds_3", type=int, default=-1, help="Blinds mechanism 3 default modbus ID.")
-    parser.add_argument("--blinds_4", type=int, default=-1, help="Blinds mechanism 4 default modbus ID.")
-    parser.add_argument("--bi_1", type=int, default=2, help="Black island 1 default modbus ID.")
-    parser.add_argument("--conv_1", type=int, default=6, help="Convector 1 default modbus ID.")
-    parser.add_argument("--conv_2", type=int, default=-1, help="Convector 2 default modbus ID.")
-    parser.add_argument("--conv_3", type=int, default=-1, help="Convector 3 default modbus ID.")
-
-    # Take arguments.
-    args = parser.parse_args()
-
+    args = __set_parser()
     __add_registers(args)
 
 
@@ -4187,19 +4262,19 @@ def main():
 
 
     if args.action == "w_json":
-        Registers.to_json(__registers, file_name) # "../Zontromat/registers.json"
+        Registers.to_json(__registers, file_name)
 
     elif args.action == "r_json":
-        registers = Registers.from_json(file_name) # "../Zontromat/registers.json") # 
+        registers = Registers.from_json(file_name)
 
         for register in registers:
             print(register)
 
     elif args.action == "w_csv":
-        Registers.to_csv(__registers, file_name) # "../Zontromat/registers.csv")
+        Registers.to_csv(__registers, file_name)
 
     elif args.action == "r_csv":
-        registers = Registers.from_csv(file_name) #"../Zontromat/registers.csv")
+        registers = Registers.from_csv(file_name)
 
         for register in registers:
             print(register)
