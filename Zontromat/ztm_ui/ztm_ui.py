@@ -424,9 +424,8 @@ class ZtmUI():
         str_registers = json.dumps(registers).replace("\'", "\"")
 
         # Payload
-        payload = {}
-        # payload = {"token": self.__session.session,\
-        #     "registers": str_registers, "last_sync": self.__last_sync}
+        # payload = {}
+        payload = {"registers": str_registers}
 
         # self.__logger.info("SYNC; To ZtmUI: {}".format(payload))
 

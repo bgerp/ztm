@@ -533,6 +533,27 @@ class Zone():
                                     self.__logger.error(e)
 
                                 # self.__update_min_max(register)
+                                    
+                    # Send envm plugin registers to ZtmUI.
+                    env_enabled = self.__registers.by_name("envm.enabled")
+                    if env_enabled != None:
+                        if env_enabled.value == True: 
+                            env_reg_names = {
+                                "envm.temp.actual": None,"envm.temp.a3": None,
+                                "envm.temp.a6": None,"envm.temp.min24": None,
+                                "envm.temp.max24": None,"envm.wind.actual": None,
+                                "envm.wind.a3": None,"envm.wind.a6": None,
+                                "envm.wind.min24": None,"envm.wind.max24": None,
+                                "envm.rh.actual": None,"envm.rh.a3": None,
+                                "envm.rh.a6": None}
+                            for env_reg_neme in env_reg_names:
+                                env_reg = self.__registers.by_name(env_reg_neme)
+                                if env_reg != None:
+                                    env_reg_names[env_reg_neme] = env_reg.value
+
+                            # Send the registers.
+                            self.__ztm_ui.set(env_reg_names)
+
 
                     # TODO: Send heart beat.
                     self.__ztm_ui.heart_beat()
