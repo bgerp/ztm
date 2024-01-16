@@ -74,7 +74,7 @@ class MW_UML_15(ModbusDevice):
 
         self._parameters.append(
             Parameter("CumulativeTraffic", "mL",\
-            ParameterType.UINT32_T_LE, [0x207, 0x208], FunctionCode.ReadHoldingRegisters))
+            ParameterType.FLOAT, [0x207, 0x208], FunctionCode.ReadHoldingRegisters))
 
         self._parameters.append(
             Parameter("InstantaneousFlow", "mL/h",\
