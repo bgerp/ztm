@@ -121,6 +121,12 @@ class Blind(BasePlugin):
         if "identifier" in config:
             self.__identifier = config["identifier"]
 
+        self.__update_now_flag = True
+
+        self.__logger = get_logger(__name__)
+
+        self.__sun_spot_update_timer = Timer(2)
+
     def __del__(self):
         """Destructor"""
 
@@ -140,23 +146,10 @@ class Blind(BasePlugin):
             GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
 
-        # Create
-        if register.value != {} and self.__blind_mechanism is None:
-            self.__blind_mechanism = BlindsFactory.create(
-                controller=self._controller,
-                name="Blind",
-                vendor=register.value['vendor'],
-                model=register.value['model'],
-                options=register.value['options'])
-
+        if register.value != {}:
             if self.__blind_mechanism is not None:
-                self.__blind_mechanism.init()
-
-        # Recreate
-        if register.value != {} and self.__blind_mechanism is not None:
-            self.__blind_mechanism.shutdown()
-
-            del self.__blind_mechanism
+                self.__blind_mechanism.shutdown()
+                del self.__blind_mechanism
 
             self.__blind_mechanism = BlindsFactory.create(
                 controller=self._controller,
@@ -168,9 +161,12 @@ class Blind(BasePlugin):
             if self.__blind_mechanism is not None:
                 self.__blind_mechanism.init()
 
-        # Delete
-        elif register.value == {} and self.__blind_mechanism is not None:
-            del self.__blind_mechanism
+        elif register.value == {}:
+            if self.__blind_mechanism is not None:
+                self.__blind_mechanism.shutdown()
+                del self.__blind_mechanism
+
+        self.__update_now_flag = True
 
     def __position_cb(self, register):
 
@@ -310,10 +306,7 @@ class Blind(BasePlugin):
         """Initialize the plugin.
         """
 
-        self.__logger = get_logger(__name__)
         self.__logger.info("Starting up the {} {}".format(self.name, self.__identifier))
-
-        self.__sun_spot_update_timer = Timer(2)
 
         self.__init_registers()
 
@@ -321,20 +314,20 @@ class Blind(BasePlugin):
         """Update the plugin.
         """
 
-        return
+        # return
 
-        # Update occupation flags.
-        if not self.__zone_occupation:
-            if not self.__blind_mechanism is None:
-                # self.__blind_mechanism.set_position(0)
-                pass
+        # # Update occupation flags.
+        # if not self.__zone_occupation:
+        #     if not self.__blind_mechanism is None:
+        #         # self.__blind_mechanism.set_position(0)
+        #         pass
 
-        self.__sun_spot_update_timer.update()
-        if self.__sun_spot_update_timer.expired:
-            self.__sun_spot_update_timer.clear()
+        # self.__sun_spot_update_timer.update()
+        # if self.__sun_spot_update_timer.expired:
+        #     self.__sun_spot_update_timer.clear()
 
-            self.__get_sun_pos()
-            self.__calc_sun_spot()
+            # self.__get_sun_pos()
+            # self.__calc_sun_spot()
 
         if not self.__blind_mechanism is None:
             self.__blind_mechanism.update()
