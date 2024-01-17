@@ -74,11 +74,11 @@ class MW_UML_15(ModbusDevice):
 
         self._parameters.append(
             Parameter("CumulativeTraffic", "mL",\
-            ParameterType.UINT32_T_BE, [0x207, 0x208], FunctionCode.ReadHoldingRegisters))
+            ParameterType.UINT32_T_BE, [0x206, 0x207], FunctionCode.ReadHoldingRegisters))
 
         self._parameters.append(
             Parameter("InstantaneousFlow", "mL/h",\
-            ParameterType.UINT32_T_LE, [0x206, 0x207], FunctionCode.ReadHoldingRegisters))
+            ParameterType.UINT32_T_LE, [0x209, 0x20A], FunctionCode.ReadHoldingRegisters))
 
         self._parameters.append(
             Parameter("WaterTemperature", "0.01",\
@@ -150,5 +150,18 @@ class MW_UML_15(ModbusDevice):
 
 #endregion
 
-    def get_liters(self):
-        return self.get_value("CumulativeTraffic")
+    def get_volume(self):
+        """Get positive cumulative traffic.
+
+        Returns:
+            float: meters cubic
+        """
+
+        value = self.get_value("CumulativeTraffic")
+
+        if value != None:
+            value = value / 1000000.0
+
+        # print(f"UNIT: {self.unit} -> PositiveCumulativeEnergy: {value}")
+
+        return value

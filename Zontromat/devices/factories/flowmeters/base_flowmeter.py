@@ -81,7 +81,7 @@ class BaseFlowmeter(BaseDevice):
 
 #region Public Methods
 
-    def get_liters(self):
+    def get_volume(self):
         pass
 
 #endregion
