@@ -96,7 +96,7 @@ __range = {
 
 #endregion
 
-def __add_registers():
+def __add_registers(args):
 
     global __registers, __range
 
@@ -607,6 +607,7 @@ def __add_registers():
     register.value = 1.0
     __registers.append(register)
 
+
     # Hot water flow meter.
     register = Register("monitoring.hw.flowmeter_settings")
     register.scope = Scope.System
@@ -639,6 +640,7 @@ def __add_registers():
     register.value = 1.0
     __registers.append(register)
 
+
     # Power analyzer.
     register = Register("monitoring.pa.settings")
     register.scope = Scope.System
@@ -664,14 +666,6 @@ def __add_registers():
     register.value = []
     __registers.append(register)
 
-    register = Register("monitoring.pa.demand_time")
-    register.scope = Scope.System
-    register.plugin_name = "Monitoring"
-    register.description = "Power analyzer measuring demand"
-    register.range = "0.0/"
-    register.value = 3600.0 # Every hour to measure the consumed electricity.
-    __registers.append(register)
-
     # Enable flag.
     register = Register("monitoring.enabled")
     register.scope = Scope.System
@@ -679,6 +673,178 @@ def __add_registers():
     register.description = "Plugin enabled"
     register.range = __range["BOOL"]
     register.value = True
+    __registers.append(register)
+
+    # ====================== NEW ======================
+
+    register = Register("monitoring.demand_time")
+    register.scope = Scope.System
+    register.plugin_name = "Monitoring"
+    register.description = "Power analyzer measuring demand"
+    register.range = "0.0/"
+    register.value = 3600.0 # Every hour to measure the consumed electricity.
+    __registers.append(register)
+
+
+    register = Register("monitoring.fl_1.hm.settings")
+    register.scope = Scope.System
+    register.plugin_name = "HVAC"
+    register.description = "Floor loop 1 heat meter settings."
+    register.range = __range["NONE"]
+    register.value = {
+        # "vendor": "mainone",
+        # "model": "flowmeter_dn20",
+        # "options":
+        # {
+        #     "uart": 1,
+        #     "mb_id": 41,
+        # }
+    }
+    __registers.append(register)
+
+    register = Register("monitoring.fl_1.hm.measurements")
+    register.scope = Scope.Device
+    register.plugin_name = "Monitoring"
+    register.description = "Floor loop 1 heat meter measurements."
+    register.range = __range["NONE"]
+    register.value = {}
+    __registers.append(register)
+
+
+    register = Register("monitoring.fl_2.hm.settings")
+    register.scope = Scope.System
+    register.plugin_name = "Monitoring"
+    register.description = "Floor loop 2 heat meter settings."
+    register.range = __range["NONE"]
+    register.value = {
+        # "vendor": "mainone",
+        # "model": "flowmeter_dn20",
+        # "options":
+        # {
+        #     "uart": 1,
+        #     "mb_id": 41,
+        # }
+    }
+    __registers.append(register)
+
+
+    register = Register("monitoring.fl_2.hm.measurements")
+    register.scope = Scope.Device
+    register.plugin_name = "Monitoring"
+    register.description = "Floor loop 2 heat meter measurements."
+    register.range = __range["NONE"]
+    register.value = {}
+    __registers.append(register)
+
+
+    register = Register("monitoring.fl_3.hm.settings")
+    register.scope = Scope.System
+    register.plugin_name = "Monitoring"
+    register.description = "Floor loop 3 heat meter settings."
+    register.range = __range["NONE"]
+    register.value = {
+        # "vendor": "mainone",
+        # "model": "flowmeter_dn20",
+        # "options":
+        # {
+        #     "uart": 1,
+        #     "mb_id": 41,
+        # }
+    }
+    __registers.append(register)
+
+    register = Register("monitoring.fl_3.hm.measurements")
+    register.scope = Scope.Device
+    register.plugin_name = "Monitoring"
+    register.description = "Floor loop 3 heat meter measurements."
+    register.range = __range["NONE"]
+    register.value = {}
+    __registers.append(register)
+
+
+    register = Register("monitoring.cl_1.hm.settings")
+    register.scope = Scope.System
+    register.plugin_name = "Monitoring"
+    register.description = "Convector loop 1 heat meter settings."
+    register.range = __range["NONE"]
+    register.value = {
+        # "vendor": "mainone",
+        # "model": "flowmeter_dn20",
+        # "options":
+        # {
+        #     "uart": 1,
+        #     "mb_id": 41,
+        # }
+    }
+    __registers.append(register)
+
+    register = Register("monitoring.cl_1.hm.measurements")
+    register.scope = Scope.Device
+    register.plugin_name = "Monitoring"
+    register.description = "Convector loop 1 heat meter measurements."
+    register.range = __range["NONE"]
+    register.value = {}
+    __registers.append(register)
+
+
+    register = Register("monitoring.cl_2.hm.settings")
+    register.scope = Scope.System
+    register.plugin_name = "Monitoring"
+    register.description = "Convector loop 2 heat meter settings."
+    register.range = __range["NONE"]
+    register.value = {
+        # "vendor": "mainone",
+        # "model": "flowmeter_dn20",
+        # "options":
+        # {
+        #     "uart": 1,
+        #     "mb_id": 41,
+        # }
+    }
+    __registers.append(register)
+
+    register = Register("monitoring.cl_2.hm.measurements")
+    register.scope = Scope.Device
+    register.plugin_name = "Monitoring"
+    register.description = "Convector loop 2 heat meter measurements."
+    register.range = __range["NONE"]
+    register.value = {}
+    __registers.append(register)
+
+
+    register = Register("monitoring.cl_3.hm.settings")
+    register.scope = Scope.System
+    register.plugin_name = "Monitoring"
+    register.description = "Convector loop 3 heat meter settings."
+    register.range = __range["NONE"]
+    register.value = {
+        # "vendor": "mainone",
+        # "model": "flowmeter_dn20",
+        # "options":
+        # {
+        #     "uart": 1,
+        #     "mb_id": 41,
+        # }
+    }
+    __registers.append(register)
+
+    register = Register("monitoring.cl_3.hm.measurements")
+    register.scope = Scope.Device
+    register.plugin_name = "Monitoring"
+    register.description = "Convector loop 3 heat meter measurements."
+    register.range = __range["NONE"]
+    register.value = {}
+    __registers.append(register)
+
+
+    # ====================== DEPRICATED ======================
+
+    register = Register("monitoring.pa.demand_time")
+    register.scope = Scope.System
+    register.plugin_name = "Monitoring"
+    register.description = "Power analyzer measuring demand"
+    register.range = "0.0/"
+    register.value = 3600.0 # Every hour to measure the consumed electricity.
     __registers.append(register)
 
 #endregion
@@ -1034,48 +1200,6 @@ def __add_registers():
     register.value = 0.0
     __registers.append(register)
 
-    # Floor loop 1 flowmeter.
-    register = Register("hvac.floor_loop_1.flowmeter.settings")
-    register.scope = Scope.System
-    register.plugin_name = "HVAC"
-    register.description = "Floor loop 1 flowmeter."
-    register.range = __range["NONE"]
-    register.value = {
-        "vendor": "mainone",
-        "model": "flowmeter_dn20",
-        "options":
-        {
-            "uart": 1,
-            "mb_id": 41,
-        }
-    }
-    __registers.append(register)
-
-    # Loop 1 Temperature
-    register = Register("hvac.floor_loop_1.temp.settings")
-    register.scope = Scope.System
-    register.plugin_name = "HVAC"
-    register.description = "Floor loop 1 thermometer."
-    register.range = __range["NONE"]
-    register.value = {
-        "vendor": "mainone",
-        "model": "flowmeter_dn20",
-        "options":
-        {
-            "uart": 1,
-            "mb_id": 41,
-        }
-    }
-    __registers.append(register)
-
-    register = Register("hvac.floor_loop_1.temp.measurements")
-    register.scope = Scope.Device
-    register.plugin_name = "HVAC"
-    register.description = "Floor loop 1 measurements."
-    register.range = __range["NONE"]
-    register.value = {}
-    __registers.append(register)
-
     register = Register("hvac.floor_loop_1.valve.settings")
     register.scope = Scope.System
     register.plugin_name = "HVAC"
@@ -1094,47 +1218,6 @@ def __add_registers():
     }
     __registers.append(register)
 
-    # Loop 2 Temperature
-    register = Register("hvac.floor_loop_2.flowmeter.settings")
-    register.scope = Scope.System
-    register.plugin_name = "HVAC"
-    register.description = "Floor loop 2 flowmeter."
-    register.range = __range["NONE"]
-    register.value = {
-        # "vendor": "mainone",
-        # "model": "flowmeter_dn20",
-        # "options":
-        # {
-        #     "uart": 1,
-        #     "mb_id": 41,
-        # }
-    }
-    __registers.append(register)
-
-    register = Register("hvac.floor_loop_2.temp.settings")
-    register.scope = Scope.System
-    register.plugin_name = "HVAC"
-    register.description = "Floor loop 2 thermometer."
-    register.range = __range["NONE"]
-    register.value = {
-        # "vendor": "mainone",
-        # "model": "flowmeter_dn20",
-        # "options":
-        # {
-        #     "uart": 1,
-        #     "mb_id": 41,
-        # }
-    }
-    __registers.append(register)
-
-    register = Register("hvac.floor_loop_2.temp.measurements")
-    register.scope = Scope.Device
-    register.plugin_name = "HVAC"
-    register.description = "Floor loop 2 measurements."
-    register.range = __range["NONE"]
-    register.value = []
-    __registers.append(register)
-
     register = Register("hvac.floor_loop_2.valve.settings")
     register.scope = Scope.System
     register.plugin_name = "HVAC"
@@ -1151,47 +1234,6 @@ def __add_registers():
         #     ]
         # }
     }
-    __registers.append(register)
-
-    # Loop 3 Temperature
-    register = Register("hvac.floor_loop_3.flowmeter.settings")
-    register.scope = Scope.System
-    register.plugin_name = "HVAC"
-    register.description = "Floor loop 3 flowmeter."
-    register.range = __range["NONE"]
-    register.value = {
-        # "vendor": "mainone",
-        # "model": "flowmeter_dn20",
-        # "options":
-        # {
-        #     "uart": 1,
-        #     "mb_id": 41,
-        # }
-    }
-    __registers.append(register)
-
-    register = Register("hvac.floor_loop_3.temp.settings")
-    register.scope = Scope.System
-    register.plugin_name = "HVAC"
-    register.description = "Floor loop 3 thermometer."
-    register.range = __range["NONE"]
-    register.value = {
-        # "vendor": "mainone",
-        # "model": "flowmeter_dn20",
-        # "options":
-        # {
-        #     "uart": 1,
-        #     "mb_id": 41,
-        # }
-    }
-    __registers.append(register)
-
-    register = Register("hvac.floor_loop_3.temp.measurements")
-    register.scope = Scope.Device
-    register.plugin_name = "HVAC"
-    register.description = "Floor loop 2 measurements."
-    register.range = __range["NONE"]
-    register.value = {}
     __registers.append(register)
 
     register = Register("hvac.floor_loop_3.valve.settings")
@@ -1239,47 +1281,6 @@ def __add_registers():
     }
     __registers.append(register)
 
-    register = Register("hvac.conv_loop_1.flowmeter.settings")
-    register.scope = Scope.System
-    register.plugin_name = "HVAC"
-    register.description = "Convector loop 1 heat meter."
-    register.range = __range["NONE"]
-    register.value = {
-        "vendor": "mainone",
-        "model": "flowmeter_dn20",
-        "options":
-        {
-            "uart": 1,
-            "mb_id": 41,
-        }
-    }
-    __registers.append(register)
-
-    register = Register("hvac.conv_loop_1.temp.settings")
-    register.scope = Scope.System
-    register.plugin_name = "HVAC"
-    register.description = "Convector loop 1 thermometer."
-    register.range = __range["NONE"]
-    register.value = {
-        "vendor": "mainone",
-        "model": "flowmeter_dn20",
-        "options":
-        {
-            "uart": 1,
-            "mb_id": 41,
-        }
-    }
-    __registers.append(register)
-
-    # Convector loop 1 measurements.
-    register = Register("hvac.conv_loop_1.temp.measurements")
-    register.scope = Scope.Device
-    register.plugin_name = "HVAC"
-    register.description = "Convector loop 1 measurements."
-    register.range = __range["NONE"]
-    register.value = {}
-    __registers.append(register)
-
     register = Register("hvac.conv_loop_1.valve.settings")
     register.scope = Scope.System
     register.plugin_name = "HVAC"
@@ -1325,48 +1326,6 @@ def __add_registers():
     }
     __registers.append(register)
 
-    register = Register("hvac.conv_loop_2.flowmeter.settings")
-    register.scope = Scope.System
-    register.plugin_name = "HVAC"
-    register.description = "Convector loop 2 flowmeter"
-    register.range = __range["NONE"]
-    register.value = {
-        # "vendor": "mainone",
-        # "model": "flowmeter_dn20",
-        # "options":
-        # {
-        #     "uart": 1,
-        #     "mb_id": 41,
-        # }
-    }
-    __registers.append(register)
-
-    # Convector loop 2 thermometer.
-    register = Register("hvac.conv_loop_2.temp.settings")
-    register.scope = Scope.System
-    register.plugin_name = "HVAC"
-    register.description = "Convector loop 2 thermometer"
-    register.range = __range["NONE"]
-    register.value = {
-        # "vendor": "mainone",
-        # "model": "flowmeter_dn20",
-        # "options":
-        # {
-        #     "uart": 1,
-        #     "mb_id": 41,
-        # }
-    }
-    __registers.append(register)
-
-    # Convector loop 2 measurements.
-    register = Register("hvac.conv_loop_2.temp.measurements")
-    register.scope = Scope.Device
-    register.plugin_name = "HVAC"
-    register.description = "Convector loop 2 measurements"
-    register.range = __range["NONE"]
-    register.value = {}
-    __registers.append(register)
-
     register = Register("hvac.conv_loop_2.valve.settings")
     register.scope = Scope.System
     register.plugin_name = "HVAC"
@@ -1410,48 +1369,6 @@ def __add_registers():
         #     ]
         # }
     }
-    __registers.append(register)
-
-    register = Register("hvac.conv_loop_3.flowmeter.settings")
-    register.scope = Scope.System
-    register.plugin_name = "HVAC"
-    register.description = "Convector loop 3 flowmeter"
-    register.range = __range["NONE"]
-    register.value = {
-        # "vendor": "mainone",
-        # "model": "flowmeter_dn20",
-        # "options":
-        # {
-        #     "uart": 1,
-        #     "mb_id": 41,
-        # }
-    }
-    __registers.append(register)
-
-    # Convector loop 3 thermometer.
-    register = Register("hvac.conv_loop_3.temp.settings")
-    register.scope = Scope.System
-    register.plugin_name = "HVAC"
-    register.description = "Convector loop 3 thermometer"
-    register.range = __range["NONE"]
-    register.value = {
-    #     "vendor": "mainone",
-    #     "model": "flowmeter_dn20",
-    #     "options":
-    #     {
-    #         "uart": 1,
-    #         "mb_id": 41,
-    #     }
-    }
-    __registers.append(register)
-
-    # Convector loop 3 measurements.
-    register = Register("hvac.conv_loop_3.temp.measurements")
-    register.scope = Scope.Device
-    register.plugin_name = "HVAC"
-    register.description = "Convector loop 3 measurements"
-    register.range = __range["NONE"]
-    register.value = {}
     __registers.append(register)
 
     register = Register("hvac.conv_loop_3.valve.settings")
@@ -1565,6 +1482,264 @@ def __add_registers():
     register.description = "Update rate of the plugin [s]"
     register.range = "0.0/"
     register.value = 1.0
+    __registers.append(register)
+
+    # ====================== DEPRICATED ======================
+
+
+    register = Register("hvac.conv_loop_1.flowmeter.settings")
+    register.scope = Scope.System
+    register.plugin_name = "HVAC"
+    register.description = "Convector loop 1 heat meter."
+    register.range = __range["NONE"]
+    register.value = {
+        "vendor": "mainone",
+        "model": "flowmeter_dn20",
+        "options":
+        {
+            "uart": 1,
+            "mb_id": 41,
+        }
+    }
+    __registers.append(register)
+
+    register = Register("hvac.conv_loop_1.temp.settings")
+    register.scope = Scope.System
+    register.plugin_name = "HVAC"
+    register.description = "Convector loop 1 thermometer."
+    register.range = __range["NONE"]
+    register.value = {
+        "vendor": "mainone",
+        "model": "flowmeter_dn20",
+        "options":
+        {
+            "uart": 1,
+            "mb_id": 41,
+        }
+    }
+    __registers.append(register)
+
+    # Convector loop 1 measurements.
+    register = Register("hvac.conv_loop_1.temp.measurements")
+    register.scope = Scope.Device
+    register.plugin_name = "HVAC"
+    register.description = "Convector loop 1 measurements."
+    register.range = __range["NONE"]
+    register.value = {}
+    __registers.append(register)
+
+
+
+
+    register = Register("hvac.conv_loop_3.flowmeter.settings")
+    register.scope = Scope.System
+    register.plugin_name = "HVAC"
+    register.description = "Convector loop 3 flowmeter"
+    register.range = __range["NONE"]
+    register.value = {
+        # "vendor": "mainone",
+        # "model": "flowmeter_dn20",
+        # "options":
+        # {
+        #     "uart": 1,
+        #     "mb_id": 41,
+        # }
+    }
+    __registers.append(register)
+
+    # Convector loop 3 thermometer.
+    register = Register("hvac.conv_loop_3.temp.settings")
+    register.scope = Scope.System
+    register.plugin_name = "HVAC"
+    register.description = "Convector loop 3 thermometer"
+    register.range = __range["NONE"]
+    register.value = {
+    #     "vendor": "mainone",
+    #     "model": "flowmeter_dn20",
+    #     "options":
+    #     {
+    #         "uart": 1,
+    #         "mb_id": 41,
+    #     }
+    }
+    __registers.append(register)
+
+    # Convector loop 3 measurements.
+    register = Register("hvac.conv_loop_3.temp.measurements")
+    register.scope = Scope.Device
+    register.plugin_name = "HVAC"
+    register.description = "Convector loop 3 measurements"
+    register.range = __range["NONE"]
+    register.value = {}
+    __registers.append(register)
+
+    # Floor loop 1 flowmeter.
+    register = Register("hvac.floor_loop_1.flowmeter.settings")
+    register.scope = Scope.System
+    register.plugin_name = "HVAC"
+    register.description = "Floor loop 1 flowmeter."
+    register.range = __range["NONE"]
+    register.value = {
+        "vendor": "mainone",
+        "model": "flowmeter_dn20",
+        "options":
+        {
+            "uart": 1,
+            "mb_id": 41,
+        }
+    }
+    __registers.append(register)
+
+
+    # Loop 1 Temperature
+    register = Register("hvac.floor_loop_1.temp.settings")
+    register.scope = Scope.System
+    register.plugin_name = "HVAC"
+    register.description = "Floor loop 1 thermometer."
+    register.range = __range["NONE"]
+    register.value = {
+        "vendor": "mainone",
+        "model": "flowmeter_dn20",
+        "options":
+        {
+            "uart": 1,
+            "mb_id": 41,
+        }
+    }
+    __registers.append(register)
+
+    register = Register("hvac.floor_loop_1.temp.measurements")
+    register.scope = Scope.Device
+    register.plugin_name = "HVAC"
+    register.description = "Floor loop 1 measurements."
+    register.range = __range["NONE"]
+    register.value = {}
+    __registers.append(register)
+
+
+    # Loop 3 Temperature
+    register = Register("hvac.floor_loop_3.flowmeter.settings")
+    register.scope = Scope.System
+    register.plugin_name = "HVAC"
+    register.description = "Floor loop 3 flowmeter."
+    register.range = __range["NONE"]
+    register.value = {
+        # "vendor": "mainone",
+        # "model": "flowmeter_dn20",
+        # "options":
+        # {
+        #     "uart": 1,
+        #     "mb_id": 41,
+        # }
+    }
+    __registers.append(register)
+
+    register = Register("hvac.floor_loop_3.temp.settings")
+    register.scope = Scope.System
+    register.plugin_name = "HVAC"
+    register.description = "Floor loop 3 thermometer."
+    register.range = __range["NONE"]
+    register.value = {
+        # "vendor": "mainone",
+        # "model": "flowmeter_dn20",
+        # "options":
+        # {
+        #     "uart": 1,
+        #     "mb_id": 41,
+        # }
+    }
+    __registers.append(register)
+
+    register = Register("hvac.floor_loop_3.temp.measurements")
+    register.scope = Scope.Device
+    register.plugin_name = "HVAC"
+    register.description = "Floor loop 2 measurements."
+    register.range = __range["NONE"]
+    register.value = {}
+    __registers.append(register)
+
+    register = Register("hvac.conv_loop_2.flowmeter.settings")
+    register.scope = Scope.System
+    register.plugin_name = "HVAC"
+    register.description = "Convector loop 2 flowmeter"
+    register.range = __range["NONE"]
+    register.value = {
+        # "vendor": "mainone",
+        # "model": "flowmeter_dn20",
+        # "options":
+        # {
+        #     "uart": 1,
+        #     "mb_id": 41,
+        # }
+    }
+    __registers.append(register)
+
+    # Convector loop 2 thermometer.
+    register = Register("hvac.conv_loop_2.temp.settings")
+    register.scope = Scope.System
+    register.plugin_name = "HVAC"
+    register.description = "Convector loop 2 thermometer"
+    register.range = __range["NONE"]
+    register.value = {
+        # "vendor": "mainone",
+        # "model": "flowmeter_dn20",
+        # "options":
+        # {
+        #     "uart": 1,
+        #     "mb_id": 41,
+        # }
+    }
+    __registers.append(register)
+
+    # Convector loop 2 measurements.
+    register = Register("hvac.conv_loop_2.temp.measurements")
+    register.scope = Scope.Device
+    register.plugin_name = "HVAC"
+    register.description = "Convector loop 2 measurements"
+    register.range = __range["NONE"]
+    register.value = {}
+    __registers.append(register)
+
+
+    # Loop 2 Temperature
+    register = Register("hvac.floor_loop_2.flowmeter.settings")
+    register.scope = Scope.System
+    register.plugin_name = "HVAC"
+    register.description = "Floor loop 2 flowmeter."
+    register.range = __range["NONE"]
+    register.value = {
+        # "vendor": "mainone",
+        # "model": "flowmeter_dn20",
+        # "options":
+        # {
+        #     "uart": 1,
+        #     "mb_id": 41,
+        # }
+    }
+    __registers.append(register)
+
+    register = Register("hvac.floor_loop_2.temp.settings")
+    register.scope = Scope.System
+    register.plugin_name = "HVAC"
+    register.description = "Floor loop 2 thermometer."
+    register.range = __range["NONE"]
+    register.value = {
+        # "vendor": "mainone",
+        # "model": "flowmeter_dn20",
+        # "options":
+        # {
+        #     "uart": 1,
+        #     "mb_id": 41,
+        # }
+    }
+    __registers.append(register)
+
+    register = Register("hvac.floor_loop_2.temp.measurements")
+    register.scope = Scope.Device
+    register.plugin_name = "HVAC"
+    register.description = "Floor loop 2 measurements."
+    register.range = __range["NONE"]
+    register.value = []
     __registers.append(register)
 
 #endregion
@@ -3957,24 +4132,49 @@ def __add_registers():
 def main():
     global __registers, __range
 
-    __f_ext = ""
-
     __registers = Registers()
-
-    __add_registers()
 
     # Create parser.
     parser = argparse.ArgumentParser()
 
+    # File extetion.
+    __f_ext = ""
+
     # Add arguments.
-    # parser.add_argument("--action", type=str, default="w_json", help="Export JSON file.")
-    parser.add_argument("--action", type=str, default="w_csv", help="Export CSV file.")
+    parser.add_argument("--action", type=str, default="w_json", help="Export JSON file.")
+    # parser.add_argument("--action", type=str, default="w_csv", help="Export CSV file.")
     # parser.add_argument("--action", type=str, default="list_gpio", help="Export type.")
     # parser.add_argument("--action", type=str, default="w_md", help="Export MD file.")
     # parser.add_argument("--path", type=str, default=file_name, help="Target file path.")
 
+    # Add args parameters
+    parser.add_argument("--pa", type=int, default=1, help="Power analyzer default modbus ID.")
+    parser.add_argument("--hw", type=int, default=-1, help="How water flow meter default modbus ID.")
+    parser.add_argument("--cw", type=int, default=-1, help="Cold water flow meter default modbus ID.")
+    parser.add_argument("--fl_1_hm", type=int, default=-1, help="Floor loop 1 heat meter default modbus ID.")
+    parser.add_argument("--fl_2_hm", type=int, default=-1, help="Floor loop 2 heat meter default modbus ID.")
+    parser.add_argument("--fl_3_hm", type=int, default=-1, help="Floor loop 3 heat meter default modbus ID.")
+    parser.add_argument("--cl_1_hm", type=int, default=-1, help="Floor loop 1 heat meter default modbus ID.")
+    parser.add_argument("--cl_2_hm", type=int, default=-1, help="Floor loop 2 heat meter default modbus ID.")
+    parser.add_argument("--cl_3_hm", type=int, default=-1, help="Floor loop 3 heat meter default modbus ID.")
+    parser.add_argument("--temp_upper", type=int, default=4, help="Upper termometr default modbus ID.")
+    parser.add_argument("--temp_lower", type=int, default=5, help="Lower termometr default modbus ID.") 
+    parser.add_argument("--temp_cent", type=int, default=3, help="Central termometer default modbus ID.")
+    parser.add_argument("--pir_1", type=int, default=16, help="PIR 1 default modbus ID.")
+    parser.add_argument("--blinds_1", type=int, default=11, help="Blinds mechanism 1 default modbus ID.")
+    parser.add_argument("--blinds_2", type=int, default=-1, help="Blinds mechanism 2 default modbus ID.")
+    parser.add_argument("--blinds_3", type=int, default=-1, help="Blinds mechanism 3 default modbus ID.")
+    parser.add_argument("--blinds_4", type=int, default=-1, help="Blinds mechanism 4 default modbus ID.")
+    parser.add_argument("--bi_1", type=int, default=2, help="Black island 1 default modbus ID.")
+    parser.add_argument("--conv_1", type=int, default=6, help="Convector 1 default modbus ID.")
+    parser.add_argument("--conv_2", type=int, default=-1, help="Convector 2 default modbus ID.")
+    parser.add_argument("--conv_3", type=int, default=-1, help="Convector 3 default modbus ID.")
+
     # Take arguments.
     args = parser.parse_args()
+
+    __add_registers(args)
+
 
     if args.action.endswith("json"):
         __f_ext = "json"
