@@ -336,7 +336,7 @@ class Monitoring(BasePlugin):
                 for item in measurement:
                     if item == "ts":
                         pass
-                    measurement[item] = self.__cw_flowmeter_dev.get_value(item)
+                    measurement[item] = self.__hw_flowmeter_dev.get_value(item)
 
                     # Scale unit from milli liter to cubic meter. 
                     if item == "CumulativeTraffic":
