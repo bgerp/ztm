@@ -214,6 +214,18 @@ class Monitoring(BasePlugin):
                         pass
                     measurement[item] = self.__cw_flowmeter_dev.get_value(item)
 
+                    # Scale unit from milli liter to cubic meter. 
+                    if item == "CumulativeTraffic":
+                        measurement[item] /= 1000000.0
+
+                    # Scale to degrees by Celsius.
+                    if item == "WaterTemperature":
+                        measurement[item] /= 100.0
+
+                    # Scale to voltage.
+                    if item == "BatteryVoltage":
+                        measurement[item] /= 100.0
+
         else:
             self.__logger.error("Unknown power water meter")
 
