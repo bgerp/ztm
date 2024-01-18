@@ -761,7 +761,7 @@ def __add_registers(args):
     register = Register("monitoring.demand_time")
     register.scope = Scope.System
     register.plugin_name = "Monitoring"
-    register.description = "Power analyzer measuring demand"
+    register.description = "Measuring demand"
     register.range = "0.0/"
     register.value = 3600.0 # Every hour to measure the consumed electricity.
     __registers.append(register)
@@ -4255,6 +4255,8 @@ def main():
         __f_ext = "json"
     if args.action.endswith("csv"):
         __f_ext = "csv"
+    if args.action.endswith("md"):
+        __f_ext = "md"
 
     # Current file path. & Go to file.
     cwf = os.path.dirname(os.path.abspath(__file__))
@@ -4286,7 +4288,7 @@ def main():
                     print("Register: {} -> {}".format(register.name, register.value["options"]))                    
 
     elif args.action == "w_md":
-        Registers.to_md(__registers, args.path) #"../Zontromat/plugins/registers.md")
+        Registers.to_md(__registers, file_name) #"../Zontromat/plugins/registers.md")
 
 if __name__ == "__main__":
     main()
