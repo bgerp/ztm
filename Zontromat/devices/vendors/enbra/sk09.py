@@ -144,7 +144,7 @@ class SK09(BaseDevice):
 
         return value
 
-    def get_liters(self):
+    def get_volume(self):
         """Get value."""
 
         return self.get_counter() * self.__tpl
