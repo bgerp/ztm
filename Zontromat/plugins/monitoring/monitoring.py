@@ -637,7 +637,6 @@ class Monitoring(BasePlugin):
 #region Private Methods (Floor Loop 1)
 
     def __fl_1_update_measurements(self):
-
         if self.__fl_1_hm_dev is None:
             return
 
@@ -667,7 +666,10 @@ class Monitoring(BasePlugin):
             GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
             return
 
-        if register.value != {} and self.__fl_1_hm_dev is None:
+        if register.value != {}:
+            if self.__fl_1_hm_dev is not None:
+                self.__fl_1_hm_dev.shutdown()
+
             self.__fl_1_hm_dev = FlowmeterFactory.create(
                 name=register.description,
                 controller=self._controller,
@@ -675,22 +677,12 @@ class Monitoring(BasePlugin):
                 model=register.value['model'],
                 options=register.value['options'])
 
-        elif register.value != {} and self.__fl_1_hm_dev is not None:
-            self.__fl_1_hm_dev.shutdown()
-            del self.__fl_1_hm_dev
-            self.__fl_1_hm_dev = FlowmeterFactory.create(
-                name=register.description,
-                controller=self._controller,
-                vendor=register.value['vendor'],
-                model=register.value['model'],
-                options=register.value['options'])
+            if self.__fl_1_hm_dev is not None:
+                self.__fl_1_hm_dev.init()
 
-        elif register.value == {} and self.__fl_1_hm_dev is not None:
-            self.__fl_1_hm_dev.shutdown()
-            del self.__fl_1_hm_dev
-
-        if self.__fl_1_hm_dev is not None:
-            self.__fl_1_hm_dev.init()
+        elif register.value == {}:
+            if self.__fl_1_hm_dev is not None:
+                self.__fl_1_hm_dev.shutdown()
 
         self.__update_now_flag = True
 
@@ -736,7 +728,10 @@ class Monitoring(BasePlugin):
             GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
             return
 
-        if register.value != {} and self.__fl_2_hm_dev is None:
+        if register.value != {}:
+            if self.__fl_2_hm_dev is not None:
+                self.__fl_2_hm_dev.shutdown()
+
             self.__fl_2_hm_dev = FlowmeterFactory.create(
                 name=register.description,
                 controller=self._controller,
@@ -744,22 +739,12 @@ class Monitoring(BasePlugin):
                 model=register.value['model'],
                 options=register.value['options'])
 
-        elif register.value != {} and self.__fl_2_hm_dev is not None:
-            self.__fl_2_hm_dev.shutdown()
-            del self.__fl_2_hm_dev
-            self.__fl_2_hm_dev = FlowmeterFactory.create(
-                name=register.description,
-                controller=self._controller,
-                vendor=register.value['vendor'],
-                model=register.value['model'],
-                options=register.value['options'])
+            if self.__fl_2_hm_dev is not None:
+                self.__fl_2_hm_dev.init()
 
-        elif register.value == {} and self.__fl_2_hm_dev is not None:
-            self.__fl_2_hm_dev.shutdown()
-            del self.__fl_2_hm_dev
-
-        if self.__fl_2_hm_dev is not None:
-            self.__fl_2_hm_dev.init()
+        elif register.value == {}:
+            if self.__fl_2_hm_dev is not None:
+                self.__fl_2_hm_dev.shutdown()
 
         self.__update_now_flag = True
 
@@ -805,7 +790,10 @@ class Monitoring(BasePlugin):
             GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
             return
 
-        if register.value != {} and self.__fl_3_hm_dev is None:
+        if register.value != {}:
+            if self.__fl_3_hm_dev is not None:
+                self.__fl_3_hm_dev.shutdown()
+
             self.__fl_3_hm_dev = FlowmeterFactory.create(
                 name=register.description,
                 controller=self._controller,
@@ -813,27 +801,16 @@ class Monitoring(BasePlugin):
                 model=register.value['model'],
                 options=register.value['options'])
 
-        elif register.value != {} and self.__fl_3_hm_dev is not None:
-            self.__fl_3_hm_dev.shutdown()
-            del self.__fl_3_hm_dev
-            self.__fl_3_hm_dev = FlowmeterFactory.create(
-                name=register.description,
-                controller=self._controller,
-                vendor=register.value['vendor'],
-                model=register.value['model'],
-                options=register.value['options'])
+            if self.__fl_3_hm_dev is not None:
+                self.__fl_3_hm_dev.init()
 
-        elif register.value == {} and self.__fl_3_hm_dev is not None:
-            self.__fl_3_hm_dev.shutdown()
-            del self.__fl_3_hm_dev
-
-        if self.__fl_3_hm_dev is not None:
-            self.__fl_3_hm_dev.init()
+        elif register.value == {}:
+            if self.__fl_3_hm_dev is not None:
+                self.__fl_3_hm_dev.shutdown()
 
         self.__update_now_flag = True
 
     def __init_fl_3_hm(self):
-
         fl_hm_3_dev_settings = self._registers.by_name(f"{self.key}.fl_3.hm.settings")
         if fl_hm_3_dev_settings is not None:
             fl_hm_3_dev_settings.update_handlers = self.__fl_3_hm_settings_cb
@@ -844,7 +821,6 @@ class Monitoring(BasePlugin):
 #region Private Methods (Heat meter Loop 1)
 
     def __cl_1_update_measurements(self):
-
         if self.__cl_1_hm_dev is None:
             return
 
@@ -874,7 +850,10 @@ class Monitoring(BasePlugin):
             GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
             return
 
-        if register.value != {} and self.__cl_1_hm_dev is None:
+        if register.value != {}:
+            if self.__cl_1_hm_dev is not None:
+                self.__cl_1_hm_dev.shutdown()
+
             self.__cl_1_hm_dev = FlowmeterFactory.create(
                 name=register.description,
                 controller=self._controller,
@@ -882,27 +861,16 @@ class Monitoring(BasePlugin):
                 model=register.value['model'],
                 options=register.value['options'])
 
-        elif register.value != {} and self.__cl_1_hm_dev is not None:
-            self.__cl_1_hm_dev.shutdown()
-            del self.__cl_1_hm_dev
-            self.__cl_1_hm_dev = FlowmeterFactory.create(
-                name=register.description,
-                controller=self._controller,
-                vendor=register.value['vendor'],
-                model=register.value['model'],
-                options=register.value['options'])
+            if self.__cl_1_hm_dev is not None:
+                self.__cl_1_hm_dev.init()
 
-        elif register.value == {} and self.__cl_1_hm_dev is not None:
-            self.__cl_1_hm_dev.shutdown()
-            del self.__cl_1_hm_dev
-
-        if self.__cl_1_hm_dev is not None:
-            self.__cl_1_hm_dev.init()
+        elif register.value == {}:
+            if self.__cl_1_hm_dev is not None:
+                self.__cl_1_hm_dev.shutdown()
 
         self.__update_now_flag = True
 
     def __init_cl_1_hm(self):
-
         cl_hm_1_dev_settings = self._registers.by_name(f"{self.key}.cl_1.hm.settings")
         if cl_hm_1_dev_settings is not None:
             cl_hm_1_dev_settings.update_handlers = self.__cl_1_hm_settings_cb
@@ -913,7 +881,6 @@ class Monitoring(BasePlugin):
 #region Private Methods (Heat meter Loop 2)
 
     def __cl_2_update_measurements(self):
-
         if self.__cl_2_hm_dev is None:
             return
 
@@ -943,7 +910,10 @@ class Monitoring(BasePlugin):
             GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
             return
 
-        if register.value != {} and self.__cl_2_hm_dev is None:
+        if register.value != {}:
+            if self.__cl_2_hm_dev is not None:
+                self.__cl_2_hm_dev.shutdown()
+
             self.__cl_2_hm_dev = FlowmeterFactory.create(
                 name=register.description,
                 controller=self._controller,
@@ -951,27 +921,16 @@ class Monitoring(BasePlugin):
                 model=register.value['model'],
                 options=register.value['options'])
 
-        elif register.value != {} and self.__cl_2_hm_dev is not None:
-            self.__cl_2_hm_dev.shutdown()
-            del self.__cl_2_hm_dev
-            self.__cl_2_hm_dev = FlowmeterFactory.create(
-                name=register.description,
-                controller=self._controller,
-                vendor=register.value['vendor'],
-                model=register.value['model'],
-                options=register.value['options'])
+            if self.__cl_2_hm_dev is not None:
+                self.__cl_2_hm_dev.init()
 
-        elif register.value == {} and self.__cl_2_hm_dev is not None:
-            self.__cl_2_hm_dev.shutdown()
-            del self.__cl_2_hm_dev
-
-        if self.__cl_2_hm_dev is not None:
-            self.__cl_2_hm_dev.init()
+        elif register.value == {}:
+            if self.__cl_2_hm_dev is not None:
+                self.__cl_2_hm_dev.shutdown()
 
         self.__update_now_flag = True
 
     def __init_cl_2_hm(self):
-
         cl_hm_2_dev_settings = self._registers.by_name(f"{self.key}.cl_2.hm.settings")
         if cl_hm_2_dev_settings is not None:
             cl_hm_2_dev_settings.update_handlers = self.__cl_2_hm_settings_cb
@@ -982,7 +941,6 @@ class Monitoring(BasePlugin):
 #region Private Methods (Heat meter Loop 3)
 
     def __cl_3_update_measurements(self):
-
         if self.__cl_3_hm_dev is None:
             return
 
@@ -1012,7 +970,10 @@ class Monitoring(BasePlugin):
             GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
             return
 
-        if register.value != {} and self.__cl_3_hm_dev is None:
+        if register.value != {}:
+            if self.__cl_3_hm_dev is not None:
+                self.__cl_3_hm_dev.shutdown()
+
             self.__cl_3_hm_dev = FlowmeterFactory.create(
                 name=register.description,
                 controller=self._controller,
@@ -1020,27 +981,16 @@ class Monitoring(BasePlugin):
                 model=register.value['model'],
                 options=register.value['options'])
 
-        elif register.value != {} and self.__cl_3_hm_dev is not None:
-            self.__cl_3_hm_dev.shutdown()
-            del self.__cl_3_hm_dev
-            self.__cl_3_hm_dev = FlowmeterFactory.create(
-                name=register.description,
-                controller=self._controller,
-                vendor=register.value['vendor'],
-                model=register.value['model'],
-                options=register.value['options'])
+            if self.__cl_3_hm_dev is not None:
+                self.__cl_3_hm_dev.init()
 
-        elif register.value == {} and self.__cl_3_hm_dev is not None:
-            self.__cl_3_hm_dev.shutdown()
-            del self.__cl_3_hm_dev
-
-        if self.__cl_3_hm_dev is not None:
-            self.__cl_3_hm_dev.init()
+        elif register.value == {}:
+            if self.__cl_3_hm_dev is not None:
+                self.__cl_3_hm_dev.shutdown()
 
         self.__update_now_flag = True
 
     def __init_cl_3_hm(self):
-
         cl_hm_3_dev_settings = self._registers.by_name(f"{self.key}.cl_3.hm.settings")
         if cl_hm_3_dev_settings is not None:
             cl_hm_3_dev_settings.update_handlers = self.__cl_3_hm_settings_cb

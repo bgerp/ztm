@@ -211,12 +211,6 @@ class Zone(BasePlugin):
     def __del__(self):
         """Destructor"""
 
-        if self.__fl_1_vlv_dev is not None:
-            del self.__fl_1_vlv_dev
-
-        if self.__cl_1_vlv_dev is not None:
-            del self.__cl_1_vlv_dev
-
         if self.__thermal_mode is not None:
             del self.__thermal_mode
 
@@ -415,7 +409,6 @@ class Zone(BasePlugin):
             if self.__air_temp_cent_dev is not None:
                 self.__temp_proc.remove(self.__air_temp_cent_dev)
                 self.__air_temp_cent_dev.shutdown()
-                del self.__air_temp_cent_dev
 
     def __air_temp_lower_settings_cb(self, register):
 
@@ -445,7 +438,6 @@ class Zone(BasePlugin):
             if self.__air_temp_lower_dev is not None:
                 self.__temp_proc.remove(self.__air_temp_lower_dev)
                 self.__air_temp_lower_dev.shutdown()
-                del self.__air_temp_lower_dev
 
     def __air_temp_upper_settings_cb(self, register):
 
@@ -475,7 +467,6 @@ class Zone(BasePlugin):
             if self.__air_temp_upper_dev is not None:
                 self.__temp_proc.remove(self.__air_temp_upper_dev)
                 self.__air_temp_upper_dev.shutdown()
-                del self.__air_temp_upper_dev
 
     def __update_measurements(self):
 
@@ -544,7 +535,6 @@ class Zone(BasePlugin):
         if register.value != {}:
             if self.__conv_1_dev is not None:
                 self.__conv_1_dev.shutdown()
-                del self.__conv_1_dev
 
             self.__conv_1_dev = ConvectorsFactory.create(
                 name=register.description,
@@ -559,7 +549,6 @@ class Zone(BasePlugin):
         elif register.value == {}:
             if self.__conv_1_dev is not None:
                 self.__conv_1_dev.shutdown()
-                del self.__conv_1_dev
 
     def __cl_1_vlv_settings_cb(self, register):
 
@@ -571,7 +560,6 @@ class Zone(BasePlugin):
         if register.value != {}:
             if self.__cl_1_vlv_dev is not None:
                 self.__cl_1_vlv_dev.shutdown()
-                del self.__cl_1_vlv_dev
 
             self.__cl_1_vlv_dev = ValveFactory.create(
                 name=register.description,
@@ -586,7 +574,6 @@ class Zone(BasePlugin):
         elif register.value == {}:
             if self.__cl_1_vlv_dev is not None:
                 self.__cl_1_vlv_dev.shutdown()
-                del self.__cl_1_vlv_dev
 
     def __conv_2_settings_cb(self, register):
 
@@ -598,7 +585,6 @@ class Zone(BasePlugin):
         if register.value != {}:
             if self.__conv_2_dev is not None:
                 self.__conv_2_dev.shutdown()
-                del self.__conv_2_dev
 
             self.__conv_2_dev = ConvectorsFactory.create(
                 name=register.description,
@@ -613,7 +599,6 @@ class Zone(BasePlugin):
         elif register.value == {}:
             if self.__conv_2_dev is not None:
                 self.__conv_2_dev.shutdown()
-                del self.__conv_2_dev
 
     def __cl_2_vlv_settings_cb(self, register):
 
@@ -625,7 +610,6 @@ class Zone(BasePlugin):
         if register.value != {}:
             if self.__cl_2_vlv_dev is not None:
                 self.__cl_2_vlv_dev.shutdown()
-                del self.__cl_2_vlv_dev
 
             self.__cl_2_vlv_dev = ValveFactory.create(
                 name=register.description,
@@ -640,7 +624,6 @@ class Zone(BasePlugin):
         elif register.value == {}:
             if self.__cl_2_vlv_dev is not None:
                 self.__cl_2_vlv_dev.shutdown()
-                del self.__cl_2_vlv_dev
 
     def __conv_3_settings_cb(self, register):
 
@@ -667,7 +650,6 @@ class Zone(BasePlugin):
         elif register.value == {}:
             if self.__conv_3_dev is not None:
                 self.__conv_3_dev.shutdown()
-                del self.__conv_3_dev
 
     def __cl_3_vlv_settings_cb(self, register):
 
@@ -694,7 +676,6 @@ class Zone(BasePlugin):
         elif register.value == {}:
             if self.__cl_3_vlv_dev is not None:
                 self.__cl_3_vlv_dev.shutdown()
-                del self.__cl_3_vlv_dev
 
     def __fl_vlv_1_settings_cb(self, register):
 
@@ -721,7 +702,6 @@ class Zone(BasePlugin):
         elif register.value == {}:
             if self.__fl_1_vlv_dev is not None:
                 self.__fl_1_vlv_dev.shutdown()
-                del self.__fl_1_vlv_dev
 
     def __fl_vlv_2_settings_cb(self, register):
 
@@ -748,7 +728,6 @@ class Zone(BasePlugin):
         elif register.value == {}:
             if self.__fl_2_vlv_dev is not None:
                 self.__fl_2_vlv_dev.shutdown()
-                del self.__fl_2_vlv_dev
 
     def __fl_vlv_3_settings_cb(self, register):
 
@@ -775,7 +754,6 @@ class Zone(BasePlugin):
         elif register.value == {}:
             if self.__fl_3_vlv_dev is not None:
                 self.__fl_3_vlv_dev.shutdown()
-                del self.__fl_3_vlv_dev
 
 #endregion
 
