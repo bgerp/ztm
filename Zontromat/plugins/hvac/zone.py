@@ -306,13 +306,13 @@ class Zone(BasePlugin):
         """Window closed sensor input."""
 
 
-        self.__vlv_fl_1_tmr = PWMTimer(900, 1)
+        self.__vlv_fl_1_tmr = PWMTimer(30, 1)
         self.__vlv_fl_1_tmr.set_cb(lambda: self.__vlv_fl_1(100), lambda: self.__vlv_fl_1(0))
 
-        self.__vlv_fl_2_tmr = PWMTimer(900, 1)
+        self.__vlv_fl_2_tmr = PWMTimer(30, 1)
         self.__vlv_fl_2_tmr.set_cb(lambda: self.__vlv_fl_2(100), lambda: self.__vlv_fl_2(0))
 
-        self.__vlv_fl_3_tmr = PWMTimer(900, 1)
+        self.__vlv_fl_3_tmr = PWMTimer(30, 1)
         self.__vlv_fl_3_tmr.set_cb(lambda: self.__vlv_fl_3(100), lambda: self.__vlv_fl_3(0))
 
         # Update now flag.
