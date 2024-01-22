@@ -132,6 +132,13 @@ class PWMTimer():
         if self.__timer.expired:
             self.__timer.clear()
 
+            if self.__lower_limit <= self.__transition:
+                if self.__state == False:
+                    self.__state = True
+                    print(f"L: {self.__lower_limit} C: {self.__counter} U: {self.__upper_limit} T: {self.__transition} S: {self.__step}")
+                    print("TUUUUURN OOOOOFF")
+                    if self.__toff_cb is not None:
+                        self.__toff_cb()
 
             if self.__lower_limit == self.__counter and\
                 self.__counter <= self.__transition:
@@ -139,23 +146,24 @@ class PWMTimer():
                     self.__state = True
                     print(f"L: {self.__lower_limit} C: {self.__counter} U: {self.__upper_limit} T: {self.__transition} S: {self.__step}")
                     print("TUUUUURN OOOOON")
+                    if self.__ton_cb is not None:
+                        self.__ton_cb()
 
             if self.__counter == self.__transition:
                 if self.__state == True:
                     self.__state = False
                     print(f"L: {self.__lower_limit} C: {self.__counter} U: {self.__upper_limit} T: {self.__transition} S: {self.__step}")
                     print("TUUUUURN OOOOOFF")
+                    if self.__toff_cb is not None:
+                        self.__toff_cb()
 
-            # if self.__transition <= self.__lower_limit:
-            #     if self.__ton_cb is not None:
-            #         print(f"Turn on by lower limit.:")
-            #         self.__ton_cb()
-
-            # # Turn ON time.
-            # elif (self.__counter - self.__transition) < self.__step:
-            #     if self.__toff_cb is not None:
-            #         print(f"Turn off by transition.: {self.__counter}")
-            #         self.__toff_cb()
+            if self.__upper_limit >= self.__transition:
+                if self.__state == False:
+                    self.__state = True
+                    print(f"L: {self.__lower_limit} C: {self.__counter} U: {self.__upper_limit} T: {self.__transition} S: {self.__step}")
+                    print("TUUUUURN OOOOON")
+                    if self.__ton_cb is not None:
+                        self.__ton_cb()
 
 
             # Increment timer.
