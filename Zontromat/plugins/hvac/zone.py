@@ -133,8 +133,6 @@ class PWMTimer():
             self.__timer.clear()
 
             if self.__lower_limit <= self.__transition:
-                if self.__state == False:
-                    self.__state = True
                     print(f"L: {self.__lower_limit} C: {self.__counter} U: {self.__upper_limit} T: {self.__transition} S: {self.__step}")
                     print("TUUUUURN OOOOOFF")
                     if self.__toff_cb is not None:
@@ -142,24 +140,18 @@ class PWMTimer():
 
             if self.__lower_limit == self.__counter and\
                 self.__counter <= self.__transition:
-                if self.__state == False:
-                    self.__state = True
                     print(f"L: {self.__lower_limit} C: {self.__counter} U: {self.__upper_limit} T: {self.__transition} S: {self.__step}")
                     print("TUUUUURN OOOOON")
                     if self.__ton_cb is not None:
                         self.__ton_cb()
 
             if self.__counter == self.__transition:
-                if self.__state == True:
-                    self.__state = False
                     print(f"L: {self.__lower_limit} C: {self.__counter} U: {self.__upper_limit} T: {self.__transition} S: {self.__step}")
                     print("TUUUUURN OOOOOFF")
                     if self.__toff_cb is not None:
                         self.__toff_cb()
 
             if self.__upper_limit >= self.__transition:
-                if self.__state == False:
-                    self.__state = True
                     print(f"L: {self.__lower_limit} C: {self.__counter} U: {self.__upper_limit} T: {self.__transition} S: {self.__step}")
                     print("TUUUUURN OOOOON")
                     if self.__ton_cb is not None:
