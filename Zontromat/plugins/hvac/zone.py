@@ -143,7 +143,7 @@ class PWMTimer():
                     if self.__toff_cb is not None:
                         self.__toff_cb()
 
-            if self.__counter == self.__transition:
+            elif self.__counter == self.__transition:
                 if self.__state != 3:
                     self.__state = 3
                     print(f"update() L: {self.__lower_limit} C: {self.__counter} U: {self.__upper_limit} T: {self.__transition} S: {self.__step}")
