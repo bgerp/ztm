@@ -97,51 +97,67 @@ __status__ = "Debug"
 
 #endregion
 
-class ValveTimer():
+class PWMTimer():
 
-    def __init__(self):
-        self.__timer = Timer(1)
+    def __init__(self, upper_limit=100, step=1):
+        self.__timer = Timer()
         self.__ton_cb = None
         self.__toff_cb = None
-        self.__upper_limit = 900
+        self.__upper_limit = upper_limit
         self.__lower_limit = 0
         self.__counter = 0
-        self.__ton = 0
-        self.__toff = int(self.__upper_limit / 2.0)
-        self.__work_flag = 1
+        self.__transition = int(self.__upper_limit * 0.5)
+        self.__state = False
+        self.set_step(step)
 
-    def work(self, value=False):
-        self.__work_flag = value
+    def set_step(self, value):
+        self.__step = value
+        self.__timer.expiration_time = self.__step
 
-    def set_ton(self, value):
-        self.__ton = value
-
-    def set_ton(self, value=0):
-        self.__ton = int(value)
-
-    def set_toff(self, value):
-        self.__toff = int(value)
+    def set_pwm(self, value):
+        if value <= 0:
+            value = 0
+            self.__transition = int(value)
+        elif value > 0 and value < 1:
+            self.__transition = int(self.__upper_limit * value)
+        elif value >= 1:
+            value = 1
+            self.__transition = int(self.__upper_limit * value)
 
     def init(self):
         pass
 
     def update(self):
         self.__timer.update()
-        if self.__timer.expired():
+        if self.__timer.expired:
             self.__timer.clear()
 
-            if self.__work_flag == False:
-                return
-
-            # Turn ON time.
-            if self.__counter == self.__ton:
+            if self.__transition <= self.__lower_limit and\
+                self.__state == False:
+                self.__state = True
                 if self.__ton_cb is not None:
+                    print("Turn on by lower limit.")
                     self.__ton_cb()
 
+            # Turn ON time.
+            elif (self.__counter - self.__transition) < self.__step:
+                if self.__state == True:
+                    self.__state = False
+                    if self.__toff_cb is not None:
+                        print("Turn off by transition.")
+                        self.__toff_cb()
+
             # Turn OFF time.
-            if self.__counter >= self.__toff:
-                if self.__toff_cb is not None:
-                    self.__toff_cb()
+            # elif self.__transition <= self.__upper_limit and\
+            #     self.__counter == self.__transition and \
+            #     self.__state == True:
+            #     self.__state = False
+            #     if self.__toff_cb is not None:
+            #         self.__toff_cb()
+
+
+            # Increment timer.
+            self.__counter += self.__step
 
             # Clear the counter.
             if self.__counter > self.__upper_limit:
@@ -181,13 +197,10 @@ class Zone(BasePlugin):
         self.__thermal_mode.on_change(self.__thermal_mode_on_change)
 
         # Create update timer.
-        self.__update_timer = Timer()
+        self.__update_timer = Timer(60)
 
         # Stop timer.
         self.__stop_timer = Timer()
-
-        # Only for test.
-        self.__experimental_update_timer = Timer()
 
         # Create temperature processor.
         self.__temp_proc = TemperatureProcessor()
@@ -246,8 +259,7 @@ class Zone(BasePlugin):
         """Convector valve device.
         """
 
-        self.__experimental_counter = 0
-        """Experimental timer."""
+        self.__dt_temp = 0
 
         self.__thermal_force_limit = 0
         """Limit thermal force."""
@@ -282,13 +294,13 @@ class Zone(BasePlugin):
         """Window closed sensor input."""
 
 
-        self.__vlv_fl_1_tmr = ValveTimer()
+        self.__vlv_fl_1_tmr = PWMTimer(100, 1)
         self.__vlv_fl_1_tmr.set_cb(lambda: self.__vlv_fl_1(100), lambda: self.__vlv_fl_1(0))
 
-        self.__vlv_fl_2_tmr = ValveTimer()
+        self.__vlv_fl_2_tmr = PWMTimer(100, 1)
         self.__vlv_fl_2_tmr.set_cb(lambda: self.__vlv_fl_2(100), lambda: self.__vlv_fl_2(0))
 
-        self.__vlv_fl_3_tmr = ValveTimer()
+        self.__vlv_fl_3_tmr = PWMTimer(100, 1)
         self.__vlv_fl_3_tmr.set_cb(lambda: self.__vlv_fl_3(100), lambda: self.__vlv_fl_3(0))
 
         # Update now flag.
@@ -301,17 +313,11 @@ class Zone(BasePlugin):
         if self.__thermal_mode is not None:
             del self.__thermal_mode
 
-        if self.__update_timer is not None:
-            del self.__update_timer
-
         if self.__stop_timer is not None:
             del self.__stop_timer
 
         if self.__queue_temperatures is not None:
             del self.__queue_temperatures
-
-        if self.__experimental_update_timer is not None:
-            del self.__experimental_update_timer
 
         super().__del__()
 
@@ -496,6 +502,8 @@ class Zone(BasePlugin):
 
     def __update_rate_cb(self, register):
 
+        return
+
         # Check data type.
         if not (register.data_type == "float" or register.data_type == "int"):
             GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
@@ -508,6 +516,9 @@ class Zone(BasePlugin):
 
         if self.__update_timer.expiration_time != register.value:
             self.__update_timer.expiration_time = register.value
+            self.__vlv_fl_1_tmr.set_step(self.__update_timer.expiration_time)
+            self.__vlv_fl_2_tmr.set_step(self.__update_timer.expiration_time)
+            self.__vlv_fl_3_tmr.set_step(self.__update_timer.expiration_time)
 
     def __delta_time_cb(self, register):
 
@@ -1146,6 +1157,14 @@ class Zone(BasePlugin):
 
 #region Private Methods
 
+    def __round_to_nearest_half(self, number):
+        value = 0
+
+        if number > 0:
+            value = round(number * 2) / 2
+
+        return value
+
     def __is_hot_water(self):
 
         # TODO: Return water temperature from monitoring registers plugin.
@@ -1163,7 +1182,6 @@ class Zone(BasePlugin):
     def __thermal_mode_on_change(self, machine):
         self.__logger.info(f"Thermal mode: {machine.get_state()}")
 
-
     def __vlv_fl_1(self, position):
         if self.__fl_1_vlv_dev is None:
             return
@@ -1173,7 +1191,7 @@ class Zone(BasePlugin):
     def __vlv_fl_2(self, position):
         if self.__fl_2_vlv_dev is None:
             return
-        
+
         self.__fl_2_vlv_dev.target_position = position
 
     def __vlv_fl_3(self, position):
@@ -1181,6 +1199,24 @@ class Zone(BasePlugin):
             return
         
         self.__fl_3_vlv_dev.target_position = position
+
+    def __vlv_cl_1(self, position):
+        if self.__cl_1_vlv_dev is None:
+            return
+        
+        self.__cl_1_vlv_dev.target_position = position
+
+    def __vlv_cl_2(self, position):
+        if self.__cl_2_vlv_dev is None:
+            return
+        
+        self.__cl_2_vlv_dev.target_position = position
+
+    def __vlv_cl_3(self, position):
+        if self.__cl_3_vlv_dev is None:
+            return
+        
+        self.__cl_3_vlv_dev.target_position = position
 
     def __conv_set_state(self, state=0):
 
@@ -1208,148 +1244,67 @@ class Zone(BasePlugin):
             state = 6
 
         if state == 0:
-            self.__vlv_fl_1_tmr.work(False)
-            self.__vlv_fl_2_tmr.work(False)
-            self.__vlv_fl_3_tmr.work(False)
-            self.__vlv_fl_1(0)
-            self.__vlv_fl_2(0)
-            self.__vlv_fl_3(0)
+            self.__vlv_fl_1_tmr.set_pwm(0)
+            self.__vlv_fl_2_tmr.set_pwm(0)
+            self.__vlv_fl_3_tmr.set_pwm(0)
+            self.__vlv_cl_1(0)
+            self.__vlv_cl_2(0)
+            self.__vlv_cl_3(0)
             self.__conv_set_state(0)
 
         elif state == 1:
-            self.__vlv_fl_1_tmr.work(True)
-            self.__vlv_fl_2_tmr.work(True)
-            self.__vlv_fl_3_tmr.work(True)
-            self.__vlv_fl_1_tmr.set_ton(1/3)
-            self.__vlv_fl_2_tmr.set_ton(1/3)
-            self.__vlv_fl_3_tmr.set_ton(1/3)
+            self.__vlv_fl_1_tmr.set_pwm(1/3)
+            self.__vlv_fl_2_tmr.set_pwm(1/3)
+            self.__vlv_fl_3_tmr.set_pwm(1/3)
+            self.__vlv_cl_1(100)
+            self.__vlv_cl_2(100)
+            self.__vlv_cl_3(100)
             self.__conv_set_state(0)
 
         elif state == 2:
-            self.__vlv_fl_1_tmr.work(True)
-            self.__vlv_fl_2_tmr.work(True)
-            self.__vlv_fl_3_tmr.work(True)
-            self.__vlv_fl_1_tmr.set_ton(1/2)
-            self.__vlv_fl_2_tmr.set_ton(1/2)
-            self.__vlv_fl_3_tmr.set_ton(1/2)
+            self.__vlv_fl_1_tmr.set_pwm(1/2)
+            self.__vlv_fl_2_tmr.set_pwm(1/2)
+            self.__vlv_fl_3_tmr.set_pwm(1/2)
+            self.__vlv_cl_1(100)
+            self.__vlv_cl_2(100)
+            self.__vlv_cl_3(100)
             self.__conv_set_state(0)
 
         elif state == 3:
-            self.__vlv_fl_1_tmr.work(False)
-            self.__vlv_fl_2_tmr.work(False)
-            self.__vlv_fl_3_tmr.work(False)
-            self.__vlv_fl_1(100)
-            self.__vlv_fl_2(100)
-            self.__vlv_fl_3(100)
+            self.__vlv_fl_1_tmr.set_pwm(1)
+            self.__vlv_fl_2_tmr.set_pwm(1)
+            self.__vlv_fl_3_tmr.set_pwm(1)
+            self.__vlv_cl_1(100)
+            self.__vlv_cl_2(100)
+            self.__vlv_cl_3(100)
             self.__conv_set_state(0)
 
         elif state == 4:
-            self.__vlv_fl_1_tmr.work(False)
-            self.__vlv_fl_2_tmr.work(False)
-            self.__vlv_fl_3_tmr.work(False)
-            self.__vlv_fl_1(100)
-            self.__vlv_fl_2(100)
-            self.__vlv_fl_3(100)
+            self.__vlv_fl_1_tmr.set_pwm(1)
+            self.__vlv_fl_2_tmr.set_pwm(1)
+            self.__vlv_fl_3_tmr.set_pwm(1)
+            self.__vlv_cl_1(100)
+            self.__vlv_cl_2(100)
+            self.__vlv_cl_3(100)
             self.__conv_set_state(1)
 
         elif state == 5:
-            self.__vlv_fl_1_tmr.work(False)
-            self.__vlv_fl_2_tmr.work(False)
-            self.__vlv_fl_3_tmr.work(False)
-            self.__vlv_fl_1(100)
-            self.__vlv_fl_2(100)
-            self.__vlv_fl_3(100)
+            self.__vlv_fl_1_tmr.set_pwm(1)
+            self.__vlv_fl_2_tmr.set_pwm(1)
+            self.__vlv_fl_3_tmr.set_pwm(1)
+            self.__vlv_cl_1(100)
+            self.__vlv_cl_2(100)
+            self.__vlv_cl_3(100)
             self.__conv_set_state(2)
 
         elif state == 6:
-            self.__vlv_fl_1_tmr.work(False)
-            self.__vlv_fl_2_tmr.work(False)
-            self.__vlv_fl_3_tmr.work(False)
-            self.__vlv_fl_1(100)
-            self.__vlv_fl_2(100)
-            self.__vlv_fl_3(100)
-            self.__conv_set_state(2)
-
-    def __test_update(self):
-
-        self.__vlv_fl_1_tmr.update()
-        self.__vlv_fl_2_tmr.update()
-        self.__vlv_fl_3_tmr.update()
-
-        if self.__update_now_flag:
-            self.__update_now_flag = False
-            # Cheat and tell the timer to run in advance.
-            self.__experimental_update_timer.update_last_time(0)
-
-        self.__experimental_update_timer.update()
-        if self.__experimental_update_timer.expired:
-            self.__experimental_update_timer.clear()
-
-            # Update thermometers values.
-            self.__update_measurements()
-
-            # Recalculate the temperatures.
-            self.__temp_proc.update()
-
-            print(f"Temeperature: {self.__temp_proc.value:2.2f}")
-
-            if self.__experimental_counter == 0:
-                if self.__fl_1_vlv_dev is not None:
-                    self.__fl_1_vlv_dev.target_position = 100
-
-            elif self.__experimental_counter == 5:
-                if self.__fl_2_vlv_dev is not None:
-                    self.__fl_2_vlv_dev.target_position = 100
-
-            elif self.__experimental_counter == 10:
-                if self.__fl_3_vlv_dev is not None:
-                    self.__fl_3_vlv_dev.target_position = 100
-
-            elif self.__experimental_counter == 15:
-                if self.__cl_1_vlv_dev is not None:
-                    self.__cl_1_vlv_dev.target_position = 100
-                # if self.__conv_1_dev is not None:
-                #     self.__conv_1_dev.set_state(1)
-
-            elif self.__experimental_counter == 20:
-                if self.__cl_2_vlv_dev is not None:
-                    self.__cl_2_vlv_dev.target_position = 100
-                # if self.__conv_2_dev is not None:
-                #     self.__conv_2_dev.set_state(1)
-
-            elif self.__experimental_counter == 25:
-                if self.__cl_3_vlv_dev is not None:
-                    self.__cl_3_vlv_dev.target_position = 100
-                # if self.__conv_3_dev is not None:
-                #     self.__conv_3_dev.set_state(1)
-
-            # Increment
-            self.__experimental_counter += 1
-
-            # Reset
-            if self.__experimental_counter > 25:
-                self.__experimental_counter = 0
-
-        if self.__fl_1_vlv_dev is not None:
-            self.__fl_1_vlv_dev.update()
-        if self.__cl_1_vlv_dev is not None:
-            self.__cl_1_vlv_dev.update()
-        if self.__conv_1_dev is not None:
-            self.__conv_1_dev.update()
-
-        if self.__fl_2_vlv_dev is not None:
-            self.__fl_2_vlv_dev.update()
-        if self.__cl_2_vlv_dev is not None:
-            self.__cl_2_vlv_dev.update()
-        if self.__conv_2_dev is not None:
-            self.__conv_2_dev.update()
-        
-        if self.__fl_3_vlv_dev is not None:
-            self.__fl_3_vlv_dev.update()
-        if self.__cl_3_vlv_dev is not None:
-            self.__cl_3_vlv_dev.update()
-        if self.__conv_3_dev is not None:
-            self.__conv_3_dev.update()
+            self.__vlv_fl_1_tmr.set_pwm(1)
+            self.__vlv_fl_2_tmr.set_pwm(1)
+            self.__vlv_fl_3_tmr.set_pwm(1)
+            self.__vlv_cl_1(100)
+            self.__vlv_cl_2(100)
+            self.__vlv_cl_3(100)
+            self.__conv_set_state(3)
 
 #endregion
 
@@ -1361,30 +1316,105 @@ class Zone(BasePlugin):
         
         self.__logger.info("Starting up the {} {}".format(self.name, self.__identifier))
 
-        self.__update_timer.expiration_time = 5
+        self.__update_timer.expiration_time = 60
 
         self.__stop_timer.expiration_time = 10
         
-        self.__experimental_update_timer.expiration_time = 1
-
         # Create registers callbacks.
         self.__init_registers()
 
         # Shutting down all the devices.
-        self.__set_thermal_force(0)
+        # self.__set_thermal_force(0)
 
     def _update(self):
         """ Update cycle.
         """
 
-        self.__test_update()
+        if self.__update_now_flag:
+            self.__update_now_flag = False
+            # Cheat and tell the timer to run in advance.
+            self.__update_timer.update_last_time(0)
+
+        self.__update_timer.update()
+        if self.__update_timer.expired:
+            self.__update_timer.clear()
+
+            # Update thermometers values.
+            self.__update_measurements()
+
+            # Recalculate the temperatures.
+            self.__temp_proc.update()
+
+            print(f"Target: {self.__adjust_temp:2.1f}; Current: {self.__temp_proc.value:2.1f}")
+
+            # Calculate the delta.
+            # Rpund to second digit.
+            dt = self.__adjust_temp - self.__temp_proc.value
+
+            # Round to have clear rounded value for state machine currency.
+            dt = self.__round_to_nearest_half(dt)
+
+            # Correct the down limit.
+            if dt < 0:
+                dt = 0
+
+            # Correct the upper limit.
+            if dt > 3:
+                dt = 3
+
+            # Scale by factor of two to convert to state machine currency.
+            dt *= 2
+
+            # Round to have clear rounded value for state machine currency.
+            dt = round(dt)
+
+            # Exit if there is no changes.
+            if self.__dt_temp == dt:
+                return
+
+            # Store last changes.
+            self.__dt_temp = dt
+
+            print(f"dT: {dt:2.1f}")
+
+            # Set the devices.
+            self.__set_devices(dt)
+
+        # Update PWM timers for the valves.
+        self.__vlv_fl_1_tmr.update()
+        self.__vlv_fl_2_tmr.update()
+        self.__vlv_fl_3_tmr.update()
+
+        # Update floor valves.
+        if self.__fl_1_vlv_dev is not None:
+            self.__fl_1_vlv_dev.update()
+        if self.__fl_2_vlv_dev is not None:
+            self.__fl_2_vlv_dev.update()
+        if self.__fl_3_vlv_dev is not None:
+            self.__fl_3_vlv_dev.update()
+
+        # Update convector valves.
+        if self.__cl_1_vlv_dev is not None:
+            self.__cl_1_vlv_dev.update()
+        if self.__conv_1_dev is not None:
+            self.__conv_1_dev.update()
+
+        if self.__cl_2_vlv_dev is not None:
+            self.__cl_2_vlv_dev.update()
+        if self.__conv_2_dev is not None:
+            self.__conv_2_dev.update()
+
+        if self.__cl_3_vlv_dev is not None:
+            self.__cl_3_vlv_dev.update()
+        if self.__conv_3_dev is not None:
+            self.__conv_3_dev.update()
 
     def _shutdown(self):
         """Shutdown the tamper.
         """
 
         self.__logger.info("Shutting down the {} {}".format(self.name, self.__identifier))
-        self.__set_thermal_force(0)
+        # self.__set_devices(0)
 
         if self.__cl_1_vlv_dev is not None:
             self.__cl_1_vlv_dev.shutdown()
