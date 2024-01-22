@@ -152,7 +152,7 @@ class PWMTimer():
                 # if self.__toff_cb is not None:
                 #     self.__toff_cb()
 
-            if self.__upper_limit >= self.__transition:
+            if self.__transition >= self.__upper_limit:
                 print(f"L: {self.__lower_limit} C: {self.__counter} U: {self.__upper_limit} T: {self.__transition} S: {self.__step}")
                 print("Turn ON by 100 duty cycle.")
                 # if self.__ton_cb is not None:
