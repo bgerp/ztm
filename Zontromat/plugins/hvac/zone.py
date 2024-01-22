@@ -134,6 +134,12 @@ class PWMTimer():
 
             print(f"L: {self.__lower_limit} C: {self.__counter} U: {self.__upper_limit} T: {self.__transition} S: {self.__step}")
 
+            if self.__lower_limit == self.__counter and\
+                self.__counter <= self.__transition:
+                # if self.__state == False:
+                #     self.__state = True
+                    print("TUUUUURN OOOOON")
+
             # if self.__transition <= self.__lower_limit:
             #     if self.__ton_cb is not None:
             #         print(f"Turn on by lower limit.:")
