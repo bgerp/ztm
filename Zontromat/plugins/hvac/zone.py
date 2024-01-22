@@ -132,29 +132,16 @@ class PWMTimer():
         if self.__timer.expired:
             self.__timer.clear()
 
-            if self.__transition <= self.__lower_limit and\
-                self.__state == False:
-                self.__state = True
+            if self.__transition <= self.__lower_limit:
                 if self.__ton_cb is not None:
                     print("Turn on by lower limit.")
                     self.__ton_cb()
 
             # Turn ON time.
             elif (self.__counter - self.__transition) < self.__step:
-                if self.__state == True:
-                    self.__state = False
-                    if self.__toff_cb is not None:
-                        print("Turn off by transition.")
-                        self.__toff_cb()
-
-            # Turn OFF time.
-            # elif self.__transition <= self.__upper_limit and\
-            #     self.__counter == self.__transition and \
-            #     self.__state == True:
-            #     self.__state = False
-            #     if self.__toff_cb is not None:
-            #         self.__toff_cb()
-
+                if self.__toff_cb is not None:
+                    print("Turn off by transition.")
+                    self.__toff_cb()
 
             # Increment timer.
             self.__counter += self.__step
