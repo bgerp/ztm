@@ -138,8 +138,8 @@ class PWMTimer():
                     self.__state = 1
                     print(f"L: {self.__lower_limit} C: {self.__counter} U: {self.__upper_limit} T: {self.__transition} S: {self.__step}")
                     print("Turn OFF by 0 duty cycle")
-                    # if self.__toff_cb is not None:
-                    #     self.__toff_cb()
+                    if self.__toff_cb is not None:
+                        self.__toff_cb()
 
             if self.__counter > self.__lower_limit and\
                 self.__counter < self.__transition:
@@ -147,24 +147,24 @@ class PWMTimer():
                     self.__state = 2
                     print(f"L: {self.__lower_limit} C: {self.__counter} U: {self.__upper_limit} T: {self.__transition} S: {self.__step}")
                     print("Turn ON by Start period")
-                    # if self.__ton_cb is not None:
-                    #     self.__ton_cb()
+                    if self.__ton_cb is not None:
+                        self.__ton_cb()
 
             if self.__counter == self.__transition:
                 if self.__state != 3:
                     self.__state = 3
                     print(f"L: {self.__lower_limit} C: {self.__counter} U: {self.__upper_limit} T: {self.__transition} S: {self.__step}")
                     print("Turn OFF by Stop period.")
-                    # if self.__toff_cb is not None:
-                    #     self.__toff_cb()
+                    if self.__toff_cb is not None:
+                        self.__toff_cb()
 
             if self.__transition >= self.__upper_limit:
                 if self.__state != 4:
                     self.__state = 4
                     print(f"L: {self.__lower_limit} C: {self.__counter} U: {self.__upper_limit} T: {self.__transition} S: {self.__step}")
                     print("Turn ON by 100 duty cycle.")
-                    # if self.__ton_cb is not None:
-                    #     self.__ton_cb()
+                    if self.__ton_cb is not None:
+                        self.__ton_cb()
 
 
             # Increment timer.
@@ -305,13 +305,13 @@ class Zone(BasePlugin):
         """Window closed sensor input."""
 
 
-        self.__vlv_fl_1_tmr = PWMTimer(30, 1)
+        self.__vlv_fl_1_tmr = PWMTimer(900, 1)
         self.__vlv_fl_1_tmr.set_cb(lambda: self.__vlv_fl_1(100), lambda: self.__vlv_fl_1(0))
 
-        self.__vlv_fl_2_tmr = PWMTimer(30, 1)
+        self.__vlv_fl_2_tmr = PWMTimer(900, 1)
         self.__vlv_fl_2_tmr.set_cb(lambda: self.__vlv_fl_2(100), lambda: self.__vlv_fl_2(0))
 
-        self.__vlv_fl_3_tmr = PWMTimer(30, 1)
+        self.__vlv_fl_3_tmr = PWMTimer(900, 1)
         self.__vlv_fl_3_tmr.set_cb(lambda: self.__vlv_fl_3(100), lambda: self.__vlv_fl_3(0))
 
         # Update now flag.
