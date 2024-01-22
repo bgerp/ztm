@@ -106,9 +106,10 @@ class PWMTimer():
         self.__upper_limit = upper_limit
         self.__lower_limit = 0
         self.__counter = 0
-        self.__transition = int(self.__upper_limit * 0.5)
+        self.__transition = 0
         self.__state = False
         self.set_step(step)
+        self.set_pwm(0)
 
     def set_step(self, value):
         self.__step = value
@@ -133,29 +134,29 @@ class PWMTimer():
             self.__timer.clear()
 
             if self.__lower_limit <= self.__transition:
-                    print(f"L: {self.__lower_limit} C: {self.__counter} U: {self.__upper_limit} T: {self.__transition} S: {self.__step}")
-                    print("TUUUUURN OOOOOFF")
-                    if self.__toff_cb is not None:
-                        self.__toff_cb()
+                print(f"L: {self.__lower_limit} C: {self.__counter} U: {self.__upper_limit} T: {self.__transition} S: {self.__step}")
+                print("Turn OFF by 0 duty cycle")
+                # if self.__toff_cb is not None:
+                #     self.__toff_cb()
 
             if self.__lower_limit == self.__counter and\
                 self.__counter <= self.__transition:
-                    print(f"L: {self.__lower_limit} C: {self.__counter} U: {self.__upper_limit} T: {self.__transition} S: {self.__step}")
-                    print("TUUUUURN OOOOON")
-                    if self.__ton_cb is not None:
-                        self.__ton_cb()
+                print(f"L: {self.__lower_limit} C: {self.__counter} U: {self.__upper_limit} T: {self.__transition} S: {self.__step}")
+                print("Turn ON by Start period")
+                # if self.__ton_cb is not None:
+                #     self.__ton_cb()
 
             if self.__counter == self.__transition:
-                    print(f"L: {self.__lower_limit} C: {self.__counter} U: {self.__upper_limit} T: {self.__transition} S: {self.__step}")
-                    print("TUUUUURN OOOOOFF")
-                    if self.__toff_cb is not None:
-                        self.__toff_cb()
+                print(f"L: {self.__lower_limit} C: {self.__counter} U: {self.__upper_limit} T: {self.__transition} S: {self.__step}")
+                print("Turn OFF by Stop period.")
+                # if self.__toff_cb is not None:
+                #     self.__toff_cb()
 
             if self.__upper_limit >= self.__transition:
-                    print(f"L: {self.__lower_limit} C: {self.__counter} U: {self.__upper_limit} T: {self.__transition} S: {self.__step}")
-                    print("TUUUUURN OOOOON")
-                    if self.__ton_cb is not None:
-                        self.__ton_cb()
+                print(f"L: {self.__lower_limit} C: {self.__counter} U: {self.__upper_limit} T: {self.__transition} S: {self.__step}")
+                print("Turn ON by 100 duty cycle.")
+                # if self.__ton_cb is not None:
+                #     self.__ton_cb()
 
 
             # Increment timer.
