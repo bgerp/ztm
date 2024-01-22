@@ -99,7 +99,7 @@ __status__ = "Debug"
 
 class PWMTimer():
 
-    def __init__(self, upper_limit=100, step=1):
+    def __init__(self, upper_limit=900, step=1):
         self.__timer = Timer()
         self.__ton_cb = None
         self.__toff_cb = None
@@ -306,13 +306,13 @@ class Zone(BasePlugin):
         """Window closed sensor input."""
 
 
-        self.__vlv_fl_1_tmr = PWMTimer(30, 1)
+        self.__vlv_fl_1_tmr = PWMTimer()
         self.__vlv_fl_1_tmr.set_cb(lambda: self.__vlv_fl_1(100), lambda: self.__vlv_fl_1(0))
 
-        self.__vlv_fl_2_tmr = PWMTimer(30, 1)
+        self.__vlv_fl_2_tmr = PWMTimer()
         self.__vlv_fl_2_tmr.set_cb(lambda: self.__vlv_fl_2(100), lambda: self.__vlv_fl_2(0))
 
-        self.__vlv_fl_3_tmr = PWMTimer(30, 1)
+        self.__vlv_fl_3_tmr = PWMTimer()
         self.__vlv_fl_3_tmr.set_cb(lambda: self.__vlv_fl_3(100), lambda: self.__vlv_fl_3(0))
 
         # Update now flag.
