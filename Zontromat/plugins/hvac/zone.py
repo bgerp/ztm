@@ -114,6 +114,7 @@ class PWMTimer():
     def set_step(self, value):
         self.__step = value
         self.__timer.expiration_time = self.__step
+        print(f"set_step() L: {self.__lower_limit} C: {self.__counter} U: {self.__upper_limit} T: {self.__transition} S: {self.__step}")
 
     def set_pwm(self, value):
         if value <= 0:
@@ -124,6 +125,7 @@ class PWMTimer():
         elif value >= 1:
             value = 1
             self.__transition = int(self.__upper_limit * value)
+        print(f"set_pwm() L: {self.__lower_limit} C: {self.__counter} U: {self.__upper_limit} T: {self.__transition} S: {self.__step}")
 
     def init(self):
         pass
@@ -136,7 +138,7 @@ class PWMTimer():
             if self.__transition <= self.__lower_limit:
                 if self.__state != 1:
                     self.__state = 1
-                    print(f"L: {self.__lower_limit} C: {self.__counter} U: {self.__upper_limit} T: {self.__transition} S: {self.__step}")
+                    print(f"update() L: {self.__lower_limit} C: {self.__counter} U: {self.__upper_limit} T: {self.__transition} S: {self.__step}")
                     print("Turn OFF by 0 duty cycle")
                     if self.__toff_cb is not None:
                         self.__toff_cb()
@@ -145,7 +147,7 @@ class PWMTimer():
                 self.__counter < self.__transition:
                 if self.__state != 2:
                     self.__state = 2
-                    print(f"L: {self.__lower_limit} C: {self.__counter} U: {self.__upper_limit} T: {self.__transition} S: {self.__step}")
+                    print(f"update() L: {self.__lower_limit} C: {self.__counter} U: {self.__upper_limit} T: {self.__transition} S: {self.__step}")
                     print("Turn ON by Start period")
                     if self.__ton_cb is not None:
                         self.__ton_cb()
@@ -153,7 +155,7 @@ class PWMTimer():
             if self.__counter == self.__transition:
                 if self.__state != 3:
                     self.__state = 3
-                    print(f"L: {self.__lower_limit} C: {self.__counter} U: {self.__upper_limit} T: {self.__transition} S: {self.__step}")
+                    print(f"update() L: {self.__lower_limit} C: {self.__counter} U: {self.__upper_limit} T: {self.__transition} S: {self.__step}")
                     print("Turn OFF by Stop period.")
                     if self.__toff_cb is not None:
                         self.__toff_cb()
@@ -161,7 +163,7 @@ class PWMTimer():
             if self.__transition >= self.__upper_limit:
                 if self.__state != 4:
                     self.__state = 4
-                    print(f"L: {self.__lower_limit} C: {self.__counter} U: {self.__upper_limit} T: {self.__transition} S: {self.__step}")
+                    print(f"update() L: {self.__lower_limit} C: {self.__counter} U: {self.__upper_limit} T: {self.__transition} S: {self.__step}")
                     print("Turn ON by 100 duty cycle.")
                     if self.__ton_cb is not None:
                         self.__ton_cb()
