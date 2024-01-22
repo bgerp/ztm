@@ -133,7 +133,7 @@ class PWMTimer():
         if self.__timer.expired:
             self.__timer.clear()
 
-            if self.__lower_limit <= self.__transition:
+            if self.__transition <= self.__lower_limit:
                 if self.__state != 1:
                     self.__state = 1
                     print(f"L: {self.__lower_limit} C: {self.__counter} U: {self.__upper_limit} T: {self.__transition} S: {self.__step}")
