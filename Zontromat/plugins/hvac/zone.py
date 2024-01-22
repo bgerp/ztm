@@ -147,7 +147,7 @@ class PWMTimer():
                 self.__counter < self.__transition:
                 if self.__state != 2:
                     self.__state = 2
-                    print(f"update() L: {self.__lower_limit} C: {self.__counter} U: {self.__upper_limit} T: {self.__transition} S: {self.__step}")
+                    print(f"update() State: {self.__state} L: {self.__lower_limit} C: {self.__counter} U: {self.__upper_limit} T: {self.__transition} S: {self.__step}")
                     print("Turn ON by Start period")
                     if self.__ton_cb is not None:
                         self.__ton_cb()
