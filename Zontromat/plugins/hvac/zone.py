@@ -141,7 +141,7 @@ class PWMTimer():
                     # if self.__toff_cb is not None:
                     #     self.__toff_cb()
 
-            if self.__lower_limit > self.__counter and\
+            if self.__counter > self.__lower_limit and\
                 self.__counter < self.__transition:
                 if self.__state != 2:
                     self.__state = 2
