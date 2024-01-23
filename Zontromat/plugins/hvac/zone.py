@@ -435,6 +435,8 @@ class Zone(BasePlugin):
 
     def __update_rate_cb(self, register):
 
+        return
+
         # Check data type.
         if not (register.data_type == "float" or register.data_type == "int"):
             GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
@@ -500,6 +502,9 @@ class Zone(BasePlugin):
 
         if self.__adjust_temp == register.value:
             return
+
+        # Evry time you move the slider, it will take affec momentary.
+        self.__update_now_flag = True
 
         # @see https://experta.bg/L/S/122745/m/Fwntindd
         min_temp = 2.5
