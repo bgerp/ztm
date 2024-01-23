@@ -99,47 +99,41 @@ class TimerPWM():
     def period(self):
         """Get period time in seconds.
 
-        Returns
-        -------
-        float
-            Period time.
+        Returns:
+            float: Period time.
         """
-
         return self.__timer.expiration_time
 
     @period.setter
     def period(self, value):
         """Set period time in seconds.
 
-        Parameters
-        ----------
-        value : value
-            Period time in seconds.
+        Args:
+            value (float): Period time in seconds.
         """
-
+        # Clear the counter.
+        self.counter = 0
         self.__timer.expiration_time = value
 
     @property
     def duty_cycle(self):
         """Get duty cycle [0-1].
 
-        Returns
-        -------
-        float
-            Duty cycle [0-1].
+        Returns:
+            float: Duty cycle [0-1].
         """
-
         return round(self.__duty_cycle / self.__upper_limit, 2)
 
     @duty_cycle.setter
     def duty_cycle(self, value):
         """Set duty cycle [0-1].
 
-        Parameters
-        ----------
-        value : value
-            Duty cycle [0-1].
+        Args:
+            value (float): Duty cycle [0-1].
         """
+
+        # Clear the counter.
+        self.counter = 0
 
         if value <= 0:
             value = 0
@@ -154,48 +148,39 @@ class TimerPWM():
     def counter(self):
         """Get counter.
 
-        Returns
-        -------
-        float
-            Ticks.
+        Returns:
+            int: Ticks
         """
-
         return self.__counter
 
     @counter.setter
     def counter(self, value):
         """Set counter.
 
-        Parameters
-        ----------
-        value : value
-            Ticks.
+        Args:
+            value (int): Ticks
         """
-
         self.__counter = value
 
     @property
     def upper_limit(self):
         """Get upper limit.
 
-        Returns
-        -------
-        float
-            Ticks.
+        Returns:
+            int: Ticks
         """
-
         return self.__upper_limit
 
     @upper_limit.setter
     def upper_limit(self, value):
         """Set upper limit.
 
-        Parameters
-        ----------
-        value : value
-            Ticks.
+        Args:
+            value (int): Ticks
         """
 
+        # Clear the counter.
+        self.counter = 0
         self.__upper_limit = value
 
     @property
