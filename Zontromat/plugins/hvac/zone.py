@@ -31,6 +31,7 @@ from utils.logger import get_logger
 from utils.logic.functions import l_scale, filter_measurements_by_time
 from utils.logic.state_machine import StateMachine
 from utils.logic.timer import Timer
+from utils.logic.timer_pwm import TimerPWM
 from utils.logic.temp_processor import TemperatureProcessor
 
 from plugins.base_plugin import BasePlugin
@@ -96,92 +97,6 @@ __status__ = "Debug"
 """
 
 #endregion
-
-class PWMTimer():
-
-    def __init__(self, upper_limit=900, step=1):
-        self.__timer = Timer()
-        self.__ton_cb = None
-        self.__toff_cb = None
-        self.__upper_limit = upper_limit
-        self.__lower_limit = 0
-        self.__counter = 0
-        self.__transition = 0
-        self.__state = 0
-        self.set_step(step)
-        self.set_pwm(0)
-
-    def set_step(self, value):
-        self.__step = value
-        self.__timer.expiration_time = self.__step
-        print(f"set_step() L: {self.__lower_limit} C: {self.__counter} U: {self.__upper_limit} T: {self.__transition} S: {self.__step}")
-
-    def set_pwm(self, value):
-        if value <= 0:
-            value = 0
-            self.__transition = int(value)
-        elif value > 0 and value < 1:
-            self.__transition = int(self.__upper_limit * value)
-        elif value >= 1:
-            value = 1
-            self.__transition = int(self.__upper_limit * value)
-        print(f"set_pwm() L: {self.__lower_limit} C: {self.__counter} U: {self.__upper_limit} T: {self.__transition} S: {self.__step}")
-
-    def init(self):
-        pass
-
-    def update(self):
-        self.__timer.update()
-        if self.__timer.expired:
-            self.__timer.clear()
-
-            if self.__transition <= self.__lower_limit:
-                if self.__state != 1:
-                    self.__state = 1
-                    print(f"update() L: {self.__lower_limit} C: {self.__counter} U: {self.__upper_limit} T: {self.__transition} S: {self.__step}")
-                    print("Turn OFF by 0 duty cycle")
-                    if self.__toff_cb is not None:
-                        self.__toff_cb()
-
-            elif self.__counter == self.__transition:
-                if self.__state != 3:
-                    self.__state = 3
-                    print(f"update() L: {self.__lower_limit} C: {self.__counter} U: {self.__upper_limit} T: {self.__transition} S: {self.__step}")
-                    print("Turn OFF by Stop period.")
-                    if self.__toff_cb is not None:
-                        self.__toff_cb()
-
-            if self.__transition >= self.__upper_limit:
-                if self.__state != 4:
-                    self.__state = 4
-                    print(f"update() State: {self.__state} L: {self.__lower_limit} C: {self.__counter} U: {self.__upper_limit} T: {self.__transition} S: {self.__step}")
-                    print("Turn ON by 100 duty cycle.")
-                    if self.__ton_cb is not None:
-                        self.__ton_cb()
-
-            elif self.__counter > self.__lower_limit and\
-                self.__counter < self.__transition:
-                if self.__state != 2:
-                    self.__state = 2
-                    print(f"update() State: {self.__state} L: {self.__lower_limit} C: {self.__counter} U: {self.__upper_limit} T: {self.__transition} S: {self.__step}")
-                    print("Turn ON by Start period")
-                    if self.__ton_cb is not None:
-                        self.__ton_cb()
-
-            # Increment timer.
-            self.__counter += self.__step
-
-            # Clear the counter.
-            if self.__counter >= self.__upper_limit:
-                self.__counter = self.__lower_limit
-
-    def set_cb(self, ton=None, toff=None):
-
-        if ton is not None:
-            self.__ton_cb = ton
-
-        if toff is not None:
-            self.__toff_cb = toff
 
 class Zone(BasePlugin):
     """HVAC control logic.
@@ -306,13 +221,19 @@ class Zone(BasePlugin):
         """Window closed sensor input."""
 
 
-        self.__vlv_fl_1_tmr = PWMTimer()
+        self.__vlv_fl_1_tmr = TimerPWM()
+        self.__vlv_fl_1_tmr.upper_limit = 900
+        self.__vlv_fl_1_tmr.duty_cycle = 0
         self.__vlv_fl_1_tmr.set_cb(lambda: self.__vlv_fl_1(100), lambda: self.__vlv_fl_1(0))
 
-        self.__vlv_fl_2_tmr = PWMTimer()
+        self.__vlv_fl_2_tmr = TimerPWM()
+        self.__vlv_fl_2_tmr.upper_limit = 900
+        self.__vlv_fl_2_tmr.duty_cycle = 0
         self.__vlv_fl_2_tmr.set_cb(lambda: self.__vlv_fl_2(100), lambda: self.__vlv_fl_2(0))
 
-        self.__vlv_fl_3_tmr = PWMTimer()
+        self.__vlv_fl_3_tmr = TimerPWM()
+        self.__vlv_fl_3_tmr.upper_limit = 900
+        self.__vlv_fl_3_tmr.duty_cycle = 0
         self.__vlv_fl_3_tmr.set_cb(lambda: self.__vlv_fl_3(100), lambda: self.__vlv_fl_3(0))
 
         # Update now flag.
@@ -514,8 +435,6 @@ class Zone(BasePlugin):
 
     def __update_rate_cb(self, register):
 
-        return
-
         # Check data type.
         if not (register.data_type == "float" or register.data_type == "int"):
             GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
@@ -528,9 +447,6 @@ class Zone(BasePlugin):
 
         if self.__update_timer.expiration_time != register.value:
             self.__update_timer.expiration_time = register.value
-            self.__vlv_fl_1_tmr.set_step(self.__update_timer.expiration_time)
-            self.__vlv_fl_2_tmr.set_step(self.__update_timer.expiration_time)
-            self.__vlv_fl_3_tmr.set_step(self.__update_timer.expiration_time)
 
     def __delta_time_cb(self, register):
 
@@ -1256,63 +1172,63 @@ class Zone(BasePlugin):
             state = 6
 
         if state == 0:
-            self.__vlv_fl_1_tmr.set_pwm(0)
-            self.__vlv_fl_2_tmr.set_pwm(0)
-            self.__vlv_fl_3_tmr.set_pwm(0)
+            self.__vlv_fl_1_tmr.duty_cycle = 0
+            self.__vlv_fl_2_tmr.duty_cycle = 0
+            self.__vlv_fl_3_tmr.duty_cycle = 0
             self.__vlv_cl_1(0)
             self.__vlv_cl_2(0)
             self.__vlv_cl_3(0)
             self.__conv_set_state(0)
 
         elif state == 1:
-            self.__vlv_fl_1_tmr.set_pwm(1/3)
-            self.__vlv_fl_2_tmr.set_pwm(1/3)
-            self.__vlv_fl_3_tmr.set_pwm(1/3)
+            self.__vlv_fl_1_tmr.duty_cycle = 1/3
+            self.__vlv_fl_2_tmr.duty_cycle = 1/3
+            self.__vlv_fl_3_tmr.duty_cycle = 1/3
             self.__vlv_cl_1(100)
             self.__vlv_cl_2(100)
             self.__vlv_cl_3(100)
             self.__conv_set_state(0)
 
         elif state == 2:
-            self.__vlv_fl_1_tmr.set_pwm(1/2)
-            self.__vlv_fl_2_tmr.set_pwm(1/2)
-            self.__vlv_fl_3_tmr.set_pwm(1/2)
+            self.__vlv_fl_1_tmr.duty_cycle = 1/2
+            self.__vlv_fl_2_tmr.duty_cycle = 1/2
+            self.__vlv_fl_3_tmr.duty_cycle = 1/2
             self.__vlv_cl_1(100)
             self.__vlv_cl_2(100)
             self.__vlv_cl_3(100)
             self.__conv_set_state(0)
 
         elif state == 3:
-            self.__vlv_fl_1_tmr.set_pwm(1)
-            self.__vlv_fl_2_tmr.set_pwm(1)
-            self.__vlv_fl_3_tmr.set_pwm(1)
+            self.__vlv_fl_1_tmr.duty_cycle = 1
+            self.__vlv_fl_2_tmr.duty_cycle = 1
+            self.__vlv_fl_3_tmr.duty_cycle = 1
             self.__vlv_cl_1(100)
             self.__vlv_cl_2(100)
             self.__vlv_cl_3(100)
             self.__conv_set_state(0)
 
         elif state == 4:
-            self.__vlv_fl_1_tmr.set_pwm(1)
-            self.__vlv_fl_2_tmr.set_pwm(1)
-            self.__vlv_fl_3_tmr.set_pwm(1)
+            self.__vlv_fl_1_tmr.duty_cycle = 1
+            self.__vlv_fl_2_tmr.duty_cycle = 1
+            self.__vlv_fl_3_tmr.duty_cycle = 1
             self.__vlv_cl_1(100)
             self.__vlv_cl_2(100)
             self.__vlv_cl_3(100)
             self.__conv_set_state(1)
 
         elif state == 5:
-            self.__vlv_fl_1_tmr.set_pwm(1)
-            self.__vlv_fl_2_tmr.set_pwm(1)
-            self.__vlv_fl_3_tmr.set_pwm(1)
+            self.__vlv_fl_1_tmr.duty_cycle = 1
+            self.__vlv_fl_2_tmr.duty_cycle = 1
+            self.__vlv_fl_3_tmr.duty_cycle = 1
             self.__vlv_cl_1(100)
             self.__vlv_cl_2(100)
             self.__vlv_cl_3(100)
             self.__conv_set_state(2)
 
         elif state == 6:
-            self.__vlv_fl_1_tmr.set_pwm(1)
-            self.__vlv_fl_2_tmr.set_pwm(1)
-            self.__vlv_fl_3_tmr.set_pwm(1)
+            self.__vlv_fl_1_tmr.duty_cycle = 1
+            self.__vlv_fl_2_tmr.duty_cycle = 1
+            self.__vlv_fl_3_tmr.duty_cycle = 1
             self.__vlv_cl_1(100)
             self.__vlv_cl_2(100)
             self.__vlv_cl_3(100)
