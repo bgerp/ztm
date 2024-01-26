@@ -93,6 +93,50 @@ class TemperatureProcessor():
 
 #endregion
 
+#region Private Methods (Temporary)
+
+    def __old_update(self):
+        temperatures = []
+
+        for thermometer in self.__thermometers:
+            if thermometer is not None:
+                temperatures.append(thermometer.get_temp())
+
+        temps = len(temperatures)
+        if temps <= 0:
+            temperatures.append(0.0)
+
+        # Find min and max.
+        minimum = min(temperatures)
+        maximum = max(temperatures)
+
+        # Take medians.
+        median = minimum + ((maximum - minimum) / 2)
+
+        # Divide data by two arrays.
+        upper_values = []
+        lower_values = []
+
+        for item in temperatures:
+            if item >= median:
+                upper_values.append(item)
+            else:
+                lower_values.append(item)
+
+        # Use the bigger one, to create average.
+        value = 0
+
+        if len(upper_values) >= len(lower_values):
+            value = sum(upper_values) / len(upper_values)
+
+        elif len(upper_values) <= len(lower_values):
+            value = sum(lower_values) / len(lower_values)
+
+        # Return the temperature.
+        self.__value = value
+
+#endregion
+
 #region Public Methods
 
     def add(self, thermometer):
@@ -134,39 +178,17 @@ class TemperatureProcessor():
 
         for thermometer in self.__thermometers:
             if thermometer is not None:
-                temperatures.append(thermometer.get_temp())
+                current_temp = thermometer.get_temp()
+                if current_temp > 0:
+                    temperatures.append()
 
-        temps = len(temperatures)
-        if temps <= 0:
-            temperatures.append(0.0)
-
-        # Find min and max.
-        minimum = min(temperatures)
-        maximum = max(temperatures)
-
-        # Take medians.
-        median = minimum + ((maximum - minimum) / 2)
-
-        # Divide data by two arrays.
-        upper_values = []
-        lower_values = []
-
-        for item in temperatures:
-            if item >= median:
-                upper_values.append(item)
-            else:
-                lower_values.append(item)
-
-        # Use the bigger one, to create average.
-        value = 0
-
-        if len(upper_values) >= len(lower_values):
-            value = sum(upper_values) / len(upper_values)
-
-        elif len(upper_values) <= len(lower_values):
-            value = sum(lower_values) / len(lower_values)
+        size = len(temperatures)
+        if size > 0:
+            self.__value = sum(temperatures) / len(temperatures)
+        else:
+            self.__value = 0
 
         # Return the temperature.
-        self.__value = value
+        return self.__value
 
 #endregion
