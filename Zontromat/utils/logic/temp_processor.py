@@ -180,7 +180,7 @@ class TemperatureProcessor():
             if thermometer is not None:
                 current_temp = thermometer.get_temp()
                 if current_temp > 0:
-                    temperatures.append()
+                    temperatures.append(current_temp)
 
         size = len(temperatures)
         if size > 0:
