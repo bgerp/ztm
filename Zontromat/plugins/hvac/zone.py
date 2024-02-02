@@ -222,17 +222,17 @@ class Zone(BasePlugin):
 
 
         self.__vlv_fl_1_tmr = TimerPWM()
-        self.__vlv_fl_1_tmr.upper_limit = 900
+        self.__vlv_fl_1_tmr.upper_limit = 3600
         self.__vlv_fl_1_tmr.duty_cycle = 0
         self.__vlv_fl_1_tmr.set_cb(lambda: self.__vlv_fl_1(100), lambda: self.__vlv_fl_1(0))
 
         self.__vlv_fl_2_tmr = TimerPWM()
-        self.__vlv_fl_2_tmr.upper_limit = 900
+        self.__vlv_fl_2_tmr.upper_limit = 3600
         self.__vlv_fl_2_tmr.duty_cycle = 0
         self.__vlv_fl_2_tmr.set_cb(lambda: self.__vlv_fl_2(100), lambda: self.__vlv_fl_2(0))
 
         self.__vlv_fl_3_tmr = TimerPWM()
-        self.__vlv_fl_3_tmr.upper_limit = 900
+        self.__vlv_fl_3_tmr.upper_limit = 3600
         self.__vlv_fl_3_tmr.duty_cycle = 0
         self.__vlv_fl_3_tmr.set_cb(lambda: self.__vlv_fl_3(100), lambda: self.__vlv_fl_3(0))
 
