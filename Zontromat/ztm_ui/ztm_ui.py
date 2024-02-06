@@ -94,7 +94,7 @@ class ZtmUI():
     """Get data from ZtmUI.
     """
 
-    __api_data_set = "/api/data/set"
+    __api_data_post = "/api/data/post"
     """Set data to ZtmUI.
     """
 
@@ -362,7 +362,7 @@ class ZtmUI():
         uri = self.host + self.__api_data_get
 
         # Headers
-        headers = {"Accept": "application/json", "Authorization": "Bearer {}".format(self.__token)}
+        headers = {"Accept": "application/json", "Content-type": "application/json", "Authorization": "Bearer {}".format(self.__token)}
 
         try:
             # The request.
@@ -418,22 +418,19 @@ class ZtmUI():
         response_registers = None
 
         # URI
-        uri = self.host + self.__api_data_get
+        uri = self.host + self.__api_data_post
 
         # Convert to JSON.
         str_registers = json.dumps(registers).replace("\'", "\"")
 
         # Payload
-        # payload = {}
-        payload = {"registers": str_registers}
-
-        # self.__logger.info("SYNC; To ZtmUI: {}".format(payload))
+        payload = str_registers
 
         # Headers
-        headers = {"Accept": "application/json", "Authorization": "Bearer {}".format(self.__token)}
+        headers = {"Accept": "application/json", "Content-type": "application/json", "Authorization": "Bearer {}".format(self.__token)}
 
         # The request.
-        response = requests.get(uri, headers=headers, data=payload, timeout=self.timeout)
+        response = requests.post(uri, headers=headers, data=payload, timeout=self.timeout)
 
         if response is not None:
 
@@ -455,53 +452,6 @@ class ZtmUI():
 
         else:
             response_registers = None
-
-        return response_registers
-
-    def set_settings(self, data):
-
-        response_registers = []
-
-        # URI
-        uri = self.host + self.__api_settings_post
-
-        # Headers
-        headers = {'Accept': 'application/json', "Authorization": "Bearer {}".format(self.__token)}
-
-        try:
-            # The request.
-            response = requests.post(uri, headers=headers, json=data, timeout=self.timeout)
-
-            if response is not None:
-
-                if response.status_code == 200:
-
-                    if response.text != "":
-
-                        json_response = json.loads(response.text)
-
-                        if "data" in json_response:
-                            data = json_response["data"]
-
-                            # Convert to registers.
-                            response_registers = data
-
-                            # Update last successful time.
-                            self.__last_sync = time.time()
-
-                        else:
-                            raise ValueError("No field data.")
-                    else:
-                        raise ValueError("Invalid response body.")
-                else:
-                    self.__login_state = LoginState.Wait
-                    raise ValueError("Invalid response code: {}".format(response.status_code))
-            else:
-                raise ValueError("Invalid response.")
-
-        except Exception as e:
-            
-            self.__logger.error(e)
 
         return response_registers
 
