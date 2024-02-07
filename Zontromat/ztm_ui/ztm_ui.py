@@ -455,6 +455,53 @@ class ZtmUI():
 
         return response_registers
 
+    def set_settings(self, data):
+
+        response_registers = []
+
+        # URI
+        uri = self.host + self.__api_settings_post
+
+        # Headers
+        headers = {'Accept': 'application/json', "Authorization": "Bearer {}".format(self.__token)}
+
+        try:
+            # The request.
+            response = requests.post(uri, headers=headers, json=data, timeout=self.timeout)
+
+            if response is not None:
+
+                if response.status_code == 200:
+
+                    if response.text != "":
+
+                        json_response = json.loads(response.text)
+
+                        if "data" in json_response:
+                            data = json_response["data"]
+
+                            # Convert to registers.
+                            response_registers = data
+
+                            # Update last successful time.
+                            self.__last_sync = time.time()
+
+                        else:
+                            raise ValueError("No field data.")
+                    else:
+                        raise ValueError("Invalid response body.")
+                else:
+                    self.__login_state = LoginState.Wait
+                    raise ValueError("Invalid response code: {}".format(response.status_code))
+            else:
+                raise ValueError("Invalid response.")
+
+        except Exception as e:
+            
+            self.__logger.error(e)
+
+        return response_registers
+
     def get_settings(self):
 
         response_registers = []
