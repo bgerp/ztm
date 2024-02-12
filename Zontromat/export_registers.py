@@ -3825,7 +3825,7 @@ def __add_registers(args):
     __registers.append(register)
 
     register = Register("vent.lower_1.fan.speed")
-    register.scope = Scope.System
+    register.scope = Scope.Device
     register.plugin_name = "Ventilation"
     register.description = "Lower fan speed [%]"
     register.range = __range["PERCENTAGE_F"]
@@ -3857,7 +3857,7 @@ def __add_registers(args):
     __registers.append(register)
 
     register = Register("vent.upper_1.fan.speed")
-    register.scope = Scope.System
+    register.scope = Scope.Device
     register.plugin_name = "Ventilation"
     register.description = "Upper fan speed [%]"
     register.range = __range["PERCENTAGE_F"]
