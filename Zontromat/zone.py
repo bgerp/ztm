@@ -534,12 +534,41 @@ class Zone():
 
                                 # self.__update_min_max(register)
 
+                    # Update Weather.                                    
+                    self.__update_weather_cast()
+
                     # TODO: Send heart beat.
                     self.__ztm_ui.heart_beat()
 
                 # If not, login.
                 else:
                     self.__ztm_ui.login()
+
+    def __update_weather_cast(self):
+
+        target_regs_names = ["envm.forecast.icon_0", "envm.forecast.rh_0", "envm.forecast.temp_0", "envm.forecast.wind_0",
+                        "envm.forecast.icon_3", "envm.forecast.rh_3", "envm.forecast.temp_3", "envm.forecast.wind_3", 
+                        "envm.forecast.icon_6", "envm.forecast.rh_6", "envm.forecast.temp_6", "envm.forecast.wind_6"]
+        target_regs_values = []
+
+        target_regs_ztmui = []
+
+        for target_name in target_regs_names:
+            register = self.__registers.by_name(target_name)
+            if register is not None:
+                target_regs_values.append(register)
+
+        for target_value in target_regs_values:
+            name = target_value.name
+            value = target_value.value
+            minimum = 0
+            maximum = 0
+            status = "Normal" # enum('Rising', 'Falling', 'Normal')
+            reg = {"name": name, "value": value, "min": minimum, "max": maximum, "status": status}
+            target_regs_ztmui.append(reg)
+
+        if target_regs_ztmui != []:
+            self.__ztm_ui.set(target_regs_ztmui)
 
 #endregion
 
