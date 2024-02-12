@@ -215,7 +215,12 @@ class Register:
         if value == self.__value:
             return
 
+        # In case of float.
         if self.data_type == "float":
+
+            # Roundup to the third sign after the decimal delimiter.
+            self.value = round(value, 3)
+
             if abs(self.value - value) < self.limit:
                 return
 
