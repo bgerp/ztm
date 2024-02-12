@@ -105,11 +105,11 @@ def __set_parser():
     global __parser
 
     # Add arguments.
-    __parser.add_argument("--action", type=str, default="w_json", help="Export JSON file.")
-    # parser.add_argument("--action", type=str, default="w_csv", help="Export CSV file.")
-    # parser.add_argument("--action", type=str, default="list_gpio", help="Export type.")
-    # parser.add_argument("--action", type=str, default="w_md", help="Export MD file.")
-    # parser.add_argument("--path", type=str, default=file_name, help="Target file path.")
+    # __parser.add_argument("--action", type=str, default="w_json", help="Export JSON file.")
+    __parser.add_argument("--action", type=str, default="w_csv", help="Export CSV file.")
+    # __parser.add_argument("--action", type=str, default="list_gpio", help="Export type.")
+    # __parser.add_argument("--action", type=str, default="w_md", help="Export MD file.")
+    # __parser.add_argument("--path", type=str, default=file_name, help="Target file path.")
 
     # Add args parameters
     __parser.add_argument("--pa", type=int, default=1, help="Power analyzer modbus ID.")
@@ -966,90 +966,15 @@ def __add_registers(args):
     register.value = 3600
     __registers.append(register)
 
-
-    register = Register("envm.temp.actual")
+    register = Register("envm.forecast.icon_0")
     register.scope = Scope.System
     register.plugin_name = "Environment"
-    register.description = "Actual outside temperature [C]"
-    register.range = "-50/50"
-    register.value = 0.0
+    register.description = "Actual weather icon."
+    register.range = __range["NONE"]
+    register.value = ""
     __registers.append(register)
 
-    register = Register("envm.temp.a3")
-    register.scope = Scope.System
-    register.plugin_name = "Environment"
-    register.description = "Actual outside temperature for 3 hours [C]"
-    register.range = "-50/50"
-    register.value = 0.0
-    __registers.append(register)
-
-    register = Register("envm.temp.a6")
-    register.scope = Scope.System
-    register.plugin_name = "Environment"
-    register.description = "Actual outside temperature for 6 hours [C]"
-    register.range = "-50/50"
-    register.value = 0.0
-    __registers.append(register)
-
-    register = Register("envm.temp.min24")
-    register.scope = Scope.System
-    register.plugin_name = "Environment"
-    register.description = "Minimum outside temperature for 24 hours [C]"
-    register.range = "-50/50"
-    register.value = 0.0
-    __registers.append(register)
-
-    register = Register("envm.temp.max24")
-    register.scope = Scope.System
-    register.plugin_name = "Environment"
-    register.description = "Maximum outside temperature for 24 hours [C]"
-    register.range = "-50/50"
-    register.value = 0.0
-    __registers.append(register)
-
-
-    register = Register("envm.wind.actual")
-    register.scope = Scope.System
-    register.plugin_name = "Environment"
-    register.description = "Actual wind now [m/sec]"
-    register.range = "0.0/"
-    register.value = 0.0
-    __registers.append(register)
-
-    register = Register("envm.wind.a3")
-    register.scope = Scope.System
-    register.plugin_name = "Environment"
-    register.description = "Actual wind for 3 hours [m/sec]"
-    register.range = "0.0/"
-    register.value = 0.0
-    __registers.append(register)
-
-    register = Register("envm.wind.a6")
-    register.scope = Scope.System
-    register.plugin_name = "Environment"
-    register.description = "Actual wind for 6 hours [m/sec]"
-    register.range = "0.0/"
-    register.value = 0.0
-    __registers.append(register)
-
-    register = Register("envm.wind.min24")
-    register.scope = Scope.System
-    register.plugin_name = "Environment"
-    register.description = "Minimum wind for 24 hours [m/sec]"
-    register.range = "0.0/"
-    register.value = 0.0
-    __registers.append(register)
-
-    register = Register("envm.wind.max24")
-    register.scope = Scope.System
-    register.plugin_name = "Environment"
-    register.description = "Maximum wind for 24 hours [m/sec]"
-    register.range = "0.0/"
-    register.value = 0.0
-    __registers.append(register)
-
-
-    register = Register("envm.rh.actual")
+    register = Register("envm.forecast.rh_0")
     register.scope = Scope.System
     register.plugin_name = "Environment"
     register.description = "Actual outside relative humidity [%]"
@@ -1057,22 +982,85 @@ def __add_registers(args):
     register.value = 0.0
     __registers.append(register)
 
-    register = Register("envm.rh.a3")
+    register = Register("envm.forecast.temp_0")
     register.scope = Scope.System
     register.plugin_name = "Environment"
-    register.description = "Actual outside relative humidity for 3 hours [%]"
+    register.description = "Actual outside temperature [*C]"
+    register.range = "-50.0/50.0"
+    register.value = 0.0
+    __registers.append(register)
+
+    register = Register("envm.forecast.wind_0")
+    register.scope = Scope.System
+    register.plugin_name = "Environment"
+    register.description = "Actual outside wind speed [m/s]"
     register.range = __range["PERCENTAGE_F"]
     register.value = 0.0
     __registers.append(register)
 
-    register = Register("envm.rh.a6")
+    register = Register("envm.forecast.icon_3")
     register.scope = Scope.System
     register.plugin_name = "Environment"
-    register.description = "Actual outside relative humidity for 6 hours [%]"
+    register.description = "Actual outside weather icon for 3 hours."
+    register.range = __range["NONE"]
+    register.value = ""
+    __registers.append(register)
+
+    register = Register("envm.forecast.rh_3")
+    register.scope = Scope.System
+    register.plugin_name = "Environment"
+    register.description = "Actual outside relative humidity for 3 hours.[%]"
     register.range = __range["PERCENTAGE_F"]
     register.value = 0.0
     __registers.append(register)
 
+    register = Register("envm.forecast.temp_3")
+    register.scope = Scope.System
+    register.plugin_name = "Environment"
+    register.description = "Actual outside temperature for 3 hours. [*C]"
+    register.range = "-50.0/50.0"
+    register.value = 0.0
+    __registers.append(register)
+
+    register = Register("envm.forecast.wind_3")
+    register.scope = Scope.System
+    register.plugin_name = "Environment"
+    register.description = "Actual outside wind speed for 3 hours. [m/s]"
+    register.range = __range["PERCENTAGE_F"]
+    register.value = 0.0
+    __registers.append(register)
+
+    register = Register("envm.forecast.icon_6")
+    register.scope = Scope.System
+    register.plugin_name = "Environment"
+    register.description = "Actual outside weather icon for 6 hours."
+    register.range = __range["NONE"]
+    register.value = ""
+    __registers.append(register)
+
+    register = Register("envm.forecast.rh_6")
+    register.scope = Scope.System
+    register.plugin_name = "Environment"
+    register.description = "Actual outside relative humidity for 6 hours.[%]"
+    register.range = __range["PERCENTAGE_F"]
+    register.value = 0.0
+    __registers.append(register)
+
+    register = Register("envm.forecast.temp_6")
+    register.scope = Scope.System
+    register.plugin_name = "Environment"
+    register.description = "Actual outside temperature for 6 hours. [*C]"
+    register.range = "-50.0/50.0"
+    register.value = 0.0
+    __registers.append(register)
+
+    register = Register("envm.forecast.wind_6")
+    register.scope = Scope.System
+    register.plugin_name = "Environment"
+    register.description = "Actual outside wind speed for 6 hours. [m/s]"
+    register.range = __range["PERCENTAGE_F"]
+    register.value = 0.0
+    __registers.append(register)
 
     register = Register("envm.light")
     register.scope = Scope.System
@@ -1590,264 +1578,6 @@ def __add_registers(args):
     register.description = "Update rate of the plugin [s]"
     register.range = "0.0/"
     register.value = 1.0
-    __registers.append(register)
-
-    # ====================== DEPRICATED ======================
-
-
-    register = Register("hvac.conv_loop_1.flowmeter.settings")
-    register.scope = Scope.System
-    register.plugin_name = "HVAC"
-    register.description = "Convector loop 1 heat meter."
-    register.range = __range["NONE"]
-    register.value = {
-        # "vendor": "mainone",
-        # "model": "flowmeter_dn20",
-        # "options":
-        # {
-        #     "uart": 1,
-        #     "mb_id": 41,
-        # }
-    }
-    __registers.append(register)
-
-    register = Register("hvac.conv_loop_1.temp.settings")
-    register.scope = Scope.System
-    register.plugin_name = "HVAC"
-    register.description = "Convector loop 1 thermometer."
-    register.range = __range["NONE"]
-    register.value = {
-        # "vendor": "mainone",
-        # "model": "flowmeter_dn20",
-        # "options":
-        # {
-        #     "uart": 1,
-        #     "mb_id": 41,
-        # }
-    }
-    __registers.append(register)
-
-    # Convector loop 1 measurements.
-    register = Register("hvac.conv_loop_1.temp.measurements")
-    register.scope = Scope.Device
-    register.plugin_name = "HVAC"
-    register.description = "Convector loop 1 measurements."
-    register.range = __range["NONE"]
-    register.value = {}
-    __registers.append(register)
-
-
-
-
-    register = Register("hvac.conv_loop_3.flowmeter.settings")
-    register.scope = Scope.System
-    register.plugin_name = "HVAC"
-    register.description = "Convector loop 3 flowmeter"
-    register.range = __range["NONE"]
-    register.value = {
-        # "vendor": "mainone",
-        # "model": "flowmeter_dn20",
-        # "options":
-        # {
-        #     "uart": 1,
-        #     "mb_id": 41,
-        # }
-    }
-    __registers.append(register)
-
-    # Convector loop 3 thermometer.
-    register = Register("hvac.conv_loop_3.temp.settings")
-    register.scope = Scope.System
-    register.plugin_name = "HVAC"
-    register.description = "Convector loop 3 thermometer"
-    register.range = __range["NONE"]
-    register.value = {
-    #     "vendor": "mainone",
-    #     "model": "flowmeter_dn20",
-    #     "options":
-    #     {
-    #         "uart": 1,
-    #         "mb_id": 41,
-    #     }
-    }
-    __registers.append(register)
-
-    # Convector loop 3 measurements.
-    register = Register("hvac.conv_loop_3.temp.measurements")
-    register.scope = Scope.Device
-    register.plugin_name = "HVAC"
-    register.description = "Convector loop 3 measurements"
-    register.range = __range["NONE"]
-    register.value = {}
-    __registers.append(register)
-
-    # Floor loop 1 flowmeter.
-    register = Register("hvac.floor_loop_1.flowmeter.settings")
-    register.scope = Scope.System
-    register.plugin_name = "HVAC"
-    register.description = "Floor loop 1 flowmeter."
-    register.range = __range["NONE"]
-    register.value = {
-        # "vendor": "mainone",
-        # "model": "flowmeter_dn20",
-        # "options":
-        # {
-        #     "uart": 1,
-        #     "mb_id": 41,
-        # }
-    }
-    __registers.append(register)
-
-
-    # Loop 1 Temperature
-    register = Register("hvac.floor_loop_1.temp.settings")
-    register.scope = Scope.System
-    register.plugin_name = "HVAC"
-    register.description = "Floor loop 1 thermometer."
-    register.range = __range["NONE"]
-    register.value = {
-        # "vendor": "mainone",
-        # "model": "flowmeter_dn20",
-        # "options":
-        # {
-        #     "uart": 1,
-        #     "mb_id": 41,
-        # }
-    }
-    __registers.append(register)
-
-    register = Register("hvac.floor_loop_1.temp.measurements")
-    register.scope = Scope.Device
-    register.plugin_name = "HVAC"
-    register.description = "Floor loop 1 measurements."
-    register.range = __range["NONE"]
-    register.value = {}
-    __registers.append(register)
-
-
-    # Loop 3 Temperature
-    register = Register("hvac.floor_loop_3.flowmeter.settings")
-    register.scope = Scope.System
-    register.plugin_name = "HVAC"
-    register.description = "Floor loop 3 flowmeter."
-    register.range = __range["NONE"]
-    register.value = {
-        # "vendor": "mainone",
-        # "model": "flowmeter_dn20",
-        # "options":
-        # {
-        #     "uart": 1,
-        #     "mb_id": 41,
-        # }
-    }
-    __registers.append(register)
-
-    register = Register("hvac.floor_loop_3.temp.settings")
-    register.scope = Scope.System
-    register.plugin_name = "HVAC"
-    register.description = "Floor loop 3 thermometer."
-    register.range = __range["NONE"]
-    register.value = {
-        # "vendor": "mainone",
-        # "model": "flowmeter_dn20",
-        # "options":
-        # {
-        #     "uart": 1,
-        #     "mb_id": 41,
-        # }
-    }
-    __registers.append(register)
-
-    register = Register("hvac.floor_loop_3.temp.measurements")
-    register.scope = Scope.Device
-    register.plugin_name = "HVAC"
-    register.description = "Floor loop 2 measurements."
-    register.range = __range["NONE"]
-    register.value = {}
-    __registers.append(register)
-
-    register = Register("hvac.conv_loop_2.flowmeter.settings")
-    register.scope = Scope.System
-    register.plugin_name = "HVAC"
-    register.description = "Convector loop 2 flowmeter"
-    register.range = __range["NONE"]
-    register.value = {
-        # "vendor": "mainone",
-        # "model": "flowmeter_dn20",
-        # "options":
-        # {
-        #     "uart": 1,
-        #     "mb_id": 41,
-        # }
-    }
-    __registers.append(register)
-
-    # Convector loop 2 thermometer.
-    register = Register("hvac.conv_loop_2.temp.settings")
-    register.scope = Scope.System
-    register.plugin_name = "HVAC"
-    register.description = "Convector loop 2 thermometer"
-    register.range = __range["NONE"]
-    register.value = {
-        # "vendor": "mainone",
-        # "model": "flowmeter_dn20",
-        # "options":
-        # {
-        #     "uart": 1,
-        #     "mb_id": 41,
-        # }
-    }
-    __registers.append(register)
-
-    # Convector loop 2 measurements.
-    register = Register("hvac.conv_loop_2.temp.measurements")
-    register.scope = Scope.Device
-    register.plugin_name = "HVAC"
-    register.description = "Convector loop 2 measurements"
-    register.range = __range["NONE"]
-    register.value = {}
-    __registers.append(register)
-
-
-    # Loop 2 Temperature
-    register = Register("hvac.floor_loop_2.flowmeter.settings")
-    register.scope = Scope.System
-    register.plugin_name = "HVAC"
-    register.description = "Floor loop 2 flowmeter."
-    register.range = __range["NONE"]
-    register.value = {
-        # "vendor": "mainone",
-        # "model": "flowmeter_dn20",
-        # "options":
-        # {
-        #     "uart": 1,
-        #     "mb_id": 41,
-        # }
-    }
-    __registers.append(register)
-
-    register = Register("hvac.floor_loop_2.temp.settings")
-    register.scope = Scope.System
-    register.plugin_name = "HVAC"
-    register.description = "Floor loop 2 thermometer."
-    register.range = __range["NONE"]
-    register.value = {
-        # "vendor": "mainone",
-        # "model": "flowmeter_dn20",
-        # "options":
-        # {
-        #     "uart": 1,
-        #     "mb_id": 41,
-        # }
-    }
-    __registers.append(register)
-
-    register = Register("hvac.floor_loop_2.temp.measurements")
-    register.scope = Scope.Device
-    register.plugin_name = "HVAC"
-    register.description = "Floor loop 2 measurements."
-    register.range = __range["NONE"]
-    register.value = []
     __registers.append(register)
 
 #endregion
@@ -4095,7 +3825,7 @@ def __add_registers(args):
     __registers.append(register)
 
     register = Register("vent.lower_1.fan.speed")
-    register.scope = Scope.System
+    register.scope = Scope.Device
     register.plugin_name = "Ventilation"
     register.description = "Lower fan speed [%]"
     register.range = __range["PERCENTAGE_F"]
@@ -4127,7 +3857,7 @@ def __add_registers(args):
     __registers.append(register)
 
     register = Register("vent.upper_1.fan.speed")
-    register.scope = Scope.System
+    register.scope = Scope.Device
     register.plugin_name = "Ventilation"
     register.description = "Upper fan speed [%]"
     register.range = __range["PERCENTAGE_F"]

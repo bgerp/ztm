@@ -240,15 +240,18 @@ class Monitoring(BasePlugin):
 
                     # Scale unit from milli liter to cubic meter. 
                     if item == "CumulativeTraffic":
-                        measurement[item] /= 1000000.0
-
+                        if measurement[item] is not  None:
+                            measurement[item] /= 1000000.0
+                    
                     # Scale to degrees by Celsius.
                     if item == "WaterTemperature":
-                        measurement[item] /= 100.0
+                        if measurement[item] is not  None:
+                            measurement[item] /= 100.0
 
                     # Scale to voltage.
                     if item == "BatteryVoltage":
-                        measurement[item] /= 100.0
+                        if measurement[item] is not  None:
+                            measurement[item] /= 100.0
 
         else:
             self.__logger.error("Unknown power water meter")
@@ -353,15 +356,18 @@ class Monitoring(BasePlugin):
 
                     # Scale unit from milli liter to cubic meter. 
                     if item == "CumulativeTraffic":
-                        measurement[item] /= 1000000.0
+                        if measurement[item] is not  None:
+                            measurement[item] /= 1000000.0
 
                     # Scale to degrees by Celsius.
                     if item == "WaterTemperature":
-                        measurement[item] /= 100.0
+                        if measurement[item] is not  None:
+                            measurement[item] /= 100.0
 
                     # Scale to voltage.
                     if item == "BatteryVoltage":
-                        measurement[item] /= 100.0
+                        if measurement[item] is not  None:
+                            measurement[item] /= 100.0
 
         else:
             self.__logger.error("Unknown power water meter")
@@ -1063,41 +1069,54 @@ class Monitoring(BasePlugin):
         if self.__demand_timer.expired:
             self.__demand_timer.clear()
 
+            # Update power analyzer.
+            try:
+                self.__pa_update_measurements()
+            except Exception as e:
+                self.__logger.error(f"{e}")
+
             # Update cold water flow meter.
-            self.__cw_update_measurements()
+            try:
+                self.__cw_update_measurements()
+            except Exception as e:
+                self.__logger.error(f"{e}")
 
             # Update hot water flow meter.
-            self.__hw_update_measurements()
-
-            # Update power analyzer.
-            self.__pa_update_measurements()
+            try:
+                self.__hw_update_measurements()
+            except Exception as e:
+                self.__logger.error(f"{e}")
 
             # Update heat meters.
             try:
                 self.__fl_1_update_measurements()
             except Exception as e:
-                print(e)
+                self.__logger.error(f"{e}")
+
             try:
                 self.__fl_2_update_measurements()
             except Exception as e:
-                print(e)
+                self.__logger.error(f"{e}")
+
             try:
                self.__fl_3_update_measurements()
             except Exception as e:
-                print(e)
+                self.__logger.error(f"{e}")
+
             try:
                 self.__cl_1_update_measurements()
             except Exception as e:
-                print(e)
+                self.__logger.error(f"{e}")
+
             try:
                 self.__cl_2_update_measurements()
             except Exception as e:
-                print(e)
+                self.__logger.error(f"{e}")
+
             try:
                 self.__cl_3_update_measurements()
             except Exception as e:
-                print(e)
-
+                self.__logger.error(f"{e}")
 
     def _shutdown(self):
         """Shutting down the plugin.

@@ -150,8 +150,6 @@ class XYMD02(ModbusDevice):
 
         if value != None:
             value = value / 10.0
-        else:
-            value = 0.0
 
         return value
 
@@ -162,7 +160,7 @@ class XYMD02(ModbusDevice):
             float: Value of the humidity.
         """
 
-        value = 0.0
+        value = None
 
         try:
             request = self.generate_request("Humidity")
