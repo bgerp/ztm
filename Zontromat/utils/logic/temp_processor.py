@@ -221,7 +221,7 @@ class TemperatureProcessor():
         if size > 0:
             self.__value = sum(temperatures) / len(temperatures)
         else:
-            self.__value = 0
+            self.__value = ref_temp
 
         # Return the temperature.
         return self.__value
