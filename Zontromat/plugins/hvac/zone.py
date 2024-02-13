@@ -38,10 +38,7 @@ from plugins.base_plugin import BasePlugin
 
 from devices.factories.valve.valve_factory import ValveFactory
 from devices.factories.convectors.convectors_factory import ConvectorsFactory
-from devices.factories.flowmeters.flowmeters_factory import FlowmeterFactory
 from devices.factories.thermometers.thermometers_factory import ThermometersFactory
-
-from devices.tests.electrical_performance.electrical_performance import ElectricalPerformance
 
 from data import verbal_const
 from data.thermal_mode import ThermalMode
@@ -572,7 +569,7 @@ class Zone(BasePlugin):
 
         if register.value != {}:
             if self.__air_temp_cent_dev is not None:
-                self.__temp_proc.remove(self.__air_temp_cent_dev)
+                self.__temp_proc.remove_ref()
                 self.__air_temp_cent_dev.shutdown()
                 del self.__air_temp_cent_dev
 
@@ -585,11 +582,11 @@ class Zone(BasePlugin):
 
             if self.__air_temp_cent_dev is not None:
                 self.__air_temp_cent_dev.init()
-                self.__temp_proc.add(self.__air_temp_cent_dev)
+                self.__temp_proc.add_ref(self.__air_temp_cent_dev)
 
         elif register.value == {}:
             if self.__air_temp_cent_dev is not None:
-                self.__temp_proc.remove(self.__air_temp_cent_dev)
+                self.__temp_proc.remove_ref()
                 self.__air_temp_cent_dev.shutdown()
 
     def __air_temp_lower_settings_cb(self, register):
