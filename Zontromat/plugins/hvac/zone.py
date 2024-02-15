@@ -227,6 +227,8 @@ class Zone(BasePlugin):
 
         self.__thermal_mode = StateMachine()
 
+        self.__adjust_temp = 0
+
     def __del__(self):
         """Destructor"""
 
