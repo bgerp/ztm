@@ -222,8 +222,10 @@ class Zone(BasePlugin):
         """Window closed sensor input.
         """
 
-        # Depricated.
+        # Deprecated.
         self.__delta_time = 0
+
+        self.__thermal_mode = None
 
     def __del__(self):
         """Destructor"""
