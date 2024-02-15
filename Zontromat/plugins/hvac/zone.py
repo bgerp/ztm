@@ -229,6 +229,8 @@ class Zone(BasePlugin):
 
         self.__adjust_temp = 0
 
+        self.__goal_building_temp = 0
+
     def __del__(self):
         """Destructor"""
 
