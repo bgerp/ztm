@@ -225,7 +225,7 @@ class Zone(BasePlugin):
         # Deprecated.
         self.__delta_time = 0
 
-        self.__thermal_mode = None
+        self.__thermal_mode = StateMachine()
 
     def __del__(self):
         """Destructor"""
