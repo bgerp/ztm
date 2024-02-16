@@ -106,7 +106,8 @@ class Zone(BasePlugin):
 #region Constructor / Destructor
 
     def __init__(self, **config):
-        """Constructor"""
+        """Constructor
+        """        
 
         super().__init__(config)
 
@@ -198,20 +199,17 @@ class Zone(BasePlugin):
         self.__vlv_fl_3_tmr.duty_cycle = 0
         self.__vlv_fl_3_tmr.set_cb(lambda: self.__vlv_fl_3(100), lambda: self.__vlv_fl_3(0))
 
-        self.__cl_sm = StateMachine(0)
+        self.__vlv_counter = 0
 
-        self.__cl_tm = Timer(5)
-
-        self.__fl_sm = StateMachine(0)
-
-        self.__fl_tm = Timer(5)
+        self.__vlv_tm = Timer(5)
 
         self.__stop_timer = Timer(10)
         """Stop timer.
         """        
 
         self.__stop_flag = False
-        """HVAC Stop flag."""
+        """HVAC Stop flag.
+        """
 
         self.__delta_temp = 0
         """Delta temperature.
@@ -996,37 +994,25 @@ class Zone(BasePlugin):
         if self.__conv_3_dev is not None:
             self.__conv_3_dev.set_state(state)
 
-    def __cl_vlv_update_state(self, state=0):
-        if self.__cl_tm.expired:
-            self.__cl_tm.clear()
-            if self.__cl_sm.is_state(0):
-                self.__vlv_cl_1(state)
-            if self.__cl_sm.is_state(1):
-                self.__vlv_cl_2(state)
-            if self.__cl_sm.is_state(2):
-                self.__vlv_cl_3(state)
-            if self.__cl_sm.is_state(0):
-                self.__cl_sm.set_state(1)
-            if self.__cl_sm.is_state(1):
-                self.__cl_sm.set_state(2)
-            if self.__cl_sm.is_state(2):
-                self.__cl_sm.set_state(0)
+    def __vlv_update_state(self, cl_state, fl_state):
+        if self.__vlv_tm.expired:
+            self.__vlv_tm.clear()
+            if self.__vlv_counter == 0:
+                self.__vlv_cl_1(cl_state)
+            if self.__vlv_counter == 1:
+                self.__vlv_cl_2(cl_state)
+            if self.__vlv_counter == 2:
+                self.__vlv_cl_3(cl_state)
+            if self.__vlv_counter == 3:
+                self.__vlv_fl_1_tmr.duty_cycle = fl_state
+            if self.__vlv_counter == 4:
+                self.__vlv_fl_2_tmr.duty_cycle = fl_state
+            if self.__vlv_counter == 5:
+                self.__vlv_fl_3_tmr.duty_cycle = fl_state
 
-    def __fl_vlv_update_state(self, state=0):
-        if self.__fl_tm.expired:
-            self.__fl_tm.clear()
-            if self.__fl_sm.is_state(0):
-                self.__vlv_fl_1_tmr.duty_cycle = state
-            if self.__fl_sm.is_state(1):
-                self.__vlv_fl_3_tmr.duty_cycle = state
-            if self.__fl_sm.is_state(2):
-                self.__vlv_fl_3_tmr.duty_cycle = state
-            if self.__fl_sm.is_state(0):
-                self.__fl_sm.set_state(1)
-            if self.__fl_sm.is_state(1):
-                self.__fl_sm.set_state(2)
-            if self.__fl_sm.is_state(2):
-                self.__fl_sm.set_state(0)
+            self.__vlv_counter += 1
+            if self.__vlv_counter > 5:
+                self.__vlv_counter = 0
 
     def __set_devices(self, state):
 
@@ -1037,38 +1023,31 @@ class Zone(BasePlugin):
             state = 6
 
         if state == 0:
-            self.__fl_vlv_update_state(0)
-            self.__cl_vlv_update_state(0)
+            self.__vlv_update_state(0, 0)
             self.__conv_set_state(0)
 
         elif state == 1:
-            self.__fl_vlv_update_state(1/3)
-            self.__cl_vlv_update_state(0)
+            self.__vlv_update_state(0, 1/3)
             self.__conv_set_state(0)
 
         elif state == 2:
-            self.__fl_vlv_update_state(1/2)
-            self.__cl_vlv_update_state(0)
+            self.__vlv_update_state(0, 1/2)
             self.__conv_set_state(0)
 
         elif state == 3:
-            self.__fl_vlv_update_state(1)
-            self.__cl_vlv_update_state(100)
+            self.__vlv_update_state(100, 1)
             self.__conv_set_state(0)
 
         elif state == 4:
-            self.__fl_vlv_update_state(1)
-            self.__cl_vlv_update_state(100)
+            self.__vlv_update_state(100, 1)
             self.__conv_set_state(1)
 
         elif state == 5:
-            self.__fl_vlv_update_state(1)
-            self.__cl_vlv_update_state(100)
+            self.__vlv_update_state(100, 1)
             self.__conv_set_state(2)
 
         elif state == 6:
-            self.__fl_vlv_update_state(1)
-            self.__cl_vlv_update_state(100)
+            self.__vlv_update_state(100, 1)
             self.__conv_set_state(3)
 
 #endregion
@@ -1152,8 +1131,8 @@ class Zone(BasePlugin):
             dt = round(dt)
 
             # Exit if there is no changes.
-            if self.__delta_temp == dt:
-                return
+            # if self.__delta_temp == dt:
+            #     return
 
             # Store last changes.
             self.__delta_temp = dt
@@ -1164,8 +1143,7 @@ class Zone(BasePlugin):
             self.__set_devices(dt)
 
         # Update post state timer.
-        self.__cl_tm.update()
-        self.__fl_tm.update()
+        self.__vlv_tm.update()
 
         # Update PWM timers for the valves.
         self.__vlv_fl_1_tmr.update()
