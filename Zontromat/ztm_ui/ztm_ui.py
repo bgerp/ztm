@@ -94,7 +94,7 @@ class ZtmUI():
     """Get data from ZtmUI.
     """
 
-    __api_data_set = "/api/data/set"
+    __api_data_post = "/api/data/post"
     """Set data to ZtmUI.
     """
 
@@ -362,7 +362,7 @@ class ZtmUI():
         uri = self.host + self.__api_data_get
 
         # Headers
-        headers = {"Accept": "application/json", "Authorization": "Bearer {}".format(self.__token)}
+        headers = {"Accept": "application/json", "Content-type": "application/json", "Authorization": "Bearer {}".format(self.__token)}
 
         try:
             # The request.
@@ -418,23 +418,19 @@ class ZtmUI():
         response_registers = None
 
         # URI
-        uri = self.host + self.__api_data_get
+        uri = self.host + self.__api_data_post
 
         # Convert to JSON.
         str_registers = json.dumps(registers).replace("\'", "\"")
 
         # Payload
-        payload = {}
-        # payload = {"token": self.__session.session,\
-        #     "registers": str_registers, "last_sync": self.__last_sync}
-
-        # self.__logger.info("SYNC; To ZtmUI: {}".format(payload))
+        payload = str_registers
 
         # Headers
-        headers = {"Accept": "application/json", "Authorization": "Bearer {}".format(self.__token)}
+        headers = {"Accept": "application/json", "Content-type": "application/json", "Authorization": "Bearer {}".format(self.__token)}
 
         # The request.
-        response = requests.get(uri, headers=headers, data=payload, timeout=self.timeout)
+        response = requests.post(uri, headers=headers, data=payload, timeout=self.timeout)
 
         if response is not None:
 
