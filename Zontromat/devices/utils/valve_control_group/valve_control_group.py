@@ -76,30 +76,6 @@ class ValveControlGroup(BasePlugin):
 
 #region Attributes
 
-    __logger = None
-    """Logger
-    """
-
-    __mode = ValveControlGroupMode.NONE
-    """Mode of the valve control group.
-    """
-
-    __fw_valves = {}
-    """Forward valves.
-    """
-
-    __rev_valves = {}
-    """Reverse valves.
-    """
-
-    __fw_pumps = {}
-    """Forward pumps control.
-    """
-
-    __rev_pumps = {}
-    """Revers pumps control.
-    """
-
 #endregion
 
 #region Constructor / Destructor
@@ -110,111 +86,38 @@ class ValveControlGroup(BasePlugin):
 
         super().__init__(config)
 
-        self.__fw_valves = {}
+        self.__mode = ValveControlGroupMode.NONE
+        """Mode of the valve control group.
+        """
+
+        self.__in_valves = {}
+        """Forward valves.
+        """
+
         self.__rev_valves = {}
-        self.__fw_pumps = {}
-        self.__rev_pumps = {}
+        """Reverse valves.
+        """
 
-        fw_valves = []
-        if "fw_valves" in self._config:
-            fw_valves = self._config["fw_valves"]
+        if "mode" in config:
+            self.mode = config["mode"]
 
-        for name in fw_valves:
-            reg_name = "{}.{}".format(config["key"], name)
-            register = self._registers.by_name(reg_name)
-            if register is not None:
+        self.__init_in_vlv()
 
-                valve_name = "{} {}".format(config["name"], name)
-                valve = ValveFactory.create(
-                    name=valve_name,
-                    controller=self._controller,
-                    vendor=register.value['vendor'],
-                    model=register.value['model'],
-                    options=register.value['options'])
-
-                self.__fw_valves[valve_name] = valve
-
-        rev_valves = []
-        if "rev_valves" in self._config:
-            rev_valves = self._config["rev_valves"]
-
-        for name in rev_valves:
-            reg_name = "{}.{}".format(config["key"], name)
-            register = self._registers.by_name(reg_name)
-            if register is not None:
-
-                valve_name = "{} {}".format(config["name"], name)
-                valve = ValveFactory.create(
-                    name=valve_name,
-                    controller=self._controller,
-                    vendor=register.value['vendor'],
-                    model=register.value['model'],
-                    options=register.value['options'])
-
-                self.__rev_valves[valve_name] = valve
-
-        fw_pumps = []
-        if "fw_pumps" in self._config:
-            fw_pumps = self._config["fw_pumps"]
-
-        for name in fw_pumps:
-            reg_name = "{}.{}".format(config["key"], name)
-            register = self._registers.by_name(reg_name)
-            if register is not None:
-
-                pump_name = "{} {}".format(config["name"], name)
-                pump = PumpFactory.create(
-                    name=pump_name,
-                    controller=self._controller,
-                    vendor=register.value['vendor'],
-                    model=register.value['model'],
-                    options=register.value['options'])
-
-                self.__fw_pumps[pump_name] = pump
-
-        rev_pumps = []
-        if "rev_pumps" in self._config:
-            rev_pumps = self._config["rev_pumps"]
-
-        for name in rev_pumps:
-            reg_name = "{}.{}".format(config["key"], name)
-            register = self._registers.by_name(reg_name)
-            if register is not None:
-
-                pump_name = "{} {}".format(config["name"], name)
-                pump = PumpFactory.create(
-                    name=pump_name,
-                    controller=self._controller,
-                    vendor=register.value['vendor'],
-                    model=register.value['model'],
-                    options=register.value['options'])
-
-                self.__rev_pumps[pump_name] = pump
+        self.__init_ret_vlv()
 
     def __del__(self):
         """Destructor
         """
 
-        if self.__fw_valves is not None:
-            for valve in self.__fw_valves:
-                del self.__fw_valves[valve]
-            del self.__fw_valves
+        if self.__in_valves is not None:
+            for valve in self.__in_valves:
+                del self.__in_valves[valve]
+            del self.__in_valves
 
         if self.__rev_valves is not None:
             for valve in self.__rev_valves:
                 del self.__rev_valves[valve]
             del self.__rev_valves
-
-        if self.__fw_pumps is not None:
-            for pump in self.__fw_pumps:
-                del self.__fw_pumps[valve]
-            del self.__fw_pumps
-
-        if self.__rev_pumps is not None:
-            for pump in self.__rev_pumps:
-                del self.__rev_pumps[valve]
-            del self.__rev_pumps
-
 
         super().__del__()
 
@@ -254,8 +157,8 @@ class ValveControlGroup(BasePlugin):
             if position < 0.0:
                 position = 0.0
 
-            if self.__fw_valves is not None:
-                for valve in self.__fw_valves:
+            if self.__in_valves is not None:
+                for valve in self.__in_valves:
                     valve.target_position = position
 
             if self.__rev_valves is not None:
@@ -274,8 +177,8 @@ class ValveControlGroup(BasePlugin):
                 position = -100.0
 
             if position > 0:
-                if self.__fw_valves is not None:
-                    for valve in self.__fw_valves:
+                if self.__in_valves is not None:
+                    for valve in self.__in_valves:
                         valve.target_position = position
 
                 if self.__rev_valves is not None:
@@ -287,13 +190,13 @@ class ValveControlGroup(BasePlugin):
                     for valve in self.__rev_valves:
                         valve.target_position = float(l_scale(position, [0, -100], [0, 100]))
 
-                if self.__fw_valves is not None:
-                    for valve in self.__fw_valves:
+                if self.__in_valves is not None:
+                    for valve in self.__in_valves:
                         valve.target_position = 0
 
             else:
-                if self.__fw_valves is not None:
-                    for valve in self.__fw_valves:
+                if self.__in_valves is not None:
+                    for valve in self.__in_valves:
                         valve.target_position = 0
 
                 if self.__rev_valves is not None:
@@ -311,31 +214,51 @@ class ValveControlGroup(BasePlugin):
         if ValveControlGroupMode.is_valid(mode):
             self.__mode = mode
 
-    @property
-    def debit(self):
-        """Get debit.
+#endregion
 
-        Returns:
-            float: Debit of the group.
-        """
+#region 
 
-        return 0
+#region Private 
 
-    @debit.setter
-    def debit(self, debit):
-        """Set debit.
+    def __init_in_vlv(self):
 
-        Args:
-            debit (float): Debit of the pump.
-        """
+        in_valves = []
+        if "in_valves" in self._config:
+            in_valves = self._config["in_valves"]
 
-        if self.__fw_pumps is not None:
-            for pump in self.__fw_pumps:
-                pump.debit = debit
+        for name in in_valves:
+            reg_name = "{}.{}".format(self._config["key"], name)
+            register = self._registers.by_name(reg_name)
+            if register is not None:
+                valve_name = "{} {}".format(self._config["name"], name)
+                valve = ValveFactory.create(
+                    name=valve_name,
+                    controller=self._controller,
+                    vendor=register.value['vendor'],
+                    model=register.value['model'],
+                    options=register.value['options'])
 
-        if self.__rev_pumps is not None:
-            for pump in self.__rev_pumps:
-                pump.debit = float(l_scale(debit, [0, 100], [100, 0]))
+                self.__in_valves[valve_name] = valve
+
+    def __init_ret_vlv(self):
+
+        rev_valves = []
+        if "rev_valves" in self._config:
+            rev_valves = self._config["rev_valves"]
+
+        for name in rev_valves:
+            reg_name = "{}.{}".format(self._config["key"], name)
+            register = self._registers.by_name(reg_name)
+            if register is not None:
+                valve_name = "{} {}".format(self._config["name"], name)
+                valve = ValveFactory.create(
+                    name=valve_name,
+                    controller=self._controller,
+                    vendor=register.value['vendor'],
+                    model=register.value['model'],
+                    options=register.value['options'])
+
+                self.__rev_valves[valve_name] = valve
 
 #endregion
 
@@ -351,74 +274,42 @@ class ValveControlGroup(BasePlugin):
 
         self.mode = ValveControlGroupMode.NONE
 
-        if self.__fw_valves is not None:
-            for valve in self.__fw_valves:
-                self.__fw_valves[valve].init()
+        if self.__in_valves is not None:
+            for valve in self.__in_valves:
+                self.__in_valves[valve].init()
 
         if self.__rev_valves is not None:
             for valve in self.__rev_valves:
                 self.__rev_valves[valve].init()
 
-        if self.__fw_pumps is not None:
-            for pump in self.__fw_pumps:
-                self.__fw_pumps[pump].init()
-
-        if self.__rev_pumps is not None:
-            for pump in self.__rev_pumps:
-                self.__rev_pumps[pump].init()
-
     def update(self):
         """Update valve state.
         """
 
-        if self.__fw_valves is not None:
-            for valve in self.__fw_valves:
-                self.__fw_valves[valve].update()
+        if self.__in_valves is not None:
+            for valve in self.__in_valves:
+                self.__in_valves[valve].update()
 
         if self.__rev_valves is not None:
             for valve in self.__rev_valves:
                 self.__rev_valves[valve].update()
 
-        if self.__fw_pumps is not None:
-            for pump in self.__fw_pumps:
-                self.__fw_pumps[pump].update()
-
-        if self.__rev_pumps is not None:
-            for pump in self.__rev_pumps:
-                self.__rev_pumps[pump].update()
-
     def shutdown(self):
         """Shutdown the group.
         """
 
-        if self.__fw_valves is not None:
-            for valve in self.__fw_valves:
-                self.__fw_valves[valve].shutdown()
+        if self.__in_valves is not None:
+            for valve in self.__in_valves:
+                self.__in_valves[valve].shutdown()
 
         if self.__rev_valves is not None:
             for valve in self.__rev_valves:
                 self.__rev_valves[valve].shutdown()
 
-        if self.__fw_pumps is not None:
-            for pump in self.__fw_pumps:
-                self.__fw_pumps[pump].shutdown()
-
-        if self.__rev_pumps is not None:
-            for pump in self.__rev_pumps:
-                self.__rev_pumps[pump].shutdown()
-
     def calibrate(self):
 
-        if self.__fw_pumps is not None:
-            for pump in self.__fw_pumps:
-                pump.debit = 0
-
-        if self.__rev_pumps is not None:
-            for pump in self.__rev_pumps:
-                pump.debit = 0
-
-        if self.__fw_valves is not None:
-            for valve in self.__fw_valves:
+        if self.__in_valves is not None:
+            for valve in self.__in_valves:
                 valve.calibrate()
 
         if self.__rev_valves is not None:
