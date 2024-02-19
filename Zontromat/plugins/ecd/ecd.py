@@ -103,89 +103,88 @@ class EnergyCenterDistribution(BasePlugin):
         """
         self.__logger.info("Starting up the: {}".format(self.name))
 
-        self.__tva_warehouse = None
+        self.__vcg_ahu_warehouse = None
         """VCG TVA warhorse.
         """
 
-        self.__convectors_kitchen = None
-        """VCG Convectors kitchen.
-        """
+        self.__state = 0
 
 
+        # self.__convectors_kitchen = None
+        # """VCG Convectors kitchen.
+        # """
 
+        # self.__v_underfloor_heating_foyer = None
+        # """Valve foyer.
+        # """
 
-        self.__v_underfloor_heating_foyer = None
-        """Valve foyer.
-        """
+        # self.__v_underfloor_heating_trestle = None
+        # """Underfloor heating trestle.
+        # """
 
-        self.__v_underfloor_heating_trestle = None
-        """Underfloor heating trestle.
-        """
+        # self.__v_underfloor_heating_pool = None
+        # """Underfloor heating pool.
+        # """
 
-        self.__v_underfloor_heating_pool = None
-        """Underfloor heating pool.
-        """
+        # self.__v_air_cooling = None
+        # """Valve air cooling.
+        # """
 
-        self.__v_air_cooling = None
-        """Valve air cooling.
-        """
+        # self.__v_ground_drill = None
+        # """Valve ground drilling.
+        # """
 
-        self.__v_ground_drill = None
-        """Valve ground drilling.
-        """
+        # self.__v_generators_cooling = None
+        # """Generators cooling.
+        # """
 
-        self.__v_generators_cooling = None
-        """Generators cooling.
-        """
+        # self.__v_short_green_purple = None
+        # """Short valve between green and purple pipes.
+        # """
 
-        self.__v_short_green_purple = None
-        """Short valve between green and purple pipes.
-        """
+        # self.__v_underfloor_west_bypass = None
+        # """Valve underfloor west bypass.
+        # """
 
-        self.__v_underfloor_west_bypass = None
-        """Valve underfloor west bypass.
-        """
+        # self.__v_underfloor_east_bypass = None
+        # """Valve underfloor east bypass.
+        # """
 
-        self.__v_underfloor_east_bypass = None
-        """Valve underfloor east bypass.
-        """
+        # self.__pool_heating = None
+        # """VCG Pool heating.
+        # """
 
-        self.__pool_heating = None
-        """VCG Pool heating.
-        """
+        # self.__tva_pool = None
+        # """VCG TVA pool.
+        # """
 
-        self.__tva_pool = None
-        """VCG TVA pool.
-        """
+        # self.__convectors_east = None
+        # """VCG Convectors east.
+        # """
 
-        self.__convectors_east = None
-        """VCG Convectors east.
-        """
+        # self.__underfloor_east = None
+        # """VCG Underfloor east.
+        # """
 
-        self.__underfloor_east = None
-        """VCG Underfloor east.
-        """
+        # self.__convectors_west = None
+        # """VCG Convectors west.
+        # """
 
-        self.__convectors_west = None
-        """VCG Convectors west.
-        """
+        # self.__tva_fitness = None
+        # """VCG TVA fitness.
+        # """
 
-        self.__tva_fitness = None
-        """VCG TVA fitness.
-        """
+        # self.__tva_roof_floor = None
+        # """VCG TVA roof floor.
+        # """
 
-        self.__tva_roof_floor = None
-        """VCG TVA roof floor.
-        """
+        # self.__underfloor_west = None
+        # """VCG Underfloor west.
+        # """
 
-        self.__underfloor_west = None
-        """VCG Underfloor west.
-        """
-
-        self.__tva_conference_center = None
-        """VCG TVA conference centre.
-        """
-
+        # self.__tva_conference_center = None
+        # """VCG TVA conference centre.
+        # """
 
 #endregion
 
@@ -232,7 +231,7 @@ class EnergyCenterDistribution(BasePlugin):
                 key=f"{register.name}",
                 controller=self._controller,
                 registers=self._registers,
-                in_valves=["cold"],
+                fw_valves=["cold"],
                 rev_valves=["hot"],
                 mode = ValveControlGroupMode.DualSide)
 
@@ -251,14 +250,12 @@ class EnergyCenterDistribution(BasePlugin):
             GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
             return
 
-        if register.value < 0 or register.value > 100:
+        if register.value < -100 or register.value > 100:
             GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
 
-        if self.__v_underfloor_east_bypass is not None:
-            self.__v_underfloor_east_bypass.target_position = register.value
-
-
+        if self.__vcg_ahu_warehouse is not None:
+            self.__vcg_ahu_warehouse.target_position = register.value
 
     def __init_registers(self):
 
@@ -306,7 +303,6 @@ class EnergyCenterDistribution(BasePlugin):
         #                            self.__ahu_heat_settings_cb,
         #                            self.__ahu_heat_pos_cb)
 
-
 #endregion
 
 #region Properties
@@ -325,70 +321,77 @@ class EnergyCenterDistribution(BasePlugin):
         """Update the plugin.
         """
 
-        if self.__tva_warehouse is not None:
-            self.__tva_warehouse.update()
+        position = self._registers.by_name("ecd.ahu_warehouse.valve.position")
+        position.value = self.__state
 
+        if self.__state == 0:
+            self.__state = 100
 
+        elif self.__state == 100:
+            self.__state = -100
 
-        if self.__v_underfloor_heating_foyer is not None:
-            self.__v_underfloor_heating_foyer.update()
+        elif self.__state == -100:
+            self.__state = 100
 
-        if self.__v_underfloor_heating_trestle is not None:
-            self.__v_underfloor_heating_trestle.update()
+        if self.__vcg_ahu_warehouse is not None:
+            self.__vcg_ahu_warehouse.update()
 
-        if self.__v_underfloor_heating_pool is not None:
-            self.__v_underfloor_heating_pool.update()
+        # if self.__v_underfloor_heating_foyer is not None:
+        #     self.__v_underfloor_heating_foyer.update()
 
-        if self.__v_air_cooling is not None:
-            self.__v_air_cooling.update()
+        # if self.__v_underfloor_heating_trestle is not None:
+        #     self.__v_underfloor_heating_trestle.update()
 
-        if self.__v_ground_drill is not None:
-            self.__v_ground_drill.update()
+        # if self.__v_underfloor_heating_pool is not None:
+        #     self.__v_underfloor_heating_pool.update()
 
-        if self.__v_generators_cooling is not None:
-            self.__v_generators_cooling.update()
+        # if self.__v_air_cooling is not None:
+        #     self.__v_air_cooling.update()
 
-        if self.__v_short_green_purple is not None:
-            self.__v_short_green_purple.update()
+        # if self.__v_ground_drill is not None:
+        #     self.__v_ground_drill.update()
 
-        if self.__v_underfloor_west_bypass is not None:
-            self.__v_underfloor_west_bypass.update()
+        # if self.__v_generators_cooling is not None:
+        #     self.__v_generators_cooling.update()
 
-        if self.__v_underfloor_east_bypass is not None:
-            self.__v_underfloor_east_bypass.update()
+        # if self.__v_short_green_purple is not None:
+        #     self.__v_short_green_purple.update()
 
+        # if self.__v_underfloor_west_bypass is not None:
+        #     self.__v_underfloor_west_bypass.update()
 
-        if self.__pool_heating is not None:
-            self.__pool_heating.update()
+        # if self.__v_underfloor_east_bypass is not None:
+        #     self.__v_underfloor_east_bypass.update()
 
-        if self.__tva_pool is not None:
-            self.__tva_pool.update()
+        # if self.__pool_heating is not None:
+        #     self.__pool_heating.update()
 
-        if self.__convectors_east is not None:
-            self.__convectors_east.update()
+        # if self.__tva_pool is not None:
+        #     self.__tva_pool.update()
 
-        if self.__underfloor_east is not None:
-            self.__underfloor_east.update()
+        # if self.__convectors_east is not None:
+        #     self.__convectors_east.update()
 
-        if self.__convectors_west is not None:
-            self.__convectors_west.update()
+        # if self.__underfloor_east is not None:
+        #     self.__underfloor_east.update()
 
-        if self.__tva_fitness is not None:
-            self.__tva_fitness.update()
+        # if self.__convectors_west is not None:
+        #     self.__convectors_west.update()
 
-        if self.__tva_roof_floor is not None:
-            self.__tva_roof_floor.update()
+        # if self.__tva_fitness is not None:
+        #     self.__tva_fitness.update()
 
-        if self.__underfloor_west is not None:
-            self.__underfloor_west.update()
+        # if self.__tva_roof_floor is not None:
+        #     self.__tva_roof_floor.update()
 
-        if self.__tva_conference_center is not None:
-            self.__tva_conference_center.update()
+        # if self.__underfloor_west is not None:
+        #     self.__underfloor_west.update()
 
-        if self.__convectors_kitchen is not None:
-            self.__convectors_kitchen.update()
+        # if self.__tva_conference_center is not None:
+        #     self.__tva_conference_center.update()
 
-
+        # if self.__convectors_kitchen is not None:
+        #     self.__convectors_kitchen.update()
 
     def _shutdown(self):
         """Shutting down the plugin.
@@ -396,68 +399,64 @@ class EnergyCenterDistribution(BasePlugin):
 
         self.__logger.info("Shutting down the {}".format(self.name))
 
-        if self.__tva_warehouse is not None:
-            self.__tva_warehouse.shutdown()
+        if self.__vcg_ahu_warehouse is not None:
+            self.__vcg_ahu_warehouse.shutdown()
 
+        # if self.__v_underfloor_heating_foyer is not None:
+        #     self.__v_underfloor_heating_foyer.shutdown()
 
-        if self.__v_underfloor_heating_foyer is not None:
-            self.__v_underfloor_heating_foyer.shutdown()
+        # if self.__v_underfloor_heating_trestle is not None:
+        #     self.__v_underfloor_heating_trestle.shutdown()
 
-        if self.__v_underfloor_heating_trestle is not None:
-            self.__v_underfloor_heating_trestle.shutdown()
+        # if self.__v_underfloor_heating_pool is not None:
+        #     self.__v_underfloor_heating_pool.shutdown()
 
-        if self.__v_underfloor_heating_pool is not None:
-            self.__v_underfloor_heating_pool.shutdown()
+        # if self.__v_air_cooling is not None:
+        #     self.__v_air_cooling.shutdown()
 
-        if self.__v_air_cooling is not None:
-            self.__v_air_cooling.shutdown()
+        # if self.__v_ground_drill is not None:
+        #     self.__v_ground_drill.shutdown()
 
-        if self.__v_ground_drill is not None:
-            self.__v_ground_drill.shutdown()
+        # if self.__v_generators_cooling is not None:
+        #     self.__v_generators_cooling.shutdown()
 
-        if self.__v_generators_cooling is not None:
-            self.__v_generators_cooling.shutdown()
+        # if self.__v_short_green_purple is not None:
+        #     self.__v_short_green_purple.shutdown()
 
-        if self.__v_short_green_purple is not None:
-            self.__v_short_green_purple.shutdown()
+        # if self.__v_underfloor_west_bypass is not None:
+        #     self.__v_underfloor_west_bypass.shutdown()
 
-        if self.__v_underfloor_west_bypass is not None:
-            self.__v_underfloor_west_bypass.shutdown()
+        # if self.__v_underfloor_east_bypass is not None:
+        #     self.__v_underfloor_east_bypass.shutdown()
 
-        if self.__v_underfloor_east_bypass is not None:
-            self.__v_underfloor_east_bypass.shutdown()
+        # if self.__pool_heating is not None:
+        #     self.__pool_heating.shutdown()
 
+        # if self.__tva_pool is not None:
+        #     self.__tva_pool.shutdown()
 
+        # if self.__convectors_east is not None:
+        #     self.__convectors_east.shutdown()
 
-        if self.__pool_heating is not None:
-            self.__pool_heating.shutdown()
+        # if self.__underfloor_east is not None:
+        #     self.__underfloor_east.shutdown()
 
-        if self.__tva_pool is not None:
-            self.__tva_pool.shutdown()
+        # if self.__convectors_west is not None:
+        #     self.__convectors_west.shutdown()
 
-        if self.__convectors_east is not None:
-            self.__convectors_east.shutdown()
+        # if self.__tva_fitness is not None:
+        #     self.__tva_fitness.shutdown()
 
-        if self.__underfloor_east is not None:
-            self.__underfloor_east.shutdown()
+        # if self.__tva_roof_floor is not None:
+        #     self.__tva_roof_floor.shutdown()
 
-        if self.__convectors_west is not None:
-            self.__convectors_west.shutdown()
+        # if self.__underfloor_west is not None:
+        #     self.__underfloor_west.shutdown()
 
-        if self.__tva_fitness is not None:
-            self.__tva_fitness.shutdown()
+        # if self.__tva_conference_center is not None:
+        #     self.__tva_conference_center.shutdown()
 
-        if self.__tva_roof_floor is not None:
-            self.__tva_roof_floor.shutdown()
-
-        if self.__underfloor_west is not None:
-            self.__underfloor_west.shutdown()
-
-        if self.__tva_conference_center is not None:
-            self.__tva_conference_center.shutdown()
-
-        if self.__convectors_kitchen is not None:
-            self.__convectors_kitchen.shutdown()
-
+        # if self.__convectors_kitchen is not None:
+        #     self.__convectors_kitchen.shutdown()
 
 #endregion

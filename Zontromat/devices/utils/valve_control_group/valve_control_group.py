@@ -70,7 +70,7 @@ class ValveControlGroup(BasePlugin):
     Args:
         BasePlugin ([type]): [description]
 
-    Returns:
+    returns:
         [type]: [description]
     """
 
@@ -90,33 +90,33 @@ class ValveControlGroup(BasePlugin):
         """Mode of the valve control group.
         """
 
-        self.__in_valves = {}
+        self.__fw_valves = {}
         """Forward valves.
         """
 
         self.__rev_valves = {}
-        """Reverse valves.
+        """return valves.
         """
 
         if "mode" in config:
-            self.mode = config["mode"]
+            self.mode = ValveControlGroupMode(config["mode"])
 
-        self.__init_in_vlv()
+        self.__init_fw_vlv()
 
-        self.__init_ret_vlv()
+        self.__init_rev_vlv()
 
     def __del__(self):
         """Destructor
         """
 
-        if self.__in_valves is not None:
-            for valve in self.__in_valves:
-                del self.__in_valves[valve]
-            del self.__in_valves
+        if self.__fw_valves is not None:
+            for valve in self.__fw_valves:
+                del valve
+            del self.__fw_valves
 
         if self.__rev_valves is not None:
             for valve in self.__rev_valves:
-                del self.__rev_valves[valve]
+                del valve
             del self.__rev_valves
 
         super().__del__()
@@ -147,8 +147,8 @@ class ValveControlGroup(BasePlugin):
             position (int): Position of the valves.
         """
 
-        # In this mode we controll proportional all the forward vales.
-        # And invers proportional all revers valves.
+        # In this mode we control proportional all the forward vales.
+        # And inverse proportional all revers valves.
         if self.mode == ValveControlGroupMode.Proportional:
 
             if position > 100.0:
@@ -157,16 +157,16 @@ class ValveControlGroup(BasePlugin):
             if position < 0.0:
                 position = 0.0
 
-            if self.__in_valves is not None:
-                for valve in self.__in_valves:
-                    valve.target_position = position
+            if self.__fw_valves is not None:
+                for valve in self.__fw_valves:
+                    self.__fw_valves[valve].target_position = int(position)
 
             if self.__rev_valves is not None:
                 for valve in self.__rev_valves:
-                    valve.target_position = float(l_scale(position, [0, 100], [100, 0]))
+                    self.__rev_valves[valve].target_position = int(l_scale(position, [0, 100], [100, 0]))
 
-        # In this mode we controll proportional all the forward vales.
-        # And invers proportional all revers valves.
+        # In this mode we control proportional all the forward vales.
+        # And inverse proportional all revers valves.
         # But when the value of the
         elif self.mode == ValveControlGroupMode.DualSide:
 
@@ -177,31 +177,32 @@ class ValveControlGroup(BasePlugin):
                 position = -100.0
 
             if position > 0:
-                if self.__in_valves is not None:
-                    for valve in self.__in_valves:
-                        valve.target_position = position
-
                 if self.__rev_valves is not None:
                     for valve in self.__rev_valves:
-                        valve.target_position = 0
+                        self.__rev_valves[valve].target_position = 0
+
+                if self.__fw_valves is not None:
+                    for valve in self.__fw_valves:
+                        self.__fw_valves[valve].target_position = int(position)
+
 
             elif position < 0:
+                if self.__fw_valves is not None:
+                    for valve in self.__fw_valves:
+                        self.__fw_valves[valve].target_position = 0
+
                 if self.__rev_valves is not None:
                     for valve in self.__rev_valves:
-                        valve.target_position = float(l_scale(position, [0, -100], [0, 100]))
-
-                if self.__in_valves is not None:
-                    for valve in self.__in_valves:
-                        valve.target_position = 0
+                        self.__rev_valves[valve].target_position = int(l_scale(position, [0, -100], [0, 100]))
 
             else:
-                if self.__in_valves is not None:
-                    for valve in self.__in_valves:
-                        valve.target_position = 0
+                if self.__fw_valves is not None:
+                    for valve in self.__fw_valves:
+                        self.__fw_valves[valve].target_position = 0
 
                 if self.__rev_valves is not None:
                     for valve in self.__rev_valves:
-                        valve.target_position = 0
+                        self.__rev_valves[valve].target_position = 0
 
     @property
     def mode(self):
@@ -220,51 +221,48 @@ class ValveControlGroup(BasePlugin):
 
 #region Private 
 
-    def __init_in_vlv(self):
+    def __init_fw_vlv(self):
 
-        in_valves = []
-        if "in_valves" in self._config:
-            in_valves = self._config["in_valves"]
+        fw_valves = []
+        if "fw_valves" in self._config:
+            fw_valves = self._config["fw_valves"]
 
-        for name in in_valves:
-            reg_name = "{}.{}".format(self._config["key"], name)
-            register = self._registers.by_name(reg_name)
-            if register is not None:
-                valve_name = "{} {}".format(self._config["name"], name)
-                valve = ValveFactory.create(
-                    name=valve_name,
-                    controller=self._controller,
-                    vendor=register.value['vendor'],
-                    model=register.value['model'],
-                    options=register.value['options'])
+        register = self._registers.by_name(self._config["key"])
+        if register is not None:
+            for name in fw_valves:
+                for key, valve in enumerate(register.value[name]):
+                    dev_name=f"{register.name}.{name}.{key}"
+                    valve = ValveFactory.create(
+                        name=dev_name,
+                        controller=self._controller,
+                        vendor=valve['vendor'],
+                        model=valve['model'],
+                        options=valve['options'])
+                    self.__fw_valves[dev_name] = valve
 
-                self.__in_valves[valve_name] = valve
-
-    def __init_ret_vlv(self):
+    def __init_rev_vlv(self):
 
         rev_valves = []
         if "rev_valves" in self._config:
             rev_valves = self._config["rev_valves"]
 
-        for name in rev_valves:
-            reg_name = "{}.{}".format(self._config["key"], name)
-            register = self._registers.by_name(reg_name)
-            if register is not None:
-                valve_name = "{} {}".format(self._config["name"], name)
-                valve = ValveFactory.create(
-                    name=valve_name,
-                    controller=self._controller,
-                    vendor=register.value['vendor'],
-                    model=register.value['model'],
-                    options=register.value['options'])
-
-                self.__rev_valves[valve_name] = valve
-
+        register = self._registers.by_name(self._config["key"])
+        if register is not None:
+            for name in rev_valves:
+                for key, valve in enumerate(register.value[name]):
+                    dev_name=f"{register.name}.{name}.{key}"
+                    valve = ValveFactory.create(
+                        name=dev_name,
+                        controller=self._controller,
+                        vendor=valve['vendor'],
+                        model=valve['model'],
+                        options=valve['options'])
+                    self.__rev_valves[dev_name] = valve
 #endregion
 
-#region Public Methods
+#region Protected Methods
 
-    def init(self):
+    def _init(self):
         """Initialize the group.
         """
 
@@ -272,52 +270,50 @@ class ValveControlGroup(BasePlugin):
         self.__logger = get_logger(__name__)
         self.__logger.info("Starting up the: {}".format(self.name))
 
-        self.mode = ValveControlGroupMode.NONE
-
-        if self.__in_valves is not None:
-            for valve in self.__in_valves:
-                self.__in_valves[valve].init()
+        if self.__fw_valves is not None:
+            for valve in self.__fw_valves:
+                self.__fw_valves[valve].init()
 
         if self.__rev_valves is not None:
             for valve in self.__rev_valves:
                 self.__rev_valves[valve].init()
 
-    def update(self):
+    def _update(self):
         """Update valve state.
         """
 
-        if self.__in_valves is not None:
-            for valve in self.__in_valves:
-                self.__in_valves[valve].update()
+        if self.__fw_valves is not None:
+            for valve in self.__fw_valves:
+                self.__fw_valves[valve].update()
 
         if self.__rev_valves is not None:
             for valve in self.__rev_valves:
                 self.__rev_valves[valve].update()
 
-    def shutdown(self):
+    def _shutdown(self):
         """Shutdown the group.
         """
 
-        if self.__in_valves is not None:
-            for valve in self.__in_valves:
-                self.__in_valves[valve].shutdown()
+        if self.__fw_valves is not None:
+            for valve in self.__fw_valves:
+                self.__fw_valves[valve].shutdown()
 
         if self.__rev_valves is not None:
             for valve in self.__rev_valves:
                 self.__rev_valves[valve].shutdown()
 
+#endregion
+
+#region Public Methods
+
     def calibrate(self):
 
-        if self.__in_valves is not None:
-            for valve in self.__in_valves:
-                valve.calibrate()
+        if self.__fw_valves is not None:
+            for valve in self.__fw_valves:
+                self.__fw_valves[valve].calibrate()
 
         if self.__rev_valves is not None:
             for valve in self.__rev_valves:
-                valve.calibrate()
-
-#endregion
-
-#region Public Static Methods
+                self.__rev_valves[valve].calibrate()
 
 #endregion
