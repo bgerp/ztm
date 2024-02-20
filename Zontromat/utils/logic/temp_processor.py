@@ -179,8 +179,9 @@ class TemperatureProcessor():
         for thermometer in self.__thermometers:
             if thermometer is not None:
                 current_temp = thermometer.get_temp()
-                if current_temp > 0:
-                    temperatures.append(current_temp)
+                if current_temp is not None:
+                    if current_temp > 0:
+                        temperatures.append(current_temp)
 
         size = len(temperatures)
         if size > 0:
