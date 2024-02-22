@@ -339,7 +339,7 @@ class ZL101PCC(BaseController):
                 GlobalErrorHandler.log_missing_resource("Missing MODBUS-RTU UART{} interface".format(remote_gpio["uart"]))
                 return False
 
-            read_response = self.self.__modbus_rtu_clients[remote_gpio["uart"]].read_discrete_inputs(
+            read_response = self.__modbus_rtu_clients[remote_gpio["uart"]].read_discrete_inputs(
                 remote_gpio["io_reg"],
                 remote_gpio["io_index"]+1,
                 remote_gpio["mb_id"])
