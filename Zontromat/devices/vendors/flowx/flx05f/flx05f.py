@@ -441,6 +441,11 @@ class FLX05F(BaseValve):
             # - Store (T0 - T1) in dT
             # - Use dT and end position contacts to ensure that the valve is closed and opened.
 
+        if self.__get_close_limit():
+            self._current_position = self.min_pos
+        if self.__get_open_limit():
+            self._current_position = self.max_pos
+
     def calibrate(self):
 
         self._state.set_state(ValveState.Calibrate)
