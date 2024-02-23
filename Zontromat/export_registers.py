@@ -1916,7 +1916,7 @@ def __add_registers(args):
     register = Register("ecd.pool_air_heating.valves.settings")
     register.scope = Scope.System
     register.plugin_name = "Energy Center Distribution"
-    register.description = "ECD / AHU Warehouse Settings"
+    register.description = "ECD / Pool air heating valves settings."
     register.range = __range["NONE"]
     register.value = \
     {
@@ -1961,17 +1961,25 @@ def __add_registers(args):
     register = Register("ecd.pool_air_heating.valves.mode")
     register.scope = Scope.System
     register.plugin_name = "Energy Center Distribution"
-    register.description = "ECD / AHU Warehouse Position"
+    register.description = "ECD / Pool air heating valves mode."
     register.range = __range["PERCENTAGE_-100_100"]
     register.value = 0.0
     __registers.append(register)
 
+    # ECD / Pool air heating valves state.
+    register = Register("ecd.pool_air_heating.valves.state")
+    register.scope = Scope.System
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Pool air heating valves state."
+    register.range = __range["PERCENTAGE_-100_100"]
+    register.value = 0.0
+    __registers.append(register)
 
-    # ECD / convectors kitchen valves settings.
+    # ECD / Convectors kitchen valves settings.
     register = Register("ecd.conv_kitchen.valves.settings")
     register.scope = Scope.System
     register.plugin_name = "Energy Center Distribution"
-    register.description = "ECD / Convectors Kitchen"
+    register.description = "ECD / Convectors kitchen valves settings."
     register.range = __range["NONE"]
     register.value = \
     {
@@ -2012,11 +2020,20 @@ def __add_registers(args):
     }
     __registers.append(register)
 
-    # ECD / convectors kitchen valves mode.
+    # ECD / Convectors kitchen valves mode.
     register = Register("ecd.conv_kitchen.valves.mode")
     register.scope = Scope.System
     register.plugin_name = "Energy Center Distribution"
-    register.description = "ECD / Convectors Kitchen"
+    register.description = "ECD / Convectors kitchen valves mode."
+    register.range = __range["PERCENTAGE_-100_100"]
+    register.value = 0.0
+    __registers.append(register)
+
+    # ECD / Convectors kitchen valves state.
+    register = Register("ecd.conv_kitchen.valves.state")
+    register.scope = Scope.System
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Convectors kitchen valves state."
     register.range = __range["PERCENTAGE_-100_100"]
     register.value = 0.0
     __registers.append(register)
@@ -2076,6 +2093,14 @@ def __add_registers(args):
     register.value = 0.0
     __registers.append(register)
 
+    # ECD / AHU conference hall valves state.
+    register = Register("ecd.ahu_conf_hall.valves.state")
+    register.scope = Scope.System
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / AHU Warehouse Position"
+    register.range = __range["PERCENTAGE_-100_100"]
+    register.value = 0.0
+    __registers.append(register)
 
     # ECD / Floor west valves settings.
     register = Register("ecd.floor_west.valves.settings")
@@ -2131,6 +2156,14 @@ def __add_registers(args):
     register.value = 0.0
     __registers.append(register)
 
+    # ECD / Floor west valves state.
+    register = Register("ecd.floor_west.valves.state")
+    register.scope = Scope.System
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / AHU Warehouse Position"
+    register.range = __range["PERCENTAGE_-100_100"]
+    register.value = 0.0
+    __registers.append(register)
 
     # ECD / Convectors west valves settings.
     register = Register("ecd.conv_west.valves.settings")
@@ -2186,6 +2219,14 @@ def __add_registers(args):
     register.value = 0.0
     __registers.append(register)
 
+    # ECD / Convectors west valves state.
+    register = Register("ecd.conv_west.valves.state")
+    register.scope = Scope.System
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Convectors west valves state."
+    register.range = __range["PERCENTAGE_-100_100"]
+    register.value = 0.0
+    __registers.append(register)
 
     # ECD / AHU roof floor valves settings.
     register = Register("ecd.ahu_roof_floor.valves.settings")
@@ -2241,6 +2282,14 @@ def __add_registers(args):
     register.value = 0.0
     __registers.append(register)
 
+    # ECD / AHU roof floor valves state.
+    register = Register("ecd.ahu_roof_floor.valves.state")
+    register.scope = Scope.System
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / AHU roof floor valves state."
+    register.range = __range["PERCENTAGE_-100_100"]
+    register.value = 0.0
+    __registers.append(register)
 
     # ECD / AHU fitness valves settings.
     register = Register("ecd.ahu_fitness.valves.settings")
@@ -2296,6 +2345,14 @@ def __add_registers(args):
     register.value = 0.0
     __registers.append(register)
 
+    # ECD / AHU fitness valves state.
+    register = Register("ecd.ahu_fitness.valves.state")
+    register.scope = Scope.System
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / AHU fitness valves state."
+    register.range = __range["PERCENTAGE_-100_100"]
+    register.value = 0.0
+    __registers.append(register)
 
     # ECD / Floor east valves settings.
     register = Register("ecd.floor_east.valves.settings")
@@ -2351,6 +2408,14 @@ def __add_registers(args):
     register.value = 0.0
     __registers.append(register)
 
+    # ECD / Floor east valves state.
+    register = Register("ecd.floor_east.valves.state")
+    register.scope = Scope.System
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Floor east valves state."
+    register.range = __range["PERCENTAGE_-100_100"]
+    register.value = 0.0
+    __registers.append(register)
 
     # ECD / Convectors east valves settings.
     register = Register("ecd.conv_east.valves.settings")
@@ -2406,11 +2471,20 @@ def __add_registers(args):
     register.value = 0.0
     __registers.append(register)
 
+    # ECD / Convectors east valves state.
+    register = Register("ecd.conv_east.valves.state")
+    register.scope = Scope.System
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Convectors east valves state."
+    register.range = __range["PERCENTAGE_-100_100"]
+    register.value = 0.0
+    __registers.append(register)
+
     # ECD / Pool air cooling valves settings.
     register = Register("ecd.pool_air_cooling.valves.settings")
     register.scope = Scope.System
     register.plugin_name = "Energy Center Distribution"
-    register.description = "ECD / Pool air cooling"
+    register.description = "ECD / Pool air cooling valves settings."
     register.range = __range["NONE"]
     register.value = \
     {
@@ -2455,7 +2529,16 @@ def __add_registers(args):
     register = Register("ecd.pool_air_cooling.valves.mode")
     register.scope = Scope.System
     register.plugin_name = "Energy Center Distribution"
-    register.description = "ECD / Pool air cooling."
+    register.description = "ECD / Pool air cooling valves mode."
+    register.range = __range["PERCENTAGE_-100_100"]
+    register.value = 0.0
+    __registers.append(register)
+
+    # ECD / Pool air cooling valves state.
+    register = Register("ecd.pool_air_cooling.valves.state")
+    register.scope = Scope.System
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Pool air cooling valves state."
     register.range = __range["PERCENTAGE_-100_100"]
     register.value = 0.0
     __registers.append(register)
@@ -2514,6 +2597,15 @@ def __add_registers(args):
     register.value = 0.0
     __registers.append(register)
 
+    # ECD / Pool air heating valves state.
+    register = Register("ecd.pool_heating.valves.state")
+    register.scope = Scope.System
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Pool air heating valves state."
+    register.range = __range["PERCENTAGE_-100_100"]
+    register.value = 0.0
+    __registers.append(register)
+
     # ECD / Floor entrance valves settings.
     register = Register("ecd.floor_entrance.valves.settings")
     register.scope = Scope.System
@@ -2564,6 +2656,15 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Energy Center Distribution"
     register.description = "ECD / Floor entrance valves mode."
+    register.range = __range["PERCENTAGE_-100_100"]
+    register.value = 0.0
+    __registers.append(register)
+
+    # ECD / Floor entrance valves state.
+    register = Register("ecd.floor_entrance.valves.state")
+    register.scope = Scope.System
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Floor entrance valves state."
     register.range = __range["PERCENTAGE_-100_100"]
     register.value = 0.0
     __registers.append(register)
@@ -2622,6 +2723,15 @@ def __add_registers(args):
     register.value = 0.0
     __registers.append(register)
 
+    # ECD / Floor pool valves state.
+    register = Register("ecd.pool_floor.valves.state")
+    register.scope = Scope.System
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Floor pool valves state."
+    register.range = __range["PERCENTAGE_-100_100"]
+    register.value = 0.0
+    __registers.append(register)
+
     # ECD / Ground drilling valves settings.
     register = Register("ecd.ground_drilling.valves.settings")
     register.scope = Scope.System
@@ -2672,6 +2782,15 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Energy Center Distribution"
     register.description = "ECD / Ground drilling valves mode."
+    register.range = __range["PERCENTAGE_-100_100"]
+    register.value = 0.0
+    __registers.append(register)
+
+    # ECD / Ground drilling valves state.
+    register = Register("ecd.ground_drilling.valves.state")
+    register.scope = Scope.System
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Ground drilling valves state."
     register.range = __range["PERCENTAGE_-100_100"]
     register.value = 0.0
     __registers.append(register)
@@ -2730,6 +2849,15 @@ def __add_registers(args):
     register.value = 0.0
     __registers.append(register)
 
+    # ECD / Air tower green valves state.
+    register = Register("ecd.air_tower_green.valves.state")
+    register.scope = Scope.System
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Air tower green valves state."
+    register.range = __range["PERCENTAGE_-100_100"]
+    register.value = 0.0
+    __registers.append(register)
+
     # ECD / Air tower green valves settings.
     register = Register("ecd.air_tower_purple.valves.settings")
     register.scope = Scope.System
@@ -2780,6 +2908,15 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Energy Center Distribution"
     register.description = "ECD / Ground drilling valves mode."
+    register.range = __range["PERCENTAGE_-100_100"]
+    register.value = 0.0
+    __registers.append(register)
+
+    # ECD / Air tower green valves state.
+    register = Register("ecd.air_tower_purple.valves.state")
+    register.scope = Scope.System
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Air tower green valves state."
     register.range = __range["PERCENTAGE_-100_100"]
     register.value = 0.0
     __registers.append(register)
@@ -2838,6 +2975,14 @@ def __add_registers(args):
     register.value = 0.0
     __registers.append(register)
 
+    # ECD / Generators valves state.
+    register = Register("ecd.generators.valves.state")
+    register.scope = Scope.System
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Generators valves state."
+    register.range = __range["PERCENTAGE_-100_100"]
+    register.value = 0.0
+    __registers.append(register)
 
     register = Register("ecd.enabled")
     register.scope = Scope.System
