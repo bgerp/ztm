@@ -105,25 +105,6 @@ class ValveControlGroup(BasePlugin):
 
         self.__init_rev_vlv()
 
-    def __del__(self):
-        """Destructor
-        """
-
-        if self.__fw_valves is not None:
-            for valve in self.__fw_valves:
-                del valve
-            del self.__fw_valves
-
-        if self.__rev_valves is not None:
-            for valve in self.__rev_valves:
-                del valve
-            del self.__rev_valves
-
-        super().__del__()
-
-        if self.__logger is not None:
-            del self.__logger
-
     def __str__(self):
 
         return self._config["name"]
@@ -137,7 +118,30 @@ class ValveControlGroup(BasePlugin):
     @property
     def target_position(self):
 
-        return 0
+        position = 0
+
+        if self.__mode == ValveControlGroupMode.DualSide:
+            positions = [0,0]
+            if self.__fw_valves is not None:
+                for valve in self.__fw_valves:
+                    positions[0] += self.__fw_valves[valve].current_position
+                positions[0] *= -1
+
+            if self.__rev_valves is not None:
+                for valve in self.__rev_valves:
+                    positions[1] += self.__rev_valves[valve].current_position
+
+            position = sum(positions) / len(positions)
+
+            if position > 0:
+                position = 100.0
+
+            if position < 0:
+                position = -100.0
+
+            position = int(position)
+
+        return position
 
     @target_position.setter
     def target_position(self, position):
