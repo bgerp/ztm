@@ -2296,6 +2296,549 @@ def __add_registers(args):
     register.value = 0.0
     __registers.append(register)
 
+
+    # ECD / Floor east valves settings.
+    register = Register("ecd.floor_east.valves.settings")
+    register.scope = Scope.System
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Floor east valves settings."
+    register.range = __range["NONE"]
+    register.value = \
+    {
+        "hot":
+        [
+            {
+                "vendor": "Flowx",
+                "model": "FLX-05F",
+                "options":
+                {
+                    "close_on_shutdown": True,
+                    "wait_on_shutdown": False,
+                    "io_mode": 1, # 1: "single_out", 2: "dual_out"
+                    "output_cw": "U0:ID7:FC5:R0:RO0",
+                    "output_ccw": "off",
+                    "limit_cw": "U0:ID7:FC2:R0:DI0",
+                    "limit_ccw": "U0:ID7:FC2:R0:DI1"
+                }
+            }
+        ],
+        "cold":
+        [
+            {
+                "vendor": "Flowx",
+                "model": "FLX-05F",
+                "options":
+                {
+                    "close_on_shutdown": True,
+                    "wait_on_shutdown": False,
+                    "io_mode": 1, # 1: "single_out", 2: "dual_out"
+                    "output_cw": "U0:ID7:FC5:R0:RO1",
+                    "output_ccw": "off",
+                    "limit_cw": "U0:ID7:FC2:R0:DI2",
+                    "limit_ccw": "U0:ID7:FC2:R0:DI1"
+                }
+            }
+        ]
+    }
+    __registers.append(register)
+
+    # ECD / Floor east valves mode.
+    register = Register("ecd.floor_east.valves.mode")
+    register.scope = Scope.System
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Floor east valves mode."
+    register.range = __range["PERCENTAGE_-100_100"]
+    register.value = 0.0
+    __registers.append(register)
+
+
+    # ECD / Convectors east valves settings.
+    register = Register("ecd.conv_east.valves.settings")
+    register.scope = Scope.System
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Convectors east valves settings."
+    register.range = __range["NONE"]
+    register.value = \
+    {
+        "hot":
+        [
+            {
+                "vendor": "Flowx",
+                "model": "FLX-05F",
+                "options":
+                {
+                    "close_on_shutdown": True,
+                    "wait_on_shutdown": False,
+                    "io_mode": 1, # 1: "single_out", 2: "dual_out"
+                    "output_cw": "U0:ID2:FC5:R0:RO6",
+                    "output_ccw": "off",
+                    "limit_cw": "U0:ID2:FC2:R0:DI0",
+                    "limit_ccw": "U0:ID2:FC2:R0:DI1"
+                }
+            }
+        ],
+        "cold":
+        [
+            {
+                "vendor": "Flowx",
+                "model": "FLX-05F",
+                "options":
+                {
+                    "close_on_shutdown": True,
+                    "wait_on_shutdown": False,
+                    "io_mode": 1, # 1: "single_out", 2: "dual_out"
+                    "output_cw": "U0:ID2:FC5:R0:RO7",
+                    "output_ccw": "off",
+                    "limit_cw": "U0:ID2:FC2:R0:DI2",
+                    "limit_ccw": "U0:ID2:FC2:R0:DI1"
+                }
+            }
+        ]
+    }
+    __registers.append(register)
+
+    # ECD / Convectors east valves mode.
+    register = Register("ecd.conv_east.valves.mode")
+    register.scope = Scope.System
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Convectors east valves mode."
+    register.range = __range["PERCENTAGE_-100_100"]
+    register.value = 0.0
+    __registers.append(register)
+
+    # ECD / Pool air cooling valves settings.
+    register = Register("ecd.pool_air_cooling.valves.settings")
+    register.scope = Scope.System
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Pool air cooling"
+    register.range = __range["NONE"]
+    register.value = \
+    {
+        "hot":
+        [
+            # {
+            #     "vendor": "Flowx",
+            #     "model": "FLX-05F",
+            #     "options":
+            #     {
+            #         "close_on_shutdown": True,
+            #         "wait_on_shutdown": False,
+            #         "io_mode": 1, # 1: "single_out", 2: "dual_out"
+            #         "output_cw": "U0:ID6:FC5:R0:RO6",
+            #         "output_ccw": "off",
+            #         "limit_cw": "U0:ID6:FC2:R0:DI0",
+            #         "limit_ccw": "U0:ID6:FC2:R0:DI1"
+            #     }
+            # }
+        ],
+        "cold":
+        [
+            {
+                "vendor": "Flowx",
+                "model": "FLX-05F",
+                "options":
+                {
+                    "close_on_shutdown": True,
+                    "wait_on_shutdown": False,
+                    "io_mode": 1, # 1: "single_out", 2: "dual_out"
+                    "output_cw": "U0:ID6:FC5:R0:RO7",
+                    "output_ccw": "off",
+                    "limit_cw": "U0:ID6:FC2:R0:DI2",
+                    "limit_ccw": "U0:ID6:FC2:R0:DI1"
+                }
+            }
+        ]
+    }
+    __registers.append(register)
+
+    # ECD / Pool air cooling valves mode.
+    register = Register("ecd.pool_air_cooling.valves.mode")
+    register.scope = Scope.System
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Pool air cooling."
+    register.range = __range["PERCENTAGE_-100_100"]
+    register.value = 0.0
+    __registers.append(register)
+
+    # ECD / Pool air heating valves settings.
+    register = Register("ecd.pool_heating.valves.settings")
+    register.scope = Scope.System
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Pool air heating valves settings."
+    register.range = __range["NONE"]
+    register.value = \
+    {
+        "hot":
+        [
+            # {
+            #     "vendor": "Flowx",
+            #     "model": "FLX-05F",
+            #     "options":
+            #     {
+            #         "close_on_shutdown": True,
+            #         "wait_on_shutdown": False,
+            #         "io_mode": 1, # 1: "single_out", 2: "dual_out"
+            #         "output_cw": "U0:ID2:FC5:R0:RO0",
+            #         "output_ccw": "off",
+            #         "limit_cw": "U0:ID6:FC2:R0:DI0",
+            #         "limit_ccw": "U0:ID6:FC2:R0:DI1"
+            #     }
+            # }
+        ],
+        "cold":
+        [
+            {
+                "vendor": "Flowx",
+                "model": "FLX-05F",
+                "options":
+                {
+                    "close_on_shutdown": True,
+                    "wait_on_shutdown": False,
+                    "io_mode": 1, # 1: "single_out", 2: "dual_out"
+                    "output_cw": "U0:ID2:FC5:R0:RO0",
+                    "output_ccw": "off",
+                    "limit_cw": "U0:ID6:FC2:R0:DI2",
+                    "limit_ccw": "U0:ID6:FC2:R0:DI1"
+                }
+            }
+        ]
+    }
+    __registers.append(register)
+
+    # ECD / Pool air heating valves mode.
+    register = Register("ecd.pool_heating.valves.mode")
+    register.scope = Scope.System
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Pool air heating valves mode."
+    register.range = __range["PERCENTAGE_-100_100"]
+    register.value = 0.0
+    __registers.append(register)
+
+    # ECD / Floor entrance valves settings.
+    register = Register("ecd.floor_entrance.valves.settings")
+    register.scope = Scope.System
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Floor entrance valves settings."
+    register.range = __range["NONE"]
+    register.value = \
+    {
+        "hot":
+        [
+            # {
+            #     "vendor": "Flowx",
+            #     "model": "FLX-05F",
+            #     "options":
+            #     {
+            #         "close_on_shutdown": True,
+            #         "wait_on_shutdown": False,
+            #         "io_mode": 1, # 1: "single_out", 2: "dual_out"
+            #         "output_cw": "U0:ID2:FC5:R0:RO1",
+            #         "output_ccw": "off",
+            #         "limit_cw": "U0:ID6:FC2:R0:DI0",
+            #         "limit_ccw": "U0:ID6:FC2:R0:DI1"
+            #     }
+            # }
+        ],
+        "cold":
+        [
+            {
+                "vendor": "Flowx",
+                "model": "FLX-05F",
+                "options":
+                {
+                    "close_on_shutdown": True,
+                    "wait_on_shutdown": False,
+                    "io_mode": 1, # 1: "single_out", 2: "dual_out"
+                    "output_cw": "U0:ID2:FC5:R0:RO1",
+                    "output_ccw": "off",
+                    "limit_cw": "U0:ID6:FC2:R0:DI2",
+                    "limit_ccw": "U0:ID6:FC2:R0:DI1"
+                }
+            }
+        ]
+    }
+    __registers.append(register)
+
+    # ECD / Floor entrance valves mode.
+    register = Register("ecd.floor_entrance.valves.mode")
+    register.scope = Scope.System
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Floor entrance valves mode."
+    register.range = __range["PERCENTAGE_-100_100"]
+    register.value = 0.0
+    __registers.append(register)
+
+    # ECD / Floor pool valves settings.
+    register = Register("ecd.pool_floor.valves.settings")
+    register.scope = Scope.System
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Floor pool valves settings."
+    register.range = __range["NONE"]
+    register.value = \
+    {
+        "hot":
+        [
+            # {
+            #     "vendor": "Flowx",
+            #     "model": "FLX-05F",
+            #     "options":
+            #     {
+            #         "close_on_shutdown": True,
+            #         "wait_on_shutdown": False,
+            #         "io_mode": 1, # 1: "single_out", 2: "dual_out"
+            #         "output_cw": "U0:ID2:FC5:R0:RO2",
+            #         "output_ccw": "off",
+            #         "limit_cw": "U0:ID6:FC2:R0:DI0",
+            #         "limit_ccw": "U0:ID6:FC2:R0:DI1"
+            #     }
+            # }
+        ],
+        "cold":
+        [
+            {
+                "vendor": "Flowx",
+                "model": "FLX-05F",
+                "options":
+                {
+                    "close_on_shutdown": True,
+                    "wait_on_shutdown": False,
+                    "io_mode": 1, # 1: "single_out", 2: "dual_out"
+                    "output_cw": "U0:ID2:FC5:R0:RO2",
+                    "output_ccw": "off",
+                    "limit_cw": "U0:ID2:FC2:R0:DI2",
+                    "limit_ccw": "U0:ID2:FC2:R0:DI1"
+                }
+            }
+        ]
+    }
+    __registers.append(register)
+
+    # ECD / Floor pool valves mode.
+    register = Register("ecd.pool_floor.valves.mode")
+    register.scope = Scope.System
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Floor pool valves mode."
+    register.range = __range["PERCENTAGE_-100_100"]
+    register.value = 0.0
+    __registers.append(register)
+
+    # ECD / Ground drilling valves settings.
+    register = Register("ecd.ground_drilling.valves.settings")
+    register.scope = Scope.System
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Ground drilling valves settings."
+    register.range = __range["NONE"]
+    register.value = \
+    {
+        "hot":
+        [
+            # {
+            #     "vendor": "Flowx",
+            #     "model": "FLX-05F",
+            #     "options":
+            #     {
+            #         "close_on_shutdown": True,
+            #         "wait_on_shutdown": False,
+            #         "io_mode": 1, # 1: "single_out", 2: "dual_out"
+            #         "output_cw": "U0:ID2:FC5:R0:RO2",
+            #         "output_ccw": "off",
+            #         "limit_cw": "U0:ID6:FC2:R0:DI0",
+            #         "limit_ccw": "U0:ID6:FC2:R0:DI1"
+            #     }
+            # }
+        ],
+        "cold":
+        [
+            {
+                "vendor": "Flowx",
+                "model": "FLX-05F",
+                "options":
+                {
+                    "close_on_shutdown": True,
+                    "wait_on_shutdown": False,
+                    "io_mode": 1, # 1: "single_out", 2: "dual_out"
+                    "output_cw": "U0:ID2:FC5:R0:RO3",
+                    "output_ccw": "off",
+                    "limit_cw": "U0:ID2:FC2:R0:DI2",
+                    "limit_ccw": "U0:ID2:FC2:R0:DI1"
+                }
+            }
+        ]
+    }
+    __registers.append(register)
+
+    # ECD / Ground drilling valves mode.
+    register = Register("ecd.ground_drilling.valves.mode")
+    register.scope = Scope.System
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Ground drilling valves mode."
+    register.range = __range["PERCENTAGE_-100_100"]
+    register.value = 0.0
+    __registers.append(register)
+
+    # ECD / Air tower green valves settings.
+    register = Register("ecd.air_tower_green.valves.settings")
+    register.scope = Scope.System
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Ground drilling valves settings."
+    register.range = __range["NONE"]
+    register.value = \
+    {
+        "hot":
+        [
+            # {
+            #     "vendor": "Flowx",
+            #     "model": "FLX-05F",
+            #     "options":
+            #     {
+            #         "close_on_shutdown": True,
+            #         "wait_on_shutdown": False,
+            #         "io_mode": 1, # 1: "single_out", 2: "dual_out"
+            #         "output_cw": "U0:ID2:FC5:R0:RO2",
+            #         "output_ccw": "off",
+            #         "limit_cw": "U0:ID6:FC2:R0:DI0",
+            #         "limit_ccw": "U0:ID6:FC2:R0:DI1"
+            #     }
+            # }
+        ],
+        "cold":
+        [
+            {
+                "vendor": "Flowx",
+                "model": "FLX-05F",
+                "options":
+                {
+                    "close_on_shutdown": True,
+                    "wait_on_shutdown": False,
+                    "io_mode": 1, # 1: "single_out", 2: "dual_out"
+                    "output_cw": "U0:ID2:FC5:R0:RO4",
+                    "output_ccw": "off",
+                    "limit_cw": "U0:ID2:FC2:R0:DI2",
+                    "limit_ccw": "U0:ID2:FC2:R0:DI1"
+                }
+            }
+        ]
+    }
+    __registers.append(register)
+
+    # ECD / Air tower green valves mode.
+    register = Register("ecd.air_tower_green.valves.mode")
+    register.scope = Scope.System
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Ground drilling valves mode."
+    register.range = __range["PERCENTAGE_-100_100"]
+    register.value = 0.0
+    __registers.append(register)
+
+    # ECD / Air tower green valves settings.
+    register = Register("ecd.air_tower_purple.valves.settings")
+    register.scope = Scope.System
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Ground drilling valves settings."
+    register.range = __range["NONE"]
+    register.value = \
+    {
+        "hot":
+        [
+            # {
+            #     "vendor": "Flowx",
+            #     "model": "FLX-05F",
+            #     "options":
+            #     {
+            #         "close_on_shutdown": True,
+            #         "wait_on_shutdown": False,
+            #         "io_mode": 1, # 1: "single_out", 2: "dual_out"
+            #         "output_cw": "U0:ID2:FC5:R0:RO2",
+            #         "output_ccw": "off",
+            #         "limit_cw": "U0:ID6:FC2:R0:DI0",
+            #         "limit_ccw": "U0:ID6:FC2:R0:DI1"
+            #     }
+            # }
+        ],
+        "cold":
+        [
+            {
+                "vendor": "Flowx",
+                "model": "FLX-05F",
+                "options":
+                {
+                    "close_on_shutdown": True,
+                    "wait_on_shutdown": False,
+                    "io_mode": 1, # 1: "single_out", 2: "dual_out"
+                    "output_cw": "U0:ID2:FC5:R0:RO5",
+                    "output_ccw": "off",
+                    "limit_cw": "U0:ID2:FC2:R0:DI2",
+                    "limit_ccw": "U0:ID2:FC2:R0:DI1"
+                }
+            }
+        ]
+    }
+    __registers.append(register)
+
+    # ECD / Air tower green valves mode.
+    register = Register("ecd.air_tower_purple.valves.mode")
+    register.scope = Scope.System
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Ground drilling valves mode."
+    register.range = __range["PERCENTAGE_-100_100"]
+    register.value = 0.0
+    __registers.append(register)
+
+    # ECD / Generators valves settings.
+    register = Register("ecd.generators.valves.settings")
+    register.scope = Scope.System
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Generators valves settings."
+    register.range = __range["NONE"]
+    register.value = \
+    {
+        "hot":
+        [
+            # {
+            #     "vendor": "Flowx",
+            #     "model": "FLX-05F",
+            #     "options":
+            #     {
+            #         "close_on_shutdown": True,
+            #         "wait_on_shutdown": False,
+            #         "io_mode": 1, # 1: "single_out", 2: "dual_out"
+            #         "output_cw": "U0:ID2:FC5:R0:RO2",
+            #         "output_ccw": "off",
+            #         "limit_cw": "U0:ID6:FC2:R0:DI0",
+            #         "limit_ccw": "U0:ID6:FC2:R0:DI1"
+            #     }
+            # }
+        ],
+        "cold":
+        [
+            {
+                "vendor": "Flowx",
+                "model": "FLX-05F",
+                "options":
+                {
+                    "close_on_shutdown": True,
+                    "wait_on_shutdown": False,
+                    "io_mode": 1, # 1: "single_out", 2: "dual_out"
+                    "output_cw": "U0:ID2:FC5:R0:RO11",
+                    "output_ccw": "off",
+                    "limit_cw": "U0:ID2:FC2:R0:DI2",
+                    "limit_ccw": "U0:ID2:FC2:R0:DI1"
+                }
+            }
+        ]
+    }
+    __registers.append(register)
+
+    # ECD / Generators valves mode.
+    register = Register("ecd.generators.valves.mode")
+    register.scope = Scope.System
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Ground drilling valves mode."
+    register.range = __range["PERCENTAGE_-100_100"]
+    register.value = 0.0
+    __registers.append(register)
+
+
     register = Register("ecd.enabled")
     register.scope = Scope.System
     register.plugin_name = "Energy Center Distribution"
@@ -2303,6 +2846,8 @@ def __add_registers(args):
     register.range = __range["BOOL"]
     register.value = False
     __registers.append(register)
+
+
 
 #endregion
 
