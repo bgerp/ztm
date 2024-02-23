@@ -36,6 +36,7 @@ from utils.logger import get_logger
 from plugins.base_plugin import BasePlugin
 
 from devices.factories.valve.valve_factory import ValveFactory
+from devices.factories.pumps.pump_factory import PumpFactory
 from devices.utils.valve_control_group.valve_control_group import ValveControlGroup
 from devices.utils.valve_control_group.valve_control_group_mode import ValveControlGroupMode
 
@@ -103,6 +104,7 @@ class EnergyCenterDistribution(BasePlugin):
         self.__logger = get_logger(__name__)
         """Logger
         """
+
         self.__logger.info("Starting up the: {}".format(self.name))
 
         self.__state = ThermalMode.Stop
@@ -114,7 +116,7 @@ class EnergyCenterDistribution(BasePlugin):
         """
 
         self.__vcg_conv_kitchen = None
-        """VCG Convectors kitchen.
+        """VCG convectors kitchen.
         """
 
         self.__vcg_ahu_conf_hall = None
@@ -122,11 +124,11 @@ class EnergyCenterDistribution(BasePlugin):
         """
 
         self.__vcg_floor_west = None
-        """VCG Floor west.
+        """VCG floor west.
         """
 
         self.__vcg_conv_west = None
-        """VCG Convectors west.
+        """VCG convectors west.
         """
 
         self.__vcg_ahu_roof_floor = None
@@ -138,11 +140,11 @@ class EnergyCenterDistribution(BasePlugin):
         """
 
         self.__vcg_floor_east = None
-        """VCG Floor east.
+        """VCG floor east.
         """
 
         self.__vcg_conv_east = None
-        """VCG Convectors east.
+        """VCG convectors east.
         """
 
         self.__vcg_pool_air_cooling = None
@@ -150,7 +152,7 @@ class EnergyCenterDistribution(BasePlugin):
         """      
 
         self.__vcg_pool_heating = None
-        """VCG Pool heating.
+        """VCG pool heating.
         """
 
         self.__vcg_floor_entrance = None
@@ -177,11 +179,91 @@ class EnergyCenterDistribution(BasePlugin):
         """Short valve between green and purple pipes.
         """
 
+        self.__pump_pool_air_heating = None
+        """Pump air heating.
+        """
+
+        self.__pump_conv_kitchen = None
+        """Pump convectors kitchen.
+        """
+
+        self.__pump_ahu_conf_hall = None
+        """Pump AHU conference hall.
+        """
+
+        self.__pump_floor_west = None
+        """Pump floor west.
+        """
+
+        self.__pump_conv_west = None
+        """Pump convectors west.
+        """
+
+        self.__pump_ahu_roof_floor = None
+        """Pump AHU roof floor.
+        """
+
+        self.__pump_ahu_fitness = None
+        """Pump AHU fitness.
+        """
+
+        self.__pump_floor_east = None
+        """Pump floor east.
+        """
+
+        self.__pump_conv_east = None
+        """Pump convectors east.
+        """
+
+        self.__pump_pool_air_cooling = None
+        """Pump air cooling.
+        """
+
+        self.__pump_pool_heating = None
+        """Pump pool heating.
+        """
+
 #endregion
 
-#region Private Methods (Registers)
+#region Private Methods
 
-    def __attach_valve(self, valve_name: str, settings_cb, mode_cb):
+    def __update_animations(self):
+        # ====================================================================================================
+        # =========================================== Test purpose ===========================================
+        # ====================================================================================================
+
+        if self.__state == ThermalMode.Stop:
+            self.__state = ThermalMode.Heating
+
+        elif self.__state == ThermalMode.Heating:
+            self.__state = ThermalMode.Cooling
+
+        elif self.__state == ThermalMode.Cooling:
+            self.__state = ThermalMode.Heating
+
+        elif self.__state == ThermalMode.Heating:
+            self.__state = ThermalMode.Stop
+
+        vcg_names = ["ecd.pool_air_heating.valves.mode", "ecd.conv_kitchen.valves.mode",
+                     "ecd.ahu_conf_hall.valves.mode", "ecd.ahu_conf_hall.valves.mode",
+                     "ecd.floor_west.valves.mode", "ecd.conv_west.valves.mode",
+                     "ecd.ahu_roof_floor.valves.mode", "ecd.ahu_fitness.valves.mode",
+                     "ecd.ahu_fitness.valves.mode", "ecd.floor_east.valves.mode",
+                     "ecd.conv_east.valves.mode", "ecd.pool_air_cooling.valves.mode",
+                     "ecd.pool_heating.valves.mode", "ecd.floor_entrance.valves.mode",
+                     "ecd.pool_floor.valves.mode", "ecd.ground_drilling.valves.mode",
+                     "ecd.air_tower_green.valves.mode", "ecd.air_tower_purple.valves.mode",
+                     "ecd.generators.valves.mode"]
+
+        for vcg_name in vcg_names:
+            mode = self._registers.by_name(vcg_name)
+            mode.value = self.__state.value
+
+        # ====================================================================================================
+        # =========================================== Test purpose ===========================================
+        # ====================================================================================================
+
+    def __attach_vcg(self, valve_name: str, settings_cb, mode_cb):
         """Attach valve callbacks.
 
         Args:
@@ -204,7 +286,34 @@ class EnergyCenterDistribution(BasePlugin):
             mode.update_handlers = mode_cb
             mode.update()
 
-    def __pool_air_heating_settings_cb(self, register: Register):
+    def __attach_pump(self, pump_name: str, settings_cb, mode_cb):
+        """Attach pump callbacks.
+
+        Args:
+            valve_name (str): Name of the pump.
+            settings_cb ([type]): Enable callback.
+            mode_cb ([type]): Mode callback.
+        """
+
+        # Valves settings.
+        reg_name = f"{self.key}.{pump_name}.pump.settings"
+        settings = self._registers.by_name(reg_name)
+        if settings is not None:
+            settings.update_handlers = settings_cb
+            settings.update()
+
+        # Valves mode.
+        reg_name = f"{self.key}.{pump_name}.pump.mode"
+        mode = self._registers.by_name(reg_name)
+        if mode is not None:
+            mode.update_handlers = mode_cb
+            mode.update()
+
+#endregion
+
+#region Private Methods (Registers)
+
+    def __vcg_pool_air_heating_settings_cb(self, register: Register):
 
         # Check data type.
         if not register.data_type == "json":
@@ -1071,83 +1180,131 @@ class EnergyCenterDistribution(BasePlugin):
         elif register.value == ThermalMode.Heating.value:
             self.__vcg_generators.target_position = 100
 
+
+    def __pmp_generators_settings_cb(self, register: Register):
+
+        # Check data type.
+        if not register.data_type == "json":
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        if register.value != {}:
+            if self.__pump_generators is not None:
+                self.__vcg_generators.shutdown()
+                del self.__vcg_generators
+
+            # AHU Warehouse (RED and BLUE)
+            self.__vcg_generators = PumpFactory(\
+                name="VCG pool floor",
+                key=f"{register.name}",
+                controller=self._controller,
+                registers=self._registers,
+                fw_valves=["cold"],
+                rev_valves=["hot"],
+                mode = ValveControlGroupMode.DualSide)
+
+            if self.__vcg_generators is not None:
+                self.__vcg_generators.init()
+
+        elif register.value == {}:
+            if self.__vcg_generators is not None:
+                self.__vcg_generators.shutdown()
+                del self.__vcg_generators
+
+    def __pmp_generators_mode_cb(self, register: Register):
+
+        # Check data type.
+        if not (register.data_type == "float" or register.data_type == "int"):
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        if not ThermalMode.is_valid(register.value):
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
+            return
+
+        if self.__vcg_generators is None:
+            return
+
+        if register.value == ThermalMode.Stop.value:
+            self.__vcg_generators.target_position = 0
+        elif register.value == ThermalMode.Cooling.value:
+            self.__vcg_generators.target_position = -100
+        elif register.value == ThermalMode.Heating.value:
+            self.__vcg_generators.target_position = 100
+
     def __init_registers(self):
 
         # -=== Left Side Valves ===-
 
-        self.__attach_valve("floor_entrance",
+        self.__attach_vcg("floor_entrance",
                                    self.__floor_entrance_settings_cb,
                                    self.__floor_entrance_mode_cb)
 
-        self.__attach_valve("pool_floor",
+        self.__attach_vcg("pool_floor",
                                    self.__pool_floor_settings_cb,
                                    self.__pool_floor_mode_cb)
 
-        self.__attach_valve("ground_drilling",
+        self.__attach_vcg("ground_drilling",
                                    self.__ground_drilling_settings_cb,
                                    self.__ground_drilling_mode_cb)
 
-        self.__attach_valve("air_tower_green",
+        self.__attach_vcg("air_tower_green",
                                    self.__air_tower_green_settings_cb,
                                    self.__air_tower_green_mode_cb)
 
-        self.__attach_valve("air_tower_purple",
+        self.__attach_vcg("air_tower_purple",
                                    self.__air_tower_purple_settings_cb,
                                    self.__air_tower_purple_mode_cb)
 
-        self.__attach_valve("generators",
+        self.__attach_vcg("generators",
                                    self.__generators_settings_cb,
                                    self.__generators_mode_cb)
 
         # -=== Right Side Valves ===-
 
-        self.__attach_valve("pool_air_heating",
-                                   self.__pool_air_heating_settings_cb,
+        self.__attach_vcg("pool_air_heating",
+                                   self.__vcg_pool_air_heating_settings_cb,
                                    self.__pool_air_heating_mode_cb)
 
-        self.__attach_valve("conv_kitchen",
+        self.__attach_vcg("conv_kitchen",
                                    self.__conv_kitchen_settings_cb,
                                    self.__conv_kitchen_mode_cb)
 
-        self.__attach_valve("ahu_conf_hall",
+        self.__attach_vcg("ahu_conf_hall",
                                    self.__ahu_conf_hall_settings_cb,
                                    self.__ahu_conf_hall_mode_cb)
 
-        self.__attach_valve("floor_west",
+        self.__attach_vcg("floor_west",
                                    self.__floor_west_settings_cb,
                                    self.__floor_west_mode_cb)
 
-        self.__attach_valve("conv_west",
+        self.__attach_vcg("conv_west",
                                    self.__conv_west_settings_cb,
                                    self.__conv_west_mode_cb)
 
-        self.__attach_valve("ahu_roof_floor",
+        self.__attach_vcg("ahu_roof_floor",
                                    self.__ahu_roof_floor_settings_cb,
                                    self.__ahu_roof_floor_mode_cb)
 
-        self.__attach_valve("ahu_fitness",
+        self.__attach_vcg("ahu_fitness",
                                    self.__ahu_fitness_settings_cb,
                                    self.__ahu_fitness_mode_cb)
 
-        self.__attach_valve("floor_east",
+        self.__attach_vcg("floor_east",
                                    self.__floor_east_settings_cb,
                                    self.__floor_east_mode_cb)
 
-        self.__attach_valve("conv_east",
+        self.__attach_vcg("conv_east",
                                    self.__conv_east_settings_cb,
                                    self.__conv_east_mode_cb)
 
-        self.__attach_valve("pool_air_cooling",
+        self.__attach_vcg("pool_air_cooling",
                                    self.__pool_air_cooling_settings_cb,
                                    self.__pool_air_cooling_mode_cb)
 
-        self.__attach_valve("pool_heating",
+        self.__attach_vcg("pool_heating",
                                    self.__pool_heating_settings_cb,
                                    self.__pool_heating_mode_cb)
-
-#endregion
-
-#region Properties
 
 #endregion
 
@@ -1163,120 +1320,109 @@ class EnergyCenterDistribution(BasePlugin):
         """Update the plugin.
         """
 
-        if self.__state == ThermalMode.Stop:
-            self.__state = ThermalMode.Heating
-
-        elif self.__state == ThermalMode.Heating:
-            self.__state = ThermalMode.Cooling
-
-        elif self.__state == ThermalMode.Cooling:
-            self.__state = ThermalMode.Heating
-
-        elif self.__state == ThermalMode.Heating:
-            self.__state = ThermalMode.Stop
-
-        mode = self._registers.by_name("ecd.pool_air_heating.valves.mode")
-        mode.value = self.__state.value
+        self.__update_animations()
 
         if self.__vcg_pool_air_heating is not None:
             self.__vcg_pool_air_heating.update()
-
-        mode = self._registers.by_name("ecd.conv_kitchen.valves.mode")
-        mode.value = self.__state.value
+            reg_state = self._registers.by_name("ecd.pool_air_heating.valves.state")
+            if reg_state is not None:
+                reg_state.value = self.__vcg_pool_air_heating.target_position
 
         if self.__vcg_conv_kitchen is not None:
             self.__vcg_conv_kitchen.update()
-
-        mode = self._registers.by_name("ecd.ahu_conf_hall.valves.mode")
-        mode.value = self.__state.value
+            reg_state = self._registers.by_name("ecd.conv_kitchen.valves.state")
+            if reg_state is not None:
+                reg_state.value = self.__vcg_conv_kitchen.target_position
 
         if self.__vcg_ahu_conf_hall is not None:
             self.__vcg_ahu_conf_hall.update()
-
-        mode = self._registers.by_name("ecd.floor_west.valves.mode")
-        mode.value = self.__state.value
+            reg_state = self._registers.by_name("ecd.ahu_conf_hall.valves.state")
+            if reg_state is not None:
+                reg_state.value = self.__vcg_ahu_conf_hall.target_position
 
         if self.__vcg_floor_west is not None:
             self.__vcg_floor_west.update()
-
-        mode = self._registers.by_name("ecd.conv_west.valves.mode")
-        mode.value = self.__state.value
+            reg_state = self._registers.by_name("ecd.floor_west.valves.state")
+            if reg_state is not None:
+                reg_state.value = self.__vcg_floor_west.target_position
 
         if self.__vcg_conv_west is not None:
             self.__vcg_conv_west.update()
-
-        mode = self._registers.by_name("ecd.ahu_roof_floor.valves.mode")
-        mode.value = self.__state.value
+            reg_state = self._registers.by_name("ecd.conv_west.valves.state")
+            if reg_state is not None:
+                reg_state.value = self.__vcg_conv_west.target_position
 
         if self.__vcg_ahu_roof_floor is not None:
             self.__vcg_ahu_roof_floor.update()
-
-        mode = self._registers.by_name("ecd.ahu_fitness.valves.mode")
-        mode.value = self.__state.value
+            reg_state = self._registers.by_name("ecd.ahu_roof_floor.valves.state")
+            if reg_state is not None:
+                reg_state.value = self.__vcg_ahu_roof_floor.target_position
 
         if self.__vcg_ahu_fitness is not None:
             self.__vcg_ahu_fitness.update()
-
-        mode = self._registers.by_name("ecd.floor_east.valves.mode")
-        mode.value = self.__state.value
+            reg_state = self._registers.by_name("ecd.ahu_fitness.valves.state")
+            if reg_state is not None:
+                reg_state.value = self.__vcg_ahu_fitness.target_position
 
         if self.__vcg_floor_east is not None:
             self.__vcg_floor_east.update()
-
-        mode = self._registers.by_name("ecd.conv_east.valves.mode")
-        mode.value = self.__state.value
+            reg_state = self._registers.by_name("ecd.floor_east.valves.state")
+            if reg_state is not None:
+                reg_state.value = self.__vcg_floor_east.target_position
 
         if self.__vcg_conv_east is not None:
             self.__vcg_conv_east.update()
-
-
-        mode = self._registers.by_name("ecd.pool_air_cooling.valves.mode")
-        mode.value = self.__state.value
+            reg_state = self._registers.by_name("ecd.conv_east.valves.state")
+            if reg_state is not None:
+                reg_state.value = self.__vcg_conv_east.target_position
 
         if self.__vcg_pool_air_cooling is not None:
             self.__vcg_pool_air_cooling.update()
-
-        mode = self._registers.by_name("ecd.pool_heating.valves.mode")
-        mode.value = self.__state.value
+            reg_state = self._registers.by_name("ecd.pool_air_cooling.valves.state")
+            if reg_state is not None:
+                reg_state.value = self.__vcg_pool_air_cooling.target_position
 
         if self.__vcg_pool_heating is not None:
             self.__vcg_pool_heating.update()
-
-        mode = self._registers.by_name("ecd.floor_entrance.valves.mode")
-        mode.value = self.__state.value
+            reg_state = self._registers.by_name("ecd.pool_heating.valves.state")
+            if reg_state is not None:
+                reg_state.value = self.__vcg_pool_heating.target_position
 
         if self.__vcg_floor_entrance is not None:
             self.__vcg_floor_entrance.update()
-
-        mode = self._registers.by_name("ecd.pool_floor.valves.mode")
-        mode.value = self.__state.value
+            reg_state = self._registers.by_name("ecd.floor_entrance.valves.state")
+            if reg_state is not None:
+                reg_state.value = self.__vcg_floor_entrance.target_position
 
         if self.__vcg_pool_floor is not None:
             self.__vcg_pool_floor.update()
-
-        mode = self._registers.by_name("ecd.ground_drilling.valves.mode")
-        mode.value = self.__state.value
+            reg_state = self._registers.by_name("ecd.pool_floor.valves.state")
+            if reg_state is not None:
+                reg_state.value = self.__vcg_pool_floor.target_position
 
         if self.__vcg_ground_drilling is not None:
             self.__vcg_ground_drilling.update()
-
-        mode = self._registers.by_name("ecd.air_tower_green.valves.mode")
-        mode.value = self.__state.value
+            reg_state = self._registers.by_name("ecd.ground_drilling.valves.state")
+            if reg_state is not None:
+                reg_state.value = self.__vcg_ground_drilling.target_position
 
         if self.__vcg_air_tower_green is not None:
             self.__vcg_air_tower_green.update()
-
-        mode = self._registers.by_name("ecd.air_tower_purple.valves.mode")
-        mode.value = self.__state.value
+            reg_state = self._registers.by_name("ecd.air_tower_green.valves.state")
+            if reg_state is not None:
+                reg_state.value = self.__vcg_air_tower_green.target_position
 
         if self.__vcg_air_tower_purple is not None:
             self.__vcg_air_tower_purple.update()
-
-        mode = self._registers.by_name("ecd.generators.valves.mode")
-        mode.value = self.__state.value
+            reg_state = self._registers.by_name("ecd.air_tower_purple.valves.state")
+            if reg_state is not None:
+                reg_state.value = self.__vcg_air_tower_purple.target_position
 
         if self.__vcg_generators is not None:
             self.__vcg_generators.update()
+            reg_state = self._registers.by_name("ecd.generators.valves.state")
+            if reg_state is not None:
+                reg_state.value = self.__vcg_generators.target_position
 
     def _shutdown(self):
         """Shutting down the plugin.
