@@ -109,7 +109,39 @@ class EnergyCenterDistribution(BasePlugin):
 
         self.__state = ThermalMode.Stop
         """JUST for test.
-        """        
+        """
+
+        # ====================================================================================================
+        # ======================================= VCG Left door panel ========================================
+        # ====================================================================================================
+
+        self.__vcg_floor_entrance = None
+        """VCG floor entrance.
+        """
+
+        self.__vcg_pool_floor = None
+        """VCG pool floor.
+        """
+
+        self.__vcg_ground_drilling = None
+        """Valve ground drilling.
+        """
+
+        self.__vcg_air_tower_green = None
+        """VCG Air tower green.
+        """
+
+        self.__vcg_air_tower_purple = None
+        """Short valve between green and purple pipes.
+        """
+
+        self.__vcg_generators = None
+        """Short valve between green and purple pipes.
+        """
+
+        # ====================================================================================================
+        # ======================================= VCG Right door panel =======================================
+        # ====================================================================================================
 
         self.__vcg_pool_air_heating = None
         """VCG air heating.
@@ -149,35 +181,15 @@ class EnergyCenterDistribution(BasePlugin):
 
         self.__vcg_pool_air_cooling = None
         """VCG air cooling.
-        """      
+        """
 
         self.__vcg_pool_heating = None
         """VCG pool heating.
         """
 
-        self.__vcg_floor_entrance = None
-        """VCG floor entrance.
-        """
-
-        self.__vcg_pool_floor = None
-        """VCG pool floor.
-        """
-
-        self.__vcg_ground_drilling = None
-        """Valve ground drilling.
-        """
-
-        self.__vcg_air_tower_green = None
-        """VCG Air tower green.
-        """
-
-        self.__vcg_air_tower_purple = None
-        """Short valve between green and purple pipes.
-        """
-
-        self.__vcg_generators = None
-        """Short valve between green and purple pipes.
-        """
+        # ====================================================================================================
+        # ============================================== Pumps ===============================================
+        # ====================================================================================================
 
         self.__pump_pool_air_heating = None
         """Pump air heating.
@@ -317,9 +329,8 @@ class EnergyCenterDistribution(BasePlugin):
 
 #endregion
 
-#region Private Methods (Registers)
+#region Private Methods (Registers for VCG Left door panel)
 
-    # Left door panel.
     def __vcg_floor_entrance_mode_cb(self, register: Register):
 
         # Check data type.
@@ -596,7 +607,9 @@ class EnergyCenterDistribution(BasePlugin):
         elif register.value == ThermalMode.Heating.value:
             self.__vcg_generators.target_position = 100
 
-    # Right door panel.
+#endregion
+
+#region Private Methods (Registers for VCG Right door panel)
 
     def __vcg_pool_air_heating_settings_cb(self, register: Register):
 
@@ -1189,7 +1202,9 @@ class EnergyCenterDistribution(BasePlugin):
                 self.__vcg_floor_entrance.shutdown()
                 del self.__vcg_floor_entrance
 
-    # Pumps right door panel.
+#endregion
+
+#region Private Methods (Registers for Pumps)
 
     def __pump_pool_air_heating_settings_cb(self, register: Register):
 
@@ -1241,8 +1256,12 @@ class EnergyCenterDistribution(BasePlugin):
 
         if self.__pump_pool_air_heating is None:
             return
-        
-        self.__pump_pool_air_heating.start_stop(register.value)
+
+        self.__pump_pool_air_heating.e_stop(register.value)
+
+#endregion
+
+#region Private Methods (Registers)
 
     def __init_registers(self):
 
@@ -1339,6 +1358,50 @@ class EnergyCenterDistribution(BasePlugin):
 
         self.__update_animations()
 
+        # ====================================================================================================
+        # ======================================= VCG Left door panel ========================================
+        # ====================================================================================================
+
+        if self.__vcg_floor_entrance is not None:
+            self.__vcg_floor_entrance.update()
+            reg_state = self._registers.by_name("ecd.floor_entrance.valves.state")
+            if reg_state is not None:
+                reg_state.value = self.__vcg_floor_entrance.target_position
+
+        if self.__vcg_pool_floor is not None:
+            self.__vcg_pool_floor.update()
+            reg_state = self._registers.by_name("ecd.pool_floor.valves.state")
+            if reg_state is not None:
+                reg_state.value = self.__vcg_pool_floor.target_position
+
+        if self.__vcg_ground_drilling is not None:
+            self.__vcg_ground_drilling.update()
+            reg_state = self._registers.by_name("ecd.ground_drilling.valves.state")
+            if reg_state is not None:
+                reg_state.value = self.__vcg_ground_drilling.target_position
+
+        if self.__vcg_air_tower_green is not None:
+            self.__vcg_air_tower_green.update()
+            reg_state = self._registers.by_name("ecd.air_tower_green.valves.state")
+            if reg_state is not None:
+                reg_state.value = self.__vcg_air_tower_green.target_position
+
+        if self.__vcg_air_tower_purple is not None:
+            self.__vcg_air_tower_purple.update()
+            reg_state = self._registers.by_name("ecd.air_tower_purple.valves.state")
+            if reg_state is not None:
+                reg_state.value = self.__vcg_air_tower_purple.target_position
+
+        if self.__vcg_generators is not None:
+            self.__vcg_generators.update()
+            reg_state = self._registers.by_name("ecd.generators.valves.state")
+            if reg_state is not None:
+                reg_state.value = self.__vcg_generators.target_position
+
+        # ====================================================================================================
+        # ======================================= VCG Right door panel =======================================
+        # ====================================================================================================
+
         if self.__vcg_pool_air_heating is not None:
             self.__vcg_pool_air_heating.update()
             reg_state = self._registers.by_name("ecd.pool_air_heating.valves.state")
@@ -1405,47 +1468,108 @@ class EnergyCenterDistribution(BasePlugin):
             if reg_state is not None:
                 reg_state.value = self.__vcg_pool_heating.target_position
 
-        if self.__vcg_floor_entrance is not None:
-            self.__vcg_floor_entrance.update()
-            reg_state = self._registers.by_name("ecd.floor_entrance.valves.state")
+        # ====================================================================================================
+        # ============================================== Pumps ===============================================
+        # ====================================================================================================
+        if self.__pump_pool_air_heating is not None:
+            self.__pump_pool_air_heating.update()
+            reg_state = self._registers.by_name("ecd.pool_air_heating.pump.state")
             if reg_state is not None:
-                reg_state.value = self.__vcg_floor_entrance.target_position
+                e_status = self.__pump_pool_air_heating.e_status()
+                reg_state.value = {"e_status" : e_status}
 
-        if self.__vcg_pool_floor is not None:
-            self.__vcg_pool_floor.update()
-            reg_state = self._registers.by_name("ecd.pool_floor.valves.state")
+        if self.__pump_conv_kitchen is not None:
+            self.__pump_conv_kitchen.update()
+            reg_state = self._registers.by_name("ecd.conv_kitchen.pump.state")
             if reg_state is not None:
-                reg_state.value = self.__vcg_pool_floor.target_position
+                reg_state.value = self.__pump_conv_kitchen.get_mode()
 
-        if self.__vcg_ground_drilling is not None:
-            self.__vcg_ground_drilling.update()
-            reg_state = self._registers.by_name("ecd.ground_drilling.valves.state")
+        if self.__pump_ahu_conf_hall is not None:
+            self.__pump_ahu_conf_hall.update()
+            reg_state = self._registers.by_name("ecd.ahu_conf_hall.pump.state")
             if reg_state is not None:
-                reg_state.value = self.__vcg_ground_drilling.target_position
+                reg_state.value = self.__pump_ahu_conf_hall.get_mode()
 
-        if self.__vcg_air_tower_green is not None:
-            self.__vcg_air_tower_green.update()
-            reg_state = self._registers.by_name("ecd.air_tower_green.valves.state")
+        if self.__pump_floor_west is not None:
+            self.__pump_floor_west.update()
+            reg_state = self._registers.by_name("ecd.floor_west.pump.state")
             if reg_state is not None:
-                reg_state.value = self.__vcg_air_tower_green.target_position
+                reg_state.value = self.__pump_floor_west.get_mode()
 
-        if self.__vcg_air_tower_purple is not None:
-            self.__vcg_air_tower_purple.update()
-            reg_state = self._registers.by_name("ecd.air_tower_purple.valves.state")
+        if self.__pump_conv_west is not None:
+            self.__pump_conv_west.update()
+            reg_state = self._registers.by_name("ecd.conv_west.pump.state")
             if reg_state is not None:
-                reg_state.value = self.__vcg_air_tower_purple.target_position
+                reg_state.value = self.__pump_conv_west.get_mode()
 
-        if self.__vcg_generators is not None:
-            self.__vcg_generators.update()
-            reg_state = self._registers.by_name("ecd.generators.valves.state")
+        if self.__pump_ahu_roof_floor is not None:
+            self.__pump_ahu_roof_floor.update()
+            reg_state = self._registers.by_name("ecd.ahu_roof_floor.pump.state")
             if reg_state is not None:
-                reg_state.value = self.__vcg_generators.target_position
+                reg_state.value = self.__pump_ahu_roof_floor.get_mode()
+
+        if self.__pump_ahu_fitness is not None:
+            self.__pump_ahu_fitness.update()
+            reg_state = self._registers.by_name("ecd.ahu_fitness.pump.state")
+            if reg_state is not None:
+                reg_state.value = self.__pump_ahu_fitness.get_mode()
+
+        if self.__pump_floor_east is not None:
+            self.__pump_floor_east.update()
+            reg_state = self._registers.by_name("ecd.floor_east.pump.state")
+            if reg_state is not None:
+                reg_state.value = self.__pump_floor_east.get_mode()
+
+        if self.__pump_conv_east is not None:
+            self.__pump_conv_east.update()
+            reg_state = self._registers.by_name("ecd.conv_east.pump.state")
+            if reg_state is not None:
+                reg_state.value = self.__pump_conv_east.get_mode()
+
+        if self.__pump_pool_air_cooling is not None:
+            self.__pump_pool_air_cooling.update()
+            reg_state = self._registers.by_name("ecd.pool_air_cooling.pump.state")
+            if reg_state is not None:
+                reg_state.value = self.__pump_pool_air_cooling.get_mode()
+
+        if self.__pump_pool_heating is not None:
+            self.__pump_pool_heating.update()
+            reg_state = self._registers.by_name("ecd.pool_heating.pump.state")
+            if reg_state is not None:
+                e_status = self.__pump_pool_heating.e_status()
+                reg_state.value = {"e_status" : e_status}
 
     def _shutdown(self):
         """Shutting down the plugin.
         """
 
         self.__logger.info("Shutting down the {}".format(self.name))
+
+        # ====================================================================================================
+        # ======================================= VCG Left door panel ========================================
+        # ====================================================================================================
+
+        if self.__vcg_floor_entrance is not None:
+            self.__vcg_floor_entrance.shutdown()
+
+        if self.__vcg_pool_floor is not None:
+            self.__vcg_pool_floor.shutdown()
+
+        if self.__vcg_ground_drilling is not None:
+            self.__vcg_ground_drilling.shutdown()
+
+        if self.__vcg_air_tower_green is not None:
+            self.__vcg_air_tower_green.shutdown()
+
+        if self.__vcg_air_tower_purple is not None:
+            self.__vcg_air_tower_purple.shutdown()
+
+        if self.__vcg_generators is not None:
+            self.__vcg_generators.shutdown()
+
+        # ====================================================================================================
+        # ======================================= VCG Right door panel =======================================
+        # ====================================================================================================
 
         if self.__vcg_pool_air_heating is not None:
             self.__vcg_pool_air_heating.shutdown()
@@ -1480,22 +1604,44 @@ class EnergyCenterDistribution(BasePlugin):
         if self.__vcg_pool_heating is not None:
             self.__vcg_pool_heating.shutdown()
 
-        if self.__vcg_floor_entrance is not None:
-            self.__vcg_floor_entrance.update()
+        # ====================================================================================================
+        # ============================================== Pumps ===============================================
+        # ====================================================================================================
 
-        if self.__vcg_pool_floor is not None:
-            self.__vcg_pool_floor.shutdown()
+        if self.__pump_pool_air_heating is not None:
+            self.__pump_pool_air_heating.shutdown()
 
-        if self.__vcg_ground_drilling is not None:
-            self.__vcg_ground_drilling.shutdown()
+        if self.__pump_conv_kitchen is not None:
+            self.__pump_conv_kitchen.shutdown()
 
-        if self.__vcg_air_tower_green is not None:
-            self.__vcg_air_tower_green.shutdown()
+        if self.__pump_ahu_conf_hall is not None:
+            self.__pump_ahu_conf_hall.shutdown()
 
-        if self.__vcg_air_tower_purple is not None:
-            self.__vcg_air_tower_purple.shutdown()
+        if self.__pump_floor_west is not None:
+            self.__pump_floor_west.shutdown()
 
-        if self.__vcg_generators is not None:
-            self.__vcg_generators.shutdown()
+        if self.__pump_conv_west is not None:
+            self.__pump_conv_west.shutdown()
+
+        if self.__pump_ahu_roof_floor is not None:
+            self.__pump_ahu_roof_floor.shutdown()
+
+        if self.__pump_ahu_fitness is not None:
+            self.__pump_ahu_fitness.shutdown()
+
+        if self.__pump_floor_east is not None:
+            self.__pump_floor_east.shutdown()
+
+        if self.__pump_conv_east is not None:
+            self.__pump_conv_east.shutdown()
+
+        if self.__pump_pool_air_cooling is not None:
+            self.__pump_pool_air_cooling.shutdown()
+
+        if self.__pump_pool_heating is not None:
+            self.__pump_pool_heating.shutdown()
+
+        if self.__pump_pool_air_heating is not None:
+            self.__pump_pool_air_heating.shutdown()
 
 #endregion
