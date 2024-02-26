@@ -235,6 +235,10 @@ class EnergyCenterDistribution(BasePlugin):
         """Pump pool heating.
         """
 
+        self.__pump_servers_cooling = None
+        """Pump servers cooling.
+        """
+
 #endregion
 
 #region Private Methods
@@ -1701,6 +1705,51 @@ class EnergyCenterDistribution(BasePlugin):
 
         self.__pump_pool_heating.e_stop(register.value)
 
+    def __pump_servers_cooling_settings_cb(self, register: Register):
+
+        # Check data type.
+        if not register.data_type == "json":
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        if register.value != {}:
+            if self.__pump_servers_cooling is not None:
+                self.__pump_servers_cooling.shutdown()
+                del self.__pump_servers_cooling
+
+            self.__pump_servers_cooling = PumpFactory.create(\
+                name=register.description,
+                key=f"{register.name}",
+                controller=self._controller,
+                registers=self._registers,
+                vendor=register.value['vendor'],
+                model=register.value['model'],
+                options=register.value['options'])
+
+            if self.__pump_servers_cooling is not None:
+                self.__pump_servers_cooling.init()
+
+        elif register.value == {}:
+            if self.__pump_servers_cooling is not None:
+                self.__pump_servers_cooling.shutdown()
+                del self.__pump_servers_cooling
+
+    def __pump_servers_cooling_mode_cb(self, register: Register):
+
+        # Check data type.
+        if not (register.data_type == "float" or register.data_type == "int"):
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        if not ThermalMode.is_valid(register.value):
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
+            return
+
+        if self.__pump_servers_cooling is None:
+            return
+
+        self.__pump_servers_cooling.e_stop(register.value)
+
 #endregion
 
 #region Private Methods (Registers)
@@ -1830,6 +1879,10 @@ class EnergyCenterDistribution(BasePlugin):
         self.__attach_pump("pool_heating",
                                     self.__pump_pool_heating_settings_cb,
                                     self.__pump_pool_heating_mode_cb)
+
+        self.__attach_pump("servers_cooling",
+                                    self.__pump_servers_cooling_settings_cb,
+                                    self.__pump_servers_cooling_mode_cb)
 
 #endregion
 
@@ -2037,6 +2090,13 @@ class EnergyCenterDistribution(BasePlugin):
                 e_status = self.__pump_pool_heating.e_status()
                 reg_state.value = {"e_status" : e_status}
 
+        if self.__pump_servers_cooling is not None:
+            self.__pump_servers_cooling.update()
+            reg_state = self._registers.by_name("ecd.servers_cooling.pump.state")
+            if reg_state is not None:
+                e_status = self.__pump_servers_cooling.e_status()
+                reg_state.value = {"e_status" : e_status}
+
     def _shutdown(self):
         """Shutting down the plugin.
         """
@@ -2141,5 +2201,8 @@ class EnergyCenterDistribution(BasePlugin):
 
         if self.__pump_pool_air_heating is not None:
             self.__pump_pool_air_heating.shutdown()
+
+        if self.__pump_servers_cooling is not None:
+            self.__pump_servers_cooling.shutdown()
 
 #endregion

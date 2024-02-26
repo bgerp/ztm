@@ -3431,6 +3431,46 @@ def __add_registers(args):
     register.value = {}
     __registers.append(register)
 
+    # ECD / Servers cooling pump settings.
+    register = Register("ecd.servers_cooling.pump.settings")
+    register.scope = Scope.System
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Servers cooling settings."
+    register.range = __range["NONE"]
+    register.value = \
+    {
+        "vendor": "Grundfos",
+        "model": "MAGNA1_80_100_F_360_1x230V_PN6",
+        "options":
+        {
+            "uart": 1,
+            "mb_id": 1,
+            "e_stop": "U0:ID2:FC5:R0:RO8",
+            "e_status": "U0:ID2:FC2:R0:DI0",
+            "stop_on_shutdown": True,
+            "wait_on_shutdown": False
+        }
+    }
+    __registers.append(register)
+
+    # ECD / Servers cooling pump mode.
+    register = Register("ecd.servers_cooling.pump.mode")
+    register.scope = Scope.System
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Servers cooling pump mode."
+    register.range = __range["PERCENTAGE_I"]
+    register.value = 0
+    __registers.append(register)
+
+    # ECD / Servers cooling pump state.
+    register = Register("ecd.servers_cooling.pump.state")
+    register.scope = Scope.Device
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Servers cooling pump state."
+    register.range = __range["NONE"]
+    register.value = {}
+    __registers.append(register)
+
     # Enable flag
     register = Register("ecd.enabled")
     register.scope = Scope.System
