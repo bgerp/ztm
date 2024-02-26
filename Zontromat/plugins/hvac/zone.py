@@ -1183,7 +1183,7 @@ class Zone(BasePlugin):
             self.__vlv_cl_1(100)
             self.__vlv_cl_2(100)
             self.__vlv_cl_3(100)
-            self.__conv_set_state(0)
+            self.__conv_set_state(1)
 
         elif state == 1:
             self.__vlv_fl_1_tmr.duty_cycle = 1/3
@@ -1192,7 +1192,7 @@ class Zone(BasePlugin):
             self.__vlv_cl_1(100)
             self.__vlv_cl_2(100)
             self.__vlv_cl_3(100)
-            self.__conv_set_state(0)
+            self.__conv_set_state(1)
 
         elif state == 2:
             self.__vlv_fl_1_tmr.duty_cycle = 1/2
