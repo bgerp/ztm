@@ -1302,8 +1302,8 @@ class Zone(BasePlugin):
             dt = round(dt)
 
             # Exit if there is no changes.
-            if self.__dt_temp == dt:
-                return
+            # if self.__dt_temp == dt:
+            #     return
 
             # Store last changes.
             self.__dt_temp = dt
