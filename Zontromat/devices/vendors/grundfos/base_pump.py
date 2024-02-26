@@ -73,10 +73,6 @@ class BasePump(ModbusDevice):
 
 #region Attributes
 
-    __logger = None
-    """Logger
-    """
-
 #endregion
 
 #region Constructor / Destructor
@@ -87,7 +83,15 @@ class BasePump(ModbusDevice):
 
         super().__init__(config)
 
+        self.__logger = None
+        """Logger
+        """
+
         self._vendor = "grundfos"
+
+        self._start_stop = "off"
+        if "start_stop" in config:
+            self._start_stop = config["start_stop"]
 
         self.__set_registers()
 
@@ -226,6 +230,14 @@ class BasePump(ModbusDevice):
                 value = self.get_parameter_value(name, registers)
 
         return value
+
+    def start_stop(self, value):
+
+        if (value != 1) and (value != 0):
+            return
+
+        if self._controller.is_valid_gpio(self._start_stop):
+            self._controller.digital_write(self._start_stop, value)
 
 
     def init(self):
