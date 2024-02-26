@@ -109,7 +109,9 @@ class PumpFactory:
             device = MAGNA1_80_100_F_360_1x230V_PN6(
                 name=name,
                 controller=controller,
-                unit=config["options"]['mb_id']
+                uart=config["options"]['uart'],
+                unit=config["options"]['mb_id'],
+                start_stop=config["options"]['start_stop']
             )
 
         # Grundfos / Magna3_40_150_F_Q / 0
