@@ -1201,7 +1201,7 @@ class Zone(BasePlugin):
             self.__vlv_cl_1(100)
             self.__vlv_cl_2(100)
             self.__vlv_cl_3(100)
-            self.__conv_set_state(1)
+            self.__conv_set_state(0)
 
         elif state == 3:
             self.__vlv_fl_1_tmr.duty_cycle = 1
@@ -1210,7 +1210,7 @@ class Zone(BasePlugin):
             self.__vlv_cl_1(100)
             self.__vlv_cl_2(100)
             self.__vlv_cl_3(100)
-            self.__conv_set_state(1)
+            self.__conv_set_state(0)
 
         elif state == 4:
             self.__vlv_fl_1_tmr.duty_cycle = 1
@@ -1219,7 +1219,7 @@ class Zone(BasePlugin):
             self.__vlv_cl_1(100)
             self.__vlv_cl_2(100)
             self.__vlv_cl_3(100)
-            self.__conv_set_state(1)
+            self.__conv_set_state(0)
 
         elif state == 5:
             self.__vlv_fl_1_tmr.duty_cycle = 1
@@ -1228,7 +1228,7 @@ class Zone(BasePlugin):
             self.__vlv_cl_1(100)
             self.__vlv_cl_2(100)
             self.__vlv_cl_3(100)
-            self.__conv_set_state(1)
+            self.__conv_set_state(0)
 
         elif state == 6:
             self.__vlv_fl_1_tmr.duty_cycle = 1
@@ -1237,7 +1237,7 @@ class Zone(BasePlugin):
             self.__vlv_cl_1(100)
             self.__vlv_cl_2(100)
             self.__vlv_cl_3(100)
-            self.__conv_set_state(1)
+            self.__conv_set_state(0)
 
 #endregion
 
