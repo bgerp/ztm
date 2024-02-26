@@ -1989,7 +1989,10 @@ def __add_registers(args):
         {
             "uart": 1,
             "mb_id": 1,
-            "start_stop": "U0:ID2:FC5:R0:RO8" 
+            "e_stop": "U0:ID2:FC5:R0:RO8",
+            "e_status": "U0:ID2:FC2:R0:DI0",
+            "stop_on_shutdown": True,
+            "wait_on_shutdown": False
         }
     }
     __registers.append(register)

@@ -111,7 +111,10 @@ class PumpFactory:
                 controller=controller,
                 uart=config["options"]['uart'],
                 unit=config["options"]['mb_id'],
-                start_stop=config["options"]['start_stop']
+                e_stop=config["options"]['e_stop'],
+                e_status=config["options"]['e_status'],
+                stop_on_shutdown=config["options"]['stop_on_shutdown'],
+                wait_on_shutdown=config["options"]['wait_on_shutdown']
             )
 
         # Grundfos / Magna3_40_150_F_Q / 0

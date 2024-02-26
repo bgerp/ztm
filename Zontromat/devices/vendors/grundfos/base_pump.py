@@ -89,9 +89,17 @@ class BasePump(ModbusDevice):
 
         self._vendor = "grundfos"
 
-        self._start_stop = "off"
-        if "start_stop" in config:
-            self._start_stop = config["start_stop"]
+        self._e_stop = "off"
+        if "e_stop" in config:
+            self._e_stop = config["e_stop"]
+
+        self._stop_on_shutdown = False
+        if "stop_on_shutdown" in config:
+            self._stop_on_shutdown = config["stop_on_shutdown"]
+
+        self._e_status = "off"
+        if "e_status" in config:
+            self._e_status = config["e_status"]
 
         self.__set_registers()
 
@@ -231,14 +239,22 @@ class BasePump(ModbusDevice):
 
         return value
 
-    def start_stop(self, value):
+    def e_stop(self, value):
 
         if (value != 1) and (value != 0):
             return
 
-        if self._controller.is_valid_gpio(self._start_stop):
-            self._controller.digital_write(self._start_stop, value)
+        if self._controller.is_valid_gpio(self._e_stop):
+            self._controller.digital_write(self._e_stop, value)
 
+    def e_status(self):
+
+        status = 0
+
+        if self._controller.is_valid_gpio(self._e_status):
+            status = self._controller.digital_read(self._e_status)
+
+        return status
 
     def init(self):
         """Initialize the pump.
@@ -255,5 +271,11 @@ class BasePump(ModbusDevice):
     def shutdown(self):
         """Shutdown the pump.
         """
+        self.__logger.info("Shuting down the: {}".format(self.name))
+
+        if self._stop_on_shutdown:
+            self.e_stop(0)
+
+        self.__logger.info("Shuted down the: {}".format(self.name))
 
 #endregion
