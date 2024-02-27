@@ -1163,6 +1163,8 @@ class Zone(BasePlugin):
             # Calculate the delta.
             dt = self.__adjust_temp - self.__temp_proc.value
 
+            print(f"dT: {dt:2.1f}")
+
             # Round to have clear rounded value for state machine currency.
             dt = self.__round_to_nearest_half(dt)
 
@@ -1224,7 +1226,6 @@ class Zone(BasePlugin):
         """
 
         self.__logger.info("Shutting down the {} {}".format(self.name, self.__identifier))
-        # self.__set_devices(0)
 
         if self.__cl_1_vlv_dev is not None:
             self.__cl_1_vlv_dev.shutdown()
