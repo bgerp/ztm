@@ -1053,6 +1053,9 @@ class Zone(BasePlugin):
         fl_state = self.__fl_control_table[self.__thermal_mode.value][state]
         fan_state = self.__fan_control_table[self.__thermal_mode.value][state]
 
+        print(f"conv_state: {conv_state:2.1f}; fl_state: {fl_state:2.1f}; fan_state: {fan_state:2.1f}; ")
+
+
         if state == 0:
             self.__set_fl_state(0)
             self.__set_cl_state(100)
@@ -1181,11 +1184,11 @@ class Zone(BasePlugin):
             # Store last changes.
             self.__dt_temp = dt
 
-            print(f"dT: {dt:2.1f}")
+            # print(f"dT: {dt:2.1f}")
 
             state = self.__conversion_table[dt]
 
-            print(f"State: {state:2.1f}")
+            # print(f"State: {state:2.1f}")
 
             # Set the devices.
             self.__set_devices(state)
