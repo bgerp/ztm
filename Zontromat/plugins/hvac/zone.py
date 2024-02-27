@@ -219,13 +219,13 @@ class Zone(BasePlugin):
             -1.5: 2,
             -1.0: 2,
             -0.5: 3,
-            0.0: 4,
-            0.5: 5,
-            1.0: 6,
-            1.5: 6,
-            2.0: 7,
-            2.5: 7,
-            3.0: 8
+             0.0: 4,
+             0.5: 5,
+             1.0: 6,
+             1.5: 6,
+             2.0: 7,
+             2.5: 7,
+             3.0: 8
         }
 
         # Floor valve control table.
@@ -346,6 +346,7 @@ class Zone(BasePlugin):
 
         if ThermalMode.is_valid(register.value):
             self.__thermal_mode = ThermalMode(register.value)
+            print(self.__thermal_mode)
 
     def __thermal_force_limit_cb(self, register):
 
