@@ -58,7 +58,29 @@ __status__ = "Debug"
 class ThermalMode(Enum):
     """Thermal modes description."""
 
-    NONE = 0
-    ColdSeason = 1
-    TransisionSeason = 2
-    WarmSeason = 3
+    Stop = 0
+    Cold = 1
+    Warm = 2
+
+#region Public static Methods
+
+    @staticmethod
+    def is_valid(value):
+        """Check validity of the data type.
+
+        Args:
+            value (str): Target data type for check.
+
+        Return:
+            bool: Valid data type.
+        """
+        state = False
+
+        for item in ThermalMode:
+            if value == item.value:
+                state = True
+                break
+
+        return state
+
+#endregion

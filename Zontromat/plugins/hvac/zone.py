@@ -113,42 +113,63 @@ class Zone(BasePlugin):
 
         super().__init__(config)
 
+        self.__identifier = 1
         if "identifier" in config:
             self.__identifier = config["identifier"]
 
         self.__logger = get_logger(__name__)
-        """Logger"""
+        """Logger
+        """
 
-        # Create thermal mode.
-        self.__thermal_mode = StateMachine(ThermalMode.NONE)
-        self.__thermal_mode.on_change(self.__thermal_mode_on_change)
+        self.__thermal_mode = 0
+        """Thermal mode.
+        """
 
-        # Create update timer.
+        self.__update_now_flag = True
+        """Fire update event every time when settings are changed.
+        """        
+
+        self.__stop_flag = False
+        """HVAC Stop flag.
+        """
+
         self.__update_timer = Timer(60)
+        """Update timer
+        """        
 
-        # Stop timer.
-        self.__stop_timer = Timer()
+        self.__stop_timer = Timer(10)
+        """Stop timer
+        """        
+
+        self.__vlv_fl_1_tmr = TimerPWM()
+        self.__vlv_fl_1_tmr.upper_limit = 3600
+        self.__vlv_fl_1_tmr.duty_cycle = 0
+        self.__vlv_fl_1_tmr.set_cb(lambda: self.__vlv_fl_1(100), lambda: self.__vlv_fl_1(0))
+
+        self.__vlv_fl_2_tmr = TimerPWM()
+        self.__vlv_fl_2_tmr.upper_limit = 3600
+        self.__vlv_fl_2_tmr.duty_cycle = 0
+        self.__vlv_fl_2_tmr.set_cb(lambda: self.__vlv_fl_2(100), lambda: self.__vlv_fl_2(0))
+
+        self.__vlv_fl_3_tmr = TimerPWM()
+        self.__vlv_fl_3_tmr.upper_limit = 3600
+        self.__vlv_fl_3_tmr.duty_cycle = 0
+        self.__vlv_fl_3_tmr.set_cb(lambda: self.__vlv_fl_3(100), lambda: self.__vlv_fl_3(0))
 
         # Create temperature processor.
         self.__temp_proc = TemperatureProcessor()
 
-        # Create temperature queue.
-        self.__queue_temperatures = deque([], maxlen=20)
-
-        self.__identifier = 1
-        """Number identifier."""
-
         self.__air_temp_upper_dev = None
-        """Air thermometer upper."""
+        """Air thermometer upper.
+        """
 
         self.__air_temp_cent_dev = None
-        """Air thermometer central."""
+        """Air thermometer central.
+        """
 
         self.__air_temp_lower_dev = None
-        """Air thermometer lower."""
-
-        self.__queue_temperatures = None
-        """Queue of the temperatures."""
+        """Air thermometer lower.
+        """
 
         self.__fl_1_vlv_dev = None
         """Floor valve device.
@@ -186,6 +207,50 @@ class Zone(BasePlugin):
         """Convector valve device.
         """
 
+        self.__window_closed_input = verbal_const.OFF
+        """Window closed sensor input.
+        """
+
+        self.__conversion_table = \
+        {
+            -3.0: 0,
+            -2.5: 1,
+            -2.0: 1,
+            -1.5: 2,
+            -1.0: 2,
+            -0.5: 3,
+            0.0: 4,
+            0.5: 5,
+            1.0: 6,
+            2.0: 7,
+            3.0: 8
+        }
+
+        # Floor valve control table.
+        self.__fl_control_table = \
+        [
+            [0, 0, 0, 0, 0, 0, 0, 0, 0],       # 0 - Спряно
+            [0, 0, 0, 0, 0, 1/4, 1/2, 1, 1], # 1 - Охлаждане 
+            [1, 1, 1/2, 1/4, 0, 0, 0, 0, 0]  # 2 - Отопление
+        ]
+
+        # Convector control table.
+        self.__conv_control_table = \
+        [
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], # 0 - Спряно
+            [0, 0, 0, 0, 0, 0, 1, 2, 3, 4], # 1 - Охлаждане 
+            [4, 3, 2, 1, 0, 0, 0, 0, 0, 0]  # 2 - Отопление
+        ]
+
+        # Fan control table.
+        self.__fan_control_table = \
+        [
+            [0, 0, 0, 0, 0, 50, 80, 120, 140], # 0 - Спряно
+            [80, 50, 30, 0, 0, 0, 30, 50, 80], # 1 - Охлаждане 
+            [0, 0, 0, 0, 0, 0, 0, 0, 0]        # 2 - Отопление
+        ]
+
+
         self.__dt_temp = 0
 
         self.__thermal_force_limit = 0
@@ -214,49 +279,6 @@ class Zone(BasePlugin):
         """Каква топлинна сила трябва да приложим към системата
         (-100% означава максимално да охлаждаме, +100% - максимално да отопляваме)"""
 
-        self.__stop_flag = False
-        """HVAC Stop flag."""
-
-        self.__window_closed_input = verbal_const.OFF
-        """Window closed sensor input."""
-
-
-        self.__vlv_fl_1_tmr = TimerPWM()
-        self.__vlv_fl_1_tmr.upper_limit = 3600
-        self.__vlv_fl_1_tmr.duty_cycle = 0
-        self.__vlv_fl_1_tmr.set_cb(lambda: self.__vlv_fl_1(100), lambda: self.__vlv_fl_1(0))
-
-        self.__vlv_fl_2_tmr = TimerPWM()
-        self.__vlv_fl_2_tmr.upper_limit = 3600
-        self.__vlv_fl_2_tmr.duty_cycle = 0
-        self.__vlv_fl_2_tmr.set_cb(lambda: self.__vlv_fl_2(100), lambda: self.__vlv_fl_2(0))
-
-        self.__vlv_fl_3_tmr = TimerPWM()
-        self.__vlv_fl_3_tmr.upper_limit = 3600
-        self.__vlv_fl_3_tmr.duty_cycle = 0
-        self.__vlv_fl_3_tmr.set_cb(lambda: self.__vlv_fl_3(100), lambda: self.__vlv_fl_3(0))
-
-        # Update now flag.
-        # Fire update event every time when settings are changed.
-        self.__update_now_flag = True
-
-    def __del__(self):
-        """Destructor"""
-
-        if self.__thermal_mode is not None:
-            del self.__thermal_mode
-
-        if self.__stop_timer is not None:
-            del self.__stop_timer
-
-        if self.__queue_temperatures is not None:
-            del self.__queue_temperatures
-
-        super().__del__()
-
-        if self.__logger is not None:
-            del self.__logger
-
 #endregion
 
 #region Properties
@@ -277,157 +299,6 @@ class Zone(BasePlugin):
 
         # return the temperature.
         return self.__temp_proc.value
-
-#endregion
-
-#region Private Methods (Temporary)
-
-    def __set_thermal_force(self, thermal_force):
-        """ Apply thermal force to the devices. """
-
-        # 6. Ако модула на пределната термална сила е по-малък от модула на термалната сила,
-        # тогава Термалата сила = Пределната термала сила
-        if thermal_force > abs(self.__thermal_force_limit):
-            thermal_force = self.__thermal_force_limit
-        elif thermal_force < -abs(self.__thermal_force_limit):
-            thermal_force = -abs(self.__thermal_force_limit)
-
-        # 7. Лимитираме Термалната сила в интервала -100 : + 100:
-        if thermal_force < -100:
-            thermal_force = -100
-        if thermal_force > 100:
-            thermal_force = 100
-
-        self.__logger.debug(f"Mode: {self.__thermal_mode.get_state()}; TForce: {thermal_force:3.3f}")
-
-        if self.__thermal_mode.is_state(ThermalMode.ColdSeason):
-            if thermal_force > 0:
-                self.__fl_1_vlv_dev.target_position = 0
-                self.__cl_1_vlv_dev.target_position = 0
-            elif thermal_force <= 0:
-                self.__fl_1_vlv_dev.target_position = 100
-                self.__cl_1_vlv_dev.target_position = 100
-
-        elif self.__thermal_mode.is_state(ThermalMode.TransisionSeason):
-            if thermal_force < 0:
-                self.__fl_1_vlv_dev.target_position = 100
-                self.__cl_1_vlv_dev.target_position = 0
-            elif thermal_force > 0:
-                self.__fl_1_vlv_dev.target_position = 0
-                self.__cl_1_vlv_dev.target_position = 100
-            else:
-                self.__fl_1_vlv_dev.target_position = 0
-                self.__cl_1_vlv_dev.target_position = 0
-
-        elif self.__thermal_mode.is_state(ThermalMode.WarmSeason):
-            if thermal_force < 0:
-                self.__fl_1_vlv_dev.target_position = 100
-                self.__cl_1_vlv_dev.target_position = 100
-            elif thermal_force > 0:
-                self.__fl_1_vlv_dev.target_position = 0
-                self.__cl_1_vlv_dev.target_position = 0
-
-        # If thermal mode set properly apply thermal force
-        if not self.__thermal_mode.is_state(ThermalMode.NONE):
-
-            self.__set_ventilation(thermal_force)
-
-            # Set convector fan.
-            conv_tf = l_scale(thermal_force, [0, 100], [0, 3])
-            conv_tf = abs(conv_tf)
-            conv_tf = int(conv_tf)
-            self.__conv_1_dev.set_state(conv_tf)
-
-    def __calc(self):
-        """_summary_
-        """
-
-        # Update thermometers values.
-        self.__update_measurements()
-
-        # Update occupation flags.
-        is_empty = self.__is_empty()
-
-        # If the window is opened, just turn off the HVAC.
-        window_tamper_state = self.__read_window_tamper()
-
-        # If temperature is less then 10 deg on loop 1.
-        is_hot_water = self.__is_hot_water()
-
-        # Take all necessary condition for normal operation of the HVAC.
-        # stop_flag = (not is_empty or not window_tamper_state or not is_hot_water)
-        stop_flag = False
-
-        if stop_flag:
-            self.__stop_timer.update()
-            if self.__stop_timer.expired:
-                self.__stop_timer.clear()
-                if self.__stop_flag != stop_flag:
-                    self.__stop_flag = stop_flag
-                    self.__set_thermal_force(0)
-
-        if not stop_flag:
-            self.__stop_flag = False
-            self.__stop_timer.update_last_time()
-
-        # Main update rate at ~ 20 second.
-        # На всеки 20 секунди се правят следните стъпки:
-        self.__update_timer.update()
-        if self.__update_timer.expired and not self.__stop_flag:
-            self.__update_timer.clear()
-
-            # Recalculate the temperatures.
-            self.__temp_proc.update()
-
-            crg_temp = 0
-            expected_room_temp = 0
-
-            # Update current room temperature.
-            temperature = self.temperature
-
-            # Add temperature to the queue.
-            self.__queue_temperatures.append(temperature)
-            self.__logger.debug(f"ROOM: {temperature:3.3f}")
-
-            # 1. Изчислява се целевата температура на стаята:
-            goal_room_temp = self.__goal_building_temp + self.__adjust_temp
-
-            # 2. Изчислява се очакваната температура на стаята:
-            expected_room_temp = temperature + self.__delta_temp
-
-
-            # 3. Намира се коригиращата разлика между
-            # Целевата температура и Очакваната температура на стаята:
-            crg_temp = goal_room_temp - expected_room_temp
-            self.__logger.debug("GRT {:3.3f}\t ERT {:3.3f}\t CRG: {:3.3f}"\
-                .format(goal_room_temp, expected_room_temp, crg_temp))
-
-            # 4.
-            # Колкото е по-отрицателна температурата, толкова повече трябва да охлаждаме,
-            # колкото е по-положителна - толкова повече трябва да отопляваме.
-            # Определяме минималната термална сила, на база Корекционната температура:
-            #self.__thermal_force_limit = aprox(-5 => -100, 5 => 100)
-
-            # 5. Интегрираме термалната сила:
-            self.__thermal_force += crg_temp
-
-            # Apply the integrated force.
-            self.__set_thermal_force(self.__thermal_force)
-
-            self._registers.write(f"{self.key}.temp_{self.__identifier}.actual", temperature)
-
-        # Recalculate delta time.
-        # pass_time = time.time() - self.__lastupdate_delta_time
-        # if pass_time > self.__delta_time:
-        #     self.__delta_temp = temperature - self.__delta_temp
-        #     self.__logger.debug("DT: {:3.3f}".format(self.__delta_temp))
-
-        #     # Update current time.
-        #     self.__lastupdate_delta_time = time.time()
-
-        self.__fl_1_vlv_dev.update()
-        self.__cl_1_vlv_dev.update()
-        self.__conv_1_dev.update()
 
 #endregion
 
@@ -462,8 +333,7 @@ class Zone(BasePlugin):
             GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
 
-        if self.__delta_time != register.value:
-            self.__delta_time = register.value
+        self.__delta_time = register.value
 
     def __thermal_mode_cb(self, register):
 
@@ -472,8 +342,8 @@ class Zone(BasePlugin):
             GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
             return
 
-        mode = ThermalMode(register.value)
-        self.__thermal_mode.set_state(mode)
+        if ThermalMode.is_valid(register.value):
+            self.__thermal_mode = ThermalMode(register.value)
 
     def __thermal_force_limit_cb(self, register):
 
@@ -1069,6 +939,25 @@ class Zone(BasePlugin):
             envm_energy.update_handlers = self.__envm_energy_cb
             envm_energy.update()
 
+    def __is_hot_water(self):
+
+        # TODO: Return water temperature from monitoring registers plugin.
+        # monitoring.cl_1.hm.measurements, take last value to see is there any hot water.
+        # monitoring.cl_2.hm.measurements, take last value to see is there any hot water.
+        # monitoring.cl_3.hm.measurements, take last value to see is there any hot water.
+        # monitoring.fl_1.hm.measurements, take last value to see is there any hot water.
+        # monitoring.fl_2.hm.measurements, take last value to see is there any hot water.
+        # monitoring.fl_3.hm.measurements, take last value to see is there any hot water.
+
+        # Request: Eml6419
+        # down_limit = 10
+
+        # down_limit = self._registers.by_name(f"monitoring.cl_1.hm.measurements")
+        # if down_limit is not None:
+        #     down_limit_value = down_limit.value
+
+        return True
+
 #endregion
 
 #region Private Methods (PLC)
@@ -1098,23 +987,6 @@ class Zone(BasePlugin):
 
         return value
 
-    def __is_hot_water(self):
-
-        # TODO: Return water temperature from monitoring registers plugin.
-
-        # Request: Eml6419
-        down_limit = 10
-
-        down_limit = self._registers.\
-            by_name(f"monitoring.floor_{self.__identifier}.temp.down_limit")
-        if down_limit is not None:
-            down_limit_value = down_limit.value
-
-        return True
-
-    def __thermal_mode_on_change(self, machine):
-        self.__logger.info(f"Thermal mode: {machine.get_state()}")
-
     def __vlv_fl_1(self, position):
         if self.__fl_1_vlv_dev is None:
             return
@@ -1133,25 +1005,22 @@ class Zone(BasePlugin):
         
         self.__fl_3_vlv_dev.target_position = position
 
-    def __vlv_cl_1(self, position):
-        if self.__cl_1_vlv_dev is None:
-            return
-        
-        self.__cl_1_vlv_dev.target_position = position
+    def __set_fl_state(self, duty_cycle):
+        self.__vlv_fl_1_tmr.duty_cycle = duty_cycle
+        self.__vlv_fl_2_tmr.duty_cycle = duty_cycle
+        self.__vlv_fl_3_tmr.duty_cycle = duty_cycle
 
-    def __vlv_cl_2(self, position):
-        if self.__cl_2_vlv_dev is None:
-            return
-        
-        self.__cl_2_vlv_dev.target_position = position
+    def __set_cl_state(self, position):
+        if self.__cl_1_vlv_dev is not None:
+            self.__cl_1_vlv_dev.target_position = position
 
-    def __vlv_cl_3(self, position):
-        if self.__cl_3_vlv_dev is None:
-            return
-        
-        self.__cl_3_vlv_dev.target_position = position
+        if self.__cl_2_vlv_dev is not None:
+            self.__cl_2_vlv_dev.target_position = position
 
-    def __conv_set_state(self, state=0):
+        if self.__cl_3_vlv_dev is not None:
+           self.__cl_3_vlv_dev.target_position = position
+
+    def __set_conv_state(self, state=0):
 
         if state < 0:
             state = 0
@@ -1170,74 +1039,52 @@ class Zone(BasePlugin):
 
     def __set_devices(self, state):
 
+        last_state = len(self.__conversion_table) - 1
+
         if state < 0:
             state = 0
 
-        if state > 6:
-            state = 6
+        if state > last_state:
+            state = last_state
+
+        conv_state = self.__conv_control_table[self.__thermal_mode.value][state]
+        fl_state = self.__fl_control_table[self.__thermal_mode.value][state]
+        fan_state = self.__fan_control_table[self.__thermal_mode.value][state]
 
         if state == 0:
-            self.__vlv_fl_1_tmr.duty_cycle = 0
-            self.__vlv_fl_2_tmr.duty_cycle = 0
-            self.__vlv_fl_3_tmr.duty_cycle = 0
-            self.__vlv_cl_1(100)
-            self.__vlv_cl_2(100)
-            self.__vlv_cl_3(100)
-            self.__conv_set_state(1)
+            self.__set_fl_state(0)
+            self.__set_cl_state(100)
+            self.__set_conv_state(1)
 
         elif state == 1:
-            self.__vlv_fl_1_tmr.duty_cycle = 1/3
-            self.__vlv_fl_2_tmr.duty_cycle = 1/3
-            self.__vlv_fl_3_tmr.duty_cycle = 1/3
-            self.__vlv_cl_1(100)
-            self.__vlv_cl_2(100)
-            self.__vlv_cl_3(100)
-            self.__conv_set_state(0)
+            self.__set_fl_state(1/3)
+            self.__set_cl_state(100)
+            self.__set_conv_state(0)
 
         elif state == 2:
-            self.__vlv_fl_1_tmr.duty_cycle = 1/2
-            self.__vlv_fl_2_tmr.duty_cycle = 1/2
-            self.__vlv_fl_3_tmr.duty_cycle = 1/2
-            self.__vlv_cl_1(100)
-            self.__vlv_cl_2(100)
-            self.__vlv_cl_3(100)
-            self.__conv_set_state(0)
+            self.__set_fl_state(1/2)
+            self.__set_cl_state(100)
+            self.__set_conv_state(0)
 
         elif state == 3:
-            self.__vlv_fl_1_tmr.duty_cycle = 1
-            self.__vlv_fl_2_tmr.duty_cycle = 1
-            self.__vlv_fl_3_tmr.duty_cycle = 1
-            self.__vlv_cl_1(100)
-            self.__vlv_cl_2(100)
-            self.__vlv_cl_3(100)
-            self.__conv_set_state(0)
+            self.__set_fl_state(1)
+            self.__set_cl_state(100)
+            self.__set_conv_state(0)
 
         elif state == 4:
-            self.__vlv_fl_1_tmr.duty_cycle = 1
-            self.__vlv_fl_2_tmr.duty_cycle = 1
-            self.__vlv_fl_3_tmr.duty_cycle = 1
-            self.__vlv_cl_1(100)
-            self.__vlv_cl_2(100)
-            self.__vlv_cl_3(100)
-            self.__conv_set_state(0)
+            self.__set_fl_state(1)
+            self.__set_cl_state(100)
+            self.__set_conv_state(0)
 
         elif state == 5:
-            self.__vlv_fl_1_tmr.duty_cycle = 1
-            self.__vlv_fl_2_tmr.duty_cycle = 1
-            self.__vlv_fl_3_tmr.duty_cycle = 1
-            self.__vlv_cl_1(100)
-            self.__vlv_cl_2(100)
-            self.__vlv_cl_3(100)
-            self.__conv_set_state(0)
+            self.__set_fl_state(1)
+            self.__set_cl_state(100)
+            self.__set_conv_state(0)
 
         elif state == 6:
-            self.__vlv_fl_1_tmr.duty_cycle = 1
-            self.__vlv_fl_2_tmr.duty_cycle = 1
-            self.__vlv_fl_3_tmr.duty_cycle = 1
-            self.__vlv_cl_1(100)
-            self.__vlv_cl_2(100)
-            self.__vlv_cl_3(100)
-            self.__conv_set_state(0)
+            self.__set_fl_state(1)
+            self.__set_cl_state(100)
+            self.__set_conv_state(0)
 
 #endregion
 
@@ -1248,28 +1095,59 @@ class Zone(BasePlugin):
         """
         
         self.__logger.info("Starting up the {} {}".format(self.name, self.__identifier))
-
-        self.__update_timer.expiration_time = 60
-
-        self.__stop_timer.expiration_time = 10
         
         # Create registers callbacks.
         self.__init_registers()
-
-        # Shutting down all the devices.
-        # self.__set_thermal_force(0)
 
     def _update(self):
         """ Update cycle.
         """
 
+        # Update occupation flags.
+        is_empty = self.__is_empty()
+
+        # If the window is opened, just turn off the HVAC.
+        window_tamper_state = self.__read_window_tamper()
+
+        # If temperature is less then 10 deg on loop 1.
+        is_hot_water = self.__is_hot_water()
+
+        # Take all necessary condition for normal operation of the HVAC.
+        # stop_flag = (not is_empty or not window_tamper_state or not is_hot_water)
+        stop_flag = False
+
+        # If it is time to stop.
+        if stop_flag:
+            # Activate 10 seconds timer to stop the HVAC.
+            self.__stop_timer.update()
+            # If it si expired.
+            if self.__stop_timer.expired:
+                # Clear the timer.
+                self.__stop_timer.clear()
+                # Flip the flag.
+                if self.__stop_flag != stop_flag:
+                    # And apply the stop flag.
+                    self.__stop_flag = stop_flag
+
+        # If it is time to stop.
+        if not stop_flag:
+            # Stop the HVAC.
+            self.__stop_flag = False
+            # Clear last time to provoke instant expiration of the update timer.
+            self.__stop_timer.update_last_time(0)
+
+        # If update now flag is activated.
         if self.__update_now_flag:
+            # Clear the flag.
             self.__update_now_flag = False
-            # Cheat and tell the timer to run in advance.
+            # Clear last time to provoke instant expiration of the update timer.
             self.__update_timer.update_last_time(0)
 
+        # Update control timer.
         self.__update_timer.update()
+        # If it is time to update.
         if self.__update_timer.expired:
+            # Clear the timer.
             self.__update_timer.clear()
 
             # Update thermometers values.
@@ -1281,25 +1159,18 @@ class Zone(BasePlugin):
             print(f"Target: {self.__adjust_temp:2.1f}; Current: {self.__temp_proc.value:2.1f}")
 
             # Calculate the delta.
-            # Rpund to second digit.
             dt = self.__adjust_temp - self.__temp_proc.value
 
             # Round to have clear rounded value for state machine currency.
             dt = self.__round_to_nearest_half(dt)
 
             # Correct the down limit.
-            if dt < 0:
-                dt = 0
+            if dt < -3.0:
+                dt = -3.0
 
             # Correct the upper limit.
-            if dt > 3:
-                dt = 3
-
-            # Scale by factor of two to convert to state machine currency.
-            dt *= 2
-
-            # Round to have clear rounded value for state machine currency.
-            dt = round(dt)
+            if dt > 3.0:
+                dt = 3.0
 
             # Exit if there is no changes.
             # if self.__dt_temp == dt:
@@ -1310,8 +1181,12 @@ class Zone(BasePlugin):
 
             print(f"dT: {dt:2.1f}")
 
+            state = self.__conversion_table[dt]
+
+            print(f"State: {state:2.1f}")
+
             # Set the devices.
-            self.__set_devices(dt)
+            self.__set_devices(state)
 
         # Update PWM timers for the valves.
         self.__vlv_fl_1_tmr.update()
