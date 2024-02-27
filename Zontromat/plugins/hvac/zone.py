@@ -984,7 +984,7 @@ class Zone(BasePlugin):
     def __round_to_nearest_half(self, number):
         value = 0
 
-        if number > 0:
+        if number != 0:
             value = round(number * 2) / 2
 
         return value
