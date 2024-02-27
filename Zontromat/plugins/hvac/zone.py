@@ -1163,8 +1163,6 @@ class Zone(BasePlugin):
             # Calculate the delta.
             dt = self.__adjust_temp - self.__temp_proc.value
 
-            print(f"dT: {dt:2.1f}")
-
             # Round to have clear rounded value for state machine currency.
             dt = self.__round_to_nearest_half(dt)
 
