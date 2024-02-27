@@ -1054,7 +1054,7 @@ class Zone(BasePlugin):
         fl_state = self.__fl_control_table[self.__thermal_mode.value][state]
         fan_state = self.__fan_control_table[self.__thermal_mode.value][state]
 
-        print(f"conv_state: {conv_state:2.1f}; fl_state: {fl_state:2.1f}; fan_state: {fan_state:2.1f}; ")
+        print(f"self.__thermal_mode: {self.__thermal_mode:2.1f}; conv_state: {conv_state:2.1f}; fl_state: {fl_state:2.1f}; fan_state: {fan_state:2.1f}; ")
 
 
         if state == 0:
