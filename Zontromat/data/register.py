@@ -215,15 +215,20 @@ class Register:
         if value == self.__value:
             return
 
+        # In case of float.
         if self.data_type == "float":
-            if abs(self.value - value) < self.limit:
+
+            # Roundup to the third sign after the decimal delimiter.
+            value = round(value, 3) # no self
+
+            if abs(self.__value - value) < self.limit: # no self
                 return
 
         # Update time.
         self.__ts = int(time.time())
 
         # Update value.
-        self.__value = value
+        self.__value = value # here OK
 
         self.update()
 

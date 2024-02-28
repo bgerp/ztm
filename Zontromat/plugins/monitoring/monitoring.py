@@ -240,15 +240,18 @@ class Monitoring(BasePlugin):
 
                     # Scale unit from milli liter to cubic meter. 
                     if item == "CumulativeTraffic":
-                        measurement[item] /= 1000000.0
-
+                        if measurement[item] is not  None:
+                            measurement[item] /= 1000000.0
+                    
                     # Scale to degrees by Celsius.
                     if item == "WaterTemperature":
-                        measurement[item] /= 100.0
+                        if measurement[item] is not  None:
+                            measurement[item] /= 100.0
 
                     # Scale to voltage.
                     if item == "BatteryVoltage":
-                        measurement[item] /= 100.0
+                        if measurement[item] is not  None:
+                            measurement[item] /= 100.0
 
         else:
             self.__logger.error("Unknown power water meter")
@@ -353,15 +356,18 @@ class Monitoring(BasePlugin):
 
                     # Scale unit from milli liter to cubic meter. 
                     if item == "CumulativeTraffic":
-                        measurement[item] /= 1000000.0
+                        if measurement[item] is not  None:
+                            measurement[item] /= 1000000.0
 
                     # Scale to degrees by Celsius.
                     if item == "WaterTemperature":
-                        measurement[item] /= 100.0
+                        if measurement[item] is not  None:
+                            measurement[item] /= 100.0
 
                     # Scale to voltage.
                     if item == "BatteryVoltage":
-                        measurement[item] /= 100.0
+                        if measurement[item] is not  None:
+                            measurement[item] /= 100.0
 
         else:
             self.__logger.error("Unknown power water meter")
