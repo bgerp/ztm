@@ -218,11 +218,13 @@ class Register:
         # In case of float.
         if self.data_type == "float":
 
-            # Roundup to the third sign after the decimal delimiter.
-            value = round(value, 3) # no self
+            if value is not None:
 
-            if abs(self.__value - value) < self.limit: # no self
-                return
+                # Roundup to the third sign after the decimal delimiter.
+                value = round(value, 3) # no self
+
+                if abs(self.__value - value) < self.limit: # no self
+                    return
 
         # Update time.
         self.__ts = int(time.time())
