@@ -506,8 +506,13 @@ class Zone():
                 timeout = self.__app_settings.ui["timeout"])
 
             self.__ztm_ui_ut = Timer(1)
-            self.__ztm_ui_weather_cast_ut = Timer(450)
+            self.__ztm_ui_weather_cast_ut = Timer(150)
             self.__ztm_ui_heartbeat_ut = Timer(3600)
+
+            # Log in.
+            if not self.__ztm_ui.is_logged_in():
+                self.__ztm_ui.login()
+
 
     def __update_weather_cast(self):
 
