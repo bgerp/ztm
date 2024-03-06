@@ -538,6 +538,9 @@ class Zone():
             reg = {"name": name, "value": value, "min": minimum, "max": maximum, "status": status}
             target_regs_ztmui.append(reg)
 
+        for item in target_regs_ztmui:
+            print(item)
+
         if target_regs_ztmui != []:
             print("OK pass the updates")
             self.__ztm_ui.set(target_regs_ztmui)
