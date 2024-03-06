@@ -515,7 +515,7 @@ class Zone():
 
 
     def __update_weather_cast(self):
-        print("Time to update")
+        # print("Time to update")
 
         target_regs_names = ["envm.forecast.icon_0", "envm.forecast.rh_0", "envm.forecast.temp_0", "envm.forecast.wind_0",
                         "envm.forecast.icon_3", "envm.forecast.rh_3", "envm.forecast.temp_3", "envm.forecast.wind_3", 
@@ -538,11 +538,11 @@ class Zone():
             reg = {"name": name, "value": value, "min": minimum, "max": maximum, "status": status}
             target_regs_ztmui.append(reg)
 
-        for item in target_regs_ztmui:
-            print(item)
+        # for item in target_regs_ztmui:
+        #     print(item)
 
         if target_regs_ztmui != []:
-            print("OK pass the updates")
+            # print("OK pass the updates")
             self.__ztm_ui.set(target_regs_ztmui)
 
     def __transport_registers_ztmui(self):
