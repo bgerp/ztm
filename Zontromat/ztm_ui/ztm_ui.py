@@ -441,13 +441,13 @@ class ZtmUI():
 
                     response_registers = json.loads(response.text)
 
-                    # self.__logger.info("SYNC; From ZtmUI: {}".format(response_registers))
+                    self.__logger.info("SYNC; From ZtmUI: {}".format(response_registers))
 
                     # Update last successful time.
                     self.__last_sync = time.time()
 
             else:
-                # self.__logger.error("HTTP Error code: {}".format(response.status_code))
+                self.__logger.error("HTTP Error code: {}".format(response.status_code))
                 response_registers = None
 
         else:
