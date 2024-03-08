@@ -428,7 +428,7 @@ class ZtmUI():
 
         # Headers
         headers = {"Accept": "application/json", "Content-type": "application/json", "Authorization": "Bearer {}".format(self.__token)}
-        self.__logger.info("1 SYNC; From ZtmUI: {}".format(response_registers))
+        self.__logger.info("1 SYNC; From ZtmUI: {}".format(str_registers))
 
         # The request.
         response = requests.post(uri, headers=headers, data=payload, timeout=self.timeout)
