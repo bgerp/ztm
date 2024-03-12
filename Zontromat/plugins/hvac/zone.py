@@ -231,9 +231,10 @@ class Zone(BasePlugin):
         # Floor valve control table.
         self.__fl_control_table = \
         [
-            [0, 0, 0, 0, 0, 0, 0, 0, 0],       # 0 - Спряно
+            [0, 0, 0, 0, 0, 0, 0, 0, 0],     # 0 - Спряно
             [1, 1, 1/2, 1/4, 0, 0, 0, 0, 0], # 1 - Охлаждане 
-            [0, 0, 0, 0, 0, 1/4, 1/2, 1, 1]  # 2 - Отопление
+            [0, 0, 0, 0, 0, 1/4, 1/2, 1, 1], # 2 - Отопление
+            [0, 0, 0, 0, 0, 1/4, 1/2, 1, 1] # 3 - Режим №3
         ]
 
         # Convector control table.
@@ -241,7 +242,8 @@ class Zone(BasePlugin):
         [
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], # 0 - Спряно
             [4, 3, 2, 1, 0, 0, 0, 0, 0, 0], # 1 - Охлаждане 
-            [0, 0, 0, 0, 0, 0, 1, 2, 3, 4]  # 2 - Отопление
+            [0, 0, 0, 0, 0, 0, 1, 2, 3, 4], # 2 - Отопление
+            [1, 1, 1, 1, 0, 0, 0, 0, 0] # 3 - Режим №3
         ]
 
         # Fan control table.
@@ -249,7 +251,8 @@ class Zone(BasePlugin):
         [
             [0, 0, 0, 0, 0, 50, 80, 120, 140], # 0 - Спряно
             [80, 50, 30, 0, 0, 0, 30, 50, 80], # 1 - Охлаждане 
-            [0, 0, 0, 0, 0, 0, 0, 0, 0]        # 2 - Отопление
+            [0, 0, 0, 0, 0, 0, 0, 0, 0],       # 2 - Отопление
+            [0, 0, 0, 0, 0, 0, 0, 0, 0] # 3 - Режим №3
         ]
 
 
@@ -1050,9 +1053,15 @@ class Zone(BasePlugin):
         if state > last_state:
             state = last_state
 
-        conv_state = self.__conv_control_table[self.__thermal_mode.value][state]
-        fl_state = self.__fl_control_table[self.__thermal_mode.value][state]
-        fan_state = self.__fan_control_table[self.__thermal_mode.value][state]
+        # Controlled by the ERP.
+        # conv_state = self.__conv_control_table[self.__thermal_mode.value][state]
+        # fl_state = self.__fl_control_table[self.__thermal_mode.value][state]
+        # fan_state = self.__fan_control_table[self.__thermal_mode.value][state]
+
+        # Test control.
+        conv_state = self.__conv_control_table[3][state]
+        fl_state = self.__fl_control_table[3][state]
+        fan_state = self.__fan_control_table[3][state]
 
         print(f"self.__thermal_mode: {self.__thermal_mode}; conv_state: {conv_state:2.1f}; fl_state: {fl_state:2.1f}; fan_state: {fan_state:2.1f}; ")
 
@@ -1069,7 +1078,7 @@ class Zone(BasePlugin):
         self.__set_conv_state(conv_state)
 
 
-        return;
+        return
         if state == 0:
             self.__set_fl_state(0)
             self.__set_cl_state(100)

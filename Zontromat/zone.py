@@ -392,7 +392,7 @@ class Zone():
         # (Eml9649)
         # Set the ERP update timer.
         self.__erp_service_update_timer = Timer(
-            int(self.__app_settings.erp_service["update_rate"]) + 
+            int(self.__app_settings.erp_service["update_rate"]) +
                 # Add phase shift time for reducing the self DDoS attack to the server.
                 int(self.__app_settings.erp_service["serial_number"]) * 0.5)
 
@@ -506,13 +506,19 @@ class Zone():
                 timeout = self.__app_settings.ui["timeout"])
 
             self.__ztm_ui_ut = Timer(1)
-            self.__ztm_ui_weather_cast_ut = Timer(450)
+            self.__ztm_ui_weather_cast_ut = Timer(600)
             self.__ztm_ui_heartbeat_ut = Timer(3600)
 
+            # Log in.
+            if not self.__ztm_ui.is_logged_in():
+                self.__ztm_ui.login()
+
+
     def __update_weather_cast(self):
+        # print("Time to update")
 
         target_regs_names = ["envm.forecast.icon_0", "envm.forecast.rh_0", "envm.forecast.temp_0", "envm.forecast.wind_0",
-                        "envm.forecast.icon_3", "envm.forecast.rh_3", "envm.forecast.temp_3", "envm.forecast.wind_3", 
+                        "envm.forecast.icon_3", "envm.forecast.rh_3", "envm.forecast.temp_3", "envm.forecast.wind_3",
                         "envm.forecast.icon_6", "envm.forecast.rh_6", "envm.forecast.temp_6", "envm.forecast.wind_6"]
         target_regs_values = []
 
@@ -532,7 +538,11 @@ class Zone():
             reg = {"name": name, "value": value, "min": minimum, "max": maximum, "status": status}
             target_regs_ztmui.append(reg)
 
+        # for item in target_regs_ztmui:
+        #     print(item)
+
         if target_regs_ztmui != []:
+            # print("OK pass the updates")
             self.__ztm_ui.set(target_regs_ztmui)
 
     def __transport_registers_ztmui(self):
@@ -564,7 +574,7 @@ class Zone():
 
         # Check is it enabled.
         if self.__app_settings.ui["enabled"] == "True":
-            
+
             # self.__update_min_max(register)
 
             # Get periodically slider data.
@@ -584,8 +594,9 @@ class Zone():
                 self.__ztm_ui_weather_cast_ut.clear()
                 # Check is it logged in.
                 if self.__ztm_ui.is_logged_in():
-                    # Update Weather.                                    
-                    self.__update_weather_cast()
+                    if self.__erp.is_logged():
+                        # Update Weather.
+                        self.__update_weather_cast()
                 # If not, login.
                 else:
                     self.__ztm_ui.login()
@@ -615,7 +626,7 @@ class Zone():
         time_offset = 0
         if self.__controller.serial_number is not None and self.__controller.serial_number.isdigit():
             time_offset = int(self.__controller.serial_number)
-            
+
         # Preset the time.
         self.__update_timer.expiration_time += (time_offset / 1000)
 
