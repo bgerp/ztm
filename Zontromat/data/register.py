@@ -219,6 +219,7 @@ class Register:
         if self.data_type == "float":
 
             if value is not None:
+
                 # Roundup to the third sign after the decimal delimiter.
                 value = round(value, 3) # no self
 

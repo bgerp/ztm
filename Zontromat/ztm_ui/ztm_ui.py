@@ -428,26 +428,32 @@ class ZtmUI():
 
         # Headers
         headers = {"Accept": "application/json", "Content-type": "application/json", "Authorization": "Bearer {}".format(self.__token)}
+        # self.__logger.info("1 SYNC; From ZtmUI: {}".format(str_registers))
 
         # The request.
         response = requests.post(uri, headers=headers, data=payload, timeout=self.timeout)
+        # self.__logger.info("2 SYNC; From ZtmUI: {}".format(response_registers))
 
         if response is not None:
+            # self.__logger.info("3 SYNC; From ZtmUI: {}".format(response_registers))
 
             # OK
             if response.status_code == 200:
+                # self.__logger.info("4 SYNC; From ZtmUI: {}".format(response_registers))
 
                 if response.text != "":
+                    # self.__logger.info("5 SYNC; From ZtmUI: {}".format(response_registers))
 
                     response_registers = json.loads(response.text)
 
-                    # self.__logger.info("SYNC; From ZtmUI: {}".format(response_registers))
+                    self.__logger.info("Sync result: {}".format(response_registers))
+                    self.__logger.info("Registers: {}".format(str_registers))
 
                     # Update last successful time.
                     self.__last_sync = time.time()
 
             else:
-                # self.__logger.error("HTTP Error code: {}".format(response.status_code))
+                self.__logger.error("HTTP Error code: {}".format(response.status_code))
                 response_registers = None
 
         else:

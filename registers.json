@@ -364,7 +364,7 @@
         "name": "blinds.blind_1.position",
         "plugin": "Blinds",
         "range": "0.0/180.0",
-        "scope": "Both"
+        "scope": "Device"
     },
     {
         "data_type": "float",
@@ -538,7 +538,7 @@
     },
     {
         "data_type": "json",
-        "default": {"model": "mw_uml_15", "options": {"mb_id": 96, "uart": 1}, "vendor": "smii"},
+        "default": {},
         "description": "Cold water flow meter",
         "limit": 0.0,
         "name": "monitoring.cw.flowmeter_settings",
@@ -568,7 +568,7 @@
     },
     {
         "data_type": "json",
-        "default": {"model": "mw_uml_15", "options": {"mb_id": 96, "uart": 1}, "vendor": "smii"},
+        "default": {},
         "description": "Hot water input flow meter",
         "limit": 0.0,
         "name": "monitoring.hw.flowmeter_settings",
@@ -626,7 +626,7 @@
     {
         "data_type": "float",
         "default": 3600.0,
-        "description": "Power analyzer measuring demand",
+        "description": "Measuring demand",
         "limit": 0.0,
         "name": "monitoring.demand_time",
         "plugin": "Monitoring",
@@ -635,14 +635,7 @@
     },
     {
         "data_type": "json",
-        "default": {
-            "model": "flowmeter_dn20",
-            "options": {
-                "mb_id": 66,
-                "uart": 1
-            },
-            "vendor": "mainone"
-        },
+        "default": {},
         "description": "Floor loop 1 heat meter settings.",
         "limit": 0.0,
         "name": "monitoring.fl_1.hm.settings",
@@ -702,14 +695,7 @@
     },
     {
         "data_type": "json",
-        "default": {
-            "model": "flowmeter_dn20",
-            "options": {
-                "mb_id": 99,
-                "uart": 1
-            },
-            "vendor": "mainone"
-        },
+        "default": {},
         "description": "Convector loop 1 heat meter settings.",
         "limit": 0.0,
         "name": "monitoring.cl_1.hm.settings",
@@ -798,103 +784,13 @@
         "scope": "System"
     },
     {
-        "data_type": "float",
-        "default": 0.0,
-        "description": "Actual outside temperature [C]",
+        "data_type": "str",
+        "default": "",
+        "description": "Actual weather icon.",
         "limit": 0.0,
-        "name": "envm.temp.actual",
+        "name": "envm.forecast.icon_0",
         "plugin": "Environment",
-        "range": "-50/50",
-        "scope": "System"
-    },
-    {
-        "data_type": "float",
-        "default": 0.0,
-        "description": "Actual outside temperature for 3 hours [C]",
-        "limit": 0.0,
-        "name": "envm.temp.a3",
-        "plugin": "Environment",
-        "range": "-50/50",
-        "scope": "System"
-    },
-    {
-        "data_type": "float",
-        "default": 0.0,
-        "description": "Actual outside temperature for 6 hours [C]",
-        "limit": 0.0,
-        "name": "envm.temp.a6",
-        "plugin": "Environment",
-        "range": "-50/50",
-        "scope": "System"
-    },
-    {
-        "data_type": "float",
-        "default": 0.0,
-        "description": "Minimum outside temperature for 24 hours [C]",
-        "limit": 0.0,
-        "name": "envm.temp.min24",
-        "plugin": "Environment",
-        "range": "-50/50",
-        "scope": "System"
-    },
-    {
-        "data_type": "float",
-        "default": 0.0,
-        "description": "Maximum outside temperature for 24 hours [C]",
-        "limit": 0.0,
-        "name": "envm.temp.max24",
-        "plugin": "Environment",
-        "range": "-50/50",
-        "scope": "System"
-    },
-    {
-        "data_type": "float",
-        "default": 0.0,
-        "description": "Actual wind now [m/sec]",
-        "limit": 0.0,
-        "name": "envm.wind.actual",
-        "plugin": "Environment",
-        "range": "0.0/",
-        "scope": "System"
-    },
-    {
-        "data_type": "float",
-        "default": 0.0,
-        "description": "Actual wind for 3 hours [m/sec]",
-        "limit": 0.0,
-        "name": "envm.wind.a3",
-        "plugin": "Environment",
-        "range": "0.0/",
-        "scope": "System"
-    },
-    {
-        "data_type": "float",
-        "default": 0.0,
-        "description": "Actual wind for 6 hours [m/sec]",
-        "limit": 0.0,
-        "name": "envm.wind.a6",
-        "plugin": "Environment",
-        "range": "0.0/",
-        "scope": "System"
-    },
-    {
-        "data_type": "float",
-        "default": 0.0,
-        "description": "Minimum wind for 24 hours [m/sec]",
-        "limit": 0.0,
-        "name": "envm.wind.min24",
-        "plugin": "Environment",
-        "range": "0.0/",
-        "scope": "System"
-    },
-    {
-        "data_type": "float",
-        "default": 0.0,
-        "description": "Maximum wind for 24 hours [m/sec]",
-        "limit": 0.0,
-        "name": "envm.wind.max24",
-        "plugin": "Environment",
-        "range": "0.0/",
+        "range": "",
         "scope": "System"
     },
     {
@@ -902,7 +798,7 @@
         "default": 0.0,
         "description": "Actual outside relative humidity [%]",
         "limit": 0.0,
-        "name": "envm.rh.actual",
+        "name": "envm.forecast.rh_0",
         "plugin": "Environment",
         "range": "0.0/100.0",
         "scope": "System"
@@ -910,9 +806,39 @@
     {
         "data_type": "float",
         "default": 0.0,
-        "description": "Actual outside relative humidity for 3 hours [%]",
+        "description": "Actual outside temperature [*C]",
         "limit": 0.0,
-        "name": "envm.rh.a3",
+        "name": "envm.forecast.temp_0",
+        "plugin": "Environment",
+        "range": "-50.0/50.0",
+        "scope": "System"
+    },
+    {
+        "data_type": "float",
+        "default": 0.0,
+        "description": "Actual outside wind speed [m/s]",
+        "limit": 0.0,
+        "name": "envm.forecast.wind_0",
+        "plugin": "Environment",
+        "range": "0.0/100.0",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "",
+        "description": "Actual outside weather icon for 3 hours.",
+        "limit": 0.0,
+        "name": "envm.forecast.icon_3",
+        "plugin": "Environment",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "float",
+        "default": 0.0,
+        "description": "Actual outside relative humidity for 3 hours.[%]",
+        "limit": 0.0,
+        "name": "envm.forecast.rh_3",
         "plugin": "Environment",
         "range": "0.0/100.0",
         "scope": "System"
@@ -920,9 +846,59 @@
     {
         "data_type": "float",
         "default": 0.0,
-        "description": "Actual outside relative humidity for 6 hours [%]",
+        "description": "Actual outside temperature for 3 hours. [*C]",
         "limit": 0.0,
-        "name": "envm.rh.a6",
+        "name": "envm.forecast.temp_3",
+        "plugin": "Environment",
+        "range": "-50.0/50.0",
+        "scope": "System"
+    },
+    {
+        "data_type": "float",
+        "default": 0.0,
+        "description": "Actual outside wind speed for 3 hours. [m/s]",
+        "limit": 0.0,
+        "name": "envm.forecast.wind_3",
+        "plugin": "Environment",
+        "range": "0.0/100.0",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "",
+        "description": "Actual outside weather icon for 6 hours.",
+        "limit": 0.0,
+        "name": "envm.forecast.icon_6",
+        "plugin": "Environment",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "float",
+        "default": 0.0,
+        "description": "Actual outside relative humidity for 6 hours.[%]",
+        "limit": 0.0,
+        "name": "envm.forecast.rh_6",
+        "plugin": "Environment",
+        "range": "0.0/100.0",
+        "scope": "System"
+    },
+    {
+        "data_type": "float",
+        "default": 0.0,
+        "description": "Actual outside temperature for 6 hours. [*C]",
+        "limit": 0.0,
+        "name": "envm.forecast.temp_6",
+        "plugin": "Environment",
+        "range": "-50.0/50.0",
+        "scope": "System"
+    },
+    {
+        "data_type": "float",
+        "default": 0.0,
+        "description": "Actual outside wind speed for 6 hours. [m/s]",
+        "limit": 0.0,
+        "name": "envm.forecast.wind_6",
         "plugin": "Environment",
         "range": "0.0/100.0",
         "scope": "System"
@@ -1194,7 +1170,7 @@
             "model": "a20t20b2c",
             "options": {
                 "output": [
-                    "U0:ID2:FC5:R0:RO0"
+                    "off"
                 ]
             },
             "vendor": "Tonhe"
@@ -1248,13 +1224,13 @@
             "model": "Klimafan",
             "options": {
                 "stage1": [
-                    "U0:ID6:FC5:R0:RO0"
+                    "off"
                 ],
                 "stage2": [
-                    "U0:ID6:FC5:R0:RO1"
+                    "off"
                 ],
                 "stage3": [
-                    "U0:ID6:FC5:R0:RO3"
+                    "off"
                 ]
             },
             "vendor": "Silpa"
@@ -1272,7 +1248,7 @@
             "model": "a20t20b2c",
             "options": {
                 "output": [
-                    "U0:ID2:FC5:R0:RO1"
+                    "off"
                 ]
             },
             "vendor": "Tonhe"
@@ -1396,7 +1372,7 @@
         "name": "hvac.temp_1.adjust",
         "plugin": "HVAC",
         "range": "-50.0/50.0",
-        "scope": "Both"
+        "scope": "Device"
     },
     {
         "data_type": "float",
@@ -1477,186 +1453,6 @@
         "plugin": "HVAC",
         "range": "0.0/",
         "scope": "System"
-    },
-    {
-        "data_type": "json",
-        "default": {},
-        "description": "Convector loop 1 heat meter.",
-        "limit": 0.0,
-        "name": "hvac.conv_loop_1.flowmeter.settings",
-        "plugin": "HVAC",
-        "range": "",
-        "scope": "System"
-    },
-    {
-        "data_type": "json",
-        "default": {},
-        "description": "Convector loop 1 thermometer.",
-        "limit": 0.0,
-        "name": "hvac.conv_loop_1.temp.settings",
-        "plugin": "HVAC",
-        "range": "",
-        "scope": "System"
-    },
-    {
-        "data_type": "json",
-        "default": {},
-        "description": "Convector loop 1 measurements.",
-        "limit": 0.0,
-        "name": "hvac.conv_loop_1.temp.measurements",
-        "plugin": "HVAC",
-        "range": "",
-        "scope": "Device"
-    },
-    {
-        "data_type": "json",
-        "default": {},
-        "description": "Convector loop 3 flowmeter",
-        "limit": 0.0,
-        "name": "hvac.conv_loop_3.flowmeter.settings",
-        "plugin": "HVAC",
-        "range": "",
-        "scope": "System"
-    },
-    {
-        "data_type": "json",
-        "default": {},
-        "description": "Convector loop 3 thermometer",
-        "limit": 0.0,
-        "name": "hvac.conv_loop_3.temp.settings",
-        "plugin": "HVAC",
-        "range": "",
-        "scope": "System"
-    },
-    {
-        "data_type": "json",
-        "default": {},
-        "description": "Convector loop 3 measurements",
-        "limit": 0.0,
-        "name": "hvac.conv_loop_3.temp.measurements",
-        "plugin": "HVAC",
-        "range": "",
-        "scope": "Device"
-    },
-    {
-        "data_type": "json",
-        "default": {},
-        "description": "Floor loop 1 flowmeter.",
-        "limit": 0.0,
-        "name": "hvac.floor_loop_1.flowmeter.settings",
-        "plugin": "HVAC",
-        "range": "",
-        "scope": "System"
-    },
-    {
-        "data_type": "json",
-        "default": {},
-        "description": "Floor loop 1 thermometer.",
-        "limit": 0.0,
-        "name": "hvac.floor_loop_1.temp.settings",
-        "plugin": "HVAC",
-        "range": "",
-        "scope": "System"
-    },
-    {
-        "data_type": "json",
-        "default": {},
-        "description": "Floor loop 1 measurements.",
-        "limit": 0.0,
-        "name": "hvac.floor_loop_1.temp.measurements",
-        "plugin": "HVAC",
-        "range": "",
-        "scope": "Device"
-    },
-    {
-        "data_type": "json",
-        "default": {},
-        "description": "Floor loop 3 flowmeter.",
-        "limit": 0.0,
-        "name": "hvac.floor_loop_3.flowmeter.settings",
-        "plugin": "HVAC",
-        "range": "",
-        "scope": "System"
-    },
-    {
-        "data_type": "json",
-        "default": {},
-        "description": "Floor loop 3 thermometer.",
-        "limit": 0.0,
-        "name": "hvac.floor_loop_3.temp.settings",
-        "plugin": "HVAC",
-        "range": "",
-        "scope": "System"
-    },
-    {
-        "data_type": "json",
-        "default": {},
-        "description": "Floor loop 2 measurements.",
-        "limit": 0.0,
-        "name": "hvac.floor_loop_3.temp.measurements",
-        "plugin": "HVAC",
-        "range": "",
-        "scope": "Device"
-    },
-    {
-        "data_type": "json",
-        "default": {},
-        "description": "Convector loop 2 flowmeter",
-        "limit": 0.0,
-        "name": "hvac.conv_loop_2.flowmeter.settings",
-        "plugin": "HVAC",
-        "range": "",
-        "scope": "System"
-    },
-    {
-        "data_type": "json",
-        "default": {},
-        "description": "Convector loop 2 thermometer",
-        "limit": 0.0,
-        "name": "hvac.conv_loop_2.temp.settings",
-        "plugin": "HVAC",
-        "range": "",
-        "scope": "System"
-    },
-    {
-        "data_type": "json",
-        "default": {},
-        "description": "Convector loop 2 measurements",
-        "limit": 0.0,
-        "name": "hvac.conv_loop_2.temp.measurements",
-        "plugin": "HVAC",
-        "range": "",
-        "scope": "Device"
-    },
-    {
-        "data_type": "json",
-        "default": {},
-        "description": "Floor loop 2 flowmeter.",
-        "limit": 0.0,
-        "name": "hvac.floor_loop_2.flowmeter.settings",
-        "plugin": "HVAC",
-        "range": "",
-        "scope": "System"
-    },
-    {
-        "data_type": "json",
-        "default": {},
-        "description": "Floor loop 2 thermometer.",
-        "limit": 0.0,
-        "name": "hvac.floor_loop_2.temp.settings",
-        "plugin": "HVAC",
-        "range": "",
-        "scope": "System"
-    },
-    {
-        "data_type": "json",
-        "default": [],
-        "description": "Floor loop 2 measurements.",
-        "limit": 0.0,
-        "name": "hvac.floor_loop_2.temp.measurements",
-        "plugin": "HVAC",
-        "range": "",
-        "scope": "Device"
     },
     {
         "data_type": "float",
@@ -1762,7 +1558,7 @@
         "name": "light.target_illum",
         "plugin": "Light",
         "range": "0.0/10000.0",
-        "scope": "Both"
+        "scope": "Device"
     },
     {
         "data_type": "float",
@@ -1966,7 +1762,7 @@
     },
     {
         "data_type": "bool",
-        "default": false,
+        "default": true,
         "description": "Plugin enabled",
         "limit": 0.0,
         "name": "sys.enabled",
@@ -3900,7 +3696,7 @@
         "name": "vent.op_setpoint_1",
         "plugin": "Ventilation",
         "range": "0.0/100.0",
-        "scope": "Both"
+        "scope": "Device"
     },
     {
         "data_type": "int",
@@ -3976,7 +3772,7 @@
         "name": "vent.lower_1.fan.speed",
         "plugin": "Ventilation",
         "range": "0.0/100.0",
-        "scope": "System"
+        "scope": "Device"
     },
     {
         "data_type": "json",
@@ -4012,7 +3808,7 @@
         "name": "vent.upper_1.fan.speed",
         "plugin": "Ventilation",
         "range": "0.0/100.0",
-        "scope": "System"
+        "scope": "Device"
     },
     {
         "data_type": "float",
