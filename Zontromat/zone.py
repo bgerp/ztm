@@ -594,7 +594,7 @@ class Zone():
                 self.__ztm_ui_weather_cast_ut.clear()
                 # Check is it logged in.
                 if self.__ztm_ui.is_logged_in():
-                    if self.__erp.is_logged():
+                    if self.__erp.is_logged:
                         # Update Weather.
                         self.__update_weather_cast()
                 # If not, login.
