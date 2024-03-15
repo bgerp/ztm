@@ -477,14 +477,14 @@ class Light(BasePlugin):
         self.__output = self.__target_illumination
 
         # Default logic.
-        # fade_data = self.__flood_fade(self.__output)
-        # result_v1 = l_scale(fade_data[0], [0, 100], [0, 10])
-        # result_v2 = l_scale(fade_data[1], [0, 100], [0, 10])
-        # self.__set_voltages(result_v1, result_v2)
+        fade_data = self.__flood_fade(self.__output)
+        result_v1 = l_scale(fade_data[0], [0, 100], [0, 10])
+        result_v2 = l_scale(fade_data[1], [0, 100], [0, 10])
+        self.__set_voltages(result_v1, result_v2)
 
         # FFW logic.
-        result_v = l_scale(self.__output, [0, 100], [0, 10])
-        self.__set_voltages(result_v, result_v)
+        # result_v = l_scale(self.__output, [0, 100], [0, 10])
+        # self.__set_voltages(result_v, result_v)
 
 #endregion
 
