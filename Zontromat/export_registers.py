@@ -3037,10 +3037,10 @@ def __add_registers(args):
                     "close_on_shutdown": True,
                     "wait_on_shutdown": False,
                     "io_mode": 1, # 1: "single_out", 2: "dual_out"
-                    "output_cw": "U0:ID7:FC5:R0:RO0",
+                    "output_cw": "U0:ID13:FC5:R0:RO4",
                     "output_ccw": "off",
-                    "limit_cw": "U0:ID7:FC2:R0:DI0",
-                    "limit_ccw": "U0:ID7:FC2:R0:DI1"
+                    "limit_cw": "U0:ID13:FC2:R0:DI4",
+                    "limit_ccw": "!U0:ID13:FC2:R0:DI6"
                 }
             }
         ],
@@ -3054,10 +3054,10 @@ def __add_registers(args):
                     "close_on_shutdown": True,
                     "wait_on_shutdown": False,
                     "io_mode": 1, # 1: "single_out", 2: "dual_out"
-                    "output_cw": "U0:ID7:FC5:R0:RO1",
+                    "output_cw": "U0:ID13:FC5:R0:RO6",
                     "output_ccw": "off",
-                    "limit_cw": "U0:ID7:FC2:R0:DI2",
-                    "limit_ccw": "U0:ID7:FC2:R0:DI1"
+                    "limit_cw": "U0:ID13:FC2:R0:DI6",
+                    "limit_ccw": "!U0:ID13:FC2:R0:DI4"
                 }
             }
         ]
@@ -3096,8 +3096,8 @@ def __add_registers(args):
         {
             "uart": 1,
             "mb_id": 1,
-            "e_stop": "U0:ID2:FC5:R0:RO8",
-            "e_status": "U0:ID2:FC2:R0:DI0",
+            "e_stop": "U0:ID13:FC5:R0:RO7",
+            "e_status": "U0:ID13:FC2:R0:DI7",
             "stop_on_shutdown": True,
             "wait_on_shutdown": False
         }
