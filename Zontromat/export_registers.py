@@ -2422,7 +2422,7 @@ def __add_registers(args):
                     "output_cw": "U0:ID12:FC5:R0:RO0",
                     "output_ccw": "off",
                     "limit_cw": "U0:ID11:FC2:R0:DI0",
-                    "limit_ccw": "U0:ID11:FC2:R0:DI1"
+                    "limit_ccw": "!U0:ID11:FC2:R0:DI2"
                 }
             }
         ],
@@ -2439,7 +2439,7 @@ def __add_registers(args):
                     "output_cw": "U0:ID12:FC5:R0:RO2",
                     "output_ccw": "off",
                     "limit_cw": "U0:ID11:FC2:R0:DI2",
-                    "limit_ccw": "U0:ID11:FC2:R0:DI1"
+                    "limit_ccw": "!U0:ID11:FC2:R0:DI0"
                 }
             }
         ]
