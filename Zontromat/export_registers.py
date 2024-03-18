@@ -3302,8 +3302,8 @@ def __add_registers(args):
         {
             "uart": 1,
             "mb_id": 1,
-            "e_stop": "U0:ID2:FC5:R0:RO7",
-            "e_status": "U0:ID2:FC2:R0:DI7",
+            "e_stop": "U0:ID15:FC5:R0:RO7",
+            "e_status": "U0:ID15:FC2:R0:DI7",
             "stop_on_shutdown": True,
             "wait_on_shutdown": False
         }
