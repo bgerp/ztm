@@ -62,17 +62,6 @@ __status__ = "Debug"
 
 #endregion
 
-"""
-
- U1:ID1:R0:DO0
- |  |   |  |
- |  |   |  \----> Bit from the register.
- |  |   \-------> Register type.
- |  \-----------> Modbus identifier.
- \--------------> UART interface.
-
-"""
-
 #region Variables
 
 __parser = None
@@ -1878,23 +1867,23 @@ def __add_registers(args):
     register.value = True
     __registers.append(register)
 
-    # Software update register.
-    register = Register("sys.software.target_version")
-    register.scope = Scope.System
-    register.plugin_name = "System"
-    register.description = "Target software version"
-    register.range = __range["NONE"]
-    register.value = json.loads("{\"repo\": \"http:\/\/github.com\/bgerp\/ztm\/\", \"branch\": \"master\", \"commit\":\"3462828\"}")
-    __registers.append(register)
+    # # Software update register.
+    # register = Register("sys.software.target_version")
+    # register.scope = Scope.System
+    # register.plugin_name = "System"
+    # register.description = "Target software version"
+    # register.range = __range["NONE"]
+    # register.value = json.loads("{\"repo\": \"http:\/\/github.com\/bgerp\/ztm\/\", \"branch\": \"master\", \"commit\":\"3462828\"}")
+    # __registers.append(register)
 
-    # Current software version.
-    register = Register("sys.software.current_version")
-    register.scope = Scope.System
-    register.plugin_name = "System"
-    register.description = "Current software version."
-    register.range = __range["NONE"]
-    register.value = json.loads("{\"repo\": \"http:\/\/github.com\/bgerp\/ztm\/\", \"branch\": \"master\", \"commit\":\"e0c1dda\"}")
-    __registers.append(register)
+    # # Current software version.
+    # register = Register("sys.software.current_version")
+    # register.scope = Scope.System
+    # register.plugin_name = "System"
+    # register.description = "Current software version."
+    # register.range = __range["NONE"]
+    # register.value = json.loads("{\"repo\": \"http:\/\/github.com\/bgerp\/ztm\/\", \"branch\": \"master\", \"commit\":\"e0c1dda\"}")
+    # __registers.append(register)
 
 #endregion
 
