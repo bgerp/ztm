@@ -3365,8 +3365,8 @@ def __add_registers(args):
                     "io_mode": 1, # 1: "single_out", 2: "dual_out"
                     "output_cw": "U0:ID17:FC5:R0:RO0",
                     "output_ccw": "off",
-                    "limit_cw": "U0:ID6:ID17:R0:DI0",
-                    "limit_ccw": "U0:ID6:ID17:R0:DI1"
+                    "limit_cw": "U0:ID17:FC2:R0:DI0",
+                    "limit_ccw": "U0:ID17:FC2:R0:DI1"
                 }
             }
         ]
