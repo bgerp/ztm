@@ -2002,7 +2002,12 @@ class EnergyCenterDistribution(BasePlugin):
             self.__vcg_pool_air_cooling.update()
             reg_state = self._registers.by_name("ecd.pool_air_cooling.valves.state")
             if reg_state is not None:
-                reg_state.value = self.__vcg_pool_air_cooling.target_position
+                if self.__vcg_pool_air_cooling.target_position == 0:
+                    reg_state.value = ThermalMode.Stop.value
+                elif self.__vcg_pool_air_cooling.target_position < 0:
+                    reg_state.value = ThermalMode.Cooling.value
+                elif self.__vcg_pool_air_cooling.target_position > 0:
+                    reg_state.value = ThermalMode.Heating.value
 
         if self.__vcg_pool_heating is not None:
             self.__vcg_pool_heating.update()
