@@ -1908,37 +1908,67 @@ class EnergyCenterDistribution(BasePlugin):
             self.__vcg_floor_entrance.update()
             reg_state = self._registers.by_name("ecd.floor_entrance.valves.state")
             if reg_state is not None:
-                reg_state.value = self.__vcg_floor_entrance.target_position
+                if self.__vcg_floor_entrance.target_position == 0:
+                    reg_state.value = ThermalMode.Stop.value
+                elif self.__vcg_floor_entrance.target_position < 0:
+                    reg_state.value = ThermalMode.Cooling.value
+                elif self.__vcg_floor_entrance.target_position > 0:
+                    reg_state.value = ThermalMode.Heating.value
 
         if self.__vcg_pool_floor is not None:
             self.__vcg_pool_floor.update()
             reg_state = self._registers.by_name("ecd.pool_floor.valves.state")
             if reg_state is not None:
-                reg_state.value = self.__vcg_pool_floor.target_position
+                if self.__vcg_pool_floor.target_position == 0:
+                    reg_state.value = ThermalMode.Stop.value
+                elif self.__vcg_pool_floor.target_position < 0:
+                    reg_state.value = ThermalMode.Cooling.value
+                elif self.__vcg_pool_floor.target_position > 0:
+                    reg_state.value = ThermalMode.Heating.value
 
         if self.__vcg_ground_drilling is not None:
             self.__vcg_ground_drilling.update()
             reg_state = self._registers.by_name("ecd.ground_drilling.valves.state")
             if reg_state is not None:
-                reg_state.value = self.__vcg_ground_drilling.target_position
+                if self.__vcg_ground_drilling.target_position == 0:
+                    reg_state.value = ThermalMode.Stop.value
+                elif self.__vcg_ground_drilling.target_position < 0:
+                    reg_state.value = ThermalMode.Cooling.value
+                elif self.__vcg_ground_drilling.target_position > 0:
+                    reg_state.value = ThermalMode.Heating.value
 
         if self.__vcg_air_tower_green is not None:
             self.__vcg_air_tower_green.update()
             reg_state = self._registers.by_name("ecd.air_tower_green.valves.state")
             if reg_state is not None:
-                reg_state.value = self.__vcg_air_tower_green.target_position
+                if self.__vcg_air_tower_green.target_position == 0:
+                    reg_state.value = ThermalMode.Stop.value
+                elif self.__vcg_air_tower_green.target_position < 0:
+                    reg_state.value = ThermalMode.Cooling.value
+                elif self.__vcg_air_tower_green.target_position > 0:
+                    reg_state.value = ThermalMode.Heating.value
 
         if self.__vcg_air_tower_purple is not None:
             self.__vcg_air_tower_purple.update()
             reg_state = self._registers.by_name("ecd.air_tower_purple.valves.state")
             if reg_state is not None:
-                reg_state.value = self.__vcg_air_tower_purple.target_position
+                if self.__vcg_air_tower_purple.target_position == 0:
+                    reg_state.value = ThermalMode.Stop.value
+                elif self.__vcg_air_tower_purple.target_position < 0:
+                    reg_state.value = ThermalMode.Cooling.value
+                elif self.__vcg_air_tower_purple.target_position > 0:
+                    reg_state.value = ThermalMode.Heating.value
 
         if self.__vcg_generators is not None:
             self.__vcg_generators.update()
             reg_state = self._registers.by_name("ecd.generators.valves.state")
             if reg_state is not None:
-                reg_state.value = self.__vcg_generators.target_position
+                if self.__vcg_generators.target_position == 0:
+                    reg_state.value = ThermalMode.Stop.value
+                elif self.__vcg_generators.target_position < 0:
+                    reg_state.value = ThermalMode.Cooling.value
+                elif self.__vcg_generators.target_position > 0:
+                    reg_state.value = ThermalMode.Heating.value
 
         # ====================================================================================================
         # ======================================= VCG Right door panel =======================================
@@ -1948,55 +1978,100 @@ class EnergyCenterDistribution(BasePlugin):
             self.__vcg_pool_air_heating.update()
             reg_state = self._registers.by_name("ecd.pool_air_heating.valves.state")
             if reg_state is not None:
-                reg_state.value = self.__vcg_pool_air_heating.target_position
+                if self.__vcg_pool_air_heating.target_position == 0:
+                    reg_state.value = ThermalMode.Stop.value
+                elif self.__vcg_pool_air_heating.target_position < 0:
+                    reg_state.value = ThermalMode.Cooling.value
+                elif self.__vcg_pool_air_heating.target_position > 0:
+                    reg_state.value = ThermalMode.Heating.value
 
         if self.__vcg_conv_kitchen is not None:
             self.__vcg_conv_kitchen.update()
             reg_state = self._registers.by_name("ecd.conv_kitchen.valves.state")
             if reg_state is not None:
-                reg_state.value = self.__vcg_conv_kitchen.target_position
+                if self.__vcg_conv_kitchen.target_position == 0:
+                    reg_state.value = ThermalMode.Stop.value
+                elif self.__vcg_conv_kitchen.target_position < 0:
+                    reg_state.value = ThermalMode.Cooling.value
+                elif self.__vcg_conv_kitchen.target_position > 0:
+                    reg_state.value = ThermalMode.Heating.value
 
         if self.__vcg_ahu_conf_hall is not None:
             self.__vcg_ahu_conf_hall.update()
             reg_state = self._registers.by_name("ecd.ahu_conf_hall.valves.state")
             if reg_state is not None:
-                reg_state.value = self.__vcg_ahu_conf_hall.target_position
+                if self.__vcg_ahu_conf_hall.target_position == 0:
+                    reg_state.value = ThermalMode.Stop.value
+                elif self.__vcg_ahu_conf_hall.target_position < 0:
+                    reg_state.value = ThermalMode.Cooling.value
+                elif self.__vcg_ahu_conf_hall.target_position > 0:
+                    reg_state.value = ThermalMode.Heating.value
 
         if self.__vcg_floor_west is not None:
             self.__vcg_floor_west.update()
             reg_state = self._registers.by_name("ecd.floor_west.valves.state")
             if reg_state is not None:
-                reg_state.value = self.__vcg_floor_west.target_position
+                if self.__vcg_floor_west.target_position == 0:
+                    reg_state.value = ThermalMode.Stop.value
+                elif self.__vcg_floor_west.target_position < 0:
+                    reg_state.value = ThermalMode.Cooling.value
+                elif self.__vcg_floor_west.target_position > 0:
+                    reg_state.value = ThermalMode.Heating.value
 
         if self.__vcg_conv_west is not None:
             self.__vcg_conv_west.update()
             reg_state = self._registers.by_name("ecd.conv_west.valves.state")
             if reg_state is not None:
-                reg_state.value = self.__vcg_conv_west.target_position
+                if self.__vcg_conv_west.target_position == 0:
+                    reg_state.value = ThermalMode.Stop.value
+                elif self.__vcg_conv_west.target_position < 0:
+                    reg_state.value = ThermalMode.Cooling.value
+                elif self.__vcg_conv_west.target_position > 0:
+                    reg_state.value = ThermalMode.Heating.value
 
         if self.__vcg_ahu_roof_floor is not None:
             self.__vcg_ahu_roof_floor.update()
             reg_state = self._registers.by_name("ecd.ahu_roof_floor.valves.state")
             if reg_state is not None:
-                reg_state.value = self.__vcg_ahu_roof_floor.target_position
+                if self.__vcg_conv_west.target_position == 0:
+                    reg_state.value = ThermalMode.Stop.value
+                elif self.__vcg_conv_west.target_position < 0:
+                    reg_state.value = ThermalMode.Cooling.value
+                elif self.__vcg_conv_west.target_position > 0:
+                    reg_state.value = ThermalMode.Heating.value
 
         if self.__vcg_ahu_fitness is not None:
             self.__vcg_ahu_fitness.update()
             reg_state = self._registers.by_name("ecd.ahu_fitness.valves.state")
             if reg_state is not None:
-                reg_state.value = self.__vcg_ahu_fitness.target_position
+                if self.__vcg_ahu_fitness.target_position == 0:
+                    reg_state.value = ThermalMode.Stop.value
+                elif self.__vcg_ahu_fitness.target_position < 0:
+                    reg_state.value = ThermalMode.Cooling.value
+                elif self.__vcg_ahu_fitness.target_position > 0:
+                    reg_state.value = ThermalMode.Heating.value
 
         if self.__vcg_floor_east is not None:
             self.__vcg_floor_east.update()
             reg_state = self._registers.by_name("ecd.floor_east.valves.state")
             if reg_state is not None:
-                reg_state.value = self.__vcg_floor_east.target_position
+                if self.__vcg_floor_east.target_position == 0:
+                    reg_state.value = ThermalMode.Stop.value
+                elif self.__vcg_floor_east.target_position < 0:
+                    reg_state.value = ThermalMode.Cooling.value
+                elif self.__vcg_floor_east.target_position > 0:
+                    reg_state.value = ThermalMode.Heating.value
 
         if self.__vcg_conv_east is not None:
             self.__vcg_conv_east.update()
             reg_state = self._registers.by_name("ecd.conv_east.valves.state")
             if reg_state is not None:
-                reg_state.value = self.__vcg_conv_east.target_position
+                if self.__vcg_conv_east.target_position == 0:
+                    reg_state.value = ThermalMode.Stop.value
+                elif self.__vcg_conv_east.target_position < 0:
+                    reg_state.value = ThermalMode.Cooling.value
+                elif self.__vcg_conv_east.target_position > 0:
+                    reg_state.value = ThermalMode.Heating.value
 
         if self.__vcg_pool_air_cooling is not None:
             self.__vcg_pool_air_cooling.update()
@@ -2013,7 +2088,12 @@ class EnergyCenterDistribution(BasePlugin):
             self.__vcg_pool_heating.update()
             reg_state = self._registers.by_name("ecd.pool_heating.valves.state")
             if reg_state is not None:
-                reg_state.value = self.__vcg_pool_heating.target_position
+                if self.__vcg_pool_heating.target_position == 0:
+                    reg_state.value = ThermalMode.Stop.value
+                elif self.__vcg_pool_heating.target_position < 0:
+                    reg_state.value = ThermalMode.Cooling.value
+                elif self.__vcg_pool_heating.target_position > 0:
+                    reg_state.value = ThermalMode.Heating.value
 
         # ====================================================================================================
         # ============================================== Pumps ===============================================
