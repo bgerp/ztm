@@ -274,8 +274,8 @@ class FLX05F(BaseValve):
 
         state = False
 
-        if self._controller.is_valid_gpio(self.__limit_ccw):
-            state = self._controller.digital_read(self.__limit_ccw)
+        if self._controller.is_valid_gpio(self.__limit_cw):
+            state = self._controller.digital_read(self.__limit_cw)
         else:
             state = True
 
@@ -285,8 +285,8 @@ class FLX05F(BaseValve):
 
         state = False
 
-        if self._controller.is_valid_gpio(self.__limit_cw):
-            state = self._controller.digital_read(self.__limit_cw)
+        if self._controller.is_valid_gpio(self.__limit_ccw):
+            state = self._controller.digital_read(self.__limit_ccw)
         else:
             state = True
 
@@ -351,21 +351,23 @@ class FLX05F(BaseValve):
             self._state.set_state(ValveState.Execute)
 
         elif self._state.is_state(ValveState.Execute):
+            
+            self._state.set_state(ValveState.Wait)
 
-            self.__move_timer.update()
-            if self.__move_timer.expired:
-                self.__move_timer.clear()
-                self.__stop()
-                self._current_position = self.target_position
-                self._state.set_state(ValveState.Wait)
+            # self.__move_timer.update()
+            # if self.__move_timer.expired:
+            #     self.__move_timer.clear()
+            #     self.__stop()
+            #     self._current_position = self.target_position
+            #     self._state.set_state(ValveState.Wait)
 
-            cw_limit_state = False # self.__get_close_limit()
-            ccw_limit_state = False # self.__get_open_limit()
-            if cw_limit_state or ccw_limit_state:
-                self.__stop()
-                GlobalErrorHandler.log_hardware_limit(self.__logger, "{} has raised end position.".format(self.name))
-                self._current_position = self.target_position
-                self._state.set_state(ValveState.Wait)
+            # cw_limit_state = False # self.__get_close_limit()
+            # ccw_limit_state = False # self.__get_open_limit()
+            # if cw_limit_state or ccw_limit_state:
+            #     self.__stop()
+            #     GlobalErrorHandler.log_hardware_limit(self.__logger, "{} has raised end position.".format(self.name))
+            #     self._current_position = self.target_position
+            #     self._state.set_state(ValveState.Wait)
 
         elif self._state.is_state(ValveState.Calibrate):
 
