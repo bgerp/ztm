@@ -125,11 +125,11 @@ class ValveControlGroup(BasePlugin):
             if self.__fw_valves is not None:
                 for valve in self.__fw_valves:
                     positions[0] += self.__fw_valves[valve].current_position
-                positions[0] *= -1
 
             if self.__rev_valves is not None:
                 for valve in self.__rev_valves:
                     positions[1] += self.__rev_valves[valve].current_position
+                positions[1] *= -1
 
             position = sum(positions) / len(positions)
 
@@ -262,6 +262,7 @@ class ValveControlGroup(BasePlugin):
                         model=valve['model'],
                         options=valve['options'])
                     self.__rev_valves[dev_name] = valve
+
 #endregion
 
 #region Protected Methods
