@@ -1898,7 +1898,7 @@ class EnergyCenterDistribution(BasePlugin):
         """Update the plugin.
         """
 
-        self.__update_animations()
+        # self.__update_animations()
 
         # ====================================================================================================
         # ======================================= VCG Left door panel ========================================
