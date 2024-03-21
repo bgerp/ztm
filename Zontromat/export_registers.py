@@ -1922,7 +1922,7 @@ def __add_registers(args):
             #     "model": "FLX-05F",
             #     "options":
             #     {
-            #         "close_on_shutdown": True,
+            #         "close_on_shutdown": False,
             #         "wait_on_shutdown": False,
             #         "io_mode": 1, # 1: "single_out", 2: "dual_out"
             #         "output_cw": "U0:ID2:FC5:R0:RO1",
@@ -1939,7 +1939,7 @@ def __add_registers(args):
                 "model": "FLX-05F",
                 "options":
                 {
-                    "close_on_shutdown": True,
+                    "close_on_shutdown": False,
                     "wait_on_shutdown": False,
                     "io_mode": 1, # 1: "single_out", 2: "dual_out"
                     "output_cw": "U0:ID11:FC5:R0:RO0",
@@ -1985,7 +1985,7 @@ def __add_registers(args):
             #     "model": "FLX-05F",
             #     "options":
             #     {
-            #         "close_on_shutdown": True,
+            #         "close_on_shutdown": False,
             #         "wait_on_shutdown": False,
             #         "io_mode": 1, # 1: "single_out", 2: "dual_out"
             #         "output_cw": "U0:ID2:FC5:R0:RO2",
@@ -2002,7 +2002,7 @@ def __add_registers(args):
                 "model": "FLX-05F",
                 "options":
                 {
-                    "close_on_shutdown": True,
+                    "close_on_shutdown": False,
                     "wait_on_shutdown": False,
                     "io_mode": 1, # 1: "single_out", 2: "dual_out"
                     "output_cw": "U0:ID11:FC5:R0:RO2",
@@ -2048,7 +2048,7 @@ def __add_registers(args):
             #     "model": "FLX-05F",
             #     "options":
             #     {
-            #         "close_on_shutdown": True,
+            #         "close_on_shutdown": False,
             #         "wait_on_shutdown": False,
             #         "io_mode": 1, # 1: "single_out", 2: "dual_out"
             #         "output_cw": "U0:ID2:FC5:R0:RO2",
@@ -2065,7 +2065,7 @@ def __add_registers(args):
                 "model": "FLX-05F",
                 "options":
                 {
-                    "close_on_shutdown": True,
+                    "close_on_shutdown": False,
                     "wait_on_shutdown": False,
                     "io_mode": 1, # 1: "single_out", 2: "dual_out"
                     "output_cw": "U0:ID11:FC5:R0:RO1",
@@ -2111,7 +2111,7 @@ def __add_registers(args):
             #     "model": "FLX-05F",
             #     "options":
             #     {
-            #         "close_on_shutdown": True,
+            #         "close_on_shutdown": False,
             #         "wait_on_shutdown": False,
             #         "io_mode": 1, # 1: "single_out", 2: "dual_out"
             #         "output_cw": "U0:ID2:FC5:R0:RO2",
@@ -2128,7 +2128,7 @@ def __add_registers(args):
                 "model": "FLX-05F",
                 "options":
                 {
-                    "close_on_shutdown": True,
+                    "close_on_shutdown": False,
                     "wait_on_shutdown": False,
                     "io_mode": 1, # 1: "single_out", 2: "dual_out"
                     "output_cw": "U0:ID11:FC5:R0:RO4",
@@ -2174,7 +2174,7 @@ def __add_registers(args):
             #     "model": "FLX-05F",
             #     "options":
             #     {
-            #         "close_on_shutdown": True,
+            #         "close_on_shutdown": False,
             #         "wait_on_shutdown": False,
             #         "io_mode": 1, # 1: "single_out", 2: "dual_out"
             #         "output_cw": "U0:ID2:FC5:R0:RO2",
@@ -2191,7 +2191,7 @@ def __add_registers(args):
                 "model": "FLX-05F",
                 "options":
                 {
-                    "close_on_shutdown": True,
+                    "close_on_shutdown": False,
                     "wait_on_shutdown": False,
                     "io_mode": 1, # 1: "single_out", 2: "dual_out"
                     "output_cw": "U0:ID11:FC5:R0:RO3",
@@ -2237,7 +2237,7 @@ def __add_registers(args):
             #     "model": "FLX-05F",
             #     "options":
             #     {
-            #         "close_on_shutdown": True,
+            #         "close_on_shutdown": False,
             #         "wait_on_shutdown": False,
             #         "io_mode": 1, # 1: "single_out", 2: "dual_out"
             #         "output_cw": "U0:ID2:FC5:R0:RO2",
@@ -2254,7 +2254,7 @@ def __add_registers(args):
                 "model": "FLX-05F",
                 "options":
                 {
-                    "close_on_shutdown": True,
+                    "close_on_shutdown": False,
                     "wait_on_shutdown": False,
                     "io_mode": 1, # 1: "single_out", 2: "dual_out"
                     "output_cw": "U0:ID11:FC5:R0:RO5",
@@ -2304,7 +2304,7 @@ def __add_registers(args):
                 "model": "FLX-05F",
                 "options":
                 {
-                    "close_on_shutdown": True,
+                    "close_on_shutdown": False,
                     "wait_on_shutdown": False,
                     "io_mode": 1, # 1: "single_out", 2: "dual_out"
                     "output_cw": "U0:ID15:FC5:R0:RO0",
@@ -2321,7 +2321,7 @@ def __add_registers(args):
             #     "model": "FLX-05F",
             #     "options":
             #     {
-            #         "close_on_shutdown": True,
+            #         "close_on_shutdown": False,
             #         "wait_on_shutdown": False,
             #         "io_mode": 1, # 1: "single_out", 2: "dual_out"
             #         "output_cw": "U0:ID15:FC5:R0:RO7",
@@ -2407,7 +2407,7 @@ def __add_registers(args):
                 "model": "FLX-05F",
                 "options":
                 {
-                    "close_on_shutdown": True,
+                    "close_on_shutdown": False,
                     "wait_on_shutdown": False,
                     "io_mode": 1, # 1: "single_out", 2: "dual_out"
                     "output_cw": "U0:ID12:FC5:R0:RO0",
@@ -2424,7 +2424,7 @@ def __add_registers(args):
                 "model": "FLX-05F",
                 "options":
                 {
-                    "close_on_shutdown": True,
+                    "close_on_shutdown": False,
                     "wait_on_shutdown": False,
                     "io_mode": 1, # 1: "single_out", 2: "dual_out"
                     "output_cw": "U0:ID12:FC5:R0:RO2",
@@ -2510,7 +2510,7 @@ def __add_registers(args):
                 "model": "FLX-05F",
                 "options":
                 {
-                    "close_on_shutdown": True,
+                    "close_on_shutdown": False,
                     "wait_on_shutdown": False,
                     "io_mode": 1, # 1: "single_out", 2: "dual_out"
                     "output_cw": "U0:ID13:FC5:R0:RO0",
@@ -2527,7 +2527,7 @@ def __add_registers(args):
                 "model": "FLX-05F",
                 "options":
                 {
-                    "close_on_shutdown": True,
+                    "close_on_shutdown": False,
                     "wait_on_shutdown": False,
                     "io_mode": 1, # 1: "single_out", 2: "dual_out"
                     "output_cw": "U0:ID13:FC5:R0:RO2",
@@ -2613,7 +2613,7 @@ def __add_registers(args):
                 "model": "FLX-05F",
                 "options":
                 {
-                    "close_on_shutdown": True,
+                    "close_on_shutdown": False,
                     "wait_on_shutdown": False,
                     "io_mode": 1, # 1: "single_out", 2: "dual_out"
                     "output_cw": "U0:ID16:FC5:R0:RO0",
@@ -2630,7 +2630,7 @@ def __add_registers(args):
                 "model": "FLX-05F",
                 "options":
                 {
-                    "close_on_shutdown": True,
+                    "close_on_shutdown": False,
                     "wait_on_shutdown": False,
                     "io_mode": 1, # 1: "single_out", 2: "dual_out"
                     "output_cw": "U0:ID16:FC5:R0:RO2",
@@ -2716,7 +2716,7 @@ def __add_registers(args):
                 "model": "FLX-05F",
                 "options":
                 {
-                    "close_on_shutdown": True,
+                    "close_on_shutdown": False,
                     "wait_on_shutdown": False,
                     "io_mode": 1, # 1: "single_out", 2: "dual_out"
                     "output_cw": "U0:ID14:FC5:R0:RO0",
@@ -2733,7 +2733,7 @@ def __add_registers(args):
                 "model": "FLX-05F",
                 "options":
                 {
-                    "close_on_shutdown": True,
+                    "close_on_shutdown": False,
                     "wait_on_shutdown": False,
                     "io_mode": 1, # 1: "single_out", 2: "dual_out"
                     "output_cw": "U0:ID14:FC5:R0:RO2",
@@ -2819,7 +2819,7 @@ def __add_registers(args):
                 "model": "FLX-05F",
                 "options":
                 {
-                    "close_on_shutdown": True,
+                    "close_on_shutdown": False,
                     "wait_on_shutdown": False,
                     "io_mode": 1, # 1: "single_out", 2: "dual_out"
                     "output_cw": "U0:ID14:FC5:R0:RO4",
@@ -2836,7 +2836,7 @@ def __add_registers(args):
                 "model": "FLX-05F",
                 "options":
                 {
-                    "close_on_shutdown": True,
+                    "close_on_shutdown": False,
                     "wait_on_shutdown": False,
                     "io_mode": 1, # 1: "single_out", 2: "dual_out"
                     "output_cw": "U0:ID14:FC5:R0:RO6",
@@ -2922,7 +2922,7 @@ def __add_registers(args):
                 "model": "FLX-05F",
                 "options":
                 {
-                    "close_on_shutdown": True,
+                    "close_on_shutdown": False,
                     "wait_on_shutdown": False,
                     "io_mode": 1, # 1: "single_out", 2: "dual_out"
                     "output_cw": "U0:ID12:FC5:R0:RO4",
@@ -2939,7 +2939,7 @@ def __add_registers(args):
                 "model": "FLX-05F",
                 "options":
                 {
-                    "close_on_shutdown": True,
+                    "close_on_shutdown": False,
                     "wait_on_shutdown": False,
                     "io_mode": 1, # 1: "single_out", 2: "dual_out"
                     "output_cw": "U0:ID12:FC5:R0:RO6",
@@ -3025,7 +3025,7 @@ def __add_registers(args):
                 "model": "FLX-05F",
                 "options":
                 {
-                    "close_on_shutdown": True,
+                    "close_on_shutdown": False,
                     "wait_on_shutdown": False,
                     "io_mode": 1, # 1: "single_out", 2: "dual_out"
                     "output_cw": "U0:ID13:FC5:R0:RO4",
@@ -3042,7 +3042,7 @@ def __add_registers(args):
                 "model": "FLX-05F",
                 "options":
                 {
-                    "close_on_shutdown": True,
+                    "close_on_shutdown": False,
                     "wait_on_shutdown": False,
                     "io_mode": 1, # 1: "single_out", 2: "dual_out"
                     "output_cw": "U0:ID13:FC5:R0:RO6",
@@ -3128,7 +3128,7 @@ def __add_registers(args):
                 "model": "FLX-05F",
                 "options":
                 {
-                    "close_on_shutdown": True,
+                    "close_on_shutdown": False,
                     "wait_on_shutdown": False,
                     "io_mode": 1, # 1: "single_out", 2: "dual_out"
                     "output_cw": "U0:ID16:FC5:R0:RO4",
@@ -3145,7 +3145,7 @@ def __add_registers(args):
                 "model": "FLX-05F",
                 "options":
                 {
-                    "close_on_shutdown": True,
+                    "close_on_shutdown": False,
                     "wait_on_shutdown": False,
                     "io_mode": 1, # 1: "single_out", 2: "dual_out"
                     "output_cw": "U0:ID16:FC5:R0:RO6",
@@ -3231,7 +3231,7 @@ def __add_registers(args):
             #     "model": "FLX-05F",
             #     "options":
             #     {
-            #         "close_on_shutdown": True,
+            #         "close_on_shutdown": False,
             #         "wait_on_shutdown": False,
             #         "io_mode": 1, # 1: "single_out", 2: "dual_out"
             #         "output_cw": "U0:ID15:FC5:R0:RO6",
@@ -3248,7 +3248,7 @@ def __add_registers(args):
                 "model": "FLX-05F",
                 "options":
                 {
-                    "close_on_shutdown": True,
+                    "close_on_shutdown": False,
                     "wait_on_shutdown": False,
                     "io_mode": 1, # 1: "single_out", 2: "dual_out"
                     "output_cw": "U0:ID15:FC5:R0:RO6",
@@ -3334,7 +3334,7 @@ def __add_registers(args):
             #     "model": "FLX-05F",
             #     "options":
             #     {
-            #         "close_on_shutdown": True,
+            #         "close_on_shutdown": False,
             #         "wait_on_shutdown": False,
             #         "io_mode": 1, # 1: "single_out", 2: "dual_out"
             #         "output_cw": "U0:ID2:FC5:R0:RO0",
@@ -3351,7 +3351,7 @@ def __add_registers(args):
                 "model": "FLX-05F",
                 "options":
                 {
-                    "close_on_shutdown": True,
+                    "close_on_shutdown": False,
                     "wait_on_shutdown": False,
                     "io_mode": 1, # 1: "single_out", 2: "dual_out"
                     "output_cw": "U0:ID17:FC5:R0:RO0",
