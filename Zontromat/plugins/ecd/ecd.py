@@ -1151,9 +1151,9 @@ class EnergyCenterDistribution(BasePlugin):
         if register.value == ThermalMode.Stop.value:
             self.__vcg_pool_air_cooling.target_position = 0
         elif register.value == ThermalMode.Cooling.value:
-            self.__vcg_pool_air_cooling.target_position = -100
-        elif register.value == ThermalMode.Heating.value:
             self.__vcg_pool_air_cooling.target_position = 100
+        elif register.value == ThermalMode.Heating.value:
+            self.__vcg_pool_air_cooling.target_position = -100
 
     def __vcg_pool_heating_settings_cb(self, register: Register):
 
