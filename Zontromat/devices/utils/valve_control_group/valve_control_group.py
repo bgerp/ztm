@@ -122,14 +122,15 @@ class ValveControlGroup(BasePlugin):
 
         if self.__mode == ValveControlGroupMode.DualSide:
             positions = [0,0]
+
             if self.__fw_valves is not None:
                 for valve in self.__fw_valves:
                     positions[0] += self.__fw_valves[valve].current_position
+                positions[0] *= -1
 
             if self.__rev_valves is not None:
                 for valve in self.__rev_valves:
                     positions[1] += self.__rev_valves[valve].current_position
-                positions[1] *= -1
 
             position = sum(positions) / len(positions)
 
@@ -221,9 +222,9 @@ class ValveControlGroup(BasePlugin):
 
 #endregion
 
-#region 
+#region
 
-#region Private 
+#region Private
 
     def __init_fw_vlv(self):
 
