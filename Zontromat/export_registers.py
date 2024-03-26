@@ -2259,8 +2259,8 @@ def __add_registers(args):
                     "io_mode": 1, # 1: "single_out", 2: "dual_out"
                     "output_cw": "U0:ID11:FC5:R0:RO5",
                     "output_ccw": "off",
-                    "limit_cw": "!U0:ID11:FC2:R0:DI5",
-                    "limit_ccw": "U0:ID11:FC2:R0:DI5"
+                    "limit_cw": "U0:ID11:FC2:R0:DI5",
+                    "limit_ccw": "!U0:ID11:FC2:R0:DI5"
                 }
             }
         ]
@@ -2309,8 +2309,8 @@ def __add_registers(args):
                     "io_mode": 1, # 1: "single_out", 2: "dual_out"
                     "output_cw": "U0:ID15:FC5:R0:RO0",
                     "output_ccw": "off",
-                    "limit_cw": "U0:ID15:FC2:R0:DI1",
-                    "limit_ccw": "U0:ID15:FC2:R0:DI0"
+                    "limit_cw": "U0:ID15:FC2:R0:DI0",
+                    "limit_ccw": "U0:ID15:FC2:R0:DI1"
                 }
             }
         ],
@@ -2618,8 +2618,8 @@ def __add_registers(args):
                     "io_mode": 1, # 1: "single_out", 2: "dual_out"
                     "output_cw": "U0:ID16:FC5:R0:RO0",
                     "output_ccw": "off",
-                    "limit_cw": "U0:ID16:FC2:R0:DI2",
-                    "limit_ccw": "!U0:ID16:FC2:R0:DI0"
+                    "limit_cw": "U0:ID16:FC2:R0:DI0",
+                    "limit_ccw": "!U0:ID16:FC2:R0:DI2"
                 }
             }
         ],
@@ -2635,8 +2635,8 @@ def __add_registers(args):
                     "io_mode": 1, # 1: "single_out", 2: "dual_out"
                     "output_cw": "U0:ID16:FC5:R0:RO2",
                     "output_ccw": "off",
-                    "limit_cw": "U0:ID16:FC2:R0:DI0",
-                    "limit_ccw": "!U0:ID16:FC2:R0:DI2"
+                    "limit_cw": "U0:ID16:FC2:R0:DI2",
+                    "limit_ccw": "!U0:ID16:FC2:R0:DI0"
                 }
             }
         ]
@@ -2721,8 +2721,8 @@ def __add_registers(args):
                     "io_mode": 1, # 1: "single_out", 2: "dual_out"
                     "output_cw": "U0:ID14:FC5:R0:RO0",
                     "output_ccw": "off",
-                    "limit_cw": "U0:ID14:FC2:R0:DI2",
-                    "limit_ccw": "!U0:ID14:FC2:R0:DI0"
+                    "limit_cw": "U0:ID14:FC2:R0:DI0",
+                    "limit_ccw": "!U0:ID14:FC2:R0:DI2"
                 }
             }
         ],
@@ -2738,8 +2738,8 @@ def __add_registers(args):
                     "io_mode": 1, # 1: "single_out", 2: "dual_out"
                     "output_cw": "U0:ID14:FC5:R0:RO2",
                     "output_ccw": "off",
-                    "limit_cw": "U0:ID14:FC2:R0:DI0",
-                    "limit_ccw": "!U0:ID14:FC2:R0:DI2"
+                    "limit_cw": "U0:ID14:FC2:R0:DI2",
+                    "limit_ccw": "!U0:ID14:FC2:R0:DI0"
                 }
             }
         ]
@@ -3030,8 +3030,8 @@ def __add_registers(args):
                     "io_mode": 1, # 1: "single_out", 2: "dual_out"
                     "output_cw": "U0:ID13:FC5:R0:RO4",
                     "output_ccw": "off",
-                    "limit_cw": "U0:ID13:FC2:R0:DI6",
-                    "limit_ccw": "!U0:ID13:FC2:R0:DI4"
+                    "limit_cw": "U0:ID13:FC2:R0:DI4",
+                    "limit_ccw": "!U0:ID13:FC2:R0:DI6"
                 }
             }
         ],
@@ -3047,8 +3047,8 @@ def __add_registers(args):
                     "io_mode": 1, # 1: "single_out", 2: "dual_out"
                     "output_cw": "U0:ID13:FC5:R0:RO6",
                     "output_ccw": "off",
-                    "limit_cw": "U0:ID13:FC2:R0:DI4",
-                    "limit_ccw": "!U0:ID13:FC2:R0:DI6"
+                    "limit_cw": "U0:ID13:FC2:R0:DI6",
+                    "limit_ccw": "!U0:ID13:FC2:R0:DI4"
                 }
             }
         ]
@@ -3133,8 +3133,8 @@ def __add_registers(args):
                     "io_mode": 1, # 1: "single_out", 2: "dual_out"
                     "output_cw": "U0:ID16:FC5:R0:RO4",
                     "output_ccw": "off",
-                    "limit_cw": "U0:ID16:FC2:R0:DI6",
-                    "limit_ccw": "!U0:ID16:FC2:R0:DI4"
+                    "limit_cw": "U0:ID16:FC2:R0:DI4",
+                    "limit_ccw": "!U0:ID16:FC2:R0:DI6"
                 }
             }
         ],
@@ -3150,8 +3150,8 @@ def __add_registers(args):
                     "io_mode": 1, # 1: "single_out", 2: "dual_out"
                     "output_cw": "U0:ID16:FC5:R0:RO6",
                     "output_ccw": "off",
-                    "limit_cw": "U0:ID16:FC2:R0:DI4",
-                    "limit_ccw": "!U0:ID16:FC2:R0:DI6"
+                    "limit_cw": "U0:ID16:FC2:R0:DI6",
+                    "limit_ccw": "!U0:ID16:FC2:R0:DI4"
                 }
             }
         ]
@@ -3253,8 +3253,8 @@ def __add_registers(args):
                     "io_mode": 1, # 1: "single_out", 2: "dual_out"
                     "output_cw": "U0:ID15:FC5:R0:RO6",
                     "output_ccw": "off",
-                    "limit_cw": "U0:ID15:FC2:R0:DI5",
-                    "limit_ccw": "U0:ID15:FC2:R0:DI6"
+                    "limit_cw": "U0:ID15:FC2:R0:DI6",
+                    "limit_ccw": "U0:ID15:FC2:R0:DI5"
                 }
             }
         ]
@@ -3329,23 +3329,6 @@ def __add_registers(args):
     {
         "hot":
         [
-            # {
-            #     "vendor": "Flowx",
-            #     "model": "FLX-05F",
-            #     "options":
-            #     {
-            #         "close_on_shutdown": False,
-            #         "wait_on_shutdown": False,
-            #         "io_mode": 1, # 1: "single_out", 2: "dual_out"
-            #         "output_cw": "U0:ID2:FC5:R0:RO0",
-            #         "output_ccw": "off",
-            #         "limit_cw": "U0:ID6:FC2:R0:DI0",
-            #         "limit_ccw": "U0:ID6:FC2:R0:DI1"
-            #     }
-            # }
-        ],
-        "cold":
-        [
             {
                 "vendor": "Flowx",
                 "model": "FLX-05F",
@@ -3360,6 +3343,23 @@ def __add_registers(args):
                     "limit_ccw": "U0:ID17:FC2:R0:DI1"
                 }
             }
+        ],
+        "cold":
+        [
+            # {
+            #     "vendor": "Flowx",
+            #     "model": "FLX-05F",
+            #     "options":
+            #     {
+            #         "close_on_shutdown": False,
+            #         "wait_on_shutdown": False,
+            #         "io_mode": 1, # 1: "single_out", 2: "dual_out"
+            #         "output_cw": "U0:ID17:FC5:R0:RO0",
+            #         "output_ccw": "off",
+            #         "limit_cw": "U0:ID17:FC2:R0:DI0",
+            #         "limit_ccw": "U0:ID17:FC2:R0:DI1"
+            #     }
+            # }
         ]
     }
     __registers.append(register)
