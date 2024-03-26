@@ -26,6 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 # import json
 # from datetime import date
 # from enum import Enum
+import re
 
 from data import verbal_const
 
@@ -42,7 +43,7 @@ from devices.utils.valve_control_group.valve_control_group_mode import ValveCont
 
 from services.global_error_handler.global_error_handler import GlobalErrorHandler
 
-from data.register import Register
+from data.register import Register, Scope
 
 from .thermal_mode import ThermalMode
 
@@ -2181,6 +2182,15 @@ class EnergyCenterDistribution(BasePlugin):
             if reg_state is not None:
                 e_status = self.__pump_servers_cooling.e_status()
                 reg_state.value = {"e_status" : e_status}
+
+        ztm_regs = self._registers.by_scope(Scope.Device)
+        pat = re.compile(r"(ecd\.)(.+?)(\.state)")
+        # pat = re.compile(r"(ecd\.)(generators\.valves)(\.state)")
+        for register in ztm_regs:
+            match = pat.match(register.name)
+            if match:
+                print(f"{register.name}: {register.value}")
+
 
     def _shutdown(self):
         """Shutting down the plugin.
