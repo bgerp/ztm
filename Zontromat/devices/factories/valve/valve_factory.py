@@ -103,6 +103,8 @@ class ValveFactory:
             device = FLX05F(
                 name=name,
                 controller=controller,
+                close_on_shutdown=config["options"]["close_on_shutdown"],
+                io_mode=config["options"]["io_mode"],
                 output_cw=config["options"]["output_cw"],
                 output_ccw=config["options"]["output_ccw"],
                 limit_cw=config["options"]["limit_cw"],
