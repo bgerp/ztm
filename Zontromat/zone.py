@@ -88,63 +88,75 @@ class Zone():
 
 #region Attributes
 
-    __logger = None
-    """Logger"""
-
-    __app_settings = None
-    """Application settings."""
-
-    __controller = None
-    """Neuron controller."""
-
-    __erp = None
-    """Communication with the ERP."""
-
-    __registers = None
-    """Registers"""
-
-    __plugin_manager = None
-    """Plugin manager."""
-
-    __update_rate = 0.5
-    """Controlling update rate in seconds."""
-
-    __update_timer = None
-    """Update timer."""
-
-    __erp_service_update_timer = None
-    """ERP update timer."""
-
-    __erp_state_machine = None
-    """Zone state."""
-
-    __stop_flag = False
-    """Time to Stop flag."""
-
-    __busy_flag = False
-    """Busy flag."""
-
     __performance_profiler = PerformanceProfiler()
-    """Performance profiler."""
-
-    __performance_profiler_timer = None
-    """Performance profiler timer."""
-
-    # (Request to stop the queue from MG @ 15.01.2021)
-    # __registers_snapshot = None
-    # """Registers snapshot."""
-
-    __ztm_ui = None
-    """Zontromat UI
+    """Performance profiler.
     """
 
-    __ztm_ui_temp_data = None
-    """UI data
-    """
+#endregion
 
-    __ztm_ui_update_timer = None
-    """ZtmUI update timer.
-    """
+#region Constructor
+
+    def __init__(self):
+        self.__logger = None
+        """Logger"""
+
+        self.__app_settings = None
+        """Application settings."""
+
+        self.__controller = None
+        """Neuron controller."""
+
+        self.__erp = None
+        """Communication with the ERP."""
+
+        self.__registers = None
+        """Registers"""
+
+        self.__plugin_manager = None
+        """Plugin manager."""
+
+        self.__update_rate = 0.5
+        """Controlling update rate in seconds."""
+
+        self.__update_timer = None
+        """Update timer."""
+
+        self.__erp_service_update_timer = None
+        """ERP update timer."""
+
+        self.__erp_state_machine = None
+        """Zone state."""
+
+        self.__stop_flag = False
+        """Time to Stop flag."""
+
+        self.__busy_flag = False
+        """Busy flag."""
+
+        self.__performance_profiler_timer = None
+        """Performance profiler timer."""
+
+        # (Request to stop the queue from MG @ 15.01.2021)
+        # __registers_snapshot = None
+        # """Registers snapshot."""
+
+        self.__ztm_ui = None
+        """Zontromat UI
+        """
+
+        self.__ztm_ui_temp_data = None
+        """UI data
+        """
+
+        self.__ztm_ui_ut = None
+        """ZtmUI update timer.
+        """
+        self.__ztm_ui_weather_cast_ut = None
+        """ZtmUI update timer.
+        """
+        self.__ztm_ui_heartbeat_ut = None
+        """ZtmUI update timer.
+        """
 
 #endregion
 
@@ -380,7 +392,7 @@ class Zone():
         # (Eml9649)
         # Set the ERP update timer.
         self.__erp_service_update_timer = Timer(
-            int(self.__app_settings.erp_service["update_rate"]) + 
+            int(self.__app_settings.erp_service["update_rate"]) +
                 # Add phase shift time for reducing the self DDoS attack to the server.
                 int(self.__app_settings.erp_service["serial_number"]) * 0.5)
 
@@ -493,61 +505,20 @@ class Zone():
                 password = self.__app_settings.ui["password"],
                 timeout = self.__app_settings.ui["timeout"])
 
-            self.__ztm_ui_update_timer = Timer(1)
+            self.__ztm_ui_ut = Timer(1)
+            self.__ztm_ui_weather_cast_ut = Timer(600)
+            self.__ztm_ui_heartbeat_ut = Timer(3600)
 
-    def __update_min_max(self, register):
+            # Log in.
+            if not self.__ztm_ui.is_logged_in():
+                self.__ztm_ui.login()
 
-        target_register = self.__registers.by_name(register["name"])
-        if target_register is not None:
-            print(target_register.name)
-            print()
-
-    def __update_ztmui(self):
-
-        # Check is it enabled.
-        if self.__app_settings.ui["enabled"] == "True":
-
-            # Update periodically bgERP.
-            self.__ztm_ui_update_timer.update()
-            if self.__ztm_ui_update_timer.expired:
-                self.__ztm_ui_update_timer.clear()
-
-                # Check is it logged in.
-                if self.__ztm_ui.is_logged_in():
-
-                    # Check UI data and send only if changes ocurred.
-                    registers_ui = self.__ztm_ui.get()
-                    if registers_ui != []:
-                        if self.__ztm_ui_temp_data != registers_ui:
-                            self.__ztm_ui_temp_data = registers_ui
-                            # Update changes.
-                            for register in registers_ui:
-                                try:
-                                    target_register = self.__registers.by_name(register["name"])
-                                    if target_register is not None:
-                                        if target_register.data_type == "float":
-                                            target_register.value = float(register["value"])
-                                        elif target_register.data_type == "int":
-                                            target_register.value = float(register["value"])
-                                except Exception as e:
-                                    self.__logger.error(e)
-
-                                # self.__update_min_max(register)
-
-                    # Update Weather.                                    
-                    self.__update_weather_cast()
-
-                    # TODO: Send heart beat.
-                    self.__ztm_ui.heart_beat()
-
-                # If not, login.
-                else:
-                    self.__ztm_ui.login()
 
     def __update_weather_cast(self):
+        # print("Time to update")
 
         target_regs_names = ["envm.forecast.icon_0", "envm.forecast.rh_0", "envm.forecast.temp_0", "envm.forecast.wind_0",
-                        "envm.forecast.icon_3", "envm.forecast.rh_3", "envm.forecast.temp_3", "envm.forecast.wind_3", 
+                        "envm.forecast.icon_3", "envm.forecast.rh_3", "envm.forecast.temp_3", "envm.forecast.wind_3",
                         "envm.forecast.icon_6", "envm.forecast.rh_6", "envm.forecast.temp_6", "envm.forecast.wind_6"]
         target_regs_values = []
 
@@ -567,8 +538,80 @@ class Zone():
             reg = {"name": name, "value": value, "min": minimum, "max": maximum, "status": status}
             target_regs_ztmui.append(reg)
 
+        # for item in target_regs_ztmui:
+        #     print(item)
+
         if target_regs_ztmui != []:
+            # print("OK pass the updates")
             self.__ztm_ui.set(target_regs_ztmui)
+
+    def __transport_registers_ztmui(self):
+        # Check UI data and send only if changes ocurred.
+        registers_ui = self.__ztm_ui.get()
+        if registers_ui != []:
+            if self.__ztm_ui_temp_data != registers_ui:
+                self.__ztm_ui_temp_data = registers_ui
+                # Update changes.
+                for register in registers_ui:
+                    try:
+                        target_register = self.__registers.by_name(register["name"])
+                        if target_register is not None:
+                            if target_register.data_type == "float":
+                                target_register.value = float(register["value"])
+                            elif target_register.data_type == "int":
+                                target_register.value = float(register["value"])
+                    except Exception as e:
+                        self.__logger.error(e)
+
+    def __update_min_max(self, register):
+
+        target_register = self.__registers.by_name(register["name"])
+        if target_register is not None:
+            print(target_register.name)
+            print()
+
+    def __update_ztmui(self):
+
+        # Check is it enabled.
+        if self.__app_settings.ui["enabled"] == "True":
+
+            # self.__update_min_max(register)
+
+            # Get periodically slider data.
+            self.__ztm_ui_ut.update()
+            if self.__ztm_ui_ut.expired:
+                self.__ztm_ui_ut.clear()
+                # Check is it logged in.
+                if self.__ztm_ui.is_logged_in():
+                    self.__transport_registers_ztmui()
+                # If not, login.
+                else:
+                    self.__ztm_ui.login()
+
+            # Update periodically weather cast data.
+            self.__ztm_ui_weather_cast_ut.update()
+            if self.__ztm_ui_weather_cast_ut.expired:
+                self.__ztm_ui_weather_cast_ut.clear()
+                # Check is it logged in.
+                if self.__ztm_ui.is_logged_in():
+                    if self.__erp.is_logged:
+                        # Update Weather.
+                        self.__update_weather_cast()
+                # If not, login.
+                else:
+                    self.__ztm_ui.login()
+
+            # Update periodically bgERP.
+            self.__ztm_ui_heartbeat_ut.update()
+            if self.__ztm_ui_heartbeat_ut.expired:
+                self.__ztm_ui_heartbeat_ut.clear()
+                # Check is it logged in.
+                if self.__ztm_ui.is_logged_in():
+                    # Send heartbeat.
+                    self.__ztm_ui.heart_beat()
+                # If not, login.
+                else:
+                    self.__ztm_ui.login()
 
 #endregion
 
@@ -583,7 +626,7 @@ class Zone():
         time_offset = 0
         if self.__controller.serial_number is not None and self.__controller.serial_number.isdigit():
             time_offset = int(self.__controller.serial_number)
-            
+
         # Preset the time.
         self.__update_timer.expiration_time += (time_offset / 1000)
 
