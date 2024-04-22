@@ -3910,7 +3910,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Ventilation"
     register.description = "HVAC set point"
-    register.range = "-100.0/100.0"
+    register.range = "-200.0/200.0"
     register.value = 0
     __registers.append(register)
 
@@ -4102,6 +4102,28 @@ def __add_registers(args):
     register.description = "Office conference hall module enable flag."
     register.range = __range["BOOL"]
     register.value = False
+    __registers.append(register)
+
+#endregion
+
+#region Global
+
+    # Global floor mode.
+    register = Register("glob.floor.mode")
+    register.scope = Scope.System
+    register.plugin_name = "No plugin, just global"
+    register.description = "Global floor thermal mode."
+    register.range = "0|1|2"
+    register.value = 0
+    __registers.append(register)
+    
+    # Global convector mode.
+    register = Register("glob.conv.mode")
+    register.scope = Scope.System
+    register.plugin_name = "No plugin, just global"
+    register.description = "Global convector thermal mode."
+    register.range = "0|1|2"
+    register.value = 0
     __registers.append(register)
 
 #endregion
