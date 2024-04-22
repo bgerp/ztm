@@ -160,26 +160,37 @@ class FLX05F(BaseValve):
         self.__move_timer = Timer()
 
         # 13 seconds absolute time to react the valve.
-        # Number is measured by emperic way.
+        # Number is measured by empiric way.
         self.__limit_timer = Timer(13)
 
         self.__calibration_state = StateMachine(CalibrationState.NONE)
 
+        self.__output_cw = "off"
         if "output_cw" in config:
             self.__output_cw = config["output_cw"]
 
+        self.__output_ccw = "off"
         if "output_ccw" in config:
             self.__output_ccw = config["output_ccw"]
 
+        self.__limit_cw = "off"
         if "limit_cw" in config:
             self.__limit_cw = config["limit_cw"]
 
+        self.__limit_ccw = "off"
         if "limit_ccw" in config:
             self.__limit_ccw = config["limit_ccw"]
 
+        self.__close_on_shutdown = False
         if "close_on_shutdown" in config:
             self.__close_on_shutdown = config["close_on_shutdown"]
 
+        self.__wait_on_shutdown = False
+        if "wait_on_shutdown" in config:
+            self.__wait_on_shutdown = config["wait_on_shutdown"]
+
+        if "io_mode" in config:
+            self.__io_mode = config["io_mode"]
 
     def __del__(self):
         """Destructor
@@ -222,38 +233,49 @@ class FLX05F(BaseValve):
 
 #endregion
 
-#region Private Messatages (PLC I/O)
+#region Private Messages (PLC I/O)
 
     def __stop(self):
         """Stop the valve motor.
         """
 
-        if self._controller.is_valid_gpio(self.__output_cw):
-            self._controller.digital_write(self.__output_cw, 0)
-
-        if self._controller.is_valid_gpio(self.__output_ccw):
-            self._controller.digital_write(self.__output_ccw, 0)
+        if self.__io_mode == 1:
+            if self._controller.is_valid_gpio(self.__output_cw):
+                self._controller.digital_write(self.__output_cw, 0)
+        elif self.__io_mode == 2:
+            if self._controller.is_valid_gpio(self.__output_cw):
+                self._controller.digital_write(self.__output_cw, 0)
+            if self._controller.is_valid_gpio(self.__output_ccw):
+                self._controller.digital_write(self.__output_ccw, 0)
 
     def __close_valve(self):
         """Turn to CW direction.
         """
 
-        if self._controller.is_valid_gpio(self.__output_cw):
-            self._controller.digital_write(self.__output_cw, 1)
+        if self.__io_mode == 1:
+            if self._controller.is_valid_gpio(self.__output_cw):
+                self._controller.digital_write(self.__output_cw, 0)
+        elif self.__io_mode == 2:
+            if self._controller.is_valid_gpio(self.__output_cw):
+                self._controller.digital_write(self.__output_cw, 1)
 
     def __open_valve(self):
         """Turn to CCW direction.
         """
 
-        if self._controller.is_valid_gpio(self.__output_ccw):
-            self._controller.digital_write(self.__output_ccw, 1)
+        if self.__io_mode == 1:
+            if self._controller.is_valid_gpio(self.__output_cw):
+                self._controller.digital_write(self.__output_cw, 1)
+        elif self.__io_mode == 2:
+            if self._controller.is_valid_gpio(self.__output_ccw):
+                self._controller.digital_write(self.__output_ccw, 1)
 
     def __get_open_limit(self):
 
         state = False
 
-        if self._controller.is_valid_gpio(self.__limit_ccw):
-            state = self._controller.digital_read(self.__limit_ccw)
+        if self._controller.is_valid_gpio(self.__limit_cw):
+            state = self._controller.digital_read(self.__limit_cw)
         else:
             state = True
 
@@ -263,8 +285,8 @@ class FLX05F(BaseValve):
 
         state = False
 
-        if self._controller.is_valid_gpio(self.__limit_cw):
-            state = self._controller.digital_read(self.__limit_cw)
+        if self._controller.is_valid_gpio(self.__limit_ccw):
+            state = self._controller.digital_read(self.__limit_ccw)
         else:
             state = True
 
@@ -292,6 +314,8 @@ class FLX05F(BaseValve):
 
             self.__close_valve()
 
+        if self.__wait_on_shutdown:
+
             while self.__get_close_limit() == False:
                 self.update()
 
@@ -313,7 +337,7 @@ class FLX05F(BaseValve):
                 return
 
             time_to_move = self.__to_time(abs(delta_pos))
-            self.__logger.debug("Time: {}".format(time_to_move))
+            # self.__logger.debug("Time: {}".format(time_to_move))
 
             self.__move_timer.expiration_time = time_to_move
             self.__move_timer.update_last_time()
@@ -327,21 +351,23 @@ class FLX05F(BaseValve):
             self._state.set_state(ValveState.Execute)
 
         elif self._state.is_state(ValveState.Execute):
+            
+            self._state.set_state(ValveState.Wait)
 
-            self.__move_timer.update()
-            if self.__move_timer.expired:
-                self.__move_timer.clear()
-                self.__stop()
-                self._current_position = self.target_position
-                self._state.set_state(ValveState.Wait)
+            # self.__move_timer.update()
+            # if self.__move_timer.expired:
+            #     self.__move_timer.clear()
+            #     self.__stop()
+            #     self._current_position = self.target_position
+            #     self._state.set_state(ValveState.Wait)
 
-            cw_limit_state = False # self.__get_close_limit()
-            ccw_limit_state = False # self.__get_open_limit()
-            if cw_limit_state or ccw_limit_state:
-                self.__stop()
-                GlobalErrorHandler.log_hardware_limit(self.__logger, "{} has raised end position.".format(self.name))
-                self._current_position = self.target_position
-                self._state.set_state(ValveState.Wait)
+            # cw_limit_state = False # self.__get_close_limit()
+            # ccw_limit_state = False # self.__get_open_limit()
+            # if cw_limit_state or ccw_limit_state:
+            #     self.__stop()
+            #     GlobalErrorHandler.log_hardware_limit(self.__logger, "{} has raised end position.".format(self.name))
+            #     self._current_position = self.target_position
+            #     self._state.set_state(ValveState.Wait)
 
         elif self._state.is_state(ValveState.Calibrate):
 
@@ -416,6 +442,11 @@ class FLX05F(BaseValve):
             # - Record the time in T1.
             # - Store (T0 - T1) in dT
             # - Use dT and end position contacts to ensure that the valve is closed and opened.
+
+        if self.__get_close_limit():
+            self._current_position = self.min_pos
+        if self.__get_open_limit():
+            self._current_position = self.max_pos
 
     def calibrate(self):
 

@@ -88,49 +88,6 @@ class Zone(BasePlugin):
 
 #region Attributes
 
-    __logger = None
-    """Logger"""
-
-    __identifier = 0
-    """Number identifier.
-    """
-
-    __occupied_flag = False
-    """Occupied flag.
-    """
-
-    __set_point_op = 0
-    """Operators Panel set point.
-    """
-    
-    __set_point_hvac = 0
-    """HVAC set point.
-    """
-
-    __set_point_ac = 0
-    """Access Control set point.
-    """
-
-    __upper_air_damper_dev = None
-    """Upper air damper settings.
-    """
-
-    __lower_air_damper_dev = None
-    """Lower air damper settings.
-    """
-
-    __upper_fan_dev = None
-    """Upper fan.
-    """
-
-    __lower_fan_dev = None
-    """Lower fan.
-    """
-
-    __fans_power_gpio_name = verbal_const.OFF
-    """Fana power controll GPIO.
-    """
-
 #endregion
 
 #region Constructor / Destructor
@@ -140,8 +97,51 @@ class Zone(BasePlugin):
 
         super().__init__(config)
 
+        self.__identifier = 0
+        """Number identifier.
+        """
+
         if "identifier" in config:
             self.__identifier = config["identifier"]
+
+        self.__logger = None
+        """Logger"""
+
+        self.__occupied_flag = False
+        """Occupied flag.
+        """
+
+        self.__set_point_op = 0
+        """Operators Panel set point.
+        """
+        
+        self.__set_point_hvac = 0
+        """HVAC set point.
+        """
+
+        self.__set_point_ac = 0
+        """Access Control set point.
+        """
+
+        self.__upper_air_damper_dev = None
+        """Upper air damper settings.
+        """
+
+        self.__lower_air_damper_dev = None
+        """Lower air damper settings.
+        """
+
+        self.__upper_fan_dev = None
+        """Upper fan.
+        """
+
+        self.__lower_fan_dev = None
+        """Lower fan.
+        """
+
+        self.__fans_power_gpio_name = verbal_const.OFF
+        """Fans power control GPIO.
+        """
 
     def __del__(self):
 
@@ -184,7 +184,7 @@ class Zone(BasePlugin):
 
 #region Private Methods (Registers)
 
-    # Fans power GPIO controll.
+    # Fans power GPIO control.
     def __fans_power_gpio(self, register: Register):
 
         # Check data type.
@@ -519,7 +519,6 @@ class Zone(BasePlugin):
             lower_fan_speed.update_handlers = self.__lower_fan_speed_cb
             lower_fan_speed.update()
 
-
     def __is_empty(self):
 
         value = False
@@ -611,6 +610,12 @@ class Zone(BasePlugin):
         if not self.__lower_air_damper_dev is None:
             self.__lower_air_damper_dev.update()
 
+    def __first_index_of_max(self, setpoints):
+        for index, etpoint in enumerate(setpoints):
+            setpoints[index] = abs(setpoints[index])
+        max_value = max(setpoints)
+        return setpoints.index(max_value)
+
 #endregion
 
 #region Public Methods
@@ -635,15 +640,52 @@ class Zone(BasePlugin):
     def _update(self):
         """Runtime of the plugin."""
 
+        # Set fan speeds.
+        speed_lower = 0
+        speed_upper = 0
+
+        # 0 - Set point from the operators panel.
+        # 1 - Set point from the HVAC.
+        # 2 - Set point from the AC.
+        set_points = [self.__set_point_op, self.__set_point_hvac, self.__set_point_ac]
+        leading_index = self.__first_index_of_max(set_points)
+        leading_setpoint = set_points[leading_index]
+
         # Power ON/OFF the power of the fans.
-        if self.__set_point_op > 0:
+        if leading_setpoint != 0:
             self._controller.digital_write(self.__fans_power_gpio_name, 1)
         else:
             self._controller.digital_write(self.__fans_power_gpio_name, 0)
 
-        # Set the value of the speeds.
-        speed_lower = self.__set_point_op
-        speed_upper = self.__set_point_op
+        # If the OP is leading.
+        if leading_index == 0:
+            # Set the value of the speeds.
+            speed_lower = leading_setpoint
+            speed_upper = leading_setpoint
+
+        # If HVAC is leading.
+        elif leading_index == 1:
+            if leading_setpoint == 0:
+                speed_lower = 0
+                speed_upper = 0
+            elif leading_setpoint > 100:
+                speed_lower = max(leading_setpoint - 100, 0)
+                speed_upper = min(leading_setpoint, 100)
+            elif leading_setpoint > 0:
+                speed_lower = 0
+                speed_upper = leading_setpoint
+            elif leading_setpoint < -100:
+                speed_lower = min(abs(leading_setpoint), 100)
+                speed_upper = max(abs(leading_setpoint) - 100, 0)
+            elif leading_setpoint < 0:
+                speed_lower = abs(leading_setpoint)
+                speed_upper = 0
+
+        # If AC is leading.
+        elif leading_index == 2:
+            # Set the value of the speeds.
+            speed_lower = leading_setpoint
+            speed_upper = leading_setpoint
 
         lower_fan_speed = self._registers.by_name("{}.lower_{}.fan.speed".format(self.key, self.__identifier))
         if lower_fan_speed is not None:

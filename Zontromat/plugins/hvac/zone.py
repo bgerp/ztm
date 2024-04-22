@@ -250,7 +250,7 @@ class Zone(BasePlugin):
         self.__fan_control_table = \
         [
             [0, 0, 0, 0, 0, 50, 80, 120, 140], # 0 - Спряно
-            [80, 50, 30, 0, 0, 0, 30, 50, 80], # 1 - Охлаждане 
+            [-80, -50, -30, 0, 0, 0, 30, 50, 80], # 1 - Охлаждане 
             [0, 0, 0, 0, 0, 0, 0, 0, 0],       # 2 - Отопление
             [0, 0, 0, 0, 0, 0, 0, 0, 0] # 3 - Режим №3
         ]
@@ -379,7 +379,7 @@ class Zone(BasePlugin):
         if self.__adjust_temp == register.value:
             return
 
-        # Evry time you move the slider, it will take affec momentary.
+        # Every time you move the slider, it will take affect momentary.
         self.__update_now_flag = True
 
         # @see https://experta.bg/L/S/122745/m/Fwntindd
@@ -434,6 +434,24 @@ class Zone(BasePlugin):
             return
 
         self.__window_closed_input = register.value
+
+    def __get_glob_floor_mode(self):
+        value = 0
+
+        register = self._registers.by_name("glob.floor.mode")
+        if register is not None:
+            value = register.value
+
+        return value
+
+    def __get_glob_conv_mode(self):
+        value = 0
+
+        register = self._registers.by_name("glob.conv.mode")
+        if register is not None:
+            value = register.value
+
+        return value
 
 #endregion
 
@@ -980,7 +998,6 @@ class Zone(BasePlugin):
 
         return state
 
-
 #endregion
 
 #region Private Methods
@@ -1076,7 +1093,7 @@ class Zone(BasePlugin):
             conv_state = 3
 
         self.__set_conv_state(conv_state)
-
+        self.__set_ventilation(fan_state)
 
         return
         if state == 0:

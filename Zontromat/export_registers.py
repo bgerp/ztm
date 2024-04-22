@@ -97,8 +97,8 @@ def __set_parser():
     global __parser
 
     # Add arguments.
-    # __parser.add_argument("--action", type=str, default="w_json", help="Export JSON file.")
-    __parser.add_argument("--action", type=str, default="w_csv", help="Export CSV file.")
+    __parser.add_argument("--action", type=str, default="w_json", help="Export JSON file.")
+    # __parser.add_argument("--action", type=str, default="w_csv", help="Export CSV file.")
     # __parser.add_argument("--action", type=str, default="list_gpio", help="Export type.")
     # __parser.add_argument("--action", type=str, default="w_md", help="Export MD file.")
     # __parser.add_argument("--path", type=str, default=file_name, help="Target file path.")
@@ -2896,6 +2896,7 @@ def __add_registers(args):
     register.description = "ECD / AHU roof floor pump mode."
     register.range = __range["PERCENTAGE_I"]
     register.value = 0
+
     __registers.append(register)
 
     # ECD / AHU roof floor hall pump state.
@@ -3329,23 +3330,6 @@ def __add_registers(args):
     {
         "hot":
         [
-            # {
-            #     "vendor": "Flowx",
-            #     "model": "FLX-05F",
-            #     "options":
-            #     {
-            #         "close_on_shutdown": False,
-            #         "wait_on_shutdown": False,
-            #         "io_mode": 1, # 1: "single_out", 2: "dual_out"
-            #         "output_cw": "U0:ID2:FC5:R0:RO0",
-            #         "output_ccw": "off",
-            #         "limit_cw": "U0:ID6:FC2:R0:DI0",
-            #         "limit_ccw": "U0:ID6:FC2:R0:DI1"
-            #     }
-            # }
-        ],
-        "cold":
-        [
             {
                 "vendor": "Flowx",
                 "model": "FLX-05F",
@@ -3360,6 +3344,23 @@ def __add_registers(args):
                     "limit_ccw": "U0:ID17:FC2:R0:DI1"
                 }
             }
+        ],
+        "cold":
+        [
+            # {
+            #     "vendor": "Flowx",
+            #     "model": "FLX-05F",
+            #     "options":
+            #     {
+            #         "close_on_shutdown": False,
+            #         "wait_on_shutdown": False,
+            #         "io_mode": 1, # 1: "single_out", 2: "dual_out"
+            #         "output_cw": "U0:ID17:FC5:R0:RO0",
+            #         "output_ccw": "off",
+            #         "limit_cw": "U0:ID17:FC2:R0:DI0",
+            #         "limit_ccw": "U0:ID17:FC2:R0:DI1"
+            #     }
+            # }
         ]
     }
     __registers.append(register)
@@ -3910,7 +3911,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Ventilation"
     register.description = "HVAC set point"
-    register.range = "-100.0/100.0"
+    register.range = "-200.0/200.0"
     register.value = 0
     __registers.append(register)
 
@@ -4102,6 +4103,28 @@ def __add_registers(args):
     register.description = "Office conference hall module enable flag."
     register.range = __range["BOOL"]
     register.value = False
+    __registers.append(register)
+
+#endregion
+
+#region Global
+
+    # Global floor mode.
+    register = Register("glob.floor.mode")
+    register.scope = Scope.System
+    register.plugin_name = "No plugin, just global"
+    register.description = "Global floor thermal mode."
+    register.range = "0|1|2"
+    register.value = 0
+    __registers.append(register)
+    
+    # Global convector mode.
+    register = Register("glob.conv.mode")
+    register.scope = Scope.System
+    register.plugin_name = "No plugin, just global"
+    register.description = "Global convector thermal mode."
+    register.range = "0|1|2"
+    register.value = 0
     __registers.append(register)
 
 #endregion
