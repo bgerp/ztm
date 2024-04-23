@@ -1088,9 +1088,9 @@ class Zone(BasePlugin):
             state = last_state
 
         # Controlled by the ERP.
-        conv_state = self.__conv_control_table[self.__glob_conv_mode.value][state]
-        fl_state = self.__fl_control_table[self.__glob_floor_mode.value][state]
-        fan_state = self.__fan_control_table[self.__glob_conv_mode.value][state]
+        conv_state = self.__conv_control_table[self.__glob_conv_mode][state]
+        fl_state = self.__fl_control_table[self.__glob_floor_mode][state]
+        fan_state = self.__fan_control_table[self.__glob_conv_mode][state]
 
         # Test control.
         # conv_state = self.__conv_control_table[3][state]
