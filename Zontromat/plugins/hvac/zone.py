@@ -121,24 +121,20 @@ class Zone(BasePlugin):
         """Logger
         """
 
-        self.__thermal_mode = 0
-        """Thermal mode.
-        """
-
         self.__update_now_flag = True
         """Fire update event every time when settings are changed.
-        """        
+        """
 
         self.__stop_flag = False
         """HVAC Stop flag.
         """
 
         self.__update_timer = Timer(60)
-        """Update timer
+        """Update timer.
         """        
 
         self.__stop_timer = Timer(10)
-        """Stop timer
+        """Stop timer.
         """        
 
         self.__vlv_fl_1_tmr = TimerPWM()
@@ -156,8 +152,53 @@ class Zone(BasePlugin):
         self.__vlv_fl_3_tmr.duty_cycle = 0
         self.__vlv_fl_3_tmr.set_cb(lambda: self.__vlv_fl_3(100), lambda: self.__vlv_fl_3(0))
 
-        # Create temperature processor.
         self.__temp_proc = TemperatureProcessor()
+        """Temperature processor.
+        """
+
+        self.__conversion_table = \
+        {
+            -3.0: 0,
+            -2.5: 1,
+            -2.0: 1,
+            -1.5: 2,
+            -1.0: 2,
+            -0.5: 3,
+             0.0: 4,
+             0.5: 5,
+             1.0: 6,
+             1.5: 6,
+             2.0: 7,
+             2.5: 7,
+             3.0: 8
+        }
+
+        # Floor valve control table.
+        self.__fl_control_table = \
+        [
+            [0, 0, 0, 0, 0, 0, 0, 0, 0],     # 0 - Спряно
+            [1, 1, 1/2, 1/4, 0, 0, 0, 0, 0], # 1 - Охлаждане 
+            [0, 0, 0, 0, 0, 1/4, 1/2, 1, 1], # 2 - Отопление
+            [0, 0, 0, 0, 0, 1/4, 1/2, 1, 1] # 3 - Режим №3
+        ]
+
+        # Convector control table.
+        self.__conv_control_table = \
+        [
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], # 0 - Спряно
+            [4, 3, 2, 1, 0, 0, 0, 0, 0, 0], # 1 - Охлаждане 
+            [0, 0, 0, 0, 0, 0, 1, 2, 3, 4], # 2 - Отопление
+            [1, 1, 1, 1, 0, 0, 0, 0, 0] # 3 - Режим №3
+        ]
+
+        # Fan control table.
+        self.__fan_control_table = \
+        [
+            [0, 0, 0, 0, 0, 50, 80, 120, 140], # 0 - Спряно
+            [-80, -50, -30, 0, 0, 0, 30, 50, 80], # 1 - Охлаждане 
+            [0, 0, 0, 0, 0, 0, 0, 0, 0],       # 2 - Отопление
+            [0, 0, 0, 0, 0, 0, 0, 0, 0] # 3 - Режим №3
+        ]
 
         self.__air_temp_upper_dev = None
         """Air thermometer upper.
@@ -207,54 +248,27 @@ class Zone(BasePlugin):
         """Convector valve device.
         """
 
+        self.__adjust_temp = 0
+        """Temperature set point from the OP.
+        """
+
         self.__window_closed_input = verbal_const.OFF
         """Window closed sensor input.
         """
 
-        self.__conversion_table = \
-        {
-            -3.0: 0,
-            -2.5: 1,
-            -2.0: 1,
-            -1.5: 2,
-            -1.0: 2,
-            -0.5: 3,
-             0.0: 4,
-             0.5: 5,
-             1.0: 6,
-             1.5: 6,
-             2.0: 7,
-             2.5: 7,
-             3.0: 8
-        }
+        self.__glob_conv_mode = 0
+        """Global convector thermal mode.
+        """
 
-        # Floor valve control table.
-        self.__fl_control_table = \
-        [
-            [0, 0, 0, 0, 0, 0, 0, 0, 0],     # 0 - Спряно
-            [1, 1, 1/2, 1/4, 0, 0, 0, 0, 0], # 1 - Охлаждане 
-            [0, 0, 0, 0, 0, 1/4, 1/2, 1, 1], # 2 - Отопление
-            [0, 0, 0, 0, 0, 1/4, 1/2, 1, 1] # 3 - Режим №3
-        ]
+        self.__glob_floor_mode = 0
+        """Global floor thermal mode.
+        """
 
-        # Convector control table.
-        self.__conv_control_table = \
-        [
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], # 0 - Спряно
-            [4, 3, 2, 1, 0, 0, 0, 0, 0, 0], # 1 - Охлаждане 
-            [0, 0, 0, 0, 0, 0, 1, 2, 3, 4], # 2 - Отопление
-            [1, 1, 1, 1, 0, 0, 0, 0, 0] # 3 - Режим №3
-        ]
 
-        # Fan control table.
-        self.__fan_control_table = \
-        [
-            [0, 0, 0, 0, 0, 50, 80, 120, 140], # 0 - Спряно
-            [-80, -50, -30, 0, 0, 0, 30, 50, 80], # 1 - Охлаждане 
-            [0, 0, 0, 0, 0, 0, 0, 0, 0],       # 2 - Отопление
-            [0, 0, 0, 0, 0, 0, 0, 0, 0] # 3 - Режим №3
-        ]
 
+        self.__thermal_mode = 0
+        """Thermal mode.
+        """
 
         self.__dt_temp = 0
 
@@ -266,19 +280,10 @@ class Zone(BasePlugin):
         назад се отчита изменението на температурата.
         Limits: (1 - 3)"""
 
-        self.__adjust_temp = 0
-        """Зададено отклонение от температурата
-        (задава се от дисплея до вратата или през мобилен телефон, вързан в локалната мрежа)
-        Limits: (-2.5 : 2.5)"""
-
         self.__goal_building_temp = 0
         """Целева температура на сградата.
         (подава се от централния сървър)
         Limits: (18-26)"""
-
-        self.__delta_temp = 0
-        """Изменението на температурата от последните минути.
-        Limits: (-3 : 3)"""
 
         self.__thermal_force = 0
         """Каква топлинна сила трябва да приложим към системата
@@ -304,154 +309,6 @@ class Zone(BasePlugin):
 
         # return the temperature.
         return self.__temp_proc.value
-
-#endregion
-
-#region Private Methods (Registers Parameters)
-
-    def __update_rate_cb(self, register):
-
-        return
-
-        # Check data type.
-        if not (register.data_type == "float" or register.data_type == "int"):
-            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
-            return
-
-        # Check value.
-        if register.value < 0:
-            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
-            return
-
-        if self.__update_timer.expiration_time != register.value:
-            self.__update_timer.expiration_time = register.value
-
-    def __delta_time_cb(self, register):
-
-        # Check data type.
-        if not (register.data_type == "float" or register.data_type == "int"):
-            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
-            return
-
-        # Check value.
-        if register.value < 0:
-            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
-            return
-
-        self.__delta_time = register.value
-
-    def __thermal_mode_cb(self, register):
-
-        # Check data type.
-        if not register.data_type == "int":
-            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
-            return
-
-        if ThermalMode.is_valid(register.value):
-            self.__thermal_mode = ThermalMode(register.value)
-            print(self.__thermal_mode)
-
-    def __thermal_force_limit_cb(self, register):
-
-        # Check data type.
-        if not (register.data_type == "float" or register.data_type == "int"):
-            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
-            return
-
-        # Check value.
-        if register.value < 0:
-            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
-            return
-
-        if register.value > 100:
-            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
-            return
-
-        self.__thermal_force_limit = register.value
-
-    def __adjust_temp_cb(self, register):
-
-        # Check data type.
-        if not (register.data_type == "float" or register.data_type == "int"):
-            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
-            return
-
-        if self.__adjust_temp == register.value:
-            return
-
-        # Every time you move the slider, it will take affect momentary.
-        self.__update_now_flag = True
-
-        # @see https://experta.bg/L/S/122745/m/Fwntindd
-        min_temp = 2.5
-        max_temp = -2.5
-
-        min_temp_reg = self._registers.by_name(f"{self.key}.temp_{self.__identifier}.min")
-        if min_temp_reg is not None:
-            min_temp = min_temp_reg.value
-
-        max_temp_reg = self._registers.by_name(f"{self.key}.temp_{self.__identifier}.max")
-        if max_temp_reg is not None:
-            max_temp = max_temp_reg.value
-
-        actual_temp = register.value
-
-        if actual_temp < min_temp:
-            actual_temp = min_temp
-
-        if actual_temp > max_temp:
-            actual_temp = max_temp
-
-        self.__adjust_temp = actual_temp
-
-    def __goal_building_temp_cb(self, register):
-
-        # Check data type.
-        if not (register.data_type == "float" or register.data_type == "int"):
-            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
-            return
-
-        # @see https://experta.bg/L/S/122745/m/Fwntindd
-        min_temp = 18
-        max_temp = 26
-
-        actual_temp = register.value
-
-        if actual_temp < min_temp:
-            actual_temp = min_temp
-
-        if actual_temp > max_temp:
-            actual_temp = max_temp
-
-        if self.__goal_building_temp != actual_temp:
-            self.__goal_building_temp = actual_temp
-
-    def __window_closed_input_cb(self, register):
-
-          # Check data type.
-        if not register.data_type == "str":
-            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
-            return
-
-        self.__window_closed_input = register.value
-
-    def __get_glob_floor_mode(self):
-        value = 0
-
-        register = self._registers.by_name("glob.floor.mode")
-        if register is not None:
-            value = register.value
-
-        return value
-
-    def __get_glob_conv_mode(self):
-        value = 0
-
-        register = self._registers.by_name("glob.conv.mode")
-        if register is not None:
-            value = register.value
-
-        return value
 
 #endregion
 
@@ -572,30 +429,6 @@ class Zone(BasePlugin):
         # 2. If the following register is available then set ist value to the thermometers value.
         self._registers.write(f"{self.key}.air_temp_upper_{self.__identifier}.value",
                               air_temp_upper_value)
-
-#endregion
-
-#region Private Methods (Registers envm)
-
-    def __envm_energy_cb(self, register):
-
-        # Check data type.
-        if not ((register.data_type == "int") or (register.data_type == "float")):
-            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
-            return
-
-        # TODO: Get energy mode for the building.
-        pass
-
-    def __is_empty(self):
-
-        value = False
-
-        is_empty = self._registers.by_name("envm.is_empty")
-        if is_empty is not None:
-            value = is_empty.value
-
-        return value
 
 #endregion
 
@@ -833,7 +666,181 @@ class Zone(BasePlugin):
 
 #endregion
 
-#region Private Methods (Ventilation Interface)
+#region Private Methods (Registers Parameters)
+
+    def __adjust_temp_cb(self, register):
+
+        # Check data type.
+        if not (register.data_type == "float" or register.data_type == "int"):
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        if self.__adjust_temp == register.value:
+            return
+
+        # Every time you move the slider, it will take affect momentary.
+        self.__update_now_flag = True
+
+        # @see https://experta.bg/L/S/122745/m/Fwntindd
+        min_temp = 2.5
+        max_temp = -2.5
+
+        min_temp_reg = self._registers.by_name(f"{self.key}.temp_{self.__identifier}.min")
+        if min_temp_reg is not None:
+            min_temp = min_temp_reg.value
+
+        max_temp_reg = self._registers.by_name(f"{self.key}.temp_{self.__identifier}.max")
+        if max_temp_reg is not None:
+            max_temp = max_temp_reg.value
+
+        actual_temp = register.value
+
+        if actual_temp < min_temp:
+            actual_temp = min_temp
+
+        if actual_temp > max_temp:
+            actual_temp = max_temp
+
+        self.__adjust_temp = actual_temp
+
+    def __window_closed_input_cb(self, register):
+
+          # Check data type.
+        if not register.data_type == "str":
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        self.__window_closed_input = register.value
+
+    def __glob_conv_mode_cb(self, register):
+
+        # Check data type.
+        if not register.data_type == "int":
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        self.__glob_conv_mode = register.value
+
+    def __glob_floor_mode_cb(self, register):
+
+        # Check data type.
+        if not register.data_type == "int":
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        self.__glob_floor_mode = register.value
+
+#endregion
+
+#region Private Methods (Registers DEPRECATED)
+
+    def __update_rate_cb(self, register):
+
+        return
+
+        # Check data type.
+        if not (register.data_type == "float" or register.data_type == "int"):
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        # Check value.
+        if register.value < 0:
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
+            return
+
+        if self.__update_timer.expiration_time != register.value:
+            self.__update_timer.expiration_time = register.value
+
+    def __delta_time_cb(self, register):
+
+        # Check data type.
+        if not (register.data_type == "float" or register.data_type == "int"):
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        # Check value.
+        if register.value < 0:
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
+            return
+
+        self.__delta_time = register.value
+
+    def __thermal_mode_cb(self, register):
+
+        # Check data type.
+        if not register.data_type == "int":
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        if ThermalMode.is_valid(register.value):
+            self.__thermal_mode = ThermalMode(register.value)
+
+    def __thermal_force_limit_cb(self, register):
+
+        # Check data type.
+        if not (register.data_type == "float" or register.data_type == "int"):
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        # Check value.
+        if register.value < 0:
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
+            return
+
+        if register.value > 100:
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
+            return
+
+        self.__thermal_force_limit = register.value
+
+    def __goal_building_temp_cb(self, register):
+
+        # Check data type.
+        if not (register.data_type == "float" or register.data_type == "int"):
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        # @see https://experta.bg/L/S/122745/m/Fwntindd
+        min_temp = 18
+        max_temp = 26
+
+        actual_temp = register.value
+
+        if actual_temp < min_temp:
+            actual_temp = min_temp
+
+        if actual_temp > max_temp:
+            actual_temp = max_temp
+
+        self.__goal_building_temp = actual_temp
+
+#endregion
+
+#region Private Methods (Registers envm)
+
+    def __envm_energy_cb(self, register):
+
+        # Check data type.
+        if not ((register.data_type == "int") or (register.data_type == "float")):
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        # TODO: Get energy mode for the building.
+        pass
+
+    def __is_empty(self):
+
+        value = False
+
+        is_empty = self._registers.by_name("envm.is_empty")
+        if is_empty is not None:
+            value = is_empty.value
+
+        return value
+
+#endregion
+
+#region Private Methods (Registers Ventilation)
 
     def __set_ventilation(self, value):
 
@@ -842,7 +849,7 @@ class Zone(BasePlugin):
 
 #endregion
 
-#region Private Methods (Registers Interface)
+#region Private Methods (Registers Initialization)
 
     def __init_registers(self):
         """Initialize the registers callbacks.
@@ -963,6 +970,16 @@ class Zone(BasePlugin):
             envm_energy.update_handlers = self.__envm_energy_cb
             envm_energy.update()
 
+        glob_floor_mode = self._registers.by_name("glob.floor.mode")
+        if glob_floor_mode is not None:
+            glob_floor_mode.update_handlers = self.__glob_floor_mode_cb
+            glob_floor_mode.update()
+
+        glob_conv_mode = self._registers.by_name("glob.conv.mode")
+        if glob_conv_mode is not None:
+            glob_conv_mode.update_handlers = self.__glob_conv_mode_cb
+            glob_conv_mode.update()
+
     def __is_hot_water(self):
 
         # TODO: Return water temperature from monitoring registers plugin.
@@ -1071,16 +1088,16 @@ class Zone(BasePlugin):
             state = last_state
 
         # Controlled by the ERP.
-        # conv_state = self.__conv_control_table[self.__thermal_mode.value][state]
-        # fl_state = self.__fl_control_table[self.__thermal_mode.value][state]
-        # fan_state = self.__fan_control_table[self.__thermal_mode.value][state]
+        conv_state = self.__conv_control_table[self.__glob_conv_mode.value][state]
+        fl_state = self.__fl_control_table[self.__glob_floor_mode.value][state]
+        fan_state = self.__fan_control_table[self.__glob_conv_mode.value][state]
 
         # Test control.
-        conv_state = self.__conv_control_table[3][state]
-        fl_state = self.__fl_control_table[3][state]
-        fan_state = self.__fan_control_table[3][state]
+        # conv_state = self.__conv_control_table[3][state]
+        # fl_state = self.__fl_control_table[3][state]
+        # fan_state = self.__fan_control_table[3][state]
 
-        print(f"self.__thermal_mode: {self.__thermal_mode}; conv_state: {conv_state:2.1f}; fl_state: {fl_state:2.1f}; fan_state: {fan_state:2.1f}; ")
+        print(f"self.__glob_floor_mode: {self.__glob_floor_mode}; self.__glob_conv_mode: {self.__glob_conv_mode}; conv_state: {conv_state:2.1f}; fl_state: {fl_state:2.1f}; fan_state: {fan_state:2.1f}; ")
 
         self.__set_fl_state(fl_state)
 
@@ -1094,42 +1111,6 @@ class Zone(BasePlugin):
 
         self.__set_conv_state(conv_state)
         self.__set_ventilation(fan_state)
-
-        return
-        if state == 0:
-            self.__set_fl_state(0)
-            self.__set_cl_state(100)
-            self.__set_conv_state(1)
-
-        elif state == 1:
-            self.__set_fl_state(1/3)
-            self.__set_cl_state(100)
-            self.__set_conv_state(0)
-
-        elif state == 2:
-            self.__set_fl_state(1/2)
-            self.__set_cl_state(100)
-            self.__set_conv_state(0)
-
-        elif state == 3:
-            self.__set_fl_state(1)
-            self.__set_cl_state(100)
-            self.__set_conv_state(0)
-
-        elif state == 4:
-            self.__set_fl_state(1)
-            self.__set_cl_state(100)
-            self.__set_conv_state(0)
-
-        elif state == 5:
-            self.__set_fl_state(1)
-            self.__set_cl_state(100)
-            self.__set_conv_state(0)
-
-        elif state == 6:
-            self.__set_fl_state(1)
-            self.__set_cl_state(100)
-            self.__set_conv_state(0)
 
 #endregion
 

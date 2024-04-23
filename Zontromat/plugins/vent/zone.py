@@ -687,13 +687,18 @@ class Zone(BasePlugin):
             speed_lower = leading_setpoint
             speed_upper = leading_setpoint
 
-        lower_fan_speed = self._registers.by_name("{}.lower_{}.fan.speed".format(self.key, self.__identifier))
+        lower_fan_speed = self._registers.by_name(f"{self.key}.lower_{self.__identifier}.fan.speed")
         if lower_fan_speed is not None:
             lower_fan_speed.value = speed_lower
 
-        upper_fan_speed = self._registers.by_name("{}.upper_{}.fan.speed".format(self.key, self.__identifier))
+        upper_fan_speed = self._registers.by_name(f"{self.key}.upper_{self.__identifier}.fan.speed")
         if upper_fan_speed is not None:
             upper_fan_speed.value = speed_upper
+
+        # #C3168
+        max_speed = self._registers.by_name(f"{self.key}.fans.max_speed_{self.__identifier}")
+        if max_speed is not None:
+            max_speed.value = max(speed_lower, speed_upper)
 
         # Update devices.
         if not self.__lower_fan_dev is None:
