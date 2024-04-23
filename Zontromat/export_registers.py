@@ -3897,6 +3897,14 @@ def __add_registers(args):
 
 #region Ventilation (vent)
 
+    register = Register("vent.fans.max_speed_1")
+    register.scope = Scope.Device
+    register.plugin_name = "Ventilation"
+    register.description = "Upper fan speed [%]"
+    register.range = __range["NONE"]
+    register.value = 0.0
+    __registers.append(register)
+
     # Operator panel setpoint.
     register = Register("vent.op_setpoint_1")
     register.scope = Scope.Device
