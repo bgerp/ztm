@@ -117,7 +117,7 @@ class Zone(BasePlugin):
         if "identifier" in config:
             self.__identifier = config["identifier"]
 
-        self.__logger = get_logger(__name__)
+        self.__logger = None
         """Logger
         """
 
@@ -312,8 +312,122 @@ class Zone(BasePlugin):
 
 #endregion
 
-#region Private Methods (Registers Air Thermometers)
+#region Private Methods (PLC)
 
+    def __read_window_tamper(self):
+
+        state = False
+
+        if self._controller.is_valid_gpio(self.__window_closed_input):
+            state = self._controller.digital_read(self.__window_closed_input)
+
+        if self.__window_closed_input == verbal_const.OFF:
+            state = True
+
+        return state
+
+#endregion
+
+#region Private Methods
+
+    def __round_to_nearest_half(self, number):
+        value = 0
+
+        if number != 0:
+            value = round(number * 2) / 2
+
+        return value
+
+    def __vlv_fl_1(self, position):
+        if self.__fl_1_vlv_dev is None:
+            return
+        
+        self.__fl_1_vlv_dev.target_position = position
+
+    def __vlv_fl_2(self, position):
+        if self.__fl_2_vlv_dev is None:
+            return
+
+        self.__fl_2_vlv_dev.target_position = position
+
+    def __vlv_fl_3(self, position):
+        if self.__fl_3_vlv_dev is None:
+            return
+        
+        self.__fl_3_vlv_dev.target_position = position
+
+    def __set_fl_state(self, duty_cycle):
+        self.__vlv_fl_1_tmr.duty_cycle = duty_cycle
+        self.__vlv_fl_2_tmr.duty_cycle = duty_cycle
+        self.__vlv_fl_3_tmr.duty_cycle = duty_cycle
+
+    def __set_cl_state(self, position):
+        if self.__cl_1_vlv_dev is not None:
+            self.__cl_1_vlv_dev.target_position = position
+
+        if self.__cl_2_vlv_dev is not None:
+            self.__cl_2_vlv_dev.target_position = position
+
+        if self.__cl_3_vlv_dev is not None:
+           self.__cl_3_vlv_dev.target_position = position
+
+    def __set_conv_state(self, state=0):
+
+        if state < 0:
+            state = 0
+
+        if state > 3:
+            state = 3
+
+        if self.__conv_1_dev is not None:
+            self.__conv_1_dev.set_state(state)
+
+        if self.__conv_2_dev is not None:
+            self.__conv_2_dev.set_state(state)
+
+        if self.__conv_3_dev is not None:
+            self.__conv_3_dev.set_state(state)
+
+    def __set_devices(self, state):
+
+        last_state = len(self.__conversion_table) - 1
+
+        if state < 0:
+            state = 0
+
+        if state > last_state:
+            state = last_state
+
+        # Controlled by the ERP.
+        # conv_state = self.__conv_control_table[self.__glob_conv_mode][state]
+        # fl_state = self.__fl_control_table[self.__glob_floor_mode][state]
+        # fan_state = self.__fan_control_table[self.__glob_conv_mode][state]
+
+        # Test control.
+        conv_state = self.__conv_control_table[3][state]
+        fl_state = self.__fl_control_table[3][state]
+        fan_state = self.__fan_control_table[3][state]
+
+        print(f"self.__glob_floor_mode: {self.__glob_floor_mode}; self.__glob_conv_mode: {self.__glob_conv_mode}; conv_state: {conv_state:2.1f}; fl_state: {fl_state:2.1f}; fan_state: {fan_state:2.1f}; ")
+
+        self.__set_fl_state(fl_state)
+
+        if conv_state > 0:
+            self.__set_cl_state(100)
+        else:
+            self.__set_cl_state(0)
+
+        if conv_state > 3:
+            conv_state = 3
+
+        self.__set_conv_state(conv_state)
+        self.__set_ventilation(fan_state)
+
+#endregion
+
+#region Private Methods (Registers Devices)
+
+    # Thermometers
     def __air_temp_cent_settings_cb(self, register):
 
         # Check data type.
@@ -430,10 +544,7 @@ class Zone(BasePlugin):
         self._registers.write(f"{self.key}.air_temp_upper_{self.__identifier}.value",
                               air_temp_upper_value)
 
-#endregion
-
-#region Private Methods (Registers Devices)
-
+    # Conv 1
     def __conv_1_settings_cb(self, register):
 
         # Check data type.
@@ -484,6 +595,7 @@ class Zone(BasePlugin):
             if self.__cl_1_vlv_dev is not None:
                 self.__cl_1_vlv_dev.shutdown()
 
+    # Conv 2
     def __conv_2_settings_cb(self, register):
 
         # Check data type.
@@ -534,6 +646,7 @@ class Zone(BasePlugin):
             if self.__cl_2_vlv_dev is not None:
                 self.__cl_2_vlv_dev.shutdown()
 
+    # Conv 3
     def __conv_3_settings_cb(self, register):
 
         # Check data type.
@@ -586,6 +699,7 @@ class Zone(BasePlugin):
             if self.__cl_3_vlv_dev is not None:
                 self.__cl_3_vlv_dev.shutdown()
 
+    # Floor
     def __fl_vlv_1_settings_cb(self, register):
 
         # Check data type.
@@ -1001,125 +1115,13 @@ class Zone(BasePlugin):
 
 #endregion
 
-#region Private Methods (PLC)
-
-    def __read_window_tamper(self):
-
-        state = False
-
-        if self._controller.is_valid_gpio(self.__window_closed_input):
-            state = self._controller.digital_read(self.__window_closed_input)
-
-        if self.__window_closed_input == verbal_const.OFF:
-            state = True
-
-        return state
-
-#endregion
-
-#region Private Methods
-
-    def __round_to_nearest_half(self, number):
-        value = 0
-
-        if number != 0:
-            value = round(number * 2) / 2
-
-        return value
-
-    def __vlv_fl_1(self, position):
-        if self.__fl_1_vlv_dev is None:
-            return
-        
-        self.__fl_1_vlv_dev.target_position = position
-
-    def __vlv_fl_2(self, position):
-        if self.__fl_2_vlv_dev is None:
-            return
-
-        self.__fl_2_vlv_dev.target_position = position
-
-    def __vlv_fl_3(self, position):
-        if self.__fl_3_vlv_dev is None:
-            return
-        
-        self.__fl_3_vlv_dev.target_position = position
-
-    def __set_fl_state(self, duty_cycle):
-        self.__vlv_fl_1_tmr.duty_cycle = duty_cycle
-        self.__vlv_fl_2_tmr.duty_cycle = duty_cycle
-        self.__vlv_fl_3_tmr.duty_cycle = duty_cycle
-
-    def __set_cl_state(self, position):
-        if self.__cl_1_vlv_dev is not None:
-            self.__cl_1_vlv_dev.target_position = position
-
-        if self.__cl_2_vlv_dev is not None:
-            self.__cl_2_vlv_dev.target_position = position
-
-        if self.__cl_3_vlv_dev is not None:
-           self.__cl_3_vlv_dev.target_position = position
-
-    def __set_conv_state(self, state=0):
-
-        if state < 0:
-            state = 0
-
-        if state > 3:
-            state = 3
-
-        if self.__conv_1_dev is not None:
-            self.__conv_1_dev.set_state(state)
-
-        if self.__conv_2_dev is not None:
-            self.__conv_2_dev.set_state(state)
-
-        if self.__conv_3_dev is not None:
-            self.__conv_3_dev.set_state(state)
-
-    def __set_devices(self, state):
-
-        last_state = len(self.__conversion_table) - 1
-
-        if state < 0:
-            state = 0
-
-        if state > last_state:
-            state = last_state
-
-        # Controlled by the ERP.
-        # conv_state = self.__conv_control_table[self.__glob_conv_mode][state]
-        # fl_state = self.__fl_control_table[self.__glob_floor_mode][state]
-        # fan_state = self.__fan_control_table[self.__glob_conv_mode][state]
-
-        # Test control.
-        conv_state = self.__conv_control_table[3][state]
-        fl_state = self.__fl_control_table[3][state]
-        fan_state = self.__fan_control_table[3][state]
-
-        print(f"self.__glob_floor_mode: {self.__glob_floor_mode}; self.__glob_conv_mode: {self.__glob_conv_mode}; conv_state: {conv_state:2.1f}; fl_state: {fl_state:2.1f}; fan_state: {fan_state:2.1f}; ")
-
-        self.__set_fl_state(fl_state)
-
-        if conv_state > 0:
-            self.__set_cl_state(100)
-        else:
-            self.__set_cl_state(0)
-
-        if conv_state > 3:
-            conv_state = 3
-
-        self.__set_conv_state(conv_state)
-        self.__set_ventilation(fan_state)
-
-#endregion
-
 #region Protected Methods
 
     def _init(self):
         """Initialize the module.
         """
-        
+
+        self.__logger = get_logger(__name__)
         self.__logger.info("Starting up the {} {}".format(self.name, self.__identifier))
         
         # Create registers callbacks.
