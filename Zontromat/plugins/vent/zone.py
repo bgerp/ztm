@@ -25,8 +25,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from enum import Enum
 
 from utils.logger import get_logger
-from utils.logic.timer import Timer
-from utils.utils import disk_size
 
 from plugins.base_plugin import BasePlugin
 from devices.factories.fans.fans_factory import FansFactory
@@ -107,20 +105,8 @@ class Zone(BasePlugin):
         self.__logger = None
         """Logger"""
 
-        self.__occupied_flag = False
-        """Occupied flag.
-        """
-
-        self.__set_point_op = 0
-        """Operators Panel set point.
-        """
-        
-        self.__set_point_hvac = 0
-        """HVAC set point.
-        """
-
-        self.__set_point_ac = 0
-        """Access Control set point.
+        self.__fans_power_gpio_name = verbal_const.OFF
+        """Fans power control GPIO.
         """
 
         self.__upper_air_damper_dev = None
@@ -139,8 +125,16 @@ class Zone(BasePlugin):
         """Lower fan.
         """
 
-        self.__fans_power_gpio_name = verbal_const.OFF
-        """Fans power control GPIO.
+        self.__set_point_op = 0
+        """Operators Panel set point.
+        """
+        
+        self.__set_point_hvac = 0
+        """HVAC set point.
+        """
+
+        self.__set_point_ac = 0
+        """Access Control set point.
         """
 
     def __del__(self):
@@ -158,7 +152,7 @@ class Zone(BasePlugin):
 
 #endregion
 
-#region Private Methods (Devices)
+#region Private Methods (PLC)
 
     def __set_upper_air_damper(self, position):
 
@@ -182,7 +176,17 @@ class Zone(BasePlugin):
 
 #endregion
 
-#region Private Methods (Registers)
+#region Private Methods
+
+    def __first_index_of_max(self, setpoints):
+        for index, etpoint in enumerate(setpoints):
+            setpoints[index] = abs(setpoints[index])
+        max_value = max(setpoints)
+        return setpoints.index(max_value)
+
+#endregion
+
+#region Private Methods (Registers Devices)
 
     # Fans power GPIO control.
     def __fans_power_gpio(self, register: Register):
@@ -194,7 +198,7 @@ class Zone(BasePlugin):
 
         self.__fans_power_gpio_name = register.value
 
-    # Upper air damper.
+    # Upper
     def __upper_air_damper_settings_cb(self, register: Register):
 
         # Check data type.
@@ -218,89 +222,6 @@ class Zone(BasePlugin):
             self.__upper_air_damper_dev.shutdown()
             del self.__upper_air_damper_dev
 
-    # Lower air damper.
-    def __lower_air_damper_settings_cb(self, register: Register):
-
-        # Check data type.
-        if not register.data_type == "json":
-            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
-            return
-
-        if register.value != {} and self.__lower_air_damper_dev is None:
-
-            self.__lower_air_damper_dev = AirDampersFactory.create(
-                name="Air damper lower",
-                controller=self._controller,
-                vendor=register.value['vendor'],
-                model=register.value['model'],
-                options=register.value['options'])
-
-            if self.__lower_air_damper_dev is not None:
-                self.__lower_air_damper_dev.init()
-
-        elif register.value == {} and self.__lower_air_damper_dev is not None:
-            self.__lower_air_damper_dev.shutdown()
-            del self.__lower_air_damper_dev
-
-    # Params
-    def __op_setpoint_cb(self, register: Register):
-
-        # Check data type.
-        if not (register.data_type == "float" or register.data_type == "int"):
-            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
-            return
-
-        temp_value = register.value
-
-        if temp_value > 100:
-            temp_value = 100
-
-        if temp_value < 0:
-            temp_value = 0
-
-        self.__set_point_op = temp_value
-
-        # self.__logger.info("Ventilation OP set point: {}".format(self.__set_point_op))
-
-    def __hvac_setpoint_cb(self, register: Register):
-
-        # Check data type.
-        if not (register.data_type == "float" or register.data_type == "int"):
-            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
-            return
-
-        temp_value = register.value
-
-        if temp_value > 100.0:
-            temp_value = 100
-
-        if temp_value < -100.0:
-            temp_value = 0
-
-        self.__set_point_hvac = temp_value
-
-        self.__logger.info("Ventilation HVAC set point: {}".format(self.__set_point_hvac))
-
-    def __ac_setpoint_cb(self, register: Register):
-
-        # Check data type.
-        if not (register.data_type == "float" or register.data_type == "int"):
-            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
-            return
-
-        temp_value = register.value
-
-        if temp_value > 100:
-            temp_value = 100
-
-        if temp_value < 0:
-            temp_value = 0
-
-        self.__set_point_ac = temp_value
-
-        self.__logger.info("Ventilation AC set point: {}".format(register.value))
-
-    # Upper fan
     def __upper_fan_settings_cb(self, register: Register):
 
         # Check data type.
@@ -369,7 +290,30 @@ class Zone(BasePlugin):
         # Set the speed of the fan.
         self.__set_upper_fan(register.value)
 
-    # Lower fan
+    # Lower
+    def __lower_air_damper_settings_cb(self, register: Register):
+
+        # Check data type.
+        if not register.data_type == "json":
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        if register.value != {} and self.__lower_air_damper_dev is None:
+
+            self.__lower_air_damper_dev = AirDampersFactory.create(
+                name="Air damper lower",
+                controller=self._controller,
+                vendor=register.value['vendor'],
+                model=register.value['model'],
+                options=register.value['options'])
+
+            if self.__lower_air_damper_dev is not None:
+                self.__lower_air_damper_dev.init()
+
+        elif register.value == {} and self.__lower_air_damper_dev is not None:
+            self.__lower_air_damper_dev.shutdown()
+            del self.__lower_air_damper_dev
+
     def __lower_fan_settings_cb(self, register: Register):
 
         # Check data type.
@@ -438,7 +382,71 @@ class Zone(BasePlugin):
         # Set the speed of the fan.
         self.__set_lower_fan(register.value)
 
-    # Init
+#endregion
+
+#region Private Methods (Registers Parameters)
+
+    def __op_setpoint_cb(self, register: Register):
+
+        # Check data type.
+        if not (register.data_type == "float" or register.data_type == "int"):
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        temp_value = register.value
+
+        if temp_value > 100:
+            temp_value = 100
+
+        if temp_value < 0:
+            temp_value = 0
+
+        self.__set_point_op = temp_value
+
+        # self.__logger.info("Ventilation OP set point: {}".format(self.__set_point_op))
+
+    def __hvac_setpoint_cb(self, register: Register):
+
+        # Check data type.
+        if not (register.data_type == "float" or register.data_type == "int"):
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        temp_value = register.value
+
+        if temp_value > 100.0:
+            temp_value = 100
+
+        if temp_value < -100.0:
+            temp_value = 0
+
+        self.__set_point_hvac = temp_value
+
+        self.__logger.info("Ventilation HVAC set point: {}".format(self.__set_point_hvac))
+
+    def __ac_setpoint_cb(self, register: Register):
+
+        # Check data type.
+        if not (register.data_type == "float" or register.data_type == "int"):
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        temp_value = register.value
+
+        if temp_value > 100:
+            temp_value = 100
+
+        if temp_value < 0:
+            temp_value = 0
+
+        self.__set_point_ac = temp_value
+
+        self.__logger.info("Ventilation AC set point: {}".format(register.value))
+
+#endregion
+
+#region Private Methods (Registers Initialization)
+
     def __init_registers(self):
 
         # Fans power GPIO
@@ -519,6 +527,10 @@ class Zone(BasePlugin):
             lower_fan_speed.update_handlers = self.__lower_fan_speed_cb
             lower_fan_speed.update()
 
+#endregion
+
+#region Private Methods (DEPRECATED)
+
     def __is_empty(self):
 
         value = False
@@ -539,10 +551,6 @@ class Zone(BasePlugin):
                 value = ThermalMode(thermal_mode.value)
 
         return value
-
-#endregion
-
-#region Private Methods
 
     def __calc(self):
 
@@ -609,12 +617,6 @@ class Zone(BasePlugin):
         
         if not self.__lower_air_damper_dev is None:
             self.__lower_air_damper_dev.update()
-
-    def __first_index_of_max(self, setpoints):
-        for index, etpoint in enumerate(setpoints):
-            setpoints[index] = abs(setpoints[index])
-        max_value = max(setpoints)
-        return setpoints.index(max_value)
 
 #endregion
 
