@@ -179,7 +179,7 @@ class Zone(BasePlugin):
             [0, 0, 0, 0, 0, 0, 0, 0, 0],     # 0 - Спряно
             [1, 1, 1/2, 1/4, 0, 0, 0, 0, 0], # 1 - Охлаждане 
             [0, 0, 0, 0, 0, 1/4, 1/2, 1, 1], # 2 - Отопление
-            [0, 0, 0, 0, 0, 1/4, 1/2, 1, 1] # 3 - Режим №3
+            [0, 0, 0, 0, 0, 0, 1/2, 1, 1] # 3 - Режим №3
         ]
 
         # Convector control table.
@@ -188,7 +188,7 @@ class Zone(BasePlugin):
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], # 0 - Спряно
             [4, 3, 2, 1, 0, 0, 0, 0, 0, 0], # 1 - Охлаждане 
             [0, 0, 0, 0, 0, 0, 1, 2, 3, 4], # 2 - Отопление
-            [1, 1, 1, 1, 0, 0, 0, 0, 0] # 3 - Режим №3
+            [2, 2, 1, 0, 0, 0, 0, 0, 0] # 3 - Режим №3
         ]
 
         # Fan control table.
@@ -264,16 +264,18 @@ class Zone(BasePlugin):
         """Global floor thermal mode.
         """
 
+        self.__dt_temp = 0
+        """Delta temperature for the past time.
+        """        
 
 
         self.__thermal_mode = 0
         """Thermal mode.
         """
 
-        self.__dt_temp = 0
-
         self.__thermal_force_limit = 0
-        """Limit thermal force."""
+        """Limit thermal force.
+        """
 
         self.__delta_time = 1
         """Конфигурационен параметър, показващ за какво време
@@ -283,11 +285,13 @@ class Zone(BasePlugin):
         self.__goal_building_temp = 0
         """Целева температура на сградата.
         (подава се от централния сървър)
-        Limits: (18-26)"""
+        Limits: (18-26)
+        """
 
         self.__thermal_force = 0
         """Каква топлинна сила трябва да приложим към системата
-        (-100% означава максимално да охлаждаме, +100% - максимално да отопляваме)"""
+        (-100% означава максимално да охлаждаме, +100% - максимално да отопляваме)
+        """
 
 #endregion
 
@@ -410,7 +414,7 @@ class Zone(BasePlugin):
 
         print(f"self.__glob_floor_mode: {self.__glob_floor_mode}; self.__glob_conv_mode: {self.__glob_conv_mode}; conv_state: {conv_state:2.1f}; fl_state: {fl_state:2.1f}; fan_state: {fan_state:2.1f}; ")
 
-        self.__set_fl_state(fl_state)
+        self.__set_fl_state(fl_state-1)
 
         if conv_state > 0:
             self.__set_cl_state(100)
@@ -1130,6 +1134,8 @@ class Zone(BasePlugin):
     def _update(self):
         """ Update cycle.
         """
+
+        # TODO: Add limits for upper and lower when under temp or over temp.
 
         # Update occupation flags.
         is_empty = self.__is_empty()
