@@ -4135,6 +4135,24 @@ def __add_registers(args):
     register.value = 0
     __registers.append(register)
 
+    # Global illumination east.
+    register = Register("glob.illumination.east")
+    register.scope = Scope.System
+    register.plugin_name = "No plugin, just global"
+    register.description = "Global east ilumination."
+    register.range = ""
+    register.value = 0.0
+    __registers.append(register)
+    
+    # Global illumination west.
+    register = Register("glob.illumination.west")
+    register.scope = Scope.System
+    register.plugin_name = "No plugin, just global"
+    register.description = "Global west ilumination."
+    register.range = ""
+    register.value = 0.0
+    __registers.append(register)
+
 #endregion
 
 def main():
