@@ -1520,6 +1520,15 @@ def __add_registers(args):
     }
     __registers.append(register)
 
+    # Temperate deviation constant.
+    register = Register("hvac.temp_deviation_1.value")
+    register.scope = Scope.Device
+    register.plugin_name = "HVAC"
+    register.description = "Temperature deviation constant."
+    register.range = "0.0/"
+    register.value = 0.0
+    __registers.append(register)
+
     # Loop 1 Down Limit Temperature # Request: Eml6419
     register = Register("hvac.floor_loop_1.temp.down_limit")
     register.scope = Scope.System
