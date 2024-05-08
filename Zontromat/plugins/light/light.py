@@ -78,7 +78,7 @@ class Light(BasePlugin):
 
 #region Constructor / Destructor
 
-    def __init__(self, **config):
+    def __init__(self, config):
         """Constructor"""
 
         super().__init__(config)
@@ -238,8 +238,6 @@ class Light(BasePlugin):
         # Control the AO3.
         if self._controller.is_valid_gpio(self.__v2_output):
             self._controller.analog_write(self.__v2_output, value_v2)
-
-
 
 #endregion
 
