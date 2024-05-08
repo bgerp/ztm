@@ -942,6 +942,55 @@ def __add_registers(args):
 
 #region Environment (envm)
 
+    register = Register("envm.enabled")
+    register.scope = Scope.System
+    register.plugin_name = "Environment"
+    register.description = "Plugin enabled"
+    register.range = __range["BOOL"]
+    register.value = True
+    __registers.append(register)
+
+    register = Register("envm.pir.settings")
+    register.scope = Scope.System
+    register.plugin_name = "Environment"
+    register.description = "Plugin PIR settings"
+    register.range = __range["NONE"]
+    register.value = {
+        "PIR_1": {
+            "vendor": "Yihao",
+            "model": "BlindsV2",
+            "options":
+            {
+                "uart": 0,
+                "mb_id": args.blinds_1
+            }
+        },
+        "PIR_2": {
+            
+        }
+    }
+    __registers.append(register)
+
+    register = Register("envm.window_tamper.settings")
+    register.scope = Scope.System
+    register.plugin_name = "Environment"
+    register.description = "Plugin window tamper settings"
+    register.range = __range["NONE"]
+    register.value = {
+        
+    }
+    __registers.append(register)
+
+    register = Register("envm.door_tamper.settings")
+    register.scope = Scope.System
+    register.plugin_name = "Environment"
+    register.description = "Plugin door tamper settings"
+    register.range = __range["NONE"]
+    register.value = {
+        
+    }
+    __registers.append(register)
+
     register = Register("envm.is_empty")
     register.scope = Scope.Device
     register.plugin_name = "Environment"
@@ -1158,13 +1207,7 @@ def __add_registers(args):
     register.value = 2
     __registers.append(register)
 
-    register = Register("envm.enabled")
-    register.scope = Scope.System
-    register.plugin_name = "Environment"
-    register.description = "Plugin enabled"
-    register.range = __range["BOOL"]
-    register.value = True
-    __registers.append(register)
+
 
     register = Register("envm.sun.azimuth")
     register.scope = Scope.System
