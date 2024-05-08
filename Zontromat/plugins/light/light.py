@@ -74,235 +74,122 @@ class Light(BasePlugin):
 
 #region Attributes
 
-    __logger = None
-    """Logger
-    """
+#endregion
 
-    __update_timer = None
-    """Update timer.
-    """
+#region Constructor / Destructor
 
-    __light_sensor = None
-    """Light sensor.
-    """
+    def __init__(self, **config):
+        """Constructor"""
 
-    __v1_output = verbal_const.OFF
-    """Analog voltage output 1.
-    """
+        super().__init__(config)
 
-    __v2_output = verbal_const.OFF
-    """Analog voltage output 2.
-    """
+        self.__identifier = 1
+        if "identifier" in config:
+            self.__identifier = config["identifier"]
 
-    __r1_output = verbal_const.OFF
-    """Relay output R1.
-    """
+        self.__logger = None
+        """Logger
+        """
 
-    __r2_output = verbal_const.OFF
-    """Relay output R2.
-    """
+        self.__update_timer = None
+        """Update timer.
+        """
+
+        self.__light_sensor = None
+        """Light sensor.
+        """
+
+        self.__v1_output = verbal_const.OFF
+        """Analog voltage output 1.
+        """
+
+        self.__v2_output = verbal_const.OFF
+        """Analog voltage output 2.
+        """
+
+        self.__r1_output = verbal_const.OFF
+        """Relay output R1.
+        """
+
+        self.__r2_output = verbal_const.OFF
+        """Relay output R2.
+        """
+
+        self.__target_illumination = 50.0
+        """Target illumination. [Lux]
+        """
+
+        self.__r1_limit = 0.5
+        """Resistor current limit.
+        note: This value is level when the resistors should be turned on and off. [%]
+        """
+
+        self.__r2_limit = 0.5
+        """Resistor current limit.
+        note: This value is level when the resistors should be turned on and off. [%]
+        """
 
 
-    __hallway_lighting_output = verbal_const.OFF
-    """Digital output for controlling hallway lighting.
-    """  
 
-    __target_illumination = 50.0
-    """Target illumination. [Lux]
-    """
+        self.__update_now_flag = True
+        """Fire update event every time when settings are changed.
+        """
 
-    __error_gain = 0.001
-    """Gain of the error. This parameter is the smoothness of the curve.
-    """
+        self.__stop_flag = False
+        """HVAC Stop flag.
+        """
 
-    __output_limit = 10000
-    """Illumination force limit. [V]
-    """
+        self.__stop_timer = Timer(10)
+        """Stop timer.
+        """   
 
-    __tmp_output = 0
-    """Temporary output. [V]
-    """
+        self.__hallway_lighting_output = verbal_const.OFF
+        """Digital output for controlling hallway lighting.
+        """  
 
-    __output = 0
-    """Main output. [V]
-    """
+        self.__error_gain = 0.001
+        """Gain of the error. This parameter is the smoothness of the curve.
+        """
 
-    __hallway_lighting_time = 0
-    """Hallway lighting time. [s]
-    """
+        self.__output_limit = 10000
+        """Illumination force limit. [V]
+        """
 
-    __r1_limit = 0.5
-    """Resistor current limit.
-    note: This value is level when the resistors should be turned on and off. [%]
-    """
+        self.__tmp_output = 0
+        """Temporary output. [V]
+        """
 
-    __r2_limit = 0.5
-    """Resistor current limit.
-    note: This value is level when the resistors should be turned on and off. [%]
-    """
+        self.__output = 0
+        """Main output. [V]
+        """
+
+        self.__hallway_lighting_time = 0
+        """Hallway lighting time. [s]
+        """
 
 #endregion
 
-#region Private Methods (Registers Interface)
+#region Private Methods (PLC)
 
-    def __error_gain_cb(self, register):
+    def __read_door_tamper(self):
 
-        # Check data type.
-        if not (register.data_type == "float" or register.data_type == "int"):
-            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
-            return
+        state = False
 
-        if self.__error_gain != register.value:
-            self.__error_gain = register.value
+        if self._controller.is_valid_gpio(self.__door_closed_input):
+            state = self._controller.digital_read(self.__door_closed_input)
 
-    def __sensor_settings_cb(self, register):
+        if self.__door_closed_input == verbal_const.OFF:
+            state = True
+        return state
 
-        # Check data type.
-        if not register.data_type == "json":
-            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
-            return
+    def __read_pir_sensor(self):
 
-        if register.value != {} and self.__light_sensor is None:
+        state = False
 
-            self.__light_sensor = LuxmeterFactory.create(
-                controller=self._controller,
-                name="Room light sensor.",
-                vendor=register.value['vendor'],
-                model=register.value['model'],
-                options=register.value['options'])
+        if self._controller.is_valid_gpio(self.__pir_input):
+            state = self._controller.digital_read(self.__pir_input)
 
-            if self.__light_sensor is not None:
-                self.__light_sensor.init()
-
-        elif register.value == {} and self.__light_sensor is not None:
-            self.__light_sensor.shutdown()
-            del self.__light_sensor
-
-    def __v1_output_cb(self, register):
-
-        # Check data type.
-        if not register.data_type == "str":
-            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
-            return
-
-        self.__v1_output = register.value
-
-    def __v2_output_cb(self, register):
-
-        # Check data type.
-        if not register.data_type == "str":
-            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
-            return
-
-        self.__v2_output = register.value
-
-    def __r1_output_cb(self, register):
-
-        # Check data type.
-        if not register.data_type == "str":
-            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
-            return
-
-        self.__r1_output = register.value
-
-    def __r2_output_cb(self, register):
-
-        # Check data type.
-        if not register.data_type == "str":
-            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
-            return
-
-        self.__r2_output = register.value
-
-    def __hallway_lighting_output_cb(self, register):
-
-        # Check data type.
-        if not register.data_type == "str":
-            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
-            return
-
-        self.__hallway_lighting_output = register.value
-
-    def __target_illum_cb(self, register):
-
-        # Check data type.
-        if not (register.data_type == "float" or register.data_type == "int"):
-            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
-            return
-
-        if self.__target_illumination != register.value:
-            self.__target_illumination = register.value
-
-    def __hallway_lighting_time_cb(self, register):
-
-        # Check data type.
-        if not (register.data_type == "float" or register.data_type == "int"):
-            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
-            return
-
-        if self.__hallway_lighting_time != register.value:
-            self.__hallway_lighting_time = register.value
-
-    def __init_registers(self):
-
-        sensor_enabled = self._registers.by_name(self.key + ".sensor.settings")
-        if sensor_enabled is not None:
-            sensor_enabled.update_handlers = self.__sensor_settings_cb
-            sensor_enabled.update()
-
-        v1_output = self._registers.by_name(self.key + ".v1.output")
-        if v1_output is not None:
-            v1_output.update_handlers = self.__v1_output_cb
-            v1_output.update()
-
-        v2_output = self._registers.by_name(self.key + ".v2.output")
-        if v2_output is not None:
-            v2_output.update_handlers = self.__v2_output_cb
-            v2_output.update()
-
-        r1_output = self._registers.by_name(self.key + ".r1.output")
-        if r1_output is not None:
-            r1_output.update_handlers = self.__r1_output_cb
-            r1_output.update()
-
-        r2_output = self._registers.by_name(self.key + ".r2.output")
-        if r2_output is not None:
-            r2_output.update_handlers = self.__r2_output_cb
-            r2_output.update()
-
-        hallway_lighting_output = self._registers.by_name(self.key + ".hallway_lighting.output")
-        if hallway_lighting_output is not None:
-            hallway_lighting_output.update_handlers = self.__hallway_lighting_output_cb
-            hallway_lighting_output.update()
-
-        error_gain = self._registers.by_name(self.key + ".error_gain")
-        if error_gain is not None:
-            error_gain.update_handlers = self.__error_gain_cb
-            error_gain.update()
-
-        target_illum = self._registers.by_name(self.key + ".target_illum")
-        if target_illum is not None:
-            target_illum.update_handlers = self.__target_illum_cb
-            target_illum.update()
-
-        target_illum = self._registers.by_name(self.key + ".hallway_lighting.time")
-        if target_illum is not None:
-            target_illum.update_handlers = self.__hallway_lighting_time_cb
-            target_illum.update()
-
-    def __is_empty(self):
-
-        value = False
-
-        is_empty = self._registers.by_name("envm.is_empty")
-        if is_empty is not None:
-            value = is_empty.value
-
-        return value
-
-#endregion
-
-#region Private Methods (Controller Interface)
+        return state
 
     def __set_voltages(self, voltage_2, voltage_1):
         """Set the voltage outputs.
@@ -351,6 +238,8 @@ class Light(BasePlugin):
         # Control the AO3.
         if self._controller.is_valid_gpio(self.__v2_output):
             self._controller.analog_write(self.__v2_output, value_v2)
+
+
 
 #endregion
 
@@ -485,6 +374,202 @@ class Light(BasePlugin):
         # FFW logic.
         # result_v = l_scale(self.__output, [0, 100], [0, 10])
         # self.__set_voltages(result_v, result_v)
+
+#endregion
+
+#region Private Methods (Registers Devices)
+
+    def __sensor_settings_cb(self, register):
+
+        # Check data type.
+        if not register.data_type == "json":
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
+            return
+
+        if register.value != {} and self.__light_sensor is None:
+
+            self.__light_sensor = LuxmeterFactory.create(
+                controller=self._controller,
+                name="Room light sensor.",
+                vendor=register.value['vendor'],
+                model=register.value['model'],
+                options=register.value['options'])
+
+            if self.__light_sensor is not None:
+                self.__light_sensor.init()
+
+        elif register.value == {} and self.__light_sensor is not None:
+            self.__light_sensor.shutdown()
+            del self.__light_sensor
+
+    def __v1_output_cb(self, register):
+
+        # Check data type.
+        if not register.data_type == "str":
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        self.__v1_output = register.value
+
+    def __v2_output_cb(self, register):
+
+        # Check data type.
+        if not register.data_type == "str":
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        self.__v2_output = register.value
+
+    def __r1_output_cb(self, register):
+
+        # Check data type.
+        if not register.data_type == "str":
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        self.__r1_output = register.value
+
+    def __r2_output_cb(self, register):
+
+        # Check data type.
+        if not register.data_type == "str":
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        self.__r2_output = register.value
+
+#endregion
+
+#region Private Methods (Registers Parameters)
+
+    def __target_illum_cb(self, register):
+
+        # Check data type.
+        if not (register.data_type == "float" or register.data_type == "int"):
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
+            return
+
+        if self.__target_illumination != register.value:
+            self.__target_illumination = register.value
+
+    def __error_gain_cb(self, register):
+
+        # Check data type.
+        if not (register.data_type == "float" or register.data_type == "int"):
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
+            return
+
+        if self.__error_gain != register.value:
+            self.__error_gain = register.value
+
+#endregion
+
+#region Private Methods (Registers DEPRECATED)
+
+    def __hallway_lighting_output_cb(self, register):
+
+        # Check data type.
+        if not register.data_type == "str":
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        self.__hallway_lighting_output = register.value
+
+    def __hallway_lighting_time_cb(self, register):
+
+        # Check data type.
+        if not (register.data_type == "float" or register.data_type == "int"):
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
+            return
+
+        if self.__hallway_lighting_time != register.value:
+            self.__hallway_lighting_time = register.value
+
+#endregion
+
+#region Private Methods (Registers Initialization)
+
+    def __init_registers(self):
+
+        sensor_enabled = self._registers.by_name(self.key + ".sensor.settings")
+        if sensor_enabled is not None:
+            sensor_enabled.update_handlers = self.__sensor_settings_cb
+            sensor_enabled.update()
+
+        v1_output = self._registers.by_name(self.key + ".v1.output")
+        if v1_output is not None:
+            v1_output.update_handlers = self.__v1_output_cb
+            v1_output.update()
+
+        v2_output = self._registers.by_name(self.key + ".v2.output")
+        if v2_output is not None:
+            v2_output.update_handlers = self.__v2_output_cb
+            v2_output.update()
+
+        r1_output = self._registers.by_name(self.key + ".r1.output")
+        if r1_output is not None:
+            r1_output.update_handlers = self.__r1_output_cb
+            r1_output.update()
+
+        r2_output = self._registers.by_name(self.key + ".r2.output")
+        if r2_output is not None:
+            r2_output.update_handlers = self.__r2_output_cb
+            r2_output.update()
+
+        hallway_lighting_output = self._registers.by_name(self.key + ".hallway_lighting.output")
+        if hallway_lighting_output is not None:
+            hallway_lighting_output.update_handlers = self.__hallway_lighting_output_cb
+            hallway_lighting_output.update()
+
+        error_gain = self._registers.by_name(self.key + ".error_gain")
+        if error_gain is not None:
+            error_gain.update_handlers = self.__error_gain_cb
+            error_gain.update()
+
+        target_illum = self._registers.by_name(self.key + ".target_illum")
+        if target_illum is not None:
+            target_illum.update_handlers = self.__target_illum_cb
+            target_illum.update()
+
+        target_illum = self._registers.by_name(self.key + ".hallway_lighting.time")
+        if target_illum is not None:
+            target_illum.update_handlers = self.__hallway_lighting_time_cb
+            target_illum.update()
+
+    def __is_empty(self):
+
+        value = False
+
+        register = self._registers.by_name("envm.is_empty")
+        if register is not None:
+            value = register.value
+
+        return value
+
+    def __set_ventilation(self, value):
+
+        # Set the ventilation.
+        self._registers.write(f"vent.hvac_setpoint_{self.__identifier}", value)
+
+    def __get_illumination_east(self):
+
+        value = None
+
+        register = self._registers.by_name("glob.illumination.east")
+        if register is not None:
+            value = register.value
+
+        return value
+
+    def __get_illumination_west(self):
+
+        value = None
+
+        register = self._registers.by_name("glob.illumination.west")
+        if register is not None:
+            value = register.value
+
+        return value
 
 #endregion
 
