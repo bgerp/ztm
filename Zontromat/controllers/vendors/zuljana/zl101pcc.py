@@ -311,7 +311,7 @@ class ZL101PCC(BaseController):
         response = False
 
         # Local GPIO.
-        if self.is_gpio_local(pin):
+        def get_local_gpio(pin):
 
             # Read device digital inputs.
             request = self.__black_island.generate_request("GetDigitalInputs")
@@ -331,7 +331,7 @@ class ZL101PCC(BaseController):
                 response = not response
 
         # Remote GPIO.
-        elif self.is_gpio_remote(pin):
+        def get_remote_gpio(pin):
 
             remote_gpio = self.parse_remote_gpio(pin)
 
@@ -351,8 +351,31 @@ class ZL101PCC(BaseController):
                 if self.is_gpio_inverted(pin):
                     response = not response
 
+        if isinstance(pin, str):
+            if self.is_gpio_off(pin):
+                return response
+            elif self.is_gpio_local(pin):
+                response = get_local_gpio(pin)
+            elif self.is_gpio_remote(pin):
+                response = get_remote_gpio(pin)
+            else:
+                GlobalErrorHandler.log_hardware_malfunction(self.__logger, "Remote GPIO: {} @ {} Pin does not exists in pin map.".format(pin, self))
+
+        elif isinstance(pin, list):
+            response = []
+            # Go trough all pins.
+            for p in pin:
+                if self.is_gpio_off(p):
+                    break
+                elif self.is_gpio_local(p):
+                    response.append(get_local_gpio(p))
+                elif self.is_gpio_remote(p):
+                    response.append(get_remote_gpio(p))
+                else:
+                    GlobalErrorHandler.log_hardware_malfunction(self.__logger, "Remote GPIO: {} @ {} Pin does not exists in pin map.".format(pin, self))
+
         else:
-             GlobalErrorHandler.log_missing_resource("Pin does not exists in pin map.")
+             GlobalErrorHandler.log_missing_resource(f"Pin ({pin}) does not confirm list or str.")
 
         return response
 
@@ -473,6 +496,9 @@ class ZL101PCC(BaseController):
                     response = set_remote_gpio(p, value)
                 else:
                     GlobalErrorHandler.log_hardware_malfunction(self.__logger, "Remote GPIO: {} @ {} Pin does not exists in pin map.".format(pin, self))
+
+        else:
+             GlobalErrorHandler.log_missing_resource(f"Pin ({pin}) does not confirm list or str.")
 
         return response
 
