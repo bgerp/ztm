@@ -957,8 +957,8 @@ def __add_registers(args):
     register.range = __range["NONE"]
     register.value = {
         "PIR_1": {
-            "vendor": "Yihao",
-            "model": "BlindsV2",
+            "vendor": "Gasim",
+            "model": "RS2",
             "options":
             {
                 "uart": 0,
@@ -969,6 +969,14 @@ def __add_registers(args):
             
         }
     }
+    __registers.append(register)
+
+    register = Register("envm.pir.activations")
+    register.scope = Scope.System
+    register.plugin_name = "Environment"
+    register.description = "Plugin PIR settings"
+    register.range = __range["NONE"]
+    register.value = {}
     __registers.append(register)
 
     register = Register("envm.window_tamper.settings")
