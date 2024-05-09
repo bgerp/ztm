@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 
+import time
 from datetime import datetime
 
 from plugins.base_plugin import BasePlugin
@@ -30,6 +31,8 @@ from plugins.base_plugin import BasePlugin
 # from sunposition import sunpos
 # from plugins.envm.sunposition import sunpos
 from plugins.envm.sunposition2 import sunpos
+
+from devices.factories.pir.pir_factory import PIRFactory
 
 from utils.logger import get_logger
 from utils.logic.timer import Timer
@@ -75,34 +78,68 @@ class Environment(BasePlugin):
 
 #region Attributes
 
-    __logger = None
-    """Logger"""
+#endregion
 
-    __update_timer = None
-    """Update timer."""
+#region Constructor / Destructor
 
-    __sunpos_enabled_value = False
-    """Sun position local calculation enabled."""
+    def __init__(self, config):
+        """Constructor"""
 
-    __location_lat = 0.0
-    """Location latitude.
-    """
+        super().__init__(config)
 
-    __location_lon = 0.0
-    """Location longitude.
-    """
+        self.__identifier = 1
+        if "identifier" in config:
+            self.__identifier = config["identifier"]
 
-    __location_elv = 0.0
-    """Location elevation.
-    """
+        self.__logger = None
+        """Logger
+        """
 
-    __time_zone = 0
-    """Location time zone.
-    """
+        self.__update_timer = None
+        """Update timer.
+        """
 
-    __temperature = 0
-    """Temperature
-    """
+        self.__sunpos_enabled_value = False
+        """Sun position local calculation enabled.
+        """
+
+        self.__location_lat = 0.0
+        """Location latitude.
+        """
+
+        self.__location_lon = 0.0
+        """Location longitude.
+        """
+
+        self.__location_elv = 0.0
+        """Location elevation.
+        """
+
+        self.__time_zone = 0
+        """Location time zone.
+        """
+
+        self.__temperature = 0
+        """Temperature
+        """
+
+        self.__pirs = {}
+        """PIR sensors in the zone.
+        """
+
+        self.__pirs_states = {}
+        """PIR sensors in the zone states.
+        """
+
+        self.__pirs_activations = {}
+        """PIR sensors in the zone activations.
+        """
+
+        self.__activations_count = 2
+        """Activations count:
+            - One for current state
+            - One for last state.
+        """
 
 #endregion
 
@@ -198,6 +235,38 @@ class Environment(BasePlugin):
         if self.__temperature != register.value:
             self.__temperature = register.value
 
+    def __pir_settings_cb(self, register):
+
+        # Check data type.
+        if not register.data_type == "json":
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
+            return
+
+        if register.value != {}:
+            if self.__pirs is not None:
+                for pir in self.__pirs:
+                    self.__pirs[pir].shutdown()
+                self.__pirs.clear()
+
+            for pir in register.value:
+                self.__pirs[pir] = PIRFactory.create(
+                    controller=self._controller,
+                    name=register.description,
+                    vendor=register.value['vendor'],
+                    model=register.value['model'],
+                    options=register.value['options'])
+                self.__pirs_activations[pir] = []
+
+            if self.__pirs is not None:
+                for pir in self.__pirs:
+                    self.__pirs[pir].init()
+
+        elif register.value == {}:
+            if self.__pirs is not None:
+                for pir in self.__pirs:
+                    self.__pirs[pir].shutdown()
+                self.__pirs.clear()
+
     def __init_registers(self):
 
         # Software sun position enabled.
@@ -231,6 +300,11 @@ class Environment(BasePlugin):
         if temperature is not None:
             temperature.update_handlers = self.__temperature_cb
             temperature.update()
+
+        pir_settings = self._registers.by_name("envm.pir.settings")
+        if pir_settings is not None:
+            pir_settings.update_handlers = self.__pir_settings_cb
+            pir_settings.update()
 
     def __set_sunpos(self):
         """Set sun position.
@@ -310,6 +384,27 @@ class Environment(BasePlugin):
         self.__azimuth = azm_out
         self.__elevation = elv_out
 
+    def __update_pirs(self):
+
+        # If PIRs are not none.
+        if self.__pirs is not None:
+            # For each PIR in list get.
+            for pir in self.__pirs:
+                # Get PIR state.
+                state = self.__pirs[pir].get_motion()
+                # If PIR state is different in previous moment.
+                if self.__pirs_states[pir] != state:
+                    # Save new state from this moment.
+                    self.__pirs_states[pir] = state
+                    # If PIR state is true (activated).
+                    if state == True:
+                        # Save time that has been activated.
+                        self.__pirs_activations[pir].append(time.time())
+
+                # Remove the oldest element.
+                if len(self.__pirs_activations[pir]) > self.__activations_count:
+                    self.__pirs_activations[pir].pop(0)
+
 #endregion
 
 #region Public Methods
@@ -321,7 +416,7 @@ class Environment(BasePlugin):
         self.__logger = get_logger(__name__)
         self.__logger.info("Starting up the {}".format(self.name))
 
-        self.__update_timer = Timer(2)
+        self.__update_timer = Timer(1)
 
         self.__init_registers()
 
@@ -336,6 +431,8 @@ class Environment(BasePlugin):
             if self.__sunpos_enabled_value:
                 self.__calculate_position()
                 self.__set_sunpos()
+
+            self.__update_pirs()
 
     def _shutdown(self):
         """Shutting down the plugin.
