@@ -78,7 +78,7 @@ class Light(BasePlugin):
 
 #region Constructor / Destructor
 
-    def __init__(self, **config):
+    def __init__(self, config):
         """Constructor"""
 
         super().__init__(config)
