@@ -964,9 +964,6 @@ def __add_registers(args):
                 "uart": 0,
                 "mb_id": args.blinds_1
             }
-        },
-        "PIR_2": {
-            
         }
     }
     __registers.append(register)
@@ -985,7 +982,7 @@ def __add_registers(args):
     register.description = "Plugin window tamper settings"
     register.range = __range["NONE"]
     register.value = {
-        
+        "WINT_1": "!U0:ID2:FC2:R0:DI0",
     }
     __registers.append(register)
 
