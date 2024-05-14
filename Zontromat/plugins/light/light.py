@@ -239,8 +239,6 @@ class Light(BasePlugin):
         if self._controller.is_valid_gpio(self.__v2_output):
             self._controller.analog_write(self.__v2_output, value_v2)
 
-
-
 #endregion
 
 #region Private Methods
