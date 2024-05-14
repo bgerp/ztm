@@ -953,7 +953,7 @@ def __add_registers(args):
     register = Register("envm.pir.settings")
     register.scope = Scope.System
     register.plugin_name = "Environment"
-    register.description = "Plugin PIR settings"
+    register.description = "Plugin environment PIR settings"
     register.range = __range["NONE"]
     register.value = {
         "PIR_1": {
@@ -971,7 +971,7 @@ def __add_registers(args):
     register = Register("envm.pir.activations")
     register.scope = Scope.System
     register.plugin_name = "Environment"
-    register.description = "Plugin PIR settings"
+    register.description = "Plugin environment PIR activations"
     register.range = __range["NONE"]
     register.value = {}
     __registers.append(register)
@@ -979,21 +979,37 @@ def __add_registers(args):
     register = Register("envm.window_tamper.settings")
     register.scope = Scope.System
     register.plugin_name = "Environment"
-    register.description = "Plugin window tamper settings"
+    register.description = "Plugin environment window tamper settings"
     register.range = __range["NONE"]
     register.value = {
         "WINT_1": "!U0:ID2:FC2:R0:DI0",
     }
     __registers.append(register)
 
+    register = Register("envm.window_tamper.activations")
+    register.scope = Scope.System
+    register.plugin_name = "Environment"
+    register.description = "Plugin environment window tampers activations"
+    register.range = __range["NONE"]
+    register.value = {}
+    __registers.append(register)
+
     register = Register("envm.door_tamper.settings")
     register.scope = Scope.System
     register.plugin_name = "Environment"
-    register.description = "Plugin door tamper settings"
+    register.description = "Plugin environment door tamper settings"
     register.range = __range["NONE"]
     register.value = {
-        
+        "DRT_1": "!U0:ID2:FC2:R0:DI1",
     }
+    __registers.append(register)
+
+    register = Register("envm.door_tamper.activations")
+    register.scope = Scope.System
+    register.plugin_name = "Environment"
+    register.description = "Plugin environment door tampers activations"
+    register.range = __range["NONE"]
+    register.value = {}
     __registers.append(register)
 
     register = Register("envm.is_empty")
