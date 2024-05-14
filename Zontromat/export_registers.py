@@ -1370,6 +1370,14 @@ def __add_registers(args):
     }
     __registers.append(register)
 
+    register = Register("hvac.floor_loop_1.valve.activations")
+    register.scope = Scope.System
+    register.plugin_name = "HVAC"
+    register.description = "Floor loop 1 valve activations"
+    register.range = __range["NONE"]
+    register.value = {}
+    __registers.append(register)
+
     register = Register("hvac.floor_loop_2.valve.settings")
     register.scope = Scope.System
     register.plugin_name = "HVAC"
@@ -1388,6 +1396,14 @@ def __add_registers(args):
     }
     __registers.append(register)
 
+    register = Register("hvac.floor_loop_2.valve.activations")
+    register.scope = Scope.System
+    register.plugin_name = "HVAC"
+    register.description = "Floor loop 2 valve activations"
+    register.range = __range["NONE"]
+    register.value = {}
+    __registers.append(register)
+
     register = Register("hvac.floor_loop_3.valve.settings")
     register.scope = Scope.System
     register.plugin_name = "HVAC"
@@ -1404,6 +1420,14 @@ def __add_registers(args):
             ]
         }
     }
+    __registers.append(register)
+
+    register = Register("hvac.floor_loop_3.valve.activations")
+    register.scope = Scope.System
+    register.plugin_name = "HVAC"
+    register.description = "Floor loop 3 valve activations"
+    register.range = __range["NONE"]
+    register.value = {}
     __registers.append(register)
 
     # Convector loop 1
@@ -1451,6 +1475,14 @@ def __add_registers(args):
     }
     __registers.append(register)
 
+    register = Register("hvac.conv_loop_1.valve.activations")
+    register.scope = Scope.System
+    register.plugin_name = "HVAC"
+    register.description = "Convector loop 1 valve activations"
+    register.range = __range["NONE"]
+    register.value = {}
+    __registers.append(register)
+
     # Convector loop 2
     register = Register("hvac.convector_2.settings")
     register.scope = Scope.System
@@ -1496,6 +1528,14 @@ def __add_registers(args):
     }
     __registers.append(register)
 
+    register = Register("hvac.conv_loop_2.valve.activations")
+    register.scope = Scope.System
+    register.plugin_name = "HVAC"
+    register.description = "Convector loop 2 valve activations"
+    register.range = __range["NONE"]
+    register.value = {}
+    __registers.append(register)
+
     # Convector loop 3 flowmeter.
     register = Register("hvac.convector_3.settings")
     register.scope = Scope.System
@@ -1539,6 +1579,14 @@ def __add_registers(args):
             ]
         }
     }
+    __registers.append(register)
+
+    register = Register("hvac.conv_loop_3.valve.activations")
+    register.scope = Scope.System
+    register.plugin_name = "HVAC"
+    register.description = "Convector loop 3 valve activations"
+    register.range = __range["NONE"]
+    register.value = {}
     __registers.append(register)
 
     # Loop 1 Down Limit Temperature # Request: Eml6419
