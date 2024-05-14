@@ -382,7 +382,7 @@ class Zone(BasePlugin):
                                 json.dumps({\
                                         "position": self.__fl_1_vlv_dev.current_position,\
                                         "openings": self.__fl_1_vlv_dev.openings,\
-                                        "closing": self.__fl_1_vlv_dev.closing
+                                        "closings": self.__fl_1_vlv_dev.closings
                                     }))
 
     def __vlv_fl_2(self, position):
@@ -399,7 +399,7 @@ class Zone(BasePlugin):
                                 json.dumps({\
                                         "position": self.__fl_2_vlv_dev.current_position,\
                                         "openings": self.__fl_2_vlv_dev.openings,\
-                                        "closing": self.__fl_2_vlv_dev.closing
+                                        "closings": self.__fl_2_vlv_dev.closings
                                     }))
 
     def __vlv_fl_3(self, position):
@@ -416,7 +416,7 @@ class Zone(BasePlugin):
                                 json.dumps({\
                                         "position": self.__fl_3_vlv_dev.current_position,\
                                         "openings": self.__fl_3_vlv_dev.openings,\
-                                        "closing": self.__fl_3_vlv_dev.closing
+                                        "closings": self.__fl_3_vlv_dev.closings
                                     }))
 
     def __set_fl_state(self, duty_cycle):
@@ -442,7 +442,7 @@ class Zone(BasePlugin):
                                 json.dumps({\
                                         "position": self.__cl_1_vlv_dev.current_position,\
                                         "openings": self.__cl_1_vlv_dev.openings,\
-                                        "closing": self.__cl_1_vlv_dev.closing
+                                        "closings": self.__cl_1_vlv_dev.closings
                                     }))
 
         if self.__cl_2_vlv_position != self.__cl_2_vlv_dev.current_position:
@@ -453,7 +453,7 @@ class Zone(BasePlugin):
                                 json.dumps({\
                                         "position": self.__cl_2_vlv_dev.current_position,\
                                         "openings": self.__cl_2_vlv_dev.openings,\
-                                        "closing": self.__cl_2_vlv_dev.closing
+                                        "closings": self.__cl_2_vlv_dev.closings
                                     }))
 
         if self.__cl_3_vlv_position != self.__cl_3_vlv_dev.current_position:
@@ -464,7 +464,7 @@ class Zone(BasePlugin):
                                 json.dumps({\
                                         "position": self.__cl_3_vlv_dev.current_position,\
                                         "openings": self.__cl_3_vlv_dev.openings,\
-                                        "closing": self.__cl_3_vlv_dev.closing
+                                        "closings": self.__cl_3_vlv_dev.closings
                                     }))
 
     def __set_conv_state(self, state=0):

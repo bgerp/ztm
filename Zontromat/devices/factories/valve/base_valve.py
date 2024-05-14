@@ -248,7 +248,7 @@ class BaseValve(BaseDevice):
         return self._openings
 
     @property
-    def closing(self):
+    def closings(self):
         return self._closings
 
 #endregion
