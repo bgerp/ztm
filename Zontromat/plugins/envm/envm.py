@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 import time
+import json
 from datetime import datetime
 
 from plugins.base_plugin import BasePlugin
@@ -131,7 +132,7 @@ class Environment(BasePlugin):
         """PIR sensors in the zone states.
         """
 
-        self.__pirs_activations = {}
+        self.__pirs_activations = []
         """PIR sensors in the zone activations.
         """
 
@@ -143,8 +144,20 @@ class Environment(BasePlugin):
         """Windows tampers in the zone activations.
         """
 
-        self.__win_tamps_activations = {}
+        self.__win_tamps_activations = []
         """Windows tampers in the zone.
+        """
+
+        self.__door_tamps = {}
+        """Door tampers in the zone.
+        """
+
+        self.__door_tamps_states = {}
+        """Door tampers in the zone activations.
+        """
+
+        self.__door_tamps_activations = []
+        """Door tampers in the zone.
         """
 
         self.__activations_count = 2
@@ -156,36 +169,6 @@ class Environment(BasePlugin):
 #endregion
 
 #region Private Methods (PLC)
-
-    def __read_win_tamper(self, pin):
-
-        state = False
-
-        if self._controller.is_valid_gpio(pin):
-            state = self._controller.digital_read(pin)
-
-        return state
-
-    def __update_win_tamps(self):
-
-        # If windows tampers are not none.
-        if self.__win_tamps is not None:
-            # For each window tamper in list get.
-            for pin in self.__win_tamps:
-                # Get window tamper state.
-                state = self.__read_win_tamper(pin)
-                # If window tamper state is different in previous moment.
-                if self.__win_tamps_states[pin] != state:
-                    # Save new state from this moment.
-                    self.__win_tamps_states[pin] = state
-                    # If window tamper state is true (activated).
-                    if state == True:
-                        # Save time that has been activated.
-                        self.__win_tamps_activations[pin].append(time.time())
-
-                # Remove the oldest activation.
-                if len(self.__win_tamps_activations[pin]) > self.__activations_count:
-                    self.__win_tamps_activations[pin].pop(0)
 
     def __update_pirs(self):
 
@@ -207,6 +190,60 @@ class Environment(BasePlugin):
                 # Remove the oldest activation.
                 if len(self.__pirs_activations[pir]) > self.__activations_count:
                     self.__pirs_activations[pir].pop(0)
+
+        # If the following register is available then set ist value to the PIRs activations.
+        self._registers.write(f"{self.key}.window_tamper.activations", 
+                              json.dumps(self.__pirs_activations))
+
+    def __update_win_tamps(self):
+
+        # If windows tampers are not none.
+        if self.__win_tamps is not None:
+            # For each window tamper in list get.
+            for pin in self.__win_tamps:
+                # Get window tamper state.
+                state = self._controller.digital_read(pin)
+                # If window tamper state is different in previous moment.
+                if self.__win_tamps_states[pin] != state:
+                    # Save new state from this moment.
+                    self.__win_tamps_states[pin] = state
+
+                    # Save time that has been changed.
+                    now = time.time()
+                    self.__win_tamps_activations[pin].append({"ts": now, "state": state})
+
+                # Remove the oldest activation.
+                if len(self.__win_tamps_activations[pin]) > self.__activations_count:
+                    self.__win_tamps_activations[pin].pop(0)
+
+        # If the following register is available then set ist value to the door tampers activations.
+        self._registers.write(f"{self.key}.window_tamper.activations", 
+                              json.dumps(self.__win_tamps_activations))
+
+    def __update_door_tamps(self):
+
+        # If windows tampers are not none.
+        if self.__door_tamps is not None:
+            # For each window tamper in list get.
+            for pin in self.__door_tamps:
+                # Get window tamper state.
+                state = self._controller.digital_read(pin)
+                # If window tamper state is different in previous moment.
+                if self.__door_tamps_states[pin] != state:
+                    # Save new state from this moment.
+                    self.__door_tamps_states[pin] = state
+                        
+                    # Save time that has been changed.
+                    now = time.time()
+                    self.__door_tamps_activations[pin].append({"ts": now, "state": state})
+
+                # Remove the oldest activation.
+                if len(self.__door_tamps_activations[pin]) > self.__activations_count:
+                    self.__door_tamps_activations[pin].pop(0)
+
+        # If the following register is available then set ist value to the door tampers activations.
+        self._registers.write(f"{self.key}.door_tamper.activations", 
+                              json.dumps(self.__door_tamps_activations))
 
 #endregion
 
@@ -422,6 +459,23 @@ class Environment(BasePlugin):
             if self.__win_tamps is not None:
                 self.__win_tamps.clear()
 
+    def __door_tamp_settings_cb(self, register):
+
+        # Check data type.
+        if not register.data_type == "json":
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
+            return
+
+        if register.value != {}:
+            if self.__door_tamps is not None:
+                self.__door_tamps.clear()
+
+            self.__door_tamps = register.value
+
+        elif register.value == {}:
+            if self.__door_tamps is not None:
+                self.__door_tamps.clear()
+
     def __init_registers(self):
 
         # Software sun position enabled.
@@ -466,6 +520,11 @@ class Environment(BasePlugin):
             window_tamper.update_handlers = self.__win_tamp_settings_cb
             window_tamper.update()
 
+        door_tamper = self._registers.by_name("envm.door_tamper.settings")
+        if door_tamper is not None:
+            door_tamper.update_handlers = self.__door_tamp_settings_cb
+            door_tamper.update()
+
     def __set_sunpos(self):
         """Set sun position.
         """
@@ -503,6 +562,8 @@ class Environment(BasePlugin):
             self.__update_pirs()
 
             self.__update_win_tamps()
+
+            self.__update_door_tamps()
 
     def _shutdown(self):
         """Shutting down the plugin.
