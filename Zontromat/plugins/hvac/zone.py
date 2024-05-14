@@ -256,6 +256,8 @@ class Zone(BasePlugin):
         """Window closed sensor input.
         """
 
+        
+
         self.__glob_conv_mode = 0
         """Global convector thermal mode.
         """
@@ -327,6 +329,26 @@ class Zone(BasePlugin):
 
         if self.__window_closed_input == verbal_const.OFF:
             state = True
+
+        return state
+
+    def __read_door_tamper(self):
+
+        state = False
+
+        if self._controller.is_valid_gpio(self.__door_closed_input):
+            state = self._controller.digital_read(self.__door_closed_input)
+
+        if self.__door_closed_input == verbal_const.OFF:
+            state = True
+        return state
+
+    def __read_pir_sensor(self):
+
+        state = False
+
+        if self._controller.is_valid_gpio(self.__pir_input):
+            state = self._controller.digital_read(self.__pir_input)
 
         return state
 

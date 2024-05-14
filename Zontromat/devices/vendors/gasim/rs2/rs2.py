@@ -1,4 +1,3 @@
-
 #!/usr/bin/env python3
 # -*- coding: utf8 -*-
 
@@ -23,7 +22,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 
-from devices.base_device import BaseDevice
+from devices.factories.pir.base_pir import BasePIR
+
+from devices.drivers.modbus.device import ModbusDevice
+from devices.drivers.modbus.parameter import Parameter
+from devices.drivers.modbus.parameter_type import ParameterType
+from devices.drivers.modbus.function_code import FunctionCode
 
 #region File Attributes
 
@@ -56,21 +60,30 @@ __status__ = "Debug"
 
 #endregion
 
-class BasePowerAnalyzer(BaseDevice):
-    """Power analyzer base class."""
-
-#region Attributes
-
-#endregion
+class RS2(ModbusDevice):
+    """This class is dedicated to read data from PIR sensor.
+    """
 
 #region Constructor
 
-#endregion
+    def __init__(self, **config):
+        """Constructor"""
 
-#region Properties
+        super().__init__(config)
+
+        self._vendor = "Gasim"
+
+        self._model = "RS2"
+
+        self._parameters.append(
+            Parameter("MotionDetected", "bool",\
+            ParameterType.UINT16_T_LE, [0x06], FunctionCode.ReadHoldingRegisters))
 
 #endregion
 
 #region Public Methods
+
+    def get_motion(self):
+        return self.get_value("MotionDetected")
 
 #endregion
