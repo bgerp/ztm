@@ -377,7 +377,7 @@ class Zone(BasePlugin):
         if self.__fl_1_vlv_position != self.__fl_1_vlv_dev.current_position:
             self.__fl_1_vlv_position = self.__fl_1_vlv_dev.current_position
 
-            # If the following register is available then set ist value.
+            # If the following register is available then set its value.
             self._registers.write(f"{self.key}.floor_loop_{self.__identifier}.activations",\
                                 json.dumps({\
                                         "position": self.__fl_1_vlv_dev.current_position,\
@@ -394,7 +394,7 @@ class Zone(BasePlugin):
         if self.__fl_2_vlv_position != self.__fl_2_vlv_dev.current_position:
             self.__fl_2_vlv_position = self.__fl_2_vlv_dev.current_position
 
-            # If the following register is available then set ist value.
+            # If the following register is available then set its value.
             self._registers.write(f"{self.key}.floor_loop_{self.__identifier}.activations",\
                                 json.dumps({\
                                         "position": self.__fl_2_vlv_dev.current_position,\
@@ -411,7 +411,7 @@ class Zone(BasePlugin):
         if self.__fl_3_vlv_position != self.__fl_3_vlv_dev.current_position:
             self.__fl_3_vlv_position = self.__fl_3_vlv_dev.current_position
 
-            # If the following register is available then set ist value.
+            # If the following register is available then set its value.
             self._registers.write(f"{self.key}.floor_loop_{self.__identifier}.activations",\
                                 json.dumps({\
                                         "position": self.__fl_3_vlv_dev.current_position,\
@@ -437,7 +437,7 @@ class Zone(BasePlugin):
         if self.__cl_1_vlv_position != self.__cl_1_vlv_dev.current_position:
             self.__cl_1_vlv_position = self.__cl_1_vlv_dev.current_position
 
-            # If the following register is available then set ist value.
+            # If the following register is available then set its value.
             self._registers.write(f"{self.key}.convector_loop_{self.__identifier}.activations",\
                                 json.dumps({\
                                         "position": self.__cl_1_vlv_dev.current_position,\
@@ -448,7 +448,7 @@ class Zone(BasePlugin):
         if self.__cl_2_vlv_position != self.__cl_2_vlv_dev.current_position:
             self.__cl_2_vlv_position = self.__cl_2_vlv_dev.current_position
 
-            # If the following register is available then set ist value.
+            # If the following register is available then set its value.
             self._registers.write(f"{self.key}.convector_loop_{self.__identifier}.activations",\
                                 json.dumps({\
                                         "position": self.__cl_2_vlv_dev.current_position,\
@@ -459,7 +459,7 @@ class Zone(BasePlugin):
         if self.__cl_3_vlv_position != self.__cl_3_vlv_dev.current_position:
             self.__cl_3_vlv_position = self.__cl_3_vlv_dev.current_position
 
-            # If the following register is available then set ist value.
+            # If the following register is available then set its value.
             self._registers.write(f"{self.key}.convector_loop_{self.__identifier}.activations",\
                                 json.dumps({\
                                         "position": self.__cl_3_vlv_dev.current_position,\
@@ -628,15 +628,15 @@ class Zone(BasePlugin):
         if self.__air_temp_upper_dev is not None:
             air_temp_upper_value = self.__air_temp_upper_dev.get_temp()
 
-        # 2. If the following register is available then set ist value to the thermometers value.
+        # 2. If the following register is available then set its value to the thermometers value.
         self._registers.write(f"{self.key}.air_temp_lower_{self.__identifier}.value",
                               air_temp_lower_value)
 
-        # 2. If the following register is available then set ist value to the thermometers value.
+        # 2. If the following register is available then set its value to the thermometers value.
         self._registers.write(f"{self.key}.air_temp_cent_{self.__identifier}.value",
                               air_temp_cent_value)
 
-        # 2. If the following register is available then set ist value to the thermometers value.
+        # 2. If the following register is available then set its value to the thermometers value.
         self._registers.write(f"{self.key}.air_temp_upper_{self.__identifier}.value",
                               air_temp_upper_value)
 
