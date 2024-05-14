@@ -969,7 +969,7 @@ def __add_registers(args):
     __registers.append(register)
 
     register = Register("envm.pir.activations")
-    register.scope = Scope.System
+    register.scope = Scope.Device
     register.plugin_name = "Environment"
     register.description = "Plugin environment PIR activations"
     register.range = __range["NONE"]
@@ -987,7 +987,7 @@ def __add_registers(args):
     __registers.append(register)
 
     register = Register("envm.window_tamper.activations")
-    register.scope = Scope.System
+    register.scope = Scope.Device
     register.plugin_name = "Environment"
     register.description = "Plugin environment window tampers activations"
     register.range = __range["NONE"]
@@ -1005,7 +1005,7 @@ def __add_registers(args):
     __registers.append(register)
 
     register = Register("envm.door_tamper.activations")
-    register.scope = Scope.System
+    register.scope = Scope.Device
     register.plugin_name = "Environment"
     register.description = "Plugin environment door tampers activations"
     register.range = __range["NONE"]
