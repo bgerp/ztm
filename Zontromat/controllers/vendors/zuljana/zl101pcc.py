@@ -330,6 +330,8 @@ class ZL101PCC(BaseController):
             if self.is_gpio_inverted(pin):
                 response = not response
 
+            return response
+
         # Remote GPIO.
         def get_remote_gpio(pin):
 
@@ -350,6 +352,8 @@ class ZL101PCC(BaseController):
                 # Inversion
                 if self.is_gpio_inverted(pin):
                     response = not response
+
+            return response
 
         if isinstance(pin, str):
             if self.is_gpio_off(pin):

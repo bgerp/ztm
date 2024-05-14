@@ -132,7 +132,7 @@ class Environment(BasePlugin):
         """PIR sensors in the zone states.
         """
 
-        self.__pirs_activations = []
+        self.__pirs_activations = {}
         """PIR sensors in the zone activations.
         """
 
@@ -144,7 +144,7 @@ class Environment(BasePlugin):
         """Windows tampers in the zone activations.
         """
 
-        self.__win_tamps_activations = []
+        self.__win_tamps_activations = {}
         """Windows tampers in the zone.
         """
 
@@ -156,7 +156,7 @@ class Environment(BasePlugin):
         """Door tampers in the zone activations.
         """
 
-        self.__door_tamps_activations = []
+        self.__door_tamps_activations = {}
         """Door tampers in the zone.
         """
 
@@ -176,6 +176,13 @@ class Environment(BasePlugin):
         if self.__pirs is not None:
             # For each PIR in list get.
             for pir in self.__pirs:
+
+                # Initialise the arrays.
+                if not pir in self.__pirs_states:
+                    self.__pirs_states[pir] = None
+                if not pir in self.__pirs_activations:
+                    self.__pirs_activations[pir] = []
+
                 # Get PIR state.
                 state = self.__pirs[pir].get_motion()
                 # If PIR state is different in previous moment.
@@ -201,8 +208,15 @@ class Environment(BasePlugin):
         if self.__win_tamps is not None:
             # For each window tamper in list get.
             for pin in self.__win_tamps:
+
+                # Initialise the arrays.
+                if not pin in self.__win_tamps_states:
+                    self.__win_tamps_states[pin] = None
+                if not pin in self.__win_tamps_activations:
+                    self.__win_tamps_activations[pin] = []
+
                 # Get window tamper state.
-                state = self._controller.digital_read(pin)
+                state = self._controller.digital_read(self.__win_tamps[pin])
                 # If window tamper state is different in previous moment.
                 if self.__win_tamps_states[pin] != state:
                     # Save new state from this moment.
@@ -226,8 +240,15 @@ class Environment(BasePlugin):
         if self.__door_tamps is not None:
             # For each window tamper in list get.
             for pin in self.__door_tamps:
+
+                # Initialise the arrays.
+                if not pin in self.__door_tamps_states:
+                    self.__door_tamps_states[pin] = None
+                if not pin in self.__door_tamps_activations:
+                    self.__door_tamps_activations[pin] = []
+
                 # Get window tamper state.
-                state = self._controller.digital_read(pin)
+                state = self._controller.digital_read(self.__door_tamps[pin])
                 # If window tamper state is different in previous moment.
                 if self.__door_tamps_states[pin] != state:
                     # Save new state from this moment.
@@ -427,10 +448,10 @@ class Environment(BasePlugin):
                 self.__pirs[pir] = PIRFactory.create(
                     controller=self._controller,
                     name=register.description,
-                    vendor=register.value['vendor'],
-                    model=register.value['model'],
-                    options=register.value['options'])
-                self.__pirs_activations[pir] = []
+                    vendor=register.value[pir]['vendor'],
+                    model=register.value[pir]['model'],
+                    options=register.value[pir]['options'])
+                self.__pirs_activations.clear()
 
             if self.__pirs is not None:
                 for pir in self.__pirs:
