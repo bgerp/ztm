@@ -79,8 +79,6 @@ class BaseValve(BaseDevice):
         super().__init__(config)
 
         self._state = StateMachine(ValveState.NONE)
-
-        self._state = None
         """Valve state.
         """
 
@@ -248,7 +246,7 @@ class BaseValve(BaseDevice):
         return self._openings
 
     @property
-    def closing(self):
+    def closings(self):
         return self._closings
 
 #endregion

@@ -191,7 +191,7 @@ class Environment(BasePlugin):
                 if len(self.__pirs_activations[pir]) > self.__activations_count:
                     self.__pirs_activations[pir].pop(0)
 
-        # If the following register is available then set ist value to the PIRs activations.
+        # If the following register is available then set its value to the PIRs activations.
         self._registers.write(f"{self.key}.window_tamper.activations", 
                               json.dumps(self.__pirs_activations))
 
@@ -216,7 +216,7 @@ class Environment(BasePlugin):
                 if len(self.__win_tamps_activations[pin]) > self.__activations_count:
                     self.__win_tamps_activations[pin].pop(0)
 
-        # If the following register is available then set ist value to the door tampers activations.
+        # If the following register is available then set its value to the door tampers activations.
         self._registers.write(f"{self.key}.window_tamper.activations", 
                               json.dumps(self.__win_tamps_activations))
 
@@ -241,7 +241,7 @@ class Environment(BasePlugin):
                 if len(self.__door_tamps_activations[pin]) > self.__activations_count:
                     self.__door_tamps_activations[pin].pop(0)
 
-        # If the following register is available then set ist value to the door tampers activations.
+        # If the following register is available then set its value to the door tampers activations.
         self._registers.write(f"{self.key}.door_tamper.activations", 
                               json.dumps(self.__door_tamps_activations))
 
