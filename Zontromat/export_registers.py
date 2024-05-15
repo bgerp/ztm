@@ -1371,7 +1371,7 @@ def __add_registers(args):
     __registers.append(register)
 
     register = Register("hvac.floor_loop_1.valve.activations")
-    register.scope = Scope.System
+    register.scope = Scope.Device
     register.plugin_name = "HVAC"
     register.description = "Floor loop 1 valve activations"
     register.range = __range["NONE"]
@@ -1397,7 +1397,7 @@ def __add_registers(args):
     __registers.append(register)
 
     register = Register("hvac.floor_loop_2.valve.activations")
-    register.scope = Scope.System
+    register.scope = Scope.Device
     register.plugin_name = "HVAC"
     register.description = "Floor loop 2 valve activations"
     register.range = __range["NONE"]
@@ -1423,7 +1423,7 @@ def __add_registers(args):
     __registers.append(register)
 
     register = Register("hvac.floor_loop_3.valve.activations")
-    register.scope = Scope.System
+    register.scope = Scope.Device
     register.plugin_name = "HVAC"
     register.description = "Floor loop 3 valve activations"
     register.range = __range["NONE"]
@@ -1476,7 +1476,7 @@ def __add_registers(args):
     __registers.append(register)
 
     register = Register("hvac.conv_loop_1.valve.activations")
-    register.scope = Scope.System
+    register.scope = Scope.Device
     register.plugin_name = "HVAC"
     register.description = "Convector loop 1 valve activations"
     register.range = __range["NONE"]
@@ -1529,7 +1529,7 @@ def __add_registers(args):
     __registers.append(register)
 
     register = Register("hvac.conv_loop_2.valve.activations")
-    register.scope = Scope.System
+    register.scope = Scope.Device
     register.plugin_name = "HVAC"
     register.description = "Convector loop 2 valve activations"
     register.range = __range["NONE"]
@@ -1582,7 +1582,7 @@ def __add_registers(args):
     __registers.append(register)
 
     register = Register("hvac.conv_loop_3.valve.activations")
-    register.scope = Scope.System
+    register.scope = Scope.Device
     register.plugin_name = "HVAC"
     register.description = "Convector loop 3 valve activations"
     register.range = __range["NONE"]

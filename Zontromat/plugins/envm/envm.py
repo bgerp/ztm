@@ -207,28 +207,30 @@ class Environment(BasePlugin):
         # If windows tampers are not none.
         if self.__win_tamps is not None:
             # For each window tamper in list get.
-            for pin in self.__win_tamps:
+
+            for window in self.__win_tamps:
 
                 # Initialise the arrays.
-                if not pin in self.__win_tamps_states:
-                    self.__win_tamps_states[pin] = None
-                if not pin in self.__win_tamps_activations:
-                    self.__win_tamps_activations[pin] = []
+                if not window in self.__win_tamps_states:
+                    self.__win_tamps_states[window] = None
+                if not window in self.__win_tamps_activations:
+                    self.__win_tamps_activations[window] = []
 
                 # Get window tamper state.
-                state = self._controller.digital_read(self.__win_tamps[pin])
+                state = self._controller.digital_read(self.__win_tamps[window])
+
                 # If window tamper state is different in previous moment.
-                if self.__win_tamps_states[pin] != state:
+                if self.__win_tamps_states[window] != state:
                     # Save new state from this moment.
-                    self.__win_tamps_states[pin] = state
+                    self.__win_tamps_states[window] = state
 
                     # Save time that has been changed.
                     now = time.time()
-                    self.__win_tamps_activations[pin].append({"ts": now, "state": state})
+                    self.__win_tamps_activations[window].append({"ts": now, "state": state})
 
                 # Remove the oldest activation.
-                if len(self.__win_tamps_activations[pin]) > self.__activations_count:
-                    self.__win_tamps_activations[pin].pop(0)
+                if len(self.__win_tamps_activations[window]) > self.__activations_count:
+                    self.__win_tamps_activations[window].pop(0)
 
         # If the following register is available then set its value to the door tampers activations.
         self._registers.write(f"{self.key}.window_tamper.activations", 
@@ -239,28 +241,30 @@ class Environment(BasePlugin):
         # If windows tampers are not none.
         if self.__door_tamps is not None:
             # For each window tamper in list get.
-            for pin in self.__door_tamps:
+
+            for door in self.__door_tamps:
 
                 # Initialise the arrays.
-                if not pin in self.__door_tamps_states:
-                    self.__door_tamps_states[pin] = None
-                if not pin in self.__door_tamps_activations:
-                    self.__door_tamps_activations[pin] = []
+                if not door in self.__door_tamps_states:
+                    self.__door_tamps_states[door] = None
+                if not door in self.__door_tamps_activations:
+                    self.__door_tamps_activations[door] = []
 
                 # Get window tamper state.
-                state = self._controller.digital_read(self.__door_tamps[pin])
+                state = self._controller.digital_read(self.__door_tamps[door])
+
                 # If window tamper state is different in previous moment.
-                if self.__door_tamps_states[pin] != state:
+                if self.__door_tamps_states[door] != state:
                     # Save new state from this moment.
-                    self.__door_tamps_states[pin] = state
+                    self.__door_tamps_states[door] = state
                         
                     # Save time that has been changed.
                     now = time.time()
-                    self.__door_tamps_activations[pin].append({"ts": now, "state": state})
+                    self.__door_tamps_activations[door].append({"ts": now, "state": state})
 
                 # Remove the oldest activation.
-                if len(self.__door_tamps_activations[pin]) > self.__activations_count:
-                    self.__door_tamps_activations[pin].pop(0)
+                if len(self.__door_tamps_activations[door]) > self.__activations_count:
+                    self.__door_tamps_activations[door].pop(0)
 
         # If the following register is available then set its value to the door tampers activations.
         self._registers.write(f"{self.key}.door_tamper.activations", 
