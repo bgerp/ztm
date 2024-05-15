@@ -207,6 +207,7 @@ class Environment(BasePlugin):
         # If windows tampers are not none.
         if self.__win_tamps is not None:
             # For each window tamper in list get.
+
             for window in self.__win_tamps:
 
                 # Initialise the arrays.
@@ -217,6 +218,7 @@ class Environment(BasePlugin):
 
                 # Get window tamper state.
                 state = self._controller.digital_read(self.__win_tamps[window])
+
                 # If window tamper state is different in previous moment.
                 if self.__win_tamps_states[window] != state:
                     # Save new state from this moment.
@@ -239,6 +241,7 @@ class Environment(BasePlugin):
         # If windows tampers are not none.
         if self.__door_tamps is not None:
             # For each window tamper in list get.
+
             for door in self.__door_tamps:
 
                 # Initialise the arrays.
@@ -249,6 +252,7 @@ class Environment(BasePlugin):
 
                 # Get window tamper state.
                 state = self._controller.digital_read(self.__door_tamps[door])
+
                 # If window tamper state is different in previous moment.
                 if self.__door_tamps_states[door] != state:
                     # Save new state from this moment.
