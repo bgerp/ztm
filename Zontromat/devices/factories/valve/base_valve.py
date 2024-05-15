@@ -219,10 +219,10 @@ class BaseValve(BaseDevice):
         if self._target_position != position:
 
             if self._target_position > position:
-                self._openings += 1
+                self._closings += 1
 
             if self._target_position < position:
-                self._closings += 1
+                self._openings += 1
 
         self._target_position = position
         self._state.set_state(ValveState.Prepare)
