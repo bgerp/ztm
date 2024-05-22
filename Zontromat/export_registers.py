@@ -2096,6 +2096,18 @@ def __add_registers(args):
     register.value = 0.0
     __registers.append(register)
 
+    # ECD / Ground drilling valves state.
+    register = Register("ecd.ground_drilling.temp.settings")
+    register.scope = Scope.Device
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Ground drilling valves state."
+    register.range = __range["NONE"]
+    register.value = {
+
+    }
+    __registers.append(register)
+
+
     # ECD / Air tower green valves settings.
     register = Register("ecd.air_tower_green.valves.settings")
     register.scope = Scope.System
@@ -3461,6 +3473,57 @@ def __add_registers(args):
     register.range = __range["NONE"]
     register.value = {}
     __registers.append(register)
+
+    # ====================================================================================================
+    # ======================================== Thermo couplers  ==========================================
+    # ====================================================================================================
+
+    # ECD / Floor entrance valves settings.
+    register = Register("ecd.floor_entrance.valves.settings")
+    register.scope = Scope.System
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Floor entrance valves settings."
+    register.range = __range["NONE"]
+    register.value = \
+    {
+        "hot":
+        [
+            # {
+            #     "vendor": "Flowx",
+            #     "model": "FLX-05F",
+            #     "options":
+            #     {
+            #         "close_on_shutdown": False,
+            #         "wait_on_shutdown": False,
+            #         "io_mode": 1, # 1: "single_out", 2: "dual_out"
+            #         "output_cw": "U0:ID2:FC5:R0:RO1",
+            #         "output_ccw": "off",
+            #         "limit_cw": "U0:ID6:FC2:R0:DI0",
+            #         "limit_ccw": "U0:ID6:FC2:R0:DI1"
+            #     }
+            # }
+        ],
+        "cold":
+        [
+            {
+                "vendor": "Flowx",
+                "model": "FLX-05F",
+                "options":
+                {
+                    "close_on_shutdown": False,
+                    "wait_on_shutdown": False,
+                    "io_mode": 1, # 1: "single_out", 2: "dual_out"
+                    "output_cw": "U0:ID11:FC5:R0:RO0",
+                    "output_ccw": "off",
+                    "limit_cw": "U0:ID11:FC2:R0:DI0",
+                    "limit_ccw": "!U0:ID11:FC2:R0:DI0"
+                }
+            }
+        ]
+    }
+    __registers.append(register)
+
+
 
     # Enable flag
     register = Register("ecd.enabled")
