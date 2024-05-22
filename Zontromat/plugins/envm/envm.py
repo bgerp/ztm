@@ -132,7 +132,7 @@ class Environment(BasePlugin):
         """PIR sensors in the zone states.
         """
 
-        self.__pirs_activations = []
+        self.__pirs_activations = {}
         """PIR sensors in the zone activations.
         """
 
@@ -144,7 +144,7 @@ class Environment(BasePlugin):
         """Windows tampers in the zone activations.
         """
 
-        self.__win_tamps_activations = []
+        self.__win_tamps_activations = {}
         """Windows tampers in the zone.
         """
 
@@ -156,7 +156,7 @@ class Environment(BasePlugin):
         """Door tampers in the zone activations.
         """
 
-        self.__door_tamps_activations = []
+        self.__door_tamps_activations = {}
         """Door tampers in the zone.
         """
 
@@ -176,6 +176,13 @@ class Environment(BasePlugin):
         if self.__pirs is not None:
             # For each PIR in list get.
             for pir in self.__pirs:
+
+                # Initialise the arrays.
+                if not pir in self.__pirs_states:
+                    self.__pirs_states[pir] = None
+                if not pir in self.__pirs_activations:
+                    self.__pirs_activations[pir] = []
+
                 # Get PIR state.
                 state = self.__pirs[pir].get_motion()
                 # If PIR state is different in previous moment.
@@ -191,7 +198,7 @@ class Environment(BasePlugin):
                 if len(self.__pirs_activations[pir]) > self.__activations_count:
                     self.__pirs_activations[pir].pop(0)
 
-        # If the following register is available then set ist value to the PIRs activations.
+        # If the following register is available then set its value to the PIRs activations.
         self._registers.write(f"{self.key}.window_tamper.activations", 
                               json.dumps(self.__pirs_activations))
 
@@ -200,23 +207,32 @@ class Environment(BasePlugin):
         # If windows tampers are not none.
         if self.__win_tamps is not None:
             # For each window tamper in list get.
-            for pin in self.__win_tamps:
+
+            for window in self.__win_tamps:
+
+                # Initialise the arrays.
+                if not window in self.__win_tamps_states:
+                    self.__win_tamps_states[window] = None
+                if not window in self.__win_tamps_activations:
+                    self.__win_tamps_activations[window] = []
+
                 # Get window tamper state.
-                state = self._controller.digital_read(pin)
+                state = self._controller.digital_read(self.__win_tamps[window])
+
                 # If window tamper state is different in previous moment.
-                if self.__win_tamps_states[pin] != state:
+                if self.__win_tamps_states[window] != state:
                     # Save new state from this moment.
-                    self.__win_tamps_states[pin] = state
+                    self.__win_tamps_states[window] = state
 
                     # Save time that has been changed.
                     now = time.time()
-                    self.__win_tamps_activations[pin].append({"ts": now, "state": state})
+                    self.__win_tamps_activations[window].append({"ts": now, "state": state})
 
                 # Remove the oldest activation.
-                if len(self.__win_tamps_activations[pin]) > self.__activations_count:
-                    self.__win_tamps_activations[pin].pop(0)
+                if len(self.__win_tamps_activations[window]) > self.__activations_count:
+                    self.__win_tamps_activations[window].pop(0)
 
-        # If the following register is available then set ist value to the door tampers activations.
+        # If the following register is available then set its value to the door tampers activations.
         self._registers.write(f"{self.key}.window_tamper.activations", 
                               json.dumps(self.__win_tamps_activations))
 
@@ -225,23 +241,32 @@ class Environment(BasePlugin):
         # If windows tampers are not none.
         if self.__door_tamps is not None:
             # For each window tamper in list get.
-            for pin in self.__door_tamps:
+
+            for door in self.__door_tamps:
+
+                # Initialise the arrays.
+                if not door in self.__door_tamps_states:
+                    self.__door_tamps_states[door] = None
+                if not door in self.__door_tamps_activations:
+                    self.__door_tamps_activations[door] = []
+
                 # Get window tamper state.
-                state = self._controller.digital_read(pin)
+                state = self._controller.digital_read(self.__door_tamps[door])
+
                 # If window tamper state is different in previous moment.
-                if self.__door_tamps_states[pin] != state:
+                if self.__door_tamps_states[door] != state:
                     # Save new state from this moment.
-                    self.__door_tamps_states[pin] = state
+                    self.__door_tamps_states[door] = state
                         
                     # Save time that has been changed.
                     now = time.time()
-                    self.__door_tamps_activations[pin].append({"ts": now, "state": state})
+                    self.__door_tamps_activations[door].append({"ts": now, "state": state})
 
                 # Remove the oldest activation.
-                if len(self.__door_tamps_activations[pin]) > self.__activations_count:
-                    self.__door_tamps_activations[pin].pop(0)
+                if len(self.__door_tamps_activations[door]) > self.__activations_count:
+                    self.__door_tamps_activations[door].pop(0)
 
-        # If the following register is available then set ist value to the door tampers activations.
+        # If the following register is available then set its value to the door tampers activations.
         self._registers.write(f"{self.key}.door_tamper.activations", 
                               json.dumps(self.__door_tamps_activations))
 
@@ -427,10 +452,10 @@ class Environment(BasePlugin):
                 self.__pirs[pir] = PIRFactory.create(
                     controller=self._controller,
                     name=register.description,
-                    vendor=register.value['vendor'],
-                    model=register.value['model'],
-                    options=register.value['options'])
-                self.__pirs_activations[pir] = []
+                    vendor=register.value[pir]['vendor'],
+                    model=register.value[pir]['model'],
+                    options=register.value[pir]['options'])
+                self.__pirs_activations.clear()
 
             if self.__pirs is not None:
                 for pir in self.__pirs:
