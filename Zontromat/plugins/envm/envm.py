@@ -199,7 +199,7 @@ class Environment(BasePlugin):
                     self.__pirs_activations[pir].pop(0)
 
         # If the following register is available then set ist value to the PIRs activations.
-        self._registers.write(f"{self.key}.window_tamper.activations", 
+        self._registers.write(f"{self.key}.pir.activations", 
                               json.dumps(self.__pirs_activations))
 
     def __update_win_tamps(self):
