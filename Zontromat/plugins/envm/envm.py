@@ -207,6 +207,7 @@ class Environment(BasePlugin):
         # If windows tampers are not none.
         if self.__win_tamps is not None:
             # For each window tamper in list get.
+
             for window in self.__win_tamps:
 
                 # Initialise the arrays.
@@ -217,6 +218,7 @@ class Environment(BasePlugin):
 
                 # Get window tamper state.
                 state = self._controller.digital_read(self.__win_tamps[window])
+
                 # If window tamper state is different in previous moment.
                 if self.__win_tamps_states[window] != state:
                     # Save new state from this moment.
@@ -230,7 +232,7 @@ class Environment(BasePlugin):
                 if len(self.__win_tamps_activations[window]) > self.__activations_count:
                     self.__win_tamps_activations[window].pop(0)
 
-        # If the following register is available then set ist value to the door tampers activations.
+        # If the following register is available then set its value to the door tampers activations.
         self._registers.write(f"{self.key}.window_tamper.activations", 
                               json.dumps(self.__win_tamps_activations))
 
@@ -239,6 +241,7 @@ class Environment(BasePlugin):
         # If windows tampers are not none.
         if self.__door_tamps is not None:
             # For each window tamper in list get.
+
             for door in self.__door_tamps:
 
                 # Initialise the arrays.
@@ -249,6 +252,7 @@ class Environment(BasePlugin):
 
                 # Get window tamper state.
                 state = self._controller.digital_read(self.__door_tamps[door])
+
                 # If window tamper state is different in previous moment.
                 if self.__door_tamps_states[door] != state:
                     # Save new state from this moment.
@@ -262,7 +266,7 @@ class Environment(BasePlugin):
                 if len(self.__door_tamps_activations[door]) > self.__activations_count:
                     self.__door_tamps_activations[door].pop(0)
 
-        # If the following register is available then set ist value to the door tampers activations.
+        # If the following register is available then set its value to the door tampers activations.
         self._registers.write(f"{self.key}.door_tamper.activations", 
                               json.dumps(self.__door_tamps_activations))
 

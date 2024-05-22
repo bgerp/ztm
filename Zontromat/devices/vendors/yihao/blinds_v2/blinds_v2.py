@@ -119,13 +119,13 @@ class BlindsV2(BaseBlind, ModbusDevice):
         if self.__new_position == position:
             return
 
-        if position > 180:
-            position = 180
+        if position > 100:
+            position = 100
 
         elif position < 0:
             position = 0
 
-        scaled_position = l_scale(position, [0, 180], [0, 100])
+        scaled_position = l_scale(position, [0, 100], [0, 100])
 
         try:
             request = self.generate_request("Position", Position=int(scaled_position))
