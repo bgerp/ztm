@@ -962,7 +962,7 @@ def __add_registers(args):
             "options":
             {
                 "uart": 0,
-                "mb_id": args.blinds_1
+                "mb_id": args.pir_1
             }
         }
     }
