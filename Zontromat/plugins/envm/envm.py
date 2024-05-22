@@ -192,14 +192,14 @@ class Environment(BasePlugin):
                     # If PIR state is true (activated).
                     if state == True:
                         # Save time that has been activated.
-                        self.__pirs_activations[pir].append(time.time())
+                        self.__pirs_activations[pir].append(int(time.time()))
 
                 # Remove the oldest activation.
                 if len(self.__pirs_activations[pir]) > self.__activations_count:
                     self.__pirs_activations[pir].pop(0)
 
-        # If the following register is available then set its value to the PIRs activations.
-        self._registers.write(f"{self.key}.window_tamper.activations", 
+        # If the following register is available then set ist value to the PIRs activations.
+        self._registers.write(f"{self.key}.pir.activations", 
                               json.dumps(self.__pirs_activations))
 
     def __update_win_tamps(self):
@@ -225,7 +225,7 @@ class Environment(BasePlugin):
                     self.__win_tamps_states[window] = state
 
                     # Save time that has been changed.
-                    now = time.time()
+                    now = int(time.time())
                     self.__win_tamps_activations[window].append({"ts": now, "state": state})
 
                 # Remove the oldest activation.
@@ -259,7 +259,7 @@ class Environment(BasePlugin):
                     self.__door_tamps_states[door] = state
                         
                     # Save time that has been changed.
-                    now = time.time()
+                    now = int(time.time())
                     self.__door_tamps_activations[door].append({"ts": now, "state": state})
 
                 # Remove the oldest activation.
