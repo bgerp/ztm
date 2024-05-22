@@ -22,7 +22,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 
-from enum import Enum
+from devices.factories.pir.base_pir import BasePIR
+
+from devices.drivers.modbus.device import ModbusDevice
+from devices.drivers.modbus.parameter import Parameter
+from devices.drivers.modbus.parameter_type import ParameterType
+from devices.drivers.modbus.function_code import FunctionCode
 
 #region File Attributes
 
@@ -55,32 +60,30 @@ __status__ = "Debug"
 
 #endregion
 
-class ThermalMode(Enum):
-    """Thermal modes description."""
+class RS2(ModbusDevice):
+    """This class is dedicated to read data from PIR sensor.
+    """
 
-    Stop = 0
-    Cold = 1
-    Warm = 2
+#region Constructor
 
-#region Public static Methods
+    def __init__(self, **config):
+        """Constructor"""
 
-    @staticmethod
-    def is_valid(value):
-        """Check validity of the data type.
+        super().__init__(config)
 
-        Args:
-            value (str): Target data type for check.
+        self._vendor = "Gasim"
 
-        Return:
-            bool: Valid data type.
-        """
-        state = False
+        self._model = "RS2"
 
-        for item in ThermalMode:
-            if value == item.value:
-                state = True
-                break
+        self._parameters.append(
+            Parameter("MotionDetected", "bool",\
+            ParameterType.UINT16_T_LE, [0x06], FunctionCode.ReadHoldingRegisters))
 
-        return state
+#endregion
+
+#region Public Methods
+
+    def get_motion(self):
+        return self.get_value("MotionDetected")
 
 #endregion

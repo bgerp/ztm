@@ -327,19 +327,10 @@ class Registers(list):
             if register.data_type == "json":
 
                 if isinstance(register.value, list):
-                    pass
+                    result[register.name] = json.dumps(register.value)
 
                 if isinstance(register.value, dict):
-                    temp_list = []
-                    for item in register.value:
-
-                        temp_dict = {}
-                        for sub_item in item:
-                            temp_dict[sub_item.name] = sub_item.value
-
-                        temp_list.append(temp_dict)
-
-                    result[register.name] = json.dumps(temp_list)
+                    result[register.name] = json.dumps(register.value)
 
             # No need special handling.
             else:

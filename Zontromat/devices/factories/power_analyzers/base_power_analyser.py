@@ -56,8 +56,8 @@ __status__ = "Debug"
 
 #endregion
 
-class BasePowerAnalyser(BaseDevice):
-    """Power analyser base class."""
+class BasePowerAnalyzer(BaseDevice):
+    """Power analyzer base class."""
 
 #region Attributes
 

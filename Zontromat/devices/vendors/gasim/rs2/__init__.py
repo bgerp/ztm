@@ -22,8 +22,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 
-from enum import Enum
-
 #region File Attributes
 
 __author__ = "Orlin Dimitrov"
@@ -52,35 +50,5 @@ __email__ = "or.dimitrov@polygonteam.com"
 
 __status__ = "Debug"
 """File status."""
-
-#endregion
-
-class ThermalMode(Enum):
-    """Thermal modes description."""
-
-    Stop = 0
-    Cold = 1
-    Warm = 2
-
-#region Public static Methods
-
-    @staticmethod
-    def is_valid(value):
-        """Check validity of the data type.
-
-        Args:
-            value (str): Target data type for check.
-
-        Return:
-            bool: Valid data type.
-        """
-        state = False
-
-        for item in ThermalMode:
-            if value == item.value:
-                state = True
-                break
-
-        return state
 
 #endregion

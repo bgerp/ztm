@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 
-from enum import Enum
+from devices.base_device import BaseDevice
 
 #region File Attributes
 
@@ -55,32 +55,21 @@ __status__ = "Debug"
 
 #endregion
 
-class ThermalMode(Enum):
-    """Thermal modes description."""
+class BasePIR(BaseDevice):
+    """Passive infrared sensor base class."""
 
-    Stop = 0
-    Cold = 1
-    Warm = 2
+#region Attributes
 
-#region Public static Methods
+#endregion
 
-    @staticmethod
-    def is_valid(value):
-        """Check validity of the data type.
+#region Constructor
 
-        Args:
-            value (str): Target data type for check.
+#endregion
 
-        Return:
-            bool: Valid data type.
-        """
-        state = False
+#region Properties
 
-        for item in ThermalMode:
-            if value == item.value:
-                state = True
-                break
+#endregion
 
-        return state
+#region Public Methods
 
 #endregion

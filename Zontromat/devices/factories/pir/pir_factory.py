@@ -22,9 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 
-from devices.vendors.tonhe.a20m15b2c.a20m15b2c import A20M15B2C
-from devices.vendors.tonhe.a20t20b2c.a20t20b2c import A20T20B2C
-from devices.vendors.flowx.flx05f.flx05f import FLX05F
+from devices.vendors.gasim.rs2.rs2 import RS2
 
 #region File Attributes
 
@@ -57,19 +55,20 @@ __status__ = "Debug"
 
 #endregion
 
-class ValveFactory:
-    """Valve factory class.
+class PIRFactory:
+    """Passive infrared sensor factory class.
     """
 
     @staticmethod
     def create(**config):
-        """Create device instace."""
+        """Create device instance.
+        """
 
-        # The device.
+        # The device instance.
         device = None
 
         # Name
-        name = ""
+        name = None
         if "name" in config:
             name = config["name"]
 
@@ -89,6 +88,15 @@ class ValveFactory:
         else:
             raise ValueError("No \"model\" argument has been passed.")
 
+        # Unit
+        unit = None
+        if "options" in config:
+            unit = int(config["options"]['mb_id'])
+
+        else:
+            raise ValueError("No \"mb_id\" argument has been passed.")
+
+
         # Controller
         controller = None
         if "controller" in config:
@@ -97,39 +105,14 @@ class ValveFactory:
         else:
             raise ValueError("No \"controller\" argument has been passed.")
 
-        # Flowx / FLX-05F / (DO0,R0) / (DO1,R1) / DI0 / DI1
-        if vendor == "Flowx" and  model == "FLX-05F":
 
-            device = FLX05F(
-                name=name,
+        # Gasim / RS2
+        if vendor == "Gasim" and  model == "RS2":
+
+            device = RS2(
                 controller=controller,
-                close_on_shutdown=config["options"]["close_on_shutdown"],
-                io_mode=config["options"]["io_mode"],
-                output_cw=config["options"]["output_cw"],
-                output_ccw=config["options"]["output_ccw"],
-                limit_cw=config["options"]["limit_cw"],
-                limit_ccw=config["options"]["limit_ccw"],
-            )
-
-        # Tonhe / a20m15b2c / (RO0/AO0) / AI0
-        elif vendor == "Tonhe" and model == "a20m15b2c":
-
-            device = A20M15B2C(
                 name=name,
-                controller=controller,
-                output=config["options"]["output"],
-                feedback=config["options"]["feedback"],
-                min_pos=config["options"]["min"],
-                max_pos=config["options"]["max"]
-            )
-
-        # Tonhe / a20t20b2c / (RO0/AO0) / AI0
-        elif vendor == "Tonhe" and model == "a20t20b2c":
-
-            device = A20T20B2C(
-                name=name,
-                controller=controller,
-                output=config["options"]["output"],
+                unit=unit
             )
 
         else:

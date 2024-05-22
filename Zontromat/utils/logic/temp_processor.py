@@ -59,12 +59,6 @@ class TemperatureProcessor():
 
 #region Attributes
 
-    __thermometers = []
-    """Thermometers"""
-
-    __value = 0
-    """Calculated value of the thermometers."""
-
 #endregion
 
 #region Constructor
@@ -72,10 +66,20 @@ class TemperatureProcessor():
     def __init__(self, thermometers=None):
         """Constructor
 
-        Parameters
-        ----------
-        thermometers : Array
-            Array of thermometers.
+        Args:
+            thermometers (Array, optional): Array of thermometers. Defaults to None.
+        """
+
+        self.__ref_thermometer = None
+        """Referent thermometer.
+        """        
+
+        self.__thermometers = []
+        """Thermometers
+        """
+
+        self.__value = 0
+        """Calculated value of the thermometers.
         """
 
         if thermometers is not None:
@@ -93,43 +97,9 @@ class TemperatureProcessor():
 
 #endregion
 
-#region Public Methods
+#region Private Methods (Temporary)
 
-    def add(self, thermometer):
-        """Add thermometer.
-
-        Parameters
-        ----------
-        thermometer : object.
-            Device of type thermometer.
-        """
-
-        if thermometer is None:
-            return
-
-        self.__thermometers.append(thermometer)
-
-    def remove(self, thermometer):
-        """Remove thermometer.
-
-        Parameters
-        ----------
-        thermometer : object.
-            Device of type thermometer.
-        """
-
-        if thermometer is not None:
-            self.__thermometers.remove(thermometer)
-
-    def clear(self):
-        """Clear all thermometers."""
-
-        if self.__thermometers is not None:
-            self.__thermometers.clear()
-
-    def update(self):
-        """Update temperature."""
-
+    def __old_update(self):
         temperatures = []
 
         for thermometer in self.__thermometers:
@@ -168,5 +138,92 @@ class TemperatureProcessor():
 
         # Return the temperature.
         self.__value = value
+
+#endregion
+
+#region Public Methods
+
+    def add_ref(self, thermometer):
+        """Add referent thermometer.
+
+        Args:
+            thermometer (Any): Referent thermometer.
+
+        Raises:
+            ValueError: Thermometer can not be none.
+        """
+        if thermometer is None:
+            raise ValueError("Thermometer can not be none.")
+        
+        self.__ref_thermometer = thermometer
+
+    def remove_ref(self, ):
+        """Remove referent thermometer.
+        """
+        
+        self.__ref_thermometer = None
+
+    def add(self, thermometer):
+        """Add thermometer.
+
+        Args:
+            thermometer (Any): Device of type thermometer.
+        """
+
+        if thermometer is None:
+            return
+
+        self.__thermometers.append(thermometer)
+
+    def remove(self, thermometer):
+        """Remove thermometer.
+
+        Args:
+            thermometer (Any): Device of type thermometer.
+        """
+
+        if thermometer is not None:
+            self.__thermometers.remove(thermometer)
+
+    def clear(self):
+        """Clear all thermometers."""
+
+        if self.__thermometers is not None:
+            self.__thermometers.clear()
+
+    def update(self):
+        """Update temperature.
+        """
+
+        dt = 100
+        ref_temp = None
+        temperatures = []
+
+        if self.__ref_thermometer is not None:
+            ref_temp = self.__ref_thermometer.get_temp()
+
+        for thermometer in self.__thermometers:
+            if thermometer is not None:
+                current_temp = thermometer.get_temp()
+
+                if current_temp is None:
+                    continue
+
+                if (self.__ref_thermometer is not None) \
+                    or (ref_temp is not None):
+
+                    dt = abs(ref_temp - current_temp)
+
+                if current_temp > 0 and dt < 1:
+                    temperatures.append(current_temp)
+
+        size = len(temperatures)
+        if size > 0:
+            self.__value = sum(temperatures) / len(temperatures)
+        else:
+            self.__value = ref_temp
+
+        # Return the temperature.
+        return self.__value
 
 #endregion
