@@ -114,7 +114,7 @@ class MB318E(ModbusDevice):
 
         value = self.get_value("Temperature")
 
-        if value is not None:
+        if value is not None and 0 <= self._chanel <= 11:
             value = value[self._chanel] # TODO: Do the math.
 
         return value
