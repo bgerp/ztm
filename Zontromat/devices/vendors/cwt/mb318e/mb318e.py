@@ -75,6 +75,7 @@ class MB318E(ModbusDevice):
 
         self._model = "MB318E"
 
+        self._chanel = 0
         if "chanel" in config:
             self._chanel = config["chanel"]
 
