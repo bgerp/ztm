@@ -1238,7 +1238,7 @@ class Zone(BasePlugin):
             print(f"Target: {self.__adjust_temp:2.1f}; Current: {self.__temp_proc.value:2.1f}")
 
             # Calculate the delta.
-            # dt = self.__adjust_temp - self.__temp_proc.value
+            dt = self.__adjust_temp - self.__temp_proc.value
 
             # Calculate the delta t and temperature deviation.
             dt = min(self.__temp_proc.value-self.__adjust_temp+self.__temperature_deviation, 0) \
