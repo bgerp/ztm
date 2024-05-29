@@ -355,18 +355,20 @@ class Environment(BasePlugin):
         ts_pir = 0
         ts_pirs = []
         for pir in self.__pirs_activations:
-            ts_pirs.append(self.__pirs_activations[pir][0])
-        ts_pir = max(ts_pirs)
+            if len(self.__pirs_activations[pir]) > 0:
+                ts_pirs.append(self.__pirs_activations[pir][0])
+                ts_pir = max(ts_pirs)
 
         # Get the ts with newer activation.
         ts_door = 0
         ts_doors = []
         for door in self.__door_tamps_activations:
-            ts_doors.append(self.__door_tamps_activations[door][0])
-        ts_door = max(ts_doors)
+            if len(self.__door_tamps_activations[door]) > 0:
+                ts_doors.append(self.__door_tamps_activations[door][0]["ts"])
+                ts_door = max(ts_doors)
 
         # Time now
-        ts_now = time.time()
+        ts_now = int(time.time())
 
         # Human
         if ts_door < ts_pir:
