@@ -661,7 +661,7 @@ class Monitoring(BasePlugin):
         # This magical number represents seconds for 24 hours.
         filter_measurements_by_time(self.__fl_1_hm_measurements, 86400)
 
-        # 2. If the following register is available then set ist value to the thermometers value.
+        # 2. If the following register is available then set its value to the thermometers value.
         self._registers.write(f"{self.key}.fl_1.hm.measurements",
                               json.dumps(self.__fl_1_hm_measurements))
 
@@ -723,7 +723,7 @@ class Monitoring(BasePlugin):
         # This magical number represents seconds for 24 hours.
         filter_measurements_by_time(self.__fl_2_hm_measurements, 86400)
 
-        # 2. If the following register is available then set ist value to the thermometers value.
+        # 2. If the following register is available then set its value to the thermometers value.
         self._registers.write(f"{self.key}.fl_2.hm.measurements",
                               json.dumps(self.__fl_2_hm_measurements))
 
@@ -785,7 +785,7 @@ class Monitoring(BasePlugin):
         # This magical number represents seconds for 24 hours.
         filter_measurements_by_time(self.__fl_3_hm_measurements, 86400)
 
-        # 2. If the following register is available then set ist value to the thermometers value.
+        # 2. If the following register is available then set its value to the thermometers value.
         self._registers.write(f"{self.key}.floor_loop_3.hm.measurements",
                               json.dumps(self.__fl_3_hm_measurements))
 
@@ -845,7 +845,7 @@ class Monitoring(BasePlugin):
         # This magical number represents seconds for 24 hours.
         filter_measurements_by_time(self.__cl_1_hm_measurements, 86400)
 
-        # 2. If the following register is available then set ist value to the thermometers value.
+        # 2. If the following register is available then set its value to the thermometers value.
         self._registers.write(f"{self.key}.cl_1.hm.measurements",
                               json.dumps(self.__cl_1_hm_measurements))
 
@@ -905,7 +905,7 @@ class Monitoring(BasePlugin):
         # This magical number represents seconds for 24 hours.
         filter_measurements_by_time(self.__cl_2_hm_measurements, 86400)
 
-        # 2. If the following register is available then set ist value to the thermometers value.
+        # 2. If the following register is available then set its value to the thermometers value.
         self._registers.write(f"{self.key}.cl_2.hm.measurements",
                               json.dumps(self.__cl_2_hm_measurements))
 
@@ -965,7 +965,7 @@ class Monitoring(BasePlugin):
         # This magical number represents seconds for 24 hours.
         filter_measurements_by_time(self.__cl_3_hm_measurements, 86400)
 
-        # 2. If the following register is available then set ist value to the thermometers value.
+        # 2. If the following register is available then set its value to the thermometers value.
         self._registers.write(f"{self.key}.cl_3.hm.measurements",
                               json.dumps(self.__cl_3_hm_measurements))
 
