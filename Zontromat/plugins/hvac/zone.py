@@ -229,6 +229,10 @@ class Zone(BasePlugin):
         """Convector valve device.
         """
 
+        self.__temperature_deviation = 0
+        """Temperature deviation constant.
+        """        
+
         self.__adjust_temp = 0
         """Temperature set point from the OP.
         """
@@ -812,6 +816,20 @@ class Zone(BasePlugin):
 
 #region Private Methods (Registers Parameters)
 
+    def __temperature_deviation_cb(self, register):
+
+        # Check data type.
+        if not (register.data_type == "float" or register.data_type == "int"):
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        temperature_deviation = register.value
+
+        if temperature_deviation < 0:
+            temperature_deviation = 0
+
+        self.__temperature_deviation = temperature_deviation
+
     def __adjust_temp_cb(self, register):
 
         # Check data type.
@@ -1098,6 +1116,11 @@ class Zone(BasePlugin):
             thermal_force_limit.update_handlers = self.__thermal_force_limit_cb
             thermal_force_limit.update()
 
+        temperature_deviation = self._registers.by_name(f"{self.key}.temperature_deviation_{self.__identifier}.value")
+        if temperature_deviation is not None:
+            temperature_deviation.update_handlers = self.__temperature_deviation_cb
+            temperature_deviation.update()
+
         adjust_temp = self._registers.by_name(f"{self.key}.temp_{self.__identifier}.adjust")
         if adjust_temp is not None:
             adjust_temp.update_handlers = self.__adjust_temp_cb
@@ -1300,6 +1323,10 @@ class Zone(BasePlugin):
 
             # Calculate the delta.
             dt = self.__adjust_temp - self.__temp_proc.value
+
+            # Calculate the delta t and temperature deviation.
+            dt = min(self.__temp_proc.value-self.__adjust_temp+self.__temperature_deviation, 0) \
+                + max(self.__temp_proc.value-self.__adjust_temp-self.__temperature_deviation, 0)
 
             # Round to have clear rounded value for state machine currency.
             dt = self.__round_to_nearest_half(dt)
