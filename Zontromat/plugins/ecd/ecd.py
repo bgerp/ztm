@@ -249,9 +249,7 @@ class EnergyCenterDistribution(BasePlugin):
             vendor="CWT",
             model="MB318E",
             controller=self._controller,
-            uart=0,
-            mb_id=1,
-            chanel=0)
+            config = {"options": {"uart": 0, "mb_id": 1, "chanel": 0}})
 
 #endregion
 
