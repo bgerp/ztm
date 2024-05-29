@@ -160,10 +160,16 @@ class Environment(BasePlugin):
         """Door tampers in the zone.
         """
 
-        self.__activations_count = 2
+        self.__activations_count = 1
         """Activations count:
             - One for current state
             - One for last state.
+            @28.05.2024y. The owner wants to have only one field for simplicity of the system.
+        """
+
+        self.__is_empty_timeout = 1200
+        """Is empty timeout time.
+            @28.05.2024y. The owner wants to set the value to 1200 seconds to start tests..
         """
 
 #endregion
@@ -341,6 +347,39 @@ class Environment(BasePlugin):
         self.__azimuth = azm_out
         self.__elevation = elv_out
 
+    def __update_is_empty(self):
+
+        is_human_presence = False
+
+        # Get the ts with newer activation.
+        ts_pir = 0
+        ts_pirs = []
+        for pir in self.__pirs_activations:
+            ts_pirs.append(self.__pirs_activations[pir][0])
+        ts_pir = max(ts_pirs)
+
+        # Get the ts with newer activation.
+        ts_door = 0
+        ts_doors = []
+        for door in self.__door_tamps_activations:
+            ts_doors.append(self.__door_tamps_activations[door][0])
+        ts_door = max(ts_doors)
+
+        # Time now
+        ts_now = time.time()
+
+        # Human
+        if ts_door < ts_pir:
+            is_human_presence = True
+        else:
+            # No human
+            if ts_now > (ts_door + self.__is_empty_timeout):
+                is_human_presence = False
+            else:
+                is_human_presence = True
+
+        self._registers.write("envm.is_empty", not is_human_presence)
+
 #endregion
 
 #region Private Methods (Registers)
@@ -501,6 +540,15 @@ class Environment(BasePlugin):
             if self.__door_tamps is not None:
                 self.__door_tamps.clear()
 
+    def __is_empty_timeout_cb(self, register):
+
+        # Check data type.
+        if not ((register.data_type == "float") or (register.data_type == "int")):
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
+            return
+
+        self.__is_empty_timeout = register.value
+
     def __init_registers(self):
 
         # Software sun position enabled.
@@ -550,6 +598,11 @@ class Environment(BasePlugin):
             door_tamper.update_handlers = self.__door_tamp_settings_cb
             door_tamper.update()
 
+        is_empty_timeout = self._registers.by_name("envm.is_empty_timeout")
+        if is_empty_timeout is not None:
+            is_empty_timeout.update_handlers = self.__is_empty_timeout_cb
+            is_empty_timeout.update()
+
     def __set_sunpos(self):
         """Set sun position.
         """
@@ -589,6 +642,8 @@ class Environment(BasePlugin):
             self.__update_win_tamps()
 
             self.__update_door_tamps()
+
+            self.__update_is_empty()
 
     def _shutdown(self):
         """Shutting down the plugin.
