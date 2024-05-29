@@ -244,6 +244,23 @@ class EnergyCenterDistribution(BasePlugin):
         # ======================================== Thermo couplers  ==========================================
         # ====================================================================================================
 
+            self.__vcg_floor_entrance = ValveControlGroup(\
+                name=register.description,
+                key=f"{register.name}",
+                controller=self._controller,
+                registers=self._registers,
+                fw_valves=["cold"],
+                rev_valves=["hot"],
+                mode = ValveControlGroupMode.DualSide)
+
+        self.__temp_0 = ThermometersFactory.create(
+            name="chanel0",
+            vendor="CWT",
+            model="MB318E",
+            controller=self._controller,
+            uart=0,
+            mb_id=1,
+            chanel=0)
 
 #endregion
 
@@ -2199,6 +2216,8 @@ class EnergyCenterDistribution(BasePlugin):
             match = pat.match(register.name)
             if match:
                 print(f"{register.name}: {register.value}")
+
+        print(self.__temp_0.get_temp())
 
 
     def _shutdown(self):
