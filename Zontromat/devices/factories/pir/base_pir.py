@@ -1,4 +1,3 @@
-
 #!/usr/bin/env python3
 # -*- coding: utf8 -*-
 
@@ -56,8 +55,8 @@ __status__ = "Debug"
 
 #endregion
 
-class BasePowerAnalyzer(BaseDevice):
-    """Power analyzer base class."""
+class BasePIR(BaseDevice):
+    """Passive infrared sensor base class."""
 
 #region Attributes
 

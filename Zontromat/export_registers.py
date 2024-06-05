@@ -114,7 +114,7 @@ def __set_parser():
     __parser.add_argument("--cl_2_hm", type=int, default=-1, help="Convector loop 2 heat meter modbus ID.")
     __parser.add_argument("--cl_3_hm", type=int, default=-1, help="Convector loop 3 heat meter modbus ID.")
     __parser.add_argument("--temp_upper", type=int, default=4, help="Upper thermometer modbus ID.")
-    __parser.add_argument("--temp_lower", type=int, default=5, help="Lower thermometer modbus ID.") 
+    __parser.add_argument("--temp_lower", type=int, default=5, help="Lower thermometer modbus ID.")
     __parser.add_argument("--temp_cent", type=int, default=3, help="Central thermometer modbus ID.")
     __parser.add_argument("--pir_1", type=int, default=16, help="PIR 1 modbus ID.")
     __parser.add_argument("--blinds_1", type=int, default=11, help="Blinds mechanism 1 modbus ID.")
@@ -126,21 +126,21 @@ def __set_parser():
     __parser.add_argument("--conv_2", type=int, default=-1, help="Convector 2 modbus ID.")
     __parser.add_argument("--conv_3", type=int, default=-1, help="Convector 3 modbus ID.")
     __parser.add_argument("--ip", type=str, default="127.0.0.1", help="IP address of the device")
-    __parser.add_argument("--fl_vlv_1", type=str, default=verbal_const.OFF, help="Floor loop 1 GPIO.")
-    __parser.add_argument("--fl_vlv_2", type=str, default=verbal_const.OFF, help="Floor loop 2 GPIO.")
-    __parser.add_argument("--fl_vlv_3", type=str, default=verbal_const.OFF, help="Floor loop 3 GPIO.")
-    __parser.add_argument("--cl_vlv_1", type=str, default=verbal_const.OFF, help="Convector loop 1 GPIO.")
-    __parser.add_argument("--cl_vlv_2", type=str, default=verbal_const.OFF, help="Convector loop 2 GPIO.")
-    __parser.add_argument("--cl_vlv_3", type=str, default=verbal_const.OFF, help="Convector loop 3 GPIO.")
-    __parser.add_argument("--conv_1_s1", type=str, default=verbal_const.OFF, help="Convector loop 1 GPIO.")
-    __parser.add_argument("--conv_1_s2", type=str, default=verbal_const.OFF, help="Convector loop 2 GPIO.")
-    __parser.add_argument("--conv_1_s3", type=str, default=verbal_const.OFF, help="Convector loop 3 GPIO.")
-    __parser.add_argument("--conv_2_s1", type=str, default=verbal_const.OFF, help="Convector loop 1 GPIO.")
-    __parser.add_argument("--conv_2_s2", type=str, default=verbal_const.OFF, help="Convector loop 2 GPIO.")
-    __parser.add_argument("--conv_2_s3", type=str, default=verbal_const.OFF, help="Convector loop 3 GPIO.")
-    __parser.add_argument("--conv_3_s1", type=str, default=verbal_const.OFF, help="Convector loop 1 GPIO.")
-    __parser.add_argument("--conv_3_s2", type=str, default=verbal_const.OFF, help="Convector loop 2 GPIO.")
-    __parser.add_argument("--conv_3_s3", type=str, default=verbal_const.OFF, help="Convector loop 3 GPIO.")
+    __parser.add_argument("--fl_vlv_1", type=str, default="off", help="Floor loop 1 GPIO.")
+    __parser.add_argument("--fl_vlv_2", type=str, default="off", help="Floor loop 2 GPIO.")
+    __parser.add_argument("--fl_vlv_3", type=str, default="off", help="Floor loop 3 GPIO.")
+    __parser.add_argument("--cl_vlv_1", type=str, default="off", help="Convector loop 1 GPIO.")
+    __parser.add_argument("--cl_vlv_2", type=str, default="off", help="Convector loop 2 GPIO.")
+    __parser.add_argument("--cl_vlv_3", type=str, default="off", help="Convector loop 3 GPIO.")
+    __parser.add_argument("--conv_1_s1", type=str, default="off", help="Convector loop 1 GPIO.")
+    __parser.add_argument("--conv_1_s2", type=str, default="off", help="Convector loop 2 GPIO.")
+    __parser.add_argument("--conv_1_s3", type=str, default="off", help="Convector loop 3 GPIO.")
+    __parser.add_argument("--conv_2_s1", type=str, default="off", help="Convector loop 1 GPIO.")
+    __parser.add_argument("--conv_2_s2", type=str, default="off", help="Convector loop 2 GPIO.")
+    __parser.add_argument("--conv_2_s3", type=str, default="off", help="Convector loop 3 GPIO.")
+    __parser.add_argument("--conv_3_s1", type=str, default="off", help="Convector loop 1 GPIO.")
+    __parser.add_argument("--conv_3_s2", type=str, default="off", help="Convector loop 2 GPIO.")
+    __parser.add_argument("--conv_3_s3", type=str, default="off", help="Convector loop 3 GPIO.")
     __parser.add_argument("--pa_model", type=str, default="SDM120", help="Model of the power analyzer.")
 
     # Take arguments.
@@ -942,6 +942,76 @@ def __add_registers(args):
 
 #region Environment (envm)
 
+    register = Register("envm.enabled")
+    register.scope = Scope.System
+    register.plugin_name = "Environment"
+    register.description = "Plugin enabled"
+    register.range = __range["BOOL"]
+    register.value = True
+    __registers.append(register)
+
+    register = Register("envm.pir.settings")
+    register.scope = Scope.System
+    register.plugin_name = "Environment"
+    register.description = "Plugin environment PIR settings"
+    register.range = __range["NONE"]
+    register.value = {
+        "PIR_1": {
+            "vendor": "Gasim",
+            "model": "RS2",
+            "options":
+            {
+                "uart": 0,
+                "mb_id": args.pir_1
+            }
+        }
+    }
+    __registers.append(register)
+
+    register = Register("envm.pir.activations")
+    register.scope = Scope.Device
+    register.plugin_name = "Environment"
+    register.description = "Plugin environment PIR activations"
+    register.range = __range["NONE"]
+    register.value = {}
+    __registers.append(register)
+
+    register = Register("envm.window_tamper.settings")
+    register.scope = Scope.System
+    register.plugin_name = "Environment"
+    register.description = "Plugin environment window tamper settings"
+    register.range = __range["NONE"]
+    register.value = {
+        "WINT_1": "!U0:ID2:FC2:R0:DI0",
+    }
+    __registers.append(register)
+
+    register = Register("envm.window_tamper.activations")
+    register.scope = Scope.Device
+    register.plugin_name = "Environment"
+    register.description = "Plugin environment window tampers activations"
+    register.range = __range["NONE"]
+    register.value = {}
+    __registers.append(register)
+
+    register = Register("envm.door_tamper.settings")
+    register.scope = Scope.System
+    register.plugin_name = "Environment"
+    register.description = "Plugin environment door tamper settings"
+    register.range = __range["NONE"]
+    register.value = {
+        "DRT_1": "!U0:ID2:FC2:R0:DI1",
+    }
+    __registers.append(register)
+
+    register = Register("envm.door_tamper.activations")
+    register.scope = Scope.Device
+    register.plugin_name = "Environment"
+    register.description = "Plugin environment door tampers activations"
+    register.range = __range["NONE"]
+    register.value = {}
+    __registers.append(register)
+
     register = Register("envm.is_empty")
     register.scope = Scope.Device
     register.plugin_name = "Environment"
@@ -1158,13 +1228,7 @@ def __add_registers(args):
     register.value = 2
     __registers.append(register)
 
-    register = Register("envm.enabled")
-    register.scope = Scope.System
-    register.plugin_name = "Environment"
-    register.description = "Plugin enabled"
-    register.range = __range["BOOL"]
-    register.value = True
-    __registers.append(register)
+
 
     register = Register("envm.sun.azimuth")
     register.scope = Scope.System
@@ -1298,12 +1362,20 @@ def __add_registers(args):
         "model": "a20t20b2c",
         "options":
         {
-            "output": 
+            "output":
             [
                 args.fl_vlv_1 #"U0:ID2:FC5:R0:RO0",
             ]
         }
     }
+    __registers.append(register)
+
+    register = Register("hvac.floor_loop_1.valve.activations")
+    register.scope = Scope.Device
+    register.plugin_name = "HVAC"
+    register.description = "Floor loop 1 valve activations"
+    register.range = __range["NONE"]
+    register.value = {}
     __registers.append(register)
 
     register = Register("hvac.floor_loop_2.valve.settings")
@@ -1316,12 +1388,20 @@ def __add_registers(args):
         "model": "a20t20b2c",
         "options":
         {
-            "output": 
+            "output":
             [
                 args.fl_vlv_2 #"U0:ID2:FC5:R0:RO1",
             ]
         }
     }
+    __registers.append(register)
+
+    register = Register("hvac.floor_loop_2.valve.activations")
+    register.scope = Scope.Device
+    register.plugin_name = "HVAC"
+    register.description = "Floor loop 2 valve activations"
+    register.range = __range["NONE"]
+    register.value = {}
     __registers.append(register)
 
     register = Register("hvac.floor_loop_3.valve.settings")
@@ -1334,12 +1414,20 @@ def __add_registers(args):
         "model": "a20t20b2c",
         "options":
         {
-            "output": 
+            "output":
             [
                 args.fl_vlv_3 #"U0:ID2:FC5:R0:RO2",
             ]
         }
     }
+    __registers.append(register)
+
+    register = Register("hvac.floor_loop_3.valve.activations")
+    register.scope = Scope.Device
+    register.plugin_name = "HVAC"
+    register.description = "Floor loop 3 valve activations"
+    register.range = __range["NONE"]
+    register.value = {}
     __registers.append(register)
 
     # Convector loop 1
@@ -1353,7 +1441,7 @@ def __add_registers(args):
         "model": "Klimafan",
         "options":
         {
-            "stage1": 
+            "stage1":
             [
                 args.conv_1_s1 #"U0:ID6:FC5:R0:RO0",
             ],
@@ -1361,7 +1449,7 @@ def __add_registers(args):
             [
                 args.conv_1_s2 #"U0:ID6:FC5:R0:RO1",
             ],
-            "stage3": 
+            "stage3":
             [
                 args.conv_1_s3 #"U0:ID6:FC5:R0:RO2",
             ]
@@ -1379,12 +1467,20 @@ def __add_registers(args):
         "model": "a20t20b2c",
         "options":
         {
-            "output": 
+            "output":
             [
                 args.cl_vlv_1 #"U0:ID2:FC5:R0:RO0",
             ]
         }
     }
+    __registers.append(register)
+
+    register = Register("hvac.conv_loop_1.valve.activations")
+    register.scope = Scope.Device
+    register.plugin_name = "HVAC"
+    register.description = "Convector loop 1 valve activations"
+    register.range = __range["NONE"]
+    register.value = {}
     __registers.append(register)
 
     # Convector loop 2
@@ -1398,7 +1494,7 @@ def __add_registers(args):
         "model": "Klimafan",
         "options":
         {
-            "stage1": 
+            "stage1":
             [
                 args.conv_2_s1 #"U0:ID7:FC5:R0:RO0",
             ],
@@ -1406,7 +1502,7 @@ def __add_registers(args):
             [
                 args.conv_2_s2 #"U0:ID7:FC5:R0:RO1",
             ],
-            "stage3": 
+            "stage3":
             [
                 args.conv_2_s3 #"U0:ID7:FC5:R0:RO2",
             ]
@@ -1424,12 +1520,20 @@ def __add_registers(args):
         "model": "a20t20b2c",
         "options":
         {
-            "output": 
+            "output":
             [
                 args.cl_vlv_2 #"U0:ID7:FC5:R0:RO4",
             ]
         }
     }
+    __registers.append(register)
+
+    register = Register("hvac.conv_loop_2.valve.activations")
+    register.scope = Scope.Device
+    register.plugin_name = "HVAC"
+    register.description = "Convector loop 2 valve activations"
+    register.range = __range["NONE"]
+    register.value = {}
     __registers.append(register)
 
     # Convector loop 3 flowmeter.
@@ -1443,7 +1547,7 @@ def __add_registers(args):
         "model": "Klimafan",
         "options":
         {
-            "stage1": 
+            "stage1":
             [
                 args.conv_3_s1 #"U0:ID8:FC5:R0:RO0",
             ],
@@ -1451,7 +1555,7 @@ def __add_registers(args):
             [
                 args.conv_3_s2 #"U0:ID8:FC5:R0:RO1",
             ],
-            "stage3": 
+            "stage3":
             [
                 args.conv_3_s3 #"U0:ID8:FC5:R0:RO2",
             ]
@@ -1469,12 +1573,20 @@ def __add_registers(args):
         "model": "a20t20b2c",
         "options":
         {
-            "output": 
+            "output":
             [
                 args.cl_vlv_3 #"U0:ID8:FC5:R0:RO4",
             ]
         }
     }
+    __registers.append(register)
+
+    register = Register("hvac.conv_loop_3.valve.activations")
+    register.scope = Scope.Device
+    register.plugin_name = "HVAC"
+    register.description = "Convector loop 3 valve activations"
+    register.range = __range["NONE"]
+    register.value = {}
     __registers.append(register)
 
     # Loop 1 Down Limit Temperature # Request: Eml6419
@@ -2908,6 +3020,7 @@ def __add_registers(args):
     register.description = "ECD / AHU roof floor pump mode."
     register.range = __range["PERCENTAGE_I"]
     register.value = 0
+
     __registers.append(register)
 
     # ECD / AHU roof floor hall pump state.
@@ -4051,6 +4164,14 @@ def __add_registers(args):
 
 #region Ventilation (vent)
 
+    register = Register("vent.fans.max_speed_1")
+    register.scope = Scope.Device
+    register.plugin_name = "Ventilation"
+    register.description = "Upper fan speed [%]"
+    register.range = __range["NONE"]
+    register.value = 0.0
+    __registers.append(register)
+
     # Operator panel setpoint.
     register = Register("vent.op_setpoint_1")
     register.scope = Scope.Device
@@ -4065,7 +4186,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Ventilation"
     register.description = "HVAC set point"
-    register.range = "-100.0/100.0"
+    register.range = "-200.0/200.0"
     register.value = 0
     __registers.append(register)
 
@@ -4261,6 +4382,46 @@ def __add_registers(args):
 
 #endregion
 
+#region Global
+
+    # Global floor mode.
+    register = Register("glob.floor.mode")
+    register.scope = Scope.System
+    register.plugin_name = "No plugin, just global"
+    register.description = "Global floor thermal mode."
+    register.range = "0|1|2"
+    register.value = 0
+    __registers.append(register)
+
+    # Global convector mode.
+    register = Register("glob.conv.mode")
+    register.scope = Scope.System
+    register.plugin_name = "No plugin, just global"
+    register.description = "Global convector thermal mode."
+    register.range = "0|1|2"
+    register.value = 0
+    __registers.append(register)
+
+    # Global illumination east.
+    register = Register("glob.illumination.east")
+    register.scope = Scope.System
+    register.plugin_name = "No plugin, just global"
+    register.description = "Global east ilumination."
+    register.range = ""
+    register.value = 0.0
+    __registers.append(register)
+
+    # Global illumination west.
+    register = Register("glob.illumination.west")
+    register.scope = Scope.System
+    register.plugin_name = "No plugin, just global"
+    register.description = "Global west ilumination."
+    register.range = ""
+    register.value = 0.0
+    __registers.append(register)
+
+#endregion
+
 def main():
     global __registers, __range, __parser
 
@@ -4309,7 +4470,7 @@ def main():
         for register in __registers:
             if isinstance(register.value, dict):
                 if "options" in register.value.keys():
-                    print("Register: {} -> {}".format(register.name, register.value["options"]))                    
+                    print("Register: {} -> {}".format(register.name, register.value["options"]))
 
     elif args.action == "w_md":
         Registers.to_md(__registers, file_name) #"../Zontromat/plugins/registers.md")
