@@ -766,89 +766,6 @@
     {
         "data_type": "bool",
         "default": true,
-        "description": "Plugin enabled",
-        "limit": 0.0,
-        "name": "envm.enabled",
-        "plugin": "Environment",
-        "range": "true|false",
-        "scope": "System"
-    },
-    {
-        "data_type": "json",
-        "default": {
-            "PIR_1": {
-                "model": "RS2",
-                "options": {
-                    "mb_id": 11,
-                    "uart": 0
-                },
-                "vendor": "Gasim"
-            }
-        },
-        "description": "Plugin environment PIR settings",
-        "limit": 0.0,
-        "name": "envm.pir.settings",
-        "plugin": "Environment",
-        "range": "",
-        "scope": "System"
-    },
-    {
-        "data_type": "json",
-        "default": {},
-        "description": "Plugin environment PIR activations",
-        "limit": 0.0,
-        "name": "envm.pir.activations",
-        "plugin": "Environment",
-        "range": "",
-        "scope": "Device"
-    },
-    {
-        "data_type": "json",
-        "default": {
-            "WINT_1": "!U0:ID2:FC2:R0:DI0"
-        },
-        "description": "Plugin environment window tamper settings",
-        "limit": 0.0,
-        "name": "envm.window_tamper.settings",
-        "plugin": "Environment",
-        "range": "",
-        "scope": "System"
-    },
-    {
-        "data_type": "json",
-        "default": {},
-        "description": "Plugin environment window tampers activations",
-        "limit": 0.0,
-        "name": "envm.window_tamper.activations",
-        "plugin": "Environment",
-        "range": "",
-        "scope": "Device"
-    },
-    {
-        "data_type": "json",
-        "default": {
-            "DRT_1": "!U0:ID2:FC2:R0:DI1"
-        },
-        "description": "Plugin environment door tamper settings",
-        "limit": 0.0,
-        "name": "envm.door_tamper.settings",
-        "plugin": "Environment",
-        "range": "",
-        "scope": "System"
-    },
-    {
-        "data_type": "json",
-        "default": {},
-        "description": "Plugin environment door tampers activations",
-        "limit": 0.0,
-        "name": "envm.door_tamper.activations",
-        "plugin": "Environment",
-        "range": "",
-        "scope": "Device"
-    },
-    {
-        "data_type": "bool",
-        "default": true,
         "description": "Is empty flag",
         "limit": 0.0,
         "name": "envm.is_empty",
@@ -1117,6 +1034,16 @@
         "scope": "System"
     },
     {
+        "data_type": "bool",
+        "default": true,
+        "description": "Plugin enabled",
+        "limit": 0.0,
+        "name": "envm.enabled",
+        "plugin": "Environment",
+        "range": "true|false",
+        "scope": "System"
+    },
+    {
         "data_type": "float",
         "default": 0.0,
         "description": "Sun azimuth value",
@@ -1257,16 +1184,6 @@
     },
     {
         "data_type": "json",
-        "default": {},
-        "description": "Floor loop 1 valve activations",
-        "limit": 0.0,
-        "name": "hvac.floor_loop_1.valve.activations",
-        "plugin": "HVAC",
-        "range": "",
-        "scope": "Device"
-    },
-    {
-        "data_type": "json",
         "default": {
             "model": "a20t20b2c",
             "options": {
@@ -1285,16 +1202,6 @@
     },
     {
         "data_type": "json",
-        "default": {},
-        "description": "Floor loop 2 valve activations",
-        "limit": 0.0,
-        "name": "hvac.floor_loop_2.valve.activations",
-        "plugin": "HVAC",
-        "range": "",
-        "scope": "Device"
-    },
-    {
-        "data_type": "json",
         "default": {
             "model": "a20t20b2c",
             "options": {
@@ -1310,16 +1217,6 @@
         "plugin": "HVAC",
         "range": "",
         "scope": "System"
-    },
-    {
-        "data_type": "json",
-        "default": {},
-        "description": "Floor loop 3 valve activations",
-        "limit": 0.0,
-        "name": "hvac.floor_loop_3.valve.activations",
-        "plugin": "HVAC",
-        "range": "",
-        "scope": "Device"
     },
     {
         "data_type": "json",
@@ -1365,16 +1262,6 @@
     },
     {
         "data_type": "json",
-        "default": {},
-        "description": "Convector loop 1 valve activations",
-        "limit": 0.0,
-        "name": "hvac.conv_loop_1.valve.activations",
-        "plugin": "HVAC",
-        "range": "",
-        "scope": "Device"
-    },
-    {
-        "data_type": "json",
         "default": {
             "model": "Klimafan",
             "options": {
@@ -1417,16 +1304,6 @@
     },
     {
         "data_type": "json",
-        "default": {},
-        "description": "Convector loop 2 valve activations",
-        "limit": 0.0,
-        "name": "hvac.conv_loop_2.valve.activations",
-        "plugin": "HVAC",
-        "range": "",
-        "scope": "Device"
-    },
-    {
-        "data_type": "json",
         "default": {
             "model": "Klimafan",
             "options": {
@@ -1466,16 +1343,6 @@
         "plugin": "HVAC",
         "range": "",
         "scope": "System"
-    },
-    {
-        "data_type": "json",
-        "default": {},
-        "description": "Convector loop 3 valve activations",
-        "limit": 0.0,
-        "name": "hvac.conv_loop_3.valve.activations",
-        "plugin": "HVAC",
-        "range": "",
-        "scope": "Device"
     },
     {
         "data_type": "int",
@@ -2082,6 +1949,16 @@
         "name": "ecd.ground_drilling.valves.state",
         "plugin": "Energy Center Distribution",
         "range": "0|1|2",
+        "scope": "Device"
+    },
+    {
+        "data_type": "json",
+        "default": {},
+        "description": "ECD / Ground drilling valves state.",
+        "limit": 0.0,
+        "name": "ecd.ground_drilling.temp.settings",
+        "plugin": "Energy Center Distribution",
+        "range": "",
         "scope": "Device"
     },
     {
@@ -3347,6 +3224,114 @@
         "scope": "Device"
     },
     {
+        "data_type": "json",
+        "default": [
+            {
+                "input": {
+                    "model": "MB318E",
+                    "options": {
+                        "chanel": 0,
+                        "mb_id": 1,
+                        "uart": 0
+                    },
+                    "vendor": "CWT"
+                },
+                "output": {
+                    "model": "MB318E",
+                    "options": {
+                        "chanel": 1,
+                        "mb_id": 1,
+                        "uart": 0
+                    },
+                    "vendor": "CWT"
+                }
+            },
+            {
+                "input": {
+                    "model": "MB318E",
+                    "options": {
+                        "chanel": 2,
+                        "mb_id": 1,
+                        "uart": 0
+                    },
+                    "vendor": "CWT"
+                },
+                "output": {
+                    "model": "MB318E",
+                    "options": {
+                        "chanel": 3,
+                        "mb_id": 1,
+                        "uart": 0
+                    },
+                    "vendor": "CWT"
+                }
+            },
+            {
+                "input": {
+                    "model": "MB318E",
+                    "options": {
+                        "chanel": 4,
+                        "mb_id": 1,
+                        "uart": 0
+                    },
+                    "vendor": "CWT"
+                },
+                "output": {
+                    "model": "MB318E",
+                    "options": {
+                        "chanel": 5,
+                        "mb_id": 1,
+                        "uart": 0
+                    },
+                    "vendor": "CWT"
+                }
+            }
+        ],
+        "description": "ECD / Ground drilling thermo couples settings.",
+        "limit": 0.0,
+        "name": "ecd.ground_drilling.tc.settings",
+        "plugin": "Energy Center Distribution",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "json",
+        "default": [],
+        "description": "ECD / Ground drilling thermo couples values.",
+        "limit": 0.0,
+        "name": "ecd.ground_drilling.tc.values",
+        "plugin": "Energy Center Distribution",
+        "range": "",
+        "scope": "Device"
+    },
+    {
+        "data_type": "json",
+        "default": {
+            "cold": [
+                {
+                    "model": "FLX-05F",
+                    "options": {
+                        "close_on_shutdown": false,
+                        "io_mode": 1,
+                        "limit_ccw": "!U0:ID11:FC2:R0:DI0",
+                        "limit_cw": "U0:ID11:FC2:R0:DI0",
+                        "output_ccw": "off",
+                        "output_cw": "U0:ID11:FC5:R0:RO0",
+                        "wait_on_shutdown": false
+                    },
+                    "vendor": "Flowx"
+                }
+            ],
+            "hot": []
+        },
+        "description": "ECD / Floor entrance valves settings.",
+        "limit": 0.0,
+        "name": "ecd.floor_entrance.valves.settings",
+        "plugin": "Energy Center Distribution",
+        "range": "",
+        "scope": "System"
+    },
+    {
         "data_type": "bool",
         "default": false,
         "description": "Plugin enabled",
@@ -3770,16 +3755,6 @@
         "scope": "System"
     },
     {
-        "data_type": "float",
-        "default": 0.0,
-        "description": "Upper fan speed [%]",
-        "limit": 0.0,
-        "name": "vent.fans.max_speed_1",
-        "plugin": "Ventilation",
-        "range": "",
-        "scope": "Device"
-    },
-    {
         "data_type": "int",
         "default": 0,
         "description": "Operators panel set point",
@@ -3796,7 +3771,7 @@
         "limit": 0.0,
         "name": "vent.hvac_setpoint_1",
         "plugin": "Ventilation",
-        "range": "-200.0/200.0",
+        "range": "-100.0/100.0",
         "scope": "System"
     },
     {
@@ -3999,46 +3974,6 @@
         "name": "oc_hall.enabled",
         "plugin": "Office Conference Hall",
         "range": "true|false",
-        "scope": "System"
-    },
-    {
-        "data_type": "int",
-        "default": 0,
-        "description": "Global floor thermal mode.",
-        "limit": 0.0,
-        "name": "glob.floor.mode",
-        "plugin": "No plugin, just global",
-        "range": "0|1|2",
-        "scope": "System"
-    },
-    {
-        "data_type": "int",
-        "default": 0,
-        "description": "Global convector thermal mode.",
-        "limit": 0.0,
-        "name": "glob.conv.mode",
-        "plugin": "No plugin, just global",
-        "range": "0|1|2",
-        "scope": "System"
-    },
-    {
-        "data_type": "float",
-        "default": 0.0,
-        "description": "Global east ilumination.",
-        "limit": 0.0,
-        "name": "glob.illumination.east",
-        "plugin": "No plugin, just global",
-        "range": "",
-        "scope": "System"
-    },
-    {
-        "data_type": "float",
-        "default": 0.0,
-        "description": "Global west ilumination.",
-        "limit": 0.0,
-        "name": "glob.illumination.west",
-        "plugin": "No plugin, just global",
-        "range": "",
         "scope": "System"
     }
 ]
