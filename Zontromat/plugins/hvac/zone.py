@@ -157,28 +157,28 @@ class Zone(BasePlugin):
         # Floor valve control table.
         self.__fl_control_table = \
         [
-            [0, 0, 0, 0, 0, 0, 0, 0, 0],     # 0 - Спряно
-            [1, 1, 1/2, 1/4, 0, 0, 0, 0, 0], # 1 - Охлаждане
-            [0, 0, 0, 0, 0, 1/4, 1/2, 1, 1], # 2 - Отопление
-            [0, 0, 0, 0, 0, 0, 1/2, 1, 1] # 3 - Режим №3
+            [  0,   0,   0,   0,   0,   0,   0,   0,   0], # 0 - Спряно
+            [  1,   1, 1/2, 1/4,   0,   0,   0,   0,   0], # 1 - Охлаждане
+            [  0,   0,   0,   0,   0, 1/4, 1/2,   1,   1], # 2 - Отопление
+            [  0,   0,   0,   0,   0,   0, 1/2,   1,   1]  # 3 - Режим №3
         ]
 
         # Convector control table.
         self.__conv_control_table = \
         [
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], # 0 - Спряно
-            [4, 3, 2, 1, 0, 0, 0, 0, 0, 0], # 1 - Охлаждане
-            [0, 0, 0, 0, 0, 0, 1, 2, 3, 4], # 2 - Отопление
-            [2, 2, 1, 0, 0, 0, 0, 0, 0] # 3 - Режим №3
+            [  0,   0,   0,   0,   0,   0,   0,   0,   0], # 0 - Спряно
+            [  4,   3,   2,   1,   0,   0,   0,   0,   0], # 1 - Охлаждане
+            [  0,   0,   0,   0,   0,   1,   2,   3,   4], # 2 - Отопление
+            [  2,   2,   1,   0,   0,   0,   0,   0,   0]  # 3 - Режим №3
         ]
 
         # Fan control table.
         self.__fan_control_table = \
         [
-            [0, 0, 0, 0, 0, 50, 80, 120, 140], # 0 - Спряно
-            [-80, -50, -30, 0, 0, 0, 30, 50, 80], # 1 - Охлаждане
-            [0, 0, 0, 0, 0, 0, 0, 0, 0],       # 2 - Отопление
-            [0, 0, 0, 0, 0, 0, 0, 0, 0] # 3 - Режим №3
+            [  0,   0,   0,   0,   0,  50,  80, 120, 140], # 0 - Спряно
+            [-80, -50, -30,   0,   0,   0,   0,   0,   0], # 1 - Охлаждане
+            [  0,   0,   0,   0,   0,   0,  30,  50,  80], # 2 - Отопление
+            [  0,   0,   0,   0,   0,   0,   0,   0,   0]  # 3 - Режим №3
         ]
 
         self.__air_temp_upper_dev = None
@@ -228,6 +228,10 @@ class Zone(BasePlugin):
         self.__cl_3_vlv_dev = None
         """Convector valve device.
         """
+
+        self.__temperature_deviation = 0
+        """Temperature deviation constant.
+        """        
 
         self.__adjust_temp = 0
         """Temperature set point from the OP.
@@ -429,18 +433,18 @@ class Zone(BasePlugin):
             state = last_state
 
         # Controlled by the ERP.
-        # conv_state = self.__conv_control_table[self.__glob_conv_mode][state]
-        # fl_state = self.__fl_control_table[self.__glob_floor_mode][state]
-        # fan_state = self.__fan_control_table[self.__glob_conv_mode][state]
+        conv_state = self.__conv_control_table[self.__glob_conv_mode][state]
+        fl_state = self.__fl_control_table[self.__glob_floor_mode][state]
+        fan_state = self.__fan_control_table[self.__glob_conv_mode][state]
 
         # Test control.
-        conv_state = self.__conv_control_table[3][state]
-        fl_state = self.__fl_control_table[3][state]
-        fan_state = self.__fan_control_table[3][state]
+        # conv_state = self.__conv_control_table[3][state]
+        # fl_state = self.__fl_control_table[3][state]
+        # fan_state = self.__fan_control_table[3][state]
 
         print(f"self.__glob_floor_mode: {self.__glob_floor_mode}; self.__glob_conv_mode: {self.__glob_conv_mode}; conv_state: {conv_state:2.1f}; fl_state: {fl_state:2.1f}; fan_state: {fan_state:2.1f}; ")
 
-        self.__set_fl_state(fl_state-1)
+        self.__set_fl_state(fl_state)
 
         if conv_state > 0:
             self.__set_cl_state(100)
@@ -450,7 +454,7 @@ class Zone(BasePlugin):
         if conv_state > 3:
             conv_state = 3
 
-        self.__set_conv_state(conv_state)
+        self.__set_conv_state(conv_state-1)
         self.__set_ventilation(fan_state)
 
 #endregion
@@ -812,6 +816,20 @@ class Zone(BasePlugin):
 
 #region Private Methods (Registers Parameters)
 
+    def __temperature_deviation_cb(self, register):
+
+        # Check data type.
+        if not (register.data_type == "float" or register.data_type == "int"):
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        temperature_deviation = register.value
+
+        if temperature_deviation < 0:
+            temperature_deviation = 0
+
+        self.__temperature_deviation = temperature_deviation
+
     def __adjust_temp_cb(self, register):
 
         # Check data type.
@@ -1098,6 +1116,11 @@ class Zone(BasePlugin):
             thermal_force_limit.update_handlers = self.__thermal_force_limit_cb
             thermal_force_limit.update()
 
+        temperature_deviation = self._registers.by_name(f"{self.key}.temperature_deviation_{self.__identifier}.value")
+        if temperature_deviation is not None:
+            temperature_deviation.update_handlers = self.__temperature_deviation_cb
+            temperature_deviation.update()
+
         adjust_temp = self._registers.by_name(f"{self.key}.temp_{self.__identifier}.adjust")
         if adjust_temp is not None:
             adjust_temp.update_handlers = self.__adjust_temp_cb
@@ -1145,26 +1168,26 @@ class Zone(BasePlugin):
 
     def __update_valve_data(self):
 
-        if self.__fl_1_vlv_dev is None:
+        if self.__fl_1_vlv_dev is not None:
 
             if self.__fl_1_vlv_position != self.__fl_1_vlv_dev.current_position:
                 self.__fl_1_vlv_position = self.__fl_1_vlv_dev.current_position
 
                 # If the following register is available then set its value.
-                self._registers.write(f"{self.key}.floor_loop_{self.__identifier}.activations",\
+                self._registers.write(f"{self.key}.floor_loop_1.valve.activations",\
                                     json.dumps({\
                                             "position": self.__fl_1_vlv_dev.current_position,\
                                             "openings": self.__fl_1_vlv_dev.openings,\
                                             "closings": self.__fl_1_vlv_dev.closings
                                         }))
 
-        if self.__fl_2_vlv_dev is None:
+        if self.__fl_2_vlv_dev is not None:
 
             if self.__fl_2_vlv_position != self.__fl_2_vlv_dev.current_position:
                 self.__fl_2_vlv_position = self.__fl_2_vlv_dev.current_position
 
                 # If the following register is available then set its value.
-                self._registers.write(f"{self.key}.floor_loop_{self.__identifier}.activations",\
+                self._registers.write(f"{self.key}.floor_loop_2.valve.activations",\
                                     json.dumps({\
                                             "position": self.__fl_2_vlv_dev.current_position,\
                                             "openings": self.__fl_2_vlv_dev.openings,\
@@ -1177,7 +1200,7 @@ class Zone(BasePlugin):
                 self.__fl_3_vlv_position = self.__fl_3_vlv_dev.current_position
 
                 # If the following register is available then set its value.
-                self._registers.write(f"{self.key}.floor_loop_{self.__identifier}.activations",\
+                self._registers.write(f"{self.key}.floor_loop_3.valve.activations",\
                                     json.dumps({\
                                             "position": self.__fl_3_vlv_dev.current_position,\
                                             "openings": self.__fl_3_vlv_dev.openings,\
@@ -1190,7 +1213,7 @@ class Zone(BasePlugin):
                 self.__cl_1_vlv_position = self.__cl_1_vlv_dev.current_position
 
                 # If the following register is available then set its value.
-                self._registers.write(f"{self.key}.convector_loop_{self.__identifier}.activations",\
+                self._registers.write(f"{self.key}.conv_loop_1.valve.activations",\
                                     json.dumps({\
                                             "position": self.__cl_1_vlv_dev.current_position,\
                                             "openings": self.__cl_1_vlv_dev.openings,\
@@ -1203,7 +1226,7 @@ class Zone(BasePlugin):
                 self.__cl_2_vlv_position = self.__cl_2_vlv_dev.current_position
 
                 # If the following register is available then set its value.
-                self._registers.write(f"{self.key}.convector_loop_{self.__identifier}.activations",\
+                self._registers.write(f"{self.key}.conv_loop_2.valve.activations",\
                                     json.dumps({\
                                             "position": self.__cl_2_vlv_dev.current_position,\
                                             "openings": self.__cl_2_vlv_dev.openings,\
@@ -1216,7 +1239,7 @@ class Zone(BasePlugin):
                 self.__cl_3_vlv_position = self.__cl_3_vlv_dev.current_position
 
                 # If the following register is available then set its value.
-                self._registers.write(f"{self.key}.convector_loop_{self.__identifier}.activations",\
+                self._registers.write(f"{self.key}.conv_loop_3.valve.activations",\
                                     json.dumps({\
                                             "position": self.__cl_3_vlv_dev.current_position,\
                                             "openings": self.__cl_3_vlv_dev.openings,\
@@ -1299,7 +1322,11 @@ class Zone(BasePlugin):
             print(f"Target: {self.__adjust_temp:2.1f}; Current: {self.__temp_proc.value:2.1f}")
 
             # Calculate the delta.
-            dt = self.__adjust_temp - self.__temp_proc.value
+            # dt = self.__adjust_temp - self.__temp_proc.value
+
+            # Calculate the delta t and temperature deviation.
+            dt = min(self.__adjust_temp - self.__temp_proc.value+self.__temperature_deviation, 0) \
+                + max(self.__adjust_temp - self.__temp_proc.value-self.__temperature_deviation, 0)
 
             # Round to have clear rounded value for state machine currency.
             dt = self.__round_to_nearest_half(dt)

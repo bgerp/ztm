@@ -22,8 +22,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 
-from enum import Enum
-
 #region File Attributes
 
 __author__ = "Orlin Dimitrov"
@@ -52,43 +50,5 @@ __email__ = "or.dimitrov@polygonteam.com"
 
 __status__ = "Debug"
 """File status."""
-
-#endregion
-
-class ParameterType(Enum):
-    """Parameter data type enumeration class."""
-
-    UINT16_T_LE = "uint16_t_le"
-    INT16_T_LE = "int16_t_le"
-    UINT32_T_LE = "uint32_t_le"
-    INT32_T_LE = "int32_t_le"
-    UINT32_T_BE = "uint32_t_be"
-    UINT64_T_LE = "uint64_t_le"
-    INT64_T_LE = "int64_t_le"
-    FLOAT = "float"
-    STRING = "string"
-    REAL = "real"
-    ARR_UINT16_T_LE = "arr_uint16_t_le"
-
-#region Public static Methods
-
-    @staticmethod
-    def is_valid(value):
-        """Check validity of the data type.
-
-        Args:
-            value (str): Target data type for check.
-
-        Return:
-            bool: Valid data type.
-        """
-        state = False
-
-        for item in ParameterType:
-            if value == item:
-                state = True
-                break
-
-        return state
 
 #endregion

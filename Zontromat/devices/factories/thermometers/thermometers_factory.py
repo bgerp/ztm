@@ -28,6 +28,7 @@ from devices.vendors.donkger.xy_md02.xy_md02 import XYMD02
 from devices.vendors.mainone.thermometer.ushm_inlet import USHMInlet
 from devices.vendors.mainone.flowmeter_dn20.flowmeter_dn20 import FlowmeterDN20
 from devices.vendors.gemho.envse.envse import Envse
+from devices.vendors.cwt.mb318e.mb318e import MB318E
 
 #region File Attributes
 
@@ -148,6 +149,17 @@ class ThermometersFactory:
                 controller=controller,
                 uart=config["options"]["uart"],
                 mb_id=config["options"]["mb_id"]
+            )
+
+        # CWT / Envse
+        elif vendor == "CWT" and  model == "MB318E":
+
+            device = MB318E(
+                name=name,
+                controller=controller,
+                uart=config["options"]["uart"],
+                mb_id=config["options"]["mb_id"],
+                chanel=config["options"]["chanel"]
             )
 
         else:
