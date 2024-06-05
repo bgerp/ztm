@@ -103,6 +103,8 @@ class MB318E(ModbusDevice):
 
         self.__ch_reg_map = {0:51, 1:52, 2:53, 3:54, 4:55, 5:56, 6:57, 7:58, 8:59, 9:60, 10:61, 11:62}
 
+        self.__temp_scale = 0.1
+
 #endregion
 
 #region Public Methods
@@ -118,6 +120,7 @@ class MB318E(ModbusDevice):
 
         if value is not None and 0 <= self._chanel < len(self.__ch_reg_map):
             value = value[self.__ch_reg_map[self._chanel]]
+            value *= self.__temp_scale
 
         return value
 
