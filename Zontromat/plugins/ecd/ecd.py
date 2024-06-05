@@ -36,10 +36,10 @@ from utils.logger import get_logger
 
 from plugins.base_plugin import BasePlugin
 
-from devices.factories.valve.valve_factory import ValveFactory
 from devices.factories.pumps.pump_factory import PumpFactory
 from devices.utils.valve_control_group.valve_control_group import ValveControlGroup
 from devices.utils.valve_control_group.valve_control_group_mode import ValveControlGroupMode
+from devices.factories.thermometers.thermometers_factory import ThermometersFactory
 
 from services.global_error_handler.global_error_handler import GlobalErrorHandler
 
@@ -239,6 +239,17 @@ class EnergyCenterDistribution(BasePlugin):
         self.__pump_servers_cooling = None
         """Pump servers cooling.
         """
+
+        # ====================================================================================================
+        # ======================================== Thermo couplers  ==========================================
+        # ====================================================================================================
+
+        self.__temp_0 = ThermometersFactory.create(
+            name="chanel0",
+            vendor="CWT",
+            model="MB318E",
+            controller=self._controller,
+            options = {"uart": 0, "mb_id": 1, "chanel": 0})
 
 #endregion
 
@@ -1753,6 +1764,10 @@ class EnergyCenterDistribution(BasePlugin):
 
 #endregion
 
+#region Private Methods (Registers Thermometers)
+
+#endregion
+
 #region Private Methods (Registers)
 
     def __init_registers(self):
@@ -2191,6 +2206,7 @@ class EnergyCenterDistribution(BasePlugin):
             if match:
                 print(f"{register.name}: {register.value}")
 
+        print(self.__temp_0.get_temp())
 
     def _shutdown(self):
         """Shutting down the plugin.
