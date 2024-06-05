@@ -243,13 +243,29 @@ class EnergyCenterDistribution(BasePlugin):
         # ====================================================================================================
         # ======================================== Thermo couplers  ==========================================
         # ====================================================================================================
+        self.__tc_ground_drilling_1_input = None
+        """Thermo couple ground drilling 1 input.
+        """
 
-        self.__temp_0 = ThermometersFactory.create(
-            name="chanel0",
-            vendor="CWT",
-            model="MB318E",
-            controller=self._controller,
-            options = {"uart": 0, "mb_id": 1, "chanel": 0})
+        self.__tc_ground_drilling_1_output = None
+        """Thermo couple ground drilling 1 output.
+        """
+
+        self.__tc_ground_drilling_2_input = None
+        """Thermo couple ground drilling 2 input.
+        """
+
+        self.__tc_ground_drilling_2_output = None
+        """Thermo couple ground drilling 2 output.
+        """
+
+        self.__tc_ground_drilling_3_input = None
+        """Thermo couple ground drilling 3 input.
+        """
+
+        self.__tc_ground_drilling_3_output = None
+        """Thermo couple ground drilling 3 output.
+        """
 
 #endregion
 
@@ -1766,6 +1782,100 @@ class EnergyCenterDistribution(BasePlugin):
 
 #region Private Methods (Registers Thermometers)
 
+    def __tc_ground_drilling_settings_cb(self, register: Register):
+
+        # Check data type.
+        if not register.data_type == "json":
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        def shutdown():
+            if self.__tc_ground_drilling_1_input is not None:
+                self.__tc_ground_drilling_1_input.shutdown()
+                del self.__tc_ground_drilling_1_input
+
+            if self.__tc_ground_drilling_1_output is not None:
+                self.__tc_ground_drilling_1_output.shutdown()
+                del self.__tc_ground_drilling_1_output
+
+            if self.__tc_ground_drilling_2_input is not None:
+                self.__tc_ground_drilling_2_input.shutdown()
+                del self.__tc_ground_drilling_2_input
+
+            if self.__tc_ground_drilling_2_output is not None:
+                self.__tc_ground_drilling_2_output.shutdown()
+                del self.__tc_ground_drilling_2_output
+
+            if self.__tc_ground_drilling_3_input is not None:
+                self.__tc_ground_drilling_3_input.shutdown()
+                del self.__tc_ground_drilling_3_input
+
+            if self.__tc_ground_drilling_3_output is not None:
+                self.__tc_ground_drilling_3_output.shutdown()
+                del self.__tc_ground_drilling_3_output
+
+        def init():
+            self.__tc_ground_drilling_1_input = ThermometersFactory.create(
+                name="chanel0",
+                vendor="CWT",
+                model="MB318E",
+                controller=self._controller,
+                options = {"uart": 0, "mb_id": 1, "chanel": 0})
+            if self.__tc_ground_drilling_1_input is not None:
+                self.__tc_ground_drilling_1_input.init()
+
+            self.__tc_ground_drilling_1_output = ThermometersFactory.create(
+                name="chanel1",
+                vendor="CWT",
+                model="MB318E",
+                controller=self._controller,
+                options = {"uart": 0, "mb_id": 1, "chanel": 0})
+            if self.__tc_ground_drilling_1_output is not None:
+                self.__tc_ground_drilling_1_output.init()
+
+            self.__tc_ground_drilling_2_input = ThermometersFactory.create(
+                name="chanel2",
+                vendor="CWT",
+                model="MB318E",
+                controller=self._controller,
+                options = {"uart": 0, "mb_id": 1, "chanel": 0})
+            if self.__tc_ground_drilling_2_input is not None:
+                self.__tc_ground_drilling_2_input.init()
+
+            self.__tc_ground_drilling_2_output = ThermometersFactory.create(
+                name="chanel3",
+                vendor="CWT",
+                model="MB318E",
+                controller=self._controller,
+                options = {"uart": 0, "mb_id": 1, "chanel": 0})
+            if self.__tc_ground_drilling_2_output is not None:
+                self.__tc_ground_drilling_2_output.init()
+
+            self.__tc_ground_drilling_3_input = ThermometersFactory.create(
+                name="chanel4",
+                vendor="CWT",
+                model="MB318E",
+                controller=self._controller,
+                options = {"uart": 0, "mb_id": 1, "chanel": 0})
+            if self.__tc_ground_drilling_3_input is not None:
+                self.__tc_ground_drilling_3_input.init()
+
+            self.__tc_ground_drilling_3_output = ThermometersFactory.create(
+                name="chanel5",
+                vendor="CWT",
+                model="MB318E",
+                controller=self._controller,
+                options = {"uart": 0, "mb_id": 1, "chanel": 0})
+            if self.__tc_ground_drilling_3_output is not None:
+                self.__tc_ground_drilling_3_output.init()
+
+        if register.value != {}:
+            shutdown()
+            init()
+
+        elif register.value == {}:
+            shutdown()
+
 #endregion
 
 #region Private Methods (Registers)
@@ -1899,6 +2009,16 @@ class EnergyCenterDistribution(BasePlugin):
         self.__attach_pump("servers_cooling",
                                     self.__pump_servers_cooling_settings_cb,
                                     self.__pump_servers_cooling_mode_cb)
+
+        # ====================================================================================================
+        # ========================================= Thermo Couples ===========================================
+        # ====================================================================================================
+
+        reg_name = f"{self.key}.ground_drilling.tc.settings"
+        settings = self._registers.by_name(reg_name)
+        if settings is not None:
+            settings.update_handlers = self.__tc_ground_drilling_settings_cb
+            settings.update()
 
 #endregion
 
@@ -2206,7 +2326,12 @@ class EnergyCenterDistribution(BasePlugin):
             if match:
                 print(f"{register.name}: {register.value}")
 
-        print(self.__temp_0.get_temp())
+        print(self.__tc_ground_drilling_1_input.get_temp())
+        print(self.__tc_ground_drilling_1_output.get_temp())
+        print(self.__tc_ground_drilling_2_input.get_temp())
+        print(self.__tc_ground_drilling_2_output.get_temp())
+        print(self.__tc_ground_drilling_3_input.get_temp())
+        print(self.__tc_ground_drilling_3_output.get_temp())
 
     def _shutdown(self):
         """Shutting down the plugin.
