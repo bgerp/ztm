@@ -3591,6 +3591,98 @@ def __add_registers(args):
     # ======================================== Thermo couplers  ==========================================
     # ====================================================================================================
 
+    # ECD / Ground drilling thermo couples settings.
+    register = Register("ecd.ground_drilling.tc.settings")
+    register.scope = Scope.System
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Ground drilling thermo couples settings."
+    register.range = __range["NONE"]
+    register.value = \
+    [
+        {
+            "input":
+            {
+                "vendor": "CWT",
+                "model": "MB318E",
+                "options":
+                {
+                    "uart": 0,
+                    "mb_id": 1,
+                    "chanel": 0
+                }
+            },
+            "output":
+            {
+                "vendor": "CWT",
+                "model": "MB318E",
+                "options":
+                {
+                    "uart": 0,
+                    "mb_id": 1,
+                    "chanel": 1
+                }
+            }
+        },
+        {
+            "input":
+            {
+                "vendor": "CWT",
+                "model": "MB318E",
+                "options":
+                {
+                    "uart": 0,
+                    "mb_id": 1,
+                    "chanel": 2
+                }
+            },
+            "output":
+            {
+                "vendor": "CWT",
+                "model": "MB318E",
+                "options":
+                {
+                    "uart": 0,
+                    "mb_id": 1,
+                    "chanel": 3
+                }
+            }
+        },
+        {
+            "input":
+            {
+                "vendor": "CWT",
+                "model": "MB318E",
+                "options":
+                {
+                    "uart": 0,
+                    "mb_id": 1,
+                    "chanel": 4
+                }
+            },
+            "output":
+            {
+                "vendor": "CWT",
+                "model": "MB318E",
+                "options":
+                {
+                    "uart": 0,
+                    "mb_id": 1,
+                    "chanel": 5
+                }
+            }
+        }
+    ]
+    __registers.append(register)
+
+    # ECD / Ground drilling thermo couples settings.
+    register = Register("ecd.ground_drilling.tc.values")
+    register.scope = Scope.Device
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Ground drilling thermo couples values."
+    register.range = __range["NONE"]
+    register.value = []
+    __registers.append(register)
+
     # ECD / Floor entrance valves settings.
     register = Register("ecd.floor_entrance.valves.settings")
     register.scope = Scope.System
