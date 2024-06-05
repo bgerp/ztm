@@ -83,7 +83,7 @@ class MB318E(ModbusDevice):
             Parameter(
                 "Temperature",
                 "DegC",
-                ParameterType.INT16_T_LE,
+                ParameterType.ARR_UINT16_T_LE,
                 [51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62],
                 FunctionCode.ReadHoldingRegisters,
                 [-200, 200]

@@ -2206,7 +2206,7 @@ class EnergyCenterDistribution(BasePlugin):
             if match:
                 print(f"{register.name}: {register.value}")
 
-        # print(self.__temp_0.get_temp())
+        print(self.__temp_0.get_temp())
 
     def _shutdown(self):
         """Shutting down the plugin.
