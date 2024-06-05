@@ -2326,12 +2326,23 @@ class EnergyCenterDistribution(BasePlugin):
             if match:
                 print(f"{register.name}: {register.value}")
 
-        print(self.__tc_ground_drilling_1_input.get_temp())
-        print(self.__tc_ground_drilling_1_output.get_temp())
-        print(self.__tc_ground_drilling_2_input.get_temp())
-        print(self.__tc_ground_drilling_2_output.get_temp())
-        print(self.__tc_ground_drilling_3_input.get_temp())
-        print(self.__tc_ground_drilling_3_output.get_temp())
+        if self.__tc_ground_drilling_1_input is not None:
+            print(self.__tc_ground_drilling_1_input.get_temp())
+
+        if self.__tc_ground_drilling_1_output is not None:
+            print(self.__tc_ground_drilling_1_output.get_temp())
+
+        if self.__tc_ground_drilling_2_input is not None:
+            print(self.__tc_ground_drilling_2_input.get_temp())
+
+        if self.__tc_ground_drilling_2_output is not None:
+            print(self.__tc_ground_drilling_2_output.get_temp())
+
+        if self.__tc_ground_drilling_3_input is not None:
+            print(self.__tc_ground_drilling_3_input.get_temp())
+
+        if self.__tc_ground_drilling_3_output is not None:
+            print(self.__tc_ground_drilling_3_output.get_temp())
 
     def _shutdown(self):
         """Shutting down the plugin.
