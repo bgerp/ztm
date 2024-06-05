@@ -101,6 +101,8 @@ class MB318E(ModbusDevice):
             )
         )
 
+        self.__ch_reg_map = {0:51, 1:52, 2:53, 3:54, 4:55, 5:56, 6:57, 7:58, 8:59, 9:60, 10:61, 11:62}
+
 #endregion
 
 #region Public Methods
@@ -115,7 +117,7 @@ class MB318E(ModbusDevice):
         value = self.get_value("Temperature")
 
         if value is not None and 0 <= self._chanel <= 11:
-            value = value[self._chanel] # TODO: Do the math.
+            value = value[self.__ch_reg_map[self._chanel]]
 
         return value
 
