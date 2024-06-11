@@ -1,4 +1,3 @@
-
 #!/usr/bin/env python3
 # -*- coding: utf8 -*-
 
@@ -22,8 +21,6 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
-
-from devices.base_device import BaseDevice
 
 #region File Attributes
 
@@ -53,24 +50,5 @@ __email__ = "or.dimitrov@polygonteam.com"
 
 __status__ = "Debug"
 """File status."""
-
-#endregion
-
-class BasePowerAnalyzer(BaseDevice):
-    """Power analyzer base class."""
-
-#region Attributes
-
-#endregion
-
-#region Constructor
-
-#endregion
-
-#region Properties
-
-#endregion
-
-#region Public Methods
 
 #endregion

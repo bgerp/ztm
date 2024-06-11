@@ -209,12 +209,12 @@ class TemperatureProcessor():
                 if current_temp is None:
                     continue
 
-                if self.__ref_thermometer is not None \
-                    or ref_temp is not None:
+                if (self.__ref_thermometer is not None) \
+                    or (ref_temp is not None):
 
                     dt = abs(ref_temp - current_temp)
 
-                if current_temp > 0 and dt < 2:
+                if current_temp > 0 and dt < 1:
                     temperatures.append(current_temp)
 
         size = len(temperatures)

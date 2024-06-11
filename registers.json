@@ -364,7 +364,7 @@
         "name": "blinds.blind_1.position",
         "plugin": "Blinds",
         "range": "0.0/180.0",
-        "scope": "Both"
+        "scope": "Device"
     },
     {
         "data_type": "float",
@@ -538,7 +538,7 @@
     },
     {
         "data_type": "json",
-        "default": {"model": "mw_uml_15", "options": {"mb_id": 96, "uart": 1}, "vendor": "smii"},
+        "default": {},
         "description": "Cold water flow meter",
         "limit": 0.0,
         "name": "monitoring.cw.flowmeter_settings",
@@ -568,7 +568,7 @@
     },
     {
         "data_type": "json",
-        "default": {"model": "mw_uml_15", "options": {"mb_id": 96, "uart": 1}, "vendor": "smii"},
+        "default": {},
         "description": "Hot water input flow meter",
         "limit": 0.0,
         "name": "monitoring.hw.flowmeter_settings",
@@ -626,7 +626,7 @@
     {
         "data_type": "float",
         "default": 3600.0,
-        "description": "Power analyzer measuring demand",
+        "description": "Measuring demand",
         "limit": 0.0,
         "name": "monitoring.demand_time",
         "plugin": "Monitoring",
@@ -635,14 +635,7 @@
     },
     {
         "data_type": "json",
-        "default": {
-            "model": "flowmeter_dn20",
-            "options": {
-                "mb_id": 66,
-                "uart": 1
-            },
-            "vendor": "mainone"
-        },
+        "default": {},
         "description": "Floor loop 1 heat meter settings.",
         "limit": 0.0,
         "name": "monitoring.fl_1.hm.settings",
@@ -702,14 +695,7 @@
     },
     {
         "data_type": "json",
-        "default": {
-            "model": "flowmeter_dn20",
-            "options": {
-                "mb_id": 99,
-                "uart": 1
-            },
-            "vendor": "mainone"
-        },
+        "default": {},
         "description": "Convector loop 1 heat meter settings.",
         "limit": 0.0,
         "name": "monitoring.cl_1.hm.settings",
@@ -798,103 +784,13 @@
         "scope": "System"
     },
     {
-        "data_type": "float",
-        "default": 0.0,
-        "description": "Actual outside temperature [C]",
+        "data_type": "str",
+        "default": "",
+        "description": "Actual weather icon.",
         "limit": 0.0,
-        "name": "envm.temp.actual",
+        "name": "envm.forecast.icon_0",
         "plugin": "Environment",
-        "range": "-50/50",
-        "scope": "System"
-    },
-    {
-        "data_type": "float",
-        "default": 0.0,
-        "description": "Actual outside temperature for 3 hours [C]",
-        "limit": 0.0,
-        "name": "envm.temp.a3",
-        "plugin": "Environment",
-        "range": "-50/50",
-        "scope": "System"
-    },
-    {
-        "data_type": "float",
-        "default": 0.0,
-        "description": "Actual outside temperature for 6 hours [C]",
-        "limit": 0.0,
-        "name": "envm.temp.a6",
-        "plugin": "Environment",
-        "range": "-50/50",
-        "scope": "System"
-    },
-    {
-        "data_type": "float",
-        "default": 0.0,
-        "description": "Minimum outside temperature for 24 hours [C]",
-        "limit": 0.0,
-        "name": "envm.temp.min24",
-        "plugin": "Environment",
-        "range": "-50/50",
-        "scope": "System"
-    },
-    {
-        "data_type": "float",
-        "default": 0.0,
-        "description": "Maximum outside temperature for 24 hours [C]",
-        "limit": 0.0,
-        "name": "envm.temp.max24",
-        "plugin": "Environment",
-        "range": "-50/50",
-        "scope": "System"
-    },
-    {
-        "data_type": "float",
-        "default": 0.0,
-        "description": "Actual wind now [m/sec]",
-        "limit": 0.0,
-        "name": "envm.wind.actual",
-        "plugin": "Environment",
-        "range": "0.0/",
-        "scope": "System"
-    },
-    {
-        "data_type": "float",
-        "default": 0.0,
-        "description": "Actual wind for 3 hours [m/sec]",
-        "limit": 0.0,
-        "name": "envm.wind.a3",
-        "plugin": "Environment",
-        "range": "0.0/",
-        "scope": "System"
-    },
-    {
-        "data_type": "float",
-        "default": 0.0,
-        "description": "Actual wind for 6 hours [m/sec]",
-        "limit": 0.0,
-        "name": "envm.wind.a6",
-        "plugin": "Environment",
-        "range": "0.0/",
-        "scope": "System"
-    },
-    {
-        "data_type": "float",
-        "default": 0.0,
-        "description": "Minimum wind for 24 hours [m/sec]",
-        "limit": 0.0,
-        "name": "envm.wind.min24",
-        "plugin": "Environment",
-        "range": "0.0/",
-        "scope": "System"
-    },
-    {
-        "data_type": "float",
-        "default": 0.0,
-        "description": "Maximum wind for 24 hours [m/sec]",
-        "limit": 0.0,
-        "name": "envm.wind.max24",
-        "plugin": "Environment",
-        "range": "0.0/",
+        "range": "",
         "scope": "System"
     },
     {
@@ -902,7 +798,7 @@
         "default": 0.0,
         "description": "Actual outside relative humidity [%]",
         "limit": 0.0,
-        "name": "envm.rh.actual",
+        "name": "envm.forecast.rh_0",
         "plugin": "Environment",
         "range": "0.0/100.0",
         "scope": "System"
@@ -910,9 +806,39 @@
     {
         "data_type": "float",
         "default": 0.0,
-        "description": "Actual outside relative humidity for 3 hours [%]",
+        "description": "Actual outside temperature [*C]",
         "limit": 0.0,
-        "name": "envm.rh.a3",
+        "name": "envm.forecast.temp_0",
+        "plugin": "Environment",
+        "range": "-50.0/50.0",
+        "scope": "System"
+    },
+    {
+        "data_type": "float",
+        "default": 0.0,
+        "description": "Actual outside wind speed [m/s]",
+        "limit": 0.0,
+        "name": "envm.forecast.wind_0",
+        "plugin": "Environment",
+        "range": "0.0/100.0",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "",
+        "description": "Actual outside weather icon for 3 hours.",
+        "limit": 0.0,
+        "name": "envm.forecast.icon_3",
+        "plugin": "Environment",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "float",
+        "default": 0.0,
+        "description": "Actual outside relative humidity for 3 hours.[%]",
+        "limit": 0.0,
+        "name": "envm.forecast.rh_3",
         "plugin": "Environment",
         "range": "0.0/100.0",
         "scope": "System"
@@ -920,9 +846,59 @@
     {
         "data_type": "float",
         "default": 0.0,
-        "description": "Actual outside relative humidity for 6 hours [%]",
+        "description": "Actual outside temperature for 3 hours. [*C]",
         "limit": 0.0,
-        "name": "envm.rh.a6",
+        "name": "envm.forecast.temp_3",
+        "plugin": "Environment",
+        "range": "-50.0/50.0",
+        "scope": "System"
+    },
+    {
+        "data_type": "float",
+        "default": 0.0,
+        "description": "Actual outside wind speed for 3 hours. [m/s]",
+        "limit": 0.0,
+        "name": "envm.forecast.wind_3",
+        "plugin": "Environment",
+        "range": "0.0/100.0",
+        "scope": "System"
+    },
+    {
+        "data_type": "str",
+        "default": "",
+        "description": "Actual outside weather icon for 6 hours.",
+        "limit": 0.0,
+        "name": "envm.forecast.icon_6",
+        "plugin": "Environment",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "float",
+        "default": 0.0,
+        "description": "Actual outside relative humidity for 6 hours.[%]",
+        "limit": 0.0,
+        "name": "envm.forecast.rh_6",
+        "plugin": "Environment",
+        "range": "0.0/100.0",
+        "scope": "System"
+    },
+    {
+        "data_type": "float",
+        "default": 0.0,
+        "description": "Actual outside temperature for 6 hours. [*C]",
+        "limit": 0.0,
+        "name": "envm.forecast.temp_6",
+        "plugin": "Environment",
+        "range": "-50.0/50.0",
+        "scope": "System"
+    },
+    {
+        "data_type": "float",
+        "default": 0.0,
+        "description": "Actual outside wind speed for 6 hours. [m/s]",
+        "limit": 0.0,
+        "name": "envm.forecast.wind_6",
         "plugin": "Environment",
         "range": "0.0/100.0",
         "scope": "System"
@@ -1194,7 +1170,7 @@
             "model": "a20t20b2c",
             "options": {
                 "output": [
-                    "U0:ID2:FC5:R0:RO0"
+                    "off"
                 ]
             },
             "vendor": "Tonhe"
@@ -1248,13 +1224,13 @@
             "model": "Klimafan",
             "options": {
                 "stage1": [
-                    "U0:ID6:FC5:R0:RO0"
+                    "off"
                 ],
                 "stage2": [
-                    "U0:ID6:FC5:R0:RO1"
+                    "off"
                 ],
                 "stage3": [
-                    "U0:ID6:FC5:R0:RO3"
+                    "off"
                 ]
             },
             "vendor": "Silpa"
@@ -1272,7 +1248,7 @@
             "model": "a20t20b2c",
             "options": {
                 "output": [
-                    "U0:ID2:FC5:R0:RO1"
+                    "off"
                 ]
             },
             "vendor": "Tonhe"
@@ -1396,7 +1372,7 @@
         "name": "hvac.temp_1.adjust",
         "plugin": "HVAC",
         "range": "-50.0/50.0",
-        "scope": "Both"
+        "scope": "Device"
     },
     {
         "data_type": "float",
@@ -1477,186 +1453,6 @@
         "plugin": "HVAC",
         "range": "0.0/",
         "scope": "System"
-    },
-    {
-        "data_type": "json",
-        "default": {},
-        "description": "Convector loop 1 heat meter.",
-        "limit": 0.0,
-        "name": "hvac.conv_loop_1.flowmeter.settings",
-        "plugin": "HVAC",
-        "range": "",
-        "scope": "System"
-    },
-    {
-        "data_type": "json",
-        "default": {},
-        "description": "Convector loop 1 thermometer.",
-        "limit": 0.0,
-        "name": "hvac.conv_loop_1.temp.settings",
-        "plugin": "HVAC",
-        "range": "",
-        "scope": "System"
-    },
-    {
-        "data_type": "json",
-        "default": {},
-        "description": "Convector loop 1 measurements.",
-        "limit": 0.0,
-        "name": "hvac.conv_loop_1.temp.measurements",
-        "plugin": "HVAC",
-        "range": "",
-        "scope": "Device"
-    },
-    {
-        "data_type": "json",
-        "default": {},
-        "description": "Convector loop 3 flowmeter",
-        "limit": 0.0,
-        "name": "hvac.conv_loop_3.flowmeter.settings",
-        "plugin": "HVAC",
-        "range": "",
-        "scope": "System"
-    },
-    {
-        "data_type": "json",
-        "default": {},
-        "description": "Convector loop 3 thermometer",
-        "limit": 0.0,
-        "name": "hvac.conv_loop_3.temp.settings",
-        "plugin": "HVAC",
-        "range": "",
-        "scope": "System"
-    },
-    {
-        "data_type": "json",
-        "default": {},
-        "description": "Convector loop 3 measurements",
-        "limit": 0.0,
-        "name": "hvac.conv_loop_3.temp.measurements",
-        "plugin": "HVAC",
-        "range": "",
-        "scope": "Device"
-    },
-    {
-        "data_type": "json",
-        "default": {},
-        "description": "Floor loop 1 flowmeter.",
-        "limit": 0.0,
-        "name": "hvac.floor_loop_1.flowmeter.settings",
-        "plugin": "HVAC",
-        "range": "",
-        "scope": "System"
-    },
-    {
-        "data_type": "json",
-        "default": {},
-        "description": "Floor loop 1 thermometer.",
-        "limit": 0.0,
-        "name": "hvac.floor_loop_1.temp.settings",
-        "plugin": "HVAC",
-        "range": "",
-        "scope": "System"
-    },
-    {
-        "data_type": "json",
-        "default": {},
-        "description": "Floor loop 1 measurements.",
-        "limit": 0.0,
-        "name": "hvac.floor_loop_1.temp.measurements",
-        "plugin": "HVAC",
-        "range": "",
-        "scope": "Device"
-    },
-    {
-        "data_type": "json",
-        "default": {},
-        "description": "Floor loop 3 flowmeter.",
-        "limit": 0.0,
-        "name": "hvac.floor_loop_3.flowmeter.settings",
-        "plugin": "HVAC",
-        "range": "",
-        "scope": "System"
-    },
-    {
-        "data_type": "json",
-        "default": {},
-        "description": "Floor loop 3 thermometer.",
-        "limit": 0.0,
-        "name": "hvac.floor_loop_3.temp.settings",
-        "plugin": "HVAC",
-        "range": "",
-        "scope": "System"
-    },
-    {
-        "data_type": "json",
-        "default": {},
-        "description": "Floor loop 2 measurements.",
-        "limit": 0.0,
-        "name": "hvac.floor_loop_3.temp.measurements",
-        "plugin": "HVAC",
-        "range": "",
-        "scope": "Device"
-    },
-    {
-        "data_type": "json",
-        "default": {},
-        "description": "Convector loop 2 flowmeter",
-        "limit": 0.0,
-        "name": "hvac.conv_loop_2.flowmeter.settings",
-        "plugin": "HVAC",
-        "range": "",
-        "scope": "System"
-    },
-    {
-        "data_type": "json",
-        "default": {},
-        "description": "Convector loop 2 thermometer",
-        "limit": 0.0,
-        "name": "hvac.conv_loop_2.temp.settings",
-        "plugin": "HVAC",
-        "range": "",
-        "scope": "System"
-    },
-    {
-        "data_type": "json",
-        "default": {},
-        "description": "Convector loop 2 measurements",
-        "limit": 0.0,
-        "name": "hvac.conv_loop_2.temp.measurements",
-        "plugin": "HVAC",
-        "range": "",
-        "scope": "Device"
-    },
-    {
-        "data_type": "json",
-        "default": {},
-        "description": "Floor loop 2 flowmeter.",
-        "limit": 0.0,
-        "name": "hvac.floor_loop_2.flowmeter.settings",
-        "plugin": "HVAC",
-        "range": "",
-        "scope": "System"
-    },
-    {
-        "data_type": "json",
-        "default": {},
-        "description": "Floor loop 2 thermometer.",
-        "limit": 0.0,
-        "name": "hvac.floor_loop_2.temp.settings",
-        "plugin": "HVAC",
-        "range": "",
-        "scope": "System"
-    },
-    {
-        "data_type": "json",
-        "default": [],
-        "description": "Floor loop 2 measurements.",
-        "limit": 0.0,
-        "name": "hvac.floor_loop_2.temp.measurements",
-        "plugin": "HVAC",
-        "range": "",
-        "scope": "Device"
     },
     {
         "data_type": "float",
@@ -1762,7 +1558,7 @@
         "name": "light.target_illum",
         "plugin": "Light",
         "range": "0.0/10000.0",
-        "scope": "Both"
+        "scope": "Device"
     },
     {
         "data_type": "float",
@@ -1966,7 +1762,7 @@
     },
     {
         "data_type": "bool",
-        "default": false,
+        "default": true,
         "description": "Plugin enabled",
         "limit": 0.0,
         "name": "sys.enabled",
@@ -2005,34 +1801,6 @@
         "scope": "System"
     },
     {
-        "data_type": "json",
-        "default": {
-            "branch": "master",
-            "commit": "3462828",
-            "repo": "http://github.com/bgerp/ztm/"
-        },
-        "description": "Target software version",
-        "limit": 0.0,
-        "name": "sys.software.target_version",
-        "plugin": "System",
-        "range": "",
-        "scope": "System"
-    },
-    {
-        "data_type": "json",
-        "default": {
-            "branch": "master",
-            "commit": "e0c1dda",
-            "repo": "http://github.com/bgerp/ztm/"
-        },
-        "description": "Current software version.",
-        "limit": 0.0,
-        "name": "sys.software.current_version",
-        "plugin": "System",
-        "range": "",
-        "scope": "System"
-    },
-    {
         "data_type": "bool",
         "default": false,
         "description": "Plugin enabled",
@@ -2045,1428 +1813,1522 @@
     {
         "data_type": "json",
         "default": {
-            "model": "FLX-05F",
-            "options": {
-                "limit_ccw": "off",
-                "limit_cw": "off",
-                "output_ccw": "off",
-                "output_cw": "off"
-            },
-            "vendor": "Flowx"
+            "cold": [
+                {
+                    "model": "FLX-05F",
+                    "options": {
+                        "close_on_shutdown": false,
+                        "io_mode": 1,
+                        "limit_ccw": "!U0:ID11:FC2:R0:DI0",
+                        "limit_cw": "U0:ID11:FC2:R0:DI0",
+                        "output_ccw": "off",
+                        "output_cw": "U0:ID11:FC5:R0:RO0",
+                        "wait_on_shutdown": false
+                    },
+                    "vendor": "Flowx"
+                }
+            ],
+            "hot": []
         },
-        "description": "ECD / Foyer Floor Heating Settings",
+        "description": "ECD / Floor entrance valves settings.",
         "limit": 0.0,
-        "name": "ecd.underfloor_heating_foyer.valve.enabled",
-        "plugin": "ECD",
+        "name": "ecd.floor_entrance.valves.settings",
+        "plugin": "Energy Center Distribution",
         "range": "",
         "scope": "System"
     },
     {
         "data_type": "float",
         "default": 0.0,
-        "description": "ECD / Foyer Floor Heating Position",
+        "description": "ECD / Floor entrance valves mode.",
         "limit": 0.0,
-        "name": "ecd.underfloor_heating_foyer.valve.position",
-        "plugin": "ECD",
-        "range": "0.0/100.0",
+        "name": "ecd.floor_entrance.valves.mode",
+        "plugin": "Energy Center Distribution",
+        "range": "0|1|2",
         "scope": "System"
     },
     {
-        "data_type": "bool",
-        "default": false,
-        "description": "ECD / Foyer Floor Heating Calibration",
+        "data_type": "float",
+        "default": 0.0,
+        "description": "ECD / Floor entrance valves state.",
         "limit": 0.0,
-        "name": "ecd.underfloor_heating_foyer.valve.calibrate",
-        "plugin": "ECD",
-        "range": "true|false",
-        "scope": "System"
+        "name": "ecd.floor_entrance.valves.state",
+        "plugin": "Energy Center Distribution",
+        "range": "0|1|2",
+        "scope": "Device"
     },
     {
         "data_type": "json",
         "default": {
-            "model": "FLX-05F",
-            "options": {
-                "limit_ccw": "off",
-                "limit_cw": "off",
-                "output_ccw": "off",
-                "output_cw": "off"
-            },
-            "vendor": "Flowx"
+            "cold": [
+                {
+                    "model": "FLX-05F",
+                    "options": {
+                        "close_on_shutdown": false,
+                        "io_mode": 1,
+                        "limit_ccw": "!U0:ID11:FC2:R0:DI2",
+                        "limit_cw": "U0:ID11:FC2:R0:DI2",
+                        "output_ccw": "off",
+                        "output_cw": "U0:ID11:FC5:R0:RO2",
+                        "wait_on_shutdown": false
+                    },
+                    "vendor": "Flowx"
+                }
+            ],
+            "hot": []
         },
-        "description": "ECD / Underfloor Heating Trestle",
+        "description": "ECD / Floor pool valves settings.",
         "limit": 0.0,
-        "name": "ecd.underfloor_heating_trestle.valve.enabled",
-        "plugin": "ECD",
+        "name": "ecd.pool_floor.valves.settings",
+        "plugin": "Energy Center Distribution",
         "range": "",
         "scope": "System"
     },
     {
         "data_type": "float",
         "default": 0.0,
-        "description": "ECD / Underfloor Heating Trestle Position",
+        "description": "ECD / Floor pool valves mode.",
         "limit": 0.0,
-        "name": "ecd.underfloor_heating_trestle.valve.position",
-        "plugin": "ECD",
-        "range": "0.0/100.0",
+        "name": "ecd.pool_floor.valves.mode",
+        "plugin": "Energy Center Distribution",
+        "range": "0|1|2",
         "scope": "System"
     },
     {
-        "data_type": "bool",
-        "default": false,
-        "description": "ECD / Underfloor Heating Trestle Calibration",
+        "data_type": "float",
+        "default": 0.0,
+        "description": "ECD / Floor pool valves state.",
         "limit": 0.0,
-        "name": "ecd.underfloor_heating_trestle.valve.calibration",
-        "plugin": "ECD",
-        "range": "true|false",
-        "scope": "System"
+        "name": "ecd.pool_floor.valves.state",
+        "plugin": "Energy Center Distribution",
+        "range": "0|1|2",
+        "scope": "Device"
     },
     {
         "data_type": "json",
         "default": {
-            "model": "FLX-05F",
-            "options": {
-                "limit_ccw": "off",
-                "limit_cw": "off",
-                "output_ccw": "off",
-                "output_cw": "off"
-            },
-            "vendor": "Flowx"
+            "cold": [
+                {
+                    "model": "FLX-05F",
+                    "options": {
+                        "close_on_shutdown": false,
+                        "io_mode": 1,
+                        "limit_ccw": "!U0:ID11:FC2:R0:DI1",
+                        "limit_cw": "U0:ID11:FC2:R0:DI1",
+                        "output_ccw": "off",
+                        "output_cw": "U0:ID11:FC5:R0:RO1",
+                        "wait_on_shutdown": false
+                    },
+                    "vendor": "Flowx"
+                }
+            ],
+            "hot": []
         },
-        "description": "ECD / Underfloor Heating Pool",
+        "description": "ECD / Ground drilling valves settings.",
         "limit": 0.0,
-        "name": "ecd.underfloor_heating_pool.valve.enabled",
-        "plugin": "ECD",
+        "name": "ecd.ground_drilling.valves.settings",
+        "plugin": "Energy Center Distribution",
         "range": "",
         "scope": "System"
     },
     {
         "data_type": "float",
         "default": 0.0,
-        "description": "ECD / Underfloor Heating Pool Position",
+        "description": "ECD / Ground drilling valves mode.",
         "limit": 0.0,
-        "name": "ecd.underfloor_heating_pool.valve.position",
-        "plugin": "ECD",
-        "range": "0.0/100.0",
+        "name": "ecd.ground_drilling.valves.mode",
+        "plugin": "Energy Center Distribution",
+        "range": "0|1|2",
         "scope": "System"
     },
     {
-        "data_type": "bool",
-        "default": false,
-        "description": "ECD / Underfloor Heating Pool Calibration",
+        "data_type": "float",
+        "default": 0.0,
+        "description": "ECD / Ground drilling valves state.",
         "limit": 0.0,
-        "name": "ecd.underfloor_heating_pool.valve.calibration",
-        "plugin": "ECD",
-        "range": "true|false",
-        "scope": "System"
+        "name": "ecd.ground_drilling.valves.state",
+        "plugin": "Energy Center Distribution",
+        "range": "0|1|2",
+        "scope": "Device"
+    },
+    {
+        "data_type": "json",
+        "default": {},
+        "description": "ECD / Ground drilling valves state.",
+        "limit": 0.0,
+        "name": "ecd.ground_drilling.temp.settings",
+        "plugin": "Energy Center Distribution",
+        "range": "",
+        "scope": "Device"
     },
     {
         "data_type": "json",
         "default": {
-            "model": "FLX-05F",
-            "options": {
-                "limit_ccw": "off",
-                "limit_cw": "off",
-                "output_ccw": "off",
-                "output_cw": "off"
-            },
-            "vendor": "Flowx"
+            "cold": [
+                {
+                    "model": "FLX-05F",
+                    "options": {
+                        "close_on_shutdown": false,
+                        "io_mode": 1,
+                        "limit_ccw": "!U0:ID11:FC2:R0:DI4",
+                        "limit_cw": "U0:ID11:FC2:R0:DI4",
+                        "output_ccw": "off",
+                        "output_cw": "U0:ID11:FC5:R0:RO4",
+                        "wait_on_shutdown": false
+                    },
+                    "vendor": "Flowx"
+                }
+            ],
+            "hot": []
         },
-        "description": "ECD / Air Cooling Valve Settings",
+        "description": "ECD / Ground drilling valves settings.",
         "limit": 0.0,
-        "name": "ecd.air_cooling.valve.enabled",
-        "plugin": "ECD",
+        "name": "ecd.air_tower_green.valves.settings",
+        "plugin": "Energy Center Distribution",
         "range": "",
         "scope": "System"
     },
     {
         "data_type": "float",
         "default": 0.0,
-        "description": "ECD / Air Cooling Valve Position",
+        "description": "ECD / Ground drilling valves mode.",
         "limit": 0.0,
-        "name": "ecd.air_cooling.valve.position",
-        "plugin": "ECD",
-        "range": "0.0/100.0",
+        "name": "ecd.air_tower_green.valves.mode",
+        "plugin": "Energy Center Distribution",
+        "range": "0|1|2",
         "scope": "System"
     },
     {
-        "data_type": "bool",
-        "default": false,
-        "description": "ECD / Air Cooling Valve Calibration",
+        "data_type": "float",
+        "default": 0.0,
+        "description": "ECD / Air tower green valves state.",
         "limit": 0.0,
-        "name": "ecd.air_cooling.valve.calibration",
-        "plugin": "ECD",
-        "range": "true|false",
-        "scope": "System"
+        "name": "ecd.air_tower_green.valves.state",
+        "plugin": "Energy Center Distribution",
+        "range": "0|1|2",
+        "scope": "Device"
     },
     {
         "data_type": "json",
         "default": {
-            "model": "FLX-05F",
-            "options": {
-                "limit_ccw": "off",
-                "limit_cw": "off",
-                "output_ccw": "off",
-                "output_cw": "off"
-            },
-            "vendor": "Flowx"
+            "cold": [
+                {
+                    "model": "FLX-05F",
+                    "options": {
+                        "close_on_shutdown": false,
+                        "io_mode": 1,
+                        "limit_ccw": "U0:ID11:FC2:R0:DI3",
+                        "limit_cw": "U0:ID11:FC2:R0:DI3",
+                        "output_ccw": "off",
+                        "output_cw": "U0:ID11:FC5:R0:RO3",
+                        "wait_on_shutdown": false
+                    },
+                    "vendor": "Flowx"
+                }
+            ],
+            "hot": []
         },
-        "description": "ECD / Ground Drilling Valve",
+        "description": "ECD / Ground drilling valves settings.",
         "limit": 0.0,
-        "name": "ecd.ground_drill.valve.enabled",
-        "plugin": "ECD",
+        "name": "ecd.air_tower_purple.valves.settings",
+        "plugin": "Energy Center Distribution",
         "range": "",
         "scope": "System"
     },
     {
         "data_type": "float",
         "default": 0.0,
-        "description": "ECD / Ground Drill Valve Position",
+        "description": "ECD / Ground drilling valves mode.",
         "limit": 0.0,
-        "name": "ecd.ground_drill.valve.position",
-        "plugin": "ECD",
-        "range": "0.0/100.0",
+        "name": "ecd.air_tower_purple.valves.mode",
+        "plugin": "Energy Center Distribution",
+        "range": "0|1|2",
         "scope": "System"
     },
     {
-        "data_type": "bool",
-        "default": false,
-        "description": "ECD / Ground Drill Valve Calibration",
+        "data_type": "float",
+        "default": 0.0,
+        "description": "ECD / Air tower green valves state.",
         "limit": 0.0,
-        "name": "ecd.ground_drill.valve.calibration",
-        "plugin": "ECD",
-        "range": "true|false",
-        "scope": "System"
+        "name": "ecd.air_tower_purple.valves.state",
+        "plugin": "Energy Center Distribution",
+        "range": "0|1|2",
+        "scope": "Device"
     },
     {
         "data_type": "json",
         "default": {
-            "model": "FLX-05F",
-            "options": {
-                "limit_ccw": "off",
-                "limit_cw": "off",
-                "output_ccw": "off",
-                "output_cw": "off"
-            },
-            "vendor": "Flowx"
+            "cold": [
+                {
+                    "model": "FLX-05F",
+                    "options": {
+                        "close_on_shutdown": false,
+                        "io_mode": 1,
+                        "limit_ccw": "!U0:ID11:FC2:R0:DI5",
+                        "limit_cw": "U0:ID11:FC2:R0:DI5",
+                        "output_ccw": "off",
+                        "output_cw": "U0:ID11:FC5:R0:RO5",
+                        "wait_on_shutdown": false
+                    },
+                    "vendor": "Flowx"
+                }
+            ],
+            "hot": []
         },
-        "description": "ECD / Generators Cooling Valve / Settings",
+        "description": "ECD / Generators valves settings.",
         "limit": 0.0,
-        "name": "ecd.generators_cooling.valve.enabled",
-        "plugin": "ECD",
+        "name": "ecd.generators.valves.settings",
+        "plugin": "Energy Center Distribution",
         "range": "",
         "scope": "System"
     },
     {
         "data_type": "float",
         "default": 0.0,
-        "description": "ECD / Generators Cooling Valve / Position",
+        "description": "ECD / Ground drilling valves mode.",
         "limit": 0.0,
-        "name": "ecd.generators_cooling.valve.position",
-        "plugin": "ECD",
-        "range": "0.0/100.0",
+        "name": "ecd.generators.valves.mode",
+        "plugin": "Energy Center Distribution",
+        "range": "0|1|2",
         "scope": "System"
     },
     {
-        "data_type": "bool",
-        "default": false,
-        "description": "ECD / Generators Cooling Valve Calibration",
+        "data_type": "float",
+        "default": 0.0,
+        "description": "ECD / Generators valves state.",
         "limit": 0.0,
-        "name": "ecd.generators_cooling.valve.calibration",
-        "plugin": "ECD",
-        "range": "true|false",
-        "scope": "System"
+        "name": "ecd.generators.valves.state",
+        "plugin": "Energy Center Distribution",
+        "range": "0|1|2",
+        "scope": "Device"
     },
     {
         "data_type": "json",
         "default": {
-            "model": "FLX-05F",
-            "options": {
-                "limit_ccw": "off",
-                "limit_cw": "off",
-                "output_ccw": "off",
-                "output_cw": "off"
-            },
-            "vendor": "Flowx"
+            "cold": [],
+            "hot": [
+                {
+                    "model": "FLX-05F",
+                    "options": {
+                        "close_on_shutdown": false,
+                        "io_mode": 1,
+                        "limit_ccw": "U0:ID15:FC2:R0:DI1",
+                        "limit_cw": "U0:ID15:FC2:R0:DI0",
+                        "output_ccw": "off",
+                        "output_cw": "U0:ID15:FC5:R0:RO0",
+                        "wait_on_shutdown": false
+                    },
+                    "vendor": "Flowx"
+                }
+            ]
         },
-        "description": "ECD / Short Green/Purple Valve Settings",
+        "description": "ECD / Pool air heating valves settings.",
         "limit": 0.0,
-        "name": "ecd.short_green_purple.valve.enabled",
-        "plugin": "ECD",
+        "name": "ecd.pool_air_heating.valves.settings",
+        "plugin": "Energy Center Distribution",
         "range": "",
         "scope": "System"
     },
     {
         "data_type": "float",
         "default": 0.0,
-        "description": "ECD / Short Green/Purple Valve Position",
+        "description": "ECD / Pool air heating valves mode.",
         "limit": 0.0,
-        "name": "ecd.short_green_purple.valve.position",
-        "plugin": "ECD",
-        "range": "0.0/100.0",
+        "name": "ecd.pool_air_heating.valves.mode",
+        "plugin": "Energy Center Distribution",
+        "range": "0|1|2",
         "scope": "System"
     },
     {
-        "data_type": "bool",
-        "default": false,
-        "description": "ECD / Generators Cooling Valve Calibration",
+        "data_type": "float",
+        "default": 0.0,
+        "description": "ECD / Pool air heating valves state.",
         "limit": 0.0,
-        "name": "ecd.short_green_purple.valve.calibration",
-        "plugin": "ECD",
-        "range": "true|false",
-        "scope": "System"
+        "name": "ecd.pool_air_heating.valves.state",
+        "plugin": "Energy Center Distribution",
+        "range": "0|1|2",
+        "scope": "Device"
     },
     {
         "data_type": "json",
         "default": {
-            "model": "FLX-05F",
+            "model": "MAGNA1_80_100_F_360_1x230V_PN6",
             "options": {
-                "limit_ccw": "off",
-                "limit_cw": "off",
-                "output_ccw": "off",
-                "output_cw": "off"
+                "e_status": "U0:ID15:FC2:R0:DI0",
+                "e_stop": "U0:ID15:FC5:R0:RO8",
+                "mb_id": 1,
+                "stop_on_shutdown": true,
+                "uart": 1,
+                "wait_on_shutdown": false
             },
-            "vendor": "Flowx"
+            "vendor": "Grundfos"
         },
-        "description": "ECD / Underfloor West Bypass Valve Settings",
+        "description": "ECD / Pool air heating pump settings.",
         "limit": 0.0,
-        "name": "ecd.underfloor_west_bypass.valve.enabled",
-        "plugin": "ECD",
+        "name": "ecd.pool_air_heating.pump.settings",
+        "plugin": "Energy Center Distribution",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "int",
+        "default": 0,
+        "description": "ECD / Pool air heating pump mode.",
+        "limit": 0.0,
+        "name": "ecd.pool_air_heating.pump.mode",
+        "plugin": "Energy Center Distribution",
+        "range": "0/100",
+        "scope": "System"
+    },
+    {
+        "data_type": "json",
+        "default": {},
+        "description": "ECD / Pool air heating pump state.",
+        "limit": 0.0,
+        "name": "ecd.pool_air_heating.pump.state",
+        "plugin": "Energy Center Distribution",
+        "range": "",
+        "scope": "Device"
+    },
+    {
+        "data_type": "json",
+        "default": {
+            "cold": [
+                {
+                    "model": "FLX-05F",
+                    "options": {
+                        "close_on_shutdown": false,
+                        "io_mode": 1,
+                        "limit_ccw": "!U0:ID12:FC2:R0:DI0",
+                        "limit_cw": "U0:ID12:FC2:R0:DI2",
+                        "output_ccw": "off",
+                        "output_cw": "U0:ID12:FC5:R0:RO2",
+                        "wait_on_shutdown": false
+                    },
+                    "vendor": "Flowx"
+                }
+            ],
+            "hot": [
+                {
+                    "model": "FLX-05F",
+                    "options": {
+                        "close_on_shutdown": false,
+                        "io_mode": 1,
+                        "limit_ccw": "!U0:ID12:FC2:R0:DI2",
+                        "limit_cw": "U0:ID12:FC2:R0:DI0",
+                        "output_ccw": "off",
+                        "output_cw": "U0:ID12:FC5:R0:RO0",
+                        "wait_on_shutdown": false
+                    },
+                    "vendor": "Flowx"
+                }
+            ]
+        },
+        "description": "ECD / Convectors kitchen valves settings.",
+        "limit": 0.0,
+        "name": "ecd.conv_kitchen.valves.settings",
+        "plugin": "Energy Center Distribution",
         "range": "",
         "scope": "System"
     },
     {
         "data_type": "float",
         "default": 0.0,
-        "description": "ECD / Underfloor West Bypass Valve Position",
+        "description": "ECD / Convectors kitchen valves mode.",
         "limit": 0.0,
-        "name": "ecd.underfloor_west_bypass.valve.position",
-        "plugin": "ECD",
-        "range": "0.0/100.0",
+        "name": "ecd.conv_kitchen.valves.mode",
+        "plugin": "Energy Center Distribution",
+        "range": "0|1|2",
         "scope": "System"
     },
     {
-        "data_type": "bool",
-        "default": false,
-        "description": "ECD / Underfloor West Bypass Valve Calibration",
+        "data_type": "float",
+        "default": 0.0,
+        "description": "ECD / Convectors kitchen valves state.",
         "limit": 0.0,
-        "name": "ecd.underfloor_west_bypass.valve.calibration",
-        "plugin": "ECD",
-        "range": "true|false",
-        "scope": "System"
+        "name": "ecd.conv_kitchen.valves.state",
+        "plugin": "Energy Center Distribution",
+        "range": "0|1|2",
+        "scope": "Device"
     },
     {
         "data_type": "json",
         "default": {
-            "model": "FLX-05F",
+            "model": "MAGNA1_80_100_F_360_1x230V_PN6",
             "options": {
-                "limit_ccw": "off",
-                "limit_cw": "off",
-                "output_ccw": "off",
-                "output_cw": "off"
+                "e_status": "U0:ID12:FC2:R0:DI3",
+                "e_stop": "U0:ID12:FC5:R0:RO3",
+                "mb_id": 1,
+                "stop_on_shutdown": true,
+                "uart": 1,
+                "wait_on_shutdown": false
             },
-            "vendor": "Flowx"
+            "vendor": "Grundfos"
         },
-        "description": "ECD / Underfloor East Bypass Valve Settings",
+        "description": "ECD / Convectors kitchen pump settings.",
         "limit": 0.0,
-        "name": "ecd.underfloor_east_bypass.valve.enabled",
-        "plugin": "ECD",
+        "name": "ecd.conv_kitchen.pump.settings",
+        "plugin": "Energy Center Distribution",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "int",
+        "default": 0,
+        "description": "ECD / Convectors kitchen pump mode.",
+        "limit": 0.0,
+        "name": "ecd.conv_kitchen.pump.mode",
+        "plugin": "Energy Center Distribution",
+        "range": "0/100",
+        "scope": "System"
+    },
+    {
+        "data_type": "json",
+        "default": {},
+        "description": "ECD / Convectors kitchen pump state.",
+        "limit": 0.0,
+        "name": "ecd.conv_kitchen.pump.state",
+        "plugin": "Energy Center Distribution",
+        "range": "",
+        "scope": "Device"
+    },
+    {
+        "data_type": "json",
+        "default": {
+            "cold": [
+                {
+                    "model": "FLX-05F",
+                    "options": {
+                        "close_on_shutdown": false,
+                        "io_mode": 1,
+                        "limit_ccw": "!U0:ID13:FC2:R0:DI0",
+                        "limit_cw": "U0:ID13:FC2:R0:DI2",
+                        "output_ccw": "off",
+                        "output_cw": "U0:ID13:FC5:R0:RO2",
+                        "wait_on_shutdown": false
+                    },
+                    "vendor": "Flowx"
+                }
+            ],
+            "hot": [
+                {
+                    "model": "FLX-05F",
+                    "options": {
+                        "close_on_shutdown": false,
+                        "io_mode": 1,
+                        "limit_ccw": "!U0:ID13:FC2:R0:DI2",
+                        "limit_cw": "U0:ID13:FC2:R0:DI0",
+                        "output_ccw": "off",
+                        "output_cw": "U0:ID13:FC5:R0:RO0",
+                        "wait_on_shutdown": false
+                    },
+                    "vendor": "Flowx"
+                }
+            ]
+        },
+        "description": "ECD / AHU conference hall valves settings.",
+        "limit": 0.0,
+        "name": "ecd.ahu_conf_hall.valves.settings",
+        "plugin": "Energy Center Distribution",
         "range": "",
         "scope": "System"
     },
     {
         "data_type": "float",
         "default": 0.0,
-        "description": "ECD / Underfloor East Bypass Valve Position",
+        "description": "ECD / AHU conference hall valves mode.",
         "limit": 0.0,
-        "name": "ecd.underfloor_east_bypass.valve.position",
-        "plugin": "ECD",
-        "range": "0.0/100.0",
+        "name": "ecd.ahu_conf_hall.valves.mode",
+        "plugin": "Energy Center Distribution",
+        "range": "0|1|2",
         "scope": "System"
     },
     {
-        "data_type": "bool",
-        "default": false,
-        "description": "ECD / Underfloor East Bypass Valve Calibration",
+        "data_type": "float",
+        "default": 0.0,
+        "description": "ECD / AHU conference hall valves state.",
         "limit": 0.0,
-        "name": "ecd.underfloor_east_bypass.valve.calibration",
-        "plugin": "ECD",
-        "range": "true|false",
-        "scope": "System"
-    },
-    {
-        "data_type": "json",
-        "default": {
-            "model": "FLX-05F",
-            "options": {
-                "limit_ccw": "off",
-                "limit_cw": "off",
-                "output_ccw": "off",
-                "output_cw": "off"
-            },
-            "vendor": "Flowx"
-        },
-        "description": "ECD / VCG / Pool Heating",
-        "limit": 0.0,
-        "name": "ecd.vcg_pool_heating.valve",
-        "plugin": "ECD",
-        "range": "",
-        "scope": "System"
+        "name": "ecd.ahu_conf_hall.valves.state",
+        "plugin": "Energy Center Distribution",
+        "range": "0|1|2",
+        "scope": "Device"
     },
     {
         "data_type": "json",
         "default": {
             "model": "MAGNA1_80_100_F_360_1x230V_PN6",
             "options": {
-                "mb_id": 0,
-                "uart": 0
+                "e_status": "U0:ID13:FC2:R0:DI3",
+                "e_stop": "U0:ID13:FC5:R0:RO3",
+                "mb_id": 1,
+                "stop_on_shutdown": true,
+                "uart": 1,
+                "wait_on_shutdown": false
             },
             "vendor": "Grundfos"
         },
-        "description": "ECD / VCG / Pool Heating",
+        "description": "ECD / AHU conference hall pump settings.",
         "limit": 0.0,
-        "name": "ecd.vcg_pool_heating.pump",
-        "plugin": "ECD",
+        "name": "ecd.ahu_conf_hall.pump.settings",
+        "plugin": "Energy Center Distribution",
         "range": "",
         "scope": "System"
     },
     {
-        "data_type": "bool",
-        "default": true,
-        "description": "ECD / VCG / Pool Heating",
+        "data_type": "int",
+        "default": 0,
+        "description": "ECD / AHU conference hall pump mode.",
         "limit": 0.0,
-        "name": "ecd.vcg_pool_heating.enabled",
-        "plugin": "ECD",
-        "range": "true|false",
-        "scope": "System"
-    },
-    {
-        "data_type": "json",
-        "default": {
-            "model": "FLX-05F",
-            "options": {
-                "limit_ccw": "off",
-                "limit_cw": "off",
-                "output_ccw": "off",
-                "output_cw": "off"
-            },
-            "vendor": "Flowx"
-        },
-        "description": "ECD / VCG / Pool Cooling In",
-        "limit": 0.0,
-        "name": "ecd.vcg_tva_pool.cold_in",
-        "plugin": "ECD",
-        "range": "",
+        "name": "ecd.ahu_conf_hall.pump.mode",
+        "plugin": "Energy Center Distribution",
+        "range": "0/100",
         "scope": "System"
     },
     {
         "data_type": "json",
-        "default": {
-            "model": "FLX-05F",
-            "options": {
-                "limit_ccw": "off",
-                "limit_cw": "off",
-                "output_ccw": "off",
-                "output_cw": "off"
-            },
-            "vendor": "Flowx"
-        },
-        "description": "ECD / VCG / Pool Cooling In",
+        "default": {},
+        "description": "ECD / AHU conference hall pump state.",
         "limit": 0.0,
-        "name": "ecd.vcg_tva_pool.cold_out",
-        "plugin": "ECD",
+        "name": "ecd.ahu_conf_hall.pump.state",
+        "plugin": "Energy Center Distribution",
         "range": "",
-        "scope": "System"
+        "scope": "Device"
     },
     {
         "data_type": "json",
         "default": {
-            "model": "FLX-05F",
-            "options": {
-                "limit_ccw": "off",
-                "limit_cw": "off",
-                "output_ccw": "off",
-                "output_cw": "off"
-            },
-            "vendor": "Flowx"
+            "cold": [
+                {
+                    "model": "FLX-05F",
+                    "options": {
+                        "close_on_shutdown": false,
+                        "io_mode": 1,
+                        "limit_ccw": "!U0:ID16:FC2:R0:DI0",
+                        "limit_cw": "U0:ID16:FC2:R0:DI2",
+                        "output_ccw": "off",
+                        "output_cw": "U0:ID16:FC5:R0:RO2",
+                        "wait_on_shutdown": false
+                    },
+                    "vendor": "Flowx"
+                }
+            ],
+            "hot": [
+                {
+                    "model": "FLX-05F",
+                    "options": {
+                        "close_on_shutdown": false,
+                        "io_mode": 1,
+                        "limit_ccw": "!U0:ID16:FC2:R0:DI2",
+                        "limit_cw": "U0:ID16:FC2:R0:DI0",
+                        "output_ccw": "off",
+                        "output_cw": "U0:ID16:FC5:R0:RO0",
+                        "wait_on_shutdown": false
+                    },
+                    "vendor": "Flowx"
+                }
+            ]
         },
-        "description": "ECD / VCG / Pool Heating In",
+        "description": "ECD / Floor west valves settings.",
         "limit": 0.0,
-        "name": "ecd.vcg_tva_pool.hot_in",
-        "plugin": "ECD",
+        "name": "ecd.floor_west.valves.settings",
+        "plugin": "Energy Center Distribution",
         "range": "",
         "scope": "System"
     },
     {
-        "data_type": "json",
-        "default": {
-            "model": "FLX-05F",
-            "options": {
-                "limit_ccw": "off",
-                "limit_cw": "off",
-                "output_ccw": "off",
-                "output_cw": "off"
-            },
-            "vendor": "Flowx"
-        },
-        "description": "ECD / VCG / Pool Heating Out",
+        "data_type": "float",
+        "default": 0.0,
+        "description": "ECD / Floor west valves mode.",
         "limit": 0.0,
-        "name": "ecd.vcg_tva_pool.hot_out",
-        "plugin": "ECD",
-        "range": "",
+        "name": "ecd.floor_west.valves.mode",
+        "plugin": "Energy Center Distribution",
+        "range": "0|1|2",
         "scope": "System"
+    },
+    {
+        "data_type": "float",
+        "default": 0.0,
+        "description": "ECD / Floor west  valves state",
+        "limit": 0.0,
+        "name": "ecd.floor_west.valves.state",
+        "plugin": "Energy Center Distribution",
+        "range": "0|1|2",
+        "scope": "Device"
     },
     {
         "data_type": "json",
         "default": {
             "model": "MAGNA1_80_100_F_360_1x230V_PN6",
             "options": {
-                "mb_id": 0,
-                "uart": 0
+                "e_status": "U0:ID16:FC2:R0:DI3",
+                "e_stop": "U0:ID16:FC5:R0:RO3",
+                "mb_id": 1,
+                "stop_on_shutdown": true,
+                "uart": 1,
+                "wait_on_shutdown": false
             },
             "vendor": "Grundfos"
         },
-        "description": "ECD / VCG / Pump",
+        "description": "ECD / Floor west pump settings.",
         "limit": 0.0,
-        "name": "ecd.vcg_tva_pool.pump",
-        "plugin": "ECD",
+        "name": "ecd.floor_west.pump.settings",
+        "plugin": "Energy Center Distribution",
         "range": "",
         "scope": "System"
     },
     {
-        "data_type": "bool",
-        "default": true,
-        "description": "ECD / VCG / Enable",
+        "data_type": "int",
+        "default": 0,
+        "description": "ECD / Floor west pump mode.",
         "limit": 0.0,
-        "name": "ecd.vcg_tva_pool.enabled",
-        "plugin": "ECD",
-        "range": "true|false",
-        "scope": "System"
-    },
-    {
-        "data_type": "json",
-        "default": {
-            "model": "FLX-05F",
-            "options": {
-                "limit_ccw": "off",
-                "limit_cw": "off",
-                "output_ccw": "off",
-                "output_cw": "off"
-            },
-            "vendor": "Flowx"
-        },
-        "description": "ECD / VCG / Convectors East Cooling In",
-        "limit": 0.0,
-        "name": "ecd.convectors_east.cold_in",
-        "plugin": "ECD",
-        "range": "",
+        "name": "ecd.floor_west.pump.mode",
+        "plugin": "Energy Center Distribution",
+        "range": "0/100",
         "scope": "System"
     },
     {
         "data_type": "json",
-        "default": {
-            "model": "FLX-05F",
-            "options": {
-                "limit_ccw": "off",
-                "limit_cw": "off",
-                "output_ccw": "off",
-                "output_cw": "off"
-            },
-            "vendor": "Flowx"
-        },
-        "description": "ECD / VCG / Convectors East Cooling Out",
+        "default": {},
+        "description": "ECD / Floor west pump state.",
         "limit": 0.0,
-        "name": "ecd.convectors_east.cold_out",
-        "plugin": "ECD",
+        "name": "ecd.floor_west.pump.state",
+        "plugin": "Energy Center Distribution",
         "range": "",
-        "scope": "System"
+        "scope": "Device"
     },
     {
         "data_type": "json",
         "default": {
-            "model": "FLX-05F",
-            "options": {
-                "limit_ccw": "off",
-                "limit_cw": "off",
-                "output_ccw": "off",
-                "output_cw": "off"
-            },
-            "vendor": "Flowx"
+            "cold": [
+                {
+                    "model": "FLX-05F",
+                    "options": {
+                        "close_on_shutdown": false,
+                        "io_mode": 1,
+                        "limit_ccw": "!U0:ID14:FC2:R0:DI0",
+                        "limit_cw": "U0:ID14:FC2:R0:DI2",
+                        "output_ccw": "off",
+                        "output_cw": "U0:ID14:FC5:R0:RO2",
+                        "wait_on_shutdown": false
+                    },
+                    "vendor": "Flowx"
+                }
+            ],
+            "hot": [
+                {
+                    "model": "FLX-05F",
+                    "options": {
+                        "close_on_shutdown": false,
+                        "io_mode": 1,
+                        "limit_ccw": "!U0:ID14:FC2:R0:DI2",
+                        "limit_cw": "U0:ID14:FC2:R0:DI0",
+                        "output_ccw": "off",
+                        "output_cw": "U0:ID14:FC5:R0:RO0",
+                        "wait_on_shutdown": false
+                    },
+                    "vendor": "Flowx"
+                }
+            ]
         },
-        "description": "ECD / VCG / Convectors East Hot In",
+        "description": "ECD / Convectors west valves settings.",
         "limit": 0.0,
-        "name": "ecd.convectors_east.hot_in",
-        "plugin": "ECD",
+        "name": "ecd.conv_west.valves.settings",
+        "plugin": "Energy Center Distribution",
         "range": "",
         "scope": "System"
     },
     {
-        "data_type": "json",
-        "default": {
-            "model": "FLX-05F",
-            "options": {
-                "limit_ccw": "off",
-                "limit_cw": "off",
-                "output_ccw": "off",
-                "output_cw": "off"
-            },
-            "vendor": "Flowx"
-        },
-        "description": "ECD / VCG / Convectors East Hot Out",
+        "data_type": "float",
+        "default": 0.0,
+        "description": "ECD / Convectors west valves mode.",
         "limit": 0.0,
-        "name": "ecd.convectors_east.hot_out",
-        "plugin": "ECD",
-        "range": "",
+        "name": "ecd.conv_west.valves.mode",
+        "plugin": "Energy Center Distribution",
+        "range": "0|1|2",
         "scope": "System"
+    },
+    {
+        "data_type": "float",
+        "default": 0.0,
+        "description": "ECD / Convectors west valves state.",
+        "limit": 0.0,
+        "name": "ecd.conv_west.valves.state",
+        "plugin": "Energy Center Distribution",
+        "range": "0|1|2",
+        "scope": "Device"
     },
     {
         "data_type": "json",
         "default": {
             "model": "MAGNA1_80_100_F_360_1x230V_PN6",
             "options": {
-                "mb_id": 0,
-                "uart": 0
+                "e_status": "U0:ID14:FC2:R0:DI3",
+                "e_stop": "U0:ID14:FC5:R0:RO3",
+                "mb_id": 1,
+                "stop_on_shutdown": true,
+                "uart": 1,
+                "wait_on_shutdown": false
             },
             "vendor": "Grundfos"
         },
-        "description": "ECD / VCG / Convectors East Pump",
+        "description": "ECD / Convectors west pump settings.",
         "limit": 0.0,
-        "name": "ecd.convectors_east.pump",
-        "plugin": "ECD",
+        "name": "ecd.conv_west.pump.settings",
+        "plugin": "Energy Center Distribution",
         "range": "",
         "scope": "System"
     },
     {
-        "data_type": "bool",
-        "default": true,
-        "description": "ECD / VCG / Convectors East Enable",
+        "data_type": "int",
+        "default": 0,
+        "description": "ECD / Convectors west pump mode.",
         "limit": 0.0,
-        "name": "ecd.convectors_east.enabled",
-        "plugin": "ECD",
-        "range": "true|false",
-        "scope": "System"
-    },
-    {
-        "data_type": "json",
-        "default": {
-            "model": "FLX-05F",
-            "options": {
-                "limit_ccw": "off",
-                "limit_cw": "off",
-                "output_ccw": "off",
-                "output_cw": "off"
-            },
-            "vendor": "Flowx"
-        },
-        "description": "ECD / VCG / Floor East Cooling In",
-        "limit": 0.0,
-        "name": "ecd.underfloor_east.cold_in",
-        "plugin": "ECD",
-        "range": "",
+        "name": "ecd.conv_west.pump.mode",
+        "plugin": "Energy Center Distribution",
+        "range": "0/100",
         "scope": "System"
     },
     {
         "data_type": "json",
-        "default": {
-            "model": "FLX-05F",
-            "options": {
-                "limit_ccw": "off",
-                "limit_cw": "off",
-                "output_ccw": "off",
-                "output_cw": "off"
-            },
-            "vendor": "Flowx"
-        },
-        "description": "ECD / VCG / Floor East Cooling Out",
+        "default": {},
+        "description": "ECD / Convectors west pump state.",
         "limit": 0.0,
-        "name": "ecd.underfloor_east.cold_out",
-        "plugin": "ECD",
+        "name": "ecd.conv_west.pump.state",
+        "plugin": "Energy Center Distribution",
         "range": "",
-        "scope": "System"
+        "scope": "Device"
     },
     {
         "data_type": "json",
         "default": {
-            "model": "FLX-05F",
-            "options": {
-                "limit_ccw": "off",
-                "limit_cw": "off",
-                "output_ccw": "off",
-                "output_cw": "off"
-            },
-            "vendor": "Flowx"
+            "cold": [
+                {
+                    "model": "FLX-05F",
+                    "options": {
+                        "close_on_shutdown": false,
+                        "io_mode": 1,
+                        "limit_ccw": "!U0:ID14:FC2:R0:DI4",
+                        "limit_cw": "U0:ID14:FC2:R0:DI6",
+                        "output_ccw": "off",
+                        "output_cw": "U0:ID14:FC5:R0:RO6",
+                        "wait_on_shutdown": false
+                    },
+                    "vendor": "Flowx"
+                }
+            ],
+            "hot": [
+                {
+                    "model": "FLX-05F",
+                    "options": {
+                        "close_on_shutdown": false,
+                        "io_mode": 1,
+                        "limit_ccw": "!U0:ID14:FC2:R0:DI6",
+                        "limit_cw": "U0:ID14:FC2:R0:DI4",
+                        "output_ccw": "off",
+                        "output_cw": "U0:ID14:FC5:R0:RO4",
+                        "wait_on_shutdown": false
+                    },
+                    "vendor": "Flowx"
+                }
+            ]
         },
-        "description": "ECD / VCG / Floor East Hot In",
+        "description": "ECD / AHU roof floor valves settings.",
         "limit": 0.0,
-        "name": "ecd.underfloor_east.hot_in",
-        "plugin": "ECD",
+        "name": "ecd.ahu_roof_floor.valves.settings",
+        "plugin": "Energy Center Distribution",
         "range": "",
         "scope": "System"
     },
     {
-        "data_type": "json",
-        "default": {
-            "model": "FLX-05F",
-            "options": {
-                "limit_ccw": "off",
-                "limit_cw": "off",
-                "output_ccw": "off",
-                "output_cw": "off"
-            },
-            "vendor": "Flowx"
-        },
-        "description": "ECD / VCG / Floor East Hot Out",
+        "data_type": "float",
+        "default": 0.0,
+        "description": "ECD / AHU roof floor valves mode.",
         "limit": 0.0,
-        "name": "ecd.underfloor_east.hot_out",
-        "plugin": "ECD",
-        "range": "",
+        "name": "ecd.ahu_roof_floor.valves.mode",
+        "plugin": "Energy Center Distribution",
+        "range": "0|1|2",
         "scope": "System"
+    },
+    {
+        "data_type": "float",
+        "default": 0.0,
+        "description": "ECD / AHU roof floor valves state.",
+        "limit": 0.0,
+        "name": "ecd.ahu_roof_floor.valves.state",
+        "plugin": "Energy Center Distribution",
+        "range": "0|1|2",
+        "scope": "Device"
     },
     {
         "data_type": "json",
         "default": {
             "model": "MAGNA1_80_100_F_360_1x230V_PN6",
             "options": {
-                "mb_id": 0,
-                "uart": 0
+                "e_status": "U0:ID14:FC2:R0:DI7",
+                "e_stop": "U0:ID14:FC5:R0:RO7",
+                "mb_id": 1,
+                "stop_on_shutdown": true,
+                "uart": 1,
+                "wait_on_shutdown": false
             },
             "vendor": "Grundfos"
         },
-        "description": "ECD / VCG / Floor East Pump",
+        "description": "ECD / AHU roof floor pump settings.",
         "limit": 0.0,
-        "name": "ecd.underfloor_east.pump",
-        "plugin": "ECD",
+        "name": "ecd.ahu_roof_floor.pump.settings",
+        "plugin": "Energy Center Distribution",
         "range": "",
         "scope": "System"
     },
     {
-        "data_type": "bool",
-        "default": true,
-        "description": "ECD / VCG / Floor East Enable",
+        "data_type": "int",
+        "default": 0,
+        "description": "ECD / AHU roof floor pump mode.",
         "limit": 0.0,
-        "name": "ecd.underfloor_east.enabled",
-        "plugin": "ECD",
-        "range": "true|false",
-        "scope": "System"
-    },
-    {
-        "data_type": "json",
-        "default": {
-            "model": "FLX-05F",
-            "options": {
-                "limit_ccw": "off",
-                "limit_cw": "off",
-                "output_ccw": "off",
-                "output_cw": "off"
-            },
-            "vendor": "Flowx"
-        },
-        "description": "ECD / VCG / Convectors West Cooling In",
-        "limit": 0.0,
-        "name": "ecd.convectors_west.cold_in",
-        "plugin": "ECD",
-        "range": "",
+        "name": "ecd.ahu_roof_floor.pump.mode",
+        "plugin": "Energy Center Distribution",
+        "range": "0/100",
         "scope": "System"
     },
     {
         "data_type": "json",
-        "default": {
-            "model": "FLX-05F",
-            "options": {
-                "limit_ccw": "off",
-                "limit_cw": "off",
-                "output_ccw": "off",
-                "output_cw": "off"
-            },
-            "vendor": "Flowx"
-        },
-        "description": "ECD / VCG / Convectors West Cooling Out",
+        "default": {},
+        "description": "ECD / AHU roof floor pump state.",
         "limit": 0.0,
-        "name": "ecd.convectors_west.cold_out",
-        "plugin": "ECD",
+        "name": "ecd.ahu_roof_floor.pump.state",
+        "plugin": "Energy Center Distribution",
         "range": "",
-        "scope": "System"
+        "scope": "Device"
     },
     {
         "data_type": "json",
         "default": {
-            "model": "FLX-05F",
-            "options": {
-                "limit_ccw": "off",
-                "limit_cw": "off",
-                "output_ccw": "off",
-                "output_cw": "off"
-            },
-            "vendor": "Flowx"
+            "cold": [
+                {
+                    "model": "FLX-05F",
+                    "options": {
+                        "close_on_shutdown": false,
+                        "io_mode": 1,
+                        "limit_ccw": "!U0:ID12:FC2:R0:DI4",
+                        "limit_cw": "U0:ID12:FC2:R0:DI6",
+                        "output_ccw": "off",
+                        "output_cw": "U0:ID12:FC5:R0:RO6",
+                        "wait_on_shutdown": false
+                    },
+                    "vendor": "Flowx"
+                }
+            ],
+            "hot": [
+                {
+                    "model": "FLX-05F",
+                    "options": {
+                        "close_on_shutdown": false,
+                        "io_mode": 1,
+                        "limit_ccw": "!U0:ID12:FC2:R0:DI6",
+                        "limit_cw": "U0:ID12:FC2:R0:DI4",
+                        "output_ccw": "off",
+                        "output_cw": "U0:ID12:FC5:R0:RO4",
+                        "wait_on_shutdown": false
+                    },
+                    "vendor": "Flowx"
+                }
+            ]
         },
-        "description": "ECD / VCG / Convectors West Hot In",
+        "description": "# ECD / AHU fitness valves settings.",
         "limit": 0.0,
-        "name": "ecd.convectors_west.hot_in",
-        "plugin": "ECD",
+        "name": "ecd.ahu_fitness.valves.settings",
+        "plugin": "Energy Center Distribution",
         "range": "",
         "scope": "System"
     },
     {
-        "data_type": "json",
-        "default": {
-            "model": "FLX-05F",
-            "options": {
-                "limit_ccw": "off",
-                "limit_cw": "off",
-                "output_ccw": "off",
-                "output_cw": "off"
-            },
-            "vendor": "Flowx"
-        },
-        "description": "ECD / VCG / Convectors West Hot Out",
+        "data_type": "float",
+        "default": 0.0,
+        "description": "ECD / AHU fitness valves mode.",
         "limit": 0.0,
-        "name": "ecd.convectors_west.hot_out",
-        "plugin": "ECD",
-        "range": "",
+        "name": "ecd.ahu_fitness.valves.mode",
+        "plugin": "Energy Center Distribution",
+        "range": "0|1|2",
         "scope": "System"
+    },
+    {
+        "data_type": "float",
+        "default": 0.0,
+        "description": "ECD / AHU fitness valves state.",
+        "limit": 0.0,
+        "name": "ecd.ahu_fitness.valves.state",
+        "plugin": "Energy Center Distribution",
+        "range": "0|1|2",
+        "scope": "Device"
     },
     {
         "data_type": "json",
         "default": {
             "model": "MAGNA1_80_100_F_360_1x230V_PN6",
             "options": {
-                "mb_id": 0,
-                "uart": 0
+                "e_status": "U0:ID12:FC2:R0:DI7",
+                "e_stop": "U0:ID12:FC5:R0:RO7",
+                "mb_id": 1,
+                "stop_on_shutdown": true,
+                "uart": 1,
+                "wait_on_shutdown": false
             },
             "vendor": "Grundfos"
         },
-        "description": "ECD / VCG / Convectors West Pump",
+        "description": "ECD / AHU fitness pump settings.",
         "limit": 0.0,
-        "name": "ecd.convectors_west.pump",
-        "plugin": "ECD",
+        "name": "ecd.ahu_fitness.pump.settings",
+        "plugin": "Energy Center Distribution",
         "range": "",
         "scope": "System"
     },
     {
-        "data_type": "bool",
-        "default": true,
-        "description": "ECD / VCG / Convectors West Enable",
+        "data_type": "int",
+        "default": 0,
+        "description": "ECD / AHU fitness pump mode.",
         "limit": 0.0,
-        "name": "ecd.convectors_west.enabled",
-        "plugin": "ECD",
-        "range": "true|false",
-        "scope": "System"
-    },
-    {
-        "data_type": "json",
-        "default": {
-            "model": "FLX-05F",
-            "options": {
-                "limit_ccw": "off",
-                "limit_cw": "off",
-                "output_ccw": "off",
-                "output_cw": "off"
-            },
-            "vendor": "Flowx"
-        },
-        "description": "ECD / VCG / TVA Roof Floor In",
-        "limit": 0.0,
-        "name": "ecd.tva_roof_floor.cold_in",
-        "plugin": "ECD",
-        "range": "",
+        "name": "ecd.ahu_fitness.pump.mode",
+        "plugin": "Energy Center Distribution",
+        "range": "0/100",
         "scope": "System"
     },
     {
         "data_type": "json",
-        "default": {
-            "model": "FLX-05F",
-            "options": {
-                "limit_ccw": "off",
-                "limit_cw": "off",
-                "output_ccw": "off",
-                "output_cw": "off"
-            },
-            "vendor": "Flowx"
-        },
-        "description": "ECD / VCG / TVA Roof Floor Out",
+        "default": {},
+        "description": "ECD / AHU fitness pump state.",
         "limit": 0.0,
-        "name": "ecd.tva_roof_floor.cold_out",
-        "plugin": "ECD",
+        "name": "ecd.ahu_fitness.pump.state",
+        "plugin": "Energy Center Distribution",
         "range": "",
-        "scope": "System"
+        "scope": "Device"
     },
     {
         "data_type": "json",
         "default": {
-            "model": "FLX-05F",
-            "options": {
-                "limit_ccw": "off",
-                "limit_cw": "off",
-                "output_ccw": "off",
-                "output_cw": "off"
-            },
-            "vendor": "Flowx"
+            "cold": [
+                {
+                    "model": "FLX-05F",
+                    "options": {
+                        "close_on_shutdown": false,
+                        "io_mode": 1,
+                        "limit_ccw": "!U0:ID13:FC2:R0:DI4",
+                        "limit_cw": "U0:ID13:FC2:R0:DI6",
+                        "output_ccw": "off",
+                        "output_cw": "U0:ID13:FC5:R0:RO6",
+                        "wait_on_shutdown": false
+                    },
+                    "vendor": "Flowx"
+                }
+            ],
+            "hot": [
+                {
+                    "model": "FLX-05F",
+                    "options": {
+                        "close_on_shutdown": false,
+                        "io_mode": 1,
+                        "limit_ccw": "!U0:ID13:FC2:R0:DI6",
+                        "limit_cw": "U0:ID13:FC2:R0:DI4",
+                        "output_ccw": "off",
+                        "output_cw": "U0:ID13:FC5:R0:RO4",
+                        "wait_on_shutdown": false
+                    },
+                    "vendor": "Flowx"
+                }
+            ]
         },
-        "description": "ECD / VCG / TVA Roof Floor In",
+        "description": "ECD / Floor east valves settings.",
         "limit": 0.0,
-        "name": "ecd.tva_roof_floor.hot_in",
-        "plugin": "ECD",
+        "name": "ecd.floor_east.valves.settings",
+        "plugin": "Energy Center Distribution",
         "range": "",
         "scope": "System"
     },
     {
-        "data_type": "json",
-        "default": {
-            "model": "FLX-05F",
-            "options": {
-                "limit_ccw": "off",
-                "limit_cw": "off",
-                "output_ccw": "off",
-                "output_cw": "off"
-            },
-            "vendor": "Flowx"
-        },
-        "description": "ECD / VCG / TVA Roof Floor Out",
+        "data_type": "float",
+        "default": 0.0,
+        "description": "ECD / Floor east valves mode.",
         "limit": 0.0,
-        "name": "ecd.tva_roof_floor.hot_out",
-        "plugin": "ECD",
-        "range": "",
+        "name": "ecd.floor_east.valves.mode",
+        "plugin": "Energy Center Distribution",
+        "range": "0|1|2",
         "scope": "System"
+    },
+    {
+        "data_type": "float",
+        "default": 0.0,
+        "description": "ECD / Floor east valves state.",
+        "limit": 0.0,
+        "name": "ecd.floor_east.valves.state",
+        "plugin": "Energy Center Distribution",
+        "range": "0|1|2",
+        "scope": "Device"
     },
     {
         "data_type": "json",
         "default": {
             "model": "MAGNA1_80_100_F_360_1x230V_PN6",
             "options": {
-                "mb_id": 0,
-                "uart": 0
+                "e_status": "U0:ID13:FC2:R0:DI7",
+                "e_stop": "U0:ID13:FC5:R0:RO7",
+                "mb_id": 1,
+                "stop_on_shutdown": true,
+                "uart": 1,
+                "wait_on_shutdown": false
             },
             "vendor": "Grundfos"
         },
-        "description": "ECD / VCG / TVA Roof Floor",
+        "description": "ECD / Floor east pump settings.",
         "limit": 0.0,
-        "name": "ecd.tva_roof_floor.pump",
-        "plugin": "ECD",
+        "name": "ecd.floor_east.pump.settings",
+        "plugin": "Energy Center Distribution",
         "range": "",
         "scope": "System"
     },
     {
-        "data_type": "bool",
-        "default": true,
-        "description": "ECD / VCG / TVA Roof Floor",
+        "data_type": "int",
+        "default": 0,
+        "description": "ECD / Floor east pump mode.",
         "limit": 0.0,
-        "name": "ecd.tva_roof_floor.enabled",
-        "plugin": "ECD",
-        "range": "true|false",
-        "scope": "System"
-    },
-    {
-        "data_type": "json",
-        "default": {
-            "model": "FLX-05F",
-            "options": {
-                "limit_ccw": "off",
-                "limit_cw": "off",
-                "output_ccw": "off",
-                "output_cw": "off"
-            },
-            "vendor": "Flowx"
-        },
-        "description": "ECD / VCG / TVA Fitness In",
-        "limit": 0.0,
-        "name": "ecd.tva_fitness.cold_in",
-        "plugin": "ECD",
-        "range": "",
+        "name": "ecd.floor_east.pump.mode",
+        "plugin": "Energy Center Distribution",
+        "range": "0/100",
         "scope": "System"
     },
     {
         "data_type": "json",
-        "default": {
-            "model": "FLX-05F",
-            "options": {
-                "limit_ccw": "off",
-                "limit_cw": "off",
-                "output_ccw": "off",
-                "output_cw": "off"
-            },
-            "vendor": "Flowx"
-        },
-        "description": "ECD / VCG / TVA Fitness Out",
+        "default": {},
+        "description": "ECD / Floor east pump state.",
         "limit": 0.0,
-        "name": "ecd.tva_fitness.cold_out",
-        "plugin": "ECD",
+        "name": "ecd.floor_east.pump.state",
+        "plugin": "Energy Center Distribution",
         "range": "",
-        "scope": "System"
+        "scope": "Device"
     },
     {
         "data_type": "json",
         "default": {
-            "model": "FLX-05F",
-            "options": {
-                "limit_ccw": "off",
-                "limit_cw": "off",
-                "output_ccw": "off",
-                "output_cw": "off"
-            },
-            "vendor": "Flowx"
+            "cold": [
+                {
+                    "model": "FLX-05F",
+                    "options": {
+                        "close_on_shutdown": false,
+                        "io_mode": 1,
+                        "limit_ccw": "!U0:ID16:FC2:R0:DI4",
+                        "limit_cw": "U0:ID16:FC2:R0:DI6",
+                        "output_ccw": "off",
+                        "output_cw": "U0:ID16:FC5:R0:RO6",
+                        "wait_on_shutdown": false
+                    },
+                    "vendor": "Flowx"
+                }
+            ],
+            "hot": [
+                {
+                    "model": "FLX-05F",
+                    "options": {
+                        "close_on_shutdown": false,
+                        "io_mode": 1,
+                        "limit_ccw": "!U0:ID16:FC2:R0:DI6",
+                        "limit_cw": "U0:ID16:FC2:R0:DI4",
+                        "output_ccw": "off",
+                        "output_cw": "U0:ID16:FC5:R0:RO4",
+                        "wait_on_shutdown": false
+                    },
+                    "vendor": "Flowx"
+                }
+            ]
         },
-        "description": "ECD / VCG / TVA Fitness In",
+        "description": "ECD / Convectors east valves settings.",
         "limit": 0.0,
-        "name": "ecd.tva_fitness.hot_in",
-        "plugin": "ECD",
+        "name": "ecd.conv_east.valves.settings",
+        "plugin": "Energy Center Distribution",
         "range": "",
         "scope": "System"
     },
     {
-        "data_type": "json",
-        "default": {
-            "model": "FLX-05F",
-            "options": {
-                "limit_ccw": "off",
-                "limit_cw": "off",
-                "output_ccw": "off",
-                "output_cw": "off"
-            },
-            "vendor": "Flowx"
-        },
-        "description": "ECD / VCG / TVA Fitness Out",
+        "data_type": "float",
+        "default": 0.0,
+        "description": "ECD / Convectors east valves mode.",
         "limit": 0.0,
-        "name": "ecd.tva_fitness.hot_out",
-        "plugin": "ECD",
-        "range": "",
+        "name": "ecd.conv_east.valves.mode",
+        "plugin": "Energy Center Distribution",
+        "range": "0|1|2",
         "scope": "System"
+    },
+    {
+        "data_type": "float",
+        "default": 0.0,
+        "description": "ECD / Convectors east valves state.",
+        "limit": 0.0,
+        "name": "ecd.conv_east.valves.state",
+        "plugin": "Energy Center Distribution",
+        "range": "0|1|2",
+        "scope": "Device"
     },
     {
         "data_type": "json",
         "default": {
             "model": "MAGNA1_80_100_F_360_1x230V_PN6",
             "options": {
-                "mb_id": 0,
-                "uart": 0
+                "e_status": "U0:ID16:FC2:R0:DI7",
+                "e_stop": "U0:ID16:FC5:R0:RO7",
+                "mb_id": 1,
+                "stop_on_shutdown": true,
+                "uart": 1,
+                "wait_on_shutdown": false
             },
             "vendor": "Grundfos"
         },
-        "description": "ECD / VCG / TVA Fitness",
+        "description": "ECD / Convectors east pump settings.",
         "limit": 0.0,
-        "name": "ecd.tva_fitness.pump",
-        "plugin": "ECD",
+        "name": "ecd.conv_east.pump.settings",
+        "plugin": "Energy Center Distribution",
         "range": "",
         "scope": "System"
     },
     {
-        "data_type": "bool",
-        "default": true,
-        "description": "ECD / VCG / TVA Fitness",
+        "data_type": "int",
+        "default": 0,
+        "description": "ECD / Convectors east pump mode.",
         "limit": 0.0,
-        "name": "ecd.tva_fitness.enabled",
-        "plugin": "ECD",
-        "range": "true|false",
-        "scope": "System"
-    },
-    {
-        "data_type": "json",
-        "default": {
-            "model": "FLX-05F",
-            "options": {
-                "limit_ccw": "off",
-                "limit_cw": "off",
-                "output_ccw": "off",
-                "output_cw": "off"
-            },
-            "vendor": "Flowx"
-        },
-        "description": "ECD / VCG / Floor West Cooling In",
-        "limit": 0.0,
-        "name": "ecd.floor_west.cold_in",
-        "plugin": "ECD",
-        "range": "",
+        "name": "ecd.conv_east.pump.mode",
+        "plugin": "Energy Center Distribution",
+        "range": "0/100",
         "scope": "System"
     },
     {
         "data_type": "json",
-        "default": {
-            "model": "FLX-05F",
-            "options": {
-                "limit_ccw": "off",
-                "limit_cw": "off",
-                "output_ccw": "off",
-                "output_cw": "off"
-            },
-            "vendor": "Flowx"
-        },
-        "description": "ECD / VCG / Floor West Cooling Out",
+        "default": {},
+        "description": "ECD / Convectors east pump state.",
         "limit": 0.0,
-        "name": "ecd.floor_west.cold_out",
-        "plugin": "ECD",
+        "name": "ecd.conv_east.pump.state",
+        "plugin": "Energy Center Distribution",
         "range": "",
-        "scope": "System"
+        "scope": "Device"
     },
     {
         "data_type": "json",
         "default": {
-            "model": "FLX-05F",
-            "options": {
-                "limit_ccw": "off",
-                "limit_cw": "off",
-                "output_ccw": "off",
-                "output_cw": "off"
-            },
-            "vendor": "Flowx"
+            "cold": [
+                {
+                    "model": "FLX-05F",
+                    "options": {
+                        "close_on_shutdown": false,
+                        "io_mode": 1,
+                        "limit_ccw": "U0:ID15:FC2:R0:DI5",
+                        "limit_cw": "U0:ID15:FC2:R0:DI6",
+                        "output_ccw": "off",
+                        "output_cw": "U0:ID15:FC5:R0:RO6",
+                        "wait_on_shutdown": false
+                    },
+                    "vendor": "Flowx"
+                }
+            ],
+            "hot": []
         },
-        "description": "ECD / VCG / Floor West Hot In",
+        "description": "ECD / Pool air cooling valves settings.",
         "limit": 0.0,
-        "name": "ecd.floor_west.hot_in",
-        "plugin": "ECD",
+        "name": "ecd.pool_air_cooling.valves.settings",
+        "plugin": "Energy Center Distribution",
         "range": "",
         "scope": "System"
     },
     {
-        "data_type": "json",
-        "default": {
-            "model": "FLX-05F",
-            "options": {
-                "limit_ccw": "off",
-                "limit_cw": "off",
-                "output_ccw": "off",
-                "output_cw": "off"
-            },
-            "vendor": "Flowx"
-        },
-        "description": "ECD / VCG / Floor West Hot Out",
+        "data_type": "float",
+        "default": 0.0,
+        "description": "ECD / Pool air cooling valves mode.",
         "limit": 0.0,
-        "name": "ecd.floor_west.hot_out",
-        "plugin": "ECD",
-        "range": "",
+        "name": "ecd.pool_air_cooling.valves.mode",
+        "plugin": "Energy Center Distribution",
+        "range": "0|1|2",
         "scope": "System"
+    },
+    {
+        "data_type": "float",
+        "default": 0.0,
+        "description": "ECD / Pool air cooling valves state.",
+        "limit": 0.0,
+        "name": "ecd.pool_air_cooling.valves.state",
+        "plugin": "Energy Center Distribution",
+        "range": "0|1|2",
+        "scope": "Device"
     },
     {
         "data_type": "json",
         "default": {
             "model": "MAGNA1_80_100_F_360_1x230V_PN6",
             "options": {
-                "mb_id": 0,
-                "uart": 0
+                "e_status": "U0:ID15:FC2:R0:DI7",
+                "e_stop": "U0:ID15:FC5:R0:RO7",
+                "mb_id": 1,
+                "stop_on_shutdown": true,
+                "uart": 1,
+                "wait_on_shutdown": false
             },
             "vendor": "Grundfos"
         },
-        "description": "ECD / VCG / Floor West Pump",
+        "description": "ECD / Pool air cooling pump settings.",
         "limit": 0.0,
-        "name": "ecd.floor_west.pump",
-        "plugin": "ECD",
+        "name": "ecd.pool_air_cooling.pump.settings",
+        "plugin": "Energy Center Distribution",
         "range": "",
         "scope": "System"
     },
     {
-        "data_type": "bool",
-        "default": true,
-        "description": "ECD / VCG / Floor West Pump",
+        "data_type": "int",
+        "default": 0,
+        "description": "ECD / Pool air cooling pump mode.",
         "limit": 0.0,
-        "name": "ecd.floor_west.enabled",
-        "plugin": "ECD",
-        "range": "true|false",
-        "scope": "System"
-    },
-    {
-        "data_type": "json",
-        "default": {
-            "model": "FLX-05F",
-            "options": {
-                "limit_ccw": "off",
-                "limit_cw": "off",
-                "output_ccw": "off",
-                "output_cw": "off"
-            },
-            "vendor": "Flowx"
-        },
-        "description": "ECD / VCG / TVA Conference Center In",
-        "limit": 0.0,
-        "name": "ecd.tva_conference_center.cold_in",
-        "plugin": "ECD",
-        "range": "",
+        "name": "ecd.pool_air_cooling.pump.mode",
+        "plugin": "Energy Center Distribution",
+        "range": "0/100",
         "scope": "System"
     },
     {
         "data_type": "json",
-        "default": {
-            "model": "FLX-05F",
-            "options": {
-                "limit_ccw": "off",
-                "limit_cw": "off",
-                "output_ccw": "off",
-                "output_cw": "off"
-            },
-            "vendor": "Flowx"
-        },
-        "description": "ECD / VCG / TVA Conference Center Out",
+        "default": {},
+        "description": "ECD / Pool air cooling pump state.",
         "limit": 0.0,
-        "name": "ecd.tva_conference_center.cold_out",
-        "plugin": "ECD",
+        "name": "ecd.pool_air_cooling.pump.state",
+        "plugin": "Energy Center Distribution",
         "range": "",
-        "scope": "System"
+        "scope": "Device"
     },
     {
         "data_type": "json",
         "default": {
-            "model": "FLX-05F",
-            "options": {
-                "limit_ccw": "off",
-                "limit_cw": "off",
-                "output_ccw": "off",
-                "output_cw": "off"
-            },
-            "vendor": "Flowx"
+            "cold": [],
+            "hot": [
+                {
+                    "model": "FLX-05F",
+                    "options": {
+                        "close_on_shutdown": false,
+                        "io_mode": 1,
+                        "limit_ccw": "U0:ID17:FC2:R0:DI1",
+                        "limit_cw": "U0:ID17:FC2:R0:DI0",
+                        "output_ccw": "off",
+                        "output_cw": "U0:ID17:FC5:R0:RO0",
+                        "wait_on_shutdown": false
+                    },
+                    "vendor": "Flowx"
+                }
+            ]
         },
-        "description": "ECD / VCG / TVA Conference Center In",
+        "description": "ECD / Pool heating valves settings.",
         "limit": 0.0,
-        "name": "ecd.tva_conference_center.hot_in",
-        "plugin": "ECD",
+        "name": "ecd.pool_heating.valves.settings",
+        "plugin": "Energy Center Distribution",
         "range": "",
         "scope": "System"
     },
     {
-        "data_type": "json",
-        "default": {
-            "model": "FLX-05F",
-            "options": {
-                "limit_ccw": "off",
-                "limit_cw": "off",
-                "output_ccw": "off",
-                "output_cw": "off"
-            },
-            "vendor": "Flowx"
-        },
-        "description": "ECD / VCG / TVA Conference Center Out",
+        "data_type": "float",
+        "default": 0.0,
+        "description": "ECD / Pool heating valves mode.",
         "limit": 0.0,
-        "name": "ecd.tva_conference_center.hot_out",
-        "plugin": "ECD",
-        "range": "",
+        "name": "ecd.pool_heating.valves.mode",
+        "plugin": "Energy Center Distribution",
+        "range": "0|1|2",
         "scope": "System"
+    },
+    {
+        "data_type": "float",
+        "default": 0.0,
+        "description": "ECD / Pool heating valves state.",
+        "limit": 0.0,
+        "name": "ecd.pool_heating.valves.state",
+        "plugin": "Energy Center Distribution",
+        "range": "0|1|2",
+        "scope": "Device"
     },
     {
         "data_type": "json",
         "default": {
             "model": "MAGNA1_80_100_F_360_1x230V_PN6",
             "options": {
-                "mb_id": 0,
-                "uart": 0
+                "e_status": "U0:ID17:FC2:R0:DI3",
+                "e_stop": "U0:ID17:FC5:R0:RO3",
+                "mb_id": 1,
+                "stop_on_shutdown": true,
+                "uart": 1,
+                "wait_on_shutdown": false
             },
             "vendor": "Grundfos"
         },
-        "description": "ECD / VCG / TVA Conference Center",
+        "description": "ECD / Pool heating pump settings.",
         "limit": 0.0,
-        "name": "ecd.tva_conference_center.pump",
-        "plugin": "ECD",
+        "name": "ecd.pool_heating.pump.settings",
+        "plugin": "Energy Center Distribution",
         "range": "",
         "scope": "System"
     },
     {
-        "data_type": "bool",
-        "default": true,
-        "description": "ECD / VCG / TVA Conference Center",
+        "data_type": "int",
+        "default": 0,
+        "description": "ECD / Pool heating pump mode.",
         "limit": 0.0,
-        "name": "ecd.tva_conference_center.enabled",
-        "plugin": "ECD",
-        "range": "true|false",
-        "scope": "System"
-    },
-    {
-        "data_type": "json",
-        "default": {
-            "model": "FLX-05F",
-            "options": {
-                "limit_ccw": "off",
-                "limit_cw": "off",
-                "output_ccw": "off",
-                "output_cw": "off"
-            },
-            "vendor": "Flowx"
-        },
-        "description": "ECD / VCG / Convectors Kitchen Cold In",
-        "limit": 0.0,
-        "name": "ecd.convectors_kitchen.cold_in",
-        "plugin": "ECD",
-        "range": "",
+        "name": "ecd.pool_heating.pump.mode",
+        "plugin": "Energy Center Distribution",
+        "range": "0/100",
         "scope": "System"
     },
     {
         "data_type": "json",
-        "default": {
-            "model": "FLX-05F",
-            "options": {
-                "limit_ccw": "off",
-                "limit_cw": "off",
-                "output_ccw": "off",
-                "output_cw": "off"
-            },
-            "vendor": "Flowx"
-        },
-        "description": "ECD / VCG / Convectors Kitchen Cold Out",
+        "default": {},
+        "description": "ECD / Pool heating pump state.",
         "limit": 0.0,
-        "name": "ecd.convectors_kitchen.cold_out",
-        "plugin": "ECD",
+        "name": "ecd.pool_heating.pump.state",
+        "plugin": "Energy Center Distribution",
         "range": "",
-        "scope": "System"
-    },
-    {
-        "data_type": "json",
-        "default": {
-            "model": "FLX-05F",
-            "options": {
-                "limit_ccw": "off",
-                "limit_cw": "off",
-                "output_ccw": "off",
-                "output_cw": "off"
-            },
-            "vendor": "Flowx"
-        },
-        "description": "ECD / VCG / Convectors Kitchen Hot In",
-        "limit": 0.0,
-        "name": "ecd.convectors_kitchen.hot_in",
-        "plugin": "ECD",
-        "range": "",
-        "scope": "System"
-    },
-    {
-        "data_type": "json",
-        "default": {
-            "model": "FLX-05F",
-            "options": {
-                "limit_ccw": "off",
-                "limit_cw": "off",
-                "output_ccw": "off",
-                "output_cw": "off"
-            },
-            "vendor": "Flowx"
-        },
-        "description": "ECD / VCG / Convectors Kitchen Hot Out",
-        "limit": 0.0,
-        "name": "ecd.convectors_kitchen.hot_out",
-        "plugin": "ECD",
-        "range": "",
-        "scope": "System"
+        "scope": "Device"
     },
     {
         "data_type": "json",
         "default": {
             "model": "MAGNA1_80_100_F_360_1x230V_PN6",
             "options": {
-                "mb_id": 0,
-                "uart": 0
+                "e_status": "U0:ID2:FC2:R0:DI0",
+                "e_stop": "U0:ID2:FC5:R0:RO8",
+                "mb_id": 1,
+                "stop_on_shutdown": true,
+                "uart": 1,
+                "wait_on_shutdown": false
             },
             "vendor": "Grundfos"
         },
-        "description": "ECD / VCG / Convectors Kitchen Pump",
+        "description": "ECD / Servers cooling settings.",
         "limit": 0.0,
-        "name": "ecd.convectors_kitchen.pump",
-        "plugin": "ECD",
+        "name": "ecd.servers_cooling.pump.settings",
+        "plugin": "Energy Center Distribution",
         "range": "",
         "scope": "System"
     },
     {
-        "data_type": "bool",
-        "default": true,
-        "description": "ECD / VCG / Convectors Kitchen Pump",
+        "data_type": "int",
+        "default": 0,
+        "description": "ECD / Servers cooling pump mode.",
         "limit": 0.0,
-        "name": "ecd.convectors_kitchen.enabled",
-        "plugin": "ECD",
-        "range": "true|false",
+        "name": "ecd.servers_cooling.pump.mode",
+        "plugin": "Energy Center Distribution",
+        "range": "0/100",
         "scope": "System"
     },
     {
         "data_type": "json",
-        "default": {
-            "model": "FLX-05F",
-            "options": {
-                "limit_ccw": "off",
-                "limit_cw": "off",
-                "output_ccw": "off",
-                "output_cw": "off"
-            },
-            "vendor": "Flowx"
-        },
-        "description": "ECD / VCG / TVA Wearhouse Cold In",
+        "default": {},
+        "description": "ECD / Servers cooling pump state.",
         "limit": 0.0,
-        "name": "ecd.tva_warehouse.cold_in",
-        "plugin": "ECD",
+        "name": "ecd.servers_cooling.pump.state",
+        "plugin": "Energy Center Distribution",
+        "range": "",
+        "scope": "Device"
+    },
+    {
+        "data_type": "json",
+        "default": [
+            {
+                "input": {
+                    "model": "MB318E",
+                    "options": {
+                        "chanel": 0,
+                        "mb_id": 1,
+                        "uart": 0
+                    },
+                    "vendor": "CWT"
+                },
+                "output": {
+                    "model": "MB318E",
+                    "options": {
+                        "chanel": 1,
+                        "mb_id": 1,
+                        "uart": 0
+                    },
+                    "vendor": "CWT"
+                }
+            },
+            {
+                "input": {
+                    "model": "MB318E",
+                    "options": {
+                        "chanel": 2,
+                        "mb_id": 1,
+                        "uart": 0
+                    },
+                    "vendor": "CWT"
+                },
+                "output": {
+                    "model": "MB318E",
+                    "options": {
+                        "chanel": 3,
+                        "mb_id": 1,
+                        "uart": 0
+                    },
+                    "vendor": "CWT"
+                }
+            },
+            {
+                "input": {
+                    "model": "MB318E",
+                    "options": {
+                        "chanel": 4,
+                        "mb_id": 1,
+                        "uart": 0
+                    },
+                    "vendor": "CWT"
+                },
+                "output": {
+                    "model": "MB318E",
+                    "options": {
+                        "chanel": 5,
+                        "mb_id": 1,
+                        "uart": 0
+                    },
+                    "vendor": "CWT"
+                }
+            }
+        ],
+        "description": "ECD / Ground drilling thermo couples settings.",
+        "limit": 0.0,
+        "name": "ecd.ground_drilling.tc.settings",
+        "plugin": "Energy Center Distribution",
         "range": "",
         "scope": "System"
     },
     {
         "data_type": "json",
-        "default": {
-            "model": "FLX-05F",
-            "options": {
-                "limit_ccw": "off",
-                "limit_cw": "off",
-                "output_ccw": "off",
-                "output_cw": "off"
-            },
-            "vendor": "Flowx"
-        },
-        "description": "ECD / VCG / TVA Wearhouse Cold Out",
+        "default": [],
+        "description": "ECD / Ground drilling thermo couples values.",
         "limit": 0.0,
-        "name": "ecd.tva_warehouse.cold_out",
-        "plugin": "ECD",
+        "name": "ecd.ground_drilling.tc.values",
+        "plugin": "Energy Center Distribution",
         "range": "",
-        "scope": "System"
+        "scope": "Device"
     },
     {
         "data_type": "json",
         "default": {
-            "model": "FLX-05F",
-            "options": {
-                "limit_ccw": "off",
-                "limit_cw": "off",
-                "output_ccw": "off",
-                "output_cw": "off"
-            },
-            "vendor": "Flowx"
+            "cold": [
+                {
+                    "model": "FLX-05F",
+                    "options": {
+                        "close_on_shutdown": false,
+                        "io_mode": 1,
+                        "limit_ccw": "!U0:ID11:FC2:R0:DI0",
+                        "limit_cw": "U0:ID11:FC2:R0:DI0",
+                        "output_ccw": "off",
+                        "output_cw": "U0:ID11:FC5:R0:RO0",
+                        "wait_on_shutdown": false
+                    },
+                    "vendor": "Flowx"
+                }
+            ],
+            "hot": []
         },
-        "description": "ECD / VCG / TVA Wearhouse Hot In",
+        "description": "ECD / Floor entrance valves settings.",
         "limit": 0.0,
-        "name": "ecd.tva_warehouse.hot_in",
-        "plugin": "ECD",
+        "name": "ecd.floor_entrance.valves.settings",
+        "plugin": "Energy Center Distribution",
         "range": "",
-        "scope": "System"
-    },
-    {
-        "data_type": "json",
-        "default": {
-            "model": "FLX-05F",
-            "options": {
-                "limit_ccw": "off",
-                "limit_cw": "off",
-                "output_ccw": "off",
-                "output_cw": "off"
-            },
-            "vendor": "Flowx"
-        },
-        "description": "ECD / VCG / TVA Wearhouse Hot Out",
-        "limit": 0.0,
-        "name": "ecd.tva_warehouse.hot_out",
-        "plugin": "ECD",
-        "range": "",
-        "scope": "System"
-    },
-    {
-        "data_type": "json",
-        "default": {
-            "model": "MAGNA1_80_100_F_360_1x230V_PN6",
-            "options": {
-                "mb_id": 0,
-                "uart": 0
-            },
-            "vendor": "Grundfos"
-        },
-        "description": "ECD / VCG / TVA Wearhouse",
-        "limit": 0.0,
-        "name": "ecd.tva_warehouse.pump",
-        "plugin": "ECD",
-        "range": "",
-        "scope": "System"
-    },
-    {
-        "data_type": "bool",
-        "default": true,
-        "description": "ECD / VCG / TVA Wearhouse",
-        "limit": 0.0,
-        "name": "ecd.tva_warehouse.enabled",
-        "plugin": "ECD",
-        "range": "true|false",
         "scope": "System"
     },
     {
@@ -3900,7 +3762,7 @@
         "name": "vent.op_setpoint_1",
         "plugin": "Ventilation",
         "range": "0.0/100.0",
-        "scope": "Both"
+        "scope": "Device"
     },
     {
         "data_type": "int",
@@ -3976,7 +3838,7 @@
         "name": "vent.lower_1.fan.speed",
         "plugin": "Ventilation",
         "range": "0.0/100.0",
-        "scope": "System"
+        "scope": "Device"
     },
     {
         "data_type": "json",
@@ -4012,7 +3874,7 @@
         "name": "vent.upper_1.fan.speed",
         "plugin": "Ventilation",
         "range": "0.0/100.0",
-        "scope": "System"
+        "scope": "Device"
     },
     {
         "data_type": "float",

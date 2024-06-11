@@ -26,6 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 # import json
 # from datetime import date
 # from enum import Enum
+import re
 
 from data import verbal_const
 
@@ -35,13 +36,16 @@ from utils.logger import get_logger
 
 from plugins.base_plugin import BasePlugin
 
-from devices.factories.valve.valve_factory import ValveFactory
+from devices.factories.pumps.pump_factory import PumpFactory
 from devices.utils.valve_control_group.valve_control_group import ValveControlGroup
 from devices.utils.valve_control_group.valve_control_group_mode import ValveControlGroupMode
+from devices.factories.thermometers.thermometers_factory import ThermometersFactory
 
 from services.global_error_handler.global_error_handler import GlobalErrorHandler
 
-from data.register import Register
+from data.register import Register, Scope
+
+from .thermal_mode import ThermalMode
 
 # (Request from mail: Eml6429)
 
@@ -84,90 +88,6 @@ class EnergyCenterDistribution(BasePlugin):
 
 #region Attributes
 
-    __logger = None
-    """Logger
-    """
-
-    __v_underfloor_heating_foyer = None
-    """Valve foyer.
-    """
-
-    __v_underfloor_heating_trestle = None
-    """Underfloor heating trestle.
-    """
-
-    __v_underfloor_heating_pool = None
-    """Underfloor heating pool.
-    """
-
-    __v_air_cooling = None
-    """Valve air cooling.
-    """
-
-    __v_ground_drill = None
-    """Valve ground drilling.
-    """
-
-    __v_generators_cooling = None
-    """Generators cooling.
-    """
-
-    __v_short_green_purple = None
-    """Short valve between green and purple pipes.
-    """
-
-    __v_underfloor_west_bypass = None
-    """Valve underfloor west bypass.
-    """
-
-    __v_underfloor_east_bypass = None
-    """Valve underfloor east bypass.
-    """
-
-    __vcg_pool_heating = None
-    """VCG Pool heating.
-    """
-
-    __vcg_tva_pool = None
-    """VCG TVA pool.
-    """
-
-    __vcg_convectors_east = None
-    """VCG Convectors east.
-    """
-
-    __vcg_underfloor_east = None
-    """VCG Underfloor east.
-    """
-
-    __vcg_convectors_west = None
-    """VCG Convectors west.
-    """
-
-    __vcg_tva_fitness = None
-    """VCG TVA fitness.
-    """
-
-    __vcg_tva_roof_floor = None
-    """VCG TVA roof floor.
-    """
-
-    __vcg_underfloor_west = None
-    """VCG Underfloor west.
-    """
-
-    __vcg_tva_conference_center = None
-    """VCG TVA conference centre.
-    """
-
-    __vcg_convectors_kitchen = None
-    """VCG Convectors kitchen.
-    """
-
-    __vcg_tva_warehouse = None
-    """VCG TVA wearhouse.
-    """
-
 #endregion
 
 #region Constructor / Destructor
@@ -183,1035 +103,1802 @@ class EnergyCenterDistribution(BasePlugin):
 
         # Create logger.
         self.__logger = get_logger(__name__)
-        self.__logger.info("Starting up the: {}".format(self.name))
-
-        return
-
-
-
-        # Convectors West (RED and BLUE)
-        self.__vcg_convectors_west = ValveControlGroup(\
-            name="VCG Convectors west",
-            key="{}.convectors_west".format(self.key),
-            controller=self._controller,
-            registers=self._registers,
-            fw_valves=["cold_in", "cold_out"],
-            rev_valves=["hot_in", "hot_out"],
-            fw_pumps=["pump"])
-        self.__vcg_convectors_west.mode = ValveControlGroupMode.DualSide
-
-        # TVA Fitness (RED and BLUE)
-        self.__vcg_tva_fitness = ValveControlGroup(\
-            name="VCG TVA fitness",
-            key="{}.tva_fitness".format(self.key),
-            controller=self._controller,
-            registers=self._registers,
-            fw_valves=["cold_in", "cold_out"],
-            rev_valves=["hot_in", "hot_out"],
-            fw_pumps=["pump"])
-        self.__vcg_tva_fitness.mode = ValveControlGroupMode.DualSide
-
-        # TVA Roof Floor (RED and BLUE)
-        self.__vcg_tva_roof_floor = ValveControlGroup(\
-            name="VCG TVA roof floor",
-            key="{}.tva_roof_floor".format(self.key),
-            controller=self._controller,
-            registers=self._registers,
-            fw_valves=["cold_in", "cold_out"],
-            rev_valves=["hot_in", "hot_out"],
-            fw_pumps=["pump"])
-        self.__vcg_tva_roof_floor.mode = ValveControlGroupMode.DualSide
-
-        # Floor West (RED and BLUE)
-        self.__vcg_underfloor_west = ValveControlGroup(\
-            name="VCG Floor west",
-            key="{}.floor_west".format(self.key),
-            controller=self._controller,
-            registers=self._registers,
-            fw_valves=["cold_in", "cold_out"],
-            rev_valves=["hot_in", "hot_out"],
-            fw_pumps=["pump"])
-        self.__vcg_underfloor_west.mode = ValveControlGroupMode.DualSide
-
-        # TVA Conference (RED and BLUE)
-        self.__vcg_tva_conference_center = ValveControlGroup(\
-            name="VCG TVA conference center",
-            key="{}.tva_conference_center".format(self.key),
-            controller=self._controller,
-            registers=self._registers,
-            fw_valves=["cold_in", "cold_out"],
-            rev_valves=["hot_in", "hot_out"],
-            fw_pumps=["pump"])
-        self.__vcg_tva_conference_center.mode = ValveControlGroupMode.DualSide
-
-        # Convectors Kitchen (RED and BLUE)
-        self.__vcg_convectors_kitchen = ValveControlGroup(\
-            name="VCG Convectors kitchen",
-            key="{}.convectors_kitchen".format(self.key),
-            controller=self._controller,
-            registers=self._registers,
-            fw_valves=["cold_in", "cold_out"],
-            rev_valves=["hot_in", "hot_out"],
-            fw_pumps=["pump"])
-        self.__vcg_convectors_kitchen.mode = ValveControlGroupMode.DualSide
-
-        # TVA Wearhouse (RED and BLUE)
-        self.__vcg_tva_warehouse = ValveControlGroup(\
-            name="VCG TVA warehouse",
-            key="{}.tva_warehouse".format(self.key),
-            controller=self._controller,
-            registers=self._registers,
-            fw_valves=["cold_in", "cold_out"],
-            rev_valves=["hot_in", "hot_out"],
-            fw_pumps=["pump"])
-        self.__vcg_tva_warehouse.mode = ValveControlGroupMode.DualSide
-
-    def __del__(self):
-        """Destructor
+        """Logger
         """
 
-        # Worm circle (PURPLE)
-        if self.__v_underfloor_heating_foyer is not None:
-            del self.__v_underfloor_heating_foyer
+        self.__logger.info("Starting up the: {}".format(self.name))
 
-        if self.__v_underfloor_heating_trestle is not None:
-            del self.__v_underfloor_heating_trestle
+        self.__state = ThermalMode.Stop
+        """JUST for test.
+        """
 
-        if self.__v_underfloor_heating_pool is not None:
-            del self.__v_underfloor_heating_pool
+        # ====================================================================================================
+        # ======================================= VCG Left door panel ========================================
+        # ====================================================================================================
 
-        # Thermal consumers.
-        if self.__vcg_pool_heating is not None:
-            del self.__vcg_pool_heating
+        self.__vcg_floor_entrance = None
+        """VCG floor entrance.
+        """
 
-        if self.__vcg_tva_pool is not None:
-            del self.__vcg_tva_pool
+        self.__vcg_pool_floor = None
+        """VCG pool floor.
+        """
 
-        if self.__vcg_convectors_east is not None:
-            del self.__vcg_convectors_east
+        self.__vcg_ground_drilling = None
+        """Valve ground drilling.
+        """
 
-        if self.__vcg_underfloor_east is not None:
-            del self.__vcg_underfloor_east
+        self.__vcg_air_tower_green = None
+        """VCG Air tower green.
+        """
 
-        if self.__vcg_convectors_west is not None:
-            del self.__vcg_convectors_west
+        self.__vcg_air_tower_purple = None
+        """Short valve between green and purple pipes.
+        """
 
-        if self.__vcg_tva_fitness is not None:
-            del self.__vcg_tva_fitness
+        self.__vcg_generators = None
+        """Short valve between green and purple pipes.
+        """
 
-        if self.__vcg_tva_roof_floor is not None:
-            del self.__vcg_tva_roof_floor
+        # ====================================================================================================
+        # ======================================= VCG Right door panel =======================================
+        # ====================================================================================================
 
-        if self.__vcg_underfloor_west is not None:
-            del self.__vcg_underfloor_west
+        self.__vcg_pool_air_heating = None
+        """VCG air heating.
+        """
 
-        if self.__vcg_tva_conference_center is not None:
-            del self.__vcg_tva_conference_center
+        self.__vcg_conv_kitchen = None
+        """VCG convectors kitchen.
+        """
 
-        if self.__vcg_convectors_kitchen is not None:
-            del self.__vcg_convectors_kitchen
+        self.__vcg_ahu_conf_hall = None
+        """VCG AHU conference hall.
+        """
 
-        if self.__vcg_tva_warehouse is not None:
-            del self.__vcg_tva_warehouse
+        self.__vcg_floor_west = None
+        """VCG floor west.
+        """
 
-        if self.__v_short_green_purple is not None:
-            del self.__v_short_green_purple
+        self.__vcg_conv_west = None
+        """VCG convectors west.
+        """
 
-        super().__del__()
+        self.__vcg_ahu_roof_floor = None
+        """VCG AHU roof floor.
+        """
 
-        if self.__logger is not None:
-            del self.__logger
+        self.__vcg_ahu_fitness = None
+        """VCG AHU fitness.
+        """
 
-#region Private Methods (Registers)
+        self.__vcg_floor_east = None
+        """VCG floor east.
+        """
 
-    def __attach_single_valve(self, valve_name: str, enable_cb, position_cb, calibration_cb):
+        self.__vcg_conv_east = None
+        """VCG convectors east.
+        """
+
+        self.__vcg_pool_air_cooling = None
+        """VCG air cooling.
+        """
+
+        self.__vcg_pool_heating = None
+        """VCG pool heating.
+        """
+
+        # ====================================================================================================
+        # ============================================== Pumps ===============================================
+        # ====================================================================================================
+
+        self.__pump_pool_air_heating = None
+        """Pump air heating.
+        """
+
+        self.__pump_conv_kitchen = None
+        """Pump convectors kitchen.
+        """
+
+        self.__pump_ahu_conf_hall = None
+        """Pump AHU conference hall.
+        """
+
+        self.__pump_floor_west = None
+        """Pump floor west.
+        """
+
+        self.__pump_conv_west = None
+        """Pump convectors west.
+        """
+
+        self.__pump_ahu_roof_floor = None
+        """Pump AHU roof floor.
+        """
+
+        self.__pump_ahu_fitness = None
+        """Pump AHU fitness.
+        """
+
+        self.__pump_floor_east = None
+        """Pump floor east.
+        """
+
+        self.__pump_conv_east = None
+        """Pump convectors east.
+        """
+
+        self.__pump_pool_air_cooling = None
+        """Pump air cooling.
+        """
+
+        self.__pump_pool_heating = None
+        """Pump pool heating.
+        """
+
+        self.__pump_servers_cooling = None
+        """Pump servers cooling.
+        """
+
+        # ====================================================================================================
+        # ======================================== Thermo couplers  ==========================================
+        # ====================================================================================================
+
+        self.__temp_0 = ThermometersFactory.create(
+            name="chanel0",
+            vendor="CWT",
+            model="MB318E",
+            controller=self._controller,
+            options = {"uart": 0, "mb_id": 1, "chanel": 0})
+
+#endregion
+
+#region Private Methods
+
+    def __update_animations(self):
+        # ====================================================================================================
+        # =========================================== Test purpose ===========================================
+        # ====================================================================================================
+
+        if self.__state == ThermalMode.Stop:
+            self.__state = ThermalMode.Heating
+
+        elif self.__state == ThermalMode.Heating:
+            self.__state = ThermalMode.Cooling
+
+        elif self.__state == ThermalMode.Cooling:
+            self.__state = ThermalMode.Heating
+
+        elif self.__state == ThermalMode.Heating:
+            self.__state = ThermalMode.Stop
+
+        vcg_names = ["ecd.pool_air_heating.valves.mode", "ecd.conv_kitchen.valves.mode",
+                     "ecd.ahu_conf_hall.valves.mode", "ecd.ahu_conf_hall.valves.mode",
+                     "ecd.floor_west.valves.mode", "ecd.conv_west.valves.mode",
+                     "ecd.ahu_roof_floor.valves.mode", "ecd.ahu_fitness.valves.mode",
+                     "ecd.ahu_fitness.valves.mode", "ecd.floor_east.valves.mode",
+                     "ecd.conv_east.valves.mode", "ecd.pool_air_cooling.valves.mode",
+                     "ecd.pool_heating.valves.mode", "ecd.floor_entrance.valves.mode",
+                     "ecd.pool_floor.valves.mode", "ecd.ground_drilling.valves.mode",
+                     "ecd.air_tower_green.valves.mode", "ecd.air_tower_purple.valves.mode",
+                     "ecd.generators.valves.mode"]
+
+        for vcg_name in vcg_names:
+            mode = self._registers.by_name(vcg_name)
+            mode.value = self.__state.value
+
+        mode = self._registers.by_name("ecd.pool_air_heating.pump.mode")
+        if mode.value != 0:
+            mode.value = 0
+        elif mode.value == 0:
+            mode.value = 1
+
+        # ====================================================================================================
+        # =========================================== Test purpose ===========================================
+        # ====================================================================================================
+
+    def __attach_vcg(self, valve_name: str, settings_cb, mode_cb):
         """Attach valve callbacks.
 
         Args:
             valve_name (str): Name of the valve.
-            enable_cb ([type]): Enable callback.
-            position_cb ([type]): Position callback.
-            calibration_cb ([type]): Calibration callback.
+            settings_cb ([type]): Enable callback.
+            mode_cb ([type]): Position callback.
         """
 
-        # Generators cooling valve enabled.
-        reg_name = "{}.{}.valve.enabled".format(self.key, valve_name)
-        enabled = self._registers.by_name(reg_name)
-        if enabled is not None:
-            enabled.update_handlers = enable_cb
-            enabled.update()
+        # Valves settings.
+        reg_name = f"{self.key}.{valve_name}.valves.settings"
+        settings = self._registers.by_name(reg_name)
+        if settings is not None:
+            settings.update_handlers = settings_cb
+            settings.update()
 
-        # Generators cooling valve postition.
-        reg_name = "{}.{}.valve.position".format(self.key, valve_name)
-        position = self._registers.by_name(reg_name)
-        if position is not None:
-            position.update_handlers = position_cb
-            position.update()
+        # Valves mode.
+        reg_name = f"{self.key}.{valve_name}.valves.mode"
+        mode = self._registers.by_name(reg_name)
+        if mode is not None:
+            mode.update_handlers = mode_cb
+            mode.update()
 
-        # Generators cooling valve calibrate.
-        reg_name = "{}.{}.valve.calibrate".format(self.key, valve_name)
-        calibration = self._registers.by_name(reg_name)
-        if calibration is not None:
-            calibration.update_handlers = calibration_cb
-            calibration.update()
+    def __attach_pump(self, pump_name: str, settings_cb, mode_cb):
+        """Attach pump callbacks.
 
+        Args:
+            valve_name (str): Name of the pump.
+            settings_cb ([type]): Enable callback.
+            mode_cb ([type]): Mode callback.
+        """
 
-    def __underfloor_heating_foyer_enabled_cb(self, register: Register):
+        # Valves settings.
+        reg_name = f"{self.key}.{pump_name}.pump.settings"
+        settings = self._registers.by_name(reg_name)
+        if settings is not None:
+            settings.update_handlers = settings_cb
+            settings.update()
 
-        # Check data type.
-        if not register.data_type == "json":
-            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
-            return
+        # Valves mode.
+        reg_name = f"{self.key}.{pump_name}.pump.mode"
+        mode = self._registers.by_name(reg_name)
+        if mode is not None:
+            mode.update_handlers = mode_cb
+            mode.update()
 
-        if register.value != verbal_const.OFF and self.__v_underfloor_heating_foyer is None:
+#endregion
 
-            self.__v_underfloor_heating_foyer = ValveFactory.create(
-                name="Valve Underfloor Heating Foyer",
-                controller=self._controller,
-                vendor=register.value['vendor'],
-                model=register.value['model'],
-                options=register.value['options'])
+#region Private Methods (Registers for VCG Left door panel)
 
-            if self.__v_underfloor_heating_foyer is not None:
-                self.__v_underfloor_heating_foyer.init()
-
-        elif register.value == {} and self.__v_underfloor_heating_foyer is not None:
-            self.__v_underfloor_heating_foyer.shutdown()
-            del self.__v_underfloor_heating_foyer
-
-    def __underfloor_heating_foyer_pos_cb(self, register: Register):
-
-        # Check data type.
-        if not (register.data_type == "float" or register.data_type == "int"):
-            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
-            return
-
-        if register.value < 0 or register.value > 100:
-            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
-            return
-
-        if self.__v_underfloor_heating_foyer is not None:
-            self.__v_underfloor_heating_foyer.target_position = register.value
-
-    def __underfloor_heating_foyer_calib_cb(self, register: Register):
-
-        # Check data type.
-        if not register.data_type == "bool":
-            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
-            return
-
-        if register.value:
-            if self.__v_underfloor_heating_foyer is not None:
-                self.__v_underfloor_heating_foyer.calibrate()
-
-
-    def __underfloor_heating_trestle_enabled_cb(self, register: Register):
+    def __vcg_floor_entrance_settings_cb(self, register: Register):
 
         # Check data type.
         if not register.data_type == "json":
             GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
             return
 
-        if register.value != verbal_const.OFF and self.__v_underfloor_heating_trestle is None:
-
-            self.__v_underfloor_heating_trestle = ValveFactory.create(
-                name="Valve Underfloor Heating Trestle",
-                controller=self._controller,
-                vendor=register.value['vendor'],
-                model=register.value['model'],
-                options=register.value['options'])
-
-            if self.__v_underfloor_heating_trestle is not None:
-                self.__v_underfloor_heating_trestle.init()
-
-        elif register.value == {} and self.__v_underfloor_heating_trestle is not None:
-            self.__v_underfloor_heating_trestle.shutdown()
-            del self.__v_underfloor_heating_trestle
-
-    def __underfloor_heating_trestle_pos_cb(self, register: Register):
-
-        # Check data type.
-        if not (register.data_type == "float" or register.data_type == "int"):
-            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
-            return
-
-        if register.value < 0 or register.value > 100:
-            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
-            return
-
-        if self.__v_underfloor_heating_trestle is not None:
-            self.__v_underfloor_heating_trestle.target_position = register.value
-
-    def __underfloor_heating_trestle_calib_cb(self, register: Register):
-
-        # Check data type.
-        if not register.data_type == "bool":
-            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
-            return
-
-        if register.value:
-            if self.__v_underfloor_heating_trestle is not None:
-                self.__v_underfloor_heating_trestle.calibrate()
-
-
-    def __underfloor_heating_pool_enabled_cb(self, register: Register):
-
-        # Check data type.
-        if not register.data_type == "json":
-            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
-            return
-
-        if register.value != verbal_const.OFF and self.__v_underfloor_heating_pool is None:
-
-            self.__v_underfloor_heating_pool = ValveFactory.create(
-                name="Valve Underfloor Heating Pool",
-                controller=self._controller,
-                vendor=register.value['vendor'],
-                model=register.value['model'],
-                options=register.value['options'])
-
-            if self.__v_underfloor_heating_pool is not None:
-                self.__v_underfloor_heating_pool.init()
-
-        elif register.value == {} and self.__v_underfloor_heating_pool is not None:
-            self.__v_underfloor_heating_pool.shutdown()
-            del self.__v_underfloor_heating_pool
-
-    def __underfloor_heating_pool_pos_cb(self, register: Register):
-
-          # Check data type.
-        if not (register.data_type == "float" or register.data_type == "int"):
-            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
-            return
-
-        if register.value < 0 or register.value > 100:
-            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
-            return
-
-        if self.__v_underfloor_heating_pool is not None:
-            self.__v_underfloor_heating_pool.target_position = register.value
-
-    def __underfloor_heating_pool_calib_cb(self, register: Register):
-
-        # Check data type.
-        if not register.data_type == "bool":
-            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
-            return
-
-        if register.value:
-            if self.__v_underfloor_heating_pool is not None:
-                self.__v_underfloor_heating_pool.calibrate()
-
-
-    def __air_cooling_enabled_cb(self, register: Register):
-
-        # Check data type.
-        if not register.data_type == "json":
-            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
-            return
-
-        if register.value != verbal_const.OFF and self.__v_air_cooling is None:
-
-            self.__v_air_cooling = ValveFactory.create(
-                name="Valve Air Cooling",
-                controller=self._controller,
-                vendor=register.value['vendor'],
-                model=register.value['model'],
-                options=register.value['options'])
-
-            if self.__v_air_cooling is not None:
-                self.__v_air_cooling.init()
-
-        elif register.value == {} and self.__v_air_cooling is not None:
-            self.__v_air_cooling.shutdown()
-            del self.__v_air_cooling
-
-    def __air_cooling_pos_cb(self, register: Register):
-
-          # Check data type.
-        if not (register.data_type == "float" or register.data_type == "int"):
-            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
-            return
-
-        if register.value < 0 or register.value > 100:
-            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
-            return
-
-        if self.__v_air_cooling is not None:
-            self.__v_air_cooling.target_position = register.value
-
-    def __air_cooling_calib_cb(self, register: Register):
-
-        # Check data type.
-        if not register.data_type == "bool":
-            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
-            return
-
-        if register.value:
-            if self.__v_air_cooling is not None:
-                self.__v_air_cooling.calibrate()
-
-
-    def __ground_drill_enabled_cb(self, register: Register):
-
-        # Check data type.
-        if not register.data_type == "json":
-            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
-            return
-
-        if register.value != verbal_const.OFF and self.__v_ground_drill is None:
-
-            self.__v_ground_drill = ValveFactory.create(
-                name="Valve Ground Drilling",
-                controller=self._controller,
-                vendor=register.value['vendor'],
-                model=register.value['model'],
-                options=register.value['options'])
-
-            if self.__v_ground_drill is not None:
-                self.__v_ground_drill.init()
-
-        elif register.value == {} and self.__v_ground_drill is not None:
-            self.__v_ground_drill.shutdown()
-            del self.__v_ground_drill
-
-    def __ground_drill_pos_cb(self, register: Register):
-
-          # Check data type.
-        if not (register.data_type == "float" or register.data_type == "int"):
-            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
-            return
-
-        if register.value < 0 or register.value > 100:
-            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
-            return
-
-        if self.__v_ground_drill is not None:
-            self.__v_ground_drill.target_position = register.value
-
-    def __ground_drill_calib_cb(self, register: Register):
-
-        # Check data type.
-        if not register.data_type == "bool":
-            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
-            return
-
-        if register.value:
-            if self.__v_ground_drill is not None:
-                self.__v_ground_drill.calibrate()
-
-
-    def __generators_cooling_enabled_cb(self, register: Register):
-
-        # Check data type.
-        if not register.data_type == "json":
-            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
-            return
-
-        if register.value != verbal_const.OFF and self.__v_generators_cooling is None:
-
-            self.__v_generators_cooling = ValveFactory.create(
-                name="Valve Generators Cooling",
-                controller=self._controller,
-                vendor=register.value['vendor'],
-                model=register.value['model'],
-                options=register.value['options'])
-
-            if self.__v_generators_cooling is not None:
-                self.__v_generators_cooling.init()
-
-        elif register.value == {} and self.__v_generators_cooling is not None:
-            self.__v_generators_cooling.shutdown()
-            del self.__v_generators_cooling
-
-    def __generators_cooling_pos_cb(self, register: Register):
-
-        # Check data type.
-        if not (register.data_type == "float" or register.data_type == "int"):
-            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
-            return
-
-        if register.value < 0 or register.value > 100:
-            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
-            return
-
-        if self.__v_generators_cooling is not None:
-            self.__v_generators_cooling.target_position = register.value
-
-    def __generators_cooling_calib_cb(self, register: Register):
-
-        # Check data type.
-        if not register.data_type == "bool":
-            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
-            return
-
-        if register.value:
-            if self.__v_generators_cooling is not None:
-                self.__v_generators_cooling.calibrate()
-
-
-    def __short_green_purple_enabled_cb(self, register: Register):
-
-        # Check data type.
-        if not register.data_type == "json":
-            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
-            return
-
-        if register.value != verbal_const.OFF and self.__v_short_green_purple is None:
-
-            self.__v_short_green_purple = ValveFactory.create(
-                name="Valve Short Green Purple",
-                controller=self._controller,
-                vendor=register.value['vendor'],
-                model=register.value['model'],
-                options=register.value['options'])
-
-            if self.__v_short_green_purple is not None:
-                self.__v_short_green_purple.init()
-
-        elif register.value == {} and self.__v_short_green_purple is not None:
-            self.__v_short_green_purple.shutdown()
-            del self.__v_short_green_purple
-
-    def __short_green_purple_pos_cb(self, register: Register):
-
-        # Check data type.
-        if not (register.data_type == "float" or register.data_type == "int"):
-            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
-            return
-
-        if register.value < 0 or register.value > 100:
-            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
-            return
-
-        if self.__v_short_green_purple is not None:
-            self.__v_short_green_purple.target_position = register.value
-
-    def __short_green_purple_calib_cb(self, register: Register):
-
-        # Check data type.
-        if not register.data_type == "bool":
-            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
-            return
-
-        if register.value:
-            if self.__v_short_green_purple is not None:
-                self.__v_short_green_purple.calibrate()
-
-
-    def __underfloor_west_bypass_enabled_cb(self, register: Register):
-
-        # Check data type.
-        if not register.data_type == "json":
-            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
-            return
-
-        if register.value != verbal_const.OFF and self.__v_underfloor_west_bypass is None:
-
-            self.__v_underfloor_west_bypass = ValveFactory.create(
-                name="Valve Underfloor West Bypass",
-                controller=self._controller,
-                vendor=register.value['vendor'],
-                model=register.value['model'],
-                options=register.value['options'])
-
-            if self.__v_underfloor_west_bypass is not None:
-                self.__v_underfloor_west_bypass.init()
-
-        elif register.value == {} and self.__v_underfloor_west_bypass is not None:
-            self.__v_underfloor_west_bypass.shutdown()
-            del self.__v_underfloor_west_bypass
-
-    def __underfloor_west_bypass_pos_cb(self, register: Register):
-
-        # Check data type.
-        if not (register.data_type == "float" or register.data_type == "int"):
-            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
-            return
-
-        if register.value < 0 or register.value > 100:
-            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
-            return
-
-        if self.__v_underfloor_west_bypass is not None:
-            self.__v_underfloor_west_bypass.target_position = register.value
-
-    def __underfloor_west_bypass_calib_cb(self, register: Register):
-
-        # Check data type.
-        if not register.data_type == "bool":
-            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
-            return
-
-        if register.value:
-            if self.__v_underfloor_west_bypass is not None:
-                self.__v_underfloor_west_bypass.calibrate()
-
-
-    def __underfloor_east_bypass_enabled_cb(self, register: Register):
-
-        # Check data type.
-        if not register.data_type == "json":
-            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
-            return
-
-        if register.value != verbal_const.OFF and self.__v_underfloor_east_bypass is None:
-
-            self.__v_underfloor_east_bypass = ValveFactory.create(
-                name="Valve Underfloor East Bypass",
-                controller=self._controller,
-                vendor=register.value['vendor'],
-                model=register.value['model'],
-                options=register.value['options'])
-
-            if self.__v_underfloor_east_bypass is not None:
-                self.__v_underfloor_east_bypass.init()
-
-        elif register.value == {} and self.__v_underfloor_east_bypass is not None:
-            self.__v_underfloor_east_bypass.shutdown()
-            del self.__v_underfloor_east_bypass
-
-    def __underfloor_east_bypass_pos_cb(self, register: Register):
-
-        # Check data type.
-        if not (register.data_type == "float" or register.data_type == "int"):
-            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
-            return
-
-        if register.value < 0 or register.value > 100:
-            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
-            return
-
-        if self.__v_underfloor_east_bypass is not None:
-            self.__v_underfloor_east_bypass.target_position = register.value
-
-    def __underfloor_east_bypass_calib_cb(self, register: Register):
-
-        # Check data type.
-        if not register.data_type == "bool":
-            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
-            return
-
-        if register.value:
-            if self.__v_underfloor_east_bypass is not None:
-                self.__v_underfloor_east_bypass.calibrate()
-
-
-    def __vcg_pool_heating_enable_cb(self, register: Register):
-
-        # Check data type.
-        if not register.data_type == "bool":
-            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
-            return
-
-        if register.value and self.__vcg_pool_heating is None:
-
-            # Consumers (RED)
-            self.__vcg_pool_heating = ValveControlGroup(
-                name="VCG Pool Heating",
-                key="{}.vcg_pool_heating".format(self.key),
+        if register.value != {}:
+            if self.__vcg_floor_entrance is not None:
+                self.__vcg_floor_entrance.shutdown()
+                del self.__vcg_floor_entrance
+
+            # AHU Warehouse (RED and BLUE)
+            self.__vcg_floor_entrance = ValveControlGroup(\
+                name=register.description,
+                key=f"{register.name}",
                 controller=self._controller,
                 registers=self._registers,
-                fw_valves=["valve"],
-                fw_pumps=["pump"])
-            self.__vcg_pool_heating.mode = ValveControlGroupMode.Proportional
+                fw_valves=["cold"],
+                rev_valves=["hot"],
+                mode = ValveControlGroupMode.DualSide)
+
+            if self.__vcg_floor_entrance is not None:
+                self.__vcg_floor_entrance.init()
+
+        elif register.value == {}:
+            if self.__vcg_floor_entrance is not None:
+                self.__vcg_floor_entrance.shutdown()
+                del self.__vcg_floor_entrance
+
+    def __vcg_floor_entrance_mode_cb(self, register: Register):
+
+        # Check data type.
+        if not (register.data_type == "float" or register.data_type == "int"):
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        if not ThermalMode.is_valid(register.value):
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
+            return
+
+        if self.__vcg_floor_entrance is None:
+            return
+
+        if register.value == ThermalMode.Stop.value:
+            self.__vcg_floor_entrance.target_position = 0
+        elif register.value == ThermalMode.Cooling.value:
+            self.__vcg_floor_entrance.target_position = -100
+        elif register.value == ThermalMode.Heating.value:
+            self.__vcg_floor_entrance.target_position = 100
+
+    def __vcg_pool_floor_settings_cb(self, register: Register):
+
+        # Check data type.
+        if not register.data_type == "json":
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        if register.value != {}:
+            if self.__vcg_pool_floor is not None:
+                self.__vcg_pool_floor.shutdown()
+                del self.__vcg_pool_floor
+
+            # AHU Warehouse (RED and BLUE)
+            self.__vcg_pool_floor = ValveControlGroup(\
+                nname=register.description,
+                key=f"{register.name}",
+                controller=self._controller,
+                registers=self._registers,
+                fw_valves=["cold"],
+                rev_valves=["hot"],
+                mode = ValveControlGroupMode.DualSide)
+
+            if self.__vcg_pool_floor is not None:
+                self.__vcg_pool_floor.init()
+
+        elif register.value == {}:
+            if self.__vcg_pool_floor is not None:
+                self.__vcg_pool_floor.shutdown()
+                del self.__vcg_pool_floor
+
+    def __vcg_pool_floor_mode_cb(self, register: Register):
+
+        # Check data type.
+        if not (register.data_type == "float" or register.data_type == "int"):
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        if not ThermalMode.is_valid(register.value):
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
+            return
+
+        if self.__vcg_pool_floor is None:
+            return
+
+        if register.value == ThermalMode.Stop.value:
+            self.__vcg_pool_floor.target_position = 0
+        elif register.value == ThermalMode.Cooling.value:
+            self.__vcg_pool_floor.target_position = -100
+        elif register.value == ThermalMode.Heating.value:
+            self.__vcg_pool_floor.target_position = 100
+
+    def __vcg_ground_drilling_settings_cb(self, register: Register):
+
+        # Check data type.
+        if not register.data_type == "json":
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        if register.value != {}:
+            if self.__vcg_ground_drilling is not None:
+                self.__vcg_ground_drilling.shutdown()
+                del self.__vcg_ground_drilling
+
+            # AHU Warehouse (RED and BLUE)
+            self.__vcg_ground_drilling = ValveControlGroup(\
+                nname=register.description,
+                key=f"{register.name}",
+                controller=self._controller,
+                registers=self._registers,
+                fw_valves=["cold"],
+                rev_valves=["hot"],
+                mode = ValveControlGroupMode.DualSide)
+
+            if self.__vcg_ground_drilling is not None:
+                self.__vcg_ground_drilling.init()
+
+        elif register.value == {}:
+            if self.__vcg_ground_drilling is not None:
+                self.__vcg_ground_drilling.shutdown()
+                del self.__vcg_ground_drilling
+
+    def __vcg_ground_drilling_mode_cb(self, register: Register):
+
+        # Check data type.
+        if not (register.data_type == "float" or register.data_type == "int"):
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        if not ThermalMode.is_valid(register.value):
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
+            return
+
+        if self.__vcg_ground_drilling is None:
+            return
+
+        if register.value == ThermalMode.Stop.value:
+            self.__vcg_ground_drilling.target_position = 0
+        elif register.value == ThermalMode.Cooling.value:
+            self.__vcg_ground_drilling.target_position = -100
+        elif register.value == ThermalMode.Heating.value:
+            self.__vcg_ground_drilling.target_position = 100
+
+    def __vcg_air_tower_green_settings_cb(self, register: Register):
+
+        # Check data type.
+        if not register.data_type == "json":
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        if register.value != {}:
+            if self.__vcg_air_tower_green is not None:
+                self.__vcg_air_tower_green.shutdown()
+                del self.__vcg_air_tower_green
+
+            # AHU Warehouse (RED and BLUE)
+            self.__vcg_air_tower_green = ValveControlGroup(\
+                nname=register.description,
+                key=f"{register.name}",
+                controller=self._controller,
+                registers=self._registers,
+                fw_valves=["cold"],
+                rev_valves=["hot"],
+                mode = ValveControlGroupMode.DualSide)
+
+            if self.__vcg_air_tower_green is not None:
+                self.__vcg_air_tower_green.init()
+
+        elif register.value == {}:
+            if self.__vcg_air_tower_green is not None:
+                self.__vcg_air_tower_green.shutdown()
+                del self.__vcg_air_tower_green
+
+    def __vcg_air_tower_green_mode_cb(self, register: Register):
+
+        # Check data type.
+        if not (register.data_type == "float" or register.data_type == "int"):
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        if not ThermalMode.is_valid(register.value):
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
+            return
+
+        if self.__vcg_air_tower_green is None:
+            return
+
+        if register.value == ThermalMode.Stop.value:
+            self.__vcg_air_tower_green.target_position = 0
+        elif register.value == ThermalMode.Cooling.value:
+            self.__vcg_air_tower_green.target_position = -100
+        elif register.value == ThermalMode.Heating.value:
+            self.__vcg_air_tower_green.target_position = 100
+
+    def __vcg_air_tower_purple_settings_cb(self, register: Register):
+
+        # Check data type.
+        if not register.data_type == "json":
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        if register.value != {}:
+            if self.__vcg_air_tower_purple is not None:
+                self.__vcg_air_tower_purple.shutdown()
+                del self.__vcg_air_tower_purple
+
+            # AHU Warehouse (RED and BLUE)
+            self.__vcg_air_tower_purple = ValveControlGroup(\
+                nname=register.description,
+                key=f"{register.name}",
+                controller=self._controller,
+                registers=self._registers,
+                fw_valves=["cold"],
+                rev_valves=["hot"],
+                mode = ValveControlGroupMode.DualSide)
+
+            if self.__vcg_air_tower_purple is not None:
+                self.__vcg_air_tower_purple.init()
+
+        elif register.value == {}:
+            if self.__vcg_air_tower_purple is not None:
+                self.__vcg_air_tower_purple.shutdown()
+                del self.__vcg_air_tower_purple
+
+    def __vcg_air_tower_purple_mode_cb(self, register: Register):
+
+        # Check data type.
+        if not (register.data_type == "float" or register.data_type == "int"):
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        if not ThermalMode.is_valid(register.value):
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
+            return
+
+        if self.__vcg_air_tower_purple is None:
+            return
+
+        if register.value == ThermalMode.Stop.value:
+            self.__vcg_air_tower_purple.target_position = 0
+        elif register.value == ThermalMode.Cooling.value:
+            self.__vcg_air_tower_purple.target_position = -100
+        elif register.value == ThermalMode.Heating.value:
+            self.__vcg_air_tower_purple.target_position = 100
+
+    def __vcg_generators_settings_cb(self, register: Register):
+
+        # Check data type.
+        if not register.data_type == "json":
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        if register.value != {}:
+            if self.__vcg_generators is not None:
+                self.__vcg_generators.shutdown()
+                del self.__vcg_generators
+
+            # AHU Warehouse (RED and BLUE)
+            self.__vcg_generators = ValveControlGroup(\
+                nname=register.description,
+                key=f"{register.name}",
+                controller=self._controller,
+                registers=self._registers,
+                fw_valves=["cold"],
+                rev_valves=["hot"],
+                mode = ValveControlGroupMode.DualSide)
+
+            if self.__vcg_generators is not None:
+                self.__vcg_generators.init()
+
+        elif register.value == {}:
+            if self.__vcg_generators is not None:
+                self.__vcg_generators.shutdown()
+                del self.__vcg_generators
+
+    def __vcg_generators_mode_cb(self, register: Register):
+
+        # Check data type.
+        if not (register.data_type == "float" or register.data_type == "int"):
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        if not ThermalMode.is_valid(register.value):
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
+            return
+
+        if self.__vcg_generators is None:
+            return
+
+        if register.value == ThermalMode.Stop.value:
+            self.__vcg_generators.target_position = 0
+        elif register.value == ThermalMode.Cooling.value:
+            self.__vcg_generators.target_position = -100
+        elif register.value == ThermalMode.Heating.value:
+            self.__vcg_generators.target_position = 100
+
+#endregion
+
+#region Private Methods (Registers for VCG Right door panel)
+
+    def __vcg_pool_air_heating_settings_cb(self, register: Register):
+
+        # Check data type.
+        if not register.data_type == "json":
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        if register.value != {}:
+            if self.__vcg_pool_air_heating is not None:
+                self.__vcg_pool_air_heating.shutdown()
+                del self.__vcg_pool_air_heating
+
+            # AHU Warehouse (RED and BLUE)
+            self.__vcg_pool_air_heating = ValveControlGroup(\
+                name=register.description,
+                key=f"{register.name}",
+                controller=self._controller,
+                registers=self._registers,
+                fw_valves=["cold"],
+                rev_valves=["hot"],
+                mode = ValveControlGroupMode.DualSide)
+
+            if self.__vcg_pool_air_heating is not None:
+                self.__vcg_pool_air_heating.init()
+
+        elif register.value == {}:
+            if self.__vcg_pool_air_heating is not None:
+                self.__vcg_pool_air_heating.shutdown()
+                del self.__vcg_pool_air_heating
+
+    def __vcg_pool_air_heating_mode_cb(self, register: Register):
+
+        # Check data type.
+        if not (register.data_type == "float" or register.data_type == "int"):
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        if not ThermalMode.is_valid(register.value):
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
+            return
+
+        if self.__vcg_pool_air_heating is None:
+            return
+
+        if register.value == ThermalMode.Stop.value:
+            self.__vcg_pool_air_heating.target_position = 0
+        elif register.value == ThermalMode.Cooling.value:
+            self.__vcg_pool_air_heating.target_position = -100
+        elif register.value == ThermalMode.Heating.value:
+            self.__vcg_pool_air_heating.target_position = 100
+
+    def __vcg_conv_kitchen_settings_cb(self, register: Register):
+
+        # Check data type.
+        if not register.data_type == "json":
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        if register.value != {}:
+            if self.__vcg_conv_kitchen is not None:
+                self.__vcg_conv_kitchen.shutdown()
+                del self.__vcg_conv_kitchen
+
+            # AHU Warehouse (RED and BLUE)
+            self.__vcg_conv_kitchen = ValveControlGroup(\
+                name=register.description,
+                key=f"{register.name}",
+                controller=self._controller,
+                registers=self._registers,
+                fw_valves=["cold"],
+                rev_valves=["hot"],
+                mode = ValveControlGroupMode.DualSide)
+
+            if self.__vcg_conv_kitchen is not None:
+                self.__vcg_conv_kitchen.init()
+
+        elif register.value == {}:
+            if self.__vcg_conv_kitchen is not None:
+                self.__vcg_conv_kitchen.shutdown()
+                del self.__vcg_conv_kitchen
+
+    def __vcg_conv_kitchen_mode_cb(self, register: Register):
+
+        # Check data type.
+        if not (register.data_type == "float" or register.data_type == "int"):
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        if not ThermalMode.is_valid(register.value):
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
+            return
+
+        if self.__vcg_conv_kitchen is None:
+            return
+
+        if register.value == ThermalMode.Stop.value:
+            self.__vcg_conv_kitchen.target_position = 0
+        elif register.value == ThermalMode.Cooling.value:
+            self.__vcg_conv_kitchen.target_position = -100
+        elif register.value == ThermalMode.Heating.value:
+            self.__vcg_conv_kitchen.target_position = 100
+
+    def __vcg_ahu_conf_hall_settings_cb(self, register: Register):
+
+        # Check data type.
+        if not register.data_type == "json":
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        if register.value != {}:
+            if self.__vcg_ahu_conf_hall is not None:
+                self.__vcg_ahu_conf_hall.shutdown()
+                del self.__vcg_ahu_conf_hall
+
+            # AHU Warehouse (RED and BLUE)
+            self.__vcg_ahu_conf_hall = ValveControlGroup(\
+                name=register.description,
+                key=f"{register.name}",
+                controller=self._controller,
+                registers=self._registers,
+                fw_valves=["cold"],
+                rev_valves=["hot"],
+                mode = ValveControlGroupMode.DualSide)
+
+            if self.__vcg_ahu_conf_hall is not None:
+                self.__vcg_ahu_conf_hall.init()
+
+        elif register.value == {}:
+            if self.__vcg_ahu_conf_hall is not None:
+                self.__vcg_ahu_conf_hall.shutdown()
+                del self.__vcg_ahu_conf_hall
+
+    def __vcg_ahu_conf_hall_mode_cb(self, register: Register):
+
+        # Check data type.
+        if not (register.data_type == "float" or register.data_type == "int"):
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        if not ThermalMode.is_valid(register.value):
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
+            return
+
+        if self.__vcg_ahu_conf_hall is None:
+            return
+
+        if register.value == ThermalMode.Stop.value:
+            self.__vcg_ahu_conf_hall.target_position = 0
+        elif register.value == ThermalMode.Cooling.value:
+            self.__vcg_ahu_conf_hall.target_position = -100
+        elif register.value == ThermalMode.Heating.value:
+            self.__vcg_ahu_conf_hall.target_position = 100
+
+    def __vcg_floor_west_settings_cb(self, register: Register):
+
+        # Check data type.
+        if not register.data_type == "json":
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        if register.value != {}:
+            if self.__vcg_floor_west is not None:
+                self.__vcg_floor_west.shutdown()
+                del self.__vcg_floor_west
+
+            # AHU Warehouse (RED and BLUE)
+            self.__vcg_floor_west = ValveControlGroup(\
+                name=register.description,
+                key=f"{register.name}",
+                controller=self._controller,
+                registers=self._registers,
+                fw_valves=["cold"],
+                rev_valves=["hot"],
+                mode = ValveControlGroupMode.DualSide)
+
+            if self.__vcg_floor_west is not None:
+                self.__vcg_floor_west.init()
+
+        elif register.value == {}:
+            if self.__vcg_floor_west is not None:
+                self.__vcg_floor_west.shutdown()
+                del self.__vcg_floor_west
+
+    def __vcg_floor_west_mode_cb(self, register: Register):
+
+        # Check data type.
+        if not (register.data_type == "float" or register.data_type == "int"):
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        if not ThermalMode.is_valid(register.value):
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
+            return
+
+        if self.__vcg_floor_west is None:
+            return
+
+        if register.value == ThermalMode.Stop.value:
+            self.__vcg_floor_west.target_position = 0
+        elif register.value == ThermalMode.Cooling.value:
+            self.__vcg_floor_west.target_position = -100
+        elif register.value == ThermalMode.Heating.value:
+            self.__vcg_floor_west.target_position = 100
+
+    def __vcg_conv_west_settings_cb(self, register: Register):
+
+        # Check data type.
+        if not register.data_type == "json":
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        if register.value != {}:
+            if self.__vcg_conv_west is not None:
+                self.__vcg_conv_west.shutdown()
+                del self.__vcg_conv_west
+
+            # AHU Warehouse (RED and BLUE)
+            self.__vcg_conv_west = ValveControlGroup(\
+                name=register.description,
+                key=f"{register.name}",
+                controller=self._controller,
+                registers=self._registers,
+                fw_valves=["cold"],
+                rev_valves=["hot"],
+                mode = ValveControlGroupMode.DualSide)
+
+            if self.__vcg_conv_west is not None:
+                self.__vcg_conv_west.init()
+
+        elif register.value == {}:
+            if self.__vcg_conv_west is not None:
+                self.__vcg_conv_west.shutdown()
+                del self.__vcg_conv_west
+
+    def __vcg_conv_west_mode_cb(self, register: Register):
+
+        # Check data type.
+        if not (register.data_type == "float" or register.data_type == "int"):
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        if not ThermalMode.is_valid(register.value):
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
+            return
+
+        if self.__vcg_conv_west is None:
+            return
+
+        if register.value == ThermalMode.Stop.value:
+            self.__vcg_conv_west.target_position = 0
+        elif register.value == ThermalMode.Cooling.value:
+            self.__vcg_conv_west.target_position = -100
+        elif register.value == ThermalMode.Heating.value:
+            self.__vcg_conv_west.target_position = 100
+
+    def __vcg_ahu_roof_floor_settings_cb(self, register: Register):
+
+        # Check data type.
+        if not register.data_type == "json":
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        if register.value != {}:
+            if self.__vcg_ahu_roof_floor is not None:
+                self.__vcg_ahu_roof_floor.shutdown()
+                del self.__vcg_ahu_roof_floor
+
+            # AHU Warehouse (RED and BLUE)
+            self.__vcg_ahu_roof_floor = ValveControlGroup(\
+                name=register.description,
+                key=f"{register.name}",
+                controller=self._controller,
+                registers=self._registers,
+                fw_valves=["cold"],
+                rev_valves=["hot"],
+                mode = ValveControlGroupMode.DualSide)
+
+            if self.__vcg_ahu_roof_floor is not None:
+                self.__vcg_ahu_roof_floor.init()
+
+        elif register.value == {}:
+            if self.__vcg_ahu_roof_floor is not None:
+                self.__vcg_ahu_roof_floor.shutdown()
+                del self.__vcg_ahu_roof_floor
+
+    def __vcg_ahu_roof_floor_mode_cb(self, register: Register):
+
+        # Check data type.
+        if not (register.data_type == "float" or register.data_type == "int"):
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        if not ThermalMode.is_valid(register.value):
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
+            return
+
+        if self.__vcg_ahu_roof_floor is None:
+            return
+
+        if register.value == ThermalMode.Stop.value:
+            self.__vcg_ahu_roof_floor.target_position = 0
+        elif register.value == ThermalMode.Cooling.value:
+            self.__vcg_ahu_roof_floor.target_position = -100
+        elif register.value == ThermalMode.Heating.value:
+            self.__vcg_ahu_roof_floor.target_position = 100
+
+    def __vcg_ahu_fitness_settings_cb(self, register: Register):
+
+        # Check data type.
+        if not register.data_type == "json":
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        if register.value != {}:
+            if self.__vcg_ahu_fitness is not None:
+                self.__vcg_ahu_fitness.shutdown()
+                del self.__vcg_ahu_fitness
+
+            # AHU Warehouse (RED and BLUE)
+            self.__vcg_ahu_fitness = ValveControlGroup(\
+                name=register.description,
+                key=f"{register.name}",
+                controller=self._controller,
+                registers=self._registers,
+                fw_valves=["cold"],
+                rev_valves=["hot"],
+                mode = ValveControlGroupMode.DualSide)
+
+            if self.__vcg_ahu_fitness is not None:
+                self.__vcg_ahu_fitness.init()
+
+        elif register.value == {}:
+            if self.__vcg_ahu_fitness is not None:
+                self.__vcg_ahu_fitness.shutdown()
+                del self.__vcg_ahu_fitness
+
+    def __vcg_ahu_fitness_mode_cb(self, register: Register):
+
+        # Check data type.
+        if not (register.data_type == "float" or register.data_type == "int"):
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        if not ThermalMode.is_valid(register.value):
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
+            return
+
+        if self.__vcg_ahu_fitness is None:
+            return
+
+        if register.value == ThermalMode.Stop.value:
+            self.__vcg_ahu_fitness.target_position = 0
+        elif register.value == ThermalMode.Cooling.value:
+            self.__vcg_ahu_fitness.target_position = -100
+        elif register.value == ThermalMode.Heating.value:
+            self.__vcg_ahu_fitness.target_position = 100
+
+    def __vcg_floor_east_settings_cb(self, register: Register):
+
+        # Check data type.
+        if not register.data_type == "json":
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        if register.value != {}:
+            if self.__vcg_floor_east is not None:
+                self.__vcg_floor_east.shutdown()
+                del self.__vcg_floor_east
+
+            # AHU Warehouse (RED and BLUE)
+            self.__vcg_floor_east = ValveControlGroup(\
+                name=register.description,
+                key=f"{register.name}",
+                controller=self._controller,
+                registers=self._registers,
+                fw_valves=["cold"],
+                rev_valves=["hot"],
+                mode = ValveControlGroupMode.DualSide)
+
+            if self.__vcg_floor_east is not None:
+                self.__vcg_floor_east.init()
+
+        elif register.value == {}:
+            if self.__vcg_floor_east is not None:
+                self.__vcg_floor_east.shutdown()
+                del self.__vcg_floor_east
+
+    def __vcg_floor_east_mode_cb(self, register: Register):
+
+        # Check data type.
+        if not (register.data_type == "float" or register.data_type == "int"):
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        if not ThermalMode.is_valid(register.value):
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
+            return
+
+        if self.__vcg_floor_east is None:
+            return
+
+        if register.value == ThermalMode.Stop.value:
+            self.__vcg_floor_east.target_position = 0
+        elif register.value == ThermalMode.Cooling.value:
+            self.__vcg_floor_east.target_position = -100
+        elif register.value == ThermalMode.Heating.value:
+            self.__vcg_floor_east.target_position = 100
+
+    def __vcg_conv_east_settings_cb(self, register: Register):
+
+        # Check data type.
+        if not register.data_type == "json":
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        if register.value != {}:
+            if self.__vcg_conv_east is not None:
+                self.__vcg_conv_east.shutdown()
+                del self.__vcg_conv_east
+
+            # AHU Warehouse (RED and BLUE)
+            self.__vcg_conv_east = ValveControlGroup(\
+                name=register.description,
+                key=f"{register.name}",
+                controller=self._controller,
+                registers=self._registers,
+                fw_valves=["cold"],
+                rev_valves=["hot"],
+                mode = ValveControlGroupMode.DualSide)
+
+            if self.__vcg_conv_east is not None:
+                self.__vcg_conv_east.init()
+
+        elif register.value == {}:
+            if self.__vcg_conv_east is not None:
+                self.__vcg_conv_east.shutdown()
+                del self.__vcg_conv_east
+
+    def __vcg_conv_east_mode_cb(self, register: Register):
+
+        # Check data type.
+        if not (register.data_type == "float" or register.data_type == "int"):
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        if not ThermalMode.is_valid(register.value):
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
+            return
+
+        if self.__vcg_conv_east is None:
+            return
+
+        if register.value == ThermalMode.Stop.value:
+            self.__vcg_conv_east.target_position = 0
+        elif register.value == ThermalMode.Cooling.value:
+            self.__vcg_conv_east.target_position = -100
+        elif register.value == ThermalMode.Heating.value:
+            self.__vcg_conv_east.target_position = 100
+
+    def __vcg_pool_air_cooling_settings_cb(self, register: Register):
+
+        # Check data type.
+        if not register.data_type == "json":
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        if register.value != {}:
+            if self.__vcg_pool_air_cooling is not None:
+                self.__vcg_pool_air_cooling.shutdown()
+                del self.__vcg_pool_air_cooling
+
+            # AHU Warehouse (RED and BLUE)
+            self.__vcg_pool_air_cooling = ValveControlGroup(\
+                name=register.description,
+                key=f"{register.name}",
+                controller=self._controller,
+                registers=self._registers,
+                fw_valves=["cold"],
+                rev_valves=["hot"],
+                mode = ValveControlGroupMode.DualSide)
+
+            if self.__vcg_pool_air_cooling is not None:
+                self.__vcg_pool_air_cooling.init()
+
+        elif register.value == {}:
+            if self.__vcg_pool_air_cooling is not None:
+                self.__vcg_pool_air_cooling.shutdown()
+                del self.__vcg_pool_air_cooling
+
+    def __vcg_pool_air_cooling_mode_cb(self, register: Register):
+
+        # Check data type.
+        if not (register.data_type == "float" or register.data_type == "int"):
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        if not ThermalMode.is_valid(register.value):
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
+            return
+
+        if self.__vcg_pool_air_cooling is None:
+            return
+
+        if register.value == ThermalMode.Stop.value:
+            self.__vcg_pool_air_cooling.target_position = 0
+        elif register.value == ThermalMode.Cooling.value:
+            self.__vcg_pool_air_cooling.target_position = 100
+        elif register.value == ThermalMode.Heating.value:
+            self.__vcg_pool_air_cooling.target_position = -100
+
+    def __vcg_pool_heating_settings_cb(self, register: Register):
+
+        # Check data type.
+        if not register.data_type == "json":
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        if register.value != {}:
+            if self.__vcg_pool_heating is not None:
+                self.__vcg_pool_heating.shutdown()
+                del self.__vcg_pool_heating
+
+            # AHU Warehouse (RED and BLUE)
+            self.__vcg_pool_heating = ValveControlGroup(\
+                name=register.description,
+                key=f"{register.name}",
+                controller=self._controller,
+                registers=self._registers,
+                fw_valves=["cold"],
+                rev_valves=["hot"],
+                mode = ValveControlGroupMode.DualSide)
 
             if self.__vcg_pool_heating is not None:
                 self.__vcg_pool_heating.init()
 
-        elif register.value == False and self.__vcg_pool_heating is not None:
-            self.__vcg_pool_heating.shutdown()
-            del self.__vcg_pool_heating
+        elif register.value == {}:
+            if self.__vcg_pool_heating is not None:
+                self.__vcg_pool_heating.shutdown()
+                del self.__vcg_pool_heating
 
-    def __vcg_tva_pool_enable_cb(self, register: Register):
+    def __vcg_pool_heating_mode_cb(self, register: Register):
 
         # Check data type.
-        if not register.data_type == "bool":
+        if not (register.data_type == "float" or register.data_type == "int"):
             GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
             return
 
-        if register.value and self.__vcg_tva_pool is None:
-
-            # Consumers (RED)
-            self.__vcg_tva_pool = ValveControlGroup(
-                name="VCG TVA Pool",
-                key="{}.vcg_tva_pool".format(self.key),
-                controller=self._controller,
-                registers=self._registers,
-                fw_valves=["cold_in", "cold_out"],
-                rev_valves=["hot_in", "hot_out"],
-                fw_pumps=["pump"])
-            self.__vcg_tva_pool.mode = ValveControlGroupMode.Proportional
-
-            if self.__vcg_tva_pool is not None:
-                self.__vcg_tva_pool.init()
-
-        elif register.value == False and self.__vcg_tva_pool is not None:
-            self.__vcg_tva_pool.shutdown()
-            del self.__vcg_tva_pool
-
-    def __convectors_east_enable_cb(self, register: Register):
-
-        if not register.data_type == "bool":
-            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+        if not ThermalMode.is_valid(register.value):
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
             return
 
-        if register.value and self.__vcg_convectors_east is None:
-
-            # Consumers (RED)
-            self.__vcg_convectors_east = ValveControlGroup(
-                name="VCG Convectors east",
-                key="{}.convectors_east".format(self.key),
-                controller=self._controller,
-                registers=self._registers,
-                fw_valves=["cold_in", "cold_out"],
-                rev_valves=["hot_in", "hot_out"],
-                fw_pumps=["pump"])
-            self.__vcg_convectors_east.mode = ValveControlGroupMode.Proportional
-
-            if self.__vcg_convectors_east is not None:
-                self.__vcg_convectors_east.init()
-
-        elif register.value == False and self.__vcg_convectors_east is not None:
-            self.__vcg_convectors_east.shutdown()
-            del self.__vcg_convectors_east
-
-    def __underfloor_east_enable_cb(self, register: Register):
-
-        if not register.data_type == "bool":
-            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+        if self.__vcg_pool_heating is None:
             return
 
-        if register.value and self.__vcg_underfloor_east is None:
-
-            # Floor East (RED and BLUE)
-            self.__vcg_underfloor_east = ValveControlGroup(\
-                name="VCG Underfloor east",
-                key="{}.underfloor_east".format(self.key),
-                controller=self._controller,
-                registers=self._registers,
-                fw_valves=["cold_in", "cold_out"],
-                rev_valves=["hot_in", "hot_out"],
-                fw_pumps=["pump"])
-            self.__vcg_underfloor_east.mode = ValveControlGroupMode.DualSide
-
-            if self.__vcg_underfloor_east is not None:
-                self.__vcg_underfloor_east.init()
-
-        elif register.value == False and self.__vcg_underfloor_east is not None:
-            self.__vcg_underfloor_east.shutdown()
-            del self.__vcg_underfloor_east
-
-    def __convectors_west_enable_cb(self, register: Register):
-
-        if not register.data_type == "bool":
-            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
-            return
-
-        if register.value and self.__vcg_convectors_west is None:
-
-            # Floor East (RED and BLUE)
-            self.__vcg_convectors_west = ValveControlGroup(\
-                name="VCG Convectors west",
-                key="{}.convectors_west".format(self.key),
-                controller=self._controller,
-                registers=self._registers,
-                fw_valves=["cold_in", "cold_out"],
-                rev_valves=["hot_in", "hot_out"],
-                fw_pumps=["pump"])
-            self.__vcg_convectors_west.mode = ValveControlGroupMode.DualSide
-
-            if self.__vcg_convectors_west is not None:
-                self.__vcg_convectors_west.init()
-
-        elif register.value == False and self.__vcg_convectors_west is not None:
-            self.__vcg_convectors_west.shutdown()
-            del self.__vcg_convectors_west
-
-    def __tva_fitness_enable_cb(self, register: Register):
-
-        if not register.data_type == "bool":
-            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
-            return
-
-        if register.value and self.__vcg_tva_fitness is None:
-
-            # Floor East (RED and BLUE)
-            self.__vcg_tva_fitness = ValveControlGroup(\
-                name="VCG tva fitness",
-                key="{}.tva_fitness".format(self.key),
-                controller=self._controller,
-                registers=self._registers,
-                fw_valves=["cold_in", "cold_out"],
-                rev_valves=["hot_in", "hot_out"],
-                fw_pumps=["pump"])
-            self.__vcg_tva_fitness.mode = ValveControlGroupMode.DualSide
-
-            if self.__vcg_tva_fitness is not None:
-                self.__vcg_tva_fitness.init()
-
-        elif not register.value and self.__vcg_tva_fitness is not None:
-            self.__vcg_tva_fitness.shutdown()
-            del self.__vcg_tva_fitness
-
-    def __tva_roof_floor_enable_cb(self, register: Register):
-
-        if not register.data_type == "bool":
-            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
-            return
-
-        if register.value and self.__vcg_tva_roof_floor is None:
-
-            # Floor East (RED and BLUE)
-            self.__vcg_tva_roof_floor = ValveControlGroup(\
-                name="VCG tva roof floor",
-                key="{}.tva_roof_floor".format(self.key),
-                controller=self._controller,
-                registers=self._registers,
-                fw_valves=["cold_in", "cold_out"],
-                rev_valves=["hot_in", "hot_out"],
-                fw_pumps=["pump"])
-            self.__vcg_tva_roof_floor.mode = ValveControlGroupMode.DualSide
-
-            if self.__vcg_tva_roof_floor is not None:
-                self.__vcg_tva_roof_floor.init()
-
-        elif not register.value and self.__vcg_tva_roof_floor is not None:
-            self.__vcg_tva_roof_floor.shutdown()
-            del self.__vcg_tva_roof_floor
-
-    def __underfloor_west_enable_cb(self, register: Register):
-
-        if not register.data_type == "bool":
-            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
-            return
-
-        if register.value and self.__vcg_underfloor_west is None:
-
-            # Floor East (RED and BLUE)
-            self.__vcg_underfloor_west = ValveControlGroup(\
-                name="VCG underfloor west",
-                key="{}.floor_west".format(self.key),
-                controller=self._controller,
-                registers=self._registers,
-                fw_valves=["cold_in", "cold_out"],
-                rev_valves=["hot_in", "hot_out"],
-                fw_pumps=["pump"])
-            self.__vcg_underfloor_west.mode = ValveControlGroupMode.DualSide
-
-            if self.__vcg_underfloor_west is not None:
-                self.__vcg_underfloor_west.init()
-
-        elif not register.value and self.__vcg_underfloor_west is not None:
-            self.__vcg_underfloor_west.shutdown()
-            del self.__vcg_underfloor_west
-
-    def __vcg_tva_conference_center_enable_cb(self, register: Register):
-
-        if not register.data_type == "bool":
-            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
-            return
-
-        if register.value and self.__vcg_tva_conference_center is None:
-
-            # Floor East (RED and BLUE)
-            self.__vcg_tva_conference_center = ValveControlGroup(\
-                name="VCG tva conference center",
-                key="{}.tva_conference_center".format(self.key),
-                controller=self._controller,
-                registers=self._registers,
-                fw_valves=["cold_in", "cold_out"],
-                rev_valves=["hot_in", "hot_out"],
-                fw_pumps=["pump"])
-            self.__vcg_tva_conference_center.mode = ValveControlGroupMode.DualSide
-
-            if self.__vcg_tva_conference_center is not None:
-                self.__vcg_tva_conference_center.init()
-
-        elif not register.value and self.__vcg_tva_conference_center is not None:
-            self.__vcg_tva_conference_center.shutdown()
-            del self.__vcg_tva_conference_center
-
-    def __vcg_convectors_kitchen_enable_cb(self, register: Register):
-
-        if not register.data_type == "bool":
-            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
-            return
-
-        if register.value and self.__vcg_convectors_kitchen is None:
-
-            # Floor East (RED and BLUE)
-            self.__vcg_convectors_kitchen = ValveControlGroup(\
-                name="VCG convectors kitchen",
-                key="{}.convectors_kitchen".format(self.key),
-                controller=self._controller,
-                registers=self._registers,
-                fw_valves=["cold_in", "cold_out"],
-                rev_valves=["hot_in", "hot_out"],
-                fw_pumps=["pump"])
-            self.__vcg_convectors_kitchen.mode = ValveControlGroupMode.DualSide
-
-            if self.__vcg_convectors_kitchen is not None:
-                self.__vcg_convectors_kitchen.init()
-
-        elif not register.value and self.__vcg_convectors_kitchen is not None:
-            self.__vcg_convectors_kitchen.shutdown()
-            del self.__vcg_convectors_kitchen
-
-    def __vcg_tva_warehouse_enable_cb(self, register: Register):
-
-        if not register.data_type == "bool":
-            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
-            return
-
-        if register.value and self.__vcg_tva_warehouse is None:
-
-            # Floor East (RED and BLUE)
-            self.__vcg_tva_warehouse = ValveControlGroup(\
-                name="VCG tva warehouse",
-                key="{}.tva_warehouse".format(self.key),
-                controller=self._controller,
-                registers=self._registers,
-                fw_valves=["cold_in", "cold_out"],
-                rev_valves=["hot_in", "hot_out"],
-                fw_pumps=["pump"])
-            self.__vcg_tva_warehouse.mode = ValveControlGroupMode.DualSide
-
-            if self.__vcg_tva_warehouse is not None:
-                self.__vcg_tva_warehouse.init()
-
-        elif not register.value and self.__vcg_tva_warehouse is not None:
-            self.__vcg_tva_warehouse.shutdown()
-            del self.__vcg_tva_warehouse
-
-
-    def __init_registers(self):
-
-        # =========================== Valve group. (PURPLE) ===========================
-        # Generators cooling valve.
-        self.__attach_single_valve("underfloor_heating_foyer",
-                                   self.__underfloor_heating_foyer_enabled_cb,
-                                   self.__underfloor_heating_foyer_pos_cb,
-                                   self.__underfloor_heating_foyer_calib_cb)
-
-        # Underfloor heating trestle valve.
-        self.__attach_single_valve("underfloor_heating_trestle",
-                                   self.__underfloor_heating_trestle_enabled_cb,
-                                   self.__underfloor_heating_trestle_pos_cb,
-                                   self.__underfloor_heating_trestle_calib_cb)
-
-        self.__attach_single_valve("underfloor_heating_pool",
-                                   self.__underfloor_heating_pool_enabled_cb,
-                                   self.__underfloor_heating_pool_pos_cb,
-                                   self.__underfloor_heating_pool_calib_cb)
-
-        # Air cooling valve.
-        self.__attach_single_valve("air_cooling",
-                                   self.__air_cooling_enabled_cb,
-                                   self.__air_cooling_pos_cb,
-                                   self.__air_cooling_calib_cb)
-
-        # Ground drill valve.
-        self.__attach_single_valve("ground_drill",
-                                   self.__ground_drill_enabled_cb,
-                                   self.__ground_drill_pos_cb,
-                                   self.__ground_drill_calib_cb)
-
-        # =========================== Generators Cooling (GREEN) ===========================
-        # Generators Cooling valve.
-        self.__attach_single_valve("generators_cooling",
-                                   self.__generators_cooling_enabled_cb,
-                                   self.__generators_cooling_pos_cb,
-                                   self.__generators_cooling_calib_cb)
-
-        # Short valve between green and purple pipes.
-        self.__attach_single_valve("short_green_purple",
-                                   self.__short_green_purple_enabled_cb,
-                                   self.__short_green_purple_pos_cb,
-                                   self.__short_green_purple_calib_cb)
-
-        # Underfloor west bypass valve.
-        self.__attach_single_valve("underfloor_west_bypass",
-                                   self.__underfloor_west_bypass_enabled_cb,
-                                   self.__underfloor_west_bypass_pos_cb,
-                                   self.__underfloor_west_bypass_calib_cb)
-
-        # Underfloor east bypass valve.
-        self.__attach_single_valve("air_cooling",
-                                   self.__underfloor_east_bypass_enabled_cb,
-                                   self.__underfloor_east_bypass_pos_cb,
-                                   self.__underfloor_east_bypass_calib_cb)
-
-        # =========================== Valve Controll Groups ===========================
-        reg_name = "{}.vcg_pool_heating.enabled".format(self.key)
-        vcg_pool_heating = self._registers.by_name(reg_name)
-        if vcg_pool_heating is not None:
-            vcg_pool_heating.update_handlers = self.__vcg_pool_heating_enable_cb
-            vcg_pool_heating.update()
-
-        reg_name = "{}.vcg_tva_pool.enabled".format(self.key)
-        vcg_tva_pool = self._registers.by_name(reg_name)
-        if vcg_tva_pool is not None:
-            vcg_tva_pool.update_handlers = self.__vcg_tva_pool_enable_cb
-            vcg_tva_pool.update()
-
-        reg_name = "{}.convectors_east.enabled".format(self.key)
-        convectors_east = self._registers.by_name(reg_name)
-        if convectors_east is not None:
-            convectors_east.update_handlers = self.__convectors_east_enable_cb
-            convectors_east.update()
-
-        reg_name = "{}.underfloor_east.enabled".format(self.key)
-        underfloor_east = self._registers.by_name(reg_name)
-        if underfloor_east is not None:
-            underfloor_east.update_handlers = self.__underfloor_east_enable_cb
-            underfloor_east.update()
-
-        reg_name = "{}.convectors_west.enabled".format(self.key)
-        convectors_west = self._registers.by_name(reg_name)
-        if convectors_west is not None:
-            convectors_west.update_handlers = self.__convectors_west_enable_cb
-            convectors_west.update()
-
-        reg_name = "{}.tva_fitness.enabled".format(self.key)
-        tva_fitness = self._registers.by_name(reg_name)
-        if tva_fitness is not None:
-            tva_fitness.update_handlers = self.__tva_fitness_enable_cb
-            tva_fitness.update()
-
-        reg_name = "{}.tva_roof_floor.enabled".format(self.key)
-        tva_roof_floor = self._registers.by_name(reg_name)
-        if tva_roof_floor is not None:
-            tva_roof_floor.update_handlers = self.__tva_roof_floor_enable_cb
-            tva_roof_floor.update()
-
-        reg_name = "{}.floor_west.enabled".format(self.key)
-        underfloor_west = self._registers.by_name(reg_name)
-        if underfloor_west is not None:
-            underfloor_west.update_handlers = self.__underfloor_west_enable_cb
-            underfloor_west.update()
-
-        reg_name = "{}.tva_conference_center.enabled".format(self.key)
-        tva_conference_center = self._registers.by_name(reg_name)
-        if tva_conference_center is not None:
-            tva_conference_center.update_handlers = self.__vcg_tva_conference_center_enable_cb
-            tva_conference_center.update()
-
-        reg_name = "{}.convectors_kitchen.enabled".format(self.key)
-        convectors_kitchen = self._registers.by_name(reg_name)
-        if convectors_kitchen is not None:
-            convectors_kitchen.update_handlers = self.__vcg_convectors_kitchen_enable_cb
-            convectors_kitchen.update()
-
-        reg_name = "{}.tva_warehouse.enabled".format(self.key)
-        tva_warehouse = self._registers.by_name(reg_name)
-        if tva_warehouse is not None:
-            tva_warehouse.update_handlers = self.__vcg_tva_warehouse_enable_cb
-            tva_warehouse.update()
+        if register.value == ThermalMode.Stop.value:
+            self.__vcg_pool_heating.target_position = 0
+        elif register.value == ThermalMode.Cooling.value:
+            self.__vcg_pool_heating.target_position = -100
+        elif register.value == ThermalMode.Heating.value:
+            self.__vcg_pool_heating.target_position = 100
 
 #endregion
 
-#region Properties
+#region Private Methods (Registers for Pumps)
+
+    def __pump_pool_air_heating_settings_cb(self, register: Register):
+
+        # Check data type.
+        if not register.data_type == "json":
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        if register.value != {}:
+            if self.__pump_pool_air_heating is not None:
+                self.__pump_pool_air_heating.shutdown()
+                del self.__pump_pool_air_heating
+
+            self.__pump_pool_air_heating = PumpFactory.create(\
+                name=register.description,
+                key=f"{register.name}",
+                controller=self._controller,
+                registers=self._registers,
+                vendor=register.value['vendor'],
+                model=register.value['model'],
+                options=register.value['options'])
+
+            if self.__pump_pool_air_heating is not None:
+                self.__pump_pool_air_heating.init()
+
+        elif register.value == {}:
+            if self.__pump_pool_air_heating is not None:
+                self.__pump_pool_air_heating.shutdown()
+                del self.__pump_pool_air_heating
+
+    def __pump_pool_air_heating_mode_cb(self, register: Register):
+
+        # Check data type.
+        if not (register.data_type == "float" or register.data_type == "int"):
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        if not ThermalMode.is_valid(register.value):
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
+            return
+
+        if self.__pump_pool_air_heating is None:
+            return
+
+        self.__pump_pool_air_heating.e_stop(register.value)
+
+    def __pump_conv_kitchen_settings_cb(self, register: Register):
+
+        # Check data type.
+        if not register.data_type == "json":
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        if register.value != {}:
+            if self.__pump_conv_kitchen is not None:
+                self.__pump_conv_kitchen.shutdown()
+                del self.__pump_conv_kitchen
+
+            self.__pump_conv_kitchen = PumpFactory.create(\
+                name=register.description,
+                key=f"{register.name}",
+                controller=self._controller,
+                registers=self._registers,
+                vendor=register.value['vendor'],
+                model=register.value['model'],
+                options=register.value['options'])
+
+            if self.__pump_conv_kitchen is not None:
+                self.__pump_conv_kitchen.init()
+
+        elif register.value == {}:
+            if self.__pump_conv_kitchen is not None:
+                self.__pump_conv_kitchen.shutdown()
+                del self.__pump_conv_kitchen
+
+    def __pump_conv_kitchen_mode_cb(self, register: Register):
+
+        # Check data type.
+        if not (register.data_type == "float" or register.data_type == "int"):
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        if not ThermalMode.is_valid(register.value):
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
+            return
+
+        if self.__pump_conv_kitchen is None:
+            return
+
+        self.__pump_conv_kitchen.e_stop(register.value)
+
+    def __pump_ahu_conf_hall_settings_cb(self, register: Register):
+
+        # Check data type.
+        if not register.data_type == "json":
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        if register.value != {}:
+            if self.__pump_ahu_conf_hall is not None:
+                self.__pump_ahu_conf_hall.shutdown()
+                del self.__pump_ahu_conf_hall
+
+            self.__pump_ahu_conf_hall = PumpFactory.create(\
+                name=register.description,
+                key=f"{register.name}",
+                controller=self._controller,
+                registers=self._registers,
+                vendor=register.value['vendor'],
+                model=register.value['model'],
+                options=register.value['options'])
+
+            if self.__pump_ahu_conf_hall is not None:
+                self.__pump_ahu_conf_hall.init()
+
+        elif register.value == {}:
+            if self.__pump_ahu_conf_hall is not None:
+                self.__pump_ahu_conf_hall.shutdown()
+                del self.__pump_ahu_conf_hall
+
+    def __pump_ahu_conf_hall_mode_cb(self, register: Register):
+
+        # Check data type.
+        if not (register.data_type == "float" or register.data_type == "int"):
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        if not ThermalMode.is_valid(register.value):
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
+            return
+
+        if self.__pump_ahu_conf_hall is None:
+            return
+
+        self.__pump_ahu_conf_hall.e_stop(register.value)
+
+    def __pump_floor_west_settings_cb(self, register: Register):
+
+        # Check data type.
+        if not register.data_type == "json":
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        if register.value != {}:
+            if self.__pump_floor_west is not None:
+                self.__pump_floor_west.shutdown()
+                del self.__pump_floor_west
+
+            self.__pump_floor_west = PumpFactory.create(\
+                name=register.description,
+                key=f"{register.name}",
+                controller=self._controller,
+                registers=self._registers,
+                vendor=register.value['vendor'],
+                model=register.value['model'],
+                options=register.value['options'])
+
+            if self.__pump_floor_west is not None:
+                self.__pump_floor_west.init()
+
+        elif register.value == {}:
+            if self.__pump_floor_west is not None:
+                self.__pump_floor_west.shutdown()
+                del self.__pump_floor_west
+
+    def __pump_floor_west_mode_cb(self, register: Register):
+
+        # Check data type.
+        if not (register.data_type == "float" or register.data_type == "int"):
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        if not ThermalMode.is_valid(register.value):
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
+            return
+
+        if self.__pump_floor_west is None:
+            return
+
+        self.__pump_floor_west.e_stop(register.value)
+
+    def __pump_conv_west_settings_cb(self, register: Register):
+
+        # Check data type.
+        if not register.data_type == "json":
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        if register.value != {}:
+            if self.__pump_conv_west is not None:
+                self.__pump_conv_west.shutdown()
+                del self.__pump_conv_west
+
+            self.__pump_conv_west = PumpFactory.create(\
+                name=register.description,
+                key=f"{register.name}",
+                controller=self._controller,
+                registers=self._registers,
+                vendor=register.value['vendor'],
+                model=register.value['model'],
+                options=register.value['options'])
+
+            if self.__pump_conv_west is not None:
+                self.__pump_conv_west.init()
+
+        elif register.value == {}:
+            if self.__pump_conv_west is not None:
+                self.__pump_conv_west.shutdown()
+                del self.__pump_conv_west
+
+    def __pump_conv_west_mode_cb(self, register: Register):
+
+        # Check data type.
+        if not (register.data_type == "float" or register.data_type == "int"):
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        if not ThermalMode.is_valid(register.value):
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
+            return
+
+        if self.__pump_conv_west is None:
+            return
+
+        self.__pump_conv_west.e_stop(register.value)
+
+    def __pump_ahu_roof_floor_settings_cb(self, register: Register):
+
+        # Check data type.
+        if not register.data_type == "json":
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        if register.value != {}:
+            if self.__pump_ahu_roof_floor is not None:
+                self.__pump_ahu_roof_floor.shutdown()
+                del self.__pump_ahu_roof_floor
+
+            self.__pump_ahu_roof_floor = PumpFactory.create(\
+                name=register.description,
+                key=f"{register.name}",
+                controller=self._controller,
+                registers=self._registers,
+                vendor=register.value['vendor'],
+                model=register.value['model'],
+                options=register.value['options'])
+
+            if self.__pump_ahu_roof_floor is not None:
+                self.__pump_ahu_roof_floor.init()
+
+        elif register.value == {}:
+            if self.__pump_ahu_roof_floor is not None:
+                self.__pump_ahu_roof_floor.shutdown()
+                del self.__pump_ahu_roof_floor
+
+    def __pump_ahu_roof_floor_mode_cb(self, register: Register):
+
+        # Check data type.
+        if not (register.data_type == "float" or register.data_type == "int"):
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        if not ThermalMode.is_valid(register.value):
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
+            return
+
+        if self.__pump_ahu_roof_floor is None:
+            return
+
+        self.__pump_ahu_roof_floor.e_stop(register.value)
+
+    def __pump_ahu_fitness_settings_cb(self, register: Register):
+
+        # Check data type.
+        if not register.data_type == "json":
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        if register.value != {}:
+            if self.__pump_ahu_fitness is not None:
+                self.__pump_ahu_fitness.shutdown()
+                del self.__pump_ahu_fitness
+
+            self.__pump_ahu_fitness = PumpFactory.create(\
+                name=register.description,
+                key=f"{register.name}",
+                controller=self._controller,
+                registers=self._registers,
+                vendor=register.value['vendor'],
+                model=register.value['model'],
+                options=register.value['options'])
+
+            if self.__pump_ahu_fitness is not None:
+                self.__pump_ahu_fitness.init()
+
+        elif register.value == {}:
+            if self.__pump_ahu_fitness is not None:
+                self.__pump_ahu_fitness.shutdown()
+                del self.__pump_ahu_fitness
+
+    def __pump_ahu_fitness_mode_cb(self, register: Register):
+
+        # Check data type.
+        if not (register.data_type == "float" or register.data_type == "int"):
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        if not ThermalMode.is_valid(register.value):
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
+            return
+
+        if self.__pump_ahu_fitness is None:
+            return
+
+        self.__pump_ahu_fitness.e_stop(register.value)
+
+    def __pump_floor_east_settings_cb(self, register: Register):
+
+        # Check data type.
+        if not register.data_type == "json":
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        if register.value != {}:
+            if self.__pump_floor_east is not None:
+                self.__pump_floor_east.shutdown()
+                del self.__pump_floor_east
+
+            self.__pump_floor_east = PumpFactory.create(\
+                name=register.description,
+                key=f"{register.name}",
+                controller=self._controller,
+                registers=self._registers,
+                vendor=register.value['vendor'],
+                model=register.value['model'],
+                options=register.value['options'])
+
+            if self.__pump_floor_east is not None:
+                self.__pump_floor_east.init()
+
+        elif register.value == {}:
+            if self.__pump_floor_east is not None:
+                self.__pump_floor_east.shutdown()
+                del self.__pump_floor_east
+
+    def __pump_floor_east_mode_cb(self, register: Register):
+
+        # Check data type.
+        if not (register.data_type == "float" or register.data_type == "int"):
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        if not ThermalMode.is_valid(register.value):
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
+            return
+
+        if self.__pump_floor_east is None:
+            return
+
+        self.__pump_floor_east.e_stop(register.value)
+
+    def __pump_conv_east_settings_cb(self, register: Register):
+
+        # Check data type.
+        if not register.data_type == "json":
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        if register.value != {}:
+            if self.__pump_conv_east is not None:
+                self.__pump_conv_east.shutdown()
+                del self.__pump_conv_east
+
+            self.__pump_conv_east = PumpFactory.create(\
+                name=register.description,
+                key=f"{register.name}",
+                controller=self._controller,
+                registers=self._registers,
+                vendor=register.value['vendor'],
+                model=register.value['model'],
+                options=register.value['options'])
+
+            if self.__pump_conv_east is not None:
+                self.__pump_conv_east.init()
+
+        elif register.value == {}:
+            if self.__pump_conv_east is not None:
+                self.__pump_conv_east.shutdown()
+                del self.__pump_conv_east
+
+    def __pump_conv_east_mode_cb(self, register: Register):
+
+        # Check data type.
+        if not (register.data_type == "float" or register.data_type == "int"):
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        if not ThermalMode.is_valid(register.value):
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
+            return
+
+        if self.__pump_conv_east is None:
+            return
+
+        self.__pump_conv_east.e_stop(register.value)
+
+    def __pump_pool_air_cooling_settings_cb(self, register: Register):
+
+        # Check data type.
+        if not register.data_type == "json":
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        if register.value != {}:
+            if self.__pump_pool_air_cooling is not None:
+                self.__pump_pool_air_cooling.shutdown()
+                del self.__pump_pool_air_cooling
+
+            self.__pump_pool_air_cooling = PumpFactory.create(\
+                name=register.description,
+                key=f"{register.name}",
+                controller=self._controller,
+                registers=self._registers,
+                vendor=register.value['vendor'],
+                model=register.value['model'],
+                options=register.value['options'])
+
+            if self.__pump_pool_air_cooling is not None:
+                self.__pump_pool_air_cooling.init()
+
+        elif register.value == {}:
+            if self.__pump_pool_air_cooling is not None:
+                self.__pump_pool_air_cooling.shutdown()
+                del self.__pump_pool_air_cooling
+
+    def __pump_pool_air_cooling_mode_cb(self, register: Register):
+
+        # Check data type.
+        if not (register.data_type == "float" or register.data_type == "int"):
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        if not ThermalMode.is_valid(register.value):
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
+            return
+
+        if self.__pump_pool_air_cooling is None:
+            return
+
+        self.__pump_pool_air_cooling.e_stop(register.value)
+
+    def __pump_pool_heating_settings_cb(self, register: Register):
+
+        # Check data type.
+        if not register.data_type == "json":
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        if register.value != {}:
+            if self.__pump_pool_heating is not None:
+                self.__pump_pool_heating.shutdown()
+                del self.__pump_pool_heating
+
+            self.__pump_pool_heating = PumpFactory.create(\
+                name=register.description,
+                key=f"{register.name}",
+                controller=self._controller,
+                registers=self._registers,
+                vendor=register.value['vendor'],
+                model=register.value['model'],
+                options=register.value['options'])
+
+            if self.__pump_pool_heating is not None:
+                self.__pump_pool_heating.init()
+
+        elif register.value == {}:
+            if self.__pump_pool_heating is not None:
+                self.__pump_pool_heating.shutdown()
+                del self.__pump_pool_heating
+
+    def __pump_pool_heating_mode_cb(self, register: Register):
+
+        # Check data type.
+        if not (register.data_type == "float" or register.data_type == "int"):
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        if not ThermalMode.is_valid(register.value):
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
+            return
+
+        if self.__pump_pool_heating is None:
+            return
+
+        self.__pump_pool_heating.e_stop(register.value)
+
+    def __pump_servers_cooling_settings_cb(self, register: Register):
+
+        # Check data type.
+        if not register.data_type == "json":
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        if register.value != {}:
+            if self.__pump_servers_cooling is not None:
+                self.__pump_servers_cooling.shutdown()
+                del self.__pump_servers_cooling
+
+            self.__pump_servers_cooling = PumpFactory.create(\
+                name=register.description,
+                key=f"{register.name}",
+                controller=self._controller,
+                registers=self._registers,
+                vendor=register.value['vendor'],
+                model=register.value['model'],
+                options=register.value['options'])
+
+            if self.__pump_servers_cooling is not None:
+                self.__pump_servers_cooling.init()
+
+        elif register.value == {}:
+            if self.__pump_servers_cooling is not None:
+                self.__pump_servers_cooling.shutdown()
+                del self.__pump_servers_cooling
+
+    def __pump_servers_cooling_mode_cb(self, register: Register):
+
+        # Check data type.
+        if not (register.data_type == "float" or register.data_type == "int"):
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        if not ThermalMode.is_valid(register.value):
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
+            return
+
+        if self.__pump_servers_cooling is None:
+            return
+
+        self.__pump_servers_cooling.e_stop(register.value)
+
+#endregion
+
+#region Private Methods (Registers Thermometers)
+
+#endregion
+
+#region Private Methods (Registers)
+
+    def __init_registers(self):
+
+        # ====================================================================================================
+        # ======================================= VCG Left door panel ========================================
+        # ====================================================================================================
+
+        self.__attach_vcg("floor_entrance",
+                                    self.__vcg_floor_entrance_settings_cb,
+                                    self.__vcg_floor_entrance_mode_cb)
+
+        self.__attach_vcg("pool_floor",
+                                    self.__vcg_pool_floor_settings_cb,
+                                    self.__vcg_pool_floor_mode_cb)
+
+        self.__attach_vcg("ground_drilling",
+                                    self.__vcg_ground_drilling_settings_cb,
+                                    self.__vcg_ground_drilling_mode_cb)
+
+        self.__attach_vcg("air_tower_green",
+                                    self.__vcg_air_tower_green_settings_cb,
+                                    self.__vcg_air_tower_green_mode_cb)
+
+        self.__attach_vcg("air_tower_purple",
+                                    self.__vcg_air_tower_purple_settings_cb,
+                                    self.__vcg_air_tower_purple_mode_cb)
+
+        self.__attach_vcg("generators",
+                                    self.__vcg_generators_settings_cb,
+                                    self.__vcg_generators_mode_cb)
+
+        # ====================================================================================================
+        # ======================================= VCG Right door panel =======================================
+        # ====================================================================================================
+
+        self.__attach_vcg("pool_air_heating",
+                                    self.__vcg_pool_air_heating_settings_cb,
+                                    self.__vcg_pool_air_heating_mode_cb)
+
+        self.__attach_vcg("conv_kitchen",
+                                    self.__vcg_conv_kitchen_settings_cb,
+                                    self.__vcg_conv_kitchen_mode_cb)
+
+        self.__attach_vcg("ahu_conf_hall",
+                                    self.__vcg_ahu_conf_hall_settings_cb,
+                                    self.__vcg_ahu_conf_hall_mode_cb)
+
+        self.__attach_vcg("floor_west",
+                                    self.__vcg_floor_west_settings_cb,
+                                    self.__vcg_floor_west_mode_cb)
+
+        self.__attach_vcg("conv_west",
+                                    self.__vcg_conv_west_settings_cb,
+                                    self.__vcg_conv_west_mode_cb)
+
+        self.__attach_vcg("ahu_roof_floor",
+                                    self.__vcg_ahu_roof_floor_settings_cb,
+                                    self.__vcg_ahu_roof_floor_mode_cb)
+
+        self.__attach_vcg("ahu_fitness",
+                                    self.__vcg_ahu_fitness_settings_cb,
+                                    self.__vcg_ahu_fitness_mode_cb)
+
+        self.__attach_vcg("floor_east",
+                                    self.__vcg_floor_east_settings_cb,
+                                    self.__vcg_floor_east_mode_cb)
+
+        self.__attach_vcg("conv_east",
+                                    self.__vcg_conv_east_settings_cb,
+                                    self.__vcg_conv_east_mode_cb)
+
+        self.__attach_vcg("pool_air_cooling",
+                                    self.__vcg_pool_air_cooling_settings_cb,
+                                    self.__vcg_pool_air_cooling_mode_cb)
+
+        self.__attach_vcg("pool_heating",
+                                    self.__vcg_pool_heating_settings_cb,
+                                    self.__vcg_pool_heating_mode_cb)
+
+        # ====================================================================================================
+        # ============================================== Pumps ===============================================
+        # ====================================================================================================
+
+        self.__attach_pump("pool_air_heating",
+                                    self.__pump_pool_air_heating_settings_cb,
+                                    self.__pump_pool_air_heating_mode_cb)
+
+        self.__attach_pump("conv_kitchen",
+                                    self.__pump_conv_kitchen_settings_cb,
+                                    self.__pump_conv_kitchen_mode_cb)
+
+        self.__attach_pump("ahu_conf_hall",
+                                    self.__pump_ahu_conf_hall_settings_cb,
+                                    self.__pump_ahu_conf_hall_mode_cb)
+
+        self.__attach_pump("floor_west",
+                                    self.__pump_floor_west_settings_cb,
+                                    self.__pump_floor_west_mode_cb)
+
+        self.__attach_pump("conv_west",
+                                    self.__pump_conv_west_settings_cb,
+                                    self.__pump_conv_west_mode_cb)
+
+        self.__attach_pump("ahu_roof_floor",
+                                    self.__pump_ahu_roof_floor_settings_cb,
+                                    self.__pump_ahu_roof_floor_mode_cb)
+
+        self.__attach_pump("ahu_fitness",
+                                    self.__pump_ahu_fitness_settings_cb,
+                                    self.__pump_ahu_fitness_mode_cb)
+
+        self.__attach_pump("floor_east",
+                                    self.__pump_floor_east_settings_cb,
+                                    self.__pump_floor_east_mode_cb)
+
+        self.__attach_pump("conv_east",
+                                    self.__pump_conv_east_settings_cb,
+                                    self.__pump_conv_east_mode_cb)
+
+        self.__attach_pump("pool_air_cooling",
+                                    self.__pump_pool_air_cooling_settings_cb,
+                                    self.__pump_pool_air_cooling_mode_cb)
+
+        self.__attach_pump("pool_heating",
+                                    self.__pump_pool_heating_settings_cb,
+                                    self.__pump_pool_heating_mode_cb)
+
+        self.__attach_pump("servers_cooling",
+                                    self.__pump_servers_cooling_settings_cb,
+                                    self.__pump_servers_cooling_mode_cb)
 
 #endregion
 
@@ -1227,66 +1914,299 @@ class EnergyCenterDistribution(BasePlugin):
         """Update the plugin.
         """
 
-        if self.__v_underfloor_heating_foyer is not None:
-            self.__v_underfloor_heating_foyer.update()
+        # self.__update_animations()
 
-        if self.__v_underfloor_heating_trestle is not None:
-            self.__v_underfloor_heating_trestle.update()
+        # ====================================================================================================
+        # ======================================= VCG Left door panel ========================================
+        # ====================================================================================================
 
-        if self.__v_underfloor_heating_pool is not None:
-            self.__v_underfloor_heating_pool.update()
+        if self.__vcg_floor_entrance is not None:
+            self.__vcg_floor_entrance.update()
+            reg_state = self._registers.by_name("ecd.floor_entrance.valves.state")
+            if reg_state is not None:
+                if self.__vcg_floor_entrance.target_position == 0:
+                    reg_state.value = ThermalMode.Stop.value
+                elif self.__vcg_floor_entrance.target_position < 0:
+                    reg_state.value = ThermalMode.Cooling.value
+                elif self.__vcg_floor_entrance.target_position > 0:
+                    reg_state.value = ThermalMode.Heating.value
 
-        if self.__v_air_cooling is not None:
-            self.__v_air_cooling.update()
+        if self.__vcg_pool_floor is not None:
+            self.__vcg_pool_floor.update()
+            reg_state = self._registers.by_name("ecd.pool_floor.valves.state")
+            if reg_state is not None:
+                if self.__vcg_pool_floor.target_position == 0:
+                    reg_state.value = ThermalMode.Stop.value
+                elif self.__vcg_pool_floor.target_position < 0:
+                    reg_state.value = ThermalMode.Cooling.value
+                elif self.__vcg_pool_floor.target_position > 0:
+                    reg_state.value = ThermalMode.Heating.value
 
-        if self.__v_ground_drill is not None:
-            self.__v_ground_drill.update()
+        if self.__vcg_ground_drilling is not None:
+            self.__vcg_ground_drilling.update()
+            reg_state = self._registers.by_name("ecd.ground_drilling.valves.state")
+            if reg_state is not None:
+                if self.__vcg_ground_drilling.target_position == 0:
+                    reg_state.value = ThermalMode.Stop.value
+                elif self.__vcg_ground_drilling.target_position < 0:
+                    reg_state.value = ThermalMode.Cooling.value
+                elif self.__vcg_ground_drilling.target_position > 0:
+                    reg_state.value = ThermalMode.Heating.value
 
-        if self.__v_generators_cooling is not None:
-            self.__v_generators_cooling.update()
+        if self.__vcg_air_tower_green is not None:
+            self.__vcg_air_tower_green.update()
+            reg_state = self._registers.by_name("ecd.air_tower_green.valves.state")
+            if reg_state is not None:
+                if self.__vcg_air_tower_green.target_position == 0:
+                    reg_state.value = ThermalMode.Stop.value
+                elif self.__vcg_air_tower_green.target_position < 0:
+                    reg_state.value = ThermalMode.Cooling.value
+                elif self.__vcg_air_tower_green.target_position > 0:
+                    reg_state.value = ThermalMode.Heating.value
 
-        if self.__v_short_green_purple is not None:
-            self.__v_short_green_purple.update()
+        if self.__vcg_air_tower_purple is not None:
+            self.__vcg_air_tower_purple.update()
+            reg_state = self._registers.by_name("ecd.air_tower_purple.valves.state")
+            if reg_state is not None:
+                if self.__vcg_air_tower_purple.target_position == 0:
+                    reg_state.value = ThermalMode.Stop.value
+                elif self.__vcg_air_tower_purple.target_position < 0:
+                    reg_state.value = ThermalMode.Cooling.value
+                elif self.__vcg_air_tower_purple.target_position > 0:
+                    reg_state.value = ThermalMode.Heating.value
 
-        if self.__v_underfloor_west_bypass is not None:
-            self.__v_underfloor_west_bypass.update()
+        if self.__vcg_generators is not None:
+            self.__vcg_generators.update()
+            reg_state = self._registers.by_name("ecd.generators.valves.state")
+            if reg_state is not None:
+                if self.__vcg_generators.target_position == 0:
+                    reg_state.value = ThermalMode.Stop.value
+                elif self.__vcg_generators.target_position < 0:
+                    reg_state.value = ThermalMode.Cooling.value
+                elif self.__vcg_generators.target_position > 0:
+                    reg_state.value = ThermalMode.Heating.value
 
-        if self.__v_underfloor_east_bypass is not None:
-            self.__v_underfloor_east_bypass.update()
+        # ====================================================================================================
+        # ======================================= VCG Right door panel =======================================
+        # ====================================================================================================
 
+        if self.__vcg_pool_air_heating is not None:
+            self.__vcg_pool_air_heating.update()
+            reg_state = self._registers.by_name("ecd.pool_air_heating.valves.state")
+            if reg_state is not None:
+                if self.__vcg_pool_air_heating.target_position == 0:
+                    reg_state.value = ThermalMode.Stop.value
+                elif self.__vcg_pool_air_heating.target_position < 0:
+                    reg_state.value = ThermalMode.Cooling.value
+                elif self.__vcg_pool_air_heating.target_position > 0:
+                    reg_state.value = ThermalMode.Heating.value
+
+        if self.__vcg_conv_kitchen is not None:
+            self.__vcg_conv_kitchen.update()
+            reg_state = self._registers.by_name("ecd.conv_kitchen.valves.state")
+            if reg_state is not None:
+                if self.__vcg_conv_kitchen.target_position == 0:
+                    reg_state.value = ThermalMode.Stop.value
+                elif self.__vcg_conv_kitchen.target_position < 0:
+                    reg_state.value = ThermalMode.Cooling.value
+                elif self.__vcg_conv_kitchen.target_position > 0:
+                    reg_state.value = ThermalMode.Heating.value
+
+        if self.__vcg_ahu_conf_hall is not None:
+            self.__vcg_ahu_conf_hall.update()
+            reg_state = self._registers.by_name("ecd.ahu_conf_hall.valves.state")
+            if reg_state is not None:
+                if self.__vcg_ahu_conf_hall.target_position == 0:
+                    reg_state.value = ThermalMode.Stop.value
+                elif self.__vcg_ahu_conf_hall.target_position < 0:
+                    reg_state.value = ThermalMode.Cooling.value
+                elif self.__vcg_ahu_conf_hall.target_position > 0:
+                    reg_state.value = ThermalMode.Heating.value
+
+        if self.__vcg_floor_west is not None:
+            self.__vcg_floor_west.update()
+            reg_state = self._registers.by_name("ecd.floor_west.valves.state")
+            if reg_state is not None:
+                if self.__vcg_floor_west.target_position == 0:
+                    reg_state.value = ThermalMode.Stop.value
+                elif self.__vcg_floor_west.target_position < 0:
+                    reg_state.value = ThermalMode.Cooling.value
+                elif self.__vcg_floor_west.target_position > 0:
+                    reg_state.value = ThermalMode.Heating.value
+
+        if self.__vcg_conv_west is not None:
+            self.__vcg_conv_west.update()
+            reg_state = self._registers.by_name("ecd.conv_west.valves.state")
+            if reg_state is not None:
+                if self.__vcg_conv_west.target_position == 0:
+                    reg_state.value = ThermalMode.Stop.value
+                elif self.__vcg_conv_west.target_position < 0:
+                    reg_state.value = ThermalMode.Cooling.value
+                elif self.__vcg_conv_west.target_position > 0:
+                    reg_state.value = ThermalMode.Heating.value
+
+        if self.__vcg_ahu_roof_floor is not None:
+            self.__vcg_ahu_roof_floor.update()
+            reg_state = self._registers.by_name("ecd.ahu_roof_floor.valves.state")
+            if reg_state is not None:
+                if self.__vcg_conv_west.target_position == 0:
+                    reg_state.value = ThermalMode.Stop.value
+                elif self.__vcg_conv_west.target_position < 0:
+                    reg_state.value = ThermalMode.Cooling.value
+                elif self.__vcg_conv_west.target_position > 0:
+                    reg_state.value = ThermalMode.Heating.value
+
+        if self.__vcg_ahu_fitness is not None:
+            self.__vcg_ahu_fitness.update()
+            reg_state = self._registers.by_name("ecd.ahu_fitness.valves.state")
+            if reg_state is not None:
+                if self.__vcg_ahu_fitness.target_position == 0:
+                    reg_state.value = ThermalMode.Stop.value
+                elif self.__vcg_ahu_fitness.target_position < 0:
+                    reg_state.value = ThermalMode.Cooling.value
+                elif self.__vcg_ahu_fitness.target_position > 0:
+                    reg_state.value = ThermalMode.Heating.value
+
+        if self.__vcg_floor_east is not None:
+            self.__vcg_floor_east.update()
+            reg_state = self._registers.by_name("ecd.floor_east.valves.state")
+            if reg_state is not None:
+                if self.__vcg_floor_east.target_position == 0:
+                    reg_state.value = ThermalMode.Stop.value
+                elif self.__vcg_floor_east.target_position < 0:
+                    reg_state.value = ThermalMode.Cooling.value
+                elif self.__vcg_floor_east.target_position > 0:
+                    reg_state.value = ThermalMode.Heating.value
+
+        if self.__vcg_conv_east is not None:
+            self.__vcg_conv_east.update()
+            reg_state = self._registers.by_name("ecd.conv_east.valves.state")
+            if reg_state is not None:
+                if self.__vcg_conv_east.target_position == 0:
+                    reg_state.value = ThermalMode.Stop.value
+                elif self.__vcg_conv_east.target_position < 0:
+                    reg_state.value = ThermalMode.Cooling.value
+                elif self.__vcg_conv_east.target_position > 0:
+                    reg_state.value = ThermalMode.Heating.value
+
+        if self.__vcg_pool_air_cooling is not None:
+            self.__vcg_pool_air_cooling.update()
+            reg_state = self._registers.by_name("ecd.pool_air_cooling.valves.state")
+            if reg_state is not None:
+                if self.__vcg_pool_air_cooling.target_position == 0:
+                    reg_state.value = ThermalMode.Stop.value
+                elif self.__vcg_pool_air_cooling.target_position < 0:
+                    reg_state.value = ThermalMode.Cooling.value
+                elif self.__vcg_pool_air_cooling.target_position > 0:
+                    reg_state.value = ThermalMode.Heating.value
 
         if self.__vcg_pool_heating is not None:
             self.__vcg_pool_heating.update()
+            reg_state = self._registers.by_name("ecd.pool_heating.valves.state")
+            if reg_state is not None:
+                if self.__vcg_pool_heating.target_position == 0:
+                    reg_state.value = ThermalMode.Stop.value
+                elif self.__vcg_pool_heating.target_position < 0:
+                    reg_state.value = ThermalMode.Cooling.value
+                elif self.__vcg_pool_heating.target_position > 0:
+                    reg_state.value = ThermalMode.Heating.value
 
-        if self.__vcg_tva_pool is not None:
-            self.__vcg_tva_pool.update()
+        # ====================================================================================================
+        # ============================================== Pumps ===============================================
+        # ====================================================================================================
+        if self.__pump_pool_air_heating is not None:
+            self.__pump_pool_air_heating.update()
+            reg_state = self._registers.by_name("ecd.pool_air_heating.pump.state")
+            if reg_state is not None:
+                e_status = self.__pump_pool_air_heating.e_status()
+                reg_state.value = {"e_status" : e_status}
 
-        if self.__vcg_convectors_east is not None:
-            self.__vcg_convectors_east.update()
+        if self.__pump_conv_kitchen is not None:
+            self.__pump_conv_kitchen.update()
+            reg_state = self._registers.by_name("ecd.conv_kitchen.pump.state")
+            if reg_state is not None:
+                e_status = self.__pump_conv_kitchen.e_status()
+                reg_state.value = {"e_status" : e_status}
 
-        if self.__vcg_underfloor_east is not None:
-            self.__vcg_underfloor_east.update()
+        if self.__pump_ahu_conf_hall is not None:
+            self.__pump_ahu_conf_hall.update()
+            reg_state = self._registers.by_name("ecd.ahu_conf_hall.pump.state")
+            if reg_state is not None:
+                e_status = self.__pump_ahu_conf_hall.e_status()
+                reg_state.value = {"e_status" : e_status}
 
-        if self.__vcg_convectors_west is not None:
-            self.__vcg_convectors_west.update()
+        if self.__pump_floor_west is not None:
+            self.__pump_floor_west.update()
+            reg_state = self._registers.by_name("ecd.floor_west.pump.state")
+            if reg_state is not None:
+                e_status = self.__pump_floor_west.e_status()
+                reg_state.value = {"e_status" : e_status}
 
-        if self.__vcg_tva_fitness is not None:
-            self.__vcg_tva_fitness.update()
+        if self.__pump_conv_west is not None:
+            self.__pump_conv_west.update()
+            reg_state = self._registers.by_name("ecd.conv_west.pump.state")
+            if reg_state is not None:
+                e_status = self.__pump_conv_west.e_status()
+                reg_state.value = {"e_status" : e_status}
 
-        if self.__vcg_tva_roof_floor is not None:
-            self.__vcg_tva_roof_floor.update()
+        if self.__pump_ahu_roof_floor is not None:
+            self.__pump_ahu_roof_floor.update()
+            reg_state = self._registers.by_name("ecd.ahu_roof_floor.pump.state")
+            if reg_state is not None:
+                e_status = self.__pump_ahu_roof_floor.e_status()
+                reg_state.value = {"e_status" : e_status}
 
-        if self.__vcg_underfloor_west is not None:
-            self.__vcg_underfloor_west.update()
+        if self.__pump_ahu_fitness is not None:
+            self.__pump_ahu_fitness.update()
+            reg_state = self._registers.by_name("ecd.ahu_fitness.pump.state")
+            if reg_state is not None:
+                e_status = self.__pump_ahu_fitness.e_status()
+                reg_state.value = {"e_status" : e_status}
 
-        if self.__vcg_tva_conference_center is not None:
-            self.__vcg_tva_conference_center.update()
+        if self.__pump_floor_east is not None:
+            self.__pump_floor_east.update()
+            reg_state = self._registers.by_name("ecd.floor_east.pump.state")
+            if reg_state is not None:
+                e_status = self.__pump_floor_east.e_status()
+                reg_state.value = {"e_status" : e_status}
 
-        if self.__vcg_convectors_kitchen is not None:
-            self.__vcg_convectors_kitchen.update()
+        if self.__pump_conv_east is not None:
+            self.__pump_conv_east.update()
+            reg_state = self._registers.by_name("ecd.conv_east.pump.state")
+            if reg_state is not None:
+                e_status = self.__pump_conv_east.e_status()
+                reg_state.value = {"e_status" : e_status}
 
-        if self.__vcg_tva_warehouse is not None:
-            self.__vcg_tva_warehouse.update()
+        if self.__pump_pool_air_cooling is not None:
+            self.__pump_pool_air_cooling.update()
+            reg_state = self._registers.by_name("ecd.pool_air_cooling.pump.state")
+            if reg_state is not None:
+                e_status = self.__pump_pool_air_cooling.e_status()
+                reg_state.value = {"e_status" : e_status}
+
+        if self.__pump_pool_heating is not None:
+            self.__pump_pool_heating.update()
+            reg_state = self._registers.by_name("ecd.pool_heating.pump.state")
+            if reg_state is not None:
+                e_status = self.__pump_pool_heating.e_status()
+                reg_state.value = {"e_status" : e_status}
+
+        if self.__pump_servers_cooling is not None:
+            self.__pump_servers_cooling.update()
+            reg_state = self._registers.by_name("ecd.servers_cooling.pump.state")
+            if reg_state is not None:
+                e_status = self.__pump_servers_cooling.e_status()
+                reg_state.value = {"e_status" : e_status}
+
+        ztm_regs = self._registers.by_scope(Scope.Device)
+        pat = re.compile(r"(ecd\.)(.+?)(\.state)")
+        # pat = re.compile(r"(ecd\.)(generators\.valves)(\.state)")
+        for register in ztm_regs:
+            match = pat.match(register.name)
+            if match:
+                print(f"{register.name}: {register.value}")
+
+        print(self.__temp_0.get_temp())
 
     def _shutdown(self):
         """Shutting down the plugin.
@@ -1294,66 +2214,106 @@ class EnergyCenterDistribution(BasePlugin):
 
         self.__logger.info("Shutting down the {}".format(self.name))
 
-        if self.__v_underfloor_heating_foyer is not None:
-            self.__v_underfloor_heating_foyer.shutdown()
+        # ====================================================================================================
+        # ======================================= VCG Left door panel ========================================
+        # ====================================================================================================
 
-        if self.__v_underfloor_heating_trestle is not None:
-            self.__v_underfloor_heating_trestle.shutdown()
+        if self.__vcg_floor_entrance is not None:
+            self.__vcg_floor_entrance.shutdown()
 
-        if self.__v_underfloor_heating_pool is not None:
-            self.__v_underfloor_heating_pool.shutdown()
+        if self.__vcg_pool_floor is not None:
+            self.__vcg_pool_floor.shutdown()
 
-        if self.__v_air_cooling is not None:
-            self.__v_air_cooling.shutdown()
+        if self.__vcg_ground_drilling is not None:
+            self.__vcg_ground_drilling.shutdown()
 
-        if self.__v_ground_drill is not None:
-            self.__v_ground_drill.shutdown()
+        if self.__vcg_air_tower_green is not None:
+            self.__vcg_air_tower_green.shutdown()
 
-        if self.__v_generators_cooling is not None:
-            self.__v_generators_cooling.shutdown()
+        if self.__vcg_air_tower_purple is not None:
+            self.__vcg_air_tower_purple.shutdown()
 
-        if self.__v_short_green_purple is not None:
-            self.__v_short_green_purple.shutdown()
+        if self.__vcg_generators is not None:
+            self.__vcg_generators.shutdown()
 
-        if self.__v_underfloor_west_bypass is not None:
-            self.__v_underfloor_west_bypass.shutdown()
+        # ====================================================================================================
+        # ======================================= VCG Right door panel =======================================
+        # ====================================================================================================
 
-        if self.__v_underfloor_east_bypass is not None:
-            self.__v_underfloor_east_bypass.shutdown()
+        if self.__vcg_pool_air_heating is not None:
+            self.__vcg_pool_air_heating.shutdown()
 
+        if self.__vcg_conv_kitchen is not None:
+            self.__vcg_conv_kitchen.shutdown()
 
+        if self.__vcg_ahu_conf_hall is not None:
+            self.__vcg_ahu_conf_hall.shutdown()
+
+        if self.__vcg_floor_west is not None:
+            self.__vcg_floor_west.shutdown()
+
+        if self.__vcg_conv_west is not None:
+            self.__vcg_conv_west.shutdown()
+
+        if self.__vcg_ahu_roof_floor is not None:
+            self.__vcg_ahu_roof_floor.shutdown()
+
+        if self.__vcg_ahu_fitness is not None:
+            self.__vcg_ahu_fitness.shutdown()
+
+        if self.__vcg_floor_east is not None:
+            self.__vcg_floor_east.shutdown()
+
+        if self.__vcg_conv_east is not None:
+            self.__vcg_conv_east.shutdown()
+
+        if self.__vcg_pool_air_cooling is not None:
+            self.__vcg_pool_air_cooling.shutdown()
 
         if self.__vcg_pool_heating is not None:
             self.__vcg_pool_heating.shutdown()
 
-        if self.__vcg_tva_pool is not None:
-            self.__vcg_tva_pool.shutdown()
+        # ====================================================================================================
+        # ============================================== Pumps ===============================================
+        # ====================================================================================================
 
-        if self.__vcg_convectors_east is not None:
-            self.__vcg_convectors_east.shutdown()
+        if self.__pump_pool_air_heating is not None:
+            self.__pump_pool_air_heating.shutdown()
 
-        if self.__vcg_underfloor_east is not None:
-            self.__vcg_underfloor_east.shutdown()
+        if self.__pump_conv_kitchen is not None:
+            self.__pump_conv_kitchen.shutdown()
 
-        if self.__vcg_convectors_west is not None:
-            self.__vcg_convectors_west.shutdown()
+        if self.__pump_ahu_conf_hall is not None:
+            self.__pump_ahu_conf_hall.shutdown()
 
-        if self.__vcg_tva_fitness is not None:
-            self.__vcg_tva_fitness.shutdown()
+        if self.__pump_floor_west is not None:
+            self.__pump_floor_west.shutdown()
 
-        if self.__vcg_tva_roof_floor is not None:
-            self.__vcg_tva_roof_floor.shutdown()
+        if self.__pump_conv_west is not None:
+            self.__pump_conv_west.shutdown()
 
-        if self.__vcg_underfloor_west is not None:
-            self.__vcg_underfloor_west.shutdown()
+        if self.__pump_ahu_roof_floor is not None:
+            self.__pump_ahu_roof_floor.shutdown()
 
-        if self.__vcg_tva_conference_center is not None:
-            self.__vcg_tva_conference_center.shutdown()
+        if self.__pump_ahu_fitness is not None:
+            self.__pump_ahu_fitness.shutdown()
 
-        if self.__vcg_convectors_kitchen is not None:
-            self.__vcg_convectors_kitchen.shutdown()
+        if self.__pump_floor_east is not None:
+            self.__pump_floor_east.shutdown()
 
-        if self.__vcg_tva_warehouse is not None:
-            self.__vcg_tva_warehouse.shutdown()
+        if self.__pump_conv_east is not None:
+            self.__pump_conv_east.shutdown()
+
+        if self.__pump_pool_air_cooling is not None:
+            self.__pump_pool_air_cooling.shutdown()
+
+        if self.__pump_pool_heating is not None:
+            self.__pump_pool_heating.shutdown()
+
+        if self.__pump_pool_air_heating is not None:
+            self.__pump_pool_air_heating.shutdown()
+
+        if self.__pump_servers_cooling is not None:
+            self.__pump_servers_cooling.shutdown()
 
 #endregion

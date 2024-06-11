@@ -1,4 +1,3 @@
-
 #!/usr/bin/env python3
 # -*- coding: utf8 -*-
 
@@ -22,8 +21,6 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
-
-from devices.base_device import BaseDevice
 
 #region File Attributes
 
@@ -56,21 +53,22 @@ __status__ = "Debug"
 
 #endregion
 
-class BasePowerAnalyzer(BaseDevice):
-    """Power analyzer base class."""
+from enum import Enum
 
-#region Attributes
+class ThermalMode(Enum):
+    Stop = 0
+    Cooling = 1
+    Heating = 2
 
-#endregion
+    @staticmethod
+    def is_valid(data_type):
+        """Checks is the data type is valid."""
 
-#region Constructor
+        state = False
 
-#endregion
+        for function_code in ThermalMode:
+            if data_type == function_code.value:
+                state = True
+                break
 
-#region Properties
-
-#endregion
-
-#region Public Methods
-
-#endregion
+        return state
