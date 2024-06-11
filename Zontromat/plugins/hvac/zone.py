@@ -339,7 +339,7 @@ class Zone(BasePlugin):
                 state |= self._controller.digital_read(self.__window_tamper_settings[tamper])
 
             if self.__window_tamper_settings[tamper] == verbal_const.OFF:
-                state = True
+                state |= True
 
         return state
 
