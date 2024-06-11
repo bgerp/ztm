@@ -336,7 +336,7 @@ class Zone(BasePlugin):
             # {'WINT_1': '!U0:ID2:FC2:R0:DI0'}
 
             if self._controller.is_valid_gpio(self.__window_tamper_settings[tamper]):
-                state = self._controller.digital_read(self.__window_tamper_settings[tamper])
+                state |= self._controller.digital_read(self.__window_tamper_settings[tamper])
 
             if self.__window_tamper_settings[tamper] == verbal_const.OFF:
                 state = True
