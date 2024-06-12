@@ -779,7 +779,7 @@
             "PIR_1": {
                 "model": "RS2",
                 "options": {
-                    "mb_id": 11,
+                    "mb_id": 16,
                     "uart": 0
                 },
                 "vendor": "Gasim"
@@ -2086,6 +2086,16 @@
     },
     {
         "data_type": "json",
+        "default": {},
+        "description": "ECD / Ground drilling valves state.",
+        "limit": 0.0,
+        "name": "ecd.ground_drilling.temp.settings",
+        "plugin": "Energy Center Distribution",
+        "range": "",
+        "scope": "Device"
+    },
+    {
+        "data_type": "json",
         "default": {
             "cold": [
                 {
@@ -3345,6 +3355,114 @@
         "plugin": "Energy Center Distribution",
         "range": "",
         "scope": "Device"
+    },
+    {
+        "data_type": "json",
+        "default": [
+            {
+                "input": {
+                    "model": "MB318E",
+                    "options": {
+                        "chanel": 0,
+                        "mb_id": 1,
+                        "uart": 0
+                    },
+                    "vendor": "CWT"
+                },
+                "output": {
+                    "model": "MB318E",
+                    "options": {
+                        "chanel": 1,
+                        "mb_id": 1,
+                        "uart": 0
+                    },
+                    "vendor": "CWT"
+                }
+            },
+            {
+                "input": {
+                    "model": "MB318E",
+                    "options": {
+                        "chanel": 2,
+                        "mb_id": 1,
+                        "uart": 0
+                    },
+                    "vendor": "CWT"
+                },
+                "output": {
+                    "model": "MB318E",
+                    "options": {
+                        "chanel": 3,
+                        "mb_id": 1,
+                        "uart": 0
+                    },
+                    "vendor": "CWT"
+                }
+            },
+            {
+                "input": {
+                    "model": "MB318E",
+                    "options": {
+                        "chanel": 4,
+                        "mb_id": 1,
+                        "uart": 0
+                    },
+                    "vendor": "CWT"
+                },
+                "output": {
+                    "model": "MB318E",
+                    "options": {
+                        "chanel": 5,
+                        "mb_id": 1,
+                        "uart": 0
+                    },
+                    "vendor": "CWT"
+                }
+            }
+        ],
+        "description": "ECD / Ground drilling thermo couples settings.",
+        "limit": 0.0,
+        "name": "ecd.ground_drilling.tc.settings",
+        "plugin": "Energy Center Distribution",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "json",
+        "default": [],
+        "description": "ECD / Ground drilling thermo couples values.",
+        "limit": 0.0,
+        "name": "ecd.ground_drilling.tc.values",
+        "plugin": "Energy Center Distribution",
+        "range": "",
+        "scope": "Device"
+    },
+    {
+        "data_type": "json",
+        "default": {
+            "cold": [
+                {
+                    "model": "FLX-05F",
+                    "options": {
+                        "close_on_shutdown": false,
+                        "io_mode": 1,
+                        "limit_ccw": "!U0:ID11:FC2:R0:DI0",
+                        "limit_cw": "U0:ID11:FC2:R0:DI0",
+                        "output_ccw": "off",
+                        "output_cw": "U0:ID11:FC5:R0:RO0",
+                        "wait_on_shutdown": false
+                    },
+                    "vendor": "Flowx"
+                }
+            ],
+            "hot": []
+        },
+        "description": "ECD / Floor entrance valves settings.",
+        "limit": 0.0,
+        "name": "ecd.floor_entrance.valves.settings",
+        "plugin": "Energy Center Distribution",
+        "range": "",
+        "scope": "System"
     },
     {
         "data_type": "bool",

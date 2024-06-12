@@ -482,6 +482,9 @@ class ModbusDevice(BaseDevice):
                 registers_data[registers[0]])
             value = unpack("f", bin_data)[0]
 
+        elif parameter_type == ParameterType.ARR_UINT16_T_LE:
+            value = registers_data
+
         return value
 
     #endregion

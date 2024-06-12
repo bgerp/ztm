@@ -157,28 +157,28 @@ class Zone(BasePlugin):
         # Floor valve control table.
         self.__fl_control_table = \
         [
-            [0, 0, 0, 0, 0, 0, 0, 0, 0],     # 0 - Спряно
-            [1, 1, 1/2, 1/4, 0, 0, 0, 0, 0], # 1 - Охлаждане
-            [0, 0, 0, 0, 0, 1/4, 1/2, 1, 1], # 2 - Отопление
-            [0, 0, 0, 0, 0, 0, 1/2, 1, 1] # 3 - Режим №3
+            [  0,   0,   0,   0,   0,   0,   0,   0,   0], # 0 - Спряно
+            [  1,   1, 1/2, 1/4,   0,   0,   0,   0,   0], # 1 - Охлаждане
+            [  0,   0,   0,   0,   0, 1/4, 1/2,   1,   1], # 2 - Отопление
+            [  0,   0,   0,   0,   0,   0, 1/2,   1,   1]  # 3 - Режим №3
         ]
 
         # Convector control table.
         self.__conv_control_table = \
         [
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], # 0 - Спряно
-            [4, 3, 2, 1, 0, 0, 0, 0, 0, 0], # 1 - Охлаждане
-            [0, 0, 0, 0, 0, 0, 1, 2, 3, 4], # 2 - Отопление
-            [2, 2, 1, 0, 0, 0, 0, 0, 0] # 3 - Режим №3
+            [  0,   0,   0,   0,   0,   0,   0,   0,   0], # 0 - Спряно
+            [  4,   3,   2,   1,   0,   0,   0,   0,   0], # 1 - Охлаждане
+            [  0,   0,   0,   0,   0,   1,   2,   3,   4], # 2 - Отопление
+            [  2,   2,   1,   0,   0,   0,   0,   0,   0]  # 3 - Режим №3
         ]
 
         # Fan control table.
         self.__fan_control_table = \
         [
-            [0, 0, 0, 0, 0, 50, 80, 120, 140], # 0 - Спряно
-            [-80, -50, -30, 0, 0, 0, 30, 50, 80], # 1 - Охлаждане
-            [0, 0, 0, 0, 0, 0, 0, 0, 0],       # 2 - Отопление
-            [0, 0, 0, 0, 0, 0, 0, 0, 0] # 3 - Режим №3
+            [  0,   0,   0,   0,   0,  50,  80, 120, 140], # 0 - Спряно
+            [-80, -50, -30,   0,   0,   0,   0,   0,   0], # 1 - Охлаждане
+            [  0,   0,   0,   0,   0,   0,  30,  50,  80], # 2 - Отопление
+            [  0,   0,   0,   0,   0,   0,   0,   0,   0]  # 3 - Режим №3
         ]
 
         self.__air_temp_upper_dev = None
@@ -229,11 +229,15 @@ class Zone(BasePlugin):
         """Convector valve device.
         """
 
+        self.__temperature_deviation = 0
+        """Temperature deviation constant.
+        """        
+
         self.__adjust_temp = 0
         """Temperature set point from the OP.
         """
 
-        self.__window_closed_input = verbal_const.OFF
+        self.__window_tamper_settings = {}
         """Window closed sensor input.
         """
 
@@ -328,11 +332,14 @@ class Zone(BasePlugin):
 
         state = False
 
-        if self._controller.is_valid_gpio(self.__window_closed_input):
-            state = self._controller.digital_read(self.__window_closed_input)
+        for tamper in self.__window_tamper_settings:
+            # {'WINT_1': '!U0:ID2:FC2:R0:DI0'}
 
-        if self.__window_closed_input == verbal_const.OFF:
-            state = True
+            if self._controller.is_valid_gpio(self.__window_tamper_settings[tamper]):
+                state |= self._controller.digital_read(self.__window_tamper_settings[tamper])
+
+            if self.__window_tamper_settings[tamper] == verbal_const.OFF:
+                state |= True
 
         return state
 
@@ -429,14 +436,14 @@ class Zone(BasePlugin):
             state = last_state
 
         # Controlled by the ERP.
-        # conv_state = self.__conv_control_table[self.__glob_conv_mode][state]
-        # fl_state = self.__fl_control_table[self.__glob_floor_mode][state]
-        # fan_state = self.__fan_control_table[self.__glob_conv_mode][state]
+        conv_state = self.__conv_control_table[self.__glob_conv_mode][state]
+        fl_state = self.__fl_control_table[self.__glob_floor_mode][state]
+        fan_state = self.__fan_control_table[self.__glob_conv_mode][state]
 
         # Test control.
-        conv_state = self.__conv_control_table[3][state]
-        fl_state = self.__fl_control_table[3][state]
-        fan_state = self.__fan_control_table[3][state]
+        # conv_state = self.__conv_control_table[3][state]
+        # fl_state = self.__fl_control_table[3][state]
+        # fan_state = self.__fan_control_table[3][state]
 
         print(f"self.__glob_floor_mode: {self.__glob_floor_mode}; self.__glob_conv_mode: {self.__glob_conv_mode}; conv_state: {conv_state:2.1f}; fl_state: {fl_state:2.1f}; fan_state: {fan_state:2.1f}; ")
 
@@ -812,6 +819,20 @@ class Zone(BasePlugin):
 
 #region Private Methods (Registers Parameters)
 
+    def __temperature_deviation_cb(self, register):
+
+        # Check data type.
+        if not (register.data_type == "float" or register.data_type == "int"):
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        temperature_deviation = register.value
+
+        if temperature_deviation < 0:
+            temperature_deviation = 0
+
+        self.__temperature_deviation = temperature_deviation
+
     def __adjust_temp_cb(self, register):
 
         # Check data type.
@@ -847,14 +868,14 @@ class Zone(BasePlugin):
 
         self.__adjust_temp = actual_temp
 
-    def __window_closed_input_cb(self, register):
+    def __window_tamper_settings_cb(self, register):
 
           # Check data type.
-        if not register.data_type == "str":
+        if not register.data_type == "json":
             GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
             return
 
-        self.__window_closed_input = register.value
+        self.__window_tamper_settings = register.value
 
     def __glob_conv_mode_cb(self, register):
 
@@ -1071,10 +1092,10 @@ class Zone(BasePlugin):
             cl_vlv_3_dev_settings.update()
 
         # Create window closed sensor.
-        window_closed_input = self._registers.by_name(f"ac.window_closed_{self.__identifier}.input")
-        if window_closed_input is not None:
-            window_closed_input.update_handlers = self.__window_closed_input_cb
-            window_closed_input.update()
+        window_tamper_settings = self._registers.by_name(f"envm.window_tamper.settings")
+        if window_tamper_settings is not None:
+            window_tamper_settings.update_handlers = self.__window_tamper_settings_cb
+            window_tamper_settings.update()
 
         # Region parameters
         update_rate = self._registers.by_name(f"{self.key}.update_rate_{self.__identifier}")
@@ -1097,6 +1118,11 @@ class Zone(BasePlugin):
         if thermal_force_limit is not None:
             thermal_force_limit.update_handlers = self.__thermal_force_limit_cb
             thermal_force_limit.update()
+
+        temperature_deviation = self._registers.by_name(f"{self.key}.temperature_deviation_{self.__identifier}.value")
+        if temperature_deviation is not None:
+            temperature_deviation.update_handlers = self.__temperature_deviation_cb
+            temperature_deviation.update()
 
         adjust_temp = self._registers.by_name(f"{self.key}.temp_{self.__identifier}.adjust")
         if adjust_temp is not None:
@@ -1253,8 +1279,8 @@ class Zone(BasePlugin):
         is_hot_water = self.__is_hot_water()
 
         # Take all necessary condition for normal operation of the HVAC.
-        # stop_flag = (not is_empty or not window_tamper_state or not is_hot_water)
-        stop_flag = False
+        stop_flag = (is_empty or window_tamper_state or not is_hot_water)
+        # stop_flag = False
 
         # If it is time to stop.
         if stop_flag:
@@ -1298,8 +1324,14 @@ class Zone(BasePlugin):
 
             print(f"Target: {self.__adjust_temp:2.1f}; Current: {self.__temp_proc.value:2.1f}")
 
-            # Calculate the delta.
-            dt = self.__adjust_temp - self.__temp_proc.value
+            dt = 0.0
+            if not self.__stop_flag:
+                # Calculate the delta.
+                # dt = self.__adjust_temp - self.__temp_proc.value
+
+                # Calculate the delta t and temperature deviation.
+                dt = min(self.__adjust_temp - self.__temp_proc.value+self.__temperature_deviation, 0) \
+                    + max(self.__adjust_temp - self.__temp_proc.value-self.__temperature_deviation, 0)
 
             # Round to have clear rounded value for state machine currency.
             dt = self.__round_to_nearest_half(dt)
