@@ -176,8 +176,8 @@ class Zone(BasePlugin):
         self.__fan_control_table = \
         [
             [  0,   0,   0,   0,   0,  50,  80, 120, 140], # 0 - Спряно
-            [-80, -50, -30,   0,   0,   0,   0,   0,   0], # 1 - Охлаждане
-            [  0,   0,   0,   0,   0,   0,  30,  50,  80], # 2 - Отопление
+            [-40, -30,   0,   0,   0,   0,   0,   0,   0], # 1 - Охлаждане
+            [  0,   0,   0,   0,   0,   0,   0,  30,  80], # 2 - Отопление
             [  0,   0,   0,   0,   0,   0,   0,   0,   0]  # 3 - Режим №3
         ]
 
@@ -454,9 +454,9 @@ class Zone(BasePlugin):
         else:
             self.__set_cl_state(0)
 
-        if conv_state > 3:
-            conv_state = 3
-
+        # By subtracting one offset the convector state and at the same time give fourth state.
+        # 1 Only valve
+        # 2 to 4 valve + 1,2 and 3 stages for the convector.
         self.__set_conv_state(conv_state-1)
         self.__set_ventilation(fan_state)
 
