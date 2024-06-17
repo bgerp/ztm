@@ -3306,6 +3306,88 @@
     },
     {
         "data_type": "json",
+        "default": [
+            {
+                "input": {
+                    "model": "MB318E",
+                    "options": {
+                        "chanel": 8,
+                        "mb_id": 1,
+                        "uart": 0
+                    },
+                    "vendor": "CWT"
+                },
+                "output": {
+                    "model": "MB318E",
+                    "options": {
+                        "chanel": 9,
+                        "mb_id": 1,
+                        "uart": 0
+                    },
+                    "vendor": "CWT"
+                }
+            }
+        ],
+        "description": "ECD / Hot water thermo couples settings.",
+        "limit": 0.0,
+        "name": "ecd.hot_water.tc.settings",
+        "plugin": "Energy Center Distribution",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "json",
+        "default": [],
+        "description": "ECD / Hot water thermo couples values.",
+        "limit": 0.0,
+        "name": "ecd.hot_water.tc.values",
+        "plugin": "Energy Center Distribution",
+        "range": "",
+        "scope": "Device"
+    },
+    {
+        "data_type": "json",
+        "default": [
+            {
+                "input": {
+                    "model": "MB318E",
+                    "options": {
+                        "chanel": 10,
+                        "mb_id": 1,
+                        "uart": 0
+                    },
+                    "vendor": "CWT"
+                },
+                "output": {
+                    "model": "MB318E",
+                    "options": {
+                        "chanel": 11,
+                        "mb_id": 1,
+                        "uart": 0
+                    },
+                    "vendor": "CWT"
+                }
+            }
+        ],
+        "description": "ECD / Cold water thermo couples settings.",
+        "limit": 0.0,
+        "name": "ecd.cold_water.tc.settings",
+        "plugin": "Energy Center Distribution",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "json",
+        "default": [],
+        "description": "ECD / Hot water thermo couples values.",
+        "limit": 0.0,
+        "name": "ecd.cold_water.tc.values",
+        "plugin": "Energy Center Distribution",
+        "range": "",
+        "scope": "Device"
+    },
+    {
+        "data_type": "json",
         "default": {
             "cold": [
                 {
