@@ -2114,66 +2114,78 @@ class EnergyCenterDistribution(BasePlugin):
                 del self.__tc_ground_drilling_3_output
 
         def init():
+            tcgd_0 = register.value[0]
+            input_tcgd_0 = tcgd_0["input"]
             self.__tc_ground_drilling_1_input = ThermometersFactory.create(
                 name="tc_ground_drilling_1_input",
-                vendor="CWT",
-                model="MB318E",
+                vendor=input_tcgd_0["vendor"],
+                model=input_tcgd_0["model"],
                 controller=self._controller,
-                options = {"uart": 0, "mb_id": 1, "chanel": 0})
+                options=input_tcgd_0["options"])
             if self.__tc_ground_drilling_1_input is not None:
                 self.__tc_ground_drilling_1_input.init()
-
+            
+            output_tcgd_0 = tcgd_0["output"]
             self.__tc_ground_drilling_1_output = ThermometersFactory.create(
                 name="tc_ground_drilling_1_output",
-                vendor="CWT",
-                model="MB318E",
+                vendor=output_tcgd_0["vendor"],
+                model=output_tcgd_0["model"],
                 controller=self._controller,
-                options = {"uart": 0, "mb_id": 1, "chanel": 1})
+                options=output_tcgd_0["options"])
             if self.__tc_ground_drilling_1_output is not None:
                 self.__tc_ground_drilling_1_output.init()
 
+            tcgd_1 = register.value[1]
+            input_tcgd_1 = tcgd_1["input"]
             self.__tc_ground_drilling_2_input = ThermometersFactory.create(
                 name="tc_ground_drilling_2_input",
-                vendor="CWT",
-                model="MB318E",
+                vendor=input_tcgd_1["vendor"],
+                model=input_tcgd_1["model"],
                 controller=self._controller,
-                options = {"uart": 0, "mb_id": 1, "chanel": 2})
+                options=input_tcgd_1["options"])
             if self.__tc_ground_drilling_2_input is not None:
                 self.__tc_ground_drilling_2_input.init()
 
+            output_tcgd_1 = tcgd_1["output"]
             self.__tc_ground_drilling_2_output = ThermometersFactory.create(
                 name="tc_ground_drilling_2_output",
-                vendor="CWT",
-                model="MB318E",
+                vendor=output_tcgd_1["vendor"],
+                model=output_tcgd_1["model"],
                 controller=self._controller,
-                options = {"uart": 0, "mb_id": 1, "chanel": 3})
+                options=output_tcgd_1["options"])
             if self.__tc_ground_drilling_2_output is not None:
                 self.__tc_ground_drilling_2_output.init()
 
+            tcgd_2 = register.value[2]
+            input_tcgd_2 = tcgd_2["input"]
             self.__tc_ground_drilling_3_input = ThermometersFactory.create(
                 name="tc_ground_drilling_3_input",
-                vendor="CWT",
-                model="MB318E",
+                vendor=input_tcgd_2["vendor"],
+                model=input_tcgd_2["model"],
                 controller=self._controller,
-                options = {"uart": 0, "mb_id": 1, "chanel": 4})
+                options=input_tcgd_2["options"])
             if self.__tc_ground_drilling_3_input is not None:
                 self.__tc_ground_drilling_3_input.init()
 
+            output_tcgd_2 = tcgd_2["output"]
             self.__tc_ground_drilling_3_output = ThermometersFactory.create(
                 name="tc_ground_drilling_3_output",
-                vendor="CWT",
-                model="MB318E",
+                vendor=output_tcgd_2["vendor"],
+                model=output_tcgd_2["model"],
                 controller=self._controller,
-                options = {"uart": 0, "mb_id": 1, "chanel": 5})
+                options=output_tcgd_2["options"])
             if self.__tc_ground_drilling_3_output is not None:
                 self.__tc_ground_drilling_3_output.init()
 
-        if register.value != {}:
-            shutdown()
-            init()
+        try:
+            if register.value != {}:
+                shutdown()
+                init()
 
-        elif register.value == {}:
-            shutdown()
+            elif register.value == {}:
+                shutdown()
+        except Exception as e:
+            self.__logger.error(e)
 
     def __update_tc_ground_drilling_value(self):
         tc_ground_drilling_values = {}
@@ -2223,30 +2235,36 @@ class EnergyCenterDistribution(BasePlugin):
                 del self.__tc_hot_water_1_output
 
         def init():
+            tchw_0 = register.value[0]
+            input_tchw_0 = tchw_0["input"]
             self.__tc_hot_water_1_input = ThermometersFactory.create(
                 name="tc_hot_water_1_input",
-                vendor="CWT",
-                model="MB318E",
+                vendor=input_tchw_0["vendor"],
+                model=input_tchw_0["model"],
                 controller=self._controller,
-                options = {"uart": 0, "mb_id": 1, "chanel": 8})
+                options=input_tchw_0["options"])
             if self.__tc_hot_water_1_input is not None:
                 self.__tc_hot_water_1_input.init()
-
+            
+            output_tchw_0 = tchw_0["output"]
             self.__tc_hot_water_1_output = ThermometersFactory.create(
                 name="tc_hot_water_1_output",
-                vendor="CWT",
-                model="MB318E",
+                vendor=output_tchw_0["vendor"],
+                model=output_tchw_0["model"],
                 controller=self._controller,
-                options = {"uart": 0, "mb_id": 1, "chanel": 9})
+                options=output_tchw_0["options"])
             if self.__tc_hot_water_1_output is not None:
                 self.__tc_hot_water_1_output.init()
 
-        if register.value != {}:
-            shutdown()
-            init()
+        try:
+            if register.value != {}:
+                shutdown()
+                init()
 
-        elif register.value == {}:
-            shutdown()
+            elif register.value == {}:
+                shutdown()
+        except Exception as e:
+            self.__logger.error(e)
 
     def __update_tc_hot_water_value(self):
         tc_hot_water_values = {}
@@ -2280,30 +2298,36 @@ class EnergyCenterDistribution(BasePlugin):
                 del self.__tc_cold_water_1_output
 
         def init():
+            tccw_0 = register.value[0]
+            input_tccw_0 = tccw_0["input"]
             self.__tc_cold_water_1_input = ThermometersFactory.create(
-                name="tc_hot_water_1_input",
-                vendor="CWT",
-                model="MB318E",
+                name="tc_cold_water_1_input",
+                vendor=input_tccw_0["vendor"],
+                model=input_tccw_0["model"],
                 controller=self._controller,
-                options = {"uart": 0, "mb_id": 1, "chanel": 10})
+                options=input_tccw_0["options"])
             if self.__tc_cold_water_1_input is not None:
                 self.__tc_cold_water_1_input.init()
 
+            output_tccw_0 = tccw_0["input"]
             self.__tc_cold_water_1_output = ThermometersFactory.create(
-                name="tc_hot_water_1_output",
-                vendor="CWT",
-                model="MB318E",
+                name="tc_cold_water_1_output",
+                vendor=output_tccw_0["vendor"],
+                model=output_tccw_0["model"],
                 controller=self._controller,
-                options = {"uart": 0, "mb_id": 1, "chanel": 11})
+                options=output_tccw_0["options"])
             if self.__tc_cold_water_1_output is not None:
                 self.__tc_cold_water_1_output.init()
 
-        if register.value != {}:
-            shutdown()
-            init()
+        try:
+            if register.value != {}:
+                shutdown()
+                init()
 
-        elif register.value == {}:
-            shutdown()
+            elif register.value == {}:
+                shutdown()
+        except Exception as e:
+            self.__logger.error(e)
 
     def __update_tc_cold_water_value(self):
         tc_cold_water_values = {}
