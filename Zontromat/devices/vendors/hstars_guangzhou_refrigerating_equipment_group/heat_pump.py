@@ -28,6 +28,11 @@ from utils.logger import get_logger
 
 from devices.base_device import BaseDevice
 
+from devices.drivers.modbus.device import ModbusDevice
+from devices.drivers.modbus.parameter import Parameter
+from devices.drivers.modbus.parameter_type import ParameterType
+from devices.drivers.modbus.function_code import FunctionCode
+
 # (Request from mail: Eml6429)
 
 #region File Attributes
@@ -61,31 +66,11 @@ __status__ = "Debug"
 
 #endregion
 
-class HeatPumpMode(Enum):
-    """Heat pumps mode.
-    """
-
-    NONE = 0
-    Summer = 1
-    Winter = 2
-
-class HP_40STD_N420WHSB4(BaseDevice):
+class HP_40STD_N420WHSB4(ModbusDevice):
     """Heat pump description. (40STD-N420WHSB4)
     """
 
 #region Attributes
-
-    __logger = None
-    """Logger
-    """
-
-    __mode = HeatPumpMode.NONE
-    """Mode of the heat pump.
-    """
-
-    __power = 0
-    """Power of the pump.
-    """
 
 #endregion
 
@@ -94,12 +79,37 @@ class HP_40STD_N420WHSB4(BaseDevice):
     def __init__(self, **config):
         """Constructor
         """
-
         super().__init__(config)
 
-        self._vendor = "Hstars Guangzhou Refrigerating Equipment Group.Co.,Ltd"
+        self._vendor = "HstarsGuangzhouRefrigeratingEquipmentGroup"
+        """Hstars Guangzhou Refrigerating Equipment Group.Co.,Ltd
+        """        
 
         self._model = "40STD-N420WHSB4"
+
+        self.__valid_modes = [1,2,3,4,5]
+
+        self._parameters.append(
+            Parameter(
+                "GetMode",
+                "Enum",
+                ParameterType.ARR_UINT16_T_LE,
+                [0],
+                FunctionCode.ReadHoldingRegisters,
+                [1, 5]
+            )
+        )
+
+        self._parameters.append(
+            Parameter(
+                "SetMode",
+                "Enum",
+                ParameterType.ARR_UINT16_T_LE,
+                [0],
+                FunctionCode.WriteSingleHoldingRegister,
+                [1, 5]
+            )
+        )
 
     def __del__(self):
         """Destructor
@@ -107,12 +117,7 @@ class HP_40STD_N420WHSB4(BaseDevice):
 
         super().__del__()
 
-        if self.__logger is not None:
-            del self.__logger
-
 #endregion
-
-#region Public Methods
 
     def set_mode(self, mode):
         """Set heat pump mode.
@@ -121,40 +126,25 @@ class HP_40STD_N420WHSB4(BaseDevice):
             mode (HeatPumpMode): Heat pump mode.
         """
 
-        if self.__mode == mode:
-            return
+        if mode in self.__modes:
+            try:
+                request = self.generate_request("SetMode", SetMode=int(mode))
+                response = self._controller.execute_mb_request(request, self._uart)
+                if response is not None:
+                    if not response.isError():
+                        pass
+                        # value = response.registers[0] / 10
 
-        self.__mode = mode
+            except Exception:
+                pass
 
-        self.__logger.debug(self.__mode.name)
+    def get_mode(self):
+        """Get heat pump mode.
 
-    def set_power(self, power):
-        """Set heat pump power.
-
-        Args:
-            power (int): Power of the machine.
+        Returns:
+            int: Heat pump mode. [1 to 5]
         """
 
-        if self.__power == power:
-            return
-
-        self.__power = power
-
-        self.__logger.debug(self.__power)
-
-    def init(self):
-        """Initialize the heat pump.
-        """
-
-        # Create logger.
-        self.__logger = get_logger(__name__)
-        self.__logger.info("Starting up the: {}".format(self.name))
-
-    def shutdown(self):
-        """Shutdown the heat pump.
-        """
-
-        self.set_power(0)
-        self.__logger.debug("Shutdown the: {}".format(self.name))
+        return self.get_value("GetMode")
 
 #endregion
