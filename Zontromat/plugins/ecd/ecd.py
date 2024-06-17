@@ -267,6 +267,22 @@ class EnergyCenterDistribution(BasePlugin):
         """Thermo couple ground drilling 3 output.
         """
 
+        self.__tc_hot_water_1_input = None
+        """Thermo couple hot water input.
+        """
+
+        self.__tc_hot_water_1_output = None
+        """Thermo couple hot water output.
+        """
+
+        self.__tc_cold_water_1_input = None
+        """Thermo couple cold water input.
+        """
+
+        self.__tc_cold_water_1_output = None
+        """Thermo couple cold water output.
+        """
+
 #endregion
 
 #region Private Methods
@@ -1907,6 +1923,120 @@ class EnergyCenterDistribution(BasePlugin):
             tc_values.value = tc_ground_drilling_values
             tc_values.update()
 
+    def __tc_hot_water_settings_cb(self, register: Register):
+
+        # Check data type.
+        if not register.data_type == "json":
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        def shutdown():
+            if self.__tc_hot_water_1_input is not None:
+                self.__tc_hot_water_1_input.shutdown()
+                del self.__tc_hot_water_1_input
+
+            if self.__tc_hot_water_1_output is not None:
+                self.__tc_hot_water_1_output.shutdown()
+                del self.__tc_hot_water_1_output
+
+        def init():
+            self.__tc_hot_water_1_input = ThermometersFactory.create(
+                name="tc_hot_water_1_input",
+                vendor="CWT",
+                model="MB318E",
+                controller=self._controller,
+                options = {"uart": 0, "mb_id": 1, "chanel": 0})
+            if self.__tc_hot_water_1_input is not None:
+                self.__tc_hot_water_1_input.init()
+
+            self.__tc_hot_water_1_output = ThermometersFactory.create(
+                name="tc_hot_water_1_output",
+                vendor="CWT",
+                model="MB318E",
+                controller=self._controller,
+                options = {"uart": 0, "mb_id": 1, "chanel": 1})
+            if self.__tc_hot_water_1_output is not None:
+                self.__tc_hot_water_1_output.init()
+
+        if register.value != {}:
+            shutdown()
+            init()
+
+        elif register.value == {}:
+            shutdown()
+
+    def __update_tc_hot_water_value(self):
+        tc_hot_water_values = {}
+        if self.__tc_hot_water_1_input is not None:
+            tc_hot_water_values[self.__tc_hot_water_1_input.name]\
+                  = self.__tc_hot_water_1_input.get_temp()
+
+        if self.__tc_hot_water_1_output is not None:
+            tc_hot_water_values[self.__tc_hot_water_1_output.name]\
+                  = self.__tc_hot_water_1_output.get_temp()
+
+        tc_values = self._registers.by_name("ecd.hot_water.tc.values")
+        if tc_values is not None:
+            tc_values.value = tc_hot_water_values
+            tc_values.update()
+
+    def __tc_cold_water_settings_cb(self, register: Register):
+
+        # Check data type.
+        if not register.data_type == "json":
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        def shutdown():
+            if self.__tc_cold_water_1_input is not None:
+                self.__tc_cold_water_1_input.shutdown()
+                del self.__tc_cold_water_1_input
+
+            if self.__tc_cold_water_1_output is not None:
+                self.__tc_cold_water_1_output.shutdown()
+                del self.__tc_cold_water_1_output
+
+        def init():
+            self.__tc_cold_water_1_input = ThermometersFactory.create(
+                name="tc_hot_water_1_input",
+                vendor="CWT",
+                model="MB318E",
+                controller=self._controller,
+                options = {"uart": 0, "mb_id": 1, "chanel": 0})
+            if self.__tc_cold_water_1_input is not None:
+                self.__tc_cold_water_1_input.init()
+
+            self.__tc_cold_water_1_output = ThermometersFactory.create(
+                name="tc_hot_water_1_output",
+                vendor="CWT",
+                model="MB318E",
+                controller=self._controller,
+                options = {"uart": 0, "mb_id": 1, "chanel": 1})
+            if self.__tc_cold_water_1_output is not None:
+                self.__tc_cold_water_1_output.init()
+
+        if register.value != {}:
+            shutdown()
+            init()
+
+        elif register.value == {}:
+            shutdown()
+
+    def __update_tc_cold_water_value(self):
+        tc_cold_water_values = {}
+        if self.__tc_cold_water_1_input is not None:
+            tc_cold_water_values[self.__tc_cold_water_1_input.name]\
+                  = self.__tc_cold_water_1_input.get_temp()
+
+        if self.__tc_cold_water_1_output is not None:
+            tc_cold_water_values[self.__tc_cold_water_1_output.name]\
+                  = self.__tc_cold_water_1_output.get_temp()
+
+        tc_values = self._registers.by_name("ecd.cold_water.tc.values")
+        if tc_values is not None:
+            tc_values.value = tc_cold_water_values
+            tc_values.update()
+
 #endregion
 
 #region Private Methods (Registers)
@@ -2046,10 +2176,22 @@ class EnergyCenterDistribution(BasePlugin):
         # ====================================================================================================
 
         reg_name = f"{self.key}.ground_drilling.tc.settings"
-        settings = self._registers.by_name(reg_name)
-        if settings is not None:
-            settings.update_handlers = self.__tc_ground_drilling_settings_cb
-            settings.update()
+        ground_drilling = self._registers.by_name(reg_name)
+        if ground_drilling is not None:
+            ground_drilling.update_handlers = self.__tc_ground_drilling_settings_cb
+            ground_drilling.update()
+
+        reg_name = f"{self.key}.hot_water.tc.settings"
+        hot_water = self._registers.by_name(reg_name)
+        if hot_water is not None:
+            hot_water.update_handlers = self.__tc_hot_water_settings_cb
+            hot_water.update()
+
+        reg_name = f"{self.key}.cold_water.tc.settings"
+        cold_water = self._registers.by_name(reg_name)
+        if cold_water is not None:
+            cold_water.update_handlers = self.__tc_cold_water_settings_cb
+            cold_water.update()
 
 #endregion
 
@@ -2358,6 +2500,10 @@ class EnergyCenterDistribution(BasePlugin):
                 print(f"{register.name}: {register.value}")
 
         self.__update_tc_ground_drilling_value()
+
+        self.__update_tc_hot_water_value()
+
+        self.__update_tc_cold_water_value()
 
     def _shutdown(self):
         """Shutting down the plugin.
