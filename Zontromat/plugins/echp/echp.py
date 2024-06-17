@@ -25,7 +25,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from utils.logger import get_logger
 
 from plugins.base_plugin import BasePlugin
-from plugins.echp.heat_pump_control_group import HeatPumpControllGroup
+from plugins.echp.heat_pump_control_group import HeatPumpControlGroup
+from devices.factories.heat_pumps.heat_pump_factory import HeatPumpFactory
 
 # (Request from mail: Eml6429)
 
@@ -68,17 +69,34 @@ class EnergyCenterHeatpump(BasePlugin):
 
 #region Attributes
 
-    __logger = None
-    """Logger
-    """
-
-    __heat_pump_control_group = None
-    """Heat pump controll group.
-    """
-
 #endregion
 
 #region Constructor / Destructor
+
+    def __init__(self, config):
+        """Constructor
+
+        Args:
+            config (config): Configuration of the object.
+        """
+
+        super().__init__(config)
+
+        self.__logger = get_logger(__name__)
+        self.__logger.info("Starting up the: {}".format(self.name))
+        """Create logger.
+        """
+
+        self.__heat_pump_control_group = HeatPumpControlGroup(
+        """Heat pump controll group.
+        """
+            name="Heat Pump Controll Group",
+            key="{}.hpcg".format(self.key),
+            controller=self._controller,
+            registers=self._registers)
+
+        if self.__heat_pump_control_group is not None:
+            self.__heat_pump_control_group.init()
 
     def __del__(self):
         """Destructor
@@ -101,18 +119,7 @@ class EnergyCenterHeatpump(BasePlugin):
         """Initialize the plugin.
         """
 
-        # Create logger.
-        self.__logger = get_logger(__name__)
-        self.__logger.info("Starting up the: {}".format(self.name))
 
-        self.__heat_pump_control_group = HeatPumpControllGroup(
-            name="Heat Pump Controll Group",
-            key="{}.hpcg".format(self.key),
-            controller=self._controller,
-            registers=self._registers)
-
-        if self.__heat_pump_control_group is not None:
-            self.__heat_pump_control_group.init()
 
     def _update(self):
         """Update the plugin.
