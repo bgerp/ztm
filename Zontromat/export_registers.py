@@ -3650,7 +3650,7 @@ def __add_registers(args):
     __registers.append(register)
 
     # ECD / Hot water thermo couples settings.
-    register = Register("ecd.hot_water.tc.values")
+    register = Register("ecd.cold_water.tc.values")
     register.scope = Scope.Device
     register.plugin_name = "Energy Center Distribution"
     register.description = "ECD / Hot water thermo couples values."
