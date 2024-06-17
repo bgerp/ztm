@@ -2309,7 +2309,7 @@ class EnergyCenterDistribution(BasePlugin):
             if self.__tc_cold_water_1_input is not None:
                 self.__tc_cold_water_1_input.init()
 
-            output_tccw_0 = tccw_0["input"]
+            output_tccw_0 = tccw_0["output"]
             self.__tc_cold_water_1_output = ThermometersFactory.create(
                 name="tc_cold_water_1_output",
                 vendor=output_tccw_0["vendor"],
