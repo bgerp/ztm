@@ -3683,6 +3683,95 @@ def __add_registers(args):
     register.value = []
     __registers.append(register)
 
+    # ECD / Hot water thermo couples settings.
+    register = Register("ecd.hot_water.tc.settings")
+    register.scope = Scope.System
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Hot water thermo couples settings."
+    register.range = __range["NONE"]
+    register.value = \
+    [
+        {
+            "input":
+            {
+                "vendor": "CWT",
+                "model": "MB318E",
+                "options":
+                {
+                    "uart": 0,
+                    "mb_id": 1,
+                    "chanel": 8
+                }
+            },
+            "output":
+            {
+                "vendor": "CWT",
+                "model": "MB318E",
+                "options":
+                {
+                    "uart": 0,
+                    "mb_id": 1,
+                    "chanel": 9
+                }
+            }
+        }
+    ]
+    __registers.append(register)
+
+    # ECD / Hot water thermo couples settings.
+    register = Register("ecd.hot_water.tc.values")
+    register.scope = Scope.Device
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Hot water thermo couples values."
+    register.range = __range["NONE"]
+    register.value = []
+    __registers.append(register)
+
+    # ECD / Cold water thermo couples settings.
+    register = Register("ecd.cold_water.tc.settings")
+    register.scope = Scope.System
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Cold water thermo couples settings."
+    register.range = __range["NONE"]
+    register.value = \
+    [
+        {
+            "input":
+            {
+                "vendor": "CWT",
+                "model": "MB318E",
+                "options":
+                {
+                    "uart": 0,
+                    "mb_id": 1,
+                    "chanel": 10
+                }
+            },
+            "output":
+            {
+                "vendor": "CWT",
+                "model": "MB318E",
+                "options":
+                {
+                    "uart": 0,
+                    "mb_id": 1,
+                    "chanel": 11
+                }
+            }
+        }
+    ]
+    __registers.append(register)
+
+    # ECD / Hot water thermo couples settings.
+    register = Register("ecd.hot_water.tc.values")
+    register.scope = Scope.Device
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Hot water thermo couples values."
+    register.range = __range["NONE"]
+    register.value = []
+    __registers.append(register)
+
+
     # ECD / Floor entrance valves settings.
     register = Register("ecd.floor_entrance.valves.settings")
     register.scope = Scope.System
