@@ -3381,7 +3381,7 @@
         "default": [],
         "description": "ECD / Hot water thermo couples values.",
         "limit": 0.0,
-        "name": "ecd.hot_water.tc.values",
+        "name": "ecd.cold_water.tc.values",
         "plugin": "Energy Center Distribution",
         "range": "",
         "scope": "Device"
