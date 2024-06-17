@@ -313,6 +313,8 @@ class ZL101PCC(BaseController):
         # Local GPIO.
         def get_local_gpio(pin):
 
+            lgpio_response = False
+
             # Read device digital inputs.
             request = self.__black_island.generate_request("GetDigitalInputs")
             di_response = self.__modbus_rtu_clients[0].execute(request)
@@ -324,16 +326,18 @@ class ZL101PCC(BaseController):
             else:
                 GlobalErrorHandler.log_hardware_malfunction(self.__logger, "GPIO: {} @ {} malfunctioning, check modbus cables and connections.".format(pin, self))
 
-            response = self.__DI[self._gpio_map[pin]]
+            lgpio_response = self.__DI[self._gpio_map[pin]]
 
             # Inversion
             if self.is_gpio_inverted(pin):
-                response = not response
+                lgpio_response = not lgpio_response
 
-            return response
+            return lgpio_response
 
         # Remote GPIO.
         def get_remote_gpio(pin):
+
+            rgpio_response = False
 
             remote_gpio = self.parse_remote_gpio(pin)
 
@@ -347,13 +351,13 @@ class ZL101PCC(BaseController):
                 remote_gpio["mb_id"])
 
             if not read_response.isError():
-                response = read_response.bits[remote_gpio["io_index"]]
+                rgpio_response = read_response.bits[remote_gpio["io_index"]]
 
                 # Inversion
                 if self.is_gpio_inverted(pin):
-                    response = not response
+                    rgpio_response = not rgpio_response
 
-            return response
+            return rgpio_response
 
         if isinstance(pin, str):
             if self.is_gpio_off(pin):
