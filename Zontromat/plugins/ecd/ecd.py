@@ -694,7 +694,7 @@ class EnergyCenterDistribution(BasePlugin):
         elif register.value == ThermalMode.Heating.value:
             self.__vcg_generators.target_position = 100
 
-    def __updateLeft_door_panel(self):
+    def __update_left_door_panel(self):
         if self.__vcg_floor_entrance is not None:
             self.__vcg_floor_entrance.update()
             reg_state = self._registers.by_name("ecd.floor_entrance.valves.state")
@@ -2492,7 +2492,7 @@ class EnergyCenterDistribution(BasePlugin):
 
         # self.__update_animations()
 
-        self.__updateLeft_door_panel()
+        self.__update_left_door_panel()
 
         self.__update_right_door_panel()
 
