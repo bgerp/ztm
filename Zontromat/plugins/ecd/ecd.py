@@ -2228,7 +2228,7 @@ class EnergyCenterDistribution(BasePlugin):
                 vendor="CWT",
                 model="MB318E",
                 controller=self._controller,
-                options = {"uart": 0, "mb_id": 1, "chanel": 0})
+                options = {"uart": 0, "mb_id": 1, "chanel": 8})
             if self.__tc_hot_water_1_input is not None:
                 self.__tc_hot_water_1_input.init()
 
@@ -2237,7 +2237,7 @@ class EnergyCenterDistribution(BasePlugin):
                 vendor="CWT",
                 model="MB318E",
                 controller=self._controller,
-                options = {"uart": 0, "mb_id": 1, "chanel": 1})
+                options = {"uart": 0, "mb_id": 1, "chanel": 9})
             if self.__tc_hot_water_1_output is not None:
                 self.__tc_hot_water_1_output.init()
 
@@ -2285,7 +2285,7 @@ class EnergyCenterDistribution(BasePlugin):
                 vendor="CWT",
                 model="MB318E",
                 controller=self._controller,
-                options = {"uart": 0, "mb_id": 1, "chanel": 0})
+                options = {"uart": 0, "mb_id": 1, "chanel": 10})
             if self.__tc_cold_water_1_input is not None:
                 self.__tc_cold_water_1_input.init()
 
@@ -2294,7 +2294,7 @@ class EnergyCenterDistribution(BasePlugin):
                 vendor="CWT",
                 model="MB318E",
                 controller=self._controller,
-                options = {"uart": 0, "mb_id": 1, "chanel": 1})
+                options = {"uart": 0, "mb_id": 1, "chanel": 11})
             if self.__tc_cold_water_1_output is not None:
                 self.__tc_cold_water_1_output.init()
 
