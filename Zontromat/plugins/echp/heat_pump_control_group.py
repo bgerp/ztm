@@ -70,115 +70,11 @@ __status__ = "Debug"
 
 #endregion
 
-class HeatPumpControllGroup(BasePlugin):
-    """Heat pump control grpoup calss.
+class HeatPumpControlGroup(BasePlugin):
+    """Heat pump control group class.
     """
 
 #region Attributes
-
-    __logger = None
-    """Logger
-    """
-
-    __heat_pumps_count = 0
-    """[summary]
-    """
-
-    __heat_pump_orders = []
-    """Het pump priority order.
-    """
-
-    __day_order = -1
-    """Day order index.
-    """
-
-    __interval_step = 3
-    """Interval step.
-    """
-
-    __cold_interval = 0
-    """Cold interval.
-    """
-
-    __hot_interval = 0
-    """Hot interval.
-    """
-
-    __vcg_cold_buff = None
-
-    __vcg_cold_geo = None
-
-    __v_warm_geo = None
-
-    __v_warm_floor = None
-
-    __v_hot = None
-
-    __heat_pump = None
-
-    __cold_water_pump = None
-
-    __hot_water_pump = None
-
-    __warm_g_water_pump = None
-
-    __warm_p_water_pump = None
-
-#endregion
-
-#region Attributes Registers Values
-
-    __heat_pumps_count = 3
-    """Het pump count.
-    """
-
-    __heat_pump_index = 0
-    """Heat pump index.
-    """
-
-    __cold_min = 5
-    """Cold water minimum.
-    """
-
-    __cold_max = 7
-    """Cold water maximum.
-    """
-
-    __hot_min = 41
-    """Hot water minimum.
-    """
-
-    __hot_max = 46
-    """Hot water maximum.
-    """
-
-    __temp_cold = 0
-    """Temperature cold water.
-    """
-
-    __temp_hot = 0
-    """Temperature hot water.
-    """
-
-    __winter_power = 0
-    """Winter power.
-    """
-
-    __summer_power = 0
-    """Summer power.
-    """
-
-    __heat_pump_mode = HeatPumpMode.NONE
-    """Heat pump mode.
-    """
-
-    __heat_pump_power = 0
-    """Heat pump power.
-    """
-
-    __heat_pump_run = False
-    """Heat pump run flag.
-    """
 
 #endregion
 
@@ -188,9 +84,107 @@ class HeatPumpControllGroup(BasePlugin):
 
         super().__init__(config)
 
+
+
         # Create logger.
         self.__logger = get_logger(__name__)
         self.__logger.info("Starting up the: {}".format(self.name))
+
+        self.__heat_pumps_count = 0
+        """[summary]
+        """
+
+        self.__heat_pump_orders = []
+        """Het pump priority order.
+        """
+
+        self.__day_order = -1
+        """Day order index.
+        """
+
+        self.__interval_step = 3
+        """Interval step.
+        """
+
+        self.__cold_interval = 0
+        """Cold interval.
+        """
+
+        self.__hot_interval = 0
+        """Hot interval.
+        """
+
+        self.__vcg_cold_buff = None
+
+        self.__vcg_cold_geo = None
+
+        self.__v_warm_geo = None
+
+        self.__v_warm_floor = None
+
+        self.__v_hot = None
+
+        self.__heat_pump = None
+
+        self.__cold_water_pump = None
+
+        self.__hot_water_pump = None
+
+        self.__warm_g_water_pump = None
+
+        self.__warm_p_water_pump = None
+
+        self.__heat_pumps_count = 3
+        """Het pump count.
+        """
+
+        self.__heat_pump_index = 0
+        """Heat pump index.
+        """
+
+        self.__cold_min = 5
+        """Cold water minimum.
+        """
+
+        self.__cold_max = 7
+        """Cold water maximum.
+        """
+
+        self.__hot_min = 41
+        """Hot water minimum.
+        """
+
+        self.__hot_max = 46
+        """Hot water maximum.
+        """
+
+        self.__temp_cold = 0
+        """Temperature cold water.
+        """
+
+        self.__temp_hot = 0
+        """Temperature hot water.
+        """
+
+        self.__winter_power = 0
+        """Winter power.
+        """
+
+        self.__summer_power = 0
+        """Summer power.
+        """
+
+        self.__heat_pump_mode = HeatPumpMode.NONE
+        """Heat pump mode.
+        """
+
+        self.__heat_pump_power = 0
+        """Heat pump power.
+        """
+
+        self.__heat_pump_run = False
+        """Heat pump run flag.
+        """
 
         # Valve group cold buffer. (BLUE)
         self.__vcg_cold_buff = ValveControlGroup(
@@ -764,7 +758,7 @@ class HeatPumpControllGroup(BasePlugin):
 
         # Heat pump.
         self.__heat_pump.set_mode(self.__heat_pump_mode)
-        self.__heat_pump.set_power(self.__heat_pump_power)
+        # self.__heat_pump.set_power(self.__heat_pump_power)
         self.__heat_pump.update()
 
         self.__update_registers()

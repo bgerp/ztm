@@ -766,6 +766,89 @@
     {
         "data_type": "bool",
         "default": true,
+        "description": "Plugin enabled",
+        "limit": 0.0,
+        "name": "envm.enabled",
+        "plugin": "Environment",
+        "range": "true|false",
+        "scope": "System"
+    },
+    {
+        "data_type": "json",
+        "default": {
+            "PIR_1": {
+                "model": "RS2",
+                "options": {
+                    "mb_id": 16,
+                    "uart": 0
+                },
+                "vendor": "Gasim"
+            }
+        },
+        "description": "Plugin environment PIR settings",
+        "limit": 0.0,
+        "name": "envm.pir.settings",
+        "plugin": "Environment",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "json",
+        "default": {},
+        "description": "Plugin environment PIR activations",
+        "limit": 0.0,
+        "name": "envm.pir.activations",
+        "plugin": "Environment",
+        "range": "",
+        "scope": "Device"
+    },
+    {
+        "data_type": "json",
+        "default": {
+            "WINT_1": "!U0:ID2:FC2:R0:DI0"
+        },
+        "description": "Plugin environment window tamper settings",
+        "limit": 0.0,
+        "name": "envm.window_tamper.settings",
+        "plugin": "Environment",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "json",
+        "default": {},
+        "description": "Plugin environment window tampers activations",
+        "limit": 0.0,
+        "name": "envm.window_tamper.activations",
+        "plugin": "Environment",
+        "range": "",
+        "scope": "Device"
+    },
+    {
+        "data_type": "json",
+        "default": {
+            "DRT_1": "!U0:ID2:FC2:R0:DI1"
+        },
+        "description": "Plugin environment door tamper settings",
+        "limit": 0.0,
+        "name": "envm.door_tamper.settings",
+        "plugin": "Environment",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "json",
+        "default": {},
+        "description": "Plugin environment door tampers activations",
+        "limit": 0.0,
+        "name": "envm.door_tamper.activations",
+        "plugin": "Environment",
+        "range": "",
+        "scope": "Device"
+    },
+    {
+        "data_type": "bool",
+        "default": true,
         "description": "Is empty flag",
         "limit": 0.0,
         "name": "envm.is_empty",
@@ -1034,16 +1117,6 @@
         "scope": "System"
     },
     {
-        "data_type": "bool",
-        "default": true,
-        "description": "Plugin enabled",
-        "limit": 0.0,
-        "name": "envm.enabled",
-        "plugin": "Environment",
-        "range": "true|false",
-        "scope": "System"
-    },
-    {
         "data_type": "float",
         "default": 0.0,
         "description": "Sun azimuth value",
@@ -1184,6 +1257,16 @@
     },
     {
         "data_type": "json",
+        "default": {},
+        "description": "Floor loop 1 valve activations",
+        "limit": 0.0,
+        "name": "hvac.floor_loop_1.valve.activations",
+        "plugin": "HVAC",
+        "range": "",
+        "scope": "Device"
+    },
+    {
+        "data_type": "json",
         "default": {
             "model": "a20t20b2c",
             "options": {
@@ -1202,6 +1285,16 @@
     },
     {
         "data_type": "json",
+        "default": {},
+        "description": "Floor loop 2 valve activations",
+        "limit": 0.0,
+        "name": "hvac.floor_loop_2.valve.activations",
+        "plugin": "HVAC",
+        "range": "",
+        "scope": "Device"
+    },
+    {
+        "data_type": "json",
         "default": {
             "model": "a20t20b2c",
             "options": {
@@ -1217,6 +1310,16 @@
         "plugin": "HVAC",
         "range": "",
         "scope": "System"
+    },
+    {
+        "data_type": "json",
+        "default": {},
+        "description": "Floor loop 3 valve activations",
+        "limit": 0.0,
+        "name": "hvac.floor_loop_3.valve.activations",
+        "plugin": "HVAC",
+        "range": "",
+        "scope": "Device"
     },
     {
         "data_type": "json",
@@ -1262,6 +1365,16 @@
     },
     {
         "data_type": "json",
+        "default": {},
+        "description": "Convector loop 1 valve activations",
+        "limit": 0.0,
+        "name": "hvac.conv_loop_1.valve.activations",
+        "plugin": "HVAC",
+        "range": "",
+        "scope": "Device"
+    },
+    {
+        "data_type": "json",
         "default": {
             "model": "Klimafan",
             "options": {
@@ -1304,6 +1417,16 @@
     },
     {
         "data_type": "json",
+        "default": {},
+        "description": "Convector loop 2 valve activations",
+        "limit": 0.0,
+        "name": "hvac.conv_loop_2.valve.activations",
+        "plugin": "HVAC",
+        "range": "",
+        "scope": "Device"
+    },
+    {
+        "data_type": "json",
         "default": {
             "model": "Klimafan",
             "options": {
@@ -1343,6 +1466,16 @@
         "plugin": "HVAC",
         "range": "",
         "scope": "System"
+    },
+    {
+        "data_type": "json",
+        "default": {},
+        "description": "Convector loop 3 valve activations",
+        "limit": 0.0,
+        "name": "hvac.conv_loop_3.valve.activations",
+        "plugin": "HVAC",
+        "range": "",
+        "scope": "Device"
     },
     {
         "data_type": "int",
@@ -3429,7 +3562,7 @@
         "description": "Energy Center Heat Pump machines count",
         "limit": 0.0,
         "name": "echp.hp.count",
-        "plugin": "ECHP",
+        "plugin": "Energy Center Heat Pump",
         "range": "0/",
         "scope": "System"
     },
@@ -3439,7 +3572,7 @@
         "description": "Energy Center Heat Pump machine index",
         "limit": 0.0,
         "name": "echp.hp.index",
-        "plugin": "ECHP",
+        "plugin": "Energy Center Heat Pump",
         "range": "0/",
         "scope": "System"
     },
@@ -3449,7 +3582,7 @@
         "description": "The power of machine",
         "limit": 0.0,
         "name": "echp.hp.power",
-        "plugin": "ECHP",
+        "plugin": "Energy Center Heat Pump",
         "range": "-100.0/100.0",
         "scope": "System"
     },
@@ -3459,7 +3592,7 @@
         "description": "The mode of the machine",
         "limit": 0.0,
         "name": "echp.hp.mode",
-        "plugin": "ECHP",
+        "plugin": "Energy Center Heat Pump",
         "range": "",
         "scope": "System"
     },
@@ -3469,7 +3602,7 @@
         "description": "The state of the machine",
         "limit": 0.0,
         "name": "echp.hp.run",
-        "plugin": "ECHP",
+        "plugin": "Energy Center Heat Pump",
         "range": "",
         "scope": "Device"
     },
@@ -3479,7 +3612,7 @@
         "description": "Energy Center Heat Pump cold minimum",
         "limit": 0.0,
         "name": "echp.hp.cold_min",
-        "plugin": "ECHP",
+        "plugin": "Energy Center Heat Pump",
         "range": "3.0/8.0",
         "scope": "System"
     },
@@ -3489,7 +3622,7 @@
         "description": "Energy Center Heat Pump cold maximum",
         "limit": 0.0,
         "name": "echp.hp.cold_max",
-        "plugin": "ECHP",
+        "plugin": "Energy Center Heat Pump",
         "range": "3.0/8.0",
         "scope": "System"
     },
@@ -3499,7 +3632,7 @@
         "description": "Energy Center Heat Pump hot minimum",
         "limit": 0.0,
         "name": "echp.hp.hot_min",
-        "plugin": "ECHP",
+        "plugin": "Energy Center Heat Pump",
         "range": "40.0/47.0",
         "scope": "System"
     },
@@ -3509,64 +3642,63 @@
         "description": "Energy Center Heat Pump hot maximum",
         "limit": 0.0,
         "name": "echp.hp.hot_max",
-        "plugin": "ECHP",
+        "plugin": "Energy Center Heat Pump",
         "range": "40.0/47.0",
         "scope": "System"
     },
     {
         "data_type": "json",
         "default": {
-            "model": "FLX-05F",
-            "options": {
-                "limit_ccw": "off",
-                "limit_cw": "off",
-                "output_ccw": "off",
-                "output_cw": "off"
-            },
-            "vendor": "Flowx"
+            "input": [
+                {
+                    "model": "FLX-05F",
+                    "options": {
+                        "close_on_shutdown": false,
+                        "io_mode": 1,
+                        "limit_ccw": "U0:ID6:FC2:R0:DI1",
+                        "limit_cw": "U0:ID6:FC2:R0:DI0",
+                        "output_ccw": "off",
+                        "output_cw": "U0:ID2:FC5:R0:RO1",
+                        "wait_on_shutdown": false
+                    },
+                    "vendor": "Flowx"
+                }
+            ],
+            "output": [
+                {
+                    "model": "FLX-05F",
+                    "options": {
+                        "close_on_shutdown": false,
+                        "io_mode": 1,
+                        "limit_ccw": "!U0:ID11:FC2:R0:DI0",
+                        "limit_cw": "U0:ID11:FC2:R0:DI0",
+                        "output_ccw": "off",
+                        "output_cw": "U0:ID11:FC5:R0:RO0",
+                        "wait_on_shutdown": false
+                    },
+                    "vendor": "Flowx"
+                }
+            ],
+            "short": [
+                {
+                    "model": "FLX-05F",
+                    "options": {
+                        "close_on_shutdown": false,
+                        "io_mode": 1,
+                        "limit_ccw": "!U0:ID11:FC2:R0:DI0",
+                        "limit_cw": "U0:ID11:FC2:R0:DI0",
+                        "output_ccw": "off",
+                        "output_cw": "U0:ID11:FC5:R0:RO0",
+                        "wait_on_shutdown": false
+                    },
+                    "vendor": "Flowx"
+                }
+            ]
         },
-        "description": "Heat Pump Control Group / VCG / Cold Buffer / Input",
+        "description": "Heat Pump Control Group / VCG / Cold Buffer",
         "limit": 0.0,
-        "name": "echp.hpcg.vcg_cold_buf.input",
-        "plugin": "ECHP",
-        "range": "",
-        "scope": "System"
-    },
-    {
-        "data_type": "json",
-        "default": {
-            "model": "FLX-05F",
-            "options": {
-                "limit_ccw": "off",
-                "limit_cw": "off",
-                "output_ccw": "off",
-                "output_cw": "off"
-            },
-            "vendor": "Flowx"
-        },
-        "description": "Heat Pump Control Group / VCG / Cold Buffer / Output",
-        "limit": 0.0,
-        "name": "echp.hpcg.vcg_cold_buf.output",
-        "plugin": "ECHP",
-        "range": "",
-        "scope": "System"
-    },
-    {
-        "data_type": "json",
-        "default": {
-            "model": "FLX-05F",
-            "options": {
-                "limit_ccw": "off",
-                "limit_cw": "off",
-                "output_ccw": "off",
-                "output_cw": "off"
-            },
-            "vendor": "Flowx"
-        },
-        "description": "Heat Pump Control Group / VCG / Cold Buffer / Short",
-        "limit": 0.0,
-        "name": "echp.hpcg.vcg_cold_buf.short",
-        "plugin": "ECHP",
+        "name": "echp.hpcg.vcg_cold_buf.settings",
+        "plugin": "Energy Center Heat Pump",
         "range": "",
         "scope": "System"
     },
@@ -3585,7 +3717,7 @@
         "description": "Heat Pump Control Group / VCG / Cold Geo / Input",
         "limit": 0.0,
         "name": "echp.hpcg.vcg_cold_geo.input",
-        "plugin": "ECHP",
+        "plugin": "Energy Center Heat Pump",
         "range": "",
         "scope": "System"
     },
@@ -3604,7 +3736,7 @@
         "description": "Heat Pump Control Group / VCG / Cold Geo / Output",
         "limit": 0.0,
         "name": "echp.hpcg.vcg_cold_geo.output",
-        "plugin": "ECHP",
+        "plugin": "Energy Center Heat Pump",
         "range": "",
         "scope": "System"
     },
@@ -3623,7 +3755,7 @@
         "description": "Heat Pump Control Group / VCG / Cold Geo / Short",
         "limit": 0.0,
         "name": "echp.hpcg.vcg_cold_geo.short",
-        "plugin": "ECHP",
+        "plugin": "Energy Center Heat Pump",
         "range": "",
         "scope": "System"
     },
@@ -3642,7 +3774,7 @@
         "description": "Heat Pump Control Group / VCG / Warm Geo / Input",
         "limit": 0.0,
         "name": "echp.hpcg.vcg_warm_geo.input",
-        "plugin": "ECHP",
+        "plugin": "Energy Center Heat Pump",
         "range": "",
         "scope": "System"
     },
@@ -3661,7 +3793,7 @@
         "description": "Heat Pump Control Group / VCG / Warm Geo / Output",
         "limit": 0.0,
         "name": "echp.hpcg.vcg_warm_geo.output",
-        "plugin": "ECHP",
+        "plugin": "Energy Center Heat Pump",
         "range": "",
         "scope": "System"
     },
@@ -3680,7 +3812,7 @@
         "description": "Heat Pump Control Group / VCG / Warm Geo / Short",
         "limit": 0.0,
         "name": "echp.hpcg.vcg_warm_geo.short",
-        "plugin": "ECHP",
+        "plugin": "Energy Center Heat Pump",
         "range": "",
         "scope": "System"
     },
@@ -3699,7 +3831,7 @@
         "description": "Heat Pump Control Group / VCG / Warm Geo / Input",
         "limit": 0.0,
         "name": "echp.hpcg.vcg_warm_floor.input",
-        "plugin": "ECHP",
+        "plugin": "Energy Center Heat Pump",
         "range": "",
         "scope": "System"
     },
@@ -3718,7 +3850,7 @@
         "description": "Heat Pump Control Group / VCG / Warm Geo / Output",
         "limit": 0.0,
         "name": "echp.hpcg.vcg_warm_floor.output",
-        "plugin": "ECHP",
+        "plugin": "Energy Center Heat Pump",
         "range": "",
         "scope": "System"
     },
@@ -3737,7 +3869,7 @@
         "description": "Heat Pump Control Group / VCG / Warm Geo / Output",
         "limit": 0.0,
         "name": "echp.hpcg.vcg_warm_floor.short",
-        "plugin": "ECHP",
+        "plugin": "Energy Center Heat Pump",
         "range": "",
         "scope": "System"
     },
@@ -3754,7 +3886,7 @@
         "description": "Heat Pump Control Group / Water Pump / Cold",
         "limit": 0.0,
         "name": "echp.hpcg.wp_cold.settings",
-        "plugin": "ECHP",
+        "plugin": "Energy Center Heat Pump",
         "range": "",
         "scope": "System"
     },
@@ -3771,7 +3903,7 @@
         "description": "Heat Pump Control Group / Water Pump / Hot",
         "limit": 0.0,
         "name": "echp.hpcg.wp_hot.settings",
-        "plugin": "ECHP",
+        "plugin": "Energy Center Heat Pump",
         "range": "",
         "scope": "System"
     },
@@ -3788,7 +3920,7 @@
         "description": "Heat Pump Control Group / Water Pump / Warm",
         "limit": 0.0,
         "name": "echp.hpcg.wp_warm_p.settings",
-        "plugin": "ECHP",
+        "plugin": "Energy Center Heat Pump",
         "range": "",
         "scope": "System"
     },
@@ -3805,7 +3937,7 @@
         "description": "Heat Pump Control Group / Water Pump / Warm",
         "limit": 0.0,
         "name": "echp.hpcg.wp_warm_g.settings",
-        "plugin": "ECHP",
+        "plugin": "Energy Center Heat Pump",
         "range": "",
         "scope": "System"
     },
@@ -3822,7 +3954,7 @@
         "description": "Heat Pump Control Group / Heat Pump",
         "limit": 0.0,
         "name": "echp.hpcg.hp.settings",
-        "plugin": "ECHP",
+        "plugin": "Energy Center Heat Pump",
         "range": "",
         "scope": "System"
     },
@@ -3835,6 +3967,16 @@
         "plugin": "Energy Center Heat Pump",
         "range": "true|false",
         "scope": "System"
+    },
+    {
+        "data_type": "float",
+        "default": 0.0,
+        "description": "Upper fan speed [%]",
+        "limit": 0.0,
+        "name": "vent.fans.max_speed_1",
+        "plugin": "Ventilation",
+        "range": "",
+        "scope": "Device"
     },
     {
         "data_type": "int",
@@ -3853,7 +3995,7 @@
         "limit": 0.0,
         "name": "vent.hvac_setpoint_1",
         "plugin": "Ventilation",
-        "range": "-100.0/100.0",
+        "range": "-200.0/200.0",
         "scope": "System"
     },
     {
@@ -4056,6 +4198,46 @@
         "name": "oc_hall.enabled",
         "plugin": "Office Conference Hall",
         "range": "true|false",
+        "scope": "System"
+    },
+    {
+        "data_type": "int",
+        "default": 0,
+        "description": "Global floor thermal mode.",
+        "limit": 0.0,
+        "name": "glob.floor.mode",
+        "plugin": "No plugin, just global",
+        "range": "0|1|2",
+        "scope": "System"
+    },
+    {
+        "data_type": "int",
+        "default": 0,
+        "description": "Global convector thermal mode.",
+        "limit": 0.0,
+        "name": "glob.conv.mode",
+        "plugin": "No plugin, just global",
+        "range": "0|1|2",
+        "scope": "System"
+    },
+    {
+        "data_type": "float",
+        "default": 0.0,
+        "description": "Global east ilumination.",
+        "limit": 0.0,
+        "name": "glob.illumination.east",
+        "plugin": "No plugin, just global",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "float",
+        "default": 0.0,
+        "description": "Global west ilumination.",
+        "limit": 0.0,
+        "name": "glob.illumination.west",
+        "plugin": "No plugin, just global",
+        "range": "",
         "scope": "System"
     }
 ]
