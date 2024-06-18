@@ -126,7 +126,7 @@ class HP_40STD_N420WHSB4(ModbusDevice):
             mode (HeatPumpMode): Heat pump mode.
         """
 
-        if mode in self.__modes:
+        if mode in self.__valid_modes:
             try:
                 request = self.generate_request("SetMode", SetMode=int(mode))
                 response = self._controller.execute_mb_request(request, self._uart)
