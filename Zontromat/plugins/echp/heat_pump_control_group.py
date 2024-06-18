@@ -29,7 +29,7 @@ from utils.logic.functions import rotate_list
 
 from plugins.base_plugin import BasePlugin
 
-from devices.vendors.hstars_guangzhou_refrigerating_equipment_group.heat_pump import HP_40STD_N420WHSB4, HeatPumpMode
+from devices.vendors.hstars_guangzhou_refrigerating_equipment_group.heat_pump import HP_40STD_N420WHSB4
 from devices.utils.valve_control_group.valve_control_group import ValveControlGroup
 from devices.utils.valve_control_group.valve_control_group_mode import ValveControlGroupMode
 
@@ -84,14 +84,16 @@ class HeatPumpControlGroup(BasePlugin):
 
         super().__init__(config)
 
-
-
         # Create logger.
         self.__logger = get_logger(__name__)
         self.__logger.info("Starting up the: {}".format(self.name))
 
-        self.__heat_pumps_count = 0
-        """[summary]
+        self.__heat_pumps_count = 3
+        """Het pump count.
+        """
+
+        self.__heat_pump_index = 0
+        """Heat pump index.
         """
 
         self.__heat_pump_orders = []
@@ -112,34 +114,6 @@ class HeatPumpControlGroup(BasePlugin):
 
         self.__hot_interval = 0
         """Hot interval.
-        """
-
-        self.__vcg_cold_buff = None
-
-        self.__vcg_cold_geo = None
-
-        self.__v_warm_geo = None
-
-        self.__v_warm_floor = None
-
-        self.__v_hot = None
-
-        self.__heat_pump = None
-
-        self.__cold_water_pump = None
-
-        self.__hot_water_pump = None
-
-        self.__warm_g_water_pump = None
-
-        self.__warm_p_water_pump = None
-
-        self.__heat_pumps_count = 3
-        """Het pump count.
-        """
-
-        self.__heat_pump_index = 0
-        """Heat pump index.
         """
 
         self.__cold_min = 5
@@ -174,7 +148,7 @@ class HeatPumpControlGroup(BasePlugin):
         """Summer power.
         """
 
-        self.__heat_pump_mode = HeatPumpMode.NONE
+        self.__heat_pump_mode = 0
         """Heat pump mode.
         """
 
@@ -187,48 +161,53 @@ class HeatPumpControlGroup(BasePlugin):
         """
 
         # Valve group cold buffer. (BLUE)
-        self.__vcg_cold_buff = ValveControlGroup(
-            name="VCG Cold Buffer",
-            key="{}.vcg_cold_buf".format(self.key),
+        self.__vcg_cold= ValveControlGroup(\
+            name="VCG Cold",
+            key=f"{self.key}.cold.valves.settings",
             controller=self._controller,
             registers=self._registers,
-            fw_valves=["input", "output"],
-            rev_valves=["short"])
-        self.__vcg_cold_buff.mode = ValveControlGroupMode.Proportional
+            fw_valves=["input"], # This is this way, because the automation is done by wire, now by software.
+            mode = ValveControlGroupMode.Proportional)
 
         # Valve group cold geo. (GREEN)
-        self.__vcg_cold_geo = ValveControlGroup(
+        self.__vcg_cold_geo = ValveControlGroup(\
             name="VCG Cold Geo",
-            key="{}.vcg_cold_geo".format(self.key),
+            key=f"{self.key}.cold_geo.valves.settings",
             controller=self._controller,
             registers=self._registers,
-            fw_valves=["input", "output"])
-        self.__vcg_cold_geo.mode = ValveControlGroupMode.Proportional
+            fw_valves=["input"], # This is this way, because the automation is done by wire, now by software.
+            mode = ValveControlGroupMode.Proportional)
 
         # Valve group warm geo. (GREEN)
-        self.__vcg_warm_geo = ValveControlGroup(
+        self.__vcg_warm_geo = ValveControlGroup(\
             name="VCG Warm Geo",
-            key="{}.vcg_warm_geo".format(self.key),
+            key=f"{self.key}.warm_geo.valves.settings",
             controller=self._controller,
             registers=self._registers,
-            fw_valves=["input", "output"],
-            rev_valves=["short"])
-        self.__vcg_warm_geo.mode = ValveControlGroupMode.Proportional
+            fw_valves=["input"], # This is this way, because the automation is done by wire, now by software.
+            mode = ValveControlGroupMode.Proportional)
 
         # Valve group warm floor. (PURPLE)
-        self.__vcg_warm_floor = ValveControlGroup(
-            name="VCG Warm floor",
-            key="{}.vcg_warm_floor".format(self.key),
+        self.__vcg_warm = ValveControlGroup(\
+            name="VCG Warm",
+            key=f"{self.key}.warm.valves.settings",
             controller=self._controller,
             registers=self._registers,
-            fw_valves=["input", "output"],
-            rev_valves=["short"])
-        self.__vcg_warm_floor.mode = ValveControlGroupMode.Proportional
+            fw_valves=["input"], # This is this way, because the automation is done by wire, now by software.
+            mode = ValveControlGroupMode.Proportional)
 
+        # Valve group warm floor. (RED)
+        self.__vcg_hot = ValveControlGroup(\
+            name="VCG Hot",
+            key=f"{self.key}.hot.valves.settings",
+            controller=self._controller,
+            registers=self._registers,
+            fw_valves=["input"], # This is this way, because the automation is done by wire, now by software.
+            mode = ValveControlGroupMode.Proportional)
+
+        # Water Pump (BLUE)
         register = self._registers.by_name("{}.wp_cold.settings".format(self.key))
         if register is not None:
-            wp_setting = register.value
-
             self.__cold_water_pump = PumpFactory.create(
                 name="WP Cold",
                 controller=self._controller,
@@ -236,10 +215,9 @@ class HeatPumpControlGroup(BasePlugin):
                 model=register.value['model'],
                 options=register.value['options'])
 
+        # Water Pump (RED)
         register = self._registers.by_name("{}.wp_hot.settings".format(self.key))
         if register is not None:
-            wp_setting = register.value
-
             self.__hot_water_pump = PumpFactory.create(
                 name="WP Hot",
                 controller=self._controller,
@@ -247,33 +225,19 @@ class HeatPumpControlGroup(BasePlugin):
                 model=register.value['model'],
                 options=register.value['options'])
 
-
-        register = self._registers.by_name("{}.wp_warm_g.settings".format(self.key))
+        # Water Pump (PURPLE)
+        register = self._registers.by_name("{}.wp_warm.settings".format(self.key))
         if register is not None:
-            wp_setting = register.value
-
-            self.__warm_g_water_pump = PumpFactory.create(
+            self.__warm_water_pump = PumpFactory.create(
                 name="WP Warm G",
                 controller=self._controller,
                 vendor=register.value['vendor'],
                 model=register.value['model'],
                 options=register.value['options'])
 
-        register = self._registers.by_name("{}.wp_warm_p.settings".format(self.key))
-        if register is not None:
-            wp_setting = register.value
-
-            self.__warm_p_water_pump = PumpFactory.create(
-                name="WP Warm P",
-                controller=self._controller,
-                vendor=register.value['vendor'],
-                model=register.value['model'],
-                options=register.value['options'])
-
+        # Heat Pump
         register = self._registers.by_name("{}.hp.settings".format(self.key))
         if register is not None:
-            wp_setting = register.value
-
             self.__heat_pump = HeatPumpFactory.create(
                 name="Heat Pump",
                 controller=self._controller,
@@ -286,20 +250,20 @@ class HeatPumpControlGroup(BasePlugin):
         """
 
         # Valve Control Groups
-        if self.__vcg_cold_buff is not None:
-            del self.__vcg_cold_buff
+        if self.__vcg_cold is not None:
+            del self.__vcg_cold
 
         if self.__vcg_cold_geo is not None:
             del self.__vcg_cold_geo
 
-        if self.__v_warm_geo is not None:
-            del self.__v_warm_geo
+        if self.__vcg_warm_geo is not None:
+            del self.__vcg_warm_geo
 
-        if self.__v_warm_floor is not None:
-            del self.__v_warm_floor
+        if self.__vcg_warm is not None:
+            del self.__vcg_warm
 
-        if self.__v_hot is not None:
-            del self.__v_hot
+        if self.__vcg_hot is not None:
+            del self.__vcg_hot
 
         # Thermal agents pumps.
         if self.__cold_water_pump is not None:
@@ -308,11 +272,8 @@ class HeatPumpControlGroup(BasePlugin):
         if self.__hot_water_pump is not None:
             del self.__hot_water_pump
 
-        if self.__warm_g_water_pump is not None:
-            del self.__warm_g_water_pump
-
-        if self.__warm_p_water_pump is not None:
-            del self.__warm_p_water_pump
+        if self.__warm_water_pump is not None:
+            del self.__warm_water_pump
 
         # Heat pump.
         if self.__heat_pump is not None:
@@ -421,7 +382,7 @@ class HeatPumpControlGroup(BasePlugin):
         """
 
         # TODO: Add schema how to work if the device is 0, 1 or 2
-        # It will be better to be done with formula for smooth controll.
+        # It will be better to be done with formula for smooth control.
 
         if self.temp_cold < self.__cold_min:
             self.__winter_power = 0
@@ -440,7 +401,7 @@ class HeatPumpControlGroup(BasePlugin):
         """
 
         # TODO: Add schema how to work if the device is 0, 1 or 2
-        # It will be better to be done with formula for smooth controll.
+        # It will be better to be done with formula for smooth control.
 
         if self.temp_hot > self.__hot_max:
             self.__summer_power = 0
@@ -693,20 +654,35 @@ class HeatPumpControlGroup(BasePlugin):
         # Generate order.
         self.__generate_order()
 
-        # Heat pump.
-        self.__heat_pump.init()
+        # Valve Control Groups
+        if self.__vcg_cold is not None:
+            self.__vcg_cold.init()
+
+        if self.__vcg_cold_geo is not None:
+            self.__vcg_cold_geo.init()
+
+        if self.__vcg_warm_geo is not None:
+            self.__vcg_warm_geo.init()
+
+        if self.__vcg_warm is not None:
+            self.__vcg_warm.init()
+
+        if self.__vcg_hot is not None:
+            self.__vcg_hot.init()
 
         # Thermal agents pumps.
-        self.__cold_water_pump.init()
-        self.__hot_water_pump.init()
-        self.__warm_p_water_pump.init()
-        self.__warm_g_water_pump.init()
+        if self.__cold_water_pump is not None:
+            self.__cold_water_pump.init()
 
-        # Valve Control Groups (RED, BLUE, PURPLE and GREEN)
-        self.__vcg_cold_buff.init()
-        self.__vcg_cold_geo.init()
-        self.__vcg_warm_geo.init()
-        self.__vcg_warm_floor.init()
+        if self.__hot_water_pump is not None:
+            self.__hot_water_pump.init()
+
+        if self.__warm_water_pump is not None:
+            self.__warm_water_pump.init()
+
+        # Heat pump.
+        if self.__heat_pump is not None:
+            self.__heat_pump.init()
 
     def update(self):
         """Update control group.
@@ -729,55 +705,83 @@ class HeatPumpControlGroup(BasePlugin):
 
         # -=== UNDER TEST ===-
 
-        output_power = self.__heat_pump_run * self.__heat_pump_power
+        # output_power = self.__heat_pump_run * self.__heat_pump_power
 
-        # Open cold circuit.
-        self.__vcg_cold_buff.target_position = output_power
-        self.__cold_water_pump.set_setpoint(output_power)
+        # # Open cold circuit.
+        # self.__vcg_cold.target_position = output_power
+        # self.__cold_water_pump.set_setpoint(output_power)
 
-        # Open warm circuit.
-        self.__vcg_warm_geo.target_position = output_power
-        self.__warm_p_water_pump.set_setpoint(output_power)
+        # # Open warm circuit.
+        # self.__vcg_warm_geo.target_position = output_power
+        # self.__warm_p_water_pump.set_setpoint(output_power)
 
-        # run pump for hot circuit.
-        self.__hot_water_pump.set_setpoint(output_power)
+        # # run pump for hot circuit.
+        # self.__hot_water_pump.set_setpoint(output_power)
 
         # ========================================================================
 
         # Valve Control Groups
-        self.__vcg_cold_buff.update()
-        self.__vcg_cold_geo.update()
-        self.__vcg_warm_geo.update()
-        self.__vcg_warm_floor.update()
+        if self.__vcg_cold is not None:
+            self.__vcg_cold.update()
+
+        if self.__vcg_cold_geo is not None:
+            self.__vcg_cold_geo.update()
+
+        if self.__vcg_warm_geo is not None:
+            self.__vcg_warm_geo.update()
+
+        if self.__vcg_warm is not None:
+            self.__vcg_warm.update()
+
+        if self.__vcg_hot is not None:
+            self.__vcg_hot.update()
 
         # Thermal agents pumps.
-        self.__cold_water_pump.update()
-        self.__hot_water_pump.update()
-        self.__warm_g_water_pump.update()
-        self.__warm_p_water_pump.update()
+        if self.__cold_water_pump is not None:
+            self.__cold_water_pump.update()
+
+        if self.__hot_water_pump is not None:
+            self.__hot_water_pump.update()
+
+        if self.__warm_water_pump is not None:
+            self.__warm_water_pump.update()
 
         # Heat pump.
-        self.__heat_pump.set_mode(self.__heat_pump_mode)
-        # self.__heat_pump.set_power(self.__heat_pump_power)
-        self.__heat_pump.update()
+        if self.__heat_pump is not None:
+            self.__heat_pump.update()
 
         self.__update_registers()
 
     def shutdown(self):
 
         # Valve Control Groups
-        self.__vcg_cold_buff.shutdown()
-        self.__vcg_cold_geo.shutdown()
-        self.__vcg_warm_geo.shutdown()
-        self.__vcg_warm_floor.shutdown()
+        if self.__vcg_cold is not None:
+            self.__vcg_cold.shutdown()
+
+        if self.__vcg_cold_geo is not None:
+            self.__vcg_cold_geo.shutdown()
+
+        if self.__vcg_warm_geo is not None:
+            self.__vcg_warm_geo.shutdown()
+
+        if self.__vcg_warm is not None:
+            self.__vcg_warm.shutdown()
+
+        if self.__vcg_hot is not None:
+            self.__vcg_hot.shutdown()
 
         # Thermal agents pumps.
-        self.__cold_water_pump.shutdown()
-        self.__hot_water_pump.shutdown()
-        self.__warm_g_water_pump.shutdown()
-        self.__warm_p_water_pump.shutdown()
+        if self.__cold_water_pump is not None:
+            self.__cold_water_pump.shutdown()
+
+        if self.__hot_water_pump is not None:
+            self.__hot_water_pump.shutdown()
+
+        if self.__warm_water_pump is not None:
+            self.__warm_water_pump.shutdown()
 
         # Heat pump.
-        self.__heat_pump.shutdown()
+        if self.__heat_pump is not None:
+            self.__heat_pump.shutdown()
 
 #endregion
