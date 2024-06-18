@@ -3525,7 +3525,7 @@
         },
         "description": "ECHP / Cold Buffer / Valves / Settings",
         "limit": 0.0,
-        "name": "echp.cold_buf.valves.settings",
+        "name": "echp.cold.valves.settings",
         "plugin": "Energy Center Heat Pump",
         "range": "",
         "scope": "System"
@@ -3535,7 +3535,7 @@
         "default": 0.0,
         "description": "ECHP / Cold Buffer / Valves / Mode",
         "limit": 0.0,
-        "name": "echp.cold_buf.valves.mode",
+        "name": "echp.cold.valves.mode",
         "plugin": "Energy Center Heat Pump",
         "range": "0|1|2",
         "scope": "System"
@@ -3545,7 +3545,7 @@
         "default": 0.0,
         "description": "ECHP / Cold Buffer / Valves / State",
         "limit": 0.0,
-        "name": "echp.cold_buf.valves.state",
+        "name": "echp.cold.valves.state",
         "plugin": "Energy Center Heat Pump",
         "range": "0|1|2",
         "scope": "Device"

@@ -3748,7 +3748,7 @@ def __add_registers(args):
     # -================================================================================-
 
     # ECHP / Cold Buffer / Valves / Settings
-    register = Register("echp.cold_buf.valves.settings")
+    register = Register("echp.cold.valves.settings")
     register.scope = Scope.System
     register.plugin_name = "Energy Center Heat Pump"
     register.description = "ECHP / Cold Buffer / Valves / Settings"
@@ -3810,7 +3810,7 @@ def __add_registers(args):
     __registers.append(register)
 
     # ECHP / Cold Buffer / Valves / Mode
-    register = Register("echp.cold_buf.valves.mode")
+    register = Register("echp.cold.valves.mode")
     register.scope = Scope.System
     register.plugin_name = "Energy Center Heat Pump"
     register.description = "ECHP / Cold Buffer / Valves / Mode"
@@ -3819,7 +3819,7 @@ def __add_registers(args):
     __registers.append(register)
 
     # ECHP / Cold Buffer / Valves / State
-    register = Register("echp.cold_buf.valves.state")
+    register = Register("echp.cold.valves.state")
     register.scope = Scope.Device
     register.plugin_name = "Energy Center Heat Pump"
     register.description = "ECHP / Cold Buffer / Valves / State"
