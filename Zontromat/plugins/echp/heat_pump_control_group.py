@@ -537,7 +537,7 @@ class HeatPumpControlGroup(BasePlugin):
 
         self.__hot_max = register.value
 
-    def __init_registers_cb(self):
+    def __init_registers(self):
         """Initialize the registers callbacks.
         """
 
@@ -649,7 +649,7 @@ class HeatPumpControlGroup(BasePlugin):
         self.__hot_interval = (self.__hot_max - self.__hot_min) / self.__interval_step
 
         # Initialize the registers callbacks.
-        self.__init_registers_cb()
+        self.__init_registers()
 
         # Generate order.
         self.__generate_order()
