@@ -93,7 +93,7 @@ class HP_40STD_N420WHSB4(ModbusDevice):
             Parameter(
                 "GetMode",
                 "Enum",
-                ParameterType.ARR_UINT16_T_LE,
+                ParameterType.INT16_T_LE,
                 [0],
                 FunctionCode.ReadHoldingRegisters,
                 [1, 5]
@@ -104,7 +104,7 @@ class HP_40STD_N420WHSB4(ModbusDevice):
             Parameter(
                 "SetMode",
                 "Enum",
-                ParameterType.ARR_UINT16_T_LE,
+                ParameterType.INT16_T_LE,
                 [0],
                 FunctionCode.WriteSingleHoldingRegister,
                 [1, 5]
@@ -145,8 +145,6 @@ class HP_40STD_N420WHSB4(ModbusDevice):
             int: Heat pump mode. [1 to 5]
         """
 
-        response = self.get_value("GetMode")
-        value = response[0]
-        return value
+        return self.get_value("GetMode")
 
 #endregion
