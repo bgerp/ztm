@@ -164,14 +164,9 @@ class HeatPumpControlGroup(BasePlugin):
         """Valve group cold buffer. (BLUE)
         """
 
-        # Valve group cold geo. (GREEN)
-        self.__vcg_cold_geo = ValveControlGroup(\
-            name="VCG Cold Geo",
-            key=f"{self.key}.cold_geo.valves.settings",
-            controller=self._controller,
-            registers=self._registers,
-            fw_valves=["input"], # This is this way, because the automation is done by wire, now by software.
-            mode = ValveControlGroupMode.Proportional)
+        self.__vcg_cold_geo = None
+        """Valve group cold geo. (GREEN)
+        """
 
         # Valve group warm geo. (GREEN)
         self.__vcg_warm_geo = ValveControlGroup(\
@@ -231,7 +226,7 @@ class HeatPumpControlGroup(BasePlugin):
                 options=register.value['options'])
 
         # Heat Pump
-        register = self._registers.by_name(f"{self.key}hp.settings")
+        register = self._registers.by_name(f"{self.key}.hp.settings")
         if register is not None:
             self.__heat_pump = HeatPumpFactory.create(
                 name="Heat Pump",
@@ -580,6 +575,49 @@ class HeatPumpControlGroup(BasePlugin):
         elif register.value == 1:
             self.__vcg_cold.target_position = 100
 
+    def __cold_geo_valves_settings_cb(self, register):
+
+        # Check data type.
+        if not register.data_type == "json":
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        if register.value != {}:
+            if self.__vcg_cold_geo is not None:
+                self.__vcg_cold_geo.shutdown()
+                del self.__vcg_cold_geo
+
+            self.__vcg_cold_geo = ValveControlGroup(\
+                name="VCG Cold Geo",
+                key=f"{self.key}.cold_geo.valves.settings",
+                controller=self._controller,
+                registers=self._registers,
+                fw_valves=["input"], # This is this way, because the automation is done by wire, now by software.
+                mode = ValveControlGroupMode.Proportional)
+
+            if self.__vcg_cold_geo is not None:
+                self.__vcg_cold_geo.init()
+
+        elif register.value == {}:
+            if self.__vcg_cold_geo is not None:
+                self.__vcg_cold_geo.shutdown()
+                del self.__vcg_cold_geo
+
+    def __cold_geo_valves_mode_cb(self, register):
+
+        # Check data type.
+        if not (register.data_type == "float" or register.data_type == "int"):
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        if self.__vcg_cold_geo is None:
+            return
+
+        if register.value == 0:
+            self.__vcg_cold_geo.target_position = 0
+        elif register.value == 1:
+            self.__vcg_cold_geo.target_position = 100
+
 #endregion
 
 #region Registers
@@ -627,6 +665,16 @@ class HeatPumpControlGroup(BasePlugin):
         if cold_valves_mode is not None:
             cold_valves_mode.update_handlers = self.__cold_valves_mode_cb
             cold_valves_mode.update()
+
+        cold_geo_valves_settings = self._registers.by_name(f"{self.key}.cold_geo.valves.settings")
+        if cold_geo_valves_settings is not None:
+            cold_geo_valves_settings.update_handlers = self.__cold_geo_valves_settings_cb
+            cold_geo_valves_settings.update()
+
+        cold_geo_valves_mode = self._registers.by_name(f"{self.key}.cold_geo.valves.mode")
+        if cold_geo_valves_mode is not None:
+            cold_geo_valves_mode.update_handlers = self.__cold_geo_valves_mode_cb
+            cold_geo_valves_mode.update()
 
     def __update_registers(self):
 
