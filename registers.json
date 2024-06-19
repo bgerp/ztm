@@ -3945,7 +3945,7 @@
                 "e_stop": "U0:ID15:FC5:R0:RO8",
                 "mb_id": 7,
                 "stop_on_shutdown": true,
-                "uart": 0,
+                "uart": 1,
                 "wait_on_shutdown": false
             },
             "vendor": "Grundfos"
@@ -3986,7 +3986,7 @@
                 "e_stop": "U0:ID15:FC5:R0:RO8",
                 "mb_id": 6,
                 "stop_on_shutdown": true,
-                "uart": 0,
+                "uart": 1,
                 "wait_on_shutdown": false
             },
             "vendor": "Grundfos"
@@ -4027,7 +4027,7 @@
                 "e_stop": "U0:ID15:FC5:R0:RO8",
                 "mb_id": 5,
                 "stop_on_shutdown": true,
-                "uart": 0,
+                "uart": 1,
                 "wait_on_shutdown": false
             },
             "vendor": "Grundfos"
@@ -4078,6 +4078,16 @@
     },
     {
         "data_type": "int",
+        "default": 0,
+        "description": "The mode of the machine",
+        "limit": 0.0,
+        "name": "echp.hp.mode",
+        "plugin": "Energy Center Heat Pump",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "int",
         "default": 3,
         "description": "Energy Center Heat Pump machines count",
         "limit": 0.0,
@@ -4104,16 +4114,6 @@
         "name": "echp.hp.power",
         "plugin": "Energy Center Heat Pump",
         "range": "-100.0/100.0",
-        "scope": "System"
-    },
-    {
-        "data_type": "int",
-        "default": 0,
-        "description": "The mode of the machine",
-        "limit": 0.0,
-        "name": "echp.hp.mode",
-        "plugin": "Energy Center Heat Pump",
-        "range": "",
         "scope": "System"
     },
     {
