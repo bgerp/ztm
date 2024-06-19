@@ -3605,7 +3605,7 @@
                 }
             ]
         },
-        "description": "ECHP / Cold Buffer / Valves / Settings",
+        "description": "ECHP / Cold / Valves / Settings",
         "limit": 0.0,
         "name": "echp.cold.valves.settings",
         "plugin": "Energy Center Heat Pump",
@@ -3615,7 +3615,7 @@
     {
         "data_type": "float",
         "default": 0.0,
-        "description": "ECHP / Cold Buffer / Valves / Mode",
+        "description": "ECHP / Cold / Valves / Mode",
         "limit": 0.0,
         "name": "echp.cold.valves.mode",
         "plugin": "Energy Center Heat Pump",
@@ -3625,7 +3625,7 @@
     {
         "data_type": "float",
         "default": 0.0,
-        "description": "ECHP / Cold Buffer / Valves / State",
+        "description": "ECHP / Cold / Valves / State",
         "limit": 0.0,
         "name": "echp.cold.valves.state",
         "plugin": "Energy Center Heat Pump",
