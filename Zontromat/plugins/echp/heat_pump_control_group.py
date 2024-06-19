@@ -680,12 +680,12 @@ class HeatPumpControlGroup(BasePlugin):
             return
 
         if register.value != {}:
-            if self.__vcg_varm is not None:
-                self.__vcg_varm.shutdown()
-                del self.__vcg_varm
+            if self.__vcg_warm is not None:
+                self.__vcg_warm.shutdown()
+                del self.__vcg_warm
 
             # Valve group warm geo. (GREEN)
-            self.__vcg_varm = ValveControlGroup(\
+            self.__vcg_warm = ValveControlGroup(\
                 name=register.description,
                 key=f"{register.name}",
                 controller=self._controller,
@@ -693,13 +693,13 @@ class HeatPumpControlGroup(BasePlugin):
                 fw_valves=["input"], # This is this way, because the automation is done by wire, now by software.
                 mode = ValveControlGroupMode.Proportional)
 
-            if self.__vcg_varm is not None:
-                self.__vcg_varm.init()
+            if self.__vcg_warm is not None:
+                self.__vcg_warm.init()
 
         elif register.value == {}:
-            if self.__vcg_varm is not None:
-                self.__vcg_varm.shutdown()
-                del self.__vcg_varm
+            if self.__vcg_warm is not None:
+                self.__vcg_warm.shutdown()
+                del self.__vcg_warm
 
     def __warm_valves_mode_cb(self, register: Register):
 
@@ -708,13 +708,13 @@ class HeatPumpControlGroup(BasePlugin):
             GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
             return
 
-        if self.__vcg_varm is None:
+        if self.__vcg_warm is None:
             return
 
         if register.value == 0:
-            self.__vcg_varm.target_position = 0
+            self.__vcg_warm.target_position = 0
         elif register.value == 1:
-            self.__vcg_varm.target_position = 100
+            self.__vcg_warm.target_position = 100
 
     def __hot_valves_settings_cb(self, register: Register):
 
