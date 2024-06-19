@@ -420,17 +420,17 @@ class HeatPumpControlGroup(BasePlugin):
         """
 
         if self.__summer_power > self.__winter_power:
-            self.__heat_pump_mode = HeatPumpMode.Summer
+            self.__heat_pump_mode = 1
             self.__heat_pump_power = self.__summer_power
 
         if self.__summer_power < self.__winter_power:
-            self.__heat_pump_mode = HeatPumpMode.Winter
+            self.__heat_pump_mode = 2
             self.__heat_pump_power = self.__winter_power
 
         if self.__summer_power == self.__winter_power:
             self.__heat_pump_power = self.__winter_power
-            if self.__heat_pump_mode == HeatPumpMode.NONE:
-                self.__heat_pump_mode = HeatPumpMode.Summer
+            if self.__heat_pump_mode == 0:
+                self.__heat_pump_mode = 1
 
     def __update_run_flag(self):
         """Update run flag.
