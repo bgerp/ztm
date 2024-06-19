@@ -65,7 +65,7 @@ __class_name__ = "EnergyCenterHeatpump"
 #endregion
 
 class EnergyCenterHeatpump(BasePlugin):
-    """Energy center heat pump controll plugin."""
+    """Energy center heat pump control plugin."""
 
 #region Attributes
 
@@ -88,12 +88,12 @@ class EnergyCenterHeatpump(BasePlugin):
         """
 
         self.__heat_pump_control_group = HeatPumpControlGroup(
-        """Heat pump controll group.
-        """
-            name="Heat Pump Controll Group",
-            key="{}.hpcg".format(self.key),
+            name="Heat Pump Control Group",
+            key=f"{self.key}",
             controller=self._controller,
             registers=self._registers)
+        """Heat pump control group.
+        """
 
         if self.__heat_pump_control_group is not None:
             self.__heat_pump_control_group.init()
@@ -118,8 +118,6 @@ class EnergyCenterHeatpump(BasePlugin):
     def _init(self):
         """Initialize the plugin.
         """
-
-
 
     def _update(self):
         """Update the plugin.

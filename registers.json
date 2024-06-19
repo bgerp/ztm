@@ -3941,8 +3941,12 @@
         "default": {
             "model": "MAGNA1_80_100_F_360_1x230V_PN6",
             "options": {
-                "mb_id": 2,
-                "uart": 0
+                "e_status": "U0:ID15:FC2:R0:DI0",
+                "e_stop": "U0:ID15:FC5:R0:RO8",
+                "mb_id": 7,
+                "stop_on_shutdown": true,
+                "uart": 0,
+                "wait_on_shutdown": false
             },
             "vendor": "Grundfos"
         },
@@ -3958,8 +3962,12 @@
         "default": {
             "model": "MAGNA1_80_100_F_360_1x230V_PN6",
             "options": {
-                "mb_id": 3,
-                "uart": 0
+                "e_status": "U0:ID15:FC2:R0:DI0",
+                "e_stop": "U0:ID15:FC5:R0:RO8",
+                "mb_id": 6,
+                "stop_on_shutdown": true,
+                "uart": 0,
+                "wait_on_shutdown": false
             },
             "vendor": "Grundfos"
         },
@@ -3975,8 +3983,12 @@
         "default": {
             "model": "MAGNA1_80_100_F_360_1x230V_PN6",
             "options": {
-                "mb_id": 0,
-                "uart": 0
+                "e_status": "U0:ID15:FC2:R0:DI0",
+                "e_stop": "U0:ID15:FC5:R0:RO8",
+                "mb_id": 5,
+                "stop_on_shutdown": true,
+                "uart": 0,
+                "wait_on_shutdown": false
             },
             "vendor": "Grundfos"
         },
