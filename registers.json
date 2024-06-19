@@ -3952,10 +3952,30 @@
         },
         "description": "Heat Pump Control Group / Water Pump / Cold",
         "limit": 0.0,
-        "name": "echp.wp_cold.settings",
+        "name": "echp.cold.pump.settings",
         "plugin": "Energy Center Heat Pump",
         "range": "",
         "scope": "System"
+    },
+    {
+        "data_type": "int",
+        "default": 0,
+        "description": "Heat Pump Control Group / Cold pump mode.",
+        "limit": 0.0,
+        "name": "echp.cold.pump.mode",
+        "plugin": "Energy Center Heat Pump",
+        "range": "0/100",
+        "scope": "System"
+    },
+    {
+        "data_type": "json",
+        "default": {},
+        "description": "Heat Pump Control Group / Cold pump state.",
+        "limit": 0.0,
+        "name": "echp.cold.pump.state",
+        "plugin": "Energy Center Heat Pump",
+        "range": "",
+        "scope": "Device"
     },
     {
         "data_type": "json",
@@ -3973,10 +3993,30 @@
         },
         "description": "Heat Pump Control Group / Water Pump / Hot",
         "limit": 0.0,
-        "name": "echp.wp_hot.settings",
+        "name": "echp.hot.pump.settings",
         "plugin": "Energy Center Heat Pump",
         "range": "",
         "scope": "System"
+    },
+    {
+        "data_type": "int",
+        "default": 0,
+        "description": "Heat Pump Control Group / Hot pump mode.",
+        "limit": 0.0,
+        "name": "echp.hot.pump.mode",
+        "plugin": "Energy Center Heat Pump",
+        "range": "0/100",
+        "scope": "System"
+    },
+    {
+        "data_type": "json",
+        "default": {},
+        "description": "Heat Pump Control Group / Hot pump state.",
+        "limit": 0.0,
+        "name": "echp.hot.pump.state",
+        "plugin": "Energy Center Heat Pump",
+        "range": "",
+        "scope": "Device"
     },
     {
         "data_type": "json",
@@ -3994,10 +4034,30 @@
         },
         "description": "Heat Pump Control Group / Water Pump / Warm",
         "limit": 0.0,
-        "name": "echp.wp_warm.settings",
+        "name": "echp.warm.pump.settings",
         "plugin": "Energy Center Heat Pump",
         "range": "",
         "scope": "System"
+    },
+    {
+        "data_type": "int",
+        "default": 0,
+        "description": "Heat Pump Control Group / Warm pump mode.",
+        "limit": 0.0,
+        "name": "echp.warm.pump.mode",
+        "plugin": "Energy Center Heat Pump",
+        "range": "0/100",
+        "scope": "System"
+    },
+    {
+        "data_type": "json",
+        "default": {},
+        "description": "Heat Pump Control Group / Warm pump state.",
+        "limit": 0.0,
+        "name": "echp.warm.pump.state",
+        "plugin": "Energy Center Heat Pump",
+        "range": "",
+        "scope": "Device"
     },
     {
         "data_type": "json",
