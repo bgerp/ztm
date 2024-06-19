@@ -568,7 +568,7 @@ class HeatPumpControlGroup(BasePlugin):
     def __cold_valves_mode_cb(self, register):
 
         # Check data type.
-        if not register.data_type == "int" or register.data_type == "float":
+        if not register.data_type == "int" or not register.data_type == "float":
             GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
             return
 
