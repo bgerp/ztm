@@ -1040,12 +1040,15 @@ class HeatPumpControlGroup(BasePlugin):
 
         # Update machine status.
         self._registers.write(f"{self.key}.hp.power", self.__heat_pump_power)
-        self._registers.write(f"{self.key}.hp.mode", self.__heat_pump_mode)
         self._registers.write(f"{self.key}.hp.run", self.__heat_pump_run)
 
         self.__update_valves_states()
 
         self.__update_pumps_states()
+
+        if self.__heat_pump is not None:
+            mode = self.__heat_pump.get_mode()
+            self._registers.write(f"{self.key}.hp.mode", mode)
 
 #endregion
 
