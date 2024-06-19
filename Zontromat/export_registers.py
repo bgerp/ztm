@@ -4247,7 +4247,7 @@ def __add_registers(args):
     # -================================================================================-
 
     # Heat Pump Control Group / Water Pump / Cold
-    register = Register("echp.wp_cold.settings")
+    register = Register("echp.cold.pump.settings")
     register.scope = Scope.System
     register.plugin_name = "Energy Center Heat Pump"
     register.description = "Heat Pump Control Group / Water Pump / Cold"
@@ -4267,8 +4267,26 @@ def __add_registers(args):
     }
     __registers.append(register)
 
+    # Heat Pump Control Group / Cold pump mode.
+    register = Register("echp.cold.pump.mode")
+    register.scope = Scope.System
+    register.plugin_name = "Energy Center Heat Pump"
+    register.description = "Heat Pump Control Group / Cold pump mode."
+    register.range = __range["PERCENTAGE_I"]
+    register.value = 0
+    __registers.append(register)
+
+    # Heat Pump Control Group / Cold pump state.
+    register = Register("echp.cold.pump.state")
+    register.scope = Scope.Device
+    register.plugin_name = "Energy Center Heat Pump"
+    register.description = "Heat Pump Control Group / Cold pump state."
+    register.range = __range["NONE"]
+    register.value = {}
+    __registers.append(register)
+
     # Heat Pump Control Group / Water Pump / Hot
-    register = Register("echp.wp_hot.settings")
+    register = Register("echp.hot.pump.settings")
     register.scope = Scope.System
     register.plugin_name = "Energy Center Heat Pump"
     register.description = "Heat Pump Control Group / Water Pump / Hot"
@@ -4288,8 +4306,26 @@ def __add_registers(args):
     }
     __registers.append(register)
 
+    # Heat Pump Control Group / Hot pump mode.
+    register = Register("echp.hot.pump.mode")
+    register.scope = Scope.System
+    register.plugin_name = "Energy Center Heat Pump"
+    register.description = "Heat Pump Control Group / Hot pump mode."
+    register.range = __range["PERCENTAGE_I"]
+    register.value = 0
+    __registers.append(register)
+
+    # Heat Pump Control Group / Hot pump state.
+    register = Register("echp.hot.pump.state")
+    register.scope = Scope.Device
+    register.plugin_name = "Energy Center Heat Pump"
+    register.description = "Heat Pump Control Group / Hot pump state."
+    register.range = __range["NONE"]
+    register.value = {}
+    __registers.append(register)
+
     # Heat Pump Control Group / Water Pump / Warm
-    register = Register("echp.wp_warm.settings")
+    register = Register("echp.warm.pump.settings")
     register.scope = Scope.System
     register.plugin_name = "Energy Center Heat Pump"
     register.description = "Heat Pump Control Group / Water Pump / Warm"
@@ -4307,6 +4343,24 @@ def __add_registers(args):
             "wait_on_shutdown": False
         }
     }
+    __registers.append(register)
+
+    # Heat Pump Control Group / Warm pump mode.
+    register = Register("echp.warm.pump.mode")
+    register.scope = Scope.System
+    register.plugin_name = "Energy Center Heat Pump"
+    register.description = "Heat Pump Control Group / Warm pump mode."
+    register.range = __range["PERCENTAGE_I"]
+    register.value = 0
+    __registers.append(register)
+
+    # Heat Pump Control Group / Warm pump state.
+    register = Register("echp.warm.pump.state")
+    register.scope = Scope.Device
+    register.plugin_name = "Energy Center Heat Pump"
+    register.description = "Heat Pump Control Group / Warm pump state."
+    register.range = __range["NONE"]
+    register.value = {}
     __registers.append(register)
 
     # -================================================================================-

@@ -160,23 +160,13 @@ class HeatPumpControlGroup(BasePlugin):
         """Heat pump run flag.
         """
 
-        # Valve group cold buffer. (BLUE)
-        self.__vcg_cold= ValveControlGroup(\
-            name="VCG Cold",
-            key=f"{self.key}.cold.valves.settings",
-            controller=self._controller,
-            registers=self._registers,
-            fw_valves=["input"], # This is this way, because the automation is done by wire, now by software.
-            mode = ValveControlGroupMode.Proportional)
+        self.__vcg_cold = None
+        """Valve group cold buffer. (BLUE)
+        """
 
-        # Valve group cold geo. (GREEN)
-        self.__vcg_cold_geo = ValveControlGroup(\
-            name="VCG Cold Geo",
-            key=f"{self.key}.cold_geo.valves.settings",
-            controller=self._controller,
-            registers=self._registers,
-            fw_valves=["input"], # This is this way, because the automation is done by wire, now by software.
-            mode = ValveControlGroupMode.Proportional)
+        self.__vcg_cold_geo = None
+        """Valve group cold geo. (GREEN)
+        """
 
         # Valve group warm geo. (GREEN)
         self.__vcg_warm_geo = ValveControlGroup(\
@@ -206,7 +196,7 @@ class HeatPumpControlGroup(BasePlugin):
             mode = ValveControlGroupMode.Proportional)
 
         # Water Pump (BLUE)
-        register = self._registers.by_name("{}.wp_cold.settings".format(self.key))
+        register = self._registers.by_name(f"{self.key}.wp_cold.settings")
         if register is not None:
             self.__cold_water_pump = PumpFactory.create(
                 name="WP Cold",
@@ -216,7 +206,7 @@ class HeatPumpControlGroup(BasePlugin):
                 options=register.value['options'])
 
         # Water Pump (RED)
-        register = self._registers.by_name("{}.wp_hot.settings".format(self.key))
+        register = self._registers.by_name(f"{self.key}.wp_hot.settings")
         if register is not None:
             self.__hot_water_pump = PumpFactory.create(
                 name="WP Hot",
@@ -226,7 +216,7 @@ class HeatPumpControlGroup(BasePlugin):
                 options=register.value['options'])
 
         # Water Pump (PURPLE)
-        register = self._registers.by_name("{}.wp_warm.settings".format(self.key))
+        register = self._registers.by_name(f"{self.key}.wp_warm.settings")
         if register is not None:
             self.__warm_water_pump = PumpFactory.create(
                 name="WP Warm G",
@@ -236,7 +226,7 @@ class HeatPumpControlGroup(BasePlugin):
                 options=register.value['options'])
 
         # Heat Pump
-        register = self._registers.by_name("{}.hp.settings".format(self.key))
+        register = self._registers.by_name(f"{self.key}.hp.settings")
         if register is not None:
             self.__heat_pump = HeatPumpFactory.create(
                 name="Heat Pump",
@@ -443,7 +433,7 @@ class HeatPumpControlGroup(BasePlugin):
 
 #endregion
 
-#region Registers Interface
+#region Registers (Parameters)
 
     def __hp_count_cb(self, register):
         """Heat pump control group count callback.
@@ -537,46 +527,165 @@ class HeatPumpControlGroup(BasePlugin):
 
         self.__hot_max = register.value
 
+#endregion
+
+#region Registers (Valves)
+
+    def __cold_valves_settings_cb(self, register):
+
+        # Check data type.
+        if not register.data_type == "json":
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        if register.value != {}:
+            if self.__vcg_cold is not None:
+                self.__vcg_cold.shutdown()
+                del self.__vcg_cold
+
+            # Valve group cold buffer. (BLUE)
+            self.__vcg_cold= ValveControlGroup(\
+                name="VCG Cold",
+                key=f"{self.key}.cold.valves.settings",
+                controller=self._controller,
+                registers=self._registers,
+                fw_valves=["input"], # This is this way, because the automation is done by wire, now by software.
+                mode = ValveControlGroupMode.Proportional)
+
+            if self.__vcg_cold is not None:
+                self.__vcg_cold.init()
+
+        elif register.value == {}:
+            if self.__vcg_cold is not None:
+                self.__vcg_cold.shutdown()
+                del self.__vcg_cold
+
+    def __cold_valves_mode_cb(self, register):
+
+        # Check data type.
+        if not (register.data_type == "float" or register.data_type == "int"):
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        if self.__vcg_cold is None:
+            return
+
+        if register.value == 0:
+            self.__vcg_cold.target_position = 0
+        elif register.value == 1:
+            self.__vcg_cold.target_position = 100
+
+    def __cold_geo_valves_settings_cb(self, register):
+
+        # Check data type.
+        if not register.data_type == "json":
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        if register.value != {}:
+            if self.__vcg_cold_geo is not None:
+                self.__vcg_cold_geo.shutdown()
+                del self.__vcg_cold_geo
+
+            self.__vcg_cold_geo = ValveControlGroup(\
+                name="VCG Cold Geo",
+                key=f"{self.key}.cold_geo.valves.settings",
+                controller=self._controller,
+                registers=self._registers,
+                fw_valves=["input"], # This is this way, because the automation is done by wire, now by software.
+                mode = ValveControlGroupMode.Proportional)
+
+            if self.__vcg_cold_geo is not None:
+                self.__vcg_cold_geo.init()
+
+        elif register.value == {}:
+            if self.__vcg_cold_geo is not None:
+                self.__vcg_cold_geo.shutdown()
+                del self.__vcg_cold_geo
+
+    def __cold_geo_valves_mode_cb(self, register):
+
+        # Check data type.
+        if not (register.data_type == "float" or register.data_type == "int"):
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        if self.__vcg_cold_geo is None:
+            return
+
+        if register.value == 0:
+            self.__vcg_cold_geo.target_position = 0
+        elif register.value == 1:
+            self.__vcg_cold_geo.target_position = 100
+
+#endregion
+
+#region Registers
+
     def __init_registers(self):
         """Initialize the registers callbacks.
         """
 
-        hp_count = self._registers.by_name("{}.hp.count".format(self.key))
+        hp_count = self._registers.by_name(f"{self.key}.hp.count")
         if hp_count is not None:
             hp_count.update_handlers = self.__hp_count_cb
             hp_count.update()
 
-        hp_index = self._registers.by_name("{}.hp.index".format(self.key))
+        hp_index = self._registers.by_name(f"{self.key}.hp.index")
         if hp_index is not None:
             hp_index.update_handlers = self.__hp_index_cb
             hp_index.update()
 
-        hp_cold_min = self._registers.by_name("{}.hp.cold_min".format(self.key))
+        hp_cold_min = self._registers.by_name(f"{self.key}.hp.cold_min")
         if hp_cold_min is not None:
             hp_cold_min.update_handlers = self.__hp_cold_min_cb
             hp_cold_min.update()
 
-        hp_cold_max = self._registers.by_name("{}.hp.cold_max".format(self.key))
+        hp_cold_max = self._registers.by_name(f"{self.key}.hp.cold_max")
         if hp_cold_max is not None:
             hp_cold_max.update_handlers = self.__hp_cold_max_cb
             hp_cold_max.update()
 
-        hp_hot_min = self._registers.by_name("{}.hp.hot_min".format(self.key))
+        hp_hot_min = self._registers.by_name(f"{self.key}.hp.hot_min")
         if hp_hot_min is not None:
             hp_hot_min.update_handlers = self.__hp_hot_min_cb
             hp_hot_min.update()
 
-        hp_hot_max = self._registers.by_name("{}.hp.hot_max".format(self.key))
+        hp_hot_max = self._registers.by_name(f"{self.key}.hp.hot_max")
         if hp_hot_max is not None:
             hp_hot_max.update_handlers = self.__hp_hot_max_cb
             hp_hot_max.update()
 
+        cold_valves_settings = self._registers.by_name(f"{self.key}.cold.valves.settings")
+        if cold_valves_settings is not None:
+            cold_valves_settings.update_handlers = self.__cold_valves_settings_cb
+            cold_valves_settings.update()
+
+        cold_valves_mode = self._registers.by_name(f"{self.key}.cold.valves.mode")
+        if cold_valves_mode is not None:
+            cold_valves_mode.update_handlers = self.__cold_valves_mode_cb
+            cold_valves_mode.update()
+
+        cold_geo_valves_settings = self._registers.by_name(f"{self.key}.cold_geo.valves.settings")
+        if cold_geo_valves_settings is not None:
+            cold_geo_valves_settings.update_handlers = self.__cold_geo_valves_settings_cb
+            cold_geo_valves_settings.update()
+
+        cold_geo_valves_mode = self._registers.by_name(f"{self.key}.cold_geo.valves.mode")
+        if cold_geo_valves_mode is not None:
+            cold_geo_valves_mode.update_handlers = self.__cold_geo_valves_mode_cb
+            cold_geo_valves_mode.update()
+
     def __update_registers(self):
 
         # Update machine status.
-        self._registers.write("{}.hp.power".format(self.key), self.__heat_pump_power)
-        self._registers.write("{}.hp.mode".format(self.key), self.__heat_pump_mode)
-        self._registers.write("{}.hp.run".format(self.key), self.__heat_pump_run)
+        self._registers.write(f"{self.key}.hp.power", self.__heat_pump_power)
+        self._registers.write(f"{self.key}.hp.mode", self.__heat_pump_mode)
+        self._registers.write(f"{self.key}.hp.run", self.__heat_pump_run)
+
+        if self.__vcg_floor_entrance is not None:
+            self.__vcg_floor_entrance.update()
+            self._registers.write(f"{self.key}.cold.valves.state", self.__vcg_cold.target_position)
 
 #endregion
 
