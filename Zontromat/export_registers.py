@@ -4257,7 +4257,7 @@ def __add_registers(args):
         "model": "MAGNA1_80_100_F_360_1x230V_PN6",
         "options":
         {
-            "uart": 0,
+            "uart": 1,
             "mb_id": 7,
             "e_stop": "U0:ID15:FC5:R0:RO8",
             "e_status": "U0:ID15:FC2:R0:DI0",
@@ -4296,7 +4296,7 @@ def __add_registers(args):
         "model": "MAGNA1_80_100_F_360_1x230V_PN6",
         "options":
         {
-            "uart": 0,
+            "uart": 1,
             "mb_id": 6,
             "e_stop": "U0:ID15:FC5:R0:RO8",
             "e_status": "U0:ID15:FC2:R0:DI0",
@@ -4335,7 +4335,7 @@ def __add_registers(args):
         "model": "MAGNA1_80_100_F_360_1x230V_PN6",
         "options":
         {
-            "uart": 0,
+            "uart": 1,
             "mb_id": 5,
             "e_stop": "U0:ID15:FC5:R0:RO8",
             "e_status": "U0:ID15:FC2:R0:DI0",
@@ -4382,6 +4382,14 @@ def __add_registers(args):
     }
     __registers.append(register)
 
+    register = Register("echp.hp.mode")
+    register.scope = Scope.System
+    register.plugin_name = "Energy Center Heat Pump"
+    register.description = "The mode of the machine"
+    register.range = __range["NONE"]
+    register.value = 0
+    __registers.append(register)
+
     # Count of the heat pump control groups.
     register = Register("echp.hp.count")
     register.scope = Scope.System
@@ -4408,13 +4416,7 @@ def __add_registers(args):
     register.value = 0
     __registers.append(register)
 
-    register = Register("echp.hp.mode")
-    register.scope = Scope.System
-    register.plugin_name = "Energy Center Heat Pump"
-    register.description = "The mode of the machine"
-    register.range = __range["NONE"]
-    register.value = 0
-    __registers.append(register)
+
 
     register = Register("echp.hp.run")
     register.scope = Scope.Device
