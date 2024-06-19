@@ -145,6 +145,8 @@ class HP_40STD_N420WHSB4(ModbusDevice):
             int: Heat pump mode. [1 to 5]
         """
 
-        return self.get_value("GetMode")
+        response = self.get_value("GetMode")
+        value = response[0]
+        return value
 
 #endregion
