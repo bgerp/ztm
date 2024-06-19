@@ -555,8 +555,8 @@ class HeatPumpControlGroup(BasePlugin):
 
             # Valve group cold buffer. (BLUE)
             self.__vcg_cold= ValveControlGroup(\
-                name="VCG Cold",
-                key=f"{self.key}.cold.valves.settings",
+                name=register.description,
+                key=f"{register.name}",
                 controller=self._controller,
                 registers=self._registers,
                 fw_valves=["input"], # This is this way, because the automation is done by wire, now by software.
@@ -598,8 +598,8 @@ class HeatPumpControlGroup(BasePlugin):
                 del self.__vcg_cold_geo
 
             self.__vcg_cold_geo = ValveControlGroup(\
-                name="VCG Cold Geo",
-                key=f"{self.key}.cold_geo.valves.settings",
+                name=register.description,
+                key=f"{register.name}",
                 controller=self._controller,
                 registers=self._registers,
                 fw_valves=["input"], # This is this way, because the automation is done by wire, now by software.
@@ -642,8 +642,8 @@ class HeatPumpControlGroup(BasePlugin):
 
             # Valve group warm geo. (GREEN)
             self.__vcg_warm_geo = ValveControlGroup(\
-                name="VCG Warm Geo",
-                key=f"{self.key}.warm_geo.valves.settings",
+                name=register.description,
+                key=f"{register.name}",
                 controller=self._controller,
                 registers=self._registers,
                 fw_valves=["input"], # This is this way, because the automation is done by wire, now by software.
@@ -686,8 +686,8 @@ class HeatPumpControlGroup(BasePlugin):
 
             # Valve group warm geo. (GREEN)
             self.__vcg_varm = ValveControlGroup(\
-                name="VCG Warm",
-                key=f"{self.key}.warm.valves.settings",
+                name=register.description,
+                key=f"{register.name}",
                 controller=self._controller,
                 registers=self._registers,
                 fw_valves=["input"], # This is this way, because the automation is done by wire, now by software.
@@ -729,8 +729,8 @@ class HeatPumpControlGroup(BasePlugin):
                 del self.__vcg_hot
 
             self.__vcg_hot = ValveControlGroup(\
-                name="VCG Hot",
-                key=f"{self.key}.hot.valves.settings",
+                name=register.description,
+                key=f"{register.name}",
                 controller=self._controller,
                 registers=self._registers,
                 fw_valves=["input"], # This is this way, because the automation is done by wire, now by software.
