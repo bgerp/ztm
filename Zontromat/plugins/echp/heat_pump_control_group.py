@@ -1123,20 +1123,6 @@ class HeatPumpControlGroup(BasePlugin):
         # Generate order.
         self.__generate_order()
 
-        # Thermal agents pumps.
-        if self.__wp_cold is not None:
-            self.__wp_cold.init()
-
-        if self.__wp_hot is not None:
-            self.__wp_hot.init()
-
-        if self.__wp_warm is not None:
-            self.__wp_warm.init()
-
-        # Heat pump.
-        if self.__heat_pump is not None:
-            self.__heat_pump.init()
-
     def update(self):
         """Update control group.
         """
@@ -1172,36 +1158,6 @@ class HeatPumpControlGroup(BasePlugin):
         # self.__wp_hot.set_setpoint(output_power)
 
         # ========================================================================
-
-        # Valve Control Groups
-        if self.__vcg_cold is not None:
-            self.__vcg_cold.update()
-
-        if self.__vcg_cold_geo is not None:
-            self.__vcg_cold_geo.update()
-
-        if self.__vcg_warm_geo is not None:
-            self.__vcg_warm_geo.update()
-
-        if self.__vcg_warm is not None:
-            self.__vcg_warm.update()
-
-        if self.__vcg_hot is not None:
-            self.__vcg_hot.update()
-
-        # Thermal agents pumps.
-        if self.__wp_cold is not None:
-            self.__wp_cold.update()
-
-        if self.__wp_hot is not None:
-            self.__wp_hot.update()
-
-        if self.__wp_warm is not None:
-            self.__wp_warm.update()
-
-        # Heat pump.
-        if self.__heat_pump is not None:
-            self.__heat_pump.update()
 
         self.__update_registers()
 
