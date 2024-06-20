@@ -1000,10 +1000,10 @@ class HeatPumpControlGroup(BasePlugin):
                                     self.__pump_hot_settings_cb,
                                     self.__pump_hot_mode_cb)
 
-        hp_count = self._registers.by_name(f"{self.key}.hp.count")
-        if hp_count is not None:
-            hp_count.update_handlers = self.__hp_settings_cb
-            hp_count.update()
+        hp_settings = self._registers.by_name(f"{self.key}.hp.settings")
+        if hp_settings is not None:
+            hp_settings.update_handlers = self.__hp_settings_cb
+            hp_settings.update()
 
 
         hp_count = self._registers.by_name(f"{self.key}.hp.count")
@@ -1040,12 +1040,15 @@ class HeatPumpControlGroup(BasePlugin):
 
         # Update machine status.
         self._registers.write(f"{self.key}.hp.power", self.__heat_pump_power)
-        self._registers.write(f"{self.key}.hp.mode", self.__heat_pump_mode)
         self._registers.write(f"{self.key}.hp.run", self.__heat_pump_run)
 
         self.__update_valves_states()
 
         self.__update_pumps_states()
+
+        if self.__heat_pump is not None:
+            mode = self.__heat_pump.get_mode()
+            self._registers.write(f"{self.key}.hp.mode", mode)
 
 #endregion
 

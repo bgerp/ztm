@@ -97,8 +97,8 @@ def __set_parser():
     global __parser
 
     # Add arguments.
-    __parser.add_argument("--action", type=str, default="w_json", help="Export JSON file.")
-    # __parser.add_argument("--action", type=str, default="w_csv", help="Export CSV file.")
+    # __parser.add_argument("--action", type=str, default="w_json", help="Export JSON file.")
+    __parser.add_argument("--action", type=str, default="w_csv", help="Export CSV file.")
     # __parser.add_argument("--action", type=str, default="list_gpio", help="Export type.")
     # __parser.add_argument("--action", type=str, default="w_md", help="Export MD file.")
     # __parser.add_argument("--path", type=str, default=file_name, help="Target file path.")
@@ -4383,7 +4383,7 @@ def __add_registers(args):
     __registers.append(register)
 
     register = Register("echp.hp.mode")
-    register.scope = Scope.System
+    register.scope = Scope.Device
     register.plugin_name = "Energy Center Heat Pump"
     register.description = "The mode of the machine"
     register.range = __range["NONE"]
