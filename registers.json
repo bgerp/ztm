@@ -4084,7 +4084,7 @@
         "name": "echp.hp.mode",
         "plugin": "Energy Center Heat Pump",
         "range": "",
-        "scope": "System"
+        "scope": "Device"
     },
     {
         "data_type": "int",
