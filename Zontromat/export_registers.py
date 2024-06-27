@@ -4382,12 +4382,68 @@ def __add_registers(args):
     }
     __registers.append(register)
 
-    register = Register("echp.hp.mode")
+    register = Register("echp.hp.get_op_mode")
     register.scope = Scope.Device
     register.plugin_name = "Energy Center Heat Pump"
-    register.description = "The mode of the machine"
+    register.description = "Get the mode of the machine"
     register.range = __range["NONE"]
     register.value = 0
+    __registers.append(register)
+
+    register = Register("echp.hp.set_op_mode")
+    register.scope = Scope.System
+    register.plugin_name = "Energy Center Heat Pump"
+    register.description = "Set the mode of the machine"
+    register.range = __range["NONE"]
+    register.value = 0
+    __registers.append(register)
+
+    register = Register("echp.hp.get_op_status")
+    register.scope = Scope.Device
+    register.plugin_name = "Energy Center Heat Pump"
+    register.description = "Get the status of the machine"
+    register.range = __range["NONE"]
+    register.value = 0
+    __registers.append(register)
+
+    register = Register("echp.hp.get_cooling_temp")
+    register.scope = Scope.Device
+    register.plugin_name = "Energy Center Heat Pump"
+    register.description = "Get the cooling temp of the machine"
+    register.range = __range["NONE"]
+    register.value = 0
+    __registers.append(register)
+
+    register = Register("echp.hp.set_cooling_temp")
+    register.scope = Scope.System
+    register.plugin_name = "Energy Center Heat Pump"
+    register.description = "Set the cooling temp of the machine"
+    register.range = __range["NONE"]
+    register.value = 0
+    __registers.append(register)
+
+    register = Register("echp.hp.get_heating_temp")
+    register.scope = Scope.Device
+    register.plugin_name = "Energy Center Heat Pump"
+    register.description = "Get the heating temp of the machine"
+    register.range = __range["NONE"]
+    register.value = 0
+    __registers.append(register)
+
+    register = Register("echp.hp.set_heating_temp")
+    register.scope = Scope.System
+    register.plugin_name = "Energy Center Heat Pump"
+    register.description = "Set the heating temp of the machine"
+    register.range = __range["NONE"]
+    register.value = 0
+    __registers.append(register)
+
+    register = Register("echp.hp.get_temps")
+    register.scope = Scope.Device
+    register.plugin_name = "Energy Center Heat Pump"
+    register.description = "Get the heating temp of the machine"
+    register.range = __range["NONE"]
+    register.value = {}
     __registers.append(register)
 
     # Count of the heat pump control groups.
