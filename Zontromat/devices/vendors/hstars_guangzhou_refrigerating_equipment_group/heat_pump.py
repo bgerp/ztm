@@ -89,6 +89,44 @@ class HP_40STD_N420WHSB4(ModbusDevice):
 
         self.__valid_modes = [1,2,3,4,5]
 
+#region Start /Stop
+        self._parameters.append(
+            Parameter(
+                "Start",
+                "Enum",
+                ParameterType.INT16_T_LE,
+                [0],
+                FunctionCode.WriteSingleCoil,
+                [0x0000, 0xFF00]
+            )
+        )
+
+        self._parameters.append(
+            Parameter(
+                "Stop",
+                "Enum",
+                ParameterType.INT16_T_LE,
+                [1],
+                FunctionCode.WriteSingleCoil,
+                [0x0000, 0xFF00]
+            )
+        )
+#endregion
+
+#region Operation Status
+        self._parameters.append(
+            Parameter(
+                "OperatingStatus",
+                "Enum",
+                ParameterType.INT16_T_LE,
+                [5],
+                FunctionCode.ReadInputRegisters,
+                [0, 2]
+            )
+        )
+#endregion
+
+#region Operation Mode
         self._parameters.append(
             Parameter(
                 "GetMode",
@@ -110,6 +148,145 @@ class HP_40STD_N420WHSB4(ModbusDevice):
                 [1, 5]
             )
         )
+#endregion
+
+#region Cooling Set Temperature
+        self._parameters.append(
+            Parameter(
+                "GetCoolingSetTemperature",
+                "C",
+                ParameterType.INT16_T_LE,
+                [1],
+                FunctionCode.ReadHoldingRegisters,
+                []
+            )
+        )
+
+        self._parameters.append(
+            Parameter(
+                "SetCoolingSetTemperature",
+                "C",
+                ParameterType.INT16_T_LE,
+                [1],
+                FunctionCode.WriteSingleHoldingRegister,
+                []
+            )
+        )
+#endregion
+
+#region Heating Set Temperature
+        self._parameters.append(
+            Parameter(
+                "GetHeatingSetTemperature",
+                "C",
+                ParameterType.INT16_T_LE,
+                [2],
+                FunctionCode.ReadHoldingRegisters,
+                []
+            )
+        )
+
+        self._parameters.append(
+            Parameter(
+                "SetHeatingSetTemperature",
+                "C",
+                ParameterType.INT16_T_LE,
+                [2],
+                FunctionCode.WriteSingleHoldingRegister,
+                []
+            )
+        )
+#endregion
+
+#region System evaporation return water temperature
+
+        self._parameters.append(
+            Parameter(
+                "GetSystemEvaporationReturnWaterTemperature",
+                "C",
+                ParameterType.INT16_T_LE,
+                [0x20],
+                FunctionCode.ReadInputRegisters,
+                []
+            )
+        )
+
+#endregion
+
+#region System evaporation temperature
+
+        self._parameters.append(
+            Parameter(
+                "GetSystemEvaporationWaterTemperature",
+                "C",
+                ParameterType.INT16_T_LE,
+                [0x21],
+                FunctionCode.ReadInputRegisters,
+                []
+            )
+        )
+
+#endregion
+
+#region System condensate return water temperature
+
+        self._parameters.append(
+            Parameter(
+                "GetSystemCondensateReturnWaterTemperature",
+                "C",
+                ParameterType.INT16_T_LE,
+                [0x22],
+                FunctionCode.ReadInputRegisters,
+                []
+            )
+        )
+
+#endregion
+
+#region System condensate water temperature
+
+        self._parameters.append(
+            Parameter(
+                "GetSystemCondensateWaterTemperature",
+                "C",
+                ParameterType.INT16_T_LE,
+                [0x23],
+                FunctionCode.ReadInputRegisters,
+                []
+            )
+        )
+
+#endregion
+
+#region Ambient temperature
+
+        self._parameters.append(
+            Parameter(
+                "GetAmbientTemperature",
+                "C",
+                ParameterType.INT16_T_LE,
+                [0x24],
+                FunctionCode.ReadInputRegisters,
+                []
+            )
+        )
+
+#endregion
+
+#region Hot water temperature
+
+        self._parameters.append(
+            Parameter(
+                "GetHotWaterTemperature",
+                "C",
+                ParameterType.INT16_T_LE,
+                [0x26],
+                FunctionCode.ReadInputRegisters,
+                []
+            )
+        )
+
+#endregion
 
     def __del__(self):
         """Destructor
