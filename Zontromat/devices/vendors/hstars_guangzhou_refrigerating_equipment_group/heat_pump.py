@@ -296,7 +296,7 @@ class HP_40STD_N420WHSB4(ModbusDevice):
 
 #endregion
 
-    def set_mode(self, mode):
+    def set_operation_mode(self, mode):
         """Set heat pump mode.
 
         Args:
@@ -315,7 +315,7 @@ class HP_40STD_N420WHSB4(ModbusDevice):
             except Exception:
                 pass
 
-    def get_mode(self):
+    def get_operation_mode(self):
         """Get heat pump mode.
 
         Returns:
@@ -323,5 +323,108 @@ class HP_40STD_N420WHSB4(ModbusDevice):
         """
 
         return self.get_value("GetMode")
+
+    def get_operation_status(self):
+
+        return self.get_value("OperatingStatus")
+
+    def get_cooling_set_temperature(self):
+        response = None
+
+        try:
+            # Generate request.
+            response = self.get_value("GetCoolingSetTemperature")
+
+            # Divide by 10
+            response /= 10
+
+            # Make it integer.
+            response = int(response)
+        except Exception:
+            pass
+
+        return response
+
+    def set_cooling_set_temperature(self, value):
+
+        try:
+            # Multiply by 10
+            value *= 10
+
+            # Make it integer.
+            value = int(value)
+
+            # Generate request.
+            request = self.generate_request("SetCoolingSetTemperature", SetCoolingSetTemperature=value)
+            response = self._controller.execute_mb_request(request, self._uart)
+            if response is not None:
+                if not response.isError():
+                    pass
+                    # value = response.registers[0] / 10
+        except Exception:
+            pass
+
+    def get_heating_set_temperature(self):
+        response = None
+
+        try:
+            # Generate request.
+            response = self.get_value("GetHeatingSetTemperature")
+
+            # Divide by 10
+            response /= 10
+
+            # Make it integer.
+            response = int(response)
+        except Exception:
+            pass
+
+        return response
+
+    def set_heating_set_temperature(self, value):
+
+        try:
+            # Multiply by 10
+            value *= 10
+
+            # Make it integer.
+            value = int(value)
+
+            # Generate request.
+            request = self.generate_request("SetCoolingSetTemperature", SetCoolingSetTemperature=value)
+            response = self._controller.execute_mb_request(request, self._uart)
+            if response is not None:
+                if not response.isError():
+                    pass
+                    # value = response.registers[0] / 10
+        except Exception:
+            pass
+
+    def get_temperatures(self):
+        response = {}
+        params = ["GetSystemEvaporationReturnWaterTemperature",
+                  "GetSystemEvaporationWaterTemperature",
+                  "GetSystemCondensateReturnWaterTemperature",
+                  "GetSystemCondensateWaterTemperature",
+                  "GetAmbientTemperature",
+                  "GetHotWaterTemperature"]
+
+        for param in params:
+            try:
+                # Generate request.
+                response = self.get_value(param)
+
+                # Divide by 10
+                response /= 10
+
+                # Make it integer.
+                response = int(response)
+
+                # Set response.
+                response[param] = response
+            except Exception:
+                pass
+
+        return response
 
 #endregion
