@@ -83,12 +83,50 @@ class HP_40STD_N420WHSB4(ModbusDevice):
 
         self._vendor = "HstarsGuangzhouRefrigeratingEquipmentGroup"
         """Hstars Guangzhou Refrigerating Equipment Group.Co.,Ltd
-        """        
+        """
 
         self._model = "40STD-N420WHSB4"
 
         self.__valid_modes = [1,2,3,4,5]
 
+#region Start /Stop
+        self._parameters.append(
+            Parameter(
+                "Start",
+                "Enum",
+                ParameterType.INT16_T_LE,
+                [0],
+                FunctionCode.WriteSingleCoil,
+                [0x0000, 0xFF00]
+            )
+        )
+
+        self._parameters.append(
+            Parameter(
+                "Stop",
+                "Enum",
+                ParameterType.INT16_T_LE,
+                [1],
+                FunctionCode.WriteSingleCoil,
+                [0x0000, 0xFF00]
+            )
+        )
+#endregion
+
+#region Operation Status
+        self._parameters.append(
+            Parameter(
+                "OperatingStatus",
+                "Enum",
+                ParameterType.INT16_T_LE,
+                [5],
+                FunctionCode.ReadInputRegisters,
+                [0, 2]
+            )
+        )
+#endregion
+
+#region Operation Mode
         self._parameters.append(
             Parameter(
                 "GetMode",
@@ -110,6 +148,145 @@ class HP_40STD_N420WHSB4(ModbusDevice):
                 [1, 5]
             )
         )
+#endregion
+
+#region Cooling Set Temperature
+        self._parameters.append(
+            Parameter(
+                "GetCoolingSetTemperature",
+                "C",
+                ParameterType.INT16_T_LE,
+                [1],
+                FunctionCode.ReadHoldingRegisters,
+                []
+            )
+        )
+
+        self._parameters.append(
+            Parameter(
+                "SetCoolingSetTemperature",
+                "C",
+                ParameterType.INT16_T_LE,
+                [1],
+                FunctionCode.WriteSingleHoldingRegister,
+                []
+            )
+        )
+#endregion
+
+#region Heating Set Temperature
+        self._parameters.append(
+            Parameter(
+                "GetHeatingSetTemperature",
+                "C",
+                ParameterType.INT16_T_LE,
+                [2],
+                FunctionCode.ReadHoldingRegisters,
+                []
+            )
+        )
+
+        self._parameters.append(
+            Parameter(
+                "SetHeatingSetTemperature",
+                "C",
+                ParameterType.INT16_T_LE,
+                [2],
+                FunctionCode.WriteSingleHoldingRegister,
+                []
+            )
+        )
+#endregion
+
+#region System evaporation return water temperature
+
+        self._parameters.append(
+            Parameter(
+                "GetSystemEvaporationReturnWaterTemperature",
+                "C",
+                ParameterType.INT16_T_LE,
+                [0x20],
+                FunctionCode.ReadInputRegisters,
+                []
+            )
+        )
+
+#endregion
+
+#region System evaporation temperature
+
+        self._parameters.append(
+            Parameter(
+                "GetSystemEvaporationWaterTemperature",
+                "C",
+                ParameterType.INT16_T_LE,
+                [0x21],
+                FunctionCode.ReadInputRegisters,
+                []
+            )
+        )
+
+#endregion
+
+#region System condensate return water temperature
+
+        self._parameters.append(
+            Parameter(
+                "GetSystemCondensateReturnWaterTemperature",
+                "C",
+                ParameterType.INT16_T_LE,
+                [0x22],
+                FunctionCode.ReadInputRegisters,
+                []
+            )
+        )
+
+#endregion
+
+#region System condensate water temperature
+
+        self._parameters.append(
+            Parameter(
+                "GetSystemCondensateWaterTemperature",
+                "C",
+                ParameterType.INT16_T_LE,
+                [0x23],
+                FunctionCode.ReadInputRegisters,
+                []
+            )
+        )
+
+#endregion
+
+#region Ambient temperature
+
+        self._parameters.append(
+            Parameter(
+                "GetAmbientTemperature",
+                "C",
+                ParameterType.INT16_T_LE,
+                [0x24],
+                FunctionCode.ReadInputRegisters,
+                []
+            )
+        )
+
+#endregion
+
+#region Hot water temperature
+
+        self._parameters.append(
+            Parameter(
+                "GetHotWaterTemperature",
+                "C",
+                ParameterType.INT16_T_LE,
+                [0x26],
+                FunctionCode.ReadInputRegisters,
+                []
+            )
+        )
+
+#endregion
 
     def __del__(self):
         """Destructor
@@ -119,7 +296,7 @@ class HP_40STD_N420WHSB4(ModbusDevice):
 
 #endregion
 
-    def set_mode(self, mode):
+    def set_operation_mode(self, mode):
         """Set heat pump mode.
 
         Args:
@@ -138,7 +315,7 @@ class HP_40STD_N420WHSB4(ModbusDevice):
             except Exception:
                 pass
 
-    def get_mode(self):
+    def get_operation_mode(self):
         """Get heat pump mode.
 
         Returns:
@@ -146,5 +323,183 @@ class HP_40STD_N420WHSB4(ModbusDevice):
         """
 
         return self.get_value("GetMode")
+
+    def get_operation_status(self):
+
+        return self.get_value("OperatingStatus")
+
+    def get_cooling_set_temperature(self):
+        response = None
+
+        try:
+            # Generate request.
+            response = self.get_value("GetCoolingSetTemperature")
+
+            # Divide by 10
+            response /= 10
+
+            # Make it integer.
+            response = int(response)
+        except Exception:
+            pass
+
+        return response
+
+    def set_cooling_set_temperature(self, value):
+
+        try:
+            # Multiply by 10
+            value *= 10
+
+            # Make it integer.
+            value = int(value)
+
+            # Generate request.
+            request = self.generate_request("SetCoolingSetTemperature", SetCoolingSetTemperature=value)
+            response = self._controller.execute_mb_request(request, self._uart)
+            if response is not None:
+                if not response.isError():
+                    pass
+                    # value = response.registers[0] / 10
+        except Exception:
+            pass
+
+    def get_heating_set_temperature(self):
+        response = None
+
+        try:
+            # Generate request.
+            response = self.get_value("GetHeatingSetTemperature")
+
+            # Divide by 10
+            response /= 10
+
+            # Make it integer.
+            response = int(response)
+        except Exception:
+            pass
+
+        return response
+
+    def set_heating_set_temperature(self, value):
+
+        try:
+            # Multiply by 10
+            value *= 10
+
+            # Make it integer.
+            value = int(value)
+
+            # Generate request.
+            request = self.generate_request("SetCoolingSetTemperature", SetCoolingSetTemperature=value)
+            response = self._controller.execute_mb_request(request, self._uart)
+            if response is not None:
+                if not response.isError():
+                    pass
+                    # value = response.registers[0] / 10
+        except Exception:
+            pass
+
+    def get_system_evaporation_return_water_temperature(self):
+        response = None
+
+        try:
+            # Generate request.
+            response = self.get_value("GetSystemEvaporationReturnWaterTemperature")
+
+            # Divide by 10
+            response /= 10
+
+            # Make it integer.
+            response = int(response)
+        except Exception:
+            pass
+
+        return response
+
+    def get_system_evaporation_water_temperature(self):
+        response = None
+
+        try:
+            # Generate request.
+            response = self.get_value("GetSystemEvaporationWaterTemperature")
+
+            # Divide by 10
+            response /= 10
+
+            # Make it integer.
+            response = int(response)
+        except Exception:
+            pass
+
+        return response
+
+    def get_system_condensate_return_water_temperature(self):
+        response = None
+
+        try:
+            # Generate request.
+            response = self.get_value("GetSystemCondensateReturnWaterTemperature")
+
+            # Divide by 10
+            response /= 10
+
+            # Make it integer.
+            response = int(response)
+        except Exception:
+            pass
+
+        return response
+
+    def get_system_condensate_water_temperature(self):
+        response = None
+
+        try:
+            # Generate request.
+            response = self.get_value("GetSystemCondensateWaterTemperature")
+
+            # Divide by 10
+            response /= 10
+
+            # Make it integer.
+            response = int(response)
+        except Exception:
+            pass
+
+        return response
+
+    def get_ambient_temperature(self):
+        response = None
+
+        try:
+            # Generate request.
+            response = self.get_value("GetAmbientTemperature")
+
+            # Divide by 10
+            response /= 10
+
+            # Make it integer.
+            response = int(response)
+        except Exception:
+            pass
+
+        return response
+
+    def get_hot_water_temperature(self):
+        response = None
+
+        try:
+            # Generate request.
+            response = self.get_value("GetHotWaterTemperature")
+
+            # Divide by 10
+            response /= 10
+
+            # Make it integer.
+            response = int(response)
+        except Exception:
+            pass
+
+        return response
 
 #endregion
