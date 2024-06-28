@@ -296,6 +296,8 @@ class HP_40STD_N420WHSB4(ModbusDevice):
 
 #endregion
 
+#region Public Methods
+
     def set_operation_mode(self, mode):
         """Set heat pump mode.
 
