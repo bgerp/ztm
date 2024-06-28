@@ -4079,9 +4079,79 @@
     {
         "data_type": "int",
         "default": 0,
-        "description": "The mode of the machine",
+        "description": "Get the mode of the machine",
         "limit": 0.0,
-        "name": "echp.hp.mode",
+        "name": "echp.hp.get_op_mode",
+        "plugin": "Energy Center Heat Pump",
+        "range": "",
+        "scope": "Device"
+    },
+    {
+        "data_type": "int",
+        "default": 0,
+        "description": "Set the mode of the machine",
+        "limit": 0.0,
+        "name": "echp.hp.set_op_mode",
+        "plugin": "Energy Center Heat Pump",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "int",
+        "default": 0,
+        "description": "Get the status of the machine",
+        "limit": 0.0,
+        "name": "echp.hp.get_op_status",
+        "plugin": "Energy Center Heat Pump",
+        "range": "",
+        "scope": "Device"
+    },
+    {
+        "data_type": "int",
+        "default": 0,
+        "description": "Get the cooling temp of the machine",
+        "limit": 0.0,
+        "name": "echp.hp.get_cooling_temp",
+        "plugin": "Energy Center Heat Pump",
+        "range": "",
+        "scope": "Device"
+    },
+    {
+        "data_type": "int",
+        "default": 0,
+        "description": "Set the cooling temp of the machine",
+        "limit": 0.0,
+        "name": "echp.hp.set_cooling_temp",
+        "plugin": "Energy Center Heat Pump",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "int",
+        "default": 0,
+        "description": "Get the heating temp of the machine",
+        "limit": 0.0,
+        "name": "echp.hp.get_heating_temp",
+        "plugin": "Energy Center Heat Pump",
+        "range": "",
+        "scope": "Device"
+    },
+    {
+        "data_type": "int",
+        "default": 0,
+        "description": "Set the heating temp of the machine",
+        "limit": 0.0,
+        "name": "echp.hp.set_heating_temp",
+        "plugin": "Energy Center Heat Pump",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "json",
+        "default": {},
+        "description": "Get the heating temp of the machine",
+        "limit": 0.0,
+        "name": "echp.hp.get_temps",
         "plugin": "Energy Center Heat Pump",
         "range": "",
         "scope": "Device"
