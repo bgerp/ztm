@@ -980,12 +980,12 @@ class HeatPumpControlGroup(BasePlugin):
             system_condensate_water_temperature = self.__heat_pump.get_system_condensate_water_temperature()
             ambient_temperature = self.__heat_pump.get_ambient_temperature()
             hot_water_temperature = self.__heat_pump.get_hot_water_temperature()
-            get_temps = {"GetSystemEvaporationReturnWaterTemperature": system_evaporation_return_water_temperature,
-                    "GetSystemEvaporationWaterTemperature": get_system_evaporation_water_temperature,
-                    "GetSystemCondensateReturnWaterTemperature": system_condensate_returnWater_temperature,
-                    "GetSystemCondensateWaterTemperature": system_condensate_water_temperature,
-                    "GetAmbientTemperature": ambient_temperature,
-                    "GetHotWaterTemperature": hot_water_temperature}
+            get_temps = {"SystemEvaporationReturnWaterTemperature": system_evaporation_return_water_temperature,
+                    "SystemEvaporationWaterTemperature": get_system_evaporation_water_temperature,
+                    "SystemCondensateReturnWaterTemperature": system_condensate_returnWater_temperature,
+                    "SystemCondensateWaterTemperature": system_condensate_water_temperature,
+                    "AmbientTemperature": ambient_temperature,
+                    "HotWaterTemperature": hot_water_temperature}
             self._registers.write(f"{self.key}.hp.get_temps", get_temps)
 
 #endregion
