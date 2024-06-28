@@ -83,7 +83,7 @@ class HP_40STD_N420WHSB4(ModbusDevice):
 
         self._vendor = "HstarsGuangzhouRefrigeratingEquipmentGroup"
         """Hstars Guangzhou Refrigerating Equipment Group.Co.,Ltd
-        """        
+        """
 
         self._model = "40STD-N420WHSB4"
 
@@ -400,30 +400,105 @@ class HP_40STD_N420WHSB4(ModbusDevice):
         except Exception:
             pass
 
-    def get_temperatures(self):
-        response = {}
-        params = ["GetSystemEvaporationReturnWaterTemperature",
-                  "GetSystemEvaporationWaterTemperature",
-                  "GetSystemCondensateReturnWaterTemperature",
-                  "GetSystemCondensateWaterTemperature",
-                  "GetAmbientTemperature",
-                  "GetHotWaterTemperature"]
+    def get_system_evaporation_return_water_temperature(self):
+        response = None
 
-        for param in params:
-            try:
-                # Generate request.
-                response = self.get_value(param)
+        try:
+            # Generate request.
+            response = self.get_value("GetSystemEvaporationReturnWaterTemperature")
 
-                # Divide by 10
-                response /= 10
+            # Divide by 10
+            response /= 10
 
-                # Make it integer.
-                response = int(response)
+            # Make it integer.
+            response = int(response)
+        except Exception:
+            pass
 
-                # Set response.
-                response[param] = response
-            except Exception:
-                pass
+        return response
+
+    def get_system_evaporation_water_temperature(self):
+        response = None
+
+        try:
+            # Generate request.
+            response = self.get_value("GetSystemEvaporationWaterTemperature")
+
+            # Divide by 10
+            response /= 10
+
+            # Make it integer.
+            response = int(response)
+        except Exception:
+            pass
+
+        return response
+
+    def get_system_condensate_return_water_temperature(self):
+        response = None
+
+        try:
+            # Generate request.
+            response = self.get_value("GetSystemCondensateReturnWaterTemperature")
+
+            # Divide by 10
+            response /= 10
+
+            # Make it integer.
+            response = int(response)
+        except Exception:
+            pass
+
+        return response
+
+    def get_system_condensate_water_temperature(self):
+        response = None
+
+        try:
+            # Generate request.
+            response = self.get_value("GetSystemCondensateWaterTemperature")
+
+            # Divide by 10
+            response /= 10
+
+            # Make it integer.
+            response = int(response)
+        except Exception:
+            pass
+
+        return response
+
+    def get_ambient_temperature(self):
+        response = None
+
+        try:
+            # Generate request.
+            response = self.get_value("GetAmbientTemperature")
+
+            # Divide by 10
+            response /= 10
+
+            # Make it integer.
+            response = int(response)
+        except Exception:
+            pass
+
+        return response
+
+    def get_hot_water_temperature(self):
+        response = None
+
+        try:
+            # Generate request.
+            response = self.get_value("GetHotWaterTemperature")
+
+            # Divide by 10
+            response /= 10
+
+            # Make it integer.
+            response = int(response)
+        except Exception:
+            pass
 
         return response
 

@@ -960,6 +960,34 @@ class HeatPumpControlGroup(BasePlugin):
                 self.__heat_pump.shutdown()
                 del self.__heat_pump
 
+    def __update_hp_states(self):
+        if self.__heat_pump is not None:
+            operation_mode = self.__heat_pump.get_operation_mode()
+            self._registers.write(f"{self.key}.hp.get_op_mode", operation_mode)
+            
+            operation_status = self.__heat_pump.get_operation_status()
+            self._registers.write(f"{self.key}.hp.get_op_status", operation_status)
+
+            cooling_set_temperature = self.__heat_pump.get_cooling_set_temperature()
+            self._registers.write(f"{self.key}.hp.get_cooling_temp", cooling_set_temperature)
+
+            heating_set_temperature = self.__heat_pump.get_heating_set_temperature()
+            self._registers.write(f"{self.key}.hp.get_heating_temp", heating_set_temperature)
+
+            system_evaporation_return_water_temperature = self.__heat_pump.get_system_evaporation_return_water_temperature()
+            get_system_evaporation_water_temperature = self.__heat_pump.get_system_evaporation_water_temperature()
+            system_condensate_returnWater_temperature = self.__heat_pump.get_system_condensate_return_water_temperature()
+            system_condensate_water_temperature = self.__heat_pump.get_system_condensate_water_temperature()
+            ambient_temperature = self.__heat_pump.get_ambient_temperature()
+            hot_water_temperature = self.__heat_pump.get_hot_water_temperature()
+            get_temps = {"GetSystemEvaporationReturnWaterTemperature": system_evaporation_return_water_temperature,
+                    "GetSystemEvaporationWaterTemperature": get_system_evaporation_water_temperature,
+                    "GetSystemCondensateReturnWaterTemperature": system_condensate_returnWater_temperature,
+                    "GetSystemCondensateWaterTemperature": system_condensate_water_temperature,
+                    "GetAmbientTemperature": ambient_temperature,
+                    "GetHotWaterTemperature": hot_water_temperature}
+            self._registers.write(f"{self.key}.hp.get_temps", get_temps)
+
 #endregion
 
 #region Private Methods (Registers)
@@ -1046,9 +1074,7 @@ class HeatPumpControlGroup(BasePlugin):
 
         self.__update_pumps_states()
 
-        if self.__heat_pump is not None:
-            mode = self.__heat_pump.get_mode()
-            self._registers.write(f"{self.key}.hp.mode", mode)
+        self.__update_hp_states()
 
 #endregion
 
