@@ -176,8 +176,8 @@ class Zone(BasePlugin):
         self.__fan_control_table = \
         [
             [  0,   0,   0,   0,   0,  50,  80, 120, 140], # 0 - Спряно
-            [-80, -50, -30,   0,   0,   0,   0,   0,   0], # 1 - Охлаждане
-            [  0,   0,   0,   0,   0,   0,  30,  50,  80], # 2 - Отопление
+            [-40, -30,   0,   0,   0,   0,   0,   0,   0], # 1 - Охлаждане
+            [  0,   0,   0,   0,   0,   0,   0,  30,  80], # 2 - Отопление
             [  0,   0,   0,   0,   0,   0,   0,   0,   0]  # 3 - Режим №3
         ]
 
@@ -237,7 +237,7 @@ class Zone(BasePlugin):
         """Temperature set point from the OP.
         """
 
-        self.__window_closed_input = verbal_const.OFF
+        self.__window_tamper_settings = {}
         """Window closed sensor input.
         """
 
@@ -332,11 +332,14 @@ class Zone(BasePlugin):
 
         state = False
 
-        if self._controller.is_valid_gpio(self.__window_closed_input):
-            state = self._controller.digital_read(self.__window_closed_input)
+        for tamper in self.__window_tamper_settings:
+            # {'WINT_1': '!U0:ID2:FC2:R0:DI0'}
 
-        if self.__window_closed_input == verbal_const.OFF:
-            state = True
+            if self._controller.is_valid_gpio(self.__window_tamper_settings[tamper]):
+                state |= self._controller.digital_read(self.__window_tamper_settings[tamper])
+
+            if self.__window_tamper_settings[tamper] == verbal_const.OFF:
+                state |= True
 
         return state
 
@@ -451,9 +454,9 @@ class Zone(BasePlugin):
         else:
             self.__set_cl_state(0)
 
-        if conv_state > 3:
-            conv_state = 3
-
+        # By subtracting one offset the convector state and at the same time give fourth state.
+        # 1 Only valve
+        # 2 to 4 valve + 1,2 and 3 stages for the convector.
         self.__set_conv_state(conv_state-1)
         self.__set_ventilation(fan_state)
 
@@ -865,14 +868,14 @@ class Zone(BasePlugin):
 
         self.__adjust_temp = actual_temp
 
-    def __window_closed_input_cb(self, register):
+    def __window_tamper_settings_cb(self, register):
 
           # Check data type.
-        if not register.data_type == "str":
+        if not register.data_type == "json":
             GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
             return
 
-        self.__window_closed_input = register.value
+        self.__window_tamper_settings = register.value
 
     def __glob_conv_mode_cb(self, register):
 
@@ -1089,10 +1092,10 @@ class Zone(BasePlugin):
             cl_vlv_3_dev_settings.update()
 
         # Create window closed sensor.
-        window_closed_input = self._registers.by_name(f"ac.window_closed_{self.__identifier}.input")
-        if window_closed_input is not None:
-            window_closed_input.update_handlers = self.__window_closed_input_cb
-            window_closed_input.update()
+        window_tamper_settings = self._registers.by_name(f"envm.window_tamper.settings")
+        if window_tamper_settings is not None:
+            window_tamper_settings.update_handlers = self.__window_tamper_settings_cb
+            window_tamper_settings.update()
 
         # Region parameters
         update_rate = self._registers.by_name(f"{self.key}.update_rate_{self.__identifier}")
@@ -1276,8 +1279,8 @@ class Zone(BasePlugin):
         is_hot_water = self.__is_hot_water()
 
         # Take all necessary condition for normal operation of the HVAC.
-        # stop_flag = (not is_empty or not window_tamper_state or not is_hot_water)
-        stop_flag = False
+        stop_flag = (is_empty or window_tamper_state or not is_hot_water)
+        # stop_flag = False
 
         # If it is time to stop.
         if stop_flag:
@@ -1321,12 +1324,14 @@ class Zone(BasePlugin):
 
             print(f"Target: {self.__adjust_temp:2.1f}; Current: {self.__temp_proc.value:2.1f}")
 
-            # Calculate the delta.
-            # dt = self.__adjust_temp - self.__temp_proc.value
+            dt = 0.0
+            if not self.__stop_flag:
+                # Calculate the delta.
+                # dt = self.__adjust_temp - self.__temp_proc.value
 
-            # Calculate the delta t and temperature deviation.
-            dt = min(self.__adjust_temp - self.__temp_proc.value+self.__temperature_deviation, 0) \
-                + max(self.__adjust_temp - self.__temp_proc.value-self.__temperature_deviation, 0)
+                # Calculate the delta t and temperature deviation.
+                dt = min(self.__adjust_temp - self.__temp_proc.value+self.__temperature_deviation, 0) \
+                    + max(self.__adjust_temp - self.__temp_proc.value-self.__temperature_deviation, 0)
 
             # Round to have clear rounded value for state machine currency.
             dt = self.__round_to_nearest_half(dt)
