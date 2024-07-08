@@ -122,6 +122,10 @@ class Register:
         """Limit!
         """
 
+        self.__profiles = ""
+        """Profiles that register are used from.
+        """
+
     def __str__(self):
         """As string
 
@@ -136,7 +140,9 @@ class Register:
             .format(self.name, self.data_type,\
                     self.range, self.plugin_name,\
                     self.scope, self.value,\
-                    self.description, self.ts)
+                    self.description, self.ts\
+                    self.profiles)
+
 
     __repr__ = __str__
 
@@ -385,6 +391,24 @@ class Register:
 
         self.__limit = value
 
+    @profiles.setter
+    def profiles(self, value: str):
+        """Setter profiles that registers are used in.
+
+        Args:
+            value (str): Profiles list that are separated by "|"
+        """
+        self.__profiles = value
+
+    @property
+    def profiles(self):
+        """Profiles that register are used in.
+
+        Returns:
+            str: Profiles list that are separated by "|"
+        """
+        return self.__profiles
+
 #endregion
 
 #region Public Methods
@@ -416,5 +440,13 @@ class Register:
         }
 
         return dict_obj
+
+#endregion
+
+#region Public Static Methods
+
+    @staticmethod
+    def create_profile(*profiles):
+        return f"|".join(profiles)
 
 #endregion
