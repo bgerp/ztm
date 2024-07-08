@@ -70,36 +70,6 @@ class Register:
 
 #region Attributes
 
-    __name = ""
-    """Register name."""
-
-    __ts = 0
-    """Timestamp of last update."""
-
-    __value = None
-    """Value of the register."""
-
-    __scope = Scope.Global
-    """Scope of register."""
-
-    __handlers = None
-    """Update handler."""
-
-    __force = False
-    """"""
-
-    __plugin_name = ""
-    """Plugin name."""
-
-    __description = ""
-    """Verbal register description."""
-
-    __range = ""
-    """Range!"""
-
-    __limit = 0.0
-    """Limit!"""
-
 #endregion
 
 #region Constructor
@@ -114,9 +84,43 @@ class Register:
         """
 
         self.__name = name
+        """Register name.
+        """
 
-        if self.__handlers is None:
-            self.__handlers = []
+        self.__ts = 0
+        """Timestamp of last update.
+        """
+
+        self.__value = None
+        """Value of the register.
+        """
+
+        self.__scope = Scope.Global
+        """Scope of register.
+        """
+
+        self.__handlers = []
+        """Update handler.
+        """
+
+        self.__force = False
+        """"""
+
+        self.__plugin_name = ""
+        """Plugin name.
+        """
+
+        self.__description = ""
+        """Verbal register description.
+        """
+
+        self.__range = ""
+        """Range!
+        """
+
+        self.__limit = 0.0
+        """Limit!
+        """
 
     def __str__(self):
         """As string
