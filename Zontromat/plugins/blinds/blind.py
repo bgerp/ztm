@@ -127,6 +127,8 @@ class Blind(BasePlugin):
 
         self.__sun_spot_update_timer = Timer(2)
 
+        print(f"Starting blinds controller: {self.__identifier}")
+
     def __del__(self):
         """Destructor"""
 
