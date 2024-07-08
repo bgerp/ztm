@@ -355,7 +355,7 @@ class Registers(list):
         return result
 
     def get_group(self, name: str):
-        """Get registerr with specified group name.
+        """Get register with specified group name.
 
         Args:
             name (str): Name of the registers.
