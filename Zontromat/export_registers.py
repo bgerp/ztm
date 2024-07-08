@@ -28,6 +28,7 @@ import os
 
 from data.register import Register
 from data.register import Scope
+from data.register import Profiles
 from data.registers import Registers
 from data import verbal_const
 
@@ -1802,6 +1803,12 @@ def __add_registers(args):
     register.description = "Last update cycle error"
     register.range = __range["NONE"]
     register.value = []
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value,
+            Profiles.DISTRIBUTION.value,
+            Profiles.HEAT_PUMP.value,
+            Profiles.NORTH_SERVER_ROOMS.value)
     # GlobalErrorHandler.set_register(register)
     __registers.append(register)
 
@@ -3682,95 +3689,6 @@ def __add_registers(args):
     register.range = __range["NONE"]
     register.value = []
     __registers.append(register)
-
-    # ECD / Hot water thermo couples settings.
-    register = Register("ecd.hot_water.tc.settings")
-    register.scope = Scope.System
-    register.plugin_name = "Energy Center Distribution"
-    register.description = "ECD / Hot water thermo couples settings."
-    register.range = __range["NONE"]
-    register.value = \
-    [
-        {
-            "input":
-            {
-                "vendor": "CWT",
-                "model": "MB318E",
-                "options":
-                {
-                    "uart": 0,
-                    "mb_id": 1,
-                    "chanel": 8
-                }
-            },
-            "output":
-            {
-                "vendor": "CWT",
-                "model": "MB318E",
-                "options":
-                {
-                    "uart": 0,
-                    "mb_id": 1,
-                    "chanel": 9
-                }
-            }
-        }
-    ]
-    __registers.append(register)
-
-    # ECD / Hot water thermo couples settings.
-    register = Register("ecd.hot_water.tc.values")
-    register.scope = Scope.Device
-    register.plugin_name = "Energy Center Distribution"
-    register.description = "ECD / Hot water thermo couples values."
-    register.range = __range["NONE"]
-    register.value = []
-    __registers.append(register)
-
-    # ECD / Cold water thermo couples settings.
-    register = Register("ecd.cold_water.tc.settings")
-    register.scope = Scope.System
-    register.plugin_name = "Energy Center Distribution"
-    register.description = "ECD / Cold water thermo couples settings."
-    register.range = __range["NONE"]
-    register.value = \
-    [
-        {
-            "input":
-            {
-                "vendor": "CWT",
-                "model": "MB318E",
-                "options":
-                {
-                    "uart": 0,
-                    "mb_id": 1,
-                    "chanel": 10
-                }
-            },
-            "output":
-            {
-                "vendor": "CWT",
-                "model": "MB318E",
-                "options":
-                {
-                    "uart": 0,
-                    "mb_id": 1,
-                    "chanel": 11
-                }
-            }
-        }
-    ]
-    __registers.append(register)
-
-    # ECD / Hot water thermo couples settings.
-    register = Register("ecd.cold_water.tc.values")
-    register.scope = Scope.Device
-    register.plugin_name = "Energy Center Distribution"
-    register.description = "ECD / Hot water thermo couples values."
-    register.range = __range["NONE"]
-    register.value = []
-    __registers.append(register)
-
 
     # ECD / Floor entrance valves settings.
     register = Register("ecd.floor_entrance.valves.settings")
