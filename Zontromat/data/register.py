@@ -502,6 +502,7 @@ class Register:
             "default": self.value,
             "description": self.description,
             "limit": self.limit,
+            "profiles": self.profiles,
         }
 
         return dict_obj
