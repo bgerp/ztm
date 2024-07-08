@@ -1819,6 +1819,12 @@ def __add_registers(args):
     register.description = "Current consumed RAM"
     register.range = "0/"
     register.value = 0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value,
+            Profiles.DISTRIBUTION.value,
+            Profiles.HEAT_PUMP.value,
+            Profiles.NORTH_SERVER_ROOMS.value)
     __registers.append(register)
 
     register = Register("sys.ram.peak")
@@ -1827,6 +1833,12 @@ def __add_registers(args):
     register.description = "Peek of consumed RAM"
     register.range = "0/"
     register.value = 0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value,
+            Profiles.DISTRIBUTION.value,
+            Profiles.HEAT_PUMP.value,
+            Profiles.NORTH_SERVER_ROOMS.value)
     __registers.append(register)
 
     register = Register("sys.time.usage")
@@ -1835,6 +1847,12 @@ def __add_registers(args):
     register.description = "Application time cycle"
     register.range = "0.0/"
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value,
+            Profiles.DISTRIBUTION.value,
+            Profiles.HEAT_PUMP.value,
+            Profiles.NORTH_SERVER_ROOMS.value)
     __registers.append(register)
 
     register = Register("sys.time.boot")
@@ -1843,6 +1861,12 @@ def __add_registers(args):
     register.description = "OS boot time."
     register.range = "0.0/"
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value,
+            Profiles.DISTRIBUTION.value,
+            Profiles.HEAT_PUMP.value,
+            Profiles.NORTH_SERVER_ROOMS.value)
     __registers.append(register)
 
     register = Register("sys.time.uptime")
@@ -1851,6 +1875,12 @@ def __add_registers(args):
     register.description = "OS uptime."
     register.range = "0.0/"
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value,
+            Profiles.DISTRIBUTION.value,
+            Profiles.HEAT_PUMP.value,
+            Profiles.NORTH_SERVER_ROOMS.value)
     __registers.append(register)
 
     register = Register("sys.time.startup")
@@ -1859,6 +1889,12 @@ def __add_registers(args):
     register.description = "Application startup time."
     register.range = "0.0/"
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value,
+            Profiles.DISTRIBUTION.value,
+            Profiles.HEAT_PUMP.value,
+            Profiles.NORTH_SERVER_ROOMS.value)
     __registers.append(register)
 
     register = Register("sys.disc.total")
@@ -1867,6 +1903,12 @@ def __add_registers(args):
     register.description = "Total disc space"
     register.range = "0/"
     register.value = 0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value,
+            Profiles.DISTRIBUTION.value,
+            Profiles.HEAT_PUMP.value,
+            Profiles.NORTH_SERVER_ROOMS.value)
     __registers.append(register)
 
     register = Register("sys.disc.used")
@@ -1875,6 +1917,12 @@ def __add_registers(args):
     register.description = "Used disc space"
     register.range = "0/"
     register.value = 0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value,
+            Profiles.DISTRIBUTION.value,
+            Profiles.HEAT_PUMP.value,
+            Profiles.NORTH_SERVER_ROOMS.value)
     __registers.append(register)
 
     register = Register("sys.disc.free")
@@ -1883,6 +1931,12 @@ def __add_registers(args):
     register.description = "Free disc space"
     register.range = "0/"
     register.value = 0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value,
+            Profiles.DISTRIBUTION.value,
+            Profiles.HEAT_PUMP.value,
+            Profiles.NORTH_SERVER_ROOMS.value)
     __registers.append(register)
 
     # Status LED
@@ -1892,6 +1946,12 @@ def __add_registers(args):
     register.description = "Status LED"
     register.range = __range["LED"]
     register.value = "LED0"
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value,
+            Profiles.DISTRIBUTION.value,
+            Profiles.HEAT_PUMP.value,
+            Profiles.NORTH_SERVER_ROOMS.value)
     __registers.append(register)
 
     register = Register("sys.sl.blink_time")
@@ -1900,6 +1960,12 @@ def __add_registers(args):
     register.description = "Blink time"
     register.range = "0.0/"
     register.value = 1.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value,
+            Profiles.DISTRIBUTION.value,
+            Profiles.HEAT_PUMP.value,
+            Profiles.NORTH_SERVER_ROOMS.value)
     __registers.append(register)
 
     # Anti tampering
@@ -1909,6 +1975,12 @@ def __add_registers(args):
     register.description = "Anti tamper"
     register.range = __range["DI"]
     register.value = verbal_const.OFF # "DI7"
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value,
+            Profiles.DISTRIBUTION.value,
+            Profiles.HEAT_PUMP.value,
+            Profiles.NORTH_SERVER_ROOMS.value)
     __registers.append(register)
 
     register = Register("sys.at.state")
@@ -1917,15 +1989,27 @@ def __add_registers(args):
     register.description = "Anti tampering state"
     register.range = __range["BOOL"]
     register.value = False
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value,
+            Profiles.DISTRIBUTION.value,
+            Profiles.HEAT_PUMP.value,
+            Profiles.NORTH_SERVER_ROOMS.value)
     __registers.append(register)
 
-    # Colision detector
+    # Collision detector
     register = Register("sys.col.info_message")
     register.scope = Scope.Device
     register.plugin_name = "System"
     register.description = "Collision info message"
     register.range = __range["NONE"]
     register.value = {}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value,
+            Profiles.DISTRIBUTION.value,
+            Profiles.HEAT_PUMP.value,
+            Profiles.NORTH_SERVER_ROOMS.value)
     __registers.append(register)
 
     register = Register("sys.col.warning_message")
@@ -1934,6 +2018,12 @@ def __add_registers(args):
     register.description = "Collision warning message"
     register.range = __range["NONE"]
     register.value = {}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value,
+            Profiles.DISTRIBUTION.value,
+            Profiles.HEAT_PUMP.value,
+            Profiles.NORTH_SERVER_ROOMS.value)
     __registers.append(register)
 
     register = Register("sys.col.error_message")
@@ -1942,6 +2032,12 @@ def __add_registers(args):
     register.description = "Collision error message"
     register.range = __range["NONE"]
     register.value = {}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value,
+            Profiles.DISTRIBUTION.value,
+            Profiles.HEAT_PUMP.value,
+            Profiles.NORTH_SERVER_ROOMS.value)
     __registers.append(register)
 
     register = Register("sys.col.clear_errors")
@@ -1950,6 +2046,12 @@ def __add_registers(args):
     register.description = "Clear messages"
     register.range = "0|1"
     register.value = 0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value,
+            Profiles.DISTRIBUTION.value,
+            Profiles.HEAT_PUMP.value,
+            Profiles.NORTH_SERVER_ROOMS.value)
     __registers.append(register)
 
     # Enable disable plugin.
@@ -1959,6 +2061,12 @@ def __add_registers(args):
     register.description = "Plugin enabled"
     register.range = __range["BOOL"]
     register.value = True
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value,
+            Profiles.DISTRIBUTION.value,
+            Profiles.HEAT_PUMP.value,
+            Profiles.NORTH_SERVER_ROOMS.value)
     __registers.append(register)
 
     # Enable info messages.
@@ -1968,6 +2076,12 @@ def __add_registers(args):
     register.description = "Enable info messages"
     register.range = __range["BOOL"]
     register.value = True
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value,
+            Profiles.DISTRIBUTION.value,
+            Profiles.HEAT_PUMP.value,
+            Profiles.NORTH_SERVER_ROOMS.value)
     __registers.append(register)
 
     # Enable warning messages.
@@ -1977,6 +2091,12 @@ def __add_registers(args):
     register.description = "Enable warning messages"
     register.range = __range["BOOL"]
     register.value = True
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value,
+            Profiles.DISTRIBUTION.value,
+            Profiles.HEAT_PUMP.value,
+            Profiles.NORTH_SERVER_ROOMS.value)
     __registers.append(register)
 
     # Enable error messages.
@@ -1986,25 +2106,13 @@ def __add_registers(args):
     register.description = "Enable error messages"
     register.range = __range["BOOL"]
     register.value = True
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value,
+            Profiles.DISTRIBUTION.value,
+            Profiles.HEAT_PUMP.value,
+            Profiles.NORTH_SERVER_ROOMS.value)
     __registers.append(register)
-
-    # # Software update register.
-    # register = Register("sys.software.target_version")
-    # register.scope = Scope.System
-    # register.plugin_name = "System"
-    # register.description = "Target software version"
-    # register.range = __range["NONE"]
-    # register.value = json.loads("{\"repo\": \"http:\/\/github.com\/bgerp\/ztm\/\", \"branch\": \"master\", \"commit\":\"3462828\"}")
-    # __registers.append(register)
-
-    # # Current software version.
-    # register = Register("sys.software.current_version")
-    # register.scope = Scope.System
-    # register.plugin_name = "System"
-    # register.description = "Current software version."
-    # register.range = __range["NONE"]
-    # register.value = json.loads("{\"repo\": \"http:\/\/github.com\/bgerp\/ztm\/\", \"branch\": \"master\", \"commit\":\"e0c1dda\"}")
-    # __registers.append(register)
 
 #endregion
 
