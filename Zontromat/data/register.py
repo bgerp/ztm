@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import time
 from enum import Enum
+import json
 
 #region File Attributes
 
@@ -56,6 +57,50 @@ __status__ = "Debug"
 
 #endregion
 
+class Profiles(Enum):
+    """Profiles enum class.
+    """
+
+    NONE = ""
+    """Empty profile.
+    """
+
+    ZONE = "mz"
+    """Micro zone.
+    """
+
+    HEAT_PUMP = "hp"
+    """Heat pump.
+    """
+
+    DISTRIBUTION = "dt"
+    """Distribution profile.
+    """
+
+    NORTH_SERVER_ROOMS = "ns"
+    """North server room.
+    """
+
+    @staticmethod
+    def from_str(profile):
+
+        p_profile = profile.lower()
+        out_profile = Profiles.NONE
+
+        if p_profile == "mz":
+            out_profile = Profiles.ZONE
+
+        elif p_profile == "hp":
+            out_profile = Profiles.HEAT_PUMP
+
+        elif p_profile == "dt":
+            out_profile = Profiles.DISTRIBUTION
+
+        elif p_profile == "ns":
+            out_profile = Profiles.NORTH_SERVER_ROOMS
+
+        return out_profile
+
 class Scope(Enum):
     """Registers scope.
     """
@@ -64,6 +109,26 @@ class Scope(Enum):
     Device = 2 #
     System = 4 #
     Both = 7 #
+
+    @staticmethod
+    def from_str(scope):
+
+        p_scope = scope.lower()
+        out_scope = Scope.NONE
+
+        if p_scope == "global":
+            out_scope = Scope.Global
+
+        elif p_scope == "device":
+            out_scope = Scope.Device
+
+        elif p_scope == "system":
+            out_scope = Scope.System
+
+        elif p_scope == "both":
+            out_scope = Scope.Both
+
+        return out_scope
 
 class Register:
     """Register"""
@@ -140,7 +205,7 @@ class Register:
             .format(self.name, self.data_type,\
                     self.range, self.plugin_name,\
                     self.scope, self.value,\
-                    self.description, self.ts\
+                    self.description, self.ts,\
                     self.profiles)
 
 
@@ -391,15 +456,6 @@ class Register:
 
         self.__limit = value
 
-    @profiles.setter
-    def profiles(self, value: str):
-        """Setter profiles that registers are used in.
-
-        Args:
-            value (str): Profiles list that are separated by "|"
-        """
-        self.__profiles = value
-
     @property
     def profiles(self):
         """Profiles that register are used in.
@@ -408,6 +464,15 @@ class Register:
             str: Profiles list that are separated by "|"
         """
         return self.__profiles
+
+    @profiles.setter
+    def profiles(self, value: str):
+        """Setter profiles that registers are used in.
+
+        Args:
+            value (str): Profiles list that are separated by "|"
+        """
+        self.__profiles = value
 
 #endregion
 
@@ -448,5 +513,86 @@ class Register:
     @staticmethod
     def create_profile(*profiles):
         return f"|".join(profiles)
+
+    @staticmethod
+    def to_value(data_type, value):
+
+        out_value = None
+
+        # bool
+        if data_type == "bool":
+            value_type = type(value)
+
+            if value_type == bool:
+                out_value = value
+
+            else:
+                if value == "false":
+                    out_value = False
+
+                if value == "true":
+                    out_value = True
+
+        # int
+        elif data_type == "int":
+            out_value = int(value)
+
+        # float
+        elif data_type == "float":
+            out_value = float(value)
+
+        # json
+        elif data_type == "json":
+            value_type = type(value)
+
+            if value_type == list:
+                out_value = value
+
+            elif value_type == dict:
+                out_value = value
+
+            elif value_type == str:
+
+                # Remove first "
+                if value.startswith("\""):
+                    value = value[1:]
+
+                # Remove last "
+                if value.endswith("\""):
+                    value = value[:-1]
+
+                # Convert single quotes to double.
+                value = value.replace("\'", "\"") 
+
+                # Converts to JSON.
+                value = json.loads(value)
+
+                out_value = value
+
+            else:
+                raise TypeError("Unsupported data type: {}".format(value_type))
+
+        else:
+            out_value = value
+
+        return out_value
+
+    @staticmethod
+    def from_value(data_type, value):
+
+        if data_type == "bool":
+            if our_value:
+                our_value = "true"
+            else:
+                our_value = "false"
+
+        elif data_type == "str":
+            if "," in value:
+                our_value = "\"" + value + "\""
+
+        elif data_type == "json":
+            our_value = json.dumps(value)
+
+        return our_value
 
 #endregion
