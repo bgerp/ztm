@@ -161,6 +161,9 @@ def __add_registers(args):
     register.description = "Plugin enabled"
     register.range = __range["BOOL"]
     register.value = False
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("ac.allowed_attendees")
@@ -169,6 +172,9 @@ def __add_registers(args):
     register.description = "Allowed attendees"
     register.range = __range["NONE"]
     register.value = [] # {"card_id": "445E6046010080FF", "pin": "159753", "valid_until": "1595322860"}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("ac.zones_count")
@@ -185,6 +191,9 @@ def __add_registers(args):
     register.description = "Nearby attendees"
     register.range = __range["NONE"]
     register.value = [] # {"card_id": "445E6046010080FF", "ts":"1595322860"}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("ac.last_update_attendees")
@@ -193,6 +202,9 @@ def __add_registers(args):
     register.description = "Last update attendee"
     register.range = __range["NONE"]
     register.value = [] # {"card_id": "445E6046010080FF", "ts":"1595322860"}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("ac.next_attendance")
@@ -201,6 +213,9 @@ def __add_registers(args):
     register.description = "Next attendance"
     register.range = "0.0/"
     register.value = 0.0 # 1595322860
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     # Entry card reader.
@@ -210,6 +225,9 @@ def __add_registers(args):
     register.description = "Card reader enabled"
     register.range = __range["NONE"]
     register.value = {} # "Teracom/act230/2911"
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     # Exit card reader.
@@ -219,6 +237,9 @@ def __add_registers(args):
     register.description = "Card reader enabled"
     register.range = __range["NONE"]
     register.value = {} # "Teracom/act230/2897"
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     #
@@ -228,6 +249,9 @@ def __add_registers(args):
     register.description = "Exit button 1 input"
     register.range = __range["DI"]
     register.value = verbal_const.OFF
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("ac.lock_mechanism_1.output")
@@ -236,6 +260,9 @@ def __add_registers(args):
     register.description = "Lock mechanism output"
     register.range = __range["DO"]
     register.value = verbal_const.OFF
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("ac.time_to_open_1")
@@ -244,6 +271,9 @@ def __add_registers(args):
     register.description = "Lock mechanism time to open [s]"
     register.range = "0/60"
     register.value = 3
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("ac.door_closed_1.input")
@@ -252,6 +282,9 @@ def __add_registers(args):
     register.description = "Door closed input"
     register.range = __range["DI"]
     register.value = verbal_const.OFF # "DI5"
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("ac.door_closed_1.state")
@@ -260,6 +293,9 @@ def __add_registers(args):
     register.description = "Door closed input state"
     register.range = __range["BOOL"]
     register.value = False
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
 
@@ -270,6 +306,9 @@ def __add_registers(args):
     register.description = "Card reader settings"
     register.range = __range["NONE"]
     register.value = {} # "Teracom/act230/2486"
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     # Exit card reader.
@@ -279,6 +318,9 @@ def __add_registers(args):
     register.description = "Card reader settings"
     register.range = __range["NONE"]
     register.value = {} # "Teracom/act230/1208"
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     #
@@ -288,6 +330,9 @@ def __add_registers(args):
     register.description = "Exit button 2 input"
     register.range = __range["DI"]
     register.value = verbal_const.OFF
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("ac.lock_mechanism_2.output")
@@ -296,6 +341,9 @@ def __add_registers(args):
     register.description = "Lock 2 mechanism output"
     register.range = __range["DO"]
     register.value = verbal_const.OFF
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("ac.time_to_open_2")
@@ -304,6 +352,9 @@ def __add_registers(args):
     register.description = "Lock 2 mechanism time to open"
     register.range = "0/60"
     register.value = 3
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("ac.door_closed_2.input")
@@ -312,6 +363,9 @@ def __add_registers(args):
     register.description = "Door 2 closed input"
     register.range = __range["DI"]
     register.value = verbal_const.OFF # "DI2"
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("ac.door_closed_2.state")
@@ -320,6 +374,9 @@ def __add_registers(args):
     register.description = "Door 2 closed input state"
     register.range = __range["BOOL"]
     register.value = False
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     #
@@ -329,6 +386,9 @@ def __add_registers(args):
     register.description = "PIR 1 sensor input"
     register.range = __range["DI"]
     register.value = verbal_const.OFF # "DI6"
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("ac.pir_1.state")
@@ -337,6 +397,9 @@ def __add_registers(args):
     register.description = "PIR 1 sensor input state"
     register.range = __range["BOOL"]
     register.value = False
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("ac.pir_2.input")
@@ -345,6 +408,9 @@ def __add_registers(args):
     register.description = "PIR 2 sensor input"
     register.range = __range["DI"]
     register.value = verbal_const.OFF # "DI0"
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("ac.pir_2.state")
@@ -353,6 +419,9 @@ def __add_registers(args):
     register.description = "PIR 2 sensor input state"
     register.range = __range["BOOL"]
     register.value = False
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     #
@@ -362,6 +431,9 @@ def __add_registers(args):
     register.description = "Window 1 closed input"
     register.range = __range["DI"]
     register.value = verbal_const.OFF # "!DI4"
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("ac.window_closed_1.state")
@@ -370,6 +442,9 @@ def __add_registers(args):
     register.description = "Window 1 closed input state"
     register.range = __range["BOOL"]
     register.value = False
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("ac.window_closed_2.input")
@@ -378,6 +453,9 @@ def __add_registers(args):
     register.description = "Window 2 closed input"
     register.range = __range["DI"]
     register.value = verbal_const.OFF # "!DI3"
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("ac.window_closed_2.state")
@@ -386,6 +464,9 @@ def __add_registers(args):
     register.description = "Window 2 closed input state"
     register.range = __range["BOOL"]
     register.value = False
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     # Door window blind 1.
@@ -395,6 +476,9 @@ def __add_registers(args):
     register.description = "Door window blind 1 output"
     register.range = __range["DO"]
     register.value = verbal_const.OFF
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
 
@@ -404,6 +488,9 @@ def __add_registers(args):
     register.description = "Door window blind 1 value"
     register.range = __range["BOOL"]
     register.value = False
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     # Door window blind 2.
@@ -413,6 +500,9 @@ def __add_registers(args):
     register.description = "Door window blind 2 output"
     register.range = __range["DO"]
     register.value = verbal_const.OFF
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("ac.door_window_blind_2.value")
@@ -421,6 +511,9 @@ def __add_registers(args):
     register.description = "Door window blind 2 value"
     register.range = __range["BOOL"]
     register.value = False
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     # Occupation
@@ -430,6 +523,9 @@ def __add_registers(args):
     register.description = "Zone occupied flag"
     register.range = __range["BOOL"]
     register.value = False
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("ac.zone_2_occupied")
@@ -438,6 +534,9 @@ def __add_registers(args):
     register.description = "Zone occupied flag"
     register.range = __range["BOOL"]
     register.value = False
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
 #endregion
