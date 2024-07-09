@@ -800,6 +800,9 @@ def __add_registers(args):
     register.description = "Plugin enabled"
     register.range = __range["BOOL"]
     register.value = True
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     # Cold water flow meter.
@@ -819,6 +822,9 @@ def __add_registers(args):
         }
     else:
         register.value = {}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("monitoring.cw.measurements")
@@ -827,6 +833,9 @@ def __add_registers(args):
     register.description = "Cold water liters"
     register.range = __range["NONE"]
     register.value = []
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("monitoring.cw.leak")
@@ -835,6 +844,9 @@ def __add_registers(args):
     register.description = "Cold water leaked liters"
     register.range = "0.0/"
     register.value = 1.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
 
@@ -855,6 +867,9 @@ def __add_registers(args):
         }
     else:
         register.value = {}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("monitoring.hw.measurements")
@@ -863,6 +878,9 @@ def __add_registers(args):
     register.description = "Hot water liters"
     register.range = __range["NONE"]
     register.value = []
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("monitoring.hw.leak")
@@ -871,6 +889,9 @@ def __add_registers(args):
     register.description = "Hot water leaked liters"
     register.range = "0.0/"
     register.value = 1.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
 
@@ -892,6 +913,9 @@ def __add_registers(args):
         }
     else:
         register.value = {}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("monitoring.pa.measurements")
@@ -900,6 +924,9 @@ def __add_registers(args):
     register.description = "Power analyzer measurements"
     register.range = __range["NONE"]
     register.value = []
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     # ====================== NEW ======================
@@ -910,6 +937,9 @@ def __add_registers(args):
     register.description = "Measuring demand"
     register.range = "0.0/"
     register.value = 3600.0 # Every hour to measure the consumed electricity.
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
 
@@ -930,6 +960,9 @@ def __add_registers(args):
         }
     else:
         register.value = {}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("monitoring.fl_1.hm.measurements")
@@ -938,6 +971,9 @@ def __add_registers(args):
     register.description = "Floor loop 1 heat meter measurements."
     register.range = __range["NONE"]
     register.value = {}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
 
@@ -958,6 +994,9 @@ def __add_registers(args):
         }
     else:
         register.value = {}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
 
@@ -967,6 +1006,9 @@ def __add_registers(args):
     register.description = "Floor loop 2 heat meter measurements."
     register.range = __range["NONE"]
     register.value = {}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
 
@@ -987,6 +1029,9 @@ def __add_registers(args):
         }
     else:
         register.value = {}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("monitoring.fl_3.hm.measurements")
@@ -995,6 +1040,9 @@ def __add_registers(args):
     register.description = "Floor loop 3 heat meter measurements."
     register.range = __range["NONE"]
     register.value = {}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
 
@@ -1015,6 +1063,9 @@ def __add_registers(args):
         }
     else:
         register.value = {}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("monitoring.cl_1.hm.measurements")
@@ -1023,6 +1074,9 @@ def __add_registers(args):
     register.description = "Convector loop 1 heat meter measurements."
     register.range = __range["NONE"]
     register.value = {}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
 
@@ -1043,6 +1097,9 @@ def __add_registers(args):
         }
     else:
         register.value = {}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("monitoring.cl_2.hm.measurements")
@@ -1051,6 +1108,9 @@ def __add_registers(args):
     register.description = "Convector loop 2 heat meter measurements."
     register.range = __range["NONE"]
     register.value = {}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
 
@@ -1071,6 +1131,9 @@ def __add_registers(args):
         }
     else:
         register.value = {}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("monitoring.cl_3.hm.measurements")
@@ -1079,17 +1142,9 @@ def __add_registers(args):
     register.description = "Convector loop 3 heat meter measurements."
     register.range = __range["NONE"]
     register.value = {}
-    __registers.append(register)
-
-
-    # ====================== DEPRICATED ======================
-
-    register = Register("monitoring.pa.demand_time")
-    register.scope = Scope.System
-    register.plugin_name = "Monitoring"
-    register.description = "Power analyzer measuring demand"
-    register.range = "0.0/"
-    register.value = 3600.0 # Every hour to measure the consumed electricity.
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
 #endregion
