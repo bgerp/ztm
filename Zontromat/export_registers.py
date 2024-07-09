@@ -4449,6 +4449,12 @@ def __add_registers(args):
     register.description = "Alarm module sound device settings."
     register.range = __range["NONE"]
     register.value = {}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value,
+            Profiles.DISTRIBUTION.value,
+            Profiles.HEAT_PUMP.value,
+            Profiles.NORTH_SERVER_ROOMS.value)
     __registers.append(register)
 
     # Visual signal device.
@@ -4458,6 +4464,12 @@ def __add_registers(args):
     register.description = "Alarm module visual device settings."
     register.range = __range["NONE"]
     register.value = {}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value,
+            Profiles.DISTRIBUTION.value,
+            Profiles.HEAT_PUMP.value,
+            Profiles.NORTH_SERVER_ROOMS.value)
     __registers.append(register)
 
     # Enable
@@ -4467,6 +4479,12 @@ def __add_registers(args):
     register.description = "Alarm module enable flag."
     register.range = __range["BOOL"]
     register.value = False
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value,
+            Profiles.DISTRIBUTION.value,
+            Profiles.HEAT_PUMP.value,
+            Profiles.NORTH_SERVER_ROOMS.value)
     __registers.append(register)
 
 #endregion
@@ -4480,6 +4498,12 @@ def __add_registers(args):
     register.description = "Statistics module enable flag."
     register.range = __range["BOOL"]
     register.value = False
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value,
+            Profiles.DISTRIBUTION.value,
+            Profiles.HEAT_PUMP.value,
+            Profiles.NORTH_SERVER_ROOMS.value)
     __registers.append(register)
 
 #endregion
