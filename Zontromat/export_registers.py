@@ -5586,6 +5586,9 @@ def __add_registers(args):
     register.description = "Global floor thermal mode."
     register.range = "0|1|2"
     register.value = 0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     # Global convector mode.
@@ -5595,6 +5598,9 @@ def __add_registers(args):
     register.description = "Global convector thermal mode."
     register.range = "0|1|2"
     register.value = 0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     # Global illumination east.
@@ -5604,6 +5610,9 @@ def __add_registers(args):
     register.description = "Global east ilumination."
     register.range = ""
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     # Global illumination west.
@@ -5613,6 +5622,9 @@ def __add_registers(args):
     register.description = "Global west ilumination."
     register.range = ""
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
 #endregion
