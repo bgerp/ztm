@@ -464,7 +464,7 @@ def __add_registers(args):
     __registers.append(register)
 
     register = Register("blinds.blind_1.position")
-    register.scope = Scope.Device
+    register.scope = Scope.Both
     register.plugin_name = "Blinds"
     register.description = "Position [deg]"
     register.range = "0.0/180.0"
@@ -983,7 +983,7 @@ def __add_registers(args):
     register.description = "Plugin environment window tamper settings"
     register.range = __range["NONE"]
     register.value = {
-        "WINT_1": "!U0:ID2:FC2:R0:DI0",
+        "WINT_1": "!U0:ID2:FC2:R0:DI1",
     }
     __registers.append(register)
 
@@ -1001,7 +1001,7 @@ def __add_registers(args):
     register.description = "Plugin environment door tamper settings"
     register.range = __range["NONE"]
     register.value = {
-        "DRT_1": "!U0:ID2:FC2:R0:DI1",
+        "DRT_1": "!U0:ID2:FC2:R0:DI0",
     }
     __registers.append(register)
 
