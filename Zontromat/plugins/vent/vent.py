@@ -62,7 +62,7 @@ __class_name__ = "Vent"
 #endregion
 
 class Vent(BasePlugin):
-    """Zone controll plugin."""
+    """Zone control plugin."""
 
 #region Attributes
 

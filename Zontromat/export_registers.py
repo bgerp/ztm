@@ -98,8 +98,8 @@ def __set_parser():
     global __parser
 
     # Add arguments.
-    __parser.add_argument("--action", type=str, default="w_json", help="Export JSON file.")
-    # __parser.add_argument("--action", type=str, default="w_csv", help="Export CSV file.")
+    # __parser.add_argument("--action", type=str, default="w_json", help="Export JSON file.")
+    __parser.add_argument("--action", type=str, default="w_csv", help="Export CSV file.")
     # __parser.add_argument("--action", type=str, default="list_gpio", help="Export type.")
     # __parser.add_argument("--action", type=str, default="w_md", help="Export MD file.")
     # __parser.add_argument("--path", type=str, default=file_name, help="Target file path.")
@@ -4126,328 +4126,422 @@ def __add_registers(args):
 
 #region Energy Center Heat Pump controller (echp)
 
-    # Input registers.
+    # -================================================================================-
 
-    # Count of the heat pump control groups.
-    register = Register("echp.hp.count")
+    # ECHP / Cold / Valves / Settings
+    register = Register("echp.cold.valves.settings")
     register.scope = Scope.System
-    register.plugin_name = "ECHP"
-    register.description = "Energy Center Heat Pump machines count"
-    register.range = "0/"
-    register.value = 3
-    __registers.append(register)
-
-    # Index of the heat pump control group.
-    register = Register("echp.hp.index")
-    register.scope = Scope.System
-    register.plugin_name = "ECHP"
-    register.description = "Energy Center Heat Pump machine index"
-    register.range = "0/"
-    register.value = 0
-    __registers.append(register)
-
-    register = Register("echp.hp.power")
-    register.scope = Scope.System
-    register.plugin_name = "ECHP"
-    register.description = "The power of machine"
-    register.range = "-100.0/100.0"
-    register.value = 0
-    __registers.append(register)
-
-    register = Register("echp.hp.mode")
-    register.scope = Scope.System
-    register.plugin_name = "ECHP"
-    register.description = "The mode of the machine"
+    register.plugin_name = "Energy Center Heat Pump"
+    register.description = "ECHP / Cold / Valves / Settings"
     register.range = __range["NONE"]
-    register.value = 0
+    register.value = \
+    {
+        "input":
+        [
+            {
+                "vendor": "Flowx",
+                "model": "FLX-05F",
+                "options":
+                {
+                    "close_on_shutdown": False,
+                    "wait_on_shutdown": False,
+                    "io_mode": 1, # 1: "single_out", 2: "dual_out"
+                    "output_cw": "off",
+                    "output_ccw": "off",
+                    "limit_cw": "off",
+                    "limit_ccw": "off"
+                }
+            }
+        ],
+        "output":
+        [
+            {
+                "vendor": "Flowx",
+                "model": "FLX-05F",
+                "options":
+                {
+                    "close_on_shutdown": False,
+                    "wait_on_shutdown": False,
+                    "io_mode": 1, # 1: "single_out", 2: "dual_out"
+                    "output_cw": "off",
+                    "output_ccw": "off",
+                    "limit_cw": "off",
+                    "limit_ccw": "off"
+                }
+            }
+        ],
+        "short":
+        [
+            {
+                "vendor": "Flowx",
+                "model": "FLX-05F",
+                "options":
+                {
+                    "close_on_shutdown": False,
+                    "wait_on_shutdown": False,
+                    "io_mode": 1, # 1: "single_out", 2: "dual_out"
+                    "output_cw": "off",
+                    "output_ccw": "off",
+                    "limit_cw": "off",
+                    "limit_ccw": "off"
+                }
+            }
+        ]
+    }
     __registers.append(register)
 
-    register = Register("echp.hp.run")
+    # ECHP / Cold / Valves / Mode
+    register = Register("echp.cold.valves.mode")
+    register.scope = Scope.System
+    register.plugin_name = "Energy Center Heat Pump"
+    register.description = "ECHP / Cold / Valves / Mode"
+    register.range = __range["VALVE_MODE"]
+    register.value = 0.0
+    __registers.append(register)
+
+    # ECHP / Cold / Valves / State
+    register = Register("echp.cold.valves.state")
     register.scope = Scope.Device
-    register.plugin_name = "ECHP"
-    register.description = "The state of the machine"
-    register.range = __range["NONE"]
-    register.value = 0
-    __registers.append(register)
-
-    # Cold minimum of the heat pump control group.
-    register = Register("echp.hp.cold_min")
-    register.scope = Scope.System
-    register.plugin_name = "ECHP"
-    register.description = "Energy Center Heat Pump cold minimum"
-    register.range = "3.0/8.0"
-    register.value = 5.0
-    __registers.append(register)
-
-    # Cold maximum of the heat pump control group.
-    register = Register("echp.hp.cold_max")
-    register.scope = Scope.System
-    register.plugin_name = "ECHP"
-    register.description = "Energy Center Heat Pump cold maximum"
-    register.range = "3.0/8.0"
-    register.value = 7.0
-    __registers.append(register)
-
-    # Hot minimum of the heat pump control group.
-    register = Register("echp.hp.hot_min")
-    register.scope = Scope.System
-    register.plugin_name = "ECHP"
-    register.description = "Energy Center Heat Pump hot minimum"
-    register.range = "40.0/47.0"
-    register.value = 41.0
-    __registers.append(register)
-
-    # Hot maximum of the heat pump control group.
-    register = Register("echp.hp.hot_max")
-    register.scope = Scope.System
-    register.plugin_name = "ECHP"
-    register.description = "Energy Center Heat Pump hot maximum"
-    register.range = "40.0/47.0"
-    register.value = 46.0
+    register.plugin_name = "Energy Center Heat Pump"
+    register.description = "ECHP / Cold / Valves / State"
+    register.range = __range["VALVE_STATE"]
+    register.value = 0.0
     __registers.append(register)
 
     # -================================================================================-
 
-    # Heat Pump Control Group / VCG / Cold Buffer / Input
-    register = Register("echp.hpcg.vcg_cold_buf.input")
+    # ECHP / Cold Geo / Valves / Settings
+    register = Register("echp.cold_geo.valves.settings")
     register.scope = Scope.System
-    register.plugin_name = "ECHP"
-    register.description = "Heat Pump Control Group / VCG / Cold Buffer / Input"
+    register.plugin_name = "Energy Center Heat Pump"
+    register.description = "ECHP / Cold Geo / Valves / Settings"
     register.range = __range["NONE"]
-    register.value = {
-        "vendor": "Flowx",
-        "model": "FLX-05F",
-        "options":
-        {
-            "output_cw": "off",
-            "output_ccw": "off",
-            "limit_cw": "off",
-            "limit_ccw": "off"
-        }
+    register.value = \
+    {
+        "input":
+        [
+            {
+                "vendor": "Flowx",
+                "model": "FLX-05F",
+                "options":
+                {
+                    "close_on_shutdown": False,
+                    "wait_on_shutdown": False,
+                    "io_mode": 1, # 1: "single_out", 2: "dual_out"
+                    "output_cw": "off",
+                    "output_ccw": "off",
+                    "limit_cw": "off",
+                    "limit_ccw": "off"
+                }
+            }
+        ],
+        "output":
+        [
+            {
+                "vendor": "Flowx",
+                "model": "FLX-05F",
+                "options":
+                {
+                    "close_on_shutdown": False,
+                    "wait_on_shutdown": False,
+                    "io_mode": 1, # 1: "single_out", 2: "dual_out"
+                    "output_cw": "off",
+                    "output_ccw": "off",
+                    "limit_cw": "off",
+                    "limit_ccw": "off"
+                }
+            }
+        ],
+        "short":
+        [
+            {
+                "vendor": "Flowx",
+                "model": "FLX-05F",
+                "options":
+                {
+                    "close_on_shutdown": False,
+                    "wait_on_shutdown": False,
+                    "io_mode": 1, # 1: "single_out", 2: "dual_out"
+                    "output_cw": "off",
+                    "output_ccw": "off",
+                    "limit_cw": "off",
+                    "limit_ccw": "off"
+                }
+            }
+        ]
     }
     __registers.append(register)
 
-    # Heat Pump Control Group / VCG / Cold Buffer / Output
-    register = Register("echp.hpcg.vcg_cold_buf.output")
+    # ECHP / Cold Geo / Valves / Mode
+    register = Register("echp.cold_geo.valves.mode")
     register.scope = Scope.System
-    register.plugin_name = "ECHP"
-    register.description = "Heat Pump Control Group / VCG / Cold Buffer / Output"
-    register.range = __range["NONE"]
-    register.value = {
-        "vendor": "Flowx",
-        "model": "FLX-05F",
-        "options":
-        {
-            "output_cw": "off",
-            "output_ccw": "off",
-            "limit_cw": "off",
-            "limit_ccw": "off"
-        }
-    }
+    register.plugin_name = "Energy Center Heat Pump"
+    register.description = "ECHP / Cold Geo / Valves / Mode"
+    register.range = __range["VALVE_MODE"]
+    register.value = 0.0
     __registers.append(register)
 
-    # Heat Pump Control Group / VCG / Cold Buffer / Short
-    register = Register("echp.hpcg.vcg_cold_buf.short")
-    register.scope = Scope.System
-    register.plugin_name = "ECHP"
-    register.description = "Heat Pump Control Group / VCG / Cold Buffer / Short"
-    register.range = __range["NONE"]
-    register.value = {
-        "vendor": "Flowx",
-        "model": "FLX-05F",
-        "options":
-        {
-            "output_cw": "off",
-            "output_ccw": "off",
-            "limit_cw": "off",
-            "limit_ccw": "off"
-        }
-    }
-    __registers.append(register)
-
-    # -================================================================================-
-
-    # Heat Pump Control Group / VCG / Cold Geo / Input
-    register = Register("echp.hpcg.vcg_cold_geo.input")
-    register.scope = Scope.System
-    register.plugin_name = "ECHP"
-    register.description = "Heat Pump Control Group / VCG / Cold Geo / Input"
-    register.range = __range["NONE"]
-    register.value = {
-        "vendor": "Flowx",
-        "model": "FLX-05F",
-        "options":
-        {
-            "output_cw": "off",
-            "output_ccw": "off",
-            "limit_cw": "off",
-            "limit_ccw": "off"
-        }
-    }
-    __registers.append(register)
-
-    # Heat Pump Control Group / VCG / Cold Geo / Output
-    register = Register("echp.hpcg.vcg_cold_geo.output")
-    register.scope = Scope.System
-    register.plugin_name = "ECHP"
-    register.description = "Heat Pump Control Group / VCG / Cold Geo / Output"
-    register.range = __range["NONE"]
-    register.value = {
-        "vendor": "Flowx",
-        "model": "FLX-05F",
-        "options":
-        {
-            "output_cw": "off",
-            "output_ccw": "off",
-            "limit_cw": "off",
-            "limit_ccw": "off"
-        }
-    }
-    __registers.append(register)
-
-    # Heat Pump Control Group / VCG / Cold Geo / Short
-    register = Register("echp.hpcg.vcg_cold_geo.short")
-    register.scope = Scope.System
-    register.plugin_name = "ECHP"
-    register.description = "Heat Pump Control Group / VCG / Cold Geo / Short"
-    register.range = __range["NONE"]
-    register.value = {
-        "vendor": "Flowx",
-        "model": "FLX-05F",
-        "options":
-        {
-            "output_cw": "off",
-            "output_ccw": "off",
-            "limit_cw": "off",
-            "limit_ccw": "off"
-        }
-    }
+    # ECHP / Cold Geo / Valves / State
+    register = Register("echp.cold_geo.valves.state")
+    register.scope = Scope.Device
+    register.plugin_name = "Energy Center Heat Pump"
+    register.description = "ECHP / Cold Geo / Valves / State"
+    register.range = __range["VALVE_STATE"]
+    register.value = 0.0
     __registers.append(register)
 
     # -================================================================================-
 
-    # Heat Pump Control Group / VCG / Warm Geo / Input
-    register = Register("echp.hpcg.vcg_warm_geo.input")
+    # ECHP / Warm Geo / Valves / Settings
+    register = Register("echp.warm_geo.valves.settings")
     register.scope = Scope.System
-    register.plugin_name = "ECHP"
-    register.description = "Heat Pump Control Group / VCG / Warm Geo / Input"
+    register.plugin_name = "Energy Center Heat Pump"
+    register.description = "ECHP / Warm Geo / Valves / Settings"
     register.range = __range["NONE"]
-    register.value = {
-        "vendor": "Flowx",
-        "model": "FLX-05F",
-        "options":
-        {
-            "output_cw": "off",
-            "output_ccw": "off",
-            "limit_cw": "off",
-            "limit_ccw": "off"
-        }
+    register.value = \
+    {
+        "input":
+        [
+            {
+                "vendor": "Flowx",
+                "model": "FLX-05F",
+                "options":
+                {
+                    "close_on_shutdown": False,
+                    "wait_on_shutdown": False,
+                    "io_mode": 1, # 1: "single_out", 2: "dual_out"
+                    "output_cw": "off",
+                    "output_ccw": "off",
+                    "limit_cw": "off",
+                    "limit_ccw": "off"
+                }
+            }
+        ],
+        "output":
+        [
+            {
+                "vendor": "Flowx",
+                "model": "FLX-05F",
+                "options":
+                {
+                    "close_on_shutdown": False,
+                    "wait_on_shutdown": False,
+                    "io_mode": 1, # 1: "single_out", 2: "dual_out"
+                    "output_cw": "off",
+                    "output_ccw": "off",
+                    "limit_cw": "off",
+                    "limit_ccw": "off"
+                }
+            }
+        ],
+        "short":
+        [
+            {
+                "vendor": "Flowx",
+                "model": "FLX-05F",
+                "options":
+                {
+                    "close_on_shutdown": False,
+                    "wait_on_shutdown": False,
+                    "io_mode": 1, # 1: "single_out", 2: "dual_out"
+                    "output_cw": "off",
+                    "output_ccw": "off",
+                    "limit_cw": "off",
+                    "limit_ccw": "off"
+                }
+            }
+        ]
     }
     __registers.append(register)
 
-    # Heat Pump Control Group / VCG / Warm Geo / Output
-    register = Register("echp.hpcg.vcg_warm_geo.output")
+    # ECHP / Warm Geo / Valves / Mode
+    register = Register("echp.warm_geo.valves.mode")
     register.scope = Scope.System
-    register.plugin_name = "ECHP"
-    register.description = "Heat Pump Control Group / VCG / Warm Geo / Output"
-    register.range = __range["NONE"]
-    register.value = {
-        "vendor": "Flowx",
-        "model": "FLX-05F",
-        "options":
-        {
-            "output_cw": "off",
-            "output_ccw": "off",
-            "limit_cw": "off",
-            "limit_ccw": "off"
-        }
-    }
+    register.plugin_name = "Energy Center Heat Pump"
+    register.description = "ECHP / Warm Geo / Valves / Mode"
+    register.range = __range["VALVE_MODE"]
+    register.value = 0.0
     __registers.append(register)
 
-    # Heat Pump Control Group / VCG / Warm Geo / Short
-    register = Register("echp.hpcg.vcg_warm_geo.short")
-    register.scope = Scope.System
-    register.plugin_name = "ECHP"
-    register.description = "Heat Pump Control Group / VCG / Warm Geo / Short"
-    register.range = __range["NONE"]
-    register.value = {
-        "vendor": "Flowx",
-        "model": "FLX-05F",
-        "options":
-        {
-            "output_cw": "off",
-            "output_ccw": "off",
-            "limit_cw": "off",
-            "limit_ccw": "off"
-        }
-    }
+    # ECHP / Warm Geo / Valves / State
+    register = Register("echp.warm_geo.valves.state")
+    register.scope = Scope.Device
+    register.plugin_name = "Energy Center Heat Pump"
+    register.description = "ECHP / Warm Geo / Valves / State"
+    register.range = __range["VALVE_STATE"]
+    register.value = 0.0
     __registers.append(register)
 
     # -================================================================================-
 
-    # Heat Pump Control Group / VCG / Warm Geo / Input
-    register = Register("echp.hpcg.vcg_warm_floor.input")
+    # ECHP / Warm / Valves / Settings
+    register = Register("echp.warm.valves.settings")
     register.scope = Scope.System
-    register.plugin_name = "ECHP"
-    register.description = "Heat Pump Control Group / VCG / Warm Geo / Input"
+    register.plugin_name = "Energy Center Heat Pump"
+    register.description = "ECHP / Warm / Valves / Settings"
     register.range = __range["NONE"]
-    register.value = {
-        "vendor": "Flowx",
-        "model": "FLX-05F",
-        "options":
-        {
-            "output_cw": "off",
-            "output_ccw": "off",
-            "limit_cw": "off",
-            "limit_ccw": "off"
-        }
+    register.value = \
+    {
+        "input":
+        [
+            {
+                "vendor": "Flowx",
+                "model": "FLX-05F",
+                "options":
+                {
+                    "close_on_shutdown": False,
+                    "wait_on_shutdown": False,
+                    "io_mode": 1, # 1: "single_out", 2: "dual_out"
+                    "output_cw": "off",
+                    "output_ccw": "off",
+                    "limit_cw": "off",
+                    "limit_ccw": "off"
+                }
+            }
+        ],
+        "output":
+        [
+            {
+                "vendor": "Flowx",
+                "model": "FLX-05F",
+                "options":
+                {
+                    "close_on_shutdown": False,
+                    "wait_on_shutdown": False,
+                    "io_mode": 1, # 1: "single_out", 2: "dual_out"
+                    "output_cw": "off",
+                    "output_ccw": "off",
+                    "limit_cw": "off",
+                    "limit_ccw": "off"
+                }
+            }
+        ],
+        "short":
+        [
+            {
+                "vendor": "Flowx",
+                "model": "FLX-05F",
+                "options":
+                {
+                    "close_on_shutdown": False,
+                    "wait_on_shutdown": False,
+                    "io_mode": 1, # 1: "single_out", 2: "dual_out"
+                    "output_cw": "off",
+                    "output_ccw": "off",
+                    "limit_cw": "off",
+                    "limit_ccw": "off"
+                }
+            }
+        ]
     }
     __registers.append(register)
 
-    # Heat Pump Control Group / VCG / Warm Geo / Output
-    register = Register("echp.hpcg.vcg_warm_floor.output")
+    # ECHP / Warm / Valves / Mode
+    register = Register("echp.warm.valves.mode")
     register.scope = Scope.System
-    register.plugin_name = "ECHP"
-    register.description = "Heat Pump Control Group / VCG / Warm Geo / Output"
+    register.plugin_name = "Energy Center Heat Pump"
+    register.description = "ECHP / Warm / Valves / Mode"
+    register.range = __range["VALVE_MODE"]
+    register.value = 0.0
+    __registers.append(register)
+
+    # ECHP / Warm / Valves / State
+    register = Register("echp.warm.valves.state")
+    register.scope = Scope.Device
+    register.plugin_name = "Energy Center Heat Pump"
+    register.description = "ECHP / Warm / Valves / State"
+    register.range = __range["VALVE_STATE"]
+    register.value = 0.0
+    __registers.append(register)
+
+    # -================================================================================-
+
+    # ECHP / Hot / Valves / Settings
+    register = Register("echp.hot.valves.settings")
+    register.scope = Scope.System
+    register.plugin_name = "Energy Center Heat Pump"
+    register.description = "ECHP / Hot / Valves / Settings"
     register.range = __range["NONE"]
-    register.value = {
-        "vendor": "Flowx",
-        "model": "FLX-05F",
-        "options":
-        {
-            "output_cw": "off",
-            "output_ccw": "off",
-            "limit_cw": "off",
-            "limit_ccw": "off"
-        }
+    register.value = \
+    {
+        "input":
+        [
+            {
+                "vendor": "Flowx",
+                "model": "FLX-05F",
+                "options":
+                {
+                    "close_on_shutdown": False,
+                    "wait_on_shutdown": False,
+                    "io_mode": 1, # 1: "single_out", 2: "dual_out"
+                    "output_cw": "off",
+                    "output_ccw": "off",
+                    "limit_cw": "off",
+                    "limit_ccw": "off"
+                }
+            }
+        ],
+        "output":
+        [
+            {
+                "vendor": "Flowx",
+                "model": "FLX-05F",
+                "options":
+                {
+                    "close_on_shutdown": False,
+                    "wait_on_shutdown": False,
+                    "io_mode": 1, # 1: "single_out", 2: "dual_out"
+                    "output_cw": "off",
+                    "output_ccw": "off",
+                    "limit_cw": "off",
+                    "limit_ccw": "off"
+                }
+            }
+        ],
+        "short":
+        [
+            {
+                "vendor": "Flowx",
+                "model": "FLX-05F",
+                "options":
+                {
+                    "close_on_shutdown": False,
+                    "wait_on_shutdown": False,
+                    "io_mode": 1, # 1: "single_out", 2: "dual_out"
+                    "output_cw": "off",
+                    "output_ccw": "off",
+                    "limit_cw": "off",
+                    "limit_ccw": "off"
+                }
+            }
+        ]
     }
     __registers.append(register)
 
-    # Heat Pump Control Group / VCG / Warm Geo / Short
-    register = Register("echp.hpcg.vcg_warm_floor.short")
+    # ECHP / Hot / Valves / Mode
+    register = Register("echp.hot.valves.mode")
     register.scope = Scope.System
-    register.plugin_name = "ECHP"
-    register.description = "Heat Pump Control Group / VCG / Warm Geo / Output"
-    register.range = __range["NONE"]
-    register.value = {
-        "vendor": "Flowx",
-        "model": "FLX-05F",
-        "options":
-        {
-            "output_cw": "off",
-            "output_ccw": "off",
-            "limit_cw": "off",
-            "limit_ccw": "off"
-        }
-    }
+    register.plugin_name = "Energy Center Heat Pump"
+    register.description = "ECHP / Hot / Valves / Mode"
+    register.range = __range["VALVE_MODE"]
+    register.value = 0.0
+    __registers.append(register)
+
+    # ECHP / Hot / Valves / State
+    register = Register("echp.hot.valves.state")
+    register.scope = Scope.Device
+    register.plugin_name = "Energy Center Heat Pump"
+    register.description = "ECHP / Hot / Valves / State"
+    register.range = __range["VALVE_STATE"]
+    register.value = 0.0
     __registers.append(register)
 
     # -================================================================================-
 
     # Heat Pump Control Group / Water Pump / Cold
-    register = Register("echp.hpcg.wp_cold.settings")
+    register = Register("echp.cold.pump.settings")
     register.scope = Scope.System
-    register.plugin_name = "ECHP"
+    register.plugin_name = "Energy Center Heat Pump"
     register.description = "Heat Pump Control Group / Water Pump / Cold"
     register.range = __range["NONE"]
     register.value = {
@@ -4455,16 +4549,38 @@ def __add_registers(args):
         "model": "MAGNA1_80_100_F_360_1x230V_PN6",
         "options":
         {
-            "uart": 0,
-            "mb_id": 2
+            "uart": 1,
+            "mb_id": 7,
+            "e_stop": "U0:ID15:FC5:R0:RO8",
+            "e_status": "U0:ID15:FC2:R0:DI0",
+            "stop_on_shutdown": True,
+            "wait_on_shutdown": False
         }
     }
     __registers.append(register)
 
-    # Heat Pump Control Group / Water Pump / Hot
-    register = Register("echp.hpcg.wp_hot.settings")
+    # Heat Pump Control Group / Cold pump mode.
+    register = Register("echp.cold.pump.mode")
     register.scope = Scope.System
-    register.plugin_name = "ECHP"
+    register.plugin_name = "Energy Center Heat Pump"
+    register.description = "Heat Pump Control Group / Cold pump mode."
+    register.range = __range["PERCENTAGE_I"]
+    register.value = 0
+    __registers.append(register)
+
+    # Heat Pump Control Group / Cold pump state.
+    register = Register("echp.cold.pump.state")
+    register.scope = Scope.Device
+    register.plugin_name = "Energy Center Heat Pump"
+    register.description = "Heat Pump Control Group / Cold pump state."
+    register.range = __range["NONE"]
+    register.value = {}
+    __registers.append(register)
+
+    # Heat Pump Control Group / Water Pump / Hot
+    register = Register("echp.hot.pump.settings")
+    register.scope = Scope.System
+    register.plugin_name = "Energy Center Heat Pump"
     register.description = "Heat Pump Control Group / Water Pump / Hot"
     register.range = __range["NONE"]
     register.value = {
@@ -4472,16 +4588,38 @@ def __add_registers(args):
         "model": "MAGNA1_80_100_F_360_1x230V_PN6",
         "options":
         {
-            "uart": 0,
-            "mb_id": 3
+            "uart": 1,
+            "mb_id": 6,
+            "e_stop": "U0:ID15:FC5:R0:RO8",
+            "e_status": "U0:ID15:FC2:R0:DI0",
+            "stop_on_shutdown": True,
+            "wait_on_shutdown": False
         }
     }
     __registers.append(register)
 
-    # Heat Pump Control Group / Water Pump / Warm
-    register = Register("echp.hpcg.wp_warm_p.settings")
+    # Heat Pump Control Group / Hot pump mode.
+    register = Register("echp.hot.pump.mode")
     register.scope = Scope.System
-    register.plugin_name = "ECHP"
+    register.plugin_name = "Energy Center Heat Pump"
+    register.description = "Heat Pump Control Group / Hot pump mode."
+    register.range = __range["PERCENTAGE_I"]
+    register.value = 0
+    __registers.append(register)
+
+    # Heat Pump Control Group / Hot pump state.
+    register = Register("echp.hot.pump.state")
+    register.scope = Scope.Device
+    register.plugin_name = "Energy Center Heat Pump"
+    register.description = "Heat Pump Control Group / Hot pump state."
+    register.range = __range["NONE"]
+    register.value = {}
+    __registers.append(register)
+
+    # Heat Pump Control Group / Water Pump / Warm
+    register = Register("echp.warm.pump.settings")
+    register.scope = Scope.System
+    register.plugin_name = "Energy Center Heat Pump"
     register.description = "Heat Pump Control Group / Water Pump / Warm"
     register.range = __range["NONE"]
     register.value = {
@@ -4489,35 +4627,40 @@ def __add_registers(args):
         "model": "MAGNA1_80_100_F_360_1x230V_PN6",
         "options":
         {
-            "uart": 0,
-            "mb_id": 0
+            "uart": 1,
+            "mb_id": 5,
+            "e_stop": "U0:ID15:FC5:R0:RO8",
+            "e_status": "U0:ID15:FC2:R0:DI0",
+            "stop_on_shutdown": True,
+            "wait_on_shutdown": False
         }
     }
     __registers.append(register)
 
-    # Heat Pump Control Group / Water Pump / Warm
-    register = Register("echp.hpcg.wp_warm_g.settings")
+    # Heat Pump Control Group / Warm pump mode.
+    register = Register("echp.warm.pump.mode")
     register.scope = Scope.System
-    register.plugin_name = "ECHP"
-    register.description = "Heat Pump Control Group / Water Pump / Warm"
+    register.plugin_name = "Energy Center Heat Pump"
+    register.description = "Heat Pump Control Group / Warm pump mode."
+    register.range = __range["PERCENTAGE_I"]
+    register.value = 0
+    __registers.append(register)
+
+    # Heat Pump Control Group / Warm pump state.
+    register = Register("echp.warm.pump.state")
+    register.scope = Scope.Device
+    register.plugin_name = "Energy Center Heat Pump"
+    register.description = "Heat Pump Control Group / Warm pump state."
     register.range = __range["NONE"]
-    register.value = {
-        "vendor": "Grundfos",
-        "model": "MAGNA1_80_100_F_360_1x230V_PN6",
-        "options":
-        {
-            "uart": 0,
-            "mb_id": 0
-        }
-    }
+    register.value = {}
     __registers.append(register)
 
     # -================================================================================-
 
     # Heat Pump Control Group / Water Pump / Warm
-    register = Register("echp.hpcg.hp.settings")
+    register = Register("echp.hp.settings")
     register.scope = Scope.System
-    register.plugin_name = "ECHP"
+    register.plugin_name = "Energy Center Heat Pump"
     register.description = "Heat Pump Control Group / Heat Pump"
     register.range = __range["NONE"]
     register.value = {
@@ -4526,13 +4669,148 @@ def __add_registers(args):
         "options":
         {
             "uart": 0,
-            "mb_id": 0
+            "mb_id": 1
         }
     }
     __registers.append(register)
 
-    # Output registers.
+    register = Register("echp.hp.get_op_mode")
+    register.scope = Scope.Device
+    register.plugin_name = "Energy Center Heat Pump"
+    register.description = "Get the mode of the machine"
+    register.range = __range["NONE"]
+    register.value = 0
+    __registers.append(register)
 
+    register = Register("echp.hp.set_op_mode")
+    register.scope = Scope.System
+    register.plugin_name = "Energy Center Heat Pump"
+    register.description = "Set the mode of the machine"
+    register.range = __range["NONE"]
+    register.value = 0
+    __registers.append(register)
+
+    register = Register("echp.hp.get_op_status")
+    register.scope = Scope.Device
+    register.plugin_name = "Energy Center Heat Pump"
+    register.description = "Get the status of the machine"
+    register.range = __range["NONE"]
+    register.value = 0
+    __registers.append(register)
+
+    register = Register("echp.hp.get_cooling_temp")
+    register.scope = Scope.Device
+    register.plugin_name = "Energy Center Heat Pump"
+    register.description = "Get the cooling temp of the machine"
+    register.range = __range["NONE"]
+    register.value = 0
+    __registers.append(register)
+
+    register = Register("echp.hp.set_cooling_temp")
+    register.scope = Scope.System
+    register.plugin_name = "Energy Center Heat Pump"
+    register.description = "Set the cooling temp of the machine"
+    register.range = __range["NONE"]
+    register.value = 0
+    __registers.append(register)
+
+    register = Register("echp.hp.get_heating_temp")
+    register.scope = Scope.Device
+    register.plugin_name = "Energy Center Heat Pump"
+    register.description = "Get the heating temp of the machine"
+    register.range = __range["NONE"]
+    register.value = 0
+    __registers.append(register)
+
+    register = Register("echp.hp.set_heating_temp")
+    register.scope = Scope.System
+    register.plugin_name = "Energy Center Heat Pump"
+    register.description = "Set the heating temp of the machine"
+    register.range = __range["NONE"]
+    register.value = 0
+    __registers.append(register)
+
+    register = Register("echp.hp.get_temps")
+    register.scope = Scope.Device
+    register.plugin_name = "Energy Center Heat Pump"
+    register.description = "Get the heating temp of the machine"
+    register.range = __range["NONE"]
+    register.value = {}
+    __registers.append(register)
+
+    # Count of the heat pump control groups.
+    register = Register("echp.hp.count")
+    register.scope = Scope.System
+    register.plugin_name = "Energy Center Heat Pump"
+    register.description = "Energy Center Heat Pump machines count"
+    register.range = "0/"
+    register.value = 3
+    __registers.append(register)
+
+    # Index of the heat pump control group.
+    register = Register("echp.hp.index")
+    register.scope = Scope.System
+    register.plugin_name = "Energy Center Heat Pump"
+    register.description = "Energy Center Heat Pump machine index"
+    register.range = "0/"
+    register.value = 0
+    __registers.append(register)
+
+    register = Register("echp.hp.power")
+    register.scope = Scope.System
+    register.plugin_name = "Energy Center Heat Pump"
+    register.description = "The power of machine"
+    register.range = "-100.0/100.0"
+    register.value = 0
+    __registers.append(register)
+
+
+
+    register = Register("echp.hp.run")
+    register.scope = Scope.Device
+    register.plugin_name = "Energy Center Heat Pump"
+    register.description = "The state of the machine"
+    register.range = __range["NONE"]
+    register.value = 0
+    __registers.append(register)
+
+    # Cold minimum of the heat pump control group.
+    register = Register("echp.hp.cold_min")
+    register.scope = Scope.System
+    register.plugin_name = "Energy Center Heat Pump"
+    register.description = "Energy Center Heat Pump cold minimum"
+    register.range = "3.0/8.0"
+    register.value = 5.0
+    __registers.append(register)
+
+    # Cold maximum of the heat pump control group.
+    register = Register("echp.hp.cold_max")
+    register.scope = Scope.System
+    register.plugin_name = "Energy Center Heat Pump"
+    register.description = "Energy Center Heat Pump cold maximum"
+    register.range = "3.0/8.0"
+    register.value = 7.0
+    __registers.append(register)
+
+    # Hot minimum of the heat pump control group.
+    register = Register("echp.hp.hot_min")
+    register.scope = Scope.System
+    register.plugin_name = "Energy Center Heat Pump"
+    register.description = "Energy Center Heat Pump hot minimum"
+    register.range = "40.0/47.0"
+    register.value = 41.0
+    __registers.append(register)
+
+    # Hot maximum of the heat pump control group.
+    register = Register("echp.hp.hot_max")
+    register.scope = Scope.System
+    register.plugin_name = "Energy Center Heat Pump"
+    register.description = "Energy Center Heat Pump hot maximum"
+    register.range = "40.0/47.0"
+    register.value = 46.0
+    __registers.append(register)
+
+    # Enable the plugin.
     register = Register("echp.enabled")
     register.scope = Scope.System
     register.plugin_name = "Energy Center Heat Pump"
