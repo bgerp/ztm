@@ -28,6 +28,10 @@ from plugins.base_plugin import BasePlugin
 
 from plugins.blinds.blind import Blind
 
+from services.global_error_handler.global_error_handler import GlobalErrorHandler
+
+from data.register import Register
+
 #region File Attributes
 
 __author__ = "Orlin Dimitrov"
@@ -67,15 +71,26 @@ class Blinds(BasePlugin):
 
 #region Attributes
 
-    __logger = None
-    """Logger"""
-
-    __blinds = {}
-    """Blinds."""
-
 #endregion
 
-#region Destructor
+#region Constructor / Destructor
+
+    def __init__(self, config):
+        """Constructor
+
+        Args:
+            config (config): Configuration of the object.
+        """
+
+        super().__init__(config)
+
+        # Create logger.
+        self.__logger = get_logger(__name__)
+        self.__logger.info("Starting up the {}".format(self.name))
+
+        self.__blinds = {}
+        """Blinds.
+        """
 
     def __del__(self):
         """Destructor"""
@@ -91,37 +106,64 @@ class Blinds(BasePlugin):
 
 #endregion
 
+#region Private Methods (Registers)
+
+    def __reg_blinds_count_cb(self, register: Register):
+
+        # Check data type.
+        if not (register.data_type == "float" or register.data_type == "int"):
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        def shutdown():
+            for blind in self.__blinds:
+                if blind is not None:
+                    self.__blinds[blind].shutdown()
+            self.__blinds = {}
+
+        def init():
+            # Name the zones.
+            prototype = "BLIND_{}"
+            blinds_count = register.value + 1
+            for index in range(1, blinds_count):
+
+                # Create name.
+                name = prototype.format(index)
+
+                # Register the zone.
+                self.__blinds[name] = Blind(registers=self._registers,
+                    controller=self._controller, identifier=index,
+                    key=self.key, name="Blind")
+
+                # Initialize the module.
+                self.__blinds[name].init()
+
+        try:
+            if register.value != len(self.__blinds):
+                shutdown()
+                init()
+
+            elif register.value == 0:
+                shutdown()
+        except Exception as e:
+            self.__logger.error(e)
+
+    def __init_registers(self):
+        reg_name = f"{self.key}.count"
+        reg_blinds_count = self._registers.by_name(reg_name)
+        if reg_blinds_count is not None:
+            reg_blinds_count.update_handlers = self.__reg_blinds_count_cb
+            reg_blinds_count.update()
+
+#endregion
+
 #region Public Methods
 
     def _init(self):
         """Initialize the plugin.
         """
 
-        # Create logger.
-        self.__logger = get_logger(__name__)
-        self.__logger.info("Starting up the {}".format(self.name))
-
-        # Card reader allowed IDs.
-        blinds_count = 0
-        reg_blinds_count = self._registers.by_name(self.key + ".count")
-        if reg_blinds_count is not None:
-            blinds_count = reg_blinds_count.value
-
-        # Name the zones.
-        prototype = "BLIND_{}"
-        blinds_count += 1
-        for index in range(1, blinds_count):
-
-            # Create name.
-            name = prototype.format(index)
-
-            # Register the zone.
-            self.__blinds[name] = Blind(registers=self._registers,
-                controller=self._controller, identifier=index,
-                key=self.key, name="Blind")
-
-            # Initialize the module.
-            self.__blinds[name].init()
+        self.__init_registers()
 
     def _update(self):
         """Update the plugin.
