@@ -108,7 +108,7 @@ class Blinds(BasePlugin):
 
 #region Private Methods (Registers)
 
-    def __reg_blinds_count_cb(self, register: Register):
+    def __blinds_count_cb(self, register: Register):
 
         # Check data type.
         if not (register.data_type == "float" or register.data_type == "int"):
@@ -152,7 +152,7 @@ class Blinds(BasePlugin):
         reg_name = f"{self.key}.count"
         reg_blinds_count = self._registers.by_name(reg_name)
         if reg_blinds_count is not None:
-            reg_blinds_count.update_handlers = self.__reg_blinds_count_cb
+            reg_blinds_count.update_handlers = self.__blinds_count_cb
             reg_blinds_count.update()
 
 #endregion
