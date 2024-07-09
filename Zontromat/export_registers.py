@@ -5290,6 +5290,9 @@ def __add_registers(args):
     register.description = "Upper fan speed [%]"
     register.range = __range["NONE"]
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     # Operator panel setpoint.
@@ -5299,6 +5302,9 @@ def __add_registers(args):
     register.description = "Operators panel set point"
     register.range = "0.0/100.0"
     register.value = 0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     # HVAC setpoint.
@@ -5308,6 +5314,9 @@ def __add_registers(args):
     register.description = "HVAC set point"
     register.range = "-200.0/200.0"
     register.value = 0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     # AC setpoint.
@@ -5317,6 +5326,9 @@ def __add_registers(args):
     register.description = "AC set point"
     register.range = "0.0/100.0"
     register.value = 0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("vent.power_gpio_1")
@@ -5325,6 +5337,9 @@ def __add_registers(args):
     register.description = "Fans power GPIO."
     register.range = __range["NONE"]
     register.value = "U0:ID6:FC5:R0:RO3"
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     # Upper fan
@@ -5341,6 +5356,9 @@ def __add_registers(args):
             "output": "U0:ID2:FC16:R0:AO3",
         }
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("vent.lower_1.fan.min_speed")
@@ -5349,6 +5367,9 @@ def __add_registers(args):
     register.description = "Lower fan minimum speed [%]"
     register.range = __range["PERCENTAGE_F"]
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("vent.lower_1.fan.max_speed")
@@ -5357,6 +5378,9 @@ def __add_registers(args):
     register.description = "Lower fan maximum speed [%]"
     register.range = __range["PERCENTAGE_F"]
     register.value = 100.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("vent.lower_1.fan.speed")
@@ -5365,6 +5389,9 @@ def __add_registers(args):
     register.description = "Lower fan speed [%]"
     register.range = __range["PERCENTAGE_F"]
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     # Upper fan
@@ -5381,6 +5408,9 @@ def __add_registers(args):
             "output": "U0:ID2:FC16:R0:AO2",
         }
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("vent.upper_1.fan.min_speed")
@@ -5389,6 +5419,9 @@ def __add_registers(args):
     register.description = "Upper fan minimum speed [%]"
     register.range = __range["PERCENTAGE_F"]
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("vent.upper_1.fan.speed")
@@ -5397,6 +5430,9 @@ def __add_registers(args):
     register.description = "Upper fan speed [%]"
     register.range = __range["PERCENTAGE_F"]
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("vent.upper_1.fan.max_speed")
@@ -5405,6 +5441,9 @@ def __add_registers(args):
     register.description = "Upper fan maximum speed [%]"
     register.range = __range["PERCENTAGE_F"]
     register.value = 100.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     # Upper valve settings
@@ -5414,6 +5453,9 @@ def __add_registers(args):
     register.description = "Lower air damper settings"
     register.range = __range["NONE"]
     register.value = verbal_const.OFF
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     # Lower valve settings
@@ -5423,6 +5465,9 @@ def __add_registers(args):
     register.description = "Upper air damper settings"
     register.range = __range["NONE"]
     register.value = verbal_const.OFF
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     # Zones count.
@@ -5432,6 +5477,9 @@ def __add_registers(args):
     register.description = "Count of the ventilation zones."
     register.range = "0/"
     register.value = 1
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     # Enable
@@ -5441,6 +5489,9 @@ def __add_registers(args):
     register.description = "Ventilation enable flag."
     register.range = __range["NONE"]
     register.value = True
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
 #endregion
