@@ -73,7 +73,7 @@ __registers = None
 """Registers
 """
 
-__range = {
+REGS_RANGES = {
     "NONE": "",
     "DI": "off|DI0|DI1|DI2|DI3|DI4|DI5|DI6|DI7|DI8|!DI0|!DI1|!DI2|!DI3|!DI4|!DI5|!DI6|!DI7|!DI8",
     "DO": "off|DO0|DO1|DO2|DO3|DO4|DO5|DO6|DO7|DO8|!DO0|!DO1|!DO2|!DO3|!DO4|!DO5|!DO6|!DO7|!DO8",
@@ -91,59 +91,71 @@ __range = {
     "VALVE_MODE": "0|1|2", # 0 - Close, 1 - Open Cool, 2 - Open Heat
     "VALVE_STATE": "0|1|2", # 0 - Close, 1 - Open Cool, 2 - Open Heat
 }
+"""Possible ranges in the registers.
+"""
 
+INVALID_MB_ID = -1
+"""Helper variable for invalid modbus ID.
+"""
 #endregion
 
 def __set_parser():
-    global __parser
+    global __parser, INVALID_MB_ID
 
     # Add arguments.
     # __parser.add_argument("--action", type=str, default="w_json", help="Export JSON file.")
     __parser.add_argument("--action", type=str, default="w_csv", help="Export CSV file.")
-    # __parser.add_argument("--action", type=str, default="list_gpio", help="Export type.")
     # __parser.add_argument("--action", type=str, default="w_md", help="Export MD file.")
     # __parser.add_argument("--path", type=str, default=file_name, help="Target file path.")
 
-    # Add args parameters
+    # Add args parameters Monitoring
     __parser.add_argument("--pa", type=int, default=1, help="Power analyzer modbus ID.")
-    __parser.add_argument("--hw", type=int, default=-1, help="How water flow meter modbus ID.")
-    __parser.add_argument("--cw", type=int, default=-1, help="Cold water flow meter modbus ID.")
-    __parser.add_argument("--fl_1_hm", type=int, default=-1, help="Floor loop 1 heat meter modbus ID.")
-    __parser.add_argument("--fl_2_hm", type=int, default=-1, help="Floor loop 2 heat meter modbus ID.")
-    __parser.add_argument("--fl_3_hm", type=int, default=-1, help="Floor loop 3 heat meter modbus ID.")
-    __parser.add_argument("--cl_1_hm", type=int, default=-1, help="Convector loop 1 heat meter modbus ID.")
-    __parser.add_argument("--cl_2_hm", type=int, default=-1, help="Convector loop 2 heat meter modbus ID.")
-    __parser.add_argument("--cl_3_hm", type=int, default=-1, help="Convector loop 3 heat meter modbus ID.")
+    __parser.add_argument("--pa_model", type=str, default="SDM120", help="Model of the power analyzer.")
+    __parser.add_argument("--hw", type=int, default=INVALID_MB_ID, help="How water flow meter modbus ID.")
+    __parser.add_argument("--cw", type=int, default=INVALID_MB_ID, help="Cold water flow meter modbus ID.")
+    __parser.add_argument("--fl_1_hm", type=int, default=INVALID_MB_ID, help="Floor loop 1 heat meter modbus ID.")
+    __parser.add_argument("--fl_2_hm", type=int, default=INVALID_MB_ID, help="Floor loop 2 heat meter modbus ID.")
+    __parser.add_argument("--fl_3_hm", type=int, default=INVALID_MB_ID, help="Floor loop 3 heat meter modbus ID.")
+    __parser.add_argument("--cl_1_hm", type=int, default=INVALID_MB_ID, help="Convector loop 1 heat meter modbus ID.")
+    __parser.add_argument("--cl_2_hm", type=int, default=INVALID_MB_ID, help="Convector loop 2 heat meter modbus ID.")
+    __parser.add_argument("--cl_3_hm", type=int, default=INVALID_MB_ID, help="Convector loop 3 heat meter modbus ID.")
+
+    # Add args parameters HVAC
     __parser.add_argument("--temp_upper", type=int, default=4, help="Upper thermometer modbus ID.")
     __parser.add_argument("--temp_lower", type=int, default=5, help="Lower thermometer modbus ID.")
     __parser.add_argument("--temp_cent", type=int, default=3, help="Central thermometer modbus ID.")
-    __parser.add_argument("--pir_1", type=int, default=16, help="PIR 1 modbus ID.")
-    __parser.add_argument("--blinds_1", type=int, default=11, help="Blinds mechanism 1 modbus ID.")
-    __parser.add_argument("--blinds_2", type=int, default=-1, help="Blinds mechanism 2 modbus ID.")
-    __parser.add_argument("--blinds_3", type=int, default=-1, help="Blinds mechanism 3 modbus ID.")
-    __parser.add_argument("--blinds_4", type=int, default=-1, help="Blinds mechanism 4 modbus ID.")
     __parser.add_argument("--bi_1", type=int, default=2, help="Black island 1 modbus ID.")
-    __parser.add_argument("--conv_1", type=int, default=6, help="Convector 1 modbus ID.")
-    __parser.add_argument("--conv_2", type=int, default=-1, help="Convector 2 modbus ID.")
-    __parser.add_argument("--conv_3", type=int, default=-1, help="Convector 3 modbus ID.")
-    __parser.add_argument("--ip", type=str, default="127.0.0.1", help="IP address of the device")
     __parser.add_argument("--fl_vlv_1", type=str, default="off", help="Floor loop 1 GPIO.")
     __parser.add_argument("--fl_vlv_2", type=str, default="off", help="Floor loop 2 GPIO.")
     __parser.add_argument("--fl_vlv_3", type=str, default="off", help="Floor loop 3 GPIO.")
     __parser.add_argument("--cl_vlv_1", type=str, default="off", help="Convector loop 1 GPIO.")
     __parser.add_argument("--cl_vlv_2", type=str, default="off", help="Convector loop 2 GPIO.")
     __parser.add_argument("--cl_vlv_3", type=str, default="off", help="Convector loop 3 GPIO.")
+    __parser.add_argument("--conv_1", type=int, default=6, help="Convector 1 modbus ID.")
     __parser.add_argument("--conv_1_s1", type=str, default="off", help="Convector loop 1 GPIO.")
     __parser.add_argument("--conv_1_s2", type=str, default="off", help="Convector loop 2 GPIO.")
     __parser.add_argument("--conv_1_s3", type=str, default="off", help="Convector loop 3 GPIO.")
+    __parser.add_argument("--conv_2", type=int, default=INVALID_MB_ID, help="Convector 2 modbus ID.")
     __parser.add_argument("--conv_2_s1", type=str, default="off", help="Convector loop 1 GPIO.")
     __parser.add_argument("--conv_2_s2", type=str, default="off", help="Convector loop 2 GPIO.")
     __parser.add_argument("--conv_2_s3", type=str, default="off", help="Convector loop 3 GPIO.")
+    __parser.add_argument("--conv_3", type=int, default=INVALID_MB_ID, help="Convector 3 modbus ID.")
     __parser.add_argument("--conv_3_s1", type=str, default="off", help="Convector loop 1 GPIO.")
     __parser.add_argument("--conv_3_s2", type=str, default="off", help="Convector loop 2 GPIO.")
     __parser.add_argument("--conv_3_s3", type=str, default="off", help="Convector loop 3 GPIO.")
-    __parser.add_argument("--pa_model", type=str, default="SDM120", help="Model of the power analyzer.")
 
+   # Add args parameters Envm
+    __parser.add_argument("--pir_1", type=int, default=16, help="PIR 1 modbus ID.")
+
+    # Add args parameters Blinds
+    __parser.add_argument("--blinds_1", type=int, default=11, help="Blinds mechanism 1 modbus ID.")
+    __parser.add_argument("--blinds_2", type=int, default=12, help="Blinds mechanism 2 modbus ID.")
+    __parser.add_argument("--blinds_3", type=int, default=13, help="Blinds mechanism 3 modbus ID.")
+    __parser.add_argument("--blinds_4", type=int, default=14, help="Blinds mechanism 4 modbus ID.")
+ 
+    # IP of the device.
+    __parser.add_argument("--ip", type=str, default="127.0.0.1", help="IP address of the device")
+ 
     # Take arguments.
     args = __parser.parse_args()
 
@@ -151,7 +163,7 @@ def __set_parser():
 
 def __add_registers(args):
 
-    global __registers, __range
+    global __registers, REGS_RANGES, INVALID_MB_ID
 
 #region Access Control (ac)
 
@@ -159,7 +171,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Access Control"
     register.description = "Plugin enabled"
-    register.range = __range["BOOL"]
+    register.range = REGS_RANGES["BOOL"]
     register.value = False
     register.profiles = \
         Register.create_profile(
@@ -170,7 +182,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Access Control"
     register.description = "Allowed attendees"
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = [] # {"card_id": "445E6046010080FF", "pin": "159753", "valid_until": "1595322860"}
     register.profiles = \
         Register.create_profile(
@@ -189,7 +201,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Access Control"
     register.description = "Nearby attendees"
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = [] # {"card_id": "445E6046010080FF", "ts":"1595322860"}
     register.profiles = \
         Register.create_profile(
@@ -200,7 +212,7 @@ def __add_registers(args):
     register.scope = Scope.Device
     register.plugin_name = "Access Control"
     register.description = "Last update attendee"
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = [] # {"card_id": "445E6046010080FF", "ts":"1595322860"}
     register.profiles = \
         Register.create_profile(
@@ -223,7 +235,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Access Control"
     register.description = "Card reader enabled"
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = {} # "Teracom/act230/2911"
     register.profiles = \
         Register.create_profile(
@@ -235,7 +247,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Access Control"
     register.description = "Card reader enabled"
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = {} # "Teracom/act230/2897"
     register.profiles = \
         Register.create_profile(
@@ -247,7 +259,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Access Control"
     register.description = "Exit button 1 input"
-    register.range = __range["DI"]
+    register.range = REGS_RANGES["DI"]
     register.value = verbal_const.OFF
     register.profiles = \
         Register.create_profile(
@@ -258,7 +270,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Access Control"
     register.description = "Lock mechanism output"
-    register.range = __range["DO"]
+    register.range = REGS_RANGES["DO"]
     register.value = verbal_const.OFF
     register.profiles = \
         Register.create_profile(
@@ -280,7 +292,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Access Control"
     register.description = "Door closed input"
-    register.range = __range["DI"]
+    register.range = REGS_RANGES["DI"]
     register.value = verbal_const.OFF # "DI5"
     register.profiles = \
         Register.create_profile(
@@ -291,7 +303,7 @@ def __add_registers(args):
     register.scope = Scope.Device
     register.plugin_name = "Access Control"
     register.description = "Door closed input state"
-    register.range = __range["BOOL"]
+    register.range = REGS_RANGES["BOOL"]
     register.value = False
     register.profiles = \
         Register.create_profile(
@@ -304,7 +316,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Access Control"
     register.description = "Card reader settings"
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = {} # "Teracom/act230/2486"
     register.profiles = \
         Register.create_profile(
@@ -316,7 +328,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Access Control"
     register.description = "Card reader settings"
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = {} # "Teracom/act230/1208"
     register.profiles = \
         Register.create_profile(
@@ -328,7 +340,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Access Control"
     register.description = "Exit button 2 input"
-    register.range = __range["DI"]
+    register.range = REGS_RANGES["DI"]
     register.value = verbal_const.OFF
     register.profiles = \
         Register.create_profile(
@@ -339,7 +351,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Access Control"
     register.description = "Lock 2 mechanism output"
-    register.range = __range["DO"]
+    register.range = REGS_RANGES["DO"]
     register.value = verbal_const.OFF
     register.profiles = \
         Register.create_profile(
@@ -361,7 +373,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Access Control"
     register.description = "Door 2 closed input"
-    register.range = __range["DI"]
+    register.range = REGS_RANGES["DI"]
     register.value = verbal_const.OFF # "DI2"
     register.profiles = \
         Register.create_profile(
@@ -372,7 +384,7 @@ def __add_registers(args):
     register.scope = Scope.Device
     register.plugin_name = "Access Control"
     register.description = "Door 2 closed input state"
-    register.range = __range["BOOL"]
+    register.range = REGS_RANGES["BOOL"]
     register.value = False
     register.profiles = \
         Register.create_profile(
@@ -384,7 +396,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Access Control"
     register.description = "PIR 1 sensor input"
-    register.range = __range["DI"]
+    register.range = REGS_RANGES["DI"]
     register.value = verbal_const.OFF # "DI6"
     register.profiles = \
         Register.create_profile(
@@ -395,7 +407,7 @@ def __add_registers(args):
     register.scope = Scope.Device
     register.plugin_name = "Access Control"
     register.description = "PIR 1 sensor input state"
-    register.range = __range["BOOL"]
+    register.range = REGS_RANGES["BOOL"]
     register.value = False
     register.profiles = \
         Register.create_profile(
@@ -406,7 +418,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Access Control"
     register.description = "PIR 2 sensor input"
-    register.range = __range["DI"]
+    register.range = REGS_RANGES["DI"]
     register.value = verbal_const.OFF # "DI0"
     register.profiles = \
         Register.create_profile(
@@ -417,7 +429,7 @@ def __add_registers(args):
     register.scope = Scope.Device
     register.plugin_name = "Access Control"
     register.description = "PIR 2 sensor input state"
-    register.range = __range["BOOL"]
+    register.range = REGS_RANGES["BOOL"]
     register.value = False
     register.profiles = \
         Register.create_profile(
@@ -429,7 +441,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Access Control"
     register.description = "Window 1 closed input"
-    register.range = __range["DI"]
+    register.range = REGS_RANGES["DI"]
     register.value = verbal_const.OFF # "!DI4"
     register.profiles = \
         Register.create_profile(
@@ -440,7 +452,7 @@ def __add_registers(args):
     register.scope = Scope.Device
     register.plugin_name = "Access Control"
     register.description = "Window 1 closed input state"
-    register.range = __range["BOOL"]
+    register.range = REGS_RANGES["BOOL"]
     register.value = False
     register.profiles = \
         Register.create_profile(
@@ -451,7 +463,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Access Control"
     register.description = "Window 2 closed input"
-    register.range = __range["DI"]
+    register.range = REGS_RANGES["DI"]
     register.value = verbal_const.OFF # "!DI3"
     register.profiles = \
         Register.create_profile(
@@ -462,7 +474,7 @@ def __add_registers(args):
     register.scope = Scope.Device
     register.plugin_name = "Access Control"
     register.description = "Window 2 closed input state"
-    register.range = __range["BOOL"]
+    register.range = REGS_RANGES["BOOL"]
     register.value = False
     register.profiles = \
         Register.create_profile(
@@ -474,7 +486,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Access Control"
     register.description = "Door window blind 1 output"
-    register.range = __range["DO"]
+    register.range = REGS_RANGES["DO"]
     register.value = verbal_const.OFF
     register.profiles = \
         Register.create_profile(
@@ -486,7 +498,7 @@ def __add_registers(args):
     register.scope = Scope.Device
     register.plugin_name = "Access Control"
     register.description = "Door window blind 1 value"
-    register.range = __range["BOOL"]
+    register.range = REGS_RANGES["BOOL"]
     register.value = False
     register.profiles = \
         Register.create_profile(
@@ -498,7 +510,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Access Control"
     register.description = "Door window blind 2 output"
-    register.range = __range["DO"]
+    register.range = REGS_RANGES["DO"]
     register.value = verbal_const.OFF
     register.profiles = \
         Register.create_profile(
@@ -509,7 +521,7 @@ def __add_registers(args):
     register.scope = Scope.Device
     register.plugin_name = "Access Control"
     register.description = "Door window blind 2 value"
-    register.range = __range["BOOL"]
+    register.range = REGS_RANGES["BOOL"]
     register.value = False
     register.profiles = \
         Register.create_profile(
@@ -521,7 +533,7 @@ def __add_registers(args):
     register.scope = Scope.Device
     register.plugin_name = "Access Control"
     register.description = "Zone occupied flag"
-    register.range = __range["BOOL"]
+    register.range = REGS_RANGES["BOOL"]
     register.value = False
     register.profiles = \
         Register.create_profile(
@@ -532,7 +544,7 @@ def __add_registers(args):
     register.scope = Scope.Device
     register.plugin_name = "Access Control"
     register.description = "Zone occupied flag"
-    register.range = __range["BOOL"]
+    register.range = REGS_RANGES["BOOL"]
     register.value = False
     register.profiles = \
         Register.create_profile(
@@ -547,8 +559,8 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Blinds"
     register.description = "Window 1 blinds mechanism"
-    register.range = __range["NONE"]
-    if args.blinds_1 > -1:
+    register.range = REGS_RANGES["NONE"]
+    if args.blinds_1 > INVALID_MB_ID:
         register.value = {
             "vendor": "Yihao",
             "model": "BlindsV2",
@@ -603,8 +615,8 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Blinds"
     register.description = "Window 2 blinds mechanism"
-    register.range = __range["NONE"]
-    if args.blinds_2 > -1:
+    register.range = REGS_RANGES["NONE"]
+    if args.blinds_2 > INVALID_MB_ID:
         register.value = {
             "vendor": "Yihao",
             "model": "BlindsV2",
@@ -659,8 +671,8 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Blinds"
     register.description = "Window 3 blinds mechanism"
-    register.range = __range["NONE"]
-    if args.blinds_3 > -1:
+    register.range = REGS_RANGES["NONE"]
+    if args.blinds_3 > INVALID_MB_ID:
         register.value = {
             "vendor": "Yihao",
             "model": "BlindsV2",
@@ -715,8 +727,8 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Blinds"
     register.description = "Window 4 blinds mechanism"
-    register.range = __range["NONE"]
-    if args.blinds_4 > -1:
+    register.range = REGS_RANGES["NONE"]
+    if args.blinds_4 > INVALID_MB_ID:
         register.value = {
             "vendor": "Yihao",
             "model": "BlindsV2",
@@ -782,7 +794,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Blinds"
     register.description = "Plugin enabled"
-    register.range = __range["BOOL"]
+    register.range = REGS_RANGES["BOOL"]
     register.value = True
     register.profiles = \
         Register.create_profile(
@@ -798,7 +810,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Monitoring"
     register.description = "Plugin enabled"
-    register.range = __range["BOOL"]
+    register.range = REGS_RANGES["BOOL"]
     register.value = True
     register.profiles = \
         Register.create_profile(
@@ -810,8 +822,8 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Monitoring"
     register.description = "Cold water flow meter"
-    register.range = __range["NONE"]
-    if args.cw > -1:
+    register.range = REGS_RANGES["NONE"]
+    if args.cw > INVALID_MB_ID:
         register.value = {
             "model": "mw_uml_15",
             "options": {
@@ -831,7 +843,7 @@ def __add_registers(args):
     register.scope = Scope.Device
     register.plugin_name = "Monitoring"
     register.description = "Cold water liters"
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = []
     register.profiles = \
         Register.create_profile(
@@ -855,8 +867,8 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Monitoring"
     register.description = "Hot water input flow meter"
-    register.range = __range["NONE"]
-    if args.hw > -1:
+    register.range = REGS_RANGES["NONE"]
+    if args.hw > INVALID_MB_ID:
         register.value = {
             "model": "mw_uml_15",
             "options": {
@@ -876,7 +888,7 @@ def __add_registers(args):
     register.scope = Scope.Device
     register.plugin_name = "Monitoring"
     register.description = "Hot water liters"
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = []
     register.profiles = \
         Register.create_profile(
@@ -900,8 +912,8 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Monitoring"
     register.description = "Power analyzer settings"
-    register.range = __range["NONE"]
-    if args.pa > -1:
+    register.range = REGS_RANGES["NONE"]
+    if args.pa > INVALID_MB_ID:
         register.value = {
             "vendor": "Eastron",
             "model": args.pa_model,
@@ -922,7 +934,7 @@ def __add_registers(args):
     register.scope = Scope.Device
     register.plugin_name = "Monitoring"
     register.description = "Power analyzer measurements"
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = []
     register.profiles = \
         Register.create_profile(
@@ -947,8 +959,8 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "HVAC"
     register.description = "Floor loop 1 heat meter settings."
-    register.range = __range["NONE"]
-    if args.fl_1_hm > -1:
+    register.range = REGS_RANGES["NONE"]
+    if args.fl_1_hm > INVALID_MB_ID:
         register.value = {
             "vendor": "mainone",
             "model": "flowmeter_dn20",
@@ -969,7 +981,7 @@ def __add_registers(args):
     register.scope = Scope.Device
     register.plugin_name = "Monitoring"
     register.description = "Floor loop 1 heat meter measurements."
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = {}
     register.profiles = \
         Register.create_profile(
@@ -981,8 +993,8 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Monitoring"
     register.description = "Floor loop 2 heat meter settings."
-    register.range = __range["NONE"]
-    if args.fl_2_hm > -1:
+    register.range = REGS_RANGES["NONE"]
+    if args.fl_2_hm > INVALID_MB_ID:
         register.value = {
             "vendor": "mainone",
             "model": "flowmeter_dn20",
@@ -1004,7 +1016,7 @@ def __add_registers(args):
     register.scope = Scope.Device
     register.plugin_name = "Monitoring"
     register.description = "Floor loop 2 heat meter measurements."
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = {}
     register.profiles = \
         Register.create_profile(
@@ -1016,8 +1028,8 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Monitoring"
     register.description = "Floor loop 3 heat meter settings."
-    register.range = __range["NONE"]
-    if args.fl_3_hm > -1:
+    register.range = REGS_RANGES["NONE"]
+    if args.fl_3_hm > INVALID_MB_ID:
         register.value = {
             "vendor": "mainone",
             "model": "flowmeter_dn20",
@@ -1038,7 +1050,7 @@ def __add_registers(args):
     register.scope = Scope.Device
     register.plugin_name = "Monitoring"
     register.description = "Floor loop 3 heat meter measurements."
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = {}
     register.profiles = \
         Register.create_profile(
@@ -1050,8 +1062,8 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Monitoring"
     register.description = "Convector loop 1 heat meter settings."
-    register.range = __range["NONE"]
-    if args.cl_1_hm > -1:
+    register.range = REGS_RANGES["NONE"]
+    if args.cl_1_hm > INVALID_MB_ID:
         register.value = {
             "vendor": "mainone",
             "model": "flowmeter_dn20",
@@ -1072,7 +1084,7 @@ def __add_registers(args):
     register.scope = Scope.Device
     register.plugin_name = "Monitoring"
     register.description = "Convector loop 1 heat meter measurements."
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = {}
     register.profiles = \
         Register.create_profile(
@@ -1084,8 +1096,8 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Monitoring"
     register.description = "Convector loop 2 heat meter settings."
-    register.range = __range["NONE"]
-    if args.cl_2_hm > -1:
+    register.range = REGS_RANGES["NONE"]
+    if args.cl_2_hm > INVALID_MB_ID:
         register.value = {
             "vendor": "mainone",
             "model": "flowmeter_dn20",
@@ -1106,7 +1118,7 @@ def __add_registers(args):
     register.scope = Scope.Device
     register.plugin_name = "Monitoring"
     register.description = "Convector loop 2 heat meter measurements."
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = {}
     register.profiles = \
         Register.create_profile(
@@ -1118,8 +1130,8 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Monitoring"
     register.description = "Convector loop 3 heat meter settings."
-    register.range = __range["NONE"]
-    if args.cl_3_hm > -1:
+    register.range = REGS_RANGES["NONE"]
+    if args.cl_3_hm > INVALID_MB_ID:
         register.value = {
             "vendor": "mainone",
             "model": "flowmeter_dn20",
@@ -1140,7 +1152,7 @@ def __add_registers(args):
     register.scope = Scope.Device
     register.plugin_name = "Monitoring"
     register.description = "Convector loop 3 heat meter measurements."
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = {}
     register.profiles = \
         Register.create_profile(
@@ -1168,7 +1180,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Environment"
     register.description = "Plugin enabled"
-    register.range = __range["BOOL"]
+    register.range = REGS_RANGES["BOOL"]
     register.value = True
     register.profiles = \
         Register.create_profile(
@@ -1179,18 +1191,21 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Environment"
     register.description = "Plugin environment PIR settings"
-    register.range = __range["NONE"]
-    register.value = {
-        "PIR_1": {
-            "vendor": "Gasim",
-            "model": "RS2",
-            "options":
-            {
-                "uart": 0,
-                "mb_id": args.pir_1
+    register.range = REGS_RANGES["NONE"]
+    if args.pir_1 > INVALID_MB_ID:
+        register.value = {
+            "PIR_1": {
+                "vendor": "Gasim",
+                "model": "RS2",
+                "options":
+                {
+                    "uart": 0,
+                    "mb_id": args.pir_1
+                }
             }
         }
-    }
+    else:
+        register.value = {}
     register.profiles = \
         Register.create_profile(
             Profiles.ZONE.value)
@@ -1200,7 +1215,7 @@ def __add_registers(args):
     register.scope = Scope.Device
     register.plugin_name = "Environment"
     register.description = "Plugin environment PIR activations"
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = {}
     register.profiles = \
         Register.create_profile(
@@ -1211,7 +1226,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Environment"
     register.description = "Plugin environment window tamper settings"
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = {
         "WINT_1": "!U0:ID2:FC2:R0:DI1",
     }
@@ -1224,7 +1239,7 @@ def __add_registers(args):
     register.scope = Scope.Device
     register.plugin_name = "Environment"
     register.description = "Plugin environment window tampers activations"
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = {}
     register.profiles = \
         Register.create_profile(
@@ -1235,7 +1250,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Environment"
     register.description = "Plugin environment door tamper settings"
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = {
         "DRT_1": "!U0:ID2:FC2:R0:DI0",
     }
@@ -1248,7 +1263,7 @@ def __add_registers(args):
     register.scope = Scope.Device
     register.plugin_name = "Environment"
     register.description = "Plugin environment door tampers activations"
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = {}
     register.profiles = \
         Register.create_profile(
@@ -1259,7 +1274,7 @@ def __add_registers(args):
     register.scope = Scope.Device
     register.plugin_name = "Environment"
     register.description = "Is empty flag"
-    register.range = __range["BOOL"]
+    register.range = REGS_RANGES["BOOL"]
     register.value = True
     register.profiles = \
         Register.create_profile(
@@ -1281,7 +1296,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Environment"
     register.description = "Actual weather icon."
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = ""
     register.profiles = \
         Register.create_profile(
@@ -1292,7 +1307,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Environment"
     register.description = "Actual outside relative humidity [%]"
-    register.range = __range["PERCENTAGE_F"]
+    register.range = REGS_RANGES["PERCENTAGE_F"]
     register.value = 0.0
     register.profiles = \
         Register.create_profile(
@@ -1314,7 +1329,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Environment"
     register.description = "Actual outside wind speed [m/s]"
-    register.range = __range["PERCENTAGE_F"]
+    register.range = REGS_RANGES["PERCENTAGE_F"]
     register.value = 0.0
     register.profiles = \
         Register.create_profile(
@@ -1325,7 +1340,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Environment"
     register.description = "Actual outside weather icon for 3 hours."
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = ""
     register.profiles = \
         Register.create_profile(
@@ -1336,7 +1351,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Environment"
     register.description = "Actual outside relative humidity for 3 hours.[%]"
-    register.range = __range["PERCENTAGE_F"]
+    register.range = REGS_RANGES["PERCENTAGE_F"]
     register.value = 0.0
     register.profiles = \
         Register.create_profile(
@@ -1358,7 +1373,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Environment"
     register.description = "Actual outside wind speed for 3 hours. [m/s]"
-    register.range = __range["PERCENTAGE_F"]
+    register.range = REGS_RANGES["PERCENTAGE_F"]
     register.value = 0.0
     register.profiles = \
         Register.create_profile(
@@ -1369,7 +1384,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Environment"
     register.description = "Actual outside weather icon for 6 hours."
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = ""
     register.profiles = \
         Register.create_profile(
@@ -1380,7 +1395,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Environment"
     register.description = "Actual outside relative humidity for 6 hours.[%]"
-    register.range = __range["PERCENTAGE_F"]
+    register.range = REGS_RANGES["PERCENTAGE_F"]
     register.value = 0.0
     register.profiles = \
         Register.create_profile(
@@ -1402,7 +1417,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Environment"
     register.description = "Actual outside wind speed for 6 hours. [m/s]"
-    register.range = __range["PERCENTAGE_F"]
+    register.range = REGS_RANGES["PERCENTAGE_F"]
     register.value = 0.0
     register.profiles = \
         Register.create_profile(
@@ -1424,7 +1439,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Environment"
     register.description = "Energy mode of the building"
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = 0
     register.profiles = \
         Register.create_profile(
@@ -1501,7 +1516,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Environment"
     register.description = "Enable software calculation of the sun position"
-    register.range = __range["BOOL"]
+    register.range = REGS_RANGES["BOOL"]
     register.value = False
     register.profiles = \
         Register.create_profile(
@@ -1583,7 +1598,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "HVAC"
     register.description = "Plugin enabled"
-    register.range = __range["BOOL"]
+    register.range = REGS_RANGES["BOOL"]
     register.value = True
     register.profiles = \
         Register.create_profile(
@@ -1607,8 +1622,8 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "HVAC"
     register.description = "Air temperature sensor center settings."
-    register.range = __range["NONE"]
-    if args.temp_cent > -1:
+    register.range = REGS_RANGES["NONE"]
+    if args.temp_cent > INVALID_MB_ID:
         register.value = {
             "vendor": "Gemho",
             "model": "Envse",
@@ -1641,8 +1656,8 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "HVAC"
     register.description = "Air temperature sensor lower settings"
-    register.range = __range["NONE"]
-    if  args.temp_lower > -1:
+    register.range = REGS_RANGES["NONE"]
+    if  args.temp_lower > INVALID_MB_ID:
         register.value = {
             "vendor": "Donkger",
             "model": "XY-MD02",
@@ -1675,15 +1690,15 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "HVAC"
     register.description = "Air temperature sensor upper settings"
-    register.range = __range["NONE"]
-    if args.temp_upper > -1:
+    register.range = REGS_RANGES["NONE"]
+    if args.temp_upper > INVALID_MB_ID:
         register.value = {
             "vendor": "Donkger",
             "model": "XY-MD02",
             "options":
             {
                 "uart": 0,
-                "mb_id": args.temp_upper
+                "mb_id": args.temp_upper # 4
             }
         }
     else:
@@ -1708,7 +1723,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "HVAC"
     register.description = "Floor loop 1 valve"
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = {
         "vendor": "Tonhe",
         "model": "a20t20b2c",
@@ -1716,7 +1731,7 @@ def __add_registers(args):
         {
             "output":
             [
-                args.fl_vlv_1 #"U0:ID2:FC5:R0:RO0",
+                args.fl_vlv_1 # U0:ID2:FC5:R0:RO1
             ]
         }
     }
@@ -1729,7 +1744,7 @@ def __add_registers(args):
     register.scope = Scope.Device
     register.plugin_name = "HVAC"
     register.description = "Floor loop 1 valve activations"
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = {}
     register.profiles = \
         Register.create_profile(
@@ -1740,7 +1755,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "HVAC"
     register.description = "Floor loop 2 valve"
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = {
         "vendor": "Tonhe",
         "model": "a20t20b2c",
@@ -1761,7 +1776,7 @@ def __add_registers(args):
     register.scope = Scope.Device
     register.plugin_name = "HVAC"
     register.description = "Floor loop 2 valve activations"
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = {}
     register.profiles = \
         Register.create_profile(
@@ -1772,7 +1787,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "HVAC"
     register.description = "Floor loop 3 valve"
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = {
         "vendor": "Tonhe",
         "model": "a20t20b2c",
@@ -1793,7 +1808,7 @@ def __add_registers(args):
     register.scope = Scope.Device
     register.plugin_name = "HVAC"
     register.description = "Floor loop 3 valve activations"
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = {}
     register.profiles = \
         Register.create_profile(
@@ -1805,7 +1820,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "HVAC"
     register.description = "Convector 1"
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = {
         "vendor": "Silpa",
         "model": "Klimafan",
@@ -1813,15 +1828,15 @@ def __add_registers(args):
         {
             "stage1":
             [
-                args.conv_1_s1 #"U0:ID6:FC5:R0:RO0",
+                args.conv_1_s1 # "U0:ID6:FC5:R0:RO0"
             ],
             "stage2":
             [
-                args.conv_1_s2 #"U0:ID6:FC5:R0:RO1",
+                args.conv_1_s2 # "U0:ID6:FC5:R0:RO1"
             ],
             "stage3":
             [
-                args.conv_1_s3 #"U0:ID6:FC5:R0:RO2",
+                args.conv_1_s3 # "U0:ID6:FC5:R0:RO2"
             ]
         }
     }
@@ -1834,7 +1849,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "HVAC"
     register.description = "Convector loop 1 valve"
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = {
         "vendor": "Tonhe",
         "model": "a20t20b2c",
@@ -1842,7 +1857,7 @@ def __add_registers(args):
         {
             "output":
             [
-                args.cl_vlv_1 #"U0:ID2:FC5:R0:RO0",
+                args.cl_vlv_1 # U0:ID2:FC5:R0:RO0
             ]
         }
     }
@@ -1855,7 +1870,7 @@ def __add_registers(args):
     register.scope = Scope.Device
     register.plugin_name = "HVAC"
     register.description = "Convector loop 1 valve activations"
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = {}
     register.profiles = \
         Register.create_profile(
@@ -1867,7 +1882,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "HVAC"
     register.description = "Convector 2"
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = {
         "vendor": "Silpa",
         "model": "Klimafan",
@@ -1896,7 +1911,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "HVAC"
     register.description = "Convector loop 2 valve"
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = {
         "vendor": "Tonhe",
         "model": "a20t20b2c",
@@ -1917,7 +1932,7 @@ def __add_registers(args):
     register.scope = Scope.Device
     register.plugin_name = "HVAC"
     register.description = "Convector loop 2 valve activations"
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = {}
     register.profiles = \
         Register.create_profile(
@@ -1929,7 +1944,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "HVAC"
     register.description = "Convector 3"
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = {
         "vendor": "Silpa",
         "model": "Klimafan",
@@ -1958,7 +1973,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "HVAC"
     register.description = "Convector loop 3 valve"
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = {
         "vendor": "Tonhe",
         "model": "a20t20b2c",
@@ -1979,7 +1994,7 @@ def __add_registers(args):
     register.scope = Scope.Device
     register.plugin_name = "HVAC"
     register.description = "Convector loop 3 valve activations"
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = {}
     register.profiles = \
         Register.create_profile(
@@ -2083,7 +2098,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "HVAC"
     register.description = "Thermal force limit"
-    register.range = __range["PERCENTAGE_F"]
+    register.range = REGS_RANGES["PERCENTAGE_F"]
     register.value = 100.0
     register.profiles = \
         Register.create_profile(
@@ -2144,7 +2159,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Light"
     register.description = "Analog output 0. U0:ID2:FC16:R0:AO0"
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = "U0:ID2:FC16:R0:AO0"
     register.profiles = \
         Register.create_profile(
@@ -2155,7 +2170,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Light"
     register.description = "Analog output 1. U0:ID2:FC16:R0:AO1"
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = "U0:ID2:FC16:R0:AO1"
     register.profiles = \
         Register.create_profile(
@@ -2166,7 +2181,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Light"
     register.description = "Digital output 6. U0:ID2:FC5:R0:DO6"
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = "U0:ID2:FC5:R0:DO6"
     register.profiles = \
         Register.create_profile(
@@ -2177,7 +2192,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Light"
     register.description = "Digital output 7. U0:ID2:FC5:R0:DO7"
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = "U0:ID2:FC5:R0:DO7"
     register.profiles = \
         Register.create_profile(
@@ -2188,7 +2203,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Light"
     register.description = "Hallway lighting digital output. U1:ID2:R0:DO3"
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = verbal_const.OFF # U1:ID2:R0:DO3
     register.profiles = \
         Register.create_profile(
@@ -2210,7 +2225,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Light"
     register.description = "Sensor settings"
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = {
         "vendor": "PT",
         "model": "light_sensor",
@@ -2250,7 +2265,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Light"
     register.description = "Plugin enabled"
-    register.range = __range["BOOL"]
+    register.range = REGS_RANGES["BOOL"]
     register.value = True
     __registers.append(register)
     register.profiles = \
@@ -2266,7 +2281,7 @@ def __add_registers(args):
     register.scope = Scope.Device
     register.plugin_name = "System"
     register.description = "Last update cycle error"
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = []
     register.profiles = \
         Register.create_profile(
@@ -2409,7 +2424,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "System"
     register.description = "Status LED"
-    register.range = __range["LED"]
+    register.range = REGS_RANGES["LED"]
     register.value = "LED0"
     register.profiles = \
         Register.create_profile(
@@ -2438,7 +2453,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "System"
     register.description = "Anti tamper"
-    register.range = __range["DI"]
+    register.range = REGS_RANGES["DI"]
     register.value = verbal_const.OFF # "DI7"
     register.profiles = \
         Register.create_profile(
@@ -2452,7 +2467,7 @@ def __add_registers(args):
     register.scope = Scope.Device
     register.plugin_name = "System"
     register.description = "Anti tampering state"
-    register.range = __range["BOOL"]
+    register.range = REGS_RANGES["BOOL"]
     register.value = False
     register.profiles = \
         Register.create_profile(
@@ -2467,7 +2482,7 @@ def __add_registers(args):
     register.scope = Scope.Device
     register.plugin_name = "System"
     register.description = "Collision info message"
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = {}
     register.profiles = \
         Register.create_profile(
@@ -2481,7 +2496,7 @@ def __add_registers(args):
     register.scope = Scope.Device
     register.plugin_name = "System"
     register.description = "Collision warning message"
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = {}
     register.profiles = \
         Register.create_profile(
@@ -2495,7 +2510,7 @@ def __add_registers(args):
     register.scope = Scope.Device
     register.plugin_name = "System"
     register.description = "Collision error message"
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = {}
     register.profiles = \
         Register.create_profile(
@@ -2524,7 +2539,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "System"
     register.description = "Plugin enabled"
-    register.range = __range["BOOL"]
+    register.range = REGS_RANGES["BOOL"]
     register.value = True
     register.profiles = \
         Register.create_profile(
@@ -2539,7 +2554,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "System"
     register.description = "Enable info messages"
-    register.range = __range["BOOL"]
+    register.range = REGS_RANGES["BOOL"]
     register.value = True
     register.profiles = \
         Register.create_profile(
@@ -2554,7 +2569,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "System"
     register.description = "Enable warning messages"
-    register.range = __range["BOOL"]
+    register.range = REGS_RANGES["BOOL"]
     register.value = True
     register.profiles = \
         Register.create_profile(
@@ -2569,7 +2584,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "System"
     register.description = "Enable error messages"
-    register.range = __range["BOOL"]
+    register.range = REGS_RANGES["BOOL"]
     register.value = True
     register.profiles = \
         Register.create_profile(
@@ -2587,7 +2602,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Energy Center Common"
     register.description = "Plugin enabled"
-    register.range = __range["BOOL"]
+    register.range = REGS_RANGES["BOOL"]
     register.value = False
     __registers.append(register)
 
@@ -2604,7 +2619,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Energy Center Distribution"
     register.description = "ECD / Floor entrance valves settings."
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = \
     {
         "hot":
@@ -2652,7 +2667,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Energy Center Distribution"
     register.description = "ECD / Floor entrance valves mode."
-    register.range = __range["VALVE_MODE"]
+    register.range = REGS_RANGES["VALVE_MODE"]
     register.value = 0.0
     register.profiles = \
         Register.create_profile(
@@ -2664,7 +2679,7 @@ def __add_registers(args):
     register.scope = Scope.Device
     register.plugin_name = "Energy Center Distribution"
     register.description = "ECD / Floor entrance valves state."
-    register.range = __range["VALVE_STATE"]
+    register.range = REGS_RANGES["VALVE_STATE"]
     register.value = 0.0
     register.profiles = \
         Register.create_profile(
@@ -2676,7 +2691,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Energy Center Distribution"
     register.description = "ECD / Floor pool valves settings."
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = \
     {
         "hot":
@@ -2724,7 +2739,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Energy Center Distribution"
     register.description = "ECD / Floor pool valves mode."
-    register.range = __range["VALVE_MODE"]
+    register.range = REGS_RANGES["VALVE_MODE"]
     register.value = 0.0
     register.profiles = \
         Register.create_profile(
@@ -2736,7 +2751,7 @@ def __add_registers(args):
     register.scope = Scope.Device
     register.plugin_name = "Energy Center Distribution"
     register.description = "ECD / Floor pool valves state."
-    register.range = __range["VALVE_STATE"]
+    register.range = REGS_RANGES["VALVE_STATE"]
     register.value = 0.0
     register.profiles = \
         Register.create_profile(
@@ -2748,7 +2763,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Energy Center Distribution"
     register.description = "ECD / Ground drilling valves settings."
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = \
     {
         "hot":
@@ -2796,7 +2811,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Energy Center Distribution"
     register.description = "ECD / Ground drilling valves mode."
-    register.range = __range["VALVE_MODE"]
+    register.range = REGS_RANGES["VALVE_MODE"]
     register.value = 0.0
     register.profiles = \
         Register.create_profile(
@@ -2808,7 +2823,7 @@ def __add_registers(args):
     register.scope = Scope.Device
     register.plugin_name = "Energy Center Distribution"
     register.description = "ECD / Ground drilling valves state."
-    register.range = __range["VALVE_STATE"]
+    register.range = REGS_RANGES["VALVE_STATE"]
     register.value = 0.0
     register.profiles = \
         Register.create_profile(
@@ -2820,7 +2835,7 @@ def __add_registers(args):
     register.scope = Scope.Device
     register.plugin_name = "Energy Center Distribution"
     register.description = "ECD / Ground drilling valves state."
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = {}
     register.profiles = \
         Register.create_profile(
@@ -2833,7 +2848,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Energy Center Distribution"
     register.description = "ECD / Ground drilling valves settings."
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = \
     {
         "hot":
@@ -2881,7 +2896,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Energy Center Distribution"
     register.description = "ECD / Ground drilling valves mode."
-    register.range = __range["VALVE_MODE"]
+    register.range = REGS_RANGES["VALVE_MODE"]
     register.value = 0.0
     register.profiles = \
         Register.create_profile(
@@ -2893,7 +2908,7 @@ def __add_registers(args):
     register.scope = Scope.Device
     register.plugin_name = "Energy Center Distribution"
     register.description = "ECD / Air tower green valves state."
-    register.range = __range["VALVE_STATE"]
+    register.range = REGS_RANGES["VALVE_STATE"]
     register.value = 0.0
     register.profiles = \
         Register.create_profile(
@@ -2905,7 +2920,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Energy Center Distribution"
     register.description = "ECD / Ground drilling valves settings."
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = \
     {
         "hot":
@@ -2953,7 +2968,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Energy Center Distribution"
     register.description = "ECD / Ground drilling valves mode."
-    register.range = __range["VALVE_MODE"]
+    register.range = REGS_RANGES["VALVE_MODE"]
     register.value = 0.0
     register.profiles = \
         Register.create_profile(
@@ -2965,7 +2980,7 @@ def __add_registers(args):
     register.scope = Scope.Device
     register.plugin_name = "Energy Center Distribution"
     register.description = "ECD / Air tower green valves state."
-    register.range = __range["VALVE_STATE"]
+    register.range = REGS_RANGES["VALVE_STATE"]
     register.value = 0.0
     register.profiles = \
         Register.create_profile(
@@ -2977,7 +2992,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Energy Center Distribution"
     register.description = "ECD / Generators valves settings."
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = \
     {
         "hot":
@@ -3025,7 +3040,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Energy Center Distribution"
     register.description = "ECD / Ground drilling valves mode."
-    register.range = __range["VALVE_MODE"]
+    register.range = REGS_RANGES["VALVE_MODE"]
     register.value = 0.0
     register.profiles = \
         Register.create_profile(
@@ -3037,7 +3052,7 @@ def __add_registers(args):
     register.scope = Scope.Device
     register.plugin_name = "Energy Center Distribution"
     register.description = "ECD / Generators valves state."
-    register.range = __range["VALVE_STATE"]
+    register.range = REGS_RANGES["VALVE_STATE"]
     register.value = 0.0
     register.profiles = \
         Register.create_profile(
@@ -3053,7 +3068,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Energy Center Distribution"
     register.description = "ECD / Pool air heating valves settings."
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = \
     {
         "hot":
@@ -3101,7 +3116,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Energy Center Distribution"
     register.description = "ECD / Pool air heating valves mode."
-    register.range = __range["VALVE_MODE"]
+    register.range = REGS_RANGES["VALVE_MODE"]
     register.value = 0.0
     register.profiles = \
         Register.create_profile(
@@ -3113,7 +3128,7 @@ def __add_registers(args):
     register.scope = Scope.Device
     register.plugin_name = "Energy Center Distribution"
     register.description = "ECD / Pool air heating valves state."
-    register.range = __range["VALVE_STATE"]
+    register.range = REGS_RANGES["VALVE_STATE"]
     register.value = 0.0
     register.profiles = \
         Register.create_profile(
@@ -3125,7 +3140,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Energy Center Distribution"
     register.description = "ECD / Pool air heating pump settings."
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = \
     {
         "vendor": "Grundfos",
@@ -3150,7 +3165,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Energy Center Distribution"
     register.description = "ECD / Pool air heating pump mode."
-    register.range = __range["PERCENTAGE_I"]
+    register.range = REGS_RANGES["PERCENTAGE_I"]
     register.value = 0
     register.profiles = \
         Register.create_profile(
@@ -3162,7 +3177,7 @@ def __add_registers(args):
     register.scope = Scope.Device
     register.plugin_name = "Energy Center Distribution"
     register.description = "ECD / Pool air heating pump state."
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = {}
     register.profiles = \
         Register.create_profile(
@@ -3174,7 +3189,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Energy Center Distribution"
     register.description = "ECD / Convectors kitchen valves settings."
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = \
     {
         "hot":
@@ -3222,7 +3237,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Energy Center Distribution"
     register.description = "ECD / Convectors kitchen valves mode."
-    register.range = __range["VALVE_MODE"]
+    register.range = REGS_RANGES["VALVE_MODE"]
     register.value = 0.0
     register.profiles = \
         Register.create_profile(
@@ -3234,7 +3249,7 @@ def __add_registers(args):
     register.scope = Scope.Device
     register.plugin_name = "Energy Center Distribution"
     register.description = "ECD / Convectors kitchen valves state."
-    register.range = __range["VALVE_STATE"]
+    register.range = REGS_RANGES["VALVE_STATE"]
     register.value = 0.0
     register.profiles = \
         Register.create_profile(
@@ -3246,7 +3261,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Energy Center Distribution"
     register.description = "ECD / Convectors kitchen pump settings."
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = \
     {
         "vendor": "Grundfos",
@@ -3271,7 +3286,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Energy Center Distribution"
     register.description = "ECD / Convectors kitchen pump mode."
-    register.range = __range["PERCENTAGE_I"]
+    register.range = REGS_RANGES["PERCENTAGE_I"]
     register.value = 0
     register.profiles = \
         Register.create_profile(
@@ -3283,7 +3298,7 @@ def __add_registers(args):
     register.scope = Scope.Device
     register.plugin_name = "Energy Center Distribution"
     register.description = "ECD / Convectors kitchen pump state."
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = {}
     register.profiles = \
         Register.create_profile(
@@ -3295,7 +3310,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Energy Center Distribution"
     register.description = "ECD / AHU conference hall valves settings."
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = \
     {
         "hot":
@@ -3343,7 +3358,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Energy Center Distribution"
     register.description = "ECD / AHU conference hall valves mode."
-    register.range = __range["VALVE_MODE"]
+    register.range = REGS_RANGES["VALVE_MODE"]
     register.value = 0.0
     register.profiles = \
         Register.create_profile(
@@ -3355,7 +3370,7 @@ def __add_registers(args):
     register.scope = Scope.Device
     register.plugin_name = "Energy Center Distribution"
     register.description = "ECD / AHU conference hall valves state."
-    register.range = __range["VALVE_STATE"]
+    register.range = REGS_RANGES["VALVE_STATE"]
     register.value = 0.0
     register.profiles = \
         Register.create_profile(
@@ -3367,7 +3382,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Energy Center Distribution"
     register.description = "ECD / AHU conference hall pump settings."
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = \
     {
         "vendor": "Grundfos",
@@ -3392,7 +3407,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Energy Center Distribution"
     register.description = "ECD / AHU conference hall pump mode."
-    register.range = __range["PERCENTAGE_I"]
+    register.range = REGS_RANGES["PERCENTAGE_I"]
     register.value = 0
     register.profiles = \
         Register.create_profile(
@@ -3404,7 +3419,7 @@ def __add_registers(args):
     register.scope = Scope.Device
     register.plugin_name = "Energy Center Distribution"
     register.description = "ECD / AHU conference hall pump state."
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = {}
     register.profiles = \
         Register.create_profile(
@@ -3416,7 +3431,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Energy Center Distribution"
     register.description = "ECD / Floor west valves settings."
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = \
     {
         "hot":
@@ -3464,7 +3479,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Energy Center Distribution"
     register.description = "ECD / Floor west valves mode."
-    register.range = __range["VALVE_MODE"]
+    register.range = REGS_RANGES["VALVE_MODE"]
     register.value = 0.0
     register.profiles = \
         Register.create_profile(
@@ -3476,7 +3491,7 @@ def __add_registers(args):
     register.scope = Scope.Device
     register.plugin_name = "Energy Center Distribution"
     register.description = "ECD / Floor west  valves state"
-    register.range = __range["VALVE_STATE"]
+    register.range = REGS_RANGES["VALVE_STATE"]
     register.value = 0.0
     register.profiles = \
         Register.create_profile(
@@ -3488,7 +3503,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Energy Center Distribution"
     register.description = "ECD / Floor west pump settings."
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = \
     {
         "vendor": "Grundfos",
@@ -3513,7 +3528,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Energy Center Distribution"
     register.description = "ECD / Floor west pump mode."
-    register.range = __range["PERCENTAGE_I"]
+    register.range = REGS_RANGES["PERCENTAGE_I"]
     register.value = 0
     register.profiles = \
         Register.create_profile(
@@ -3525,7 +3540,7 @@ def __add_registers(args):
     register.scope = Scope.Device
     register.plugin_name = "Energy Center Distribution"
     register.description = "ECD / Floor west pump state."
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = {}
     register.profiles = \
         Register.create_profile(
@@ -3537,7 +3552,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Energy Center Distribution"
     register.description = "ECD / Convectors west valves settings."
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = \
     {
         "hot":
@@ -3582,7 +3597,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Energy Center Distribution"
     register.description = "ECD / Convectors west valves mode."
-    register.range = __range["VALVE_MODE"]
+    register.range = REGS_RANGES["VALVE_MODE"]
     register.value = 0.0
     register.profiles = \
         Register.create_profile(
@@ -3594,7 +3609,7 @@ def __add_registers(args):
     register.scope = Scope.Device
     register.plugin_name = "Energy Center Distribution"
     register.description = "ECD / Convectors west valves state."
-    register.range = __range["VALVE_STATE"]
+    register.range = REGS_RANGES["VALVE_STATE"]
     register.value = 0.0
     register.profiles = \
         Register.create_profile(
@@ -3606,7 +3621,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Energy Center Distribution"
     register.description = "ECD / Convectors west pump settings."
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = \
     {
         "vendor": "Grundfos",
@@ -3631,7 +3646,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Energy Center Distribution"
     register.description = "ECD / Convectors west pump mode."
-    register.range = __range["PERCENTAGE_I"]
+    register.range = REGS_RANGES["PERCENTAGE_I"]
     register.value = 0
     register.profiles = \
         Register.create_profile(
@@ -3643,7 +3658,7 @@ def __add_registers(args):
     register.scope = Scope.Device
     register.plugin_name = "Energy Center Distribution"
     register.description = "ECD / Convectors west pump state."
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = {}
     register.profiles = \
         Register.create_profile(
@@ -3655,7 +3670,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Energy Center Distribution"
     register.description = "ECD / AHU roof floor valves settings."
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = \
     {
         "hot":
@@ -3703,7 +3718,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Energy Center Distribution"
     register.description = "ECD / AHU roof floor valves mode."
-    register.range = __range["VALVE_MODE"]
+    register.range = REGS_RANGES["VALVE_MODE"]
     register.value = 0.0
     register.profiles = \
         Register.create_profile(
@@ -3715,7 +3730,7 @@ def __add_registers(args):
     register.scope = Scope.Device
     register.plugin_name = "Energy Center Distribution"
     register.description = "ECD / AHU roof floor valves state."
-    register.range = __range["VALVE_STATE"]
+    register.range = REGS_RANGES["VALVE_STATE"]
     register.value = 0.0
     register.profiles = \
         Register.create_profile(
@@ -3727,7 +3742,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Energy Center Distribution"
     register.description = "ECD / AHU roof floor pump settings."
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = \
     {
         "vendor": "Grundfos",
@@ -3752,7 +3767,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Energy Center Distribution"
     register.description = "ECD / AHU roof floor pump mode."
-    register.range = __range["PERCENTAGE_I"]
+    register.range = REGS_RANGES["PERCENTAGE_I"]
     register.value = 0
     register.profiles = \
         Register.create_profile(
@@ -3764,7 +3779,7 @@ def __add_registers(args):
     register.scope = Scope.Device
     register.plugin_name = "Energy Center Distribution"
     register.description = "ECD / AHU roof floor pump state."
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = {}
     register.profiles = \
         Register.create_profile(
@@ -3776,7 +3791,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Energy Center Distribution"
     register.description = "# ECD / AHU fitness valves settings."
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = \
     {
         "hot":
@@ -3824,7 +3839,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Energy Center Distribution"
     register.description = "ECD / AHU fitness valves mode."
-    register.range = __range["VALVE_MODE"]
+    register.range = REGS_RANGES["VALVE_MODE"]
     register.value = 0.0
     register.profiles = \
         Register.create_profile(
@@ -3836,7 +3851,7 @@ def __add_registers(args):
     register.scope = Scope.Device
     register.plugin_name = "Energy Center Distribution"
     register.description = "ECD / AHU fitness valves state."
-    register.range = __range["VALVE_STATE"]
+    register.range = REGS_RANGES["VALVE_STATE"]
     register.value = 0.0
     register.profiles = \
         Register.create_profile(
@@ -3848,7 +3863,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Energy Center Distribution"
     register.description = "ECD / AHU fitness pump settings."
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = \
     {
         "vendor": "Grundfos",
@@ -3873,7 +3888,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Energy Center Distribution"
     register.description = "ECD / AHU fitness pump mode."
-    register.range = __range["PERCENTAGE_I"]
+    register.range = REGS_RANGES["PERCENTAGE_I"]
     register.value = 0
     register.profiles = \
         Register.create_profile(
@@ -3885,7 +3900,7 @@ def __add_registers(args):
     register.scope = Scope.Device
     register.plugin_name = "Energy Center Distribution"
     register.description = "ECD / AHU fitness pump state."
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = {}
     register.profiles = \
         Register.create_profile(
@@ -3897,7 +3912,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Energy Center Distribution"
     register.description = "ECD / Floor east valves settings."
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = \
     {
         "hot":
@@ -3945,7 +3960,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Energy Center Distribution"
     register.description = "ECD / Floor east valves mode."
-    register.range = __range["VALVE_MODE"]
+    register.range = REGS_RANGES["VALVE_MODE"]
     register.value = 0.0
     register.profiles = \
         Register.create_profile(
@@ -3957,7 +3972,7 @@ def __add_registers(args):
     register.scope = Scope.Device
     register.plugin_name = "Energy Center Distribution"
     register.description = "ECD / Floor east valves state."
-    register.range = __range["VALVE_STATE"]
+    register.range = REGS_RANGES["VALVE_STATE"]
     register.value = 0.0
     register.profiles = \
         Register.create_profile(
@@ -3969,7 +3984,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Energy Center Distribution"
     register.description = "ECD / Floor east pump settings."
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = \
     {
         "vendor": "Grundfos",
@@ -3994,7 +4009,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Energy Center Distribution"
     register.description = "ECD / Floor east pump mode."
-    register.range = __range["PERCENTAGE_I"]
+    register.range = REGS_RANGES["PERCENTAGE_I"]
     register.value = 0
     register.profiles = \
         Register.create_profile(
@@ -4006,7 +4021,7 @@ def __add_registers(args):
     register.scope = Scope.Device
     register.plugin_name = "Energy Center Distribution"
     register.description = "ECD / Floor east pump state."
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = {}
     register.profiles = \
         Register.create_profile(
@@ -4018,7 +4033,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Energy Center Distribution"
     register.description = "ECD / Convectors east valves settings."
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = \
     {
         "hot":
@@ -4066,7 +4081,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Energy Center Distribution"
     register.description = "ECD / Convectors east valves mode."
-    register.range = __range["VALVE_MODE"]
+    register.range = REGS_RANGES["VALVE_MODE"]
     register.value = 0.0
     register.profiles = \
         Register.create_profile(
@@ -4078,7 +4093,7 @@ def __add_registers(args):
     register.scope = Scope.Device
     register.plugin_name = "Energy Center Distribution"
     register.description = "ECD / Convectors east valves state."
-    register.range = __range["VALVE_STATE"]
+    register.range = REGS_RANGES["VALVE_STATE"]
     register.value = 0.0
     register.profiles = \
         Register.create_profile(
@@ -4090,7 +4105,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Energy Center Distribution"
     register.description = "ECD / Convectors east pump settings."
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = \
     {
         "vendor": "Grundfos",
@@ -4115,7 +4130,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Energy Center Distribution"
     register.description = "ECD / Convectors east pump mode."
-    register.range = __range["PERCENTAGE_I"]
+    register.range = REGS_RANGES["PERCENTAGE_I"]
     register.value = 0
     register.profiles = \
         Register.create_profile(
@@ -4127,7 +4142,7 @@ def __add_registers(args):
     register.scope = Scope.Device
     register.plugin_name = "Energy Center Distribution"
     register.description = "ECD / Convectors east pump state."
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = {}
     register.profiles = \
         Register.create_profile(
@@ -4139,7 +4154,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Energy Center Distribution"
     register.description = "ECD / Pool air cooling valves settings."
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = \
     {
         "hot":
@@ -4187,7 +4202,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Energy Center Distribution"
     register.description = "ECD / Pool air cooling valves mode."
-    register.range = __range["VALVE_MODE"]
+    register.range = REGS_RANGES["VALVE_MODE"]
     register.value = 0.0
     register.profiles = \
         Register.create_profile(
@@ -4199,7 +4214,7 @@ def __add_registers(args):
     register.scope = Scope.Device
     register.plugin_name = "Energy Center Distribution"
     register.description = "ECD / Pool air cooling valves state."
-    register.range = __range["VALVE_STATE"]
+    register.range = REGS_RANGES["VALVE_STATE"]
     register.value = 0.0
     register.profiles = \
         Register.create_profile(
@@ -4211,7 +4226,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Energy Center Distribution"
     register.description = "ECD / Pool air cooling pump settings."
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = \
     {
         "vendor": "Grundfos",
@@ -4236,7 +4251,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Energy Center Distribution"
     register.description = "ECD / Pool air cooling pump mode."
-    register.range = __range["PERCENTAGE_I"]
+    register.range = REGS_RANGES["PERCENTAGE_I"]
     register.value = 0
     register.profiles = \
         Register.create_profile(
@@ -4248,7 +4263,7 @@ def __add_registers(args):
     register.scope = Scope.Device
     register.plugin_name = "Energy Center Distribution"
     register.description = "ECD / Pool air cooling pump state."
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = {}
     register.profiles = \
         Register.create_profile(
@@ -4260,7 +4275,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Energy Center Distribution"
     register.description = "ECD / Pool heating valves settings."
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = \
     {
         "hot":
@@ -4308,7 +4323,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Energy Center Distribution"
     register.description = "ECD / Pool heating valves mode."
-    register.range = __range["VALVE_MODE"]
+    register.range = REGS_RANGES["VALVE_MODE"]
     register.value = 0.0
     register.profiles = \
         Register.create_profile(
@@ -4320,7 +4335,7 @@ def __add_registers(args):
     register.scope = Scope.Device
     register.plugin_name = "Energy Center Distribution"
     register.description = "ECD / Pool heating valves state."
-    register.range = __range["VALVE_STATE"]
+    register.range = REGS_RANGES["VALVE_STATE"]
     register.value = 0.0
     register.profiles = \
         Register.create_profile(
@@ -4332,7 +4347,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Energy Center Distribution"
     register.description = "ECD / Pool heating pump settings."
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = \
     {
         "vendor": "Grundfos",
@@ -4357,7 +4372,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Energy Center Distribution"
     register.description = "ECD / Pool heating pump mode."
-    register.range = __range["PERCENTAGE_I"]
+    register.range = REGS_RANGES["PERCENTAGE_I"]
     register.value = 0
     register.profiles = \
         Register.create_profile(
@@ -4369,7 +4384,7 @@ def __add_registers(args):
     register.scope = Scope.Device
     register.plugin_name = "Energy Center Distribution"
     register.description = "ECD / Pool heating pump state."
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = {}
     register.profiles = \
         Register.create_profile(
@@ -4381,7 +4396,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Energy Center Distribution"
     register.description = "ECD / Servers cooling settings."
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = \
     {
         "vendor": "Grundfos",
@@ -4406,7 +4421,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Energy Center Distribution"
     register.description = "ECD / Servers cooling pump mode."
-    register.range = __range["PERCENTAGE_I"]
+    register.range = REGS_RANGES["PERCENTAGE_I"]
     register.value = 0
     register.profiles = \
         Register.create_profile(
@@ -4418,7 +4433,7 @@ def __add_registers(args):
     register.scope = Scope.Device
     register.plugin_name = "Energy Center Distribution"
     register.description = "ECD / Servers cooling pump state."
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = {}
     register.profiles = \
         Register.create_profile(
@@ -4434,7 +4449,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Energy Center Distribution"
     register.description = "ECD / Ground drilling thermo couples settings."
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = \
     [
         {
@@ -4520,7 +4535,7 @@ def __add_registers(args):
     register.scope = Scope.Device
     register.plugin_name = "Energy Center Distribution"
     register.description = "ECD / Ground drilling thermo couples values."
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = []
     register.profiles = \
         Register.create_profile(
@@ -4532,7 +4547,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Energy Center Distribution"
     register.description = "ECD / Hot water thermo couples settings."
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = \
     [
         {
@@ -4567,7 +4582,7 @@ def __add_registers(args):
     register.scope = Scope.Device
     register.plugin_name = "Energy Center Distribution"
     register.description = "ECD / Hot water thermo couples values."
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = []
     __registers.append(register)
 
@@ -4576,7 +4591,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Energy Center Distribution"
     register.description = "ECD / Cold water thermo couples settings."
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = \
     [
         {
@@ -4611,7 +4626,7 @@ def __add_registers(args):
     register.scope = Scope.Device
     register.plugin_name = "Energy Center Distribution"
     register.description = "ECD / Hot water thermo couples values."
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = []
     __registers.append(register)
 
@@ -4620,7 +4635,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Energy Center Distribution"
     register.description = "Plugin enabled"
-    register.range = __range["BOOL"]
+    register.range = REGS_RANGES["BOOL"]
     register.value = False
     register.profiles = \
         Register.create_profile(
@@ -4638,7 +4653,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Energy Center Heat Pump"
     register.description = "ECHP / Cold / Valves / Settings"
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = \
     {
         "input":
@@ -4703,7 +4718,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Energy Center Heat Pump"
     register.description = "ECHP / Cold / Valves / Mode"
-    register.range = __range["VALVE_MODE"]
+    register.range = REGS_RANGES["VALVE_MODE"]
     register.value = 0.0
     register.profiles = \
         Register.create_profile(
@@ -4715,7 +4730,7 @@ def __add_registers(args):
     register.scope = Scope.Device
     register.plugin_name = "Energy Center Heat Pump"
     register.description = "ECHP / Cold / Valves / State"
-    register.range = __range["VALVE_STATE"]
+    register.range = REGS_RANGES["VALVE_STATE"]
     register.value = 0.0
     register.profiles = \
         Register.create_profile(
@@ -4729,7 +4744,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Energy Center Heat Pump"
     register.description = "ECHP / Cold Geo / Valves / Settings"
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = \
     {
         "input":
@@ -4794,7 +4809,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Energy Center Heat Pump"
     register.description = "ECHP / Cold Geo / Valves / Mode"
-    register.range = __range["VALVE_MODE"]
+    register.range = REGS_RANGES["VALVE_MODE"]
     register.value = 0.0
     register.profiles = \
         Register.create_profile(
@@ -4806,7 +4821,7 @@ def __add_registers(args):
     register.scope = Scope.Device
     register.plugin_name = "Energy Center Heat Pump"
     register.description = "ECHP / Cold Geo / Valves / State"
-    register.range = __range["VALVE_STATE"]
+    register.range = REGS_RANGES["VALVE_STATE"]
     register.value = 0.0
     register.profiles = \
         Register.create_profile(
@@ -4820,7 +4835,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Energy Center Heat Pump"
     register.description = "ECHP / Warm Geo / Valves / Settings"
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = \
     {
         "input":
@@ -4885,7 +4900,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Energy Center Heat Pump"
     register.description = "ECHP / Warm Geo / Valves / Mode"
-    register.range = __range["VALVE_MODE"]
+    register.range = REGS_RANGES["VALVE_MODE"]
     register.value = 0.0
     register.profiles = \
         Register.create_profile(
@@ -4897,7 +4912,7 @@ def __add_registers(args):
     register.scope = Scope.Device
     register.plugin_name = "Energy Center Heat Pump"
     register.description = "ECHP / Warm Geo / Valves / State"
-    register.range = __range["VALVE_STATE"]
+    register.range = REGS_RANGES["VALVE_STATE"]
     register.value = 0.0
     register.profiles = \
         Register.create_profile(
@@ -4911,7 +4926,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Energy Center Heat Pump"
     register.description = "ECHP / Warm / Valves / Settings"
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = \
     {
         "input":
@@ -4976,7 +4991,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Energy Center Heat Pump"
     register.description = "ECHP / Warm / Valves / Mode"
-    register.range = __range["VALVE_MODE"]
+    register.range = REGS_RANGES["VALVE_MODE"]
     register.value = 0.0
     register.profiles = \
         Register.create_profile(
@@ -4988,7 +5003,7 @@ def __add_registers(args):
     register.scope = Scope.Device
     register.plugin_name = "Energy Center Heat Pump"
     register.description = "ECHP / Warm / Valves / State"
-    register.range = __range["VALVE_STATE"]
+    register.range = REGS_RANGES["VALVE_STATE"]
     register.value = 0.0
     register.profiles = \
         Register.create_profile(
@@ -5002,7 +5017,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Energy Center Heat Pump"
     register.description = "ECHP / Hot / Valves / Settings"
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = \
     {
         "input":
@@ -5067,7 +5082,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Energy Center Heat Pump"
     register.description = "ECHP / Hot / Valves / Mode"
-    register.range = __range["VALVE_MODE"]
+    register.range = REGS_RANGES["VALVE_MODE"]
     register.value = 0.0
     register.profiles = \
         Register.create_profile(
@@ -5079,7 +5094,7 @@ def __add_registers(args):
     register.scope = Scope.Device
     register.plugin_name = "Energy Center Heat Pump"
     register.description = "ECHP / Hot / Valves / State"
-    register.range = __range["VALVE_STATE"]
+    register.range = REGS_RANGES["VALVE_STATE"]
     register.value = 0.0
     register.profiles = \
         Register.create_profile(
@@ -5093,7 +5108,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Energy Center Heat Pump"
     register.description = "Heat Pump Control Group / Water Pump / Cold"
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = {
         "vendor": "Grundfos",
         "model": "MAGNA1_80_100_F_360_1x230V_PN6",
@@ -5117,7 +5132,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Energy Center Heat Pump"
     register.description = "Heat Pump Control Group / Cold pump mode."
-    register.range = __range["PERCENTAGE_I"]
+    register.range = REGS_RANGES["PERCENTAGE_I"]
     register.value = 0
     register.profiles = \
         Register.create_profile(
@@ -5129,7 +5144,7 @@ def __add_registers(args):
     register.scope = Scope.Device
     register.plugin_name = "Energy Center Heat Pump"
     register.description = "Heat Pump Control Group / Cold pump state."
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = {}
     register.profiles = \
         Register.create_profile(
@@ -5141,7 +5156,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Energy Center Heat Pump"
     register.description = "Heat Pump Control Group / Water Pump / Hot"
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = {
         "vendor": "Grundfos",
         "model": "MAGNA1_80_100_F_360_1x230V_PN6",
@@ -5165,7 +5180,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Energy Center Heat Pump"
     register.description = "Heat Pump Control Group / Hot pump mode."
-    register.range = __range["PERCENTAGE_I"]
+    register.range = REGS_RANGES["PERCENTAGE_I"]
     register.value = 0
     register.profiles = \
         Register.create_profile(
@@ -5177,7 +5192,7 @@ def __add_registers(args):
     register.scope = Scope.Device
     register.plugin_name = "Energy Center Heat Pump"
     register.description = "Heat Pump Control Group / Hot pump state."
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = {}
     register.profiles = \
         Register.create_profile(
@@ -5189,7 +5204,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Energy Center Heat Pump"
     register.description = "Heat Pump Control Group / Water Pump / Warm"
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = {
         "vendor": "Grundfos",
         "model": "MAGNA1_80_100_F_360_1x230V_PN6",
@@ -5213,7 +5228,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Energy Center Heat Pump"
     register.description = "Heat Pump Control Group / Warm pump mode."
-    register.range = __range["PERCENTAGE_I"]
+    register.range = REGS_RANGES["PERCENTAGE_I"]
     register.value = 0
     register.profiles = \
         Register.create_profile(
@@ -5225,7 +5240,7 @@ def __add_registers(args):
     register.scope = Scope.Device
     register.plugin_name = "Energy Center Heat Pump"
     register.description = "Heat Pump Control Group / Warm pump state."
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = {}
     register.profiles = \
         Register.create_profile(
@@ -5239,7 +5254,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Energy Center Heat Pump"
     register.description = "Heat Pump Control Group / Heat Pump"
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = {
         "vendor": "HstarsGuangzhouRefrigeratingEquipmentGroup",
         "model": "40STD-N420WHSB4",
@@ -5258,7 +5273,7 @@ def __add_registers(args):
     register.scope = Scope.Device
     register.plugin_name = "Energy Center Heat Pump"
     register.description = "Get the mode of the machine"
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = 0
     register.profiles = \
         Register.create_profile(
@@ -5269,7 +5284,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Energy Center Heat Pump"
     register.description = "Set the mode of the machine"
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = 0
     register.profiles = \
         Register.create_profile(
@@ -5280,7 +5295,7 @@ def __add_registers(args):
     register.scope = Scope.Device
     register.plugin_name = "Energy Center Heat Pump"
     register.description = "Get the status of the machine"
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = 0
     register.profiles = \
         Register.create_profile(
@@ -5291,7 +5306,7 @@ def __add_registers(args):
     register.scope = Scope.Device
     register.plugin_name = "Energy Center Heat Pump"
     register.description = "Get the cooling temp of the machine"
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = 0
     register.profiles = \
         Register.create_profile(
@@ -5302,7 +5317,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Energy Center Heat Pump"
     register.description = "Set the cooling temp of the machine"
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = 0
     register.profiles = \
         Register.create_profile(
@@ -5313,7 +5328,7 @@ def __add_registers(args):
     register.scope = Scope.Device
     register.plugin_name = "Energy Center Heat Pump"
     register.description = "Get the heating temp of the machine"
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = 0
     register.profiles = \
         Register.create_profile(
@@ -5324,7 +5339,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Energy Center Heat Pump"
     register.description = "Set the heating temp of the machine"
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = 0
     register.profiles = \
         Register.create_profile(
@@ -5335,7 +5350,7 @@ def __add_registers(args):
     register.scope = Scope.Device
     register.plugin_name = "Energy Center Heat Pump"
     register.description = "Get the heating temp of the machine"
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = {}
     register.profiles = \
         Register.create_profile(
@@ -5381,7 +5396,7 @@ def __add_registers(args):
     register.scope = Scope.Device
     register.plugin_name = "Energy Center Heat Pump"
     register.description = "The state of the machine"
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = 0
     register.profiles = \
         Register.create_profile(
@@ -5441,7 +5456,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Energy Center Heat Pump"
     register.description = "Plugin enabled"
-    register.range = __range["BOOL"]
+    register.range = REGS_RANGES["BOOL"]
     register.value = False
     register.profiles = \
         Register.create_profile(
@@ -5456,7 +5471,7 @@ def __add_registers(args):
     register.scope = Scope.Device
     register.plugin_name = "Ventilation"
     register.description = "Upper fan speed [%]"
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = 0.0
     register.profiles = \
         Register.create_profile(
@@ -5503,7 +5518,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Ventilation"
     register.description = "Fans power GPIO."
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = "U0:ID6:FC5:R0:RO3"
     register.profiles = \
         Register.create_profile(
@@ -5515,7 +5530,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Ventilation"
     register.description = "Lower fan settings"
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = {
         "vendor": "HangzhouAirflowElectricApplications",
         "model": "f3p146ec072600",
@@ -5533,7 +5548,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Ventilation"
     register.description = "Lower fan minimum speed [%]"
-    register.range = __range["PERCENTAGE_F"]
+    register.range = REGS_RANGES["PERCENTAGE_F"]
     register.value = 0.0
     register.profiles = \
         Register.create_profile(
@@ -5544,7 +5559,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Ventilation"
     register.description = "Lower fan maximum speed [%]"
-    register.range = __range["PERCENTAGE_F"]
+    register.range = REGS_RANGES["PERCENTAGE_F"]
     register.value = 100.0
     register.profiles = \
         Register.create_profile(
@@ -5555,7 +5570,7 @@ def __add_registers(args):
     register.scope = Scope.Device
     register.plugin_name = "Ventilation"
     register.description = "Lower fan speed [%]"
-    register.range = __range["PERCENTAGE_F"]
+    register.range = REGS_RANGES["PERCENTAGE_F"]
     register.value = 0.0
     register.profiles = \
         Register.create_profile(
@@ -5567,7 +5582,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Ventilation"
     register.description = "Upper fan settings"
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = {
         "vendor": "HangzhouAirflowElectricApplications",
         "model": "f3p146ec072600",
@@ -5585,7 +5600,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Ventilation"
     register.description = "Upper fan minimum speed [%]"
-    register.range = __range["PERCENTAGE_F"]
+    register.range = REGS_RANGES["PERCENTAGE_F"]
     register.value = 0.0
     register.profiles = \
         Register.create_profile(
@@ -5596,7 +5611,7 @@ def __add_registers(args):
     register.scope = Scope.Device
     register.plugin_name = "Ventilation"
     register.description = "Upper fan speed [%]"
-    register.range = __range["PERCENTAGE_F"]
+    register.range = REGS_RANGES["PERCENTAGE_F"]
     register.value = 0.0
     register.profiles = \
         Register.create_profile(
@@ -5607,7 +5622,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Ventilation"
     register.description = "Upper fan maximum speed [%]"
-    register.range = __range["PERCENTAGE_F"]
+    register.range = REGS_RANGES["PERCENTAGE_F"]
     register.value = 100.0
     register.profiles = \
         Register.create_profile(
@@ -5619,7 +5634,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Ventilation"
     register.description = "Lower air damper settings"
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = verbal_const.OFF
     register.profiles = \
         Register.create_profile(
@@ -5631,7 +5646,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Ventilation"
     register.description = "Upper air damper settings"
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = verbal_const.OFF
     register.profiles = \
         Register.create_profile(
@@ -5655,7 +5670,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Ventilation"
     register.description = "Ventilation enable flag."
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = True
     register.profiles = \
         Register.create_profile(
@@ -5671,7 +5686,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Alarm"
     register.description = "Alarm module sound device settings."
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = {}
     register.profiles = \
         Register.create_profile(
@@ -5686,7 +5701,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Alarm"
     register.description = "Alarm module visual device settings."
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = {}
     register.profiles = \
         Register.create_profile(
@@ -5701,7 +5716,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Alarm"
     register.description = "Alarm module enable flag."
-    register.range = __range["BOOL"]
+    register.range = REGS_RANGES["BOOL"]
     register.value = False
     register.profiles = \
         Register.create_profile(
@@ -5720,7 +5735,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Statistics"
     register.description = "Statistics module enable flag."
-    register.range = __range["BOOL"]
+    register.range = REGS_RANGES["BOOL"]
     register.value = False
     register.profiles = \
         Register.create_profile(
@@ -5739,7 +5754,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Office Conference Hall"
     register.description = "Office conference hall module enable flag."
-    register.range = __range["BOOL"]
+    register.range = REGS_RANGES["BOOL"]
     register.value = False
     __registers.append(register)
 
@@ -5798,7 +5813,7 @@ def __add_registers(args):
 #endregion
 
 def main():
-    global __registers, __range, __parser
+    global __registers, REGS_RANGES, __parser
 
     __parser = argparse.ArgumentParser()
 
@@ -5840,12 +5855,6 @@ def main():
 
         for register in registers:
             print(register)
-
-    elif args.action == "list_gpio":
-        for register in __registers:
-            if isinstance(register.value, dict):
-                if "options" in register.value.keys():
-                    print("Register: {} -> {}".format(register.name, register.value["options"]))
 
     elif args.action == "w_md":
         Registers.to_md(__registers, file_name) #"../Zontromat/plugins/registers.md")
