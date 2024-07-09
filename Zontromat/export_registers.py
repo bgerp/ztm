@@ -560,6 +560,9 @@ def __add_registers(args):
         }
     else:
         register.value = {}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("blinds.blind_1.position")
@@ -568,6 +571,9 @@ def __add_registers(args):
     register.description = "Position [deg]"
     register.range = "0.0/180.0"
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("blinds.blind_1.object_height")
@@ -576,6 +582,9 @@ def __add_registers(args):
     register.description = "Object height [m]."
     register.range = "0.0/"
     register.value = 2.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("blinds.blind_1.sunspot_limit")
@@ -584,6 +593,9 @@ def __add_registers(args):
     register.description = "Sun spot limit [m]."
     register.range = "0.0/"
     register.value = 1.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
 
@@ -604,6 +616,9 @@ def __add_registers(args):
         }
     else:
         register.value = {}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("blinds.blind_2.position")
@@ -612,6 +627,9 @@ def __add_registers(args):
     register.description = "Position [deg]"
     register.range = "0.0/180.0"
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("blinds.blind_2.object_height")
@@ -620,6 +638,9 @@ def __add_registers(args):
     register.description = "Object height [m]."
     register.range = "0.0/"
     register.value = 2.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("blinds.blind_2.sunspot_limit")
@@ -628,6 +649,9 @@ def __add_registers(args):
     register.description = "Sun spot limit [m]."
     register.range = "0.0/"
     register.value = 1.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
 
@@ -648,6 +672,9 @@ def __add_registers(args):
         }
     else:
         register.valve = {}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("blinds.blind_3.position")
@@ -656,6 +683,9 @@ def __add_registers(args):
     register.description = "Position [deg]"
     register.range = "0.0/180.0"
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("blinds.blind_3.object_height")
@@ -664,6 +694,9 @@ def __add_registers(args):
     register.description = "Object height [m]."
     register.range = "0.0/"
     register.value = 2.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("blinds.blind_3.sunspot_limit")
@@ -672,6 +705,9 @@ def __add_registers(args):
     register.description = "Sun spot limit [m]."
     register.range = "0.0/"
     register.value = 1.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
 
@@ -692,6 +728,9 @@ def __add_registers(args):
         }
     else:
         register.value = {}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("blinds.blind_4.position")
@@ -700,6 +739,9 @@ def __add_registers(args):
     register.description = "Position [deg]"
     register.range = "0.0/180.0"
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("blinds.blind_4.object_height")
@@ -708,6 +750,9 @@ def __add_registers(args):
     register.description = "Object height [m]."
     register.range = "0.0/"
     register.value = 2.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("blinds.blind_4.sunspot_limit")
@@ -716,6 +761,9 @@ def __add_registers(args):
     register.description = "Sun spot limit [m]."
     register.range = "0.0/"
     register.value = 1.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
 
@@ -725,6 +773,9 @@ def __add_registers(args):
     register.description = "Number of blind controllers"
     register.range = "1/"
     register.value = 1
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("blinds.enabled")
@@ -733,6 +784,9 @@ def __add_registers(args):
     register.description = "Plugin enabled"
     register.range = __range["BOOL"]
     register.value = True
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
 #endregion
