@@ -1157,6 +1157,9 @@ def __add_registers(args):
     register.description = "Plugin enabled"
     register.range = __range["BOOL"]
     register.value = True
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("envm.pir.settings")
@@ -1175,6 +1178,9 @@ def __add_registers(args):
             }
         }
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("envm.pir.activations")
@@ -1183,6 +1189,9 @@ def __add_registers(args):
     register.description = "Plugin environment PIR activations"
     register.range = __range["NONE"]
     register.value = {}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("envm.window_tamper.settings")
@@ -1193,6 +1202,9 @@ def __add_registers(args):
     register.value = {
         "WINT_1": "!U0:ID2:FC2:R0:DI1",
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("envm.window_tamper.activations")
@@ -1201,6 +1213,9 @@ def __add_registers(args):
     register.description = "Plugin environment window tampers activations"
     register.range = __range["NONE"]
     register.value = {}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("envm.door_tamper.settings")
@@ -1211,6 +1226,9 @@ def __add_registers(args):
     register.value = {
         "DRT_1": "!U0:ID2:FC2:R0:DI0",
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("envm.door_tamper.activations")
@@ -1219,6 +1237,9 @@ def __add_registers(args):
     register.description = "Plugin environment door tampers activations"
     register.range = __range["NONE"]
     register.value = {}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("envm.is_empty")
@@ -1227,6 +1248,9 @@ def __add_registers(args):
     register.description = "Is empty flag"
     register.range = __range["BOOL"]
     register.value = True
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("envm.is_empty_timeout")
@@ -1235,6 +1259,9 @@ def __add_registers(args):
     register.description = "Is empty time out [s]"
     register.range = "0/"
     register.value = 3600
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("envm.forecast.icon_0")
@@ -1243,6 +1270,9 @@ def __add_registers(args):
     register.description = "Actual weather icon."
     register.range = __range["NONE"]
     register.value = ""
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("envm.forecast.rh_0")
@@ -1251,6 +1281,9 @@ def __add_registers(args):
     register.description = "Actual outside relative humidity [%]"
     register.range = __range["PERCENTAGE_F"]
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("envm.forecast.temp_0")
@@ -1259,6 +1292,9 @@ def __add_registers(args):
     register.description = "Actual outside temperature [*C]"
     register.range = "-50.0/50.0"
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("envm.forecast.wind_0")
@@ -1267,6 +1303,9 @@ def __add_registers(args):
     register.description = "Actual outside wind speed [m/s]"
     register.range = __range["PERCENTAGE_F"]
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("envm.forecast.icon_3")
@@ -1275,6 +1314,9 @@ def __add_registers(args):
     register.description = "Actual outside weather icon for 3 hours."
     register.range = __range["NONE"]
     register.value = ""
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("envm.forecast.rh_3")
@@ -1283,6 +1325,9 @@ def __add_registers(args):
     register.description = "Actual outside relative humidity for 3 hours.[%]"
     register.range = __range["PERCENTAGE_F"]
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("envm.forecast.temp_3")
@@ -1291,6 +1336,9 @@ def __add_registers(args):
     register.description = "Actual outside temperature for 3 hours. [*C]"
     register.range = "-50.0/50.0"
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("envm.forecast.wind_3")
@@ -1299,6 +1347,9 @@ def __add_registers(args):
     register.description = "Actual outside wind speed for 3 hours. [m/s]"
     register.range = __range["PERCENTAGE_F"]
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("envm.forecast.icon_6")
@@ -1307,6 +1358,9 @@ def __add_registers(args):
     register.description = "Actual outside weather icon for 6 hours."
     register.range = __range["NONE"]
     register.value = ""
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("envm.forecast.rh_6")
@@ -1315,6 +1369,9 @@ def __add_registers(args):
     register.description = "Actual outside relative humidity for 6 hours.[%]"
     register.range = __range["PERCENTAGE_F"]
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("envm.forecast.temp_6")
@@ -1323,6 +1380,9 @@ def __add_registers(args):
     register.description = "Actual outside temperature for 6 hours. [*C]"
     register.range = "-50.0/50.0"
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("envm.forecast.wind_6")
@@ -1331,6 +1391,9 @@ def __add_registers(args):
     register.description = "Actual outside wind speed for 6 hours. [m/s]"
     register.range = __range["PERCENTAGE_F"]
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("envm.light")
@@ -1339,6 +1402,9 @@ def __add_registers(args):
     register.description = "Outside light [lux]"
     register.range = "0.0/"
     register.value = 1000.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("envm.energy") # Energy mode of the building.
@@ -1347,6 +1413,9 @@ def __add_registers(args):
     register.description = "Energy mode of the building"
     register.range = __range["NONE"]
     register.value = 0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("envm.flag_fire")
@@ -1355,6 +1424,9 @@ def __add_registers(args):
     register.description = "Emergency index for the fire."
     register.range = "0/3"
     register.value = 0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("envm.flag_storm")
@@ -1363,6 +1435,9 @@ def __add_registers(args):
     register.description = "Emergency index for the storm."
     register.range = "0/3"
     register.value = 0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("envm.flag_earthquake")
@@ -1371,6 +1446,9 @@ def __add_registers(args):
     register.description = "Emergency index for the earthquake."
     register.range = "0/3"
     register.value = 0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("envm.flag_gassing")
@@ -1379,6 +1457,9 @@ def __add_registers(args):
     register.description = "Emergency index for the gassing."
     register.range = "0/3"
     register.value = 0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("envm.flag_flooding")
@@ -1387,6 +1468,9 @@ def __add_registers(args):
     register.description = "Emergency index for the flooding."
     register.range = "0/3"
     register.value = 0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("envm.flag_blocked")
@@ -1395,6 +1479,9 @@ def __add_registers(args):
     register.description = "Emergency index for the blocking."
     register.range = "0/3"
     register.value = 0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("envm.sunpos.enabled")
@@ -1403,6 +1490,9 @@ def __add_registers(args):
     register.description = "Enable software calculation of the sun position"
     register.range = __range["BOOL"]
     register.value = False
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("envm.building.location.lat")
@@ -1411,6 +1501,9 @@ def __add_registers(args):
     register.description = "Latitude of the target building."
     register.range = "0.0/360.0"
     register.value = 43.07779
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("envm.building.location.lon")
@@ -1419,6 +1512,9 @@ def __add_registers(args):
     register.description = "Longitude of the target building."
     register.range = "0.0/360.0"
     register.value = 25.59549
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("envm.building.location.elv")
@@ -1427,6 +1523,9 @@ def __add_registers(args):
     register.description = "Longitude of the target building."
     register.range = "/"
     register.value = 210
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("envm.building.location.time_zone")
@@ -1435,9 +1534,10 @@ def __add_registers(args):
     register.description = "Longitude of the target building."
     register.range = "0/23"
     register.value = 2
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
-
-
 
     register = Register("envm.sun.azimuth")
     register.scope = Scope.System
@@ -1445,6 +1545,9 @@ def __add_registers(args):
     register.description = "Sun azimuth value"
     register.range = "0.0/360.0"
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("envm.sun.elevation")
@@ -1453,6 +1556,9 @@ def __add_registers(args):
     register.description = "Sun elevation value"
     register.range = "0.0/360.0"
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
 #endregion
