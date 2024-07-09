@@ -4135,6 +4135,9 @@ def __add_registers(args):
     register.description = "Energy Center Heat Pump machines count"
     register.range = "0/"
     register.value = 3
+    register.profiles = \
+        Register.create_profile(
+            Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     # Index of the heat pump control group.
@@ -4144,6 +4147,9 @@ def __add_registers(args):
     register.description = "Energy Center Heat Pump machine index"
     register.range = "0/"
     register.value = 0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     register = Register("echp.hp.power")
@@ -4152,6 +4158,9 @@ def __add_registers(args):
     register.description = "The power of machine"
     register.range = "-100.0/100.0"
     register.value = 0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     register = Register("echp.hp.mode")
@@ -4160,6 +4169,9 @@ def __add_registers(args):
     register.description = "The mode of the machine"
     register.range = __range["NONE"]
     register.value = 0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     register = Register("echp.hp.run")
@@ -4168,6 +4180,9 @@ def __add_registers(args):
     register.description = "The state of the machine"
     register.range = __range["NONE"]
     register.value = 0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     # Cold minimum of the heat pump control group.
@@ -4177,6 +4192,9 @@ def __add_registers(args):
     register.description = "Energy Center Heat Pump cold minimum"
     register.range = "3.0/8.0"
     register.value = 5.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     # Cold maximum of the heat pump control group.
@@ -4186,6 +4204,9 @@ def __add_registers(args):
     register.description = "Energy Center Heat Pump cold maximum"
     register.range = "3.0/8.0"
     register.value = 7.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     # Hot minimum of the heat pump control group.
@@ -4195,6 +4216,9 @@ def __add_registers(args):
     register.description = "Energy Center Heat Pump hot minimum"
     register.range = "40.0/47.0"
     register.value = 41.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     # Hot maximum of the heat pump control group.
@@ -4204,6 +4228,9 @@ def __add_registers(args):
     register.description = "Energy Center Heat Pump hot maximum"
     register.range = "40.0/47.0"
     register.value = 46.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     # -================================================================================-
@@ -4225,6 +4252,9 @@ def __add_registers(args):
             "limit_ccw": "off"
         }
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     # Heat Pump Control Group / VCG / Cold Buffer / Output
@@ -4244,6 +4274,9 @@ def __add_registers(args):
             "limit_ccw": "off"
         }
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     # Heat Pump Control Group / VCG / Cold Buffer / Short
@@ -4263,6 +4296,9 @@ def __add_registers(args):
             "limit_ccw": "off"
         }
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     # -================================================================================-
@@ -4284,6 +4320,9 @@ def __add_registers(args):
             "limit_ccw": "off"
         }
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     # Heat Pump Control Group / VCG / Cold Geo / Output
@@ -4303,6 +4342,9 @@ def __add_registers(args):
             "limit_ccw": "off"
         }
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     # Heat Pump Control Group / VCG / Cold Geo / Short
@@ -4322,6 +4364,9 @@ def __add_registers(args):
             "limit_ccw": "off"
         }
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     # -================================================================================-
@@ -4343,6 +4388,9 @@ def __add_registers(args):
             "limit_ccw": "off"
         }
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     # Heat Pump Control Group / VCG / Warm Geo / Output
@@ -4362,6 +4410,9 @@ def __add_registers(args):
             "limit_ccw": "off"
         }
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     # Heat Pump Control Group / VCG / Warm Geo / Short
@@ -4381,6 +4432,9 @@ def __add_registers(args):
             "limit_ccw": "off"
         }
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     # -================================================================================-
@@ -4402,6 +4456,9 @@ def __add_registers(args):
             "limit_ccw": "off"
         }
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     # Heat Pump Control Group / VCG / Warm Geo / Output
@@ -4421,6 +4478,9 @@ def __add_registers(args):
             "limit_ccw": "off"
         }
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     # Heat Pump Control Group / VCG / Warm Geo / Short
@@ -4440,6 +4500,9 @@ def __add_registers(args):
             "limit_ccw": "off"
         }
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     # -================================================================================-
@@ -4459,6 +4522,9 @@ def __add_registers(args):
             "mb_id": 2
         }
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     # Heat Pump Control Group / Water Pump / Hot
@@ -4476,6 +4542,9 @@ def __add_registers(args):
             "mb_id": 3
         }
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     # Heat Pump Control Group / Water Pump / Warm
@@ -4493,6 +4562,9 @@ def __add_registers(args):
             "mb_id": 0
         }
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     # Heat Pump Control Group / Water Pump / Warm
@@ -4510,6 +4582,9 @@ def __add_registers(args):
             "mb_id": 0
         }
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     # -================================================================================-
@@ -4529,6 +4604,9 @@ def __add_registers(args):
             "mb_id": 0
         }
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     # Output registers.
@@ -4539,6 +4617,9 @@ def __add_registers(args):
     register.description = "Plugin enabled"
     register.range = __range["BOOL"]
     register.value = False
+    register.profiles = \
+        Register.create_profile(
+            Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
 #endregion
