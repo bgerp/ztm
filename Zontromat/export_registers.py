@@ -2111,6 +2111,9 @@ def __add_registers(args):
     register.description = "Minimum limit"
     register.range = "0.0/10000.0"
     register.value = 800.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("light.max")
@@ -2119,6 +2122,9 @@ def __add_registers(args):
     register.description = "Maximum limit"
     register.range = "0.0/10000.0"
     register.value = 10000.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("light.v1.output")
@@ -2127,6 +2133,9 @@ def __add_registers(args):
     register.description = "Analog output 0. U0:ID2:FC16:R0:AO0"
     register.range = __range["NONE"]
     register.value = "U0:ID2:FC16:R0:AO0"
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("light.v2.output")
@@ -2135,6 +2144,9 @@ def __add_registers(args):
     register.description = "Analog output 1. U0:ID2:FC16:R0:AO1"
     register.range = __range["NONE"]
     register.value = "U0:ID2:FC16:R0:AO1"
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("light.r1.output")
@@ -2143,6 +2155,9 @@ def __add_registers(args):
     register.description = "Digital output 6. U0:ID2:FC5:R0:DO6"
     register.range = __range["NONE"]
     register.value = "U0:ID2:FC5:R0:DO6"
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("light.r2.output")
@@ -2151,6 +2166,9 @@ def __add_registers(args):
     register.description = "Digital output 7. U0:ID2:FC5:R0:DO7"
     register.range = __range["NONE"]
     register.value = "U0:ID2:FC5:R0:DO7"
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("light.hallway_lighting.output")
@@ -2159,6 +2177,9 @@ def __add_registers(args):
     register.description = "Hallway lighting digital output. U1:ID2:R0:DO3"
     register.range = __range["NONE"]
     register.value = verbal_const.OFF # U1:ID2:R0:DO3
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("light.hallway_lighting.time")
@@ -2167,6 +2188,9 @@ def __add_registers(args):
     register.description = "Hallway lighting wait time."
     register.range = "0.0/"
     register.value = 60.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("light.sensor.settings")
@@ -2182,6 +2206,9 @@ def __add_registers(args):
             "input": "AI2",
         }
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("light.target_illum")
@@ -2190,6 +2217,9 @@ def __add_registers(args):
     register.description = "Target illumination"
     register.range = "0.0/10000.0"
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("light.error_gain")
@@ -2198,6 +2228,9 @@ def __add_registers(args):
     register.description = "Error gain"
     register.range = "/"
     register.value = 0.01
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("light.enabled")
@@ -2207,6 +2240,9 @@ def __add_registers(args):
     register.range = __range["BOOL"]
     register.value = True
     __registers.append(register)
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
 
 #endregion
 
