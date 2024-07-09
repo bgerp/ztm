@@ -97,12 +97,13 @@ class HeatPumpFactory:
             raise ValueError("No \"controller\" argument has been passed.")
 
         # HstarsGuangzhouRefrigeratingEquipmentGroup / HP_40STD_N420WHSB4 / 0
-        if vendor == "HstarsGuangzhouRefrigeratingEquipmentGroup" and  model == "HP_40STD_N420WHSB4":
+        if vendor == "HstarsGuangzhouRefrigeratingEquipmentGroup" and  model == "40STD-N420WHSB4":
 
             device = HP_40STD_N420WHSB4(
                 name=name,
                 controller=controller,
-                unit=config["options"]["mb_id"]
+                uart=config["options"]["uart"],
+                mb_id=config["options"]["mb_id"]
             )
 
         else:

@@ -82,7 +82,7 @@ class AirValveState(Enum):
     Close = 3
 
 class Zone(BasePlugin):
-    """Ventilation zone controll."""
+    """Ventilation zone control."""
 
 #region Attributes
 

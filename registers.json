@@ -3747,13 +3747,612 @@
         "scope": "System"
     },
     {
+        "data_type": "json",
+        "default": {
+            "input": [
+                {
+                    "model": "FLX-05F",
+                    "options": {
+                        "close_on_shutdown": false,
+                        "io_mode": 1,
+                        "limit_ccw": "off",
+                        "limit_cw": "off",
+                        "output_ccw": "off",
+                        "output_cw": "off",
+                        "wait_on_shutdown": false
+                    },
+                    "vendor": "Flowx"
+                }
+            ],
+            "output": [
+                {
+                    "model": "FLX-05F",
+                    "options": {
+                        "close_on_shutdown": false,
+                        "io_mode": 1,
+                        "limit_ccw": "off",
+                        "limit_cw": "off",
+                        "output_ccw": "off",
+                        "output_cw": "off",
+                        "wait_on_shutdown": false
+                    },
+                    "vendor": "Flowx"
+                }
+            ],
+            "short": [
+                {
+                    "model": "FLX-05F",
+                    "options": {
+                        "close_on_shutdown": false,
+                        "io_mode": 1,
+                        "limit_ccw": "off",
+                        "limit_cw": "off",
+                        "output_ccw": "off",
+                        "output_cw": "off",
+                        "wait_on_shutdown": false
+                    },
+                    "vendor": "Flowx"
+                }
+            ]
+        },
+        "description": "ECHP / Cold / Valves / Settings",
+        "limit": 0.0,
+        "name": "echp.cold.valves.settings",
+        "plugin": "Energy Center Heat Pump",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "float",
+        "default": 0.0,
+        "description": "ECHP / Cold / Valves / Mode",
+        "limit": 0.0,
+        "name": "echp.cold.valves.mode",
+        "plugin": "Energy Center Heat Pump",
+        "range": "0|1|2",
+        "scope": "System"
+    },
+    {
+        "data_type": "float",
+        "default": 0.0,
+        "description": "ECHP / Cold / Valves / State",
+        "limit": 0.0,
+        "name": "echp.cold.valves.state",
+        "plugin": "Energy Center Heat Pump",
+        "range": "0|1|2",
+        "scope": "Device"
+    },
+    {
+        "data_type": "json",
+        "default": {
+            "input": [
+                {
+                    "model": "FLX-05F",
+                    "options": {
+                        "close_on_shutdown": false,
+                        "io_mode": 1,
+                        "limit_ccw": "off",
+                        "limit_cw": "off",
+                        "output_ccw": "off",
+                        "output_cw": "off",
+                        "wait_on_shutdown": false
+                    },
+                    "vendor": "Flowx"
+                }
+            ],
+            "output": [
+                {
+                    "model": "FLX-05F",
+                    "options": {
+                        "close_on_shutdown": false,
+                        "io_mode": 1,
+                        "limit_ccw": "off",
+                        "limit_cw": "off",
+                        "output_ccw": "off",
+                        "output_cw": "off",
+                        "wait_on_shutdown": false
+                    },
+                    "vendor": "Flowx"
+                }
+            ],
+            "short": [
+                {
+                    "model": "FLX-05F",
+                    "options": {
+                        "close_on_shutdown": false,
+                        "io_mode": 1,
+                        "limit_ccw": "off",
+                        "limit_cw": "off",
+                        "output_ccw": "off",
+                        "output_cw": "off",
+                        "wait_on_shutdown": false
+                    },
+                    "vendor": "Flowx"
+                }
+            ]
+        },
+        "description": "ECHP / Cold Geo / Valves / Settings",
+        "limit": 0.0,
+        "name": "echp.cold_geo.valves.settings",
+        "plugin": "Energy Center Heat Pump",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "float",
+        "default": 0.0,
+        "description": "ECHP / Cold Geo / Valves / Mode",
+        "limit": 0.0,
+        "name": "echp.cold_geo.valves.mode",
+        "plugin": "Energy Center Heat Pump",
+        "range": "0|1|2",
+        "scope": "System"
+    },
+    {
+        "data_type": "float",
+        "default": 0.0,
+        "description": "ECHP / Cold Geo / Valves / State",
+        "limit": 0.0,
+        "name": "echp.cold_geo.valves.state",
+        "plugin": "Energy Center Heat Pump",
+        "range": "0|1|2",
+        "scope": "Device"
+    },
+    {
+        "data_type": "json",
+        "default": {
+            "input": [
+                {
+                    "model": "FLX-05F",
+                    "options": {
+                        "close_on_shutdown": false,
+                        "io_mode": 1,
+                        "limit_ccw": "off",
+                        "limit_cw": "off",
+                        "output_ccw": "off",
+                        "output_cw": "off",
+                        "wait_on_shutdown": false
+                    },
+                    "vendor": "Flowx"
+                }
+            ],
+            "output": [
+                {
+                    "model": "FLX-05F",
+                    "options": {
+                        "close_on_shutdown": false,
+                        "io_mode": 1,
+                        "limit_ccw": "off",
+                        "limit_cw": "off",
+                        "output_ccw": "off",
+                        "output_cw": "off",
+                        "wait_on_shutdown": false
+                    },
+                    "vendor": "Flowx"
+                }
+            ],
+            "short": [
+                {
+                    "model": "FLX-05F",
+                    "options": {
+                        "close_on_shutdown": false,
+                        "io_mode": 1,
+                        "limit_ccw": "off",
+                        "limit_cw": "off",
+                        "output_ccw": "off",
+                        "output_cw": "off",
+                        "wait_on_shutdown": false
+                    },
+                    "vendor": "Flowx"
+                }
+            ]
+        },
+        "description": "ECHP / Warm Geo / Valves / Settings",
+        "limit": 0.0,
+        "name": "echp.warm_geo.valves.settings",
+        "plugin": "Energy Center Heat Pump",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "float",
+        "default": 0.0,
+        "description": "ECHP / Warm Geo / Valves / Mode",
+        "limit": 0.0,
+        "name": "echp.warm_geo.valves.mode",
+        "plugin": "Energy Center Heat Pump",
+        "range": "0|1|2",
+        "scope": "System"
+    },
+    {
+        "data_type": "float",
+        "default": 0.0,
+        "description": "ECHP / Warm Geo / Valves / State",
+        "limit": 0.0,
+        "name": "echp.warm_geo.valves.state",
+        "plugin": "Energy Center Heat Pump",
+        "range": "0|1|2",
+        "scope": "Device"
+    },
+    {
+        "data_type": "json",
+        "default": {
+            "input": [
+                {
+                    "model": "FLX-05F",
+                    "options": {
+                        "close_on_shutdown": false,
+                        "io_mode": 1,
+                        "limit_ccw": "off",
+                        "limit_cw": "off",
+                        "output_ccw": "off",
+                        "output_cw": "off",
+                        "wait_on_shutdown": false
+                    },
+                    "vendor": "Flowx"
+                }
+            ],
+            "output": [
+                {
+                    "model": "FLX-05F",
+                    "options": {
+                        "close_on_shutdown": false,
+                        "io_mode": 1,
+                        "limit_ccw": "off",
+                        "limit_cw": "off",
+                        "output_ccw": "off",
+                        "output_cw": "off",
+                        "wait_on_shutdown": false
+                    },
+                    "vendor": "Flowx"
+                }
+            ],
+            "short": [
+                {
+                    "model": "FLX-05F",
+                    "options": {
+                        "close_on_shutdown": false,
+                        "io_mode": 1,
+                        "limit_ccw": "off",
+                        "limit_cw": "off",
+                        "output_ccw": "off",
+                        "output_cw": "off",
+                        "wait_on_shutdown": false
+                    },
+                    "vendor": "Flowx"
+                }
+            ]
+        },
+        "description": "ECHP / Warm / Valves / Settings",
+        "limit": 0.0,
+        "name": "echp.warm.valves.settings",
+        "plugin": "Energy Center Heat Pump",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "float",
+        "default": 0.0,
+        "description": "ECHP / Warm / Valves / Mode",
+        "limit": 0.0,
+        "name": "echp.warm.valves.mode",
+        "plugin": "Energy Center Heat Pump",
+        "range": "0|1|2",
+        "scope": "System"
+    },
+    {
+        "data_type": "float",
+        "default": 0.0,
+        "description": "ECHP / Warm / Valves / State",
+        "limit": 0.0,
+        "name": "echp.warm.valves.state",
+        "plugin": "Energy Center Heat Pump",
+        "range": "0|1|2",
+        "scope": "Device"
+    },
+    {
+        "data_type": "json",
+        "default": {
+            "input": [
+                {
+                    "model": "FLX-05F",
+                    "options": {
+                        "close_on_shutdown": false,
+                        "io_mode": 1,
+                        "limit_ccw": "off",
+                        "limit_cw": "off",
+                        "output_ccw": "off",
+                        "output_cw": "off",
+                        "wait_on_shutdown": false
+                    },
+                    "vendor": "Flowx"
+                }
+            ],
+            "output": [
+                {
+                    "model": "FLX-05F",
+                    "options": {
+                        "close_on_shutdown": false,
+                        "io_mode": 1,
+                        "limit_ccw": "off",
+                        "limit_cw": "off",
+                        "output_ccw": "off",
+                        "output_cw": "off",
+                        "wait_on_shutdown": false
+                    },
+                    "vendor": "Flowx"
+                }
+            ],
+            "short": [
+                {
+                    "model": "FLX-05F",
+                    "options": {
+                        "close_on_shutdown": false,
+                        "io_mode": 1,
+                        "limit_ccw": "off",
+                        "limit_cw": "off",
+                        "output_ccw": "off",
+                        "output_cw": "off",
+                        "wait_on_shutdown": false
+                    },
+                    "vendor": "Flowx"
+                }
+            ]
+        },
+        "description": "ECHP / Hot / Valves / Settings",
+        "limit": 0.0,
+        "name": "echp.hot.valves.settings",
+        "plugin": "Energy Center Heat Pump",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "float",
+        "default": 0.0,
+        "description": "ECHP / Hot / Valves / Mode",
+        "limit": 0.0,
+        "name": "echp.hot.valves.mode",
+        "plugin": "Energy Center Heat Pump",
+        "range": "0|1|2",
+        "scope": "System"
+    },
+    {
+        "data_type": "float",
+        "default": 0.0,
+        "description": "ECHP / Hot / Valves / State",
+        "limit": 0.0,
+        "name": "echp.hot.valves.state",
+        "plugin": "Energy Center Heat Pump",
+        "range": "0|1|2",
+        "scope": "Device"
+    },
+    {
+        "data_type": "json",
+        "default": {
+            "model": "MAGNA1_80_100_F_360_1x230V_PN6",
+            "options": {
+                "e_status": "U0:ID15:FC2:R0:DI0",
+                "e_stop": "U0:ID15:FC5:R0:RO8",
+                "mb_id": 7,
+                "stop_on_shutdown": true,
+                "uart": 1,
+                "wait_on_shutdown": false
+            },
+            "vendor": "Grundfos"
+        },
+        "description": "Heat Pump Control Group / Water Pump / Cold",
+        "limit": 0.0,
+        "name": "echp.cold.pump.settings",
+        "plugin": "Energy Center Heat Pump",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "int",
+        "default": 0,
+        "description": "Heat Pump Control Group / Cold pump mode.",
+        "limit": 0.0,
+        "name": "echp.cold.pump.mode",
+        "plugin": "Energy Center Heat Pump",
+        "range": "0/100",
+        "scope": "System"
+    },
+    {
+        "data_type": "json",
+        "default": {},
+        "description": "Heat Pump Control Group / Cold pump state.",
+        "limit": 0.0,
+        "name": "echp.cold.pump.state",
+        "plugin": "Energy Center Heat Pump",
+        "range": "",
+        "scope": "Device"
+    },
+    {
+        "data_type": "json",
+        "default": {
+            "model": "MAGNA1_80_100_F_360_1x230V_PN6",
+            "options": {
+                "e_status": "U0:ID15:FC2:R0:DI0",
+                "e_stop": "U0:ID15:FC5:R0:RO8",
+                "mb_id": 6,
+                "stop_on_shutdown": true,
+                "uart": 1,
+                "wait_on_shutdown": false
+            },
+            "vendor": "Grundfos"
+        },
+        "description": "Heat Pump Control Group / Water Pump / Hot",
+        "limit": 0.0,
+        "name": "echp.hot.pump.settings",
+        "plugin": "Energy Center Heat Pump",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "int",
+        "default": 0,
+        "description": "Heat Pump Control Group / Hot pump mode.",
+        "limit": 0.0,
+        "name": "echp.hot.pump.mode",
+        "plugin": "Energy Center Heat Pump",
+        "range": "0/100",
+        "scope": "System"
+    },
+    {
+        "data_type": "json",
+        "default": {},
+        "description": "Heat Pump Control Group / Hot pump state.",
+        "limit": 0.0,
+        "name": "echp.hot.pump.state",
+        "plugin": "Energy Center Heat Pump",
+        "range": "",
+        "scope": "Device"
+    },
+    {
+        "data_type": "json",
+        "default": {
+            "model": "MAGNA1_80_100_F_360_1x230V_PN6",
+            "options": {
+                "e_status": "U0:ID15:FC2:R0:DI0",
+                "e_stop": "U0:ID15:FC5:R0:RO8",
+                "mb_id": 5,
+                "stop_on_shutdown": true,
+                "uart": 1,
+                "wait_on_shutdown": false
+            },
+            "vendor": "Grundfos"
+        },
+        "description": "Heat Pump Control Group / Water Pump / Warm",
+        "limit": 0.0,
+        "name": "echp.warm.pump.settings",
+        "plugin": "Energy Center Heat Pump",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "int",
+        "default": 0,
+        "description": "Heat Pump Control Group / Warm pump mode.",
+        "limit": 0.0,
+        "name": "echp.warm.pump.mode",
+        "plugin": "Energy Center Heat Pump",
+        "range": "0/100",
+        "scope": "System"
+    },
+    {
+        "data_type": "json",
+        "default": {},
+        "description": "Heat Pump Control Group / Warm pump state.",
+        "limit": 0.0,
+        "name": "echp.warm.pump.state",
+        "plugin": "Energy Center Heat Pump",
+        "range": "",
+        "scope": "Device"
+    },
+    {
+        "data_type": "json",
+        "default": {
+            "model": "40STD-N420WHSB4",
+            "options": {
+                "mb_id": 1,
+                "uart": 0
+            },
+            "vendor": "HstarsGuangzhouRefrigeratingEquipmentGroup"
+        },
+        "description": "Heat Pump Control Group / Heat Pump",
+        "limit": 0.0,
+        "name": "echp.hp.settings",
+        "plugin": "Energy Center Heat Pump",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "int",
+        "default": 0,
+        "description": "Get the mode of the machine",
+        "limit": 0.0,
+        "name": "echp.hp.get_op_mode",
+        "plugin": "Energy Center Heat Pump",
+        "range": "",
+        "scope": "Device"
+    },
+    {
+        "data_type": "int",
+        "default": 0,
+        "description": "Set the mode of the machine",
+        "limit": 0.0,
+        "name": "echp.hp.set_op_mode",
+        "plugin": "Energy Center Heat Pump",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "int",
+        "default": 0,
+        "description": "Get the status of the machine",
+        "limit": 0.0,
+        "name": "echp.hp.get_op_status",
+        "plugin": "Energy Center Heat Pump",
+        "range": "",
+        "scope": "Device"
+    },
+    {
+        "data_type": "int",
+        "default": 0,
+        "description": "Get the cooling temp of the machine",
+        "limit": 0.0,
+        "name": "echp.hp.get_cooling_temp",
+        "plugin": "Energy Center Heat Pump",
+        "range": "",
+        "scope": "Device"
+    },
+    {
+        "data_type": "int",
+        "default": 0,
+        "description": "Set the cooling temp of the machine",
+        "limit": 0.0,
+        "name": "echp.hp.set_cooling_temp",
+        "plugin": "Energy Center Heat Pump",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "int",
+        "default": 0,
+        "description": "Get the heating temp of the machine",
+        "limit": 0.0,
+        "name": "echp.hp.get_heating_temp",
+        "plugin": "Energy Center Heat Pump",
+        "range": "",
+        "scope": "Device"
+    },
+    {
+        "data_type": "int",
+        "default": 0,
+        "description": "Set the heating temp of the machine",
+        "limit": 0.0,
+        "name": "echp.hp.set_heating_temp",
+        "plugin": "Energy Center Heat Pump",
+        "range": "",
+        "scope": "System"
+    },
+    {
+        "data_type": "json",
+        "default": {},
+        "description": "Get the heating temp of the machine",
+        "limit": 0.0,
+        "name": "echp.hp.get_temps",
+        "plugin": "Energy Center Heat Pump",
+        "range": "",
+        "scope": "Device"
+    },
+    {
         "data_type": "int",
         "default": 3,
         "description": "Energy Center Heat Pump machines count",
         "limit": 0.0,
         "name": "echp.hp.count",
-        "plugin": "ECHP",
-        "profiles": "",
+        "plugin": "Energy Center Heat Pump",
         "range": "0/",
         "scope": "System"
     },
@@ -3763,8 +4362,7 @@
         "description": "Energy Center Heat Pump machine index",
         "limit": 0.0,
         "name": "echp.hp.index",
-        "plugin": "ECHP",
-        "profiles": "",
+        "plugin": "Energy Center Heat Pump",
         "range": "0/",
         "scope": "System"
     },
@@ -3774,20 +4372,8 @@
         "description": "The power of machine",
         "limit": 0.0,
         "name": "echp.hp.power",
-        "plugin": "ECHP",
-        "profiles": "",
+        "plugin": "Energy Center Heat Pump",
         "range": "-100.0/100.0",
-        "scope": "System"
-    },
-    {
-        "data_type": "int",
-        "default": 0,
-        "description": "The mode of the machine",
-        "limit": 0.0,
-        "name": "echp.hp.mode",
-        "plugin": "ECHP",
-        "profiles": "",
-        "range": "",
         "scope": "System"
     },
     {
@@ -3796,8 +4382,7 @@
         "description": "The state of the machine",
         "limit": 0.0,
         "name": "echp.hp.run",
-        "plugin": "ECHP",
-        "profiles": "",
+        "plugin": "Energy Center Heat Pump",
         "range": "",
         "scope": "Device"
     },
@@ -3807,8 +4392,7 @@
         "description": "Energy Center Heat Pump cold minimum",
         "limit": 0.0,
         "name": "echp.hp.cold_min",
-        "plugin": "ECHP",
-        "profiles": "",
+        "plugin": "Energy Center Heat Pump",
         "range": "3.0/8.0",
         "scope": "System"
     },
@@ -3818,8 +4402,7 @@
         "description": "Energy Center Heat Pump cold maximum",
         "limit": 0.0,
         "name": "echp.hp.cold_max",
-        "plugin": "ECHP",
-        "profiles": "",
+        "plugin": "Energy Center Heat Pump",
         "range": "3.0/8.0",
         "scope": "System"
     },
@@ -3829,8 +4412,7 @@
         "description": "Energy Center Heat Pump hot minimum",
         "limit": 0.0,
         "name": "echp.hp.hot_min",
-        "plugin": "ECHP",
-        "profiles": "",
+        "plugin": "Energy Center Heat Pump",
         "range": "40.0/47.0",
         "scope": "System"
     },
@@ -3840,339 +4422,8 @@
         "description": "Energy Center Heat Pump hot maximum",
         "limit": 0.0,
         "name": "echp.hp.hot_max",
-        "plugin": "ECHP",
-        "profiles": "",
+        "plugin": "Energy Center Heat Pump",
         "range": "40.0/47.0",
-        "scope": "System"
-    },
-    {
-        "data_type": "json",
-        "default": {
-            "model": "FLX-05F",
-            "options": {
-                "limit_ccw": "off",
-                "limit_cw": "off",
-                "output_ccw": "off",
-                "output_cw": "off"
-            },
-            "vendor": "Flowx"
-        },
-        "description": "Heat Pump Control Group / VCG / Cold Buffer / Input",
-        "limit": 0.0,
-        "name": "echp.hpcg.vcg_cold_buf.input",
-        "plugin": "ECHP",
-        "profiles": "",
-        "range": "",
-        "scope": "System"
-    },
-    {
-        "data_type": "json",
-        "default": {
-            "model": "FLX-05F",
-            "options": {
-                "limit_ccw": "off",
-                "limit_cw": "off",
-                "output_ccw": "off",
-                "output_cw": "off"
-            },
-            "vendor": "Flowx"
-        },
-        "description": "Heat Pump Control Group / VCG / Cold Buffer / Output",
-        "limit": 0.0,
-        "name": "echp.hpcg.vcg_cold_buf.output",
-        "plugin": "ECHP",
-        "profiles": "",
-        "range": "",
-        "scope": "System"
-    },
-    {
-        "data_type": "json",
-        "default": {
-            "model": "FLX-05F",
-            "options": {
-                "limit_ccw": "off",
-                "limit_cw": "off",
-                "output_ccw": "off",
-                "output_cw": "off"
-            },
-            "vendor": "Flowx"
-        },
-        "description": "Heat Pump Control Group / VCG / Cold Buffer / Short",
-        "limit": 0.0,
-        "name": "echp.hpcg.vcg_cold_buf.short",
-        "plugin": "ECHP",
-        "profiles": "",
-        "range": "",
-        "scope": "System"
-    },
-    {
-        "data_type": "json",
-        "default": {
-            "model": "FLX-05F",
-            "options": {
-                "limit_ccw": "off",
-                "limit_cw": "off",
-                "output_ccw": "off",
-                "output_cw": "off"
-            },
-            "vendor": "Flowx"
-        },
-        "description": "Heat Pump Control Group / VCG / Cold Geo / Input",
-        "limit": 0.0,
-        "name": "echp.hpcg.vcg_cold_geo.input",
-        "plugin": "ECHP",
-        "profiles": "",
-        "range": "",
-        "scope": "System"
-    },
-    {
-        "data_type": "json",
-        "default": {
-            "model": "FLX-05F",
-            "options": {
-                "limit_ccw": "off",
-                "limit_cw": "off",
-                "output_ccw": "off",
-                "output_cw": "off"
-            },
-            "vendor": "Flowx"
-        },
-        "description": "Heat Pump Control Group / VCG / Cold Geo / Output",
-        "limit": 0.0,
-        "name": "echp.hpcg.vcg_cold_geo.output",
-        "plugin": "ECHP",
-        "profiles": "",
-        "range": "",
-        "scope": "System"
-    },
-    {
-        "data_type": "json",
-        "default": {
-            "model": "FLX-05F",
-            "options": {
-                "limit_ccw": "off",
-                "limit_cw": "off",
-                "output_ccw": "off",
-                "output_cw": "off"
-            },
-            "vendor": "Flowx"
-        },
-        "description": "Heat Pump Control Group / VCG / Cold Geo / Short",
-        "limit": 0.0,
-        "name": "echp.hpcg.vcg_cold_geo.short",
-        "plugin": "ECHP",
-        "profiles": "",
-        "range": "",
-        "scope": "System"
-    },
-    {
-        "data_type": "json",
-        "default": {
-            "model": "FLX-05F",
-            "options": {
-                "limit_ccw": "off",
-                "limit_cw": "off",
-                "output_ccw": "off",
-                "output_cw": "off"
-            },
-            "vendor": "Flowx"
-        },
-        "description": "Heat Pump Control Group / VCG / Warm Geo / Input",
-        "limit": 0.0,
-        "name": "echp.hpcg.vcg_warm_geo.input",
-        "plugin": "ECHP",
-        "profiles": "",
-        "range": "",
-        "scope": "System"
-    },
-    {
-        "data_type": "json",
-        "default": {
-            "model": "FLX-05F",
-            "options": {
-                "limit_ccw": "off",
-                "limit_cw": "off",
-                "output_ccw": "off",
-                "output_cw": "off"
-            },
-            "vendor": "Flowx"
-        },
-        "description": "Heat Pump Control Group / VCG / Warm Geo / Output",
-        "limit": 0.0,
-        "name": "echp.hpcg.vcg_warm_geo.output",
-        "plugin": "ECHP",
-        "profiles": "",
-        "range": "",
-        "scope": "System"
-    },
-    {
-        "data_type": "json",
-        "default": {
-            "model": "FLX-05F",
-            "options": {
-                "limit_ccw": "off",
-                "limit_cw": "off",
-                "output_ccw": "off",
-                "output_cw": "off"
-            },
-            "vendor": "Flowx"
-        },
-        "description": "Heat Pump Control Group / VCG / Warm Geo / Short",
-        "limit": 0.0,
-        "name": "echp.hpcg.vcg_warm_geo.short",
-        "plugin": "ECHP",
-        "profiles": "",
-        "range": "",
-        "scope": "System"
-    },
-    {
-        "data_type": "json",
-        "default": {
-            "model": "FLX-05F",
-            "options": {
-                "limit_ccw": "off",
-                "limit_cw": "off",
-                "output_ccw": "off",
-                "output_cw": "off"
-            },
-            "vendor": "Flowx"
-        },
-        "description": "Heat Pump Control Group / VCG / Warm Geo / Input",
-        "limit": 0.0,
-        "name": "echp.hpcg.vcg_warm_floor.input",
-        "plugin": "ECHP",
-        "profiles": "",
-        "range": "",
-        "scope": "System"
-    },
-    {
-        "data_type": "json",
-        "default": {
-            "model": "FLX-05F",
-            "options": {
-                "limit_ccw": "off",
-                "limit_cw": "off",
-                "output_ccw": "off",
-                "output_cw": "off"
-            },
-            "vendor": "Flowx"
-        },
-        "description": "Heat Pump Control Group / VCG / Warm Geo / Output",
-        "limit": 0.0,
-        "name": "echp.hpcg.vcg_warm_floor.output",
-        "plugin": "ECHP",
-        "profiles": "",
-        "range": "",
-        "scope": "System"
-    },
-    {
-        "data_type": "json",
-        "default": {
-            "model": "FLX-05F",
-            "options": {
-                "limit_ccw": "off",
-                "limit_cw": "off",
-                "output_ccw": "off",
-                "output_cw": "off"
-            },
-            "vendor": "Flowx"
-        },
-        "description": "Heat Pump Control Group / VCG / Warm Geo / Output",
-        "limit": 0.0,
-        "name": "echp.hpcg.vcg_warm_floor.short",
-        "plugin": "ECHP",
-        "profiles": "",
-        "range": "",
-        "scope": "System"
-    },
-    {
-        "data_type": "json",
-        "default": {
-            "model": "MAGNA1_80_100_F_360_1x230V_PN6",
-            "options": {
-                "mb_id": 2,
-                "uart": 0
-            },
-            "vendor": "Grundfos"
-        },
-        "description": "Heat Pump Control Group / Water Pump / Cold",
-        "limit": 0.0,
-        "name": "echp.hpcg.wp_cold.settings",
-        "plugin": "ECHP",
-        "profiles": "",
-        "range": "",
-        "scope": "System"
-    },
-    {
-        "data_type": "json",
-        "default": {
-            "model": "MAGNA1_80_100_F_360_1x230V_PN6",
-            "options": {
-                "mb_id": 3,
-                "uart": 0
-            },
-            "vendor": "Grundfos"
-        },
-        "description": "Heat Pump Control Group / Water Pump / Hot",
-        "limit": 0.0,
-        "name": "echp.hpcg.wp_hot.settings",
-        "plugin": "ECHP",
-        "profiles": "",
-        "range": "",
-        "scope": "System"
-    },
-    {
-        "data_type": "json",
-        "default": {
-            "model": "MAGNA1_80_100_F_360_1x230V_PN6",
-            "options": {
-                "mb_id": 0,
-                "uart": 0
-            },
-            "vendor": "Grundfos"
-        },
-        "description": "Heat Pump Control Group / Water Pump / Warm",
-        "limit": 0.0,
-        "name": "echp.hpcg.wp_warm_p.settings",
-        "plugin": "ECHP",
-        "profiles": "",
-        "range": "",
-        "scope": "System"
-    },
-    {
-        "data_type": "json",
-        "default": {
-            "model": "MAGNA1_80_100_F_360_1x230V_PN6",
-            "options": {
-                "mb_id": 0,
-                "uart": 0
-            },
-            "vendor": "Grundfos"
-        },
-        "description": "Heat Pump Control Group / Water Pump / Warm",
-        "limit": 0.0,
-        "name": "echp.hpcg.wp_warm_g.settings",
-        "plugin": "ECHP",
-        "profiles": "",
-        "range": "",
-        "scope": "System"
-    },
-    {
-        "data_type": "json",
-        "default": {
-            "model": "40STD-N420WHSB4",
-            "options": {
-                "mb_id": 0,
-                "uart": 0
-            },
-            "vendor": "HstarsGuangzhouRefrigeratingEquipmentGroup"
-        },
-        "description": "Heat Pump Control Group / Heat Pump",
-        "limit": 0.0,
-        "name": "echp.hpcg.hp.settings",
-        "plugin": "ECHP",
-        "profiles": "",
-        "range": "",
         "scope": "System"
     },
     {
