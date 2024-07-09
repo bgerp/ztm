@@ -579,21 +579,31 @@ class Register:
         return out_value
 
     @staticmethod
-    def from_value(data_type, value):
+    def from_value(data_type: str, value):
+        """Parse from value.
+
+        Args:
+            data_type (str): Data type string.
+            value (any): Value input.
+
+        Returns:
+            _type_: _description_
+        """
+        out_value = None
 
         if data_type == "bool":
-            if our_value:
-                our_value = "true"
+            if out_value:
+                out_value = "true"
             else:
-                our_value = "false"
+                out_value = "false"
 
         elif data_type == "str":
             if "," in value:
-                our_value = "\"" + value + "\""
+                out_value = "\"" + value + "\""
 
         elif data_type == "json":
-            our_value = json.dumps(value)
+            out_value = json.dumps(value)
 
-        return our_value
+        return out_value
 
 #endregion
