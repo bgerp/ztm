@@ -1572,6 +1572,9 @@ def __add_registers(args):
     register.description = "Plugin enabled"
     register.range = __range["BOOL"]
     register.value = True
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     # Zones count.
@@ -1581,6 +1584,9 @@ def __add_registers(args):
     register.description = "Count of the HVAC zones."
     register.range = "0/"
     register.value = 1
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     # Air temp central.
@@ -1601,6 +1607,9 @@ def __add_registers(args):
         }
     else:
         register.value = {}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("hvac.air_temp_cent_1.value")
@@ -1609,6 +1618,9 @@ def __add_registers(args):
     register.description = "Air temperature sensor center value."
     register.range = "0.0/"
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     # Air temp lower
@@ -1629,6 +1641,9 @@ def __add_registers(args):
         }
     else:
         register.value = {}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("hvac.air_temp_lower_1.value")
@@ -1637,6 +1652,9 @@ def __add_registers(args):
     register.description = "Air temperature sensor lower value"
     register.range = "0.0/"
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     # Air temp upper.
@@ -1657,6 +1675,9 @@ def __add_registers(args):
         }
     else:
         register.value = {}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("hvac.air_temp_upper_1.value")
@@ -1665,6 +1686,9 @@ def __add_registers(args):
     register.description = "Air temperature sensor upper value"
     register.range = "0.0/"
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("hvac.floor_loop_1.valve.settings")
@@ -1683,6 +1707,9 @@ def __add_registers(args):
             ]
         }
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("hvac.floor_loop_1.valve.activations")
@@ -1691,6 +1718,9 @@ def __add_registers(args):
     register.description = "Floor loop 1 valve activations"
     register.range = __range["NONE"]
     register.value = {}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("hvac.floor_loop_2.valve.settings")
@@ -1709,6 +1739,9 @@ def __add_registers(args):
             ]
         }
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("hvac.floor_loop_2.valve.activations")
@@ -1717,6 +1750,9 @@ def __add_registers(args):
     register.description = "Floor loop 2 valve activations"
     register.range = __range["NONE"]
     register.value = {}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("hvac.floor_loop_3.valve.settings")
@@ -1735,6 +1771,9 @@ def __add_registers(args):
             ]
         }
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("hvac.floor_loop_3.valve.activations")
@@ -1743,6 +1782,9 @@ def __add_registers(args):
     register.description = "Floor loop 3 valve activations"
     register.range = __range["NONE"]
     register.value = {}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     # Convector loop 1
@@ -1770,6 +1812,9 @@ def __add_registers(args):
             ]
         }
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("hvac.conv_loop_1.valve.settings")
@@ -1788,6 +1833,9 @@ def __add_registers(args):
             ]
         }
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("hvac.conv_loop_1.valve.activations")
@@ -1796,6 +1844,9 @@ def __add_registers(args):
     register.description = "Convector loop 1 valve activations"
     register.range = __range["NONE"]
     register.value = {}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     # Convector loop 2
@@ -1823,6 +1874,9 @@ def __add_registers(args):
             ]
         }
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("hvac.conv_loop_2.valve.settings")
@@ -1841,6 +1895,9 @@ def __add_registers(args):
             ]
         }
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("hvac.conv_loop_2.valve.activations")
@@ -1849,6 +1906,9 @@ def __add_registers(args):
     register.description = "Convector loop 2 valve activations"
     register.range = __range["NONE"]
     register.value = {}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     # Convector loop 3 flowmeter.
@@ -1876,6 +1936,9 @@ def __add_registers(args):
             ]
         }
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("hvac.conv_loop_3.valve.settings")
@@ -1894,6 +1957,9 @@ def __add_registers(args):
             ]
         }
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("hvac.conv_loop_3.valve.activations")
@@ -1902,6 +1968,9 @@ def __add_registers(args):
     register.description = "Convector loop 3 valve activations"
     register.range = __range["NONE"]
     register.value = {}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     # Loop 1 Down Limit Temperature # Request: Eml6419
@@ -1911,6 +1980,9 @@ def __add_registers(args):
     register.description = "Loop 1 temperature down limit."
     register.range = "0.0/"
     register.value = 15
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("hvac.conv_loop_1.temp.down_limit")
@@ -1919,6 +1991,9 @@ def __add_registers(args):
     register.description = "Loop 1 temperature sensor value."
     register.range = "/"
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("hvac.temp_1.adjust")
@@ -1927,6 +2002,9 @@ def __add_registers(args):
     register.description = "Adjust temperature"
     register.range = "-50.0/50.0"
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     # Delta time.
@@ -1936,6 +2014,9 @@ def __add_registers(args):
     register.description = "Measuring delta time"
     register.range = "0.0/"
     register.value = 5.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     # Goal building temp.
@@ -1945,6 +2026,9 @@ def __add_registers(args):
     register.description = "Goal of the building temperature"
     register.range = "-50.0/50.0"
     register.value = 20.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     # Temperature actual
@@ -1954,6 +2038,9 @@ def __add_registers(args):
     register.description = "Actual temperature"
     register.range = "-50.0/50.0"
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("hvac.temp_1.max")
@@ -1962,6 +2049,9 @@ def __add_registers(args):
     register.description = "Maximum achievable"
     register.range = "-50.0/50.0"
     register.value = 30.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("hvac.temp_1.min")
@@ -1970,6 +2060,9 @@ def __add_registers(args):
     register.description = "Minimum achievable"
     register.range = "-50.0/50.0"
     register.value = 20.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     # Thermal force limit
@@ -1979,6 +2072,9 @@ def __add_registers(args):
     register.description = "Thermal force limit"
     register.range = __range["PERCENTAGE_F"]
     register.value = 100.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     # Thermal mode
@@ -1988,6 +2084,9 @@ def __add_registers(args):
     register.description = "Thermal mode"
     register.range = "1|2|3|4"
     register.value = 2
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     # Update rate.
@@ -1997,6 +2096,9 @@ def __add_registers(args):
     register.description = "Update rate of the plugin [s]"
     register.range = "0.0/"
     register.value = 1.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
 #endregion
