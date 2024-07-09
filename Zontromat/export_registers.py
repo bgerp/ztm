@@ -2177,6 +2177,9 @@ def __add_registers(args):
             }
         ]
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Floor entrance valves mode.
@@ -2186,6 +2189,9 @@ def __add_registers(args):
     register.description = "ECD / Floor entrance valves mode."
     register.range = __range["VALVE_MODE"]
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Floor entrance valves state.
@@ -2195,6 +2201,9 @@ def __add_registers(args):
     register.description = "ECD / Floor entrance valves state."
     register.range = __range["VALVE_STATE"]
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Floor pool valves settings.
@@ -2240,6 +2249,9 @@ def __add_registers(args):
             }
         ]
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Floor pool valves mode.
@@ -2249,6 +2261,9 @@ def __add_registers(args):
     register.description = "ECD / Floor pool valves mode."
     register.range = __range["VALVE_MODE"]
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Floor pool valves state.
@@ -2258,6 +2273,9 @@ def __add_registers(args):
     register.description = "ECD / Floor pool valves state."
     register.range = __range["VALVE_STATE"]
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Ground drilling valves settings.
@@ -2303,6 +2321,9 @@ def __add_registers(args):
             }
         ]
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Ground drilling valves mode.
@@ -2312,6 +2333,9 @@ def __add_registers(args):
     register.description = "ECD / Ground drilling valves mode."
     register.range = __range["VALVE_MODE"]
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Ground drilling valves state.
@@ -2321,6 +2345,9 @@ def __add_registers(args):
     register.description = "ECD / Ground drilling valves state."
     register.range = __range["VALVE_STATE"]
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Ground drilling valves state.
@@ -2329,9 +2356,10 @@ def __add_registers(args):
     register.plugin_name = "Energy Center Distribution"
     register.description = "ECD / Ground drilling valves state."
     register.range = __range["NONE"]
-    register.value = {
-
-    }
+    register.value = {}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
 
@@ -2378,6 +2406,9 @@ def __add_registers(args):
             }
         ]
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Air tower green valves mode.
@@ -2387,6 +2418,9 @@ def __add_registers(args):
     register.description = "ECD / Ground drilling valves mode."
     register.range = __range["VALVE_MODE"]
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Air tower green valves state.
@@ -2396,6 +2430,9 @@ def __add_registers(args):
     register.description = "ECD / Air tower green valves state."
     register.range = __range["VALVE_STATE"]
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Air tower green valves settings.
@@ -2441,6 +2478,9 @@ def __add_registers(args):
             }
         ]
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Air tower green valves mode.
@@ -2450,6 +2490,9 @@ def __add_registers(args):
     register.description = "ECD / Ground drilling valves mode."
     register.range = __range["VALVE_MODE"]
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Air tower green valves state.
@@ -2459,6 +2502,9 @@ def __add_registers(args):
     register.description = "ECD / Air tower green valves state."
     register.range = __range["VALVE_STATE"]
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Generators valves settings.
@@ -2504,6 +2550,9 @@ def __add_registers(args):
             }
         ]
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Generators valves mode.
@@ -2513,6 +2562,9 @@ def __add_registers(args):
     register.description = "ECD / Ground drilling valves mode."
     register.range = __range["VALVE_MODE"]
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Generators valves state.
@@ -2522,6 +2574,9 @@ def __add_registers(args):
     register.description = "ECD / Generators valves state."
     register.range = __range["VALVE_STATE"]
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ====================================================================================================
@@ -2571,6 +2626,9 @@ def __add_registers(args):
             # }
         ]
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Pool air heating valves mode.
@@ -2580,6 +2638,9 @@ def __add_registers(args):
     register.description = "ECD / Pool air heating valves mode."
     register.range = __range["VALVE_MODE"]
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Pool air heating valves state.
@@ -2589,6 +2650,9 @@ def __add_registers(args):
     register.description = "ECD / Pool air heating valves state."
     register.range = __range["VALVE_STATE"]
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Pool air heating pump settings.
@@ -2611,6 +2675,9 @@ def __add_registers(args):
             "wait_on_shutdown": False
         }
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Pool air heating pump mode.
@@ -2620,6 +2687,9 @@ def __add_registers(args):
     register.description = "ECD / Pool air heating pump mode."
     register.range = __range["PERCENTAGE_I"]
     register.value = 0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Pool air heating pump state.
@@ -2629,6 +2699,9 @@ def __add_registers(args):
     register.description = "ECD / Pool air heating pump state."
     register.range = __range["NONE"]
     register.value = {}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Convectors kitchen valves settings.
@@ -2674,6 +2747,9 @@ def __add_registers(args):
             }
         ]
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Convectors kitchen valves mode.
@@ -2683,6 +2759,9 @@ def __add_registers(args):
     register.description = "ECD / Convectors kitchen valves mode."
     register.range = __range["VALVE_MODE"]
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Convectors kitchen valves state.
@@ -2692,6 +2771,9 @@ def __add_registers(args):
     register.description = "ECD / Convectors kitchen valves state."
     register.range = __range["VALVE_STATE"]
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Convectors kitchen pump settings.
@@ -2714,6 +2796,9 @@ def __add_registers(args):
             "wait_on_shutdown": False
         }
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Convectors kitchen pump mode.
@@ -2723,6 +2808,9 @@ def __add_registers(args):
     register.description = "ECD / Convectors kitchen pump mode."
     register.range = __range["PERCENTAGE_I"]
     register.value = 0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Convectors kitchen pump state.
@@ -2732,6 +2820,9 @@ def __add_registers(args):
     register.description = "ECD / Convectors kitchen pump state."
     register.range = __range["NONE"]
     register.value = {}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / AHU conference hall valves settings.
@@ -2777,6 +2868,9 @@ def __add_registers(args):
             }
         ]
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / AHU conference hall valves mode.
@@ -2786,6 +2880,9 @@ def __add_registers(args):
     register.description = "ECD / AHU conference hall valves mode."
     register.range = __range["VALVE_MODE"]
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / AHU conference hall valves state.
@@ -2795,6 +2892,9 @@ def __add_registers(args):
     register.description = "ECD / AHU conference hall valves state."
     register.range = __range["VALVE_STATE"]
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / AHU conference hall pump settings.
@@ -2817,6 +2917,9 @@ def __add_registers(args):
             "wait_on_shutdown": False
         }
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / AHU conference hall pump mode.
@@ -2826,6 +2929,9 @@ def __add_registers(args):
     register.description = "ECD / AHU conference hall pump mode."
     register.range = __range["PERCENTAGE_I"]
     register.value = 0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / AHU conference hall pump state.
@@ -2835,6 +2941,9 @@ def __add_registers(args):
     register.description = "ECD / AHU conference hall pump state."
     register.range = __range["NONE"]
     register.value = {}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Floor west valves settings.
@@ -2880,6 +2989,9 @@ def __add_registers(args):
             }
         ]
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Floor west valves mode.
@@ -2889,6 +3001,9 @@ def __add_registers(args):
     register.description = "ECD / Floor west valves mode."
     register.range = __range["VALVE_MODE"]
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Floor west valves state.
@@ -2898,6 +3013,9 @@ def __add_registers(args):
     register.description = "ECD / Floor west  valves state"
     register.range = __range["VALVE_STATE"]
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Floor west pump settings.
@@ -2920,6 +3038,9 @@ def __add_registers(args):
             "wait_on_shutdown": False
         }
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Floor west pump mode.
@@ -2929,6 +3050,9 @@ def __add_registers(args):
     register.description = "ECD / Floor west pump mode."
     register.range = __range["PERCENTAGE_I"]
     register.value = 0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Floor west hall pump state.
@@ -2938,6 +3062,9 @@ def __add_registers(args):
     register.description = "ECD / Floor west pump state."
     register.range = __range["NONE"]
     register.value = {}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Convectors west valves settings.
@@ -2992,6 +3119,9 @@ def __add_registers(args):
     register.description = "ECD / Convectors west valves mode."
     register.range = __range["VALVE_MODE"]
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Convectors west valves state.
@@ -3001,6 +3131,9 @@ def __add_registers(args):
     register.description = "ECD / Convectors west valves state."
     register.range = __range["VALVE_STATE"]
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Convectors west pump settings.
@@ -3023,6 +3156,9 @@ def __add_registers(args):
             "wait_on_shutdown": False
         }
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Convectors west pump mode.
@@ -3032,6 +3168,9 @@ def __add_registers(args):
     register.description = "ECD / Convectors west pump mode."
     register.range = __range["PERCENTAGE_I"]
     register.value = 0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Convectors west hall pump state.
@@ -3041,6 +3180,9 @@ def __add_registers(args):
     register.description = "ECD / Convectors west pump state."
     register.range = __range["NONE"]
     register.value = {}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / AHU roof floor valves settings.
@@ -3086,6 +3228,9 @@ def __add_registers(args):
             }
         ]
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / AHU roof floor valves mode.
@@ -3095,6 +3240,9 @@ def __add_registers(args):
     register.description = "ECD / AHU roof floor valves mode."
     register.range = __range["VALVE_MODE"]
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / AHU roof floor valves state.
@@ -3104,6 +3252,9 @@ def __add_registers(args):
     register.description = "ECD / AHU roof floor valves state."
     register.range = __range["VALVE_STATE"]
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / AHU roof floor pump settings.
@@ -3126,6 +3277,9 @@ def __add_registers(args):
             "wait_on_shutdown": False
         }
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / AHU roof floor pump mode.
@@ -3135,7 +3289,9 @@ def __add_registers(args):
     register.description = "ECD / AHU roof floor pump mode."
     register.range = __range["PERCENTAGE_I"]
     register.value = 0
-
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / AHU roof floor hall pump state.
@@ -3145,6 +3301,9 @@ def __add_registers(args):
     register.description = "ECD / AHU roof floor pump state."
     register.range = __range["NONE"]
     register.value = {}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / AHU fitness valves settings.
@@ -3190,6 +3349,9 @@ def __add_registers(args):
             }
         ]
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / AHU fitness valves mode.
@@ -3199,6 +3361,9 @@ def __add_registers(args):
     register.description = "ECD / AHU fitness valves mode."
     register.range = __range["VALVE_MODE"]
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / AHU fitness valves state.
@@ -3208,6 +3373,9 @@ def __add_registers(args):
     register.description = "ECD / AHU fitness valves state."
     register.range = __range["VALVE_STATE"]
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / AHU fitness pump settings.
@@ -3230,6 +3398,9 @@ def __add_registers(args):
             "wait_on_shutdown": False
         }
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / AHU fitness pump mode.
@@ -3239,6 +3410,9 @@ def __add_registers(args):
     register.description = "ECD / AHU fitness pump mode."
     register.range = __range["PERCENTAGE_I"]
     register.value = 0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / AHU fitness pump state.
@@ -3248,6 +3422,9 @@ def __add_registers(args):
     register.description = "ECD / AHU fitness pump state."
     register.range = __range["NONE"]
     register.value = {}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Floor east valves settings.
@@ -3293,6 +3470,9 @@ def __add_registers(args):
             }
         ]
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Floor east valves mode.
@@ -3302,6 +3482,9 @@ def __add_registers(args):
     register.description = "ECD / Floor east valves mode."
     register.range = __range["VALVE_MODE"]
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Floor east valves state.
@@ -3311,6 +3494,9 @@ def __add_registers(args):
     register.description = "ECD / Floor east valves state."
     register.range = __range["VALVE_STATE"]
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Floor east pump settings.
@@ -3333,6 +3519,9 @@ def __add_registers(args):
             "wait_on_shutdown": False
         }
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Floor east pump mode.
@@ -3342,6 +3531,9 @@ def __add_registers(args):
     register.description = "ECD / Floor east pump mode."
     register.range = __range["PERCENTAGE_I"]
     register.value = 0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Floor east pump state.
@@ -3351,6 +3543,9 @@ def __add_registers(args):
     register.description = "ECD / Floor east pump state."
     register.range = __range["NONE"]
     register.value = {}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Convectors east valves settings.
@@ -3396,6 +3591,9 @@ def __add_registers(args):
             }
         ]
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Convectors east valves mode.
@@ -3405,6 +3603,9 @@ def __add_registers(args):
     register.description = "ECD / Convectors east valves mode."
     register.range = __range["VALVE_MODE"]
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Convectors east valves state.
@@ -3414,6 +3615,9 @@ def __add_registers(args):
     register.description = "ECD / Convectors east valves state."
     register.range = __range["VALVE_STATE"]
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Convectors east pump settings.
@@ -3436,6 +3640,9 @@ def __add_registers(args):
             "wait_on_shutdown": False
         }
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Convectors east pump mode.
@@ -3445,6 +3652,9 @@ def __add_registers(args):
     register.description = "ECD / Convectors east pump mode."
     register.range = __range["PERCENTAGE_I"]
     register.value = 0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Convectors east pump state.
@@ -3454,6 +3664,9 @@ def __add_registers(args):
     register.description = "ECD / Convectors east pump state."
     register.range = __range["NONE"]
     register.value = {}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Pool air cooling valves settings.
@@ -3499,6 +3712,9 @@ def __add_registers(args):
             }
         ]
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Pool air cooling valves mode.
@@ -3508,6 +3724,9 @@ def __add_registers(args):
     register.description = "ECD / Pool air cooling valves mode."
     register.range = __range["VALVE_MODE"]
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Pool air cooling valves state.
@@ -3517,6 +3736,9 @@ def __add_registers(args):
     register.description = "ECD / Pool air cooling valves state."
     register.range = __range["VALVE_STATE"]
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Pool air cooling pump settings.
@@ -3539,6 +3761,9 @@ def __add_registers(args):
             "wait_on_shutdown": False
         }
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Pool air cooling pump mode.
@@ -3548,6 +3773,9 @@ def __add_registers(args):
     register.description = "ECD / Pool air cooling pump mode."
     register.range = __range["PERCENTAGE_I"]
     register.value = 0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Pool air cooling pump state.
@@ -3557,6 +3785,9 @@ def __add_registers(args):
     register.description = "ECD / Pool air cooling pump state."
     register.range = __range["NONE"]
     register.value = {}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Pool heating valves settings.
@@ -3602,6 +3833,9 @@ def __add_registers(args):
             # }
         ]
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Pool heating valves mode.
@@ -3611,6 +3845,9 @@ def __add_registers(args):
     register.description = "ECD / Pool heating valves mode."
     register.range = __range["VALVE_MODE"]
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Pool heating valves state.
@@ -3620,6 +3857,9 @@ def __add_registers(args):
     register.description = "ECD / Pool heating valves state."
     register.range = __range["VALVE_STATE"]
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Pool heating pump settings.
@@ -3642,6 +3882,9 @@ def __add_registers(args):
             "wait_on_shutdown": False
         }
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Pool heating pump mode.
@@ -3651,6 +3894,9 @@ def __add_registers(args):
     register.description = "ECD / Pool heating pump mode."
     register.range = __range["PERCENTAGE_I"]
     register.value = 0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Pool heating ump state.
@@ -3660,6 +3906,9 @@ def __add_registers(args):
     register.description = "ECD / Pool heating pump state."
     register.range = __range["NONE"]
     register.value = {}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Servers cooling pump settings.
@@ -3682,6 +3931,9 @@ def __add_registers(args):
             "wait_on_shutdown": False
         }
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Servers cooling pump mode.
@@ -3691,6 +3943,9 @@ def __add_registers(args):
     register.description = "ECD / Servers cooling pump mode."
     register.range = __range["PERCENTAGE_I"]
     register.value = 0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Servers cooling pump state.
@@ -3700,6 +3955,9 @@ def __add_registers(args):
     register.description = "ECD / Servers cooling pump state."
     register.range = __range["NONE"]
     register.value = {}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ====================================================================================================
@@ -3787,6 +4045,9 @@ def __add_registers(args):
             }
         }
     ]
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Ground drilling thermo couples settings.
@@ -3796,6 +4057,9 @@ def __add_registers(args):
     register.description = "ECD / Ground drilling thermo couples values."
     register.range = __range["NONE"]
     register.value = []
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Floor entrance valves settings.
@@ -3841,9 +4105,10 @@ def __add_registers(args):
             }
         ]
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
-
-
 
     # Enable flag
     register = Register("ecd.enabled")
@@ -3852,9 +4117,10 @@ def __add_registers(args):
     register.description = "Plugin enabled"
     register.range = __range["BOOL"]
     register.value = False
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
-
-
 
 #endregion
 
