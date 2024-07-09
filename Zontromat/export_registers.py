@@ -4640,6 +4640,9 @@ def __add_registers(args):
             }
         ]
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     # ECHP / Cold / Valves / Mode
@@ -4649,6 +4652,9 @@ def __add_registers(args):
     register.description = "ECHP / Cold / Valves / Mode"
     register.range = __range["VALVE_MODE"]
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     # ECHP / Cold / Valves / State
@@ -4658,6 +4664,9 @@ def __add_registers(args):
     register.description = "ECHP / Cold / Valves / State"
     register.range = __range["VALVE_STATE"]
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     # -================================================================================-
@@ -4722,6 +4731,9 @@ def __add_registers(args):
             }
         ]
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     # ECHP / Cold Geo / Valves / Mode
@@ -4731,6 +4743,9 @@ def __add_registers(args):
     register.description = "ECHP / Cold Geo / Valves / Mode"
     register.range = __range["VALVE_MODE"]
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     # ECHP / Cold Geo / Valves / State
@@ -4740,6 +4755,9 @@ def __add_registers(args):
     register.description = "ECHP / Cold Geo / Valves / State"
     register.range = __range["VALVE_STATE"]
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     # -================================================================================-
@@ -4804,6 +4822,9 @@ def __add_registers(args):
             }
         ]
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     # ECHP / Warm Geo / Valves / Mode
@@ -4813,6 +4834,9 @@ def __add_registers(args):
     register.description = "ECHP / Warm Geo / Valves / Mode"
     register.range = __range["VALVE_MODE"]
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     # ECHP / Warm Geo / Valves / State
@@ -4822,6 +4846,9 @@ def __add_registers(args):
     register.description = "ECHP / Warm Geo / Valves / State"
     register.range = __range["VALVE_STATE"]
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     # -================================================================================-
@@ -4886,6 +4913,9 @@ def __add_registers(args):
             }
         ]
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     # ECHP / Warm / Valves / Mode
@@ -4895,6 +4925,9 @@ def __add_registers(args):
     register.description = "ECHP / Warm / Valves / Mode"
     register.range = __range["VALVE_MODE"]
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     # ECHP / Warm / Valves / State
@@ -4904,6 +4937,9 @@ def __add_registers(args):
     register.description = "ECHP / Warm / Valves / State"
     register.range = __range["VALVE_STATE"]
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     # -================================================================================-
@@ -4968,6 +5004,9 @@ def __add_registers(args):
             }
         ]
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     # ECHP / Hot / Valves / Mode
@@ -4977,6 +5016,9 @@ def __add_registers(args):
     register.description = "ECHP / Hot / Valves / Mode"
     register.range = __range["VALVE_MODE"]
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     # ECHP / Hot / Valves / State
@@ -4986,6 +5028,9 @@ def __add_registers(args):
     register.description = "ECHP / Hot / Valves / State"
     register.range = __range["VALVE_STATE"]
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     # -================================================================================-
@@ -5009,6 +5054,9 @@ def __add_registers(args):
             "wait_on_shutdown": False
         }
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     # Heat Pump Control Group / Cold pump mode.
@@ -5018,6 +5066,9 @@ def __add_registers(args):
     register.description = "Heat Pump Control Group / Cold pump mode."
     register.range = __range["PERCENTAGE_I"]
     register.value = 0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     # Heat Pump Control Group / Cold pump state.
@@ -5027,6 +5078,9 @@ def __add_registers(args):
     register.description = "Heat Pump Control Group / Cold pump state."
     register.range = __range["NONE"]
     register.value = {}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     # Heat Pump Control Group / Water Pump / Hot
@@ -5060,6 +5114,9 @@ def __add_registers(args):
     register.description = "Heat Pump Control Group / Hot pump mode."
     register.range = __range["PERCENTAGE_I"]
     register.value = 0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     # Heat Pump Control Group / Hot pump state.
@@ -5069,6 +5126,9 @@ def __add_registers(args):
     register.description = "Heat Pump Control Group / Hot pump state."
     register.range = __range["NONE"]
     register.value = {}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     # Heat Pump Control Group / Water Pump / Warm
@@ -5090,6 +5150,9 @@ def __add_registers(args):
             "wait_on_shutdown": False
         }
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     # Heat Pump Control Group / Warm pump mode.
@@ -5099,6 +5162,9 @@ def __add_registers(args):
     register.description = "Heat Pump Control Group / Warm pump mode."
     register.range = __range["PERCENTAGE_I"]
     register.value = 0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     # Heat Pump Control Group / Warm pump state.
@@ -5108,6 +5174,9 @@ def __add_registers(args):
     register.description = "Heat Pump Control Group / Warm pump state."
     register.range = __range["NONE"]
     register.value = {}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     # -================================================================================-
@@ -5138,6 +5207,9 @@ def __add_registers(args):
     register.description = "Get the mode of the machine"
     register.range = __range["NONE"]
     register.value = 0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     register = Register("echp.hp.set_op_mode")
@@ -5146,6 +5218,9 @@ def __add_registers(args):
     register.description = "Set the mode of the machine"
     register.range = __range["NONE"]
     register.value = 0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     register = Register("echp.hp.get_op_status")
@@ -5154,6 +5229,9 @@ def __add_registers(args):
     register.description = "Get the status of the machine"
     register.range = __range["NONE"]
     register.value = 0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     register = Register("echp.hp.get_cooling_temp")
@@ -5162,6 +5240,9 @@ def __add_registers(args):
     register.description = "Get the cooling temp of the machine"
     register.range = __range["NONE"]
     register.value = 0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     register = Register("echp.hp.set_cooling_temp")
@@ -5170,6 +5251,9 @@ def __add_registers(args):
     register.description = "Set the cooling temp of the machine"
     register.range = __range["NONE"]
     register.value = 0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     register = Register("echp.hp.get_heating_temp")
@@ -5178,6 +5262,9 @@ def __add_registers(args):
     register.description = "Get the heating temp of the machine"
     register.range = __range["NONE"]
     register.value = 0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     register = Register("echp.hp.set_heating_temp")
@@ -5186,6 +5273,9 @@ def __add_registers(args):
     register.description = "Set the heating temp of the machine"
     register.range = __range["NONE"]
     register.value = 0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     register = Register("echp.hp.get_temps")
@@ -5194,6 +5284,9 @@ def __add_registers(args):
     register.description = "Get the heating temp of the machine"
     register.range = __range["NONE"]
     register.value = {}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     # Count of the heat pump control groups.
@@ -5203,6 +5296,9 @@ def __add_registers(args):
     register.description = "Energy Center Heat Pump machines count"
     register.range = "0/"
     register.value = 3
+    register.profiles = \
+        Register.create_profile(
+            Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     # Index of the heat pump control group.
@@ -5212,6 +5308,9 @@ def __add_registers(args):
     register.description = "Energy Center Heat Pump machine index"
     register.range = "0/"
     register.value = 0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     register = Register("echp.hp.power")
@@ -5220,9 +5319,10 @@ def __add_registers(args):
     register.description = "The power of machine"
     register.range = "-100.0/100.0"
     register.value = 0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.HEAT_PUMP.value)
     __registers.append(register)
-
-
 
     register = Register("echp.hp.run")
     register.scope = Scope.Device
@@ -5230,6 +5330,9 @@ def __add_registers(args):
     register.description = "The state of the machine"
     register.range = __range["NONE"]
     register.value = 0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     # Cold minimum of the heat pump control group.
@@ -5239,6 +5342,9 @@ def __add_registers(args):
     register.description = "Energy Center Heat Pump cold minimum"
     register.range = "3.0/8.0"
     register.value = 5.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     # Cold maximum of the heat pump control group.
@@ -5248,6 +5354,9 @@ def __add_registers(args):
     register.description = "Energy Center Heat Pump cold maximum"
     register.range = "3.0/8.0"
     register.value = 7.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     # Hot minimum of the heat pump control group.
@@ -5257,6 +5366,9 @@ def __add_registers(args):
     register.description = "Energy Center Heat Pump hot minimum"
     register.range = "40.0/47.0"
     register.value = 41.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     # Hot maximum of the heat pump control group.
@@ -5266,6 +5378,9 @@ def __add_registers(args):
     register.description = "Energy Center Heat Pump hot maximum"
     register.range = "40.0/47.0"
     register.value = 46.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     # Enable the plugin.
