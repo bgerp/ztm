@@ -1147,6 +1147,19 @@ def __add_registers(args):
             Profiles.ZONE.value)
     __registers.append(register)
 
+    # ====================== DEPRECATED ======================
+
+    register = Register("monitoring.pa.demand_time")
+    register.scope = Scope.System
+    register.plugin_name = "Monitoring"
+    register.description = "Power analyzer measuring demand"
+    register.range = "0.0/"
+    register.value = 3600.0 # Every hour to measure the consumed electricity.
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
+    __registers.append(register)
+
 #endregion
 
 #region Environment (envm)
@@ -4514,52 +4527,92 @@ def __add_registers(args):
             Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
-    # ECD / Floor entrance valves settings.
-    register = Register("ecd.floor_entrance.valves.settings")
+    # ECD / Hot water thermo couples settings.
+    register = Register("ecd.hot_water.tc.settings")
     register.scope = Scope.System
     register.plugin_name = "Energy Center Distribution"
-    register.description = "ECD / Floor entrance valves settings."
+    register.description = "ECD / Hot water thermo couples settings."
     register.range = __range["NONE"]
     register.value = \
-    {
-        "hot":
-        [
-            # {
-            #     "vendor": "Flowx",
-            #     "model": "FLX-05F",
-            #     "options":
-            #     {
-            #         "close_on_shutdown": False,
-            #         "wait_on_shutdown": False,
-            #         "io_mode": 1, # 1: "single_out", 2: "dual_out"
-            #         "output_cw": "U0:ID2:FC5:R0:RO1",
-            #         "output_ccw": "off",
-            #         "limit_cw": "U0:ID6:FC2:R0:DI0",
-            #         "limit_ccw": "U0:ID6:FC2:R0:DI1"
-            #     }
-            # }
-        ],
-        "cold":
-        [
+    [
+        {
+            "input":
             {
-                "vendor": "Flowx",
-                "model": "FLX-05F",
+                "vendor": "CWT",
+                "model": "MB318E",
                 "options":
                 {
-                    "close_on_shutdown": False,
-                    "wait_on_shutdown": False,
-                    "io_mode": 1, # 1: "single_out", 2: "dual_out"
-                    "output_cw": "U0:ID11:FC5:R0:RO0",
-                    "output_ccw": "off",
-                    "limit_cw": "U0:ID11:FC2:R0:DI0",
-                    "limit_ccw": "!U0:ID11:FC2:R0:DI0"
+                    "uart": 0,
+                    "mb_id": 1,
+                    "chanel": 8
+                }
+            },
+            "output":
+            {
+                "vendor": "CWT",
+                "model": "MB318E",
+                "options":
+                {
+                    "uart": 0,
+                    "mb_id": 1,
+                    "chanel": 9
                 }
             }
-        ]
-    }
-    register.profiles = \
-        Register.create_profile(
-            Profiles.DISTRIBUTION.value)
+        }
+    ]
+    __registers.append(register)
+
+    # ECD / Hot water thermo couples settings.
+    register = Register("ecd.hot_water.tc.values")
+    register.scope = Scope.Device
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Hot water thermo couples values."
+    register.range = __range["NONE"]
+    register.value = []
+    __registers.append(register)
+
+    # ECD / Cold water thermo couples settings.
+    register = Register("ecd.cold_water.tc.settings")
+    register.scope = Scope.System
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Cold water thermo couples settings."
+    register.range = __range["NONE"]
+    register.value = \
+    [
+        {
+            "input":
+            {
+                "vendor": "CWT",
+                "model": "MB318E",
+                "options":
+                {
+                    "uart": 0,
+                    "mb_id": 1,
+                    "chanel": 10
+                }
+            },
+            "output":
+            {
+                "vendor": "CWT",
+                "model": "MB318E",
+                "options":
+                {
+                    "uart": 0,
+                    "mb_id": 1,
+                    "chanel": 11
+                }
+            }
+        }
+    ]
+    __registers.append(register)
+
+    # ECD / Hot water thermo couples settings.
+    register = Register("ecd.cold_water.tc.values")
+    register.scope = Scope.Device
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Hot water thermo couples values."
+    register.range = __range["NONE"]
+    register.value = []
     __registers.append(register)
 
     # Enable flag
