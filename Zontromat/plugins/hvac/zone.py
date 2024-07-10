@@ -1183,7 +1183,6 @@ class Zone(BasePlugin):
                                         "openings": self.__fl_1_vlv_dev.openings,\
                                         "closings": self.__fl_1_vlv_dev.closings
                                     }))
-            print(f"{self.__fl_1_vlv_dev}")
 
         if self.__fl_2_vlv_dev is not None:
 
