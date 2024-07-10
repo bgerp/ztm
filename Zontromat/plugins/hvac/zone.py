@@ -1173,17 +1173,16 @@ class Zone(BasePlugin):
 
         if self.__fl_1_vlv_dev is not None:
 
-            # if self.__fl_1_vlv_position != self.__fl_1_vlv_dev.current_position:
-            #     self.__fl_1_vlv_position = self.__fl_1_vlv_dev.current_position
+            if self.__fl_1_vlv_position != self.__fl_1_vlv_dev.current_position:
+                self.__fl_1_vlv_position = self.__fl_1_vlv_dev.current_position
 
-            # If the following register is available then set its value.
-            content = json.dumps({\
-                                        "position": self.__fl_1_vlv_dev.current_position,\
-                                        "openings": self.__fl_1_vlv_dev.openings,\
-                                        "closings": self.__fl_1_vlv_dev.closings
-                                    })
-            print(f"Content: {content}")
-            self._registers.write(f"{self.key}.floor_loop_1.valve.activations", content)
+                # If the following register is available then set its value.
+                self._registers.write(f"{self.key}.floor_loop_1.valve.activations",\
+                                    json.dumps({\
+                                            "position": self.__fl_1_vlv_dev.current_position,\
+                                            "openings": self.__fl_1_vlv_dev.openings,\
+                                            "closings": self.__fl_1_vlv_dev.closings
+                                        }))
 
         if self.__fl_2_vlv_dev is not None:
 
@@ -1213,16 +1212,16 @@ class Zone(BasePlugin):
 
         if self.__cl_1_vlv_dev is not None:
 
-            # if self.__cl_1_vlv_position != self.__cl_1_vlv_dev.current_position:
-            #     self.__cl_1_vlv_position = self.__cl_1_vlv_dev.current_position
+            if self.__cl_1_vlv_position != self.__cl_1_vlv_dev.current_position:
+                self.__cl_1_vlv_position = self.__cl_1_vlv_dev.current_position
 
-            # If the following register is available then set its value.
-            self._registers.write(f"{self.key}.conv_loop_1.valve.activations",\
-                                json.dumps({\
-                                        "position": self.__cl_1_vlv_dev.current_position,\
-                                        "openings": self.__cl_1_vlv_dev.openings,\
-                                        "closings": self.__cl_1_vlv_dev.closings
-                                    }))
+                # If the following register is available then set its value.
+                self._registers.write(f"{self.key}.conv_loop_1.valve.activations",\
+                                    json.dumps({\
+                                            "position": self.__cl_1_vlv_dev.current_position,\
+                                            "openings": self.__cl_1_vlv_dev.openings,\
+                                            "closings": self.__cl_1_vlv_dev.closings
+                                        }))
 
         if self.__cl_2_vlv_dev is not None:
 
