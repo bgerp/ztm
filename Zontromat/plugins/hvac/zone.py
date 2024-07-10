@@ -1177,12 +1177,13 @@ class Zone(BasePlugin):
             #     self.__fl_1_vlv_position = self.__fl_1_vlv_dev.current_position
 
             # If the following register is available then set its value.
-            self._registers.write(f"{self.key}.floor_loop_1.valve.activations",\
-                                json.dumps({\
+            content = json.dumps({\
                                         "position": self.__fl_1_vlv_dev.current_position,\
                                         "openings": self.__fl_1_vlv_dev.openings,\
                                         "closings": self.__fl_1_vlv_dev.closings
-                                    }))
+                                    })
+            print(f"Content: {content}")
+            self._registers.write(f"{self.key}.floor_loop_1.valve.activations", content)
 
         if self.__fl_2_vlv_dev is not None:
 
