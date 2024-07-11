@@ -592,7 +592,7 @@ class Register:
         out_value = None
 
         if data_type == "bool":
-            if out_value:
+            if value:
                 out_value = "true"
             else:
                 out_value = "false"

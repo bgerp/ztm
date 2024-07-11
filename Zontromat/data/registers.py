@@ -465,7 +465,7 @@ class Registers(list):
         with open(file_path, "w", newline="", encoding='utf-8') as csv_file:
 
             fieldnames = ["name", "type", "range", "plugin", "scope", "default", "description", "profiles"]
-            writer = csv.DictWriter(csv_file, fieldnames=fieldnames, delimiter=",", doublequote=True, escapechar=None, quoting=csv.QUOTE_ALL)
+            writer = csv.DictWriter(csv_file, fieldnames=fieldnames, delimiter=",", doublequote=True, escapechar=None, quoting=csv.QUOTE_STRINGS)
             writer.writeheader()
 
             for register in registers:
