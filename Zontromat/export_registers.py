@@ -195,6 +195,9 @@ def __add_registers(args):
     register.description = "Number of security zones"
     register.range = "1/"
     register.value = 2
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("ac.nearby_attendees")

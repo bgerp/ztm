@@ -1,7 +1,7 @@
 "name","type","range","plugin","scope","default","description","profiles"
 "ac.enabled","bool","true|false","Access Control","system","false","Plugin enabled","mz"
 "ac.allowed_attendees","json","","Access Control","system","[]","Allowed attendees","mz"
-"ac.zones_count","int","1/","Access Control","system",2,"Number of security zones",""
+"ac.zones_count","int","1/","Access Control","system",2,"Number of security zones","mz"
 "ac.nearby_attendees","json","","Access Control","system","[]","Nearby attendees","mz"
 "ac.last_update_attendees","json","","Access Control","device","[]","Last update attendee","mz"
 "ac.next_attendance","float","0.0/","Access Control","device",0.0,"Next attendance","mz"
