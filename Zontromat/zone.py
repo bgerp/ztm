@@ -506,6 +506,7 @@ class Zone():
                 timeout = self.__app_settings.ui["timeout"])
 
             self.__ztm_ui_ut = Timer(1)
+            self.__ztm_ui_activations_ut = Timer(1)
             self.__ztm_ui_weather_cast_ut = Timer(600)
             self.__ztm_ui_heartbeat_ut = Timer(3600)
 
@@ -514,24 +515,55 @@ class Zone():
                 self.__ztm_ui.login()
 
 
-    def __update_weather_cast(self):
+    def __update_tamers_activations(self):
         # print("Time to update")
 
-        target_regs_names = ["envm.forecast.icon_0", "envm.forecast.rh_0", "envm.forecast.temp_0", "envm.forecast.wind_0",
-                        "envm.forecast.icon_3", "envm.forecast.rh_3", "envm.forecast.temp_3", "envm.forecast.wind_3",
-                        "envm.forecast.icon_6", "envm.forecast.rh_6", "envm.forecast.temp_6", "envm.forecast.wind_6"]
-        target_regs_values = []
+        target_regs_names = ["envm.door_tamper.activations",
+                            "envm.window_tamper.activations",
+                            "envm.pir.activations"]
+        target_regs = []
 
         target_regs_ztmui = []
 
         for target_name in target_regs_names:
             register = self.__registers.by_name(target_name)
             if register is not None:
-                target_regs_values.append(register)
+                target_regs.append(register)
 
-        for target_value in target_regs_values:
-            name = target_value.name
-            value = target_value.value
+        for target_reg in target_regs:
+            name = target_reg.name
+            value = target_reg.value
+            minimum = 0
+            maximum = 0
+            status = "Normal" # enum('Rising', 'Falling', 'Normal')
+            reg = {"name": name, "value": value, "min": minimum, "max": maximum, "status": status}
+            target_regs_ztmui.append(reg)
+
+        # for item in target_regs_ztmui:
+        #     print(item)
+
+        if target_regs_ztmui != []:
+            # print("OK pass the updates")
+            self.__ztm_ui.set(target_regs_ztmui)
+
+    def __update_weather_cast(self):
+        # print("Time to update")
+
+        target_regs_names = ["envm.forecast.icon_0", "envm.forecast.rh_0", "envm.forecast.temp_0", "envm.forecast.wind_0",
+                        "envm.forecast.icon_3", "envm.forecast.rh_3", "envm.forecast.temp_3", "envm.forecast.wind_3",
+                        "envm.forecast.icon_6", "envm.forecast.rh_6", "envm.forecast.temp_6", "envm.forecast.wind_6"]
+        target_regs = []
+
+        target_regs_ztmui = []
+
+        for target_name in target_regs_names:
+            register = self.__registers.by_name(target_name)
+            if register is not None:
+                target_regs.append(register)
+
+        for target_reg in target_regs:
+            name = target_reg.name
+            value = target_reg.value
             minimum = 0
             maximum = 0
             status = "Normal" # enum('Rising', 'Falling', 'Normal')
@@ -585,6 +617,16 @@ class Zone():
                 # Check is it logged in.
                 if self.__ztm_ui.is_logged_in():
                     self.__transport_registers_ztmui()
+                # If not, login.
+                else:
+                    self.__ztm_ui.login()
+
+            self.__ztm_ui_activations_ut.update()
+            if self.__ztm_ui_activations_ut.expired:
+                self.__ztm_ui_activations_ut.clear()
+                # Check is it logged in.
+                if self.__ztm_ui.is_logged_in():
+                    self.__update_tamers_activations()
                 # If not, login.
                 else:
                     self.__ztm_ui.login()
