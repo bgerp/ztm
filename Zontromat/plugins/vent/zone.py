@@ -137,6 +137,10 @@ class Zone(BasePlugin):
         """Access Control set point.
         """
 
+        self.__window_tamper_settings = {}
+        """Window closed sensor input.
+        """
+
     def __del__(self):
 
         if self.__upper_fan_dev is not None:
@@ -153,6 +157,21 @@ class Zone(BasePlugin):
 #endregion
 
 #region Private Methods (PLC)
+
+    def __read_window_tamper(self):
+
+        state = False
+
+        for tamper in self.__window_tamper_settings:
+            # {'WINT_1': '!U0:ID2:FC2:R0:DI0'}
+
+            if self._controller.is_valid_gpio(self.__window_tamper_settings[tamper]):
+                state |= self._controller.digital_read(self.__window_tamper_settings[tamper])
+
+            if self.__window_tamper_settings[tamper] == verbal_const.OFF:
+                state |= True
+
+        return state
 
     def __set_upper_air_damper(self, position):
 
@@ -382,6 +401,15 @@ class Zone(BasePlugin):
         # Set the speed of the fan.
         self.__set_lower_fan(register.value)
 
+    def __window_tamper_settings_cb(self, register):
+
+          # Check data type.
+        if not register.data_type == "json":
+            GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
+            return
+
+        self.__window_tamper_settings = register.value
+
 #endregion
 
 #region Private Methods (Registers Parameters)
@@ -527,6 +555,12 @@ class Zone(BasePlugin):
             lower_fan_speed.update_handlers = self.__lower_fan_speed_cb
             lower_fan_speed.update()
 
+        # Create window closed sensor.
+        window_tamper_settings = self._registers.by_name(f"envm.window_tamper.settings")
+        if window_tamper_settings is not None:
+            window_tamper_settings.update_handlers = self.__window_tamper_settings_cb
+            window_tamper_settings.update()
+
 #endregion
 
 #region Private Methods (DEPRECATED)
@@ -642,6 +676,16 @@ class Zone(BasePlugin):
     def _update(self):
         """Runtime of the plugin."""
 
+        # Update occupation flags.
+        is_empty = self.__is_empty()
+
+        # If the window is opened, just turn off the HVAC.
+        window_tamper_state = self.__read_window_tamper()
+
+        # Take all necessary condition for normal operation of the HVAC.
+        stop_flag = (is_empty or window_tamper_state)
+        # stop_flag = False
+
         # Set fan speeds.
         speed_lower = 0
         speed_upper = 0
@@ -654,7 +698,7 @@ class Zone(BasePlugin):
         leading_setpoint = set_points[leading_index]
 
         # Power ON/OFF the power of the fans.
-        if leading_setpoint != 0:
+        if leading_setpoint != 0 and stop_flag == False:
             self._controller.digital_write(self.__fans_power_gpio_name, 1)
         else:
             self._controller.digital_write(self.__fans_power_gpio_name, 0)

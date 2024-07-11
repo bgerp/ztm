@@ -6,6 +6,7 @@
         "limit": 0.0,
         "name": "ac.enabled",
         "plugin": "Access Control",
+        "profiles": "mz",
         "range": "true|false",
         "scope": "System"
     },
@@ -16,6 +17,7 @@
         "limit": 0.0,
         "name": "ac.allowed_attendees",
         "plugin": "Access Control",
+        "profiles": "mz",
         "range": "",
         "scope": "System"
     },
@@ -26,6 +28,7 @@
         "limit": 0.0,
         "name": "ac.zones_count",
         "plugin": "Access Control",
+        "profiles": "",
         "range": "1/",
         "scope": "System"
     },
@@ -36,6 +39,7 @@
         "limit": 0.0,
         "name": "ac.nearby_attendees",
         "plugin": "Access Control",
+        "profiles": "mz",
         "range": "",
         "scope": "System"
     },
@@ -46,6 +50,7 @@
         "limit": 0.0,
         "name": "ac.last_update_attendees",
         "plugin": "Access Control",
+        "profiles": "mz",
         "range": "",
         "scope": "Device"
     },
@@ -56,6 +61,7 @@
         "limit": 0.0,
         "name": "ac.next_attendance",
         "plugin": "Access Control",
+        "profiles": "mz",
         "range": "0.0/",
         "scope": "Device"
     },
@@ -66,6 +72,7 @@
         "limit": 0.0,
         "name": "ac.entry_reader_1.enabled",
         "plugin": "Access Control",
+        "profiles": "mz",
         "range": "",
         "scope": "System"
     },
@@ -76,6 +83,7 @@
         "limit": 0.0,
         "name": "ac.exit_reader_1.enabled",
         "plugin": "Access Control",
+        "profiles": "mz",
         "range": "",
         "scope": "System"
     },
@@ -86,6 +94,7 @@
         "limit": 0.0,
         "name": "ac.exit_button_1.input",
         "plugin": "Access Control",
+        "profiles": "mz",
         "range": "off|DI0|DI1|DI2|DI3|DI4|DI5|DI6|DI7|DI8|!DI0|!DI1|!DI2|!DI3|!DI4|!DI5|!DI6|!DI7|!DI8",
         "scope": "System"
     },
@@ -96,6 +105,7 @@
         "limit": 0.0,
         "name": "ac.lock_mechanism_1.output",
         "plugin": "Access Control",
+        "profiles": "mz",
         "range": "off|DO0|DO1|DO2|DO3|DO4|DO5|DO6|DO7|DO8|!DO0|!DO1|!DO2|!DO3|!DO4|!DO5|!DO6|!DO7|!DO8",
         "scope": "System"
     },
@@ -106,6 +116,7 @@
         "limit": 0.0,
         "name": "ac.time_to_open_1",
         "plugin": "Access Control",
+        "profiles": "mz",
         "range": "0/60",
         "scope": "System"
     },
@@ -116,6 +127,7 @@
         "limit": 0.0,
         "name": "ac.door_closed_1.input",
         "plugin": "Access Control",
+        "profiles": "mz",
         "range": "off|DI0|DI1|DI2|DI3|DI4|DI5|DI6|DI7|DI8|!DI0|!DI1|!DI2|!DI3|!DI4|!DI5|!DI6|!DI7|!DI8",
         "scope": "System"
     },
@@ -126,6 +138,7 @@
         "limit": 0.0,
         "name": "ac.door_closed_1.state",
         "plugin": "Access Control",
+        "profiles": "mz",
         "range": "true|false",
         "scope": "Device"
     },
@@ -136,6 +149,7 @@
         "limit": 0.0,
         "name": "ac.entry_reader_2.enabled",
         "plugin": "Access Control",
+        "profiles": "mz",
         "range": "",
         "scope": "System"
     },
@@ -146,6 +160,7 @@
         "limit": 0.0,
         "name": "ac.exit_reader_2.enabled",
         "plugin": "Access Control",
+        "profiles": "mz",
         "range": "",
         "scope": "System"
     },
@@ -156,6 +171,7 @@
         "limit": 0.0,
         "name": "ac.exit_button_2.input",
         "plugin": "Access Control",
+        "profiles": "mz",
         "range": "off|DI0|DI1|DI2|DI3|DI4|DI5|DI6|DI7|DI8|!DI0|!DI1|!DI2|!DI3|!DI4|!DI5|!DI6|!DI7|!DI8",
         "scope": "System"
     },
@@ -166,6 +182,7 @@
         "limit": 0.0,
         "name": "ac.lock_mechanism_2.output",
         "plugin": "Access Control",
+        "profiles": "mz",
         "range": "off|DO0|DO1|DO2|DO3|DO4|DO5|DO6|DO7|DO8|!DO0|!DO1|!DO2|!DO3|!DO4|!DO5|!DO6|!DO7|!DO8",
         "scope": "System"
     },
@@ -176,6 +193,7 @@
         "limit": 0.0,
         "name": "ac.time_to_open_2",
         "plugin": "Access Control",
+        "profiles": "mz",
         "range": "0/60",
         "scope": "System"
     },
@@ -186,6 +204,7 @@
         "limit": 0.0,
         "name": "ac.door_closed_2.input",
         "plugin": "Access Control",
+        "profiles": "mz",
         "range": "off|DI0|DI1|DI2|DI3|DI4|DI5|DI6|DI7|DI8|!DI0|!DI1|!DI2|!DI3|!DI4|!DI5|!DI6|!DI7|!DI8",
         "scope": "System"
     },
@@ -196,6 +215,7 @@
         "limit": 0.0,
         "name": "ac.door_closed_2.state",
         "plugin": "Access Control",
+        "profiles": "mz",
         "range": "true|false",
         "scope": "Device"
     },
@@ -206,6 +226,7 @@
         "limit": 0.0,
         "name": "ac.pir_1.input",
         "plugin": "Access Control",
+        "profiles": "mz",
         "range": "off|DI0|DI1|DI2|DI3|DI4|DI5|DI6|DI7|DI8|!DI0|!DI1|!DI2|!DI3|!DI4|!DI5|!DI6|!DI7|!DI8",
         "scope": "System"
     },
@@ -216,6 +237,7 @@
         "limit": 0.0,
         "name": "ac.pir_1.state",
         "plugin": "Access Control",
+        "profiles": "mz",
         "range": "true|false",
         "scope": "Device"
     },
@@ -226,6 +248,7 @@
         "limit": 0.0,
         "name": "ac.pir_2.input",
         "plugin": "Access Control",
+        "profiles": "mz",
         "range": "off|DI0|DI1|DI2|DI3|DI4|DI5|DI6|DI7|DI8|!DI0|!DI1|!DI2|!DI3|!DI4|!DI5|!DI6|!DI7|!DI8",
         "scope": "System"
     },
@@ -236,6 +259,7 @@
         "limit": 0.0,
         "name": "ac.pir_2.state",
         "plugin": "Access Control",
+        "profiles": "mz",
         "range": "true|false",
         "scope": "Device"
     },
@@ -246,6 +270,7 @@
         "limit": 0.0,
         "name": "ac.window_closed_1.input",
         "plugin": "Access Control",
+        "profiles": "mz",
         "range": "off|DI0|DI1|DI2|DI3|DI4|DI5|DI6|DI7|DI8|!DI0|!DI1|!DI2|!DI3|!DI4|!DI5|!DI6|!DI7|!DI8",
         "scope": "System"
     },
@@ -256,6 +281,7 @@
         "limit": 0.0,
         "name": "ac.window_closed_1.state",
         "plugin": "Access Control",
+        "profiles": "mz",
         "range": "true|false",
         "scope": "Device"
     },
@@ -266,6 +292,7 @@
         "limit": 0.0,
         "name": "ac.window_closed_2.input",
         "plugin": "Access Control",
+        "profiles": "mz",
         "range": "off|DI0|DI1|DI2|DI3|DI4|DI5|DI6|DI7|DI8|!DI0|!DI1|!DI2|!DI3|!DI4|!DI5|!DI6|!DI7|!DI8",
         "scope": "System"
     },
@@ -276,6 +303,7 @@
         "limit": 0.0,
         "name": "ac.window_closed_2.state",
         "plugin": "Access Control",
+        "profiles": "mz",
         "range": "true|false",
         "scope": "Device"
     },
@@ -286,6 +314,7 @@
         "limit": 0.0,
         "name": "ac.door_window_blind_1.output",
         "plugin": "Access Control",
+        "profiles": "mz",
         "range": "off|DO0|DO1|DO2|DO3|DO4|DO5|DO6|DO7|DO8|!DO0|!DO1|!DO2|!DO3|!DO4|!DO5|!DO6|!DO7|!DO8",
         "scope": "System"
     },
@@ -296,6 +325,7 @@
         "limit": 0.0,
         "name": "ac.door_window_blind_1.value",
         "plugin": "Access Control",
+        "profiles": "mz",
         "range": "true|false",
         "scope": "Device"
     },
@@ -306,6 +336,7 @@
         "limit": 0.0,
         "name": "ac.door_window_blind_2.output",
         "plugin": "Access Control",
+        "profiles": "mz",
         "range": "off|DO0|DO1|DO2|DO3|DO4|DO5|DO6|DO7|DO8|!DO0|!DO1|!DO2|!DO3|!DO4|!DO5|!DO6|!DO7|!DO8",
         "scope": "System"
     },
@@ -316,6 +347,7 @@
         "limit": 0.0,
         "name": "ac.door_window_blind_2.value",
         "plugin": "Access Control",
+        "profiles": "mz",
         "range": "true|false",
         "scope": "Device"
     },
@@ -326,6 +358,7 @@
         "limit": 0.0,
         "name": "ac.zone_1_occupied",
         "plugin": "Access Control",
+        "profiles": "mz",
         "range": "true|false",
         "scope": "Device"
     },
@@ -336,6 +369,7 @@
         "limit": 0.0,
         "name": "ac.zone_2_occupied",
         "plugin": "Access Control",
+        "profiles": "mz",
         "range": "true|false",
         "scope": "Device"
     },
@@ -353,6 +387,7 @@
         "limit": 0.0,
         "name": "blinds.blind_1.mechanism",
         "plugin": "Blinds",
+        "profiles": "mz",
         "range": "",
         "scope": "System"
     },
@@ -363,8 +398,9 @@
         "limit": 0.0,
         "name": "blinds.blind_1.position",
         "plugin": "Blinds",
+        "profiles": "mz",
         "range": "0.0/180.0",
-        "scope": "Device"
+        "scope": "Both"
     },
     {
         "data_type": "float",
@@ -373,6 +409,7 @@
         "limit": 0.0,
         "name": "blinds.blind_1.object_height",
         "plugin": "Blinds",
+        "profiles": "mz",
         "range": "0.0/",
         "scope": "Both"
     },
@@ -383,16 +420,25 @@
         "limit": 0.0,
         "name": "blinds.blind_1.sunspot_limit",
         "plugin": "Blinds",
+        "profiles": "mz",
         "range": "0.0/",
         "scope": "Both"
     },
     {
         "data_type": "json",
-        "default": {},
+        "default": {
+            "model": "BlindsV2",
+            "options": {
+                "mb_id": 12,
+                "uart": 0
+            },
+            "vendor": "Yihao"
+        },
         "description": "Window 2 blinds mechanism",
         "limit": 0.0,
         "name": "blinds.blind_2.mechanism",
         "plugin": "Blinds",
+        "profiles": "mz",
         "range": "",
         "scope": "System"
     },
@@ -403,6 +449,7 @@
         "limit": 0.0,
         "name": "blinds.blind_2.position",
         "plugin": "Blinds",
+        "profiles": "mz",
         "range": "0.0/180.0",
         "scope": "Both"
     },
@@ -413,6 +460,7 @@
         "limit": 0.0,
         "name": "blinds.blind_2.object_height",
         "plugin": "Blinds",
+        "profiles": "mz",
         "range": "0.0/",
         "scope": "Both"
     },
@@ -423,16 +471,25 @@
         "limit": 0.0,
         "name": "blinds.blind_2.sunspot_limit",
         "plugin": "Blinds",
+        "profiles": "mz",
         "range": "0.0/",
         "scope": "Both"
     },
     {
-        "data_type": "None",
-        "default": null,
+        "data_type": "json",
+        "default": {
+            "model": "BlindsV2",
+            "options": {
+                "mb_id": 13,
+                "uart": 0
+            },
+            "vendor": "Yihao"
+        },
         "description": "Window 3 blinds mechanism",
         "limit": 0.0,
         "name": "blinds.blind_3.mechanism",
         "plugin": "Blinds",
+        "profiles": "mz",
         "range": "",
         "scope": "System"
     },
@@ -443,6 +500,7 @@
         "limit": 0.0,
         "name": "blinds.blind_3.position",
         "plugin": "Blinds",
+        "profiles": "mz",
         "range": "0.0/180.0",
         "scope": "Both"
     },
@@ -453,6 +511,7 @@
         "limit": 0.0,
         "name": "blinds.blind_3.object_height",
         "plugin": "Blinds",
+        "profiles": "mz",
         "range": "0.0/",
         "scope": "Both"
     },
@@ -463,16 +522,25 @@
         "limit": 0.0,
         "name": "blinds.blind_3.sunspot_limit",
         "plugin": "Blinds",
+        "profiles": "mz",
         "range": "0.0/",
         "scope": "Both"
     },
     {
         "data_type": "json",
-        "default": {},
+        "default": {
+            "model": "BlindsV2",
+            "options": {
+                "mb_id": 14,
+                "uart": 0
+            },
+            "vendor": "Yihao"
+        },
         "description": "Window 4 blinds mechanism",
         "limit": 0.0,
         "name": "blinds.blind_4.mechanism",
         "plugin": "Blinds",
+        "profiles": "mz",
         "range": "",
         "scope": "System"
     },
@@ -483,6 +551,7 @@
         "limit": 0.0,
         "name": "blinds.blind_4.position",
         "plugin": "Blinds",
+        "profiles": "mz",
         "range": "0.0/180.0",
         "scope": "Both"
     },
@@ -493,6 +562,7 @@
         "limit": 0.0,
         "name": "blinds.blind_4.object_height",
         "plugin": "Blinds",
+        "profiles": "mz",
         "range": "0.0/",
         "scope": "Both"
     },
@@ -503,6 +573,7 @@
         "limit": 0.0,
         "name": "blinds.blind_4.sunspot_limit",
         "plugin": "Blinds",
+        "profiles": "mz",
         "range": "0.0/",
         "scope": "Both"
     },
@@ -513,6 +584,7 @@
         "limit": 0.0,
         "name": "blinds.count",
         "plugin": "Blinds",
+        "profiles": "mz",
         "range": "1/",
         "scope": "System"
     },
@@ -523,6 +595,7 @@
         "limit": 0.0,
         "name": "blinds.enabled",
         "plugin": "Blinds",
+        "profiles": "mz",
         "range": "true|false",
         "scope": "System"
     },
@@ -533,6 +606,7 @@
         "limit": 0.0,
         "name": "monitoring.enabled",
         "plugin": "Monitoring",
+        "profiles": "mz",
         "range": "true|false",
         "scope": "System"
     },
@@ -543,6 +617,7 @@
         "limit": 0.0,
         "name": "monitoring.cw.flowmeter_settings",
         "plugin": "Monitoring",
+        "profiles": "mz",
         "range": "",
         "scope": "System"
     },
@@ -553,6 +628,7 @@
         "limit": 0.0,
         "name": "monitoring.cw.measurements",
         "plugin": "Monitoring",
+        "profiles": "mz",
         "range": "",
         "scope": "Device"
     },
@@ -563,6 +639,7 @@
         "limit": 0.0,
         "name": "monitoring.cw.leak",
         "plugin": "Monitoring",
+        "profiles": "mz",
         "range": "0.0/",
         "scope": "Device"
     },
@@ -573,6 +650,7 @@
         "limit": 0.0,
         "name": "monitoring.hw.flowmeter_settings",
         "plugin": "Monitoring",
+        "profiles": "mz",
         "range": "",
         "scope": "System"
     },
@@ -583,6 +661,7 @@
         "limit": 0.0,
         "name": "monitoring.hw.measurements",
         "plugin": "Monitoring",
+        "profiles": "mz",
         "range": "",
         "scope": "Device"
     },
@@ -593,6 +672,7 @@
         "limit": 0.0,
         "name": "monitoring.hw.leak",
         "plugin": "Monitoring",
+        "profiles": "mz",
         "range": "0.0/",
         "scope": "Device"
     },
@@ -610,6 +690,7 @@
         "limit": 0.0,
         "name": "monitoring.pa.settings",
         "plugin": "Monitoring",
+        "profiles": "mz",
         "range": "",
         "scope": "System"
     },
@@ -620,6 +701,7 @@
         "limit": 0.0,
         "name": "monitoring.pa.measurements",
         "plugin": "Monitoring",
+        "profiles": "mz",
         "range": "",
         "scope": "Device"
     },
@@ -630,6 +712,7 @@
         "limit": 0.0,
         "name": "monitoring.demand_time",
         "plugin": "Monitoring",
+        "profiles": "mz",
         "range": "0.0/",
         "scope": "System"
     },
@@ -640,6 +723,7 @@
         "limit": 0.0,
         "name": "monitoring.fl_1.hm.settings",
         "plugin": "HVAC",
+        "profiles": "mz",
         "range": "",
         "scope": "System"
     },
@@ -650,6 +734,7 @@
         "limit": 0.0,
         "name": "monitoring.fl_1.hm.measurements",
         "plugin": "Monitoring",
+        "profiles": "mz",
         "range": "",
         "scope": "Device"
     },
@@ -660,6 +745,7 @@
         "limit": 0.0,
         "name": "monitoring.fl_2.hm.settings",
         "plugin": "Monitoring",
+        "profiles": "mz",
         "range": "",
         "scope": "System"
     },
@@ -670,6 +756,7 @@
         "limit": 0.0,
         "name": "monitoring.fl_2.hm.measurements",
         "plugin": "Monitoring",
+        "profiles": "mz",
         "range": "",
         "scope": "Device"
     },
@@ -680,6 +767,7 @@
         "limit": 0.0,
         "name": "monitoring.fl_3.hm.settings",
         "plugin": "Monitoring",
+        "profiles": "mz",
         "range": "",
         "scope": "System"
     },
@@ -690,6 +778,7 @@
         "limit": 0.0,
         "name": "monitoring.fl_3.hm.measurements",
         "plugin": "Monitoring",
+        "profiles": "mz",
         "range": "",
         "scope": "Device"
     },
@@ -700,6 +789,7 @@
         "limit": 0.0,
         "name": "monitoring.cl_1.hm.settings",
         "plugin": "Monitoring",
+        "profiles": "mz",
         "range": "",
         "scope": "System"
     },
@@ -710,6 +800,7 @@
         "limit": 0.0,
         "name": "monitoring.cl_1.hm.measurements",
         "plugin": "Monitoring",
+        "profiles": "mz",
         "range": "",
         "scope": "Device"
     },
@@ -720,6 +811,7 @@
         "limit": 0.0,
         "name": "monitoring.cl_2.hm.settings",
         "plugin": "Monitoring",
+        "profiles": "mz",
         "range": "",
         "scope": "System"
     },
@@ -730,6 +822,7 @@
         "limit": 0.0,
         "name": "monitoring.cl_2.hm.measurements",
         "plugin": "Monitoring",
+        "profiles": "mz",
         "range": "",
         "scope": "Device"
     },
@@ -740,6 +833,7 @@
         "limit": 0.0,
         "name": "monitoring.cl_3.hm.settings",
         "plugin": "Monitoring",
+        "profiles": "mz",
         "range": "",
         "scope": "System"
     },
@@ -750,6 +844,7 @@
         "limit": 0.0,
         "name": "monitoring.cl_3.hm.measurements",
         "plugin": "Monitoring",
+        "profiles": "mz",
         "range": "",
         "scope": "Device"
     },
@@ -760,6 +855,7 @@
         "limit": 0.0,
         "name": "monitoring.pa.demand_time",
         "plugin": "Monitoring",
+        "profiles": "mz",
         "range": "0.0/",
         "scope": "System"
     },
@@ -770,6 +866,7 @@
         "limit": 0.0,
         "name": "envm.enabled",
         "plugin": "Environment",
+        "profiles": "mz",
         "range": "true|false",
         "scope": "System"
     },
@@ -789,6 +886,7 @@
         "limit": 0.0,
         "name": "envm.pir.settings",
         "plugin": "Environment",
+        "profiles": "mz",
         "range": "",
         "scope": "System"
     },
@@ -799,18 +897,20 @@
         "limit": 0.0,
         "name": "envm.pir.activations",
         "plugin": "Environment",
+        "profiles": "mz",
         "range": "",
         "scope": "Device"
     },
     {
         "data_type": "json",
         "default": {
-            "WINT_1": "!U0:ID2:FC2:R0:DI0"
+            "WINT_1": "!U0:ID2:FC2:R0:DI1"
         },
         "description": "Plugin environment window tamper settings",
         "limit": 0.0,
         "name": "envm.window_tamper.settings",
         "plugin": "Environment",
+        "profiles": "mz",
         "range": "",
         "scope": "System"
     },
@@ -821,18 +921,20 @@
         "limit": 0.0,
         "name": "envm.window_tamper.activations",
         "plugin": "Environment",
+        "profiles": "mz",
         "range": "",
         "scope": "Device"
     },
     {
         "data_type": "json",
         "default": {
-            "DRT_1": "!U0:ID2:FC2:R0:DI1"
+            "DRT_1": "!U0:ID2:FC2:R0:DI0"
         },
         "description": "Plugin environment door tamper settings",
         "limit": 0.0,
         "name": "envm.door_tamper.settings",
         "plugin": "Environment",
+        "profiles": "mz",
         "range": "",
         "scope": "System"
     },
@@ -843,6 +945,7 @@
         "limit": 0.0,
         "name": "envm.door_tamper.activations",
         "plugin": "Environment",
+        "profiles": "mz",
         "range": "",
         "scope": "Device"
     },
@@ -853,6 +956,7 @@
         "limit": 0.0,
         "name": "envm.is_empty",
         "plugin": "Environment",
+        "profiles": "mz",
         "range": "true|false",
         "scope": "Device"
     },
@@ -863,6 +967,7 @@
         "limit": 0.0,
         "name": "envm.is_empty_timeout",
         "plugin": "Environment",
+        "profiles": "mz",
         "range": "0/",
         "scope": "System"
     },
@@ -873,6 +978,7 @@
         "limit": 0.0,
         "name": "envm.forecast.icon_0",
         "plugin": "Environment",
+        "profiles": "mz",
         "range": "",
         "scope": "System"
     },
@@ -883,6 +989,7 @@
         "limit": 0.0,
         "name": "envm.forecast.rh_0",
         "plugin": "Environment",
+        "profiles": "mz",
         "range": "0.0/100.0",
         "scope": "System"
     },
@@ -893,6 +1000,7 @@
         "limit": 0.0,
         "name": "envm.forecast.temp_0",
         "plugin": "Environment",
+        "profiles": "mz",
         "range": "-50.0/50.0",
         "scope": "System"
     },
@@ -903,6 +1011,7 @@
         "limit": 0.0,
         "name": "envm.forecast.wind_0",
         "plugin": "Environment",
+        "profiles": "mz",
         "range": "0.0/100.0",
         "scope": "System"
     },
@@ -913,6 +1022,7 @@
         "limit": 0.0,
         "name": "envm.forecast.icon_3",
         "plugin": "Environment",
+        "profiles": "mz",
         "range": "",
         "scope": "System"
     },
@@ -923,6 +1033,7 @@
         "limit": 0.0,
         "name": "envm.forecast.rh_3",
         "plugin": "Environment",
+        "profiles": "mz",
         "range": "0.0/100.0",
         "scope": "System"
     },
@@ -933,6 +1044,7 @@
         "limit": 0.0,
         "name": "envm.forecast.temp_3",
         "plugin": "Environment",
+        "profiles": "mz",
         "range": "-50.0/50.0",
         "scope": "System"
     },
@@ -943,6 +1055,7 @@
         "limit": 0.0,
         "name": "envm.forecast.wind_3",
         "plugin": "Environment",
+        "profiles": "mz",
         "range": "0.0/100.0",
         "scope": "System"
     },
@@ -953,6 +1066,7 @@
         "limit": 0.0,
         "name": "envm.forecast.icon_6",
         "plugin": "Environment",
+        "profiles": "mz",
         "range": "",
         "scope": "System"
     },
@@ -963,6 +1077,7 @@
         "limit": 0.0,
         "name": "envm.forecast.rh_6",
         "plugin": "Environment",
+        "profiles": "mz",
         "range": "0.0/100.0",
         "scope": "System"
     },
@@ -973,6 +1088,7 @@
         "limit": 0.0,
         "name": "envm.forecast.temp_6",
         "plugin": "Environment",
+        "profiles": "mz",
         "range": "-50.0/50.0",
         "scope": "System"
     },
@@ -983,6 +1099,7 @@
         "limit": 0.0,
         "name": "envm.forecast.wind_6",
         "plugin": "Environment",
+        "profiles": "mz",
         "range": "0.0/100.0",
         "scope": "System"
     },
@@ -993,6 +1110,7 @@
         "limit": 0.0,
         "name": "envm.light",
         "plugin": "Environment",
+        "profiles": "mz",
         "range": "0.0/",
         "scope": "System"
     },
@@ -1003,6 +1121,7 @@
         "limit": 0.0,
         "name": "envm.energy",
         "plugin": "Environment",
+        "profiles": "mz",
         "range": "",
         "scope": "System"
     },
@@ -1013,6 +1132,7 @@
         "limit": 0.0,
         "name": "envm.flag_fire",
         "plugin": "Environment",
+        "profiles": "mz",
         "range": "0/3",
         "scope": "System"
     },
@@ -1023,6 +1143,7 @@
         "limit": 0.0,
         "name": "envm.flag_storm",
         "plugin": "Environment",
+        "profiles": "mz",
         "range": "0/3",
         "scope": "System"
     },
@@ -1033,6 +1154,7 @@
         "limit": 0.0,
         "name": "envm.flag_earthquake",
         "plugin": "Environment",
+        "profiles": "mz",
         "range": "0/3",
         "scope": "System"
     },
@@ -1043,6 +1165,7 @@
         "limit": 0.0,
         "name": "envm.flag_gassing",
         "plugin": "Environment",
+        "profiles": "mz",
         "range": "0/3",
         "scope": "System"
     },
@@ -1053,6 +1176,7 @@
         "limit": 0.0,
         "name": "envm.flag_flooding",
         "plugin": "Environment",
+        "profiles": "mz",
         "range": "0/3",
         "scope": "System"
     },
@@ -1063,6 +1187,7 @@
         "limit": 0.0,
         "name": "envm.flag_blocked",
         "plugin": "Environment",
+        "profiles": "mz",
         "range": "0/3",
         "scope": "System"
     },
@@ -1073,6 +1198,7 @@
         "limit": 0.0,
         "name": "envm.sunpos.enabled",
         "plugin": "Environment",
+        "profiles": "mz",
         "range": "true|false",
         "scope": "System"
     },
@@ -1083,6 +1209,7 @@
         "limit": 0.0,
         "name": "envm.building.location.lat",
         "plugin": "Environment",
+        "profiles": "mz",
         "range": "0.0/360.0",
         "scope": "System"
     },
@@ -1093,6 +1220,7 @@
         "limit": 0.0,
         "name": "envm.building.location.lon",
         "plugin": "Environment",
+        "profiles": "mz",
         "range": "0.0/360.0",
         "scope": "System"
     },
@@ -1103,6 +1231,7 @@
         "limit": 0.0,
         "name": "envm.building.location.elv",
         "plugin": "Environment",
+        "profiles": "mz",
         "range": "/",
         "scope": "System"
     },
@@ -1113,6 +1242,7 @@
         "limit": 0.0,
         "name": "envm.building.location.time_zone",
         "plugin": "Environment",
+        "profiles": "mz",
         "range": "0/23",
         "scope": "System"
     },
@@ -1123,6 +1253,7 @@
         "limit": 0.0,
         "name": "envm.sun.azimuth",
         "plugin": "Blinds",
+        "profiles": "mz",
         "range": "0.0/360.0",
         "scope": "System"
     },
@@ -1133,6 +1264,7 @@
         "limit": 0.0,
         "name": "envm.sun.elevation",
         "plugin": "Blinds",
+        "profiles": "mz",
         "range": "0.0/360.0",
         "scope": "System"
     },
@@ -1143,6 +1275,7 @@
         "limit": 0.0,
         "name": "hvac.enabled",
         "plugin": "HVAC",
+        "profiles": "mz",
         "range": "true|false",
         "scope": "System"
     },
@@ -1153,6 +1286,7 @@
         "limit": 0.0,
         "name": "hvac.zones_count",
         "plugin": "HVAC",
+        "profiles": "mz",
         "range": "0/",
         "scope": "System"
     },
@@ -1170,6 +1304,7 @@
         "limit": 0.0,
         "name": "hvac.air_temp_cent_1.settings",
         "plugin": "HVAC",
+        "profiles": "mz",
         "range": "",
         "scope": "System"
     },
@@ -1180,6 +1315,7 @@
         "limit": 0.0,
         "name": "hvac.air_temp_cent_1.value",
         "plugin": "HVAC",
+        "profiles": "mz",
         "range": "0.0/",
         "scope": "Device"
     },
@@ -1197,6 +1333,7 @@
         "limit": 0.0,
         "name": "hvac.air_temp_lower_1.settings",
         "plugin": "HVAC",
+        "profiles": "mz",
         "range": "",
         "scope": "System"
     },
@@ -1207,6 +1344,7 @@
         "limit": 0.0,
         "name": "hvac.air_temp_lower_1.value",
         "plugin": "HVAC",
+        "profiles": "mz",
         "range": "0.0/",
         "scope": "Device"
     },
@@ -1224,6 +1362,7 @@
         "limit": 0.0,
         "name": "hvac.air_temp_upper_1.settings",
         "plugin": "HVAC",
+        "profiles": "mz",
         "range": "",
         "scope": "System"
     },
@@ -1234,6 +1373,7 @@
         "limit": 0.0,
         "name": "hvac.air_temp_upper_1.value",
         "plugin": "HVAC",
+        "profiles": "mz",
         "range": "0.0/",
         "scope": "Device"
     },
@@ -1252,6 +1392,7 @@
         "limit": 0.0,
         "name": "hvac.floor_loop_1.valve.settings",
         "plugin": "HVAC",
+        "profiles": "mz",
         "range": "",
         "scope": "System"
     },
@@ -1262,6 +1403,7 @@
         "limit": 0.0,
         "name": "hvac.floor_loop_1.valve.activations",
         "plugin": "HVAC",
+        "profiles": "mz",
         "range": "",
         "scope": "Device"
     },
@@ -1280,6 +1422,7 @@
         "limit": 0.0,
         "name": "hvac.floor_loop_2.valve.settings",
         "plugin": "HVAC",
+        "profiles": "mz",
         "range": "",
         "scope": "System"
     },
@@ -1290,6 +1433,7 @@
         "limit": 0.0,
         "name": "hvac.floor_loop_2.valve.activations",
         "plugin": "HVAC",
+        "profiles": "mz",
         "range": "",
         "scope": "Device"
     },
@@ -1308,6 +1452,7 @@
         "limit": 0.0,
         "name": "hvac.floor_loop_3.valve.settings",
         "plugin": "HVAC",
+        "profiles": "mz",
         "range": "",
         "scope": "System"
     },
@@ -1318,6 +1463,7 @@
         "limit": 0.0,
         "name": "hvac.floor_loop_3.valve.activations",
         "plugin": "HVAC",
+        "profiles": "mz",
         "range": "",
         "scope": "Device"
     },
@@ -1342,6 +1488,7 @@
         "limit": 0.0,
         "name": "hvac.convector_1.settings",
         "plugin": "HVAC",
+        "profiles": "mz",
         "range": "",
         "scope": "System"
     },
@@ -1360,6 +1507,7 @@
         "limit": 0.0,
         "name": "hvac.conv_loop_1.valve.settings",
         "plugin": "HVAC",
+        "profiles": "mz",
         "range": "",
         "scope": "System"
     },
@@ -1370,6 +1518,7 @@
         "limit": 0.0,
         "name": "hvac.conv_loop_1.valve.activations",
         "plugin": "HVAC",
+        "profiles": "mz",
         "range": "",
         "scope": "Device"
     },
@@ -1394,6 +1543,7 @@
         "limit": 0.0,
         "name": "hvac.convector_2.settings",
         "plugin": "HVAC",
+        "profiles": "mz",
         "range": "",
         "scope": "System"
     },
@@ -1412,6 +1562,7 @@
         "limit": 0.0,
         "name": "hvac.conv_loop_2.valve.settings",
         "plugin": "HVAC",
+        "profiles": "mz",
         "range": "",
         "scope": "System"
     },
@@ -1422,6 +1573,7 @@
         "limit": 0.0,
         "name": "hvac.conv_loop_2.valve.activations",
         "plugin": "HVAC",
+        "profiles": "mz",
         "range": "",
         "scope": "Device"
     },
@@ -1446,6 +1598,7 @@
         "limit": 0.0,
         "name": "hvac.convector_3.settings",
         "plugin": "HVAC",
+        "profiles": "mz",
         "range": "",
         "scope": "System"
     },
@@ -1464,6 +1617,7 @@
         "limit": 0.0,
         "name": "hvac.conv_loop_3.valve.settings",
         "plugin": "HVAC",
+        "profiles": "mz",
         "range": "",
         "scope": "System"
     },
@@ -1474,6 +1628,7 @@
         "limit": 0.0,
         "name": "hvac.conv_loop_3.valve.activations",
         "plugin": "HVAC",
+        "profiles": "mz",
         "range": "",
         "scope": "Device"
     },
@@ -1484,6 +1639,7 @@
         "limit": 0.0,
         "name": "hvac.floor_loop_1.temp.down_limit",
         "plugin": "HVAC",
+        "profiles": "mz",
         "range": "0.0/",
         "scope": "System"
     },
@@ -1494,6 +1650,7 @@
         "limit": 0.0,
         "name": "hvac.conv_loop_1.temp.down_limit",
         "plugin": "HVAC",
+        "profiles": "mz",
         "range": "/",
         "scope": "System"
     },
@@ -1504,6 +1661,7 @@
         "limit": 0.0,
         "name": "hvac.temp_1.adjust",
         "plugin": "HVAC",
+        "profiles": "mz",
         "range": "-50.0/50.0",
         "scope": "Device"
     },
@@ -1514,6 +1672,7 @@
         "limit": 0.0,
         "name": "hvac.delta_time_1",
         "plugin": "HVAC",
+        "profiles": "mz",
         "range": "0.0/",
         "scope": "System"
     },
@@ -1524,6 +1683,7 @@
         "limit": 0.0,
         "name": "hvac.goal_building_temp",
         "plugin": "HVAC",
+        "profiles": "mz",
         "range": "-50.0/50.0",
         "scope": "System"
     },
@@ -1534,6 +1694,7 @@
         "limit": 0.0,
         "name": "hvac.temp_1.actual",
         "plugin": "HVAC",
+        "profiles": "mz",
         "range": "-50.0/50.0",
         "scope": "System"
     },
@@ -1544,6 +1705,7 @@
         "limit": 0.0,
         "name": "hvac.temp_1.max",
         "plugin": "HVAC",
+        "profiles": "mz",
         "range": "-50.0/50.0",
         "scope": "System"
     },
@@ -1554,6 +1716,7 @@
         "limit": 0.0,
         "name": "hvac.temp_1.min",
         "plugin": "HVAC",
+        "profiles": "mz",
         "range": "-50.0/50.0",
         "scope": "System"
     },
@@ -1564,6 +1727,7 @@
         "limit": 0.0,
         "name": "hvac.thermal_force_limit_1",
         "plugin": "HVAC",
+        "profiles": "mz",
         "range": "0.0/100.0",
         "scope": "System"
     },
@@ -1574,6 +1738,7 @@
         "limit": 0.0,
         "name": "hvac.thermal_mode_1",
         "plugin": "HVAC",
+        "profiles": "mz",
         "range": "1|2|3|4",
         "scope": "System"
     },
@@ -1584,6 +1749,7 @@
         "limit": 0.0,
         "name": "hvac.update_rate_1",
         "plugin": "HVAC",
+        "profiles": "mz",
         "range": "0.0/",
         "scope": "System"
     },
@@ -1594,6 +1760,7 @@
         "limit": 0.0,
         "name": "light.min",
         "plugin": "Light",
+        "profiles": "mz",
         "range": "0.0/10000.0",
         "scope": "System"
     },
@@ -1604,6 +1771,7 @@
         "limit": 0.0,
         "name": "light.max",
         "plugin": "Light",
+        "profiles": "mz",
         "range": "0.0/10000.0",
         "scope": "System"
     },
@@ -1614,6 +1782,7 @@
         "limit": 0.0,
         "name": "light.v1.output",
         "plugin": "Light",
+        "profiles": "mz",
         "range": "",
         "scope": "System"
     },
@@ -1624,6 +1793,7 @@
         "limit": 0.0,
         "name": "light.v2.output",
         "plugin": "Light",
+        "profiles": "mz",
         "range": "",
         "scope": "System"
     },
@@ -1634,6 +1804,7 @@
         "limit": 0.0,
         "name": "light.r1.output",
         "plugin": "Light",
+        "profiles": "mz",
         "range": "",
         "scope": "System"
     },
@@ -1644,6 +1815,7 @@
         "limit": 0.0,
         "name": "light.r2.output",
         "plugin": "Light",
+        "profiles": "mz",
         "range": "",
         "scope": "System"
     },
@@ -1654,6 +1826,7 @@
         "limit": 0.0,
         "name": "light.hallway_lighting.output",
         "plugin": "Light",
+        "profiles": "mz",
         "range": "",
         "scope": "System"
     },
@@ -1664,6 +1837,7 @@
         "limit": 0.0,
         "name": "light.hallway_lighting.time",
         "plugin": "Light",
+        "profiles": "mz",
         "range": "0.0/",
         "scope": "System"
     },
@@ -1680,6 +1854,7 @@
         "limit": 0.0,
         "name": "light.sensor.settings",
         "plugin": "Light",
+        "profiles": "mz",
         "range": "",
         "scope": "System"
     },
@@ -1690,6 +1865,7 @@
         "limit": 0.0,
         "name": "light.target_illum",
         "plugin": "Light",
+        "profiles": "mz",
         "range": "0.0/10000.0",
         "scope": "Device"
     },
@@ -1700,6 +1876,7 @@
         "limit": 0.0,
         "name": "light.error_gain",
         "plugin": "Light",
+        "profiles": "mz",
         "range": "/",
         "scope": "System"
     },
@@ -1710,6 +1887,7 @@
         "limit": 0.0,
         "name": "light.enabled",
         "plugin": "Light",
+        "profiles": "mz",
         "range": "true|false",
         "scope": "System"
     },
@@ -1720,6 +1898,7 @@
         "limit": 0.0,
         "name": "sys.last_update_errs",
         "plugin": "System",
+        "profiles": "mz|dt|hp|ns",
         "range": "",
         "scope": "Device"
     },
@@ -1730,6 +1909,7 @@
         "limit": 0.0,
         "name": "sys.ram.current",
         "plugin": "System",
+        "profiles": "mz|dt|hp|ns",
         "range": "0/",
         "scope": "Device"
     },
@@ -1740,6 +1920,7 @@
         "limit": 0.0,
         "name": "sys.ram.peak",
         "plugin": "System",
+        "profiles": "mz|dt|hp|ns",
         "range": "0/",
         "scope": "Device"
     },
@@ -1750,6 +1931,7 @@
         "limit": 0.0,
         "name": "sys.time.usage",
         "plugin": "System",
+        "profiles": "mz|dt|hp|ns",
         "range": "0.0/",
         "scope": "Device"
     },
@@ -1760,6 +1942,7 @@
         "limit": 0.0,
         "name": "sys.time.boot",
         "plugin": "System",
+        "profiles": "mz|dt|hp|ns",
         "range": "0.0/",
         "scope": "Device"
     },
@@ -1770,6 +1953,7 @@
         "limit": 0.0,
         "name": "sys.time.uptime",
         "plugin": "System",
+        "profiles": "mz|dt|hp|ns",
         "range": "0.0/",
         "scope": "Device"
     },
@@ -1780,6 +1964,7 @@
         "limit": 0.0,
         "name": "sys.time.startup",
         "plugin": "System",
+        "profiles": "mz|dt|hp|ns",
         "range": "0.0/",
         "scope": "Device"
     },
@@ -1790,6 +1975,7 @@
         "limit": 0.0,
         "name": "sys.disc.total",
         "plugin": "System",
+        "profiles": "mz|dt|hp|ns",
         "range": "0/",
         "scope": "Device"
     },
@@ -1800,6 +1986,7 @@
         "limit": 0.0,
         "name": "sys.disc.used",
         "plugin": "System",
+        "profiles": "mz|dt|hp|ns",
         "range": "0/",
         "scope": "Device"
     },
@@ -1810,6 +1997,7 @@
         "limit": 0.0,
         "name": "sys.disc.free",
         "plugin": "System",
+        "profiles": "mz|dt|hp|ns",
         "range": "0/",
         "scope": "Device"
     },
@@ -1820,6 +2008,7 @@
         "limit": 0.0,
         "name": "sys.sl.output",
         "plugin": "System",
+        "profiles": "mz|dt|hp|ns",
         "range": "off|LED0|LED1|LED2|LED3|!LED0|!LED1|!LED2|!LED3",
         "scope": "System"
     },
@@ -1830,6 +2019,7 @@
         "limit": 0.0,
         "name": "sys.sl.blink_time",
         "plugin": "System",
+        "profiles": "mz|dt|hp|ns",
         "range": "0.0/",
         "scope": "System"
     },
@@ -1840,6 +2030,7 @@
         "limit": 0.0,
         "name": "sys.at.input",
         "plugin": "System",
+        "profiles": "mz|dt|hp|ns",
         "range": "off|DI0|DI1|DI2|DI3|DI4|DI5|DI6|DI7|DI8|!DI0|!DI1|!DI2|!DI3|!DI4|!DI5|!DI6|!DI7|!DI8",
         "scope": "System"
     },
@@ -1850,6 +2041,7 @@
         "limit": 0.0,
         "name": "sys.at.state",
         "plugin": "System",
+        "profiles": "mz|dt|hp|ns",
         "range": "true|false",
         "scope": "Device"
     },
@@ -1860,6 +2052,7 @@
         "limit": 0.0,
         "name": "sys.col.info_message",
         "plugin": "System",
+        "profiles": "mz|dt|hp|ns",
         "range": "",
         "scope": "Device"
     },
@@ -1870,6 +2063,7 @@
         "limit": 0.0,
         "name": "sys.col.warning_message",
         "plugin": "System",
+        "profiles": "mz|dt|hp|ns",
         "range": "",
         "scope": "Device"
     },
@@ -1880,6 +2074,7 @@
         "limit": 0.0,
         "name": "sys.col.error_message",
         "plugin": "System",
+        "profiles": "mz|dt|hp|ns",
         "range": "",
         "scope": "Device"
     },
@@ -1890,6 +2085,7 @@
         "limit": 0.0,
         "name": "sys.col.clear_errors",
         "plugin": "System",
+        "profiles": "mz|dt|hp|ns",
         "range": "0|1",
         "scope": "System"
     },
@@ -1900,6 +2096,7 @@
         "limit": 0.0,
         "name": "sys.enabled",
         "plugin": "System",
+        "profiles": "mz|dt|hp|ns",
         "range": "true|false",
         "scope": "System"
     },
@@ -1910,6 +2107,7 @@
         "limit": 0.0,
         "name": "sys.col.info_message.enable",
         "plugin": "System",
+        "profiles": "mz|dt|hp|ns",
         "range": "true|false",
         "scope": "System"
     },
@@ -1920,6 +2118,7 @@
         "limit": 0.0,
         "name": "sys.col.warning_message.enable",
         "plugin": "System",
+        "profiles": "mz|dt|hp|ns",
         "range": "true|false",
         "scope": "System"
     },
@@ -1930,6 +2129,7 @@
         "limit": 0.0,
         "name": "sys.col.error_message.enable",
         "plugin": "System",
+        "profiles": "mz|dt|hp|ns",
         "range": "true|false",
         "scope": "System"
     },
@@ -1940,6 +2140,7 @@
         "limit": 0.0,
         "name": "ecc.enabled",
         "plugin": "Energy Center Common",
+        "profiles": "",
         "range": "true|false",
         "scope": "System"
     },
@@ -1967,6 +2168,7 @@
         "limit": 0.0,
         "name": "ecd.floor_entrance.valves.settings",
         "plugin": "Energy Center Distribution",
+        "profiles": "dt",
         "range": "",
         "scope": "System"
     },
@@ -1977,6 +2179,7 @@
         "limit": 0.0,
         "name": "ecd.floor_entrance.valves.mode",
         "plugin": "Energy Center Distribution",
+        "profiles": "dt",
         "range": "0|1|2",
         "scope": "System"
     },
@@ -1987,6 +2190,7 @@
         "limit": 0.0,
         "name": "ecd.floor_entrance.valves.state",
         "plugin": "Energy Center Distribution",
+        "profiles": "dt",
         "range": "0|1|2",
         "scope": "Device"
     },
@@ -2014,6 +2218,7 @@
         "limit": 0.0,
         "name": "ecd.pool_floor.valves.settings",
         "plugin": "Energy Center Distribution",
+        "profiles": "dt",
         "range": "",
         "scope": "System"
     },
@@ -2024,6 +2229,7 @@
         "limit": 0.0,
         "name": "ecd.pool_floor.valves.mode",
         "plugin": "Energy Center Distribution",
+        "profiles": "dt",
         "range": "0|1|2",
         "scope": "System"
     },
@@ -2034,6 +2240,7 @@
         "limit": 0.0,
         "name": "ecd.pool_floor.valves.state",
         "plugin": "Energy Center Distribution",
+        "profiles": "dt",
         "range": "0|1|2",
         "scope": "Device"
     },
@@ -2061,6 +2268,7 @@
         "limit": 0.0,
         "name": "ecd.ground_drilling.valves.settings",
         "plugin": "Energy Center Distribution",
+        "profiles": "dt",
         "range": "",
         "scope": "System"
     },
@@ -2071,6 +2279,7 @@
         "limit": 0.0,
         "name": "ecd.ground_drilling.valves.mode",
         "plugin": "Energy Center Distribution",
+        "profiles": "dt",
         "range": "0|1|2",
         "scope": "System"
     },
@@ -2081,6 +2290,7 @@
         "limit": 0.0,
         "name": "ecd.ground_drilling.valves.state",
         "plugin": "Energy Center Distribution",
+        "profiles": "dt",
         "range": "0|1|2",
         "scope": "Device"
     },
@@ -2091,6 +2301,7 @@
         "limit": 0.0,
         "name": "ecd.ground_drilling.temp.settings",
         "plugin": "Energy Center Distribution",
+        "profiles": "dt",
         "range": "",
         "scope": "Device"
     },
@@ -2118,6 +2329,7 @@
         "limit": 0.0,
         "name": "ecd.air_tower_green.valves.settings",
         "plugin": "Energy Center Distribution",
+        "profiles": "dt",
         "range": "",
         "scope": "System"
     },
@@ -2128,6 +2340,7 @@
         "limit": 0.0,
         "name": "ecd.air_tower_green.valves.mode",
         "plugin": "Energy Center Distribution",
+        "profiles": "dt",
         "range": "0|1|2",
         "scope": "System"
     },
@@ -2138,6 +2351,7 @@
         "limit": 0.0,
         "name": "ecd.air_tower_green.valves.state",
         "plugin": "Energy Center Distribution",
+        "profiles": "dt",
         "range": "0|1|2",
         "scope": "Device"
     },
@@ -2165,6 +2379,7 @@
         "limit": 0.0,
         "name": "ecd.air_tower_purple.valves.settings",
         "plugin": "Energy Center Distribution",
+        "profiles": "dt",
         "range": "",
         "scope": "System"
     },
@@ -2175,6 +2390,7 @@
         "limit": 0.0,
         "name": "ecd.air_tower_purple.valves.mode",
         "plugin": "Energy Center Distribution",
+        "profiles": "dt",
         "range": "0|1|2",
         "scope": "System"
     },
@@ -2185,6 +2401,7 @@
         "limit": 0.0,
         "name": "ecd.air_tower_purple.valves.state",
         "plugin": "Energy Center Distribution",
+        "profiles": "dt",
         "range": "0|1|2",
         "scope": "Device"
     },
@@ -2212,6 +2429,7 @@
         "limit": 0.0,
         "name": "ecd.generators.valves.settings",
         "plugin": "Energy Center Distribution",
+        "profiles": "dt",
         "range": "",
         "scope": "System"
     },
@@ -2222,6 +2440,7 @@
         "limit": 0.0,
         "name": "ecd.generators.valves.mode",
         "plugin": "Energy Center Distribution",
+        "profiles": "dt",
         "range": "0|1|2",
         "scope": "System"
     },
@@ -2232,6 +2451,7 @@
         "limit": 0.0,
         "name": "ecd.generators.valves.state",
         "plugin": "Energy Center Distribution",
+        "profiles": "dt",
         "range": "0|1|2",
         "scope": "Device"
     },
@@ -2259,6 +2479,7 @@
         "limit": 0.0,
         "name": "ecd.pool_air_heating.valves.settings",
         "plugin": "Energy Center Distribution",
+        "profiles": "dt",
         "range": "",
         "scope": "System"
     },
@@ -2269,6 +2490,7 @@
         "limit": 0.0,
         "name": "ecd.pool_air_heating.valves.mode",
         "plugin": "Energy Center Distribution",
+        "profiles": "dt",
         "range": "0|1|2",
         "scope": "System"
     },
@@ -2279,6 +2501,7 @@
         "limit": 0.0,
         "name": "ecd.pool_air_heating.valves.state",
         "plugin": "Energy Center Distribution",
+        "profiles": "dt",
         "range": "0|1|2",
         "scope": "Device"
     },
@@ -2300,6 +2523,7 @@
         "limit": 0.0,
         "name": "ecd.pool_air_heating.pump.settings",
         "plugin": "Energy Center Distribution",
+        "profiles": "dt",
         "range": "",
         "scope": "System"
     },
@@ -2310,6 +2534,7 @@
         "limit": 0.0,
         "name": "ecd.pool_air_heating.pump.mode",
         "plugin": "Energy Center Distribution",
+        "profiles": "dt",
         "range": "0/100",
         "scope": "System"
     },
@@ -2320,6 +2545,7 @@
         "limit": 0.0,
         "name": "ecd.pool_air_heating.pump.state",
         "plugin": "Energy Center Distribution",
+        "profiles": "dt",
         "range": "",
         "scope": "Device"
     },
@@ -2361,6 +2587,7 @@
         "limit": 0.0,
         "name": "ecd.conv_kitchen.valves.settings",
         "plugin": "Energy Center Distribution",
+        "profiles": "dt",
         "range": "",
         "scope": "System"
     },
@@ -2371,6 +2598,7 @@
         "limit": 0.0,
         "name": "ecd.conv_kitchen.valves.mode",
         "plugin": "Energy Center Distribution",
+        "profiles": "dt",
         "range": "0|1|2",
         "scope": "System"
     },
@@ -2381,6 +2609,7 @@
         "limit": 0.0,
         "name": "ecd.conv_kitchen.valves.state",
         "plugin": "Energy Center Distribution",
+        "profiles": "dt",
         "range": "0|1|2",
         "scope": "Device"
     },
@@ -2402,6 +2631,7 @@
         "limit": 0.0,
         "name": "ecd.conv_kitchen.pump.settings",
         "plugin": "Energy Center Distribution",
+        "profiles": "dt",
         "range": "",
         "scope": "System"
     },
@@ -2412,6 +2642,7 @@
         "limit": 0.0,
         "name": "ecd.conv_kitchen.pump.mode",
         "plugin": "Energy Center Distribution",
+        "profiles": "dt",
         "range": "0/100",
         "scope": "System"
     },
@@ -2422,6 +2653,7 @@
         "limit": 0.0,
         "name": "ecd.conv_kitchen.pump.state",
         "plugin": "Energy Center Distribution",
+        "profiles": "dt",
         "range": "",
         "scope": "Device"
     },
@@ -2463,6 +2695,7 @@
         "limit": 0.0,
         "name": "ecd.ahu_conf_hall.valves.settings",
         "plugin": "Energy Center Distribution",
+        "profiles": "dt",
         "range": "",
         "scope": "System"
     },
@@ -2473,6 +2706,7 @@
         "limit": 0.0,
         "name": "ecd.ahu_conf_hall.valves.mode",
         "plugin": "Energy Center Distribution",
+        "profiles": "dt",
         "range": "0|1|2",
         "scope": "System"
     },
@@ -2483,6 +2717,7 @@
         "limit": 0.0,
         "name": "ecd.ahu_conf_hall.valves.state",
         "plugin": "Energy Center Distribution",
+        "profiles": "dt",
         "range": "0|1|2",
         "scope": "Device"
     },
@@ -2504,6 +2739,7 @@
         "limit": 0.0,
         "name": "ecd.ahu_conf_hall.pump.settings",
         "plugin": "Energy Center Distribution",
+        "profiles": "dt",
         "range": "",
         "scope": "System"
     },
@@ -2514,6 +2750,7 @@
         "limit": 0.0,
         "name": "ecd.ahu_conf_hall.pump.mode",
         "plugin": "Energy Center Distribution",
+        "profiles": "dt",
         "range": "0/100",
         "scope": "System"
     },
@@ -2524,6 +2761,7 @@
         "limit": 0.0,
         "name": "ecd.ahu_conf_hall.pump.state",
         "plugin": "Energy Center Distribution",
+        "profiles": "dt",
         "range": "",
         "scope": "Device"
     },
@@ -2565,6 +2803,7 @@
         "limit": 0.0,
         "name": "ecd.floor_west.valves.settings",
         "plugin": "Energy Center Distribution",
+        "profiles": "dt",
         "range": "",
         "scope": "System"
     },
@@ -2575,6 +2814,7 @@
         "limit": 0.0,
         "name": "ecd.floor_west.valves.mode",
         "plugin": "Energy Center Distribution",
+        "profiles": "dt",
         "range": "0|1|2",
         "scope": "System"
     },
@@ -2585,6 +2825,7 @@
         "limit": 0.0,
         "name": "ecd.floor_west.valves.state",
         "plugin": "Energy Center Distribution",
+        "profiles": "dt",
         "range": "0|1|2",
         "scope": "Device"
     },
@@ -2606,6 +2847,7 @@
         "limit": 0.0,
         "name": "ecd.floor_west.pump.settings",
         "plugin": "Energy Center Distribution",
+        "profiles": "dt",
         "range": "",
         "scope": "System"
     },
@@ -2616,6 +2858,7 @@
         "limit": 0.0,
         "name": "ecd.floor_west.pump.mode",
         "plugin": "Energy Center Distribution",
+        "profiles": "dt",
         "range": "0/100",
         "scope": "System"
     },
@@ -2626,6 +2869,7 @@
         "limit": 0.0,
         "name": "ecd.floor_west.pump.state",
         "plugin": "Energy Center Distribution",
+        "profiles": "dt",
         "range": "",
         "scope": "Device"
     },
@@ -2667,6 +2911,7 @@
         "limit": 0.0,
         "name": "ecd.conv_west.valves.settings",
         "plugin": "Energy Center Distribution",
+        "profiles": "",
         "range": "",
         "scope": "System"
     },
@@ -2677,6 +2922,7 @@
         "limit": 0.0,
         "name": "ecd.conv_west.valves.mode",
         "plugin": "Energy Center Distribution",
+        "profiles": "dt",
         "range": "0|1|2",
         "scope": "System"
     },
@@ -2687,6 +2933,7 @@
         "limit": 0.0,
         "name": "ecd.conv_west.valves.state",
         "plugin": "Energy Center Distribution",
+        "profiles": "dt",
         "range": "0|1|2",
         "scope": "Device"
     },
@@ -2708,6 +2955,7 @@
         "limit": 0.0,
         "name": "ecd.conv_west.pump.settings",
         "plugin": "Energy Center Distribution",
+        "profiles": "dt",
         "range": "",
         "scope": "System"
     },
@@ -2718,6 +2966,7 @@
         "limit": 0.0,
         "name": "ecd.conv_west.pump.mode",
         "plugin": "Energy Center Distribution",
+        "profiles": "dt",
         "range": "0/100",
         "scope": "System"
     },
@@ -2728,6 +2977,7 @@
         "limit": 0.0,
         "name": "ecd.conv_west.pump.state",
         "plugin": "Energy Center Distribution",
+        "profiles": "dt",
         "range": "",
         "scope": "Device"
     },
@@ -2769,6 +3019,7 @@
         "limit": 0.0,
         "name": "ecd.ahu_roof_floor.valves.settings",
         "plugin": "Energy Center Distribution",
+        "profiles": "dt",
         "range": "",
         "scope": "System"
     },
@@ -2779,6 +3030,7 @@
         "limit": 0.0,
         "name": "ecd.ahu_roof_floor.valves.mode",
         "plugin": "Energy Center Distribution",
+        "profiles": "dt",
         "range": "0|1|2",
         "scope": "System"
     },
@@ -2789,6 +3041,7 @@
         "limit": 0.0,
         "name": "ecd.ahu_roof_floor.valves.state",
         "plugin": "Energy Center Distribution",
+        "profiles": "dt",
         "range": "0|1|2",
         "scope": "Device"
     },
@@ -2810,6 +3063,7 @@
         "limit": 0.0,
         "name": "ecd.ahu_roof_floor.pump.settings",
         "plugin": "Energy Center Distribution",
+        "profiles": "dt",
         "range": "",
         "scope": "System"
     },
@@ -2820,6 +3074,7 @@
         "limit": 0.0,
         "name": "ecd.ahu_roof_floor.pump.mode",
         "plugin": "Energy Center Distribution",
+        "profiles": "dt",
         "range": "0/100",
         "scope": "System"
     },
@@ -2830,6 +3085,7 @@
         "limit": 0.0,
         "name": "ecd.ahu_roof_floor.pump.state",
         "plugin": "Energy Center Distribution",
+        "profiles": "dt",
         "range": "",
         "scope": "Device"
     },
@@ -2871,6 +3127,7 @@
         "limit": 0.0,
         "name": "ecd.ahu_fitness.valves.settings",
         "plugin": "Energy Center Distribution",
+        "profiles": "dt",
         "range": "",
         "scope": "System"
     },
@@ -2881,6 +3138,7 @@
         "limit": 0.0,
         "name": "ecd.ahu_fitness.valves.mode",
         "plugin": "Energy Center Distribution",
+        "profiles": "dt",
         "range": "0|1|2",
         "scope": "System"
     },
@@ -2891,6 +3149,7 @@
         "limit": 0.0,
         "name": "ecd.ahu_fitness.valves.state",
         "plugin": "Energy Center Distribution",
+        "profiles": "dt",
         "range": "0|1|2",
         "scope": "Device"
     },
@@ -2912,6 +3171,7 @@
         "limit": 0.0,
         "name": "ecd.ahu_fitness.pump.settings",
         "plugin": "Energy Center Distribution",
+        "profiles": "dt",
         "range": "",
         "scope": "System"
     },
@@ -2922,6 +3182,7 @@
         "limit": 0.0,
         "name": "ecd.ahu_fitness.pump.mode",
         "plugin": "Energy Center Distribution",
+        "profiles": "dt",
         "range": "0/100",
         "scope": "System"
     },
@@ -2932,6 +3193,7 @@
         "limit": 0.0,
         "name": "ecd.ahu_fitness.pump.state",
         "plugin": "Energy Center Distribution",
+        "profiles": "dt",
         "range": "",
         "scope": "Device"
     },
@@ -2973,6 +3235,7 @@
         "limit": 0.0,
         "name": "ecd.floor_east.valves.settings",
         "plugin": "Energy Center Distribution",
+        "profiles": "dt",
         "range": "",
         "scope": "System"
     },
@@ -2983,6 +3246,7 @@
         "limit": 0.0,
         "name": "ecd.floor_east.valves.mode",
         "plugin": "Energy Center Distribution",
+        "profiles": "dt",
         "range": "0|1|2",
         "scope": "System"
     },
@@ -2993,6 +3257,7 @@
         "limit": 0.0,
         "name": "ecd.floor_east.valves.state",
         "plugin": "Energy Center Distribution",
+        "profiles": "dt",
         "range": "0|1|2",
         "scope": "Device"
     },
@@ -3014,6 +3279,7 @@
         "limit": 0.0,
         "name": "ecd.floor_east.pump.settings",
         "plugin": "Energy Center Distribution",
+        "profiles": "dt",
         "range": "",
         "scope": "System"
     },
@@ -3024,6 +3290,7 @@
         "limit": 0.0,
         "name": "ecd.floor_east.pump.mode",
         "plugin": "Energy Center Distribution",
+        "profiles": "dt",
         "range": "0/100",
         "scope": "System"
     },
@@ -3034,6 +3301,7 @@
         "limit": 0.0,
         "name": "ecd.floor_east.pump.state",
         "plugin": "Energy Center Distribution",
+        "profiles": "dt",
         "range": "",
         "scope": "Device"
     },
@@ -3075,6 +3343,7 @@
         "limit": 0.0,
         "name": "ecd.conv_east.valves.settings",
         "plugin": "Energy Center Distribution",
+        "profiles": "dt",
         "range": "",
         "scope": "System"
     },
@@ -3085,6 +3354,7 @@
         "limit": 0.0,
         "name": "ecd.conv_east.valves.mode",
         "plugin": "Energy Center Distribution",
+        "profiles": "dt",
         "range": "0|1|2",
         "scope": "System"
     },
@@ -3095,6 +3365,7 @@
         "limit": 0.0,
         "name": "ecd.conv_east.valves.state",
         "plugin": "Energy Center Distribution",
+        "profiles": "dt",
         "range": "0|1|2",
         "scope": "Device"
     },
@@ -3116,6 +3387,7 @@
         "limit": 0.0,
         "name": "ecd.conv_east.pump.settings",
         "plugin": "Energy Center Distribution",
+        "profiles": "dt",
         "range": "",
         "scope": "System"
     },
@@ -3126,6 +3398,7 @@
         "limit": 0.0,
         "name": "ecd.conv_east.pump.mode",
         "plugin": "Energy Center Distribution",
+        "profiles": "dt",
         "range": "0/100",
         "scope": "System"
     },
@@ -3136,6 +3409,7 @@
         "limit": 0.0,
         "name": "ecd.conv_east.pump.state",
         "plugin": "Energy Center Distribution",
+        "profiles": "dt",
         "range": "",
         "scope": "Device"
     },
@@ -3163,6 +3437,7 @@
         "limit": 0.0,
         "name": "ecd.pool_air_cooling.valves.settings",
         "plugin": "Energy Center Distribution",
+        "profiles": "dt",
         "range": "",
         "scope": "System"
     },
@@ -3173,6 +3448,7 @@
         "limit": 0.0,
         "name": "ecd.pool_air_cooling.valves.mode",
         "plugin": "Energy Center Distribution",
+        "profiles": "dt",
         "range": "0|1|2",
         "scope": "System"
     },
@@ -3183,6 +3459,7 @@
         "limit": 0.0,
         "name": "ecd.pool_air_cooling.valves.state",
         "plugin": "Energy Center Distribution",
+        "profiles": "dt",
         "range": "0|1|2",
         "scope": "Device"
     },
@@ -3204,6 +3481,7 @@
         "limit": 0.0,
         "name": "ecd.pool_air_cooling.pump.settings",
         "plugin": "Energy Center Distribution",
+        "profiles": "dt",
         "range": "",
         "scope": "System"
     },
@@ -3214,6 +3492,7 @@
         "limit": 0.0,
         "name": "ecd.pool_air_cooling.pump.mode",
         "plugin": "Energy Center Distribution",
+        "profiles": "dt",
         "range": "0/100",
         "scope": "System"
     },
@@ -3224,6 +3503,7 @@
         "limit": 0.0,
         "name": "ecd.pool_air_cooling.pump.state",
         "plugin": "Energy Center Distribution",
+        "profiles": "dt",
         "range": "",
         "scope": "Device"
     },
@@ -3251,6 +3531,7 @@
         "limit": 0.0,
         "name": "ecd.pool_heating.valves.settings",
         "plugin": "Energy Center Distribution",
+        "profiles": "dt",
         "range": "",
         "scope": "System"
     },
@@ -3261,6 +3542,7 @@
         "limit": 0.0,
         "name": "ecd.pool_heating.valves.mode",
         "plugin": "Energy Center Distribution",
+        "profiles": "dt",
         "range": "0|1|2",
         "scope": "System"
     },
@@ -3271,6 +3553,7 @@
         "limit": 0.0,
         "name": "ecd.pool_heating.valves.state",
         "plugin": "Energy Center Distribution",
+        "profiles": "dt",
         "range": "0|1|2",
         "scope": "Device"
     },
@@ -3292,6 +3575,7 @@
         "limit": 0.0,
         "name": "ecd.pool_heating.pump.settings",
         "plugin": "Energy Center Distribution",
+        "profiles": "dt",
         "range": "",
         "scope": "System"
     },
@@ -3302,6 +3586,7 @@
         "limit": 0.0,
         "name": "ecd.pool_heating.pump.mode",
         "plugin": "Energy Center Distribution",
+        "profiles": "dt",
         "range": "0/100",
         "scope": "System"
     },
@@ -3312,6 +3597,7 @@
         "limit": 0.0,
         "name": "ecd.pool_heating.pump.state",
         "plugin": "Energy Center Distribution",
+        "profiles": "dt",
         "range": "",
         "scope": "Device"
     },
@@ -3333,6 +3619,7 @@
         "limit": 0.0,
         "name": "ecd.servers_cooling.pump.settings",
         "plugin": "Energy Center Distribution",
+        "profiles": "dt",
         "range": "",
         "scope": "System"
     },
@@ -3343,6 +3630,7 @@
         "limit": 0.0,
         "name": "ecd.servers_cooling.pump.mode",
         "plugin": "Energy Center Distribution",
+        "profiles": "dt",
         "range": "0/100",
         "scope": "System"
     },
@@ -3353,6 +3641,7 @@
         "limit": 0.0,
         "name": "ecd.servers_cooling.pump.state",
         "plugin": "Energy Center Distribution",
+        "profiles": "dt",
         "range": "",
         "scope": "Device"
     },
@@ -3424,6 +3713,7 @@
         "limit": 0.0,
         "name": "ecd.ground_drilling.tc.settings",
         "plugin": "Energy Center Distribution",
+        "profiles": "dt",
         "range": "",
         "scope": "System"
     },
@@ -3434,6 +3724,7 @@
         "limit": 0.0,
         "name": "ecd.ground_drilling.tc.values",
         "plugin": "Energy Center Distribution",
+        "profiles": "dt",
         "range": "",
         "scope": "Device"
     },
@@ -3465,6 +3756,7 @@
         "limit": 0.0,
         "name": "ecd.hot_water.tc.settings",
         "plugin": "Energy Center Distribution",
+        "profiles": "",
         "range": "",
         "scope": "System"
     },
@@ -3475,6 +3767,7 @@
         "limit": 0.0,
         "name": "ecd.hot_water.tc.values",
         "plugin": "Energy Center Distribution",
+        "profiles": "",
         "range": "",
         "scope": "Device"
     },
@@ -3506,6 +3799,7 @@
         "limit": 0.0,
         "name": "ecd.cold_water.tc.settings",
         "plugin": "Energy Center Distribution",
+        "profiles": "",
         "range": "",
         "scope": "System"
     },
@@ -3516,35 +3810,9 @@
         "limit": 0.0,
         "name": "ecd.cold_water.tc.values",
         "plugin": "Energy Center Distribution",
+        "profiles": "",
         "range": "",
         "scope": "Device"
-    },
-    {
-        "data_type": "json",
-        "default": {
-            "cold": [
-                {
-                    "model": "FLX-05F",
-                    "options": {
-                        "close_on_shutdown": false,
-                        "io_mode": 1,
-                        "limit_ccw": "!U0:ID11:FC2:R0:DI0",
-                        "limit_cw": "U0:ID11:FC2:R0:DI0",
-                        "output_ccw": "off",
-                        "output_cw": "U0:ID11:FC5:R0:RO0",
-                        "wait_on_shutdown": false
-                    },
-                    "vendor": "Flowx"
-                }
-            ],
-            "hot": []
-        },
-        "description": "ECD / Floor entrance valves settings.",
-        "limit": 0.0,
-        "name": "ecd.floor_entrance.valves.settings",
-        "plugin": "Energy Center Distribution",
-        "range": "",
-        "scope": "System"
     },
     {
         "data_type": "bool",
@@ -3553,6 +3821,7 @@
         "limit": 0.0,
         "name": "ecd.enabled",
         "plugin": "Energy Center Distribution",
+        "profiles": "dt",
         "range": "true|false",
         "scope": "System"
     },
@@ -3609,6 +3878,7 @@
         "limit": 0.0,
         "name": "echp.cold.valves.settings",
         "plugin": "Energy Center Heat Pump",
+        "profiles": "hp",
         "range": "",
         "scope": "System"
     },
@@ -3619,6 +3889,7 @@
         "limit": 0.0,
         "name": "echp.cold.valves.mode",
         "plugin": "Energy Center Heat Pump",
+        "profiles": "hp",
         "range": "0|1|2",
         "scope": "System"
     },
@@ -3629,6 +3900,7 @@
         "limit": 0.0,
         "name": "echp.cold.valves.state",
         "plugin": "Energy Center Heat Pump",
+        "profiles": "hp",
         "range": "0|1|2",
         "scope": "Device"
     },
@@ -3685,6 +3957,7 @@
         "limit": 0.0,
         "name": "echp.cold_geo.valves.settings",
         "plugin": "Energy Center Heat Pump",
+        "profiles": "hp",
         "range": "",
         "scope": "System"
     },
@@ -3695,6 +3968,7 @@
         "limit": 0.0,
         "name": "echp.cold_geo.valves.mode",
         "plugin": "Energy Center Heat Pump",
+        "profiles": "hp",
         "range": "0|1|2",
         "scope": "System"
     },
@@ -3705,6 +3979,7 @@
         "limit": 0.0,
         "name": "echp.cold_geo.valves.state",
         "plugin": "Energy Center Heat Pump",
+        "profiles": "hp",
         "range": "0|1|2",
         "scope": "Device"
     },
@@ -3761,6 +4036,7 @@
         "limit": 0.0,
         "name": "echp.warm_geo.valves.settings",
         "plugin": "Energy Center Heat Pump",
+        "profiles": "hp",
         "range": "",
         "scope": "System"
     },
@@ -3771,6 +4047,7 @@
         "limit": 0.0,
         "name": "echp.warm_geo.valves.mode",
         "plugin": "Energy Center Heat Pump",
+        "profiles": "hp",
         "range": "0|1|2",
         "scope": "System"
     },
@@ -3781,6 +4058,7 @@
         "limit": 0.0,
         "name": "echp.warm_geo.valves.state",
         "plugin": "Energy Center Heat Pump",
+        "profiles": "hp",
         "range": "0|1|2",
         "scope": "Device"
     },
@@ -3837,6 +4115,7 @@
         "limit": 0.0,
         "name": "echp.warm.valves.settings",
         "plugin": "Energy Center Heat Pump",
+        "profiles": "hp",
         "range": "",
         "scope": "System"
     },
@@ -3847,6 +4126,7 @@
         "limit": 0.0,
         "name": "echp.warm.valves.mode",
         "plugin": "Energy Center Heat Pump",
+        "profiles": "hp",
         "range": "0|1|2",
         "scope": "System"
     },
@@ -3857,6 +4137,7 @@
         "limit": 0.0,
         "name": "echp.warm.valves.state",
         "plugin": "Energy Center Heat Pump",
+        "profiles": "hp",
         "range": "0|1|2",
         "scope": "Device"
     },
@@ -3913,6 +4194,7 @@
         "limit": 0.0,
         "name": "echp.hot.valves.settings",
         "plugin": "Energy Center Heat Pump",
+        "profiles": "hp",
         "range": "",
         "scope": "System"
     },
@@ -3923,6 +4205,7 @@
         "limit": 0.0,
         "name": "echp.hot.valves.mode",
         "plugin": "Energy Center Heat Pump",
+        "profiles": "hp",
         "range": "0|1|2",
         "scope": "System"
     },
@@ -3933,6 +4216,7 @@
         "limit": 0.0,
         "name": "echp.hot.valves.state",
         "plugin": "Energy Center Heat Pump",
+        "profiles": "hp",
         "range": "0|1|2",
         "scope": "Device"
     },
@@ -3954,6 +4238,7 @@
         "limit": 0.0,
         "name": "echp.cold.pump.settings",
         "plugin": "Energy Center Heat Pump",
+        "profiles": "hp",
         "range": "",
         "scope": "System"
     },
@@ -3964,6 +4249,7 @@
         "limit": 0.0,
         "name": "echp.cold.pump.mode",
         "plugin": "Energy Center Heat Pump",
+        "profiles": "hp",
         "range": "0/100",
         "scope": "System"
     },
@@ -3974,6 +4260,7 @@
         "limit": 0.0,
         "name": "echp.cold.pump.state",
         "plugin": "Energy Center Heat Pump",
+        "profiles": "hp",
         "range": "",
         "scope": "Device"
     },
@@ -3995,6 +4282,7 @@
         "limit": 0.0,
         "name": "echp.hot.pump.settings",
         "plugin": "Energy Center Heat Pump",
+        "profiles": "hp",
         "range": "",
         "scope": "System"
     },
@@ -4005,6 +4293,7 @@
         "limit": 0.0,
         "name": "echp.hot.pump.mode",
         "plugin": "Energy Center Heat Pump",
+        "profiles": "hp",
         "range": "0/100",
         "scope": "System"
     },
@@ -4015,6 +4304,7 @@
         "limit": 0.0,
         "name": "echp.hot.pump.state",
         "plugin": "Energy Center Heat Pump",
+        "profiles": "hp",
         "range": "",
         "scope": "Device"
     },
@@ -4036,6 +4326,7 @@
         "limit": 0.0,
         "name": "echp.warm.pump.settings",
         "plugin": "Energy Center Heat Pump",
+        "profiles": "hp",
         "range": "",
         "scope": "System"
     },
@@ -4046,6 +4337,7 @@
         "limit": 0.0,
         "name": "echp.warm.pump.mode",
         "plugin": "Energy Center Heat Pump",
+        "profiles": "hp",
         "range": "0/100",
         "scope": "System"
     },
@@ -4056,6 +4348,7 @@
         "limit": 0.0,
         "name": "echp.warm.pump.state",
         "plugin": "Energy Center Heat Pump",
+        "profiles": "hp",
         "range": "",
         "scope": "Device"
     },
@@ -4073,6 +4366,7 @@
         "limit": 0.0,
         "name": "echp.hp.settings",
         "plugin": "Energy Center Heat Pump",
+        "profiles": "hp",
         "range": "",
         "scope": "System"
     },
@@ -4083,6 +4377,7 @@
         "limit": 0.0,
         "name": "echp.hp.get_op_mode",
         "plugin": "Energy Center Heat Pump",
+        "profiles": "hp",
         "range": "",
         "scope": "Device"
     },
@@ -4093,6 +4388,7 @@
         "limit": 0.0,
         "name": "echp.hp.set_op_mode",
         "plugin": "Energy Center Heat Pump",
+        "profiles": "hp",
         "range": "",
         "scope": "System"
     },
@@ -4103,6 +4399,7 @@
         "limit": 0.0,
         "name": "echp.hp.get_op_status",
         "plugin": "Energy Center Heat Pump",
+        "profiles": "hp",
         "range": "",
         "scope": "Device"
     },
@@ -4113,6 +4410,7 @@
         "limit": 0.0,
         "name": "echp.hp.get_cooling_temp",
         "plugin": "Energy Center Heat Pump",
+        "profiles": "hp",
         "range": "",
         "scope": "Device"
     },
@@ -4123,6 +4421,7 @@
         "limit": 0.0,
         "name": "echp.hp.set_cooling_temp",
         "plugin": "Energy Center Heat Pump",
+        "profiles": "hp",
         "range": "",
         "scope": "System"
     },
@@ -4133,6 +4432,7 @@
         "limit": 0.0,
         "name": "echp.hp.get_heating_temp",
         "plugin": "Energy Center Heat Pump",
+        "profiles": "hp",
         "range": "",
         "scope": "Device"
     },
@@ -4143,6 +4443,7 @@
         "limit": 0.0,
         "name": "echp.hp.set_heating_temp",
         "plugin": "Energy Center Heat Pump",
+        "profiles": "hp",
         "range": "",
         "scope": "System"
     },
@@ -4153,6 +4454,7 @@
         "limit": 0.0,
         "name": "echp.hp.get_temps",
         "plugin": "Energy Center Heat Pump",
+        "profiles": "hp",
         "range": "",
         "scope": "Device"
     },
@@ -4163,6 +4465,7 @@
         "limit": 0.0,
         "name": "echp.hp.count",
         "plugin": "Energy Center Heat Pump",
+        "profiles": "hp",
         "range": "0/",
         "scope": "System"
     },
@@ -4173,6 +4476,7 @@
         "limit": 0.0,
         "name": "echp.hp.index",
         "plugin": "Energy Center Heat Pump",
+        "profiles": "hp",
         "range": "0/",
         "scope": "System"
     },
@@ -4183,6 +4487,7 @@
         "limit": 0.0,
         "name": "echp.hp.power",
         "plugin": "Energy Center Heat Pump",
+        "profiles": "hp",
         "range": "-100.0/100.0",
         "scope": "System"
     },
@@ -4193,6 +4498,7 @@
         "limit": 0.0,
         "name": "echp.hp.run",
         "plugin": "Energy Center Heat Pump",
+        "profiles": "hp",
         "range": "",
         "scope": "Device"
     },
@@ -4203,6 +4509,7 @@
         "limit": 0.0,
         "name": "echp.hp.cold_min",
         "plugin": "Energy Center Heat Pump",
+        "profiles": "hp",
         "range": "3.0/8.0",
         "scope": "System"
     },
@@ -4213,6 +4520,7 @@
         "limit": 0.0,
         "name": "echp.hp.cold_max",
         "plugin": "Energy Center Heat Pump",
+        "profiles": "hp",
         "range": "3.0/8.0",
         "scope": "System"
     },
@@ -4223,6 +4531,7 @@
         "limit": 0.0,
         "name": "echp.hp.hot_min",
         "plugin": "Energy Center Heat Pump",
+        "profiles": "hp",
         "range": "40.0/47.0",
         "scope": "System"
     },
@@ -4233,6 +4542,7 @@
         "limit": 0.0,
         "name": "echp.hp.hot_max",
         "plugin": "Energy Center Heat Pump",
+        "profiles": "hp",
         "range": "40.0/47.0",
         "scope": "System"
     },
@@ -4243,6 +4553,7 @@
         "limit": 0.0,
         "name": "echp.enabled",
         "plugin": "Energy Center Heat Pump",
+        "profiles": "hp",
         "range": "true|false",
         "scope": "System"
     },
@@ -4253,6 +4564,7 @@
         "limit": 0.0,
         "name": "vent.fans.max_speed_1",
         "plugin": "Ventilation",
+        "profiles": "mz",
         "range": "",
         "scope": "Device"
     },
@@ -4263,6 +4575,7 @@
         "limit": 0.0,
         "name": "vent.op_setpoint_1",
         "plugin": "Ventilation",
+        "profiles": "mz",
         "range": "0.0/100.0",
         "scope": "Device"
     },
@@ -4273,6 +4586,7 @@
         "limit": 0.0,
         "name": "vent.hvac_setpoint_1",
         "plugin": "Ventilation",
+        "profiles": "mz",
         "range": "-200.0/200.0",
         "scope": "System"
     },
@@ -4283,6 +4597,7 @@
         "limit": 0.0,
         "name": "vent.ac_setpoint_1",
         "plugin": "Ventilation",
+        "profiles": "mz",
         "range": "0.0/100.0",
         "scope": "System"
     },
@@ -4293,6 +4608,7 @@
         "limit": 0.0,
         "name": "vent.power_gpio_1",
         "plugin": "Ventilation",
+        "profiles": "mz",
         "range": "",
         "scope": "System"
     },
@@ -4309,6 +4625,7 @@
         "limit": 0.0,
         "name": "vent.lower_1.fan.settings",
         "plugin": "Ventilation",
+        "profiles": "mz",
         "range": "",
         "scope": "System"
     },
@@ -4319,6 +4636,7 @@
         "limit": 0.0,
         "name": "vent.lower_1.fan.min_speed",
         "plugin": "Ventilation",
+        "profiles": "mz",
         "range": "0.0/100.0",
         "scope": "System"
     },
@@ -4329,6 +4647,7 @@
         "limit": 0.0,
         "name": "vent.lower_1.fan.max_speed",
         "plugin": "Ventilation",
+        "profiles": "mz",
         "range": "0.0/100.0",
         "scope": "System"
     },
@@ -4339,6 +4658,7 @@
         "limit": 0.0,
         "name": "vent.lower_1.fan.speed",
         "plugin": "Ventilation",
+        "profiles": "mz",
         "range": "0.0/100.0",
         "scope": "Device"
     },
@@ -4355,6 +4675,7 @@
         "limit": 0.0,
         "name": "vent.upper_1.fan.settings",
         "plugin": "Ventilation",
+        "profiles": "mz",
         "range": "",
         "scope": "System"
     },
@@ -4365,6 +4686,7 @@
         "limit": 0.0,
         "name": "vent.upper_1.fan.min_speed",
         "plugin": "Ventilation",
+        "profiles": "mz",
         "range": "0.0/100.0",
         "scope": "System"
     },
@@ -4375,6 +4697,7 @@
         "limit": 0.0,
         "name": "vent.upper_1.fan.speed",
         "plugin": "Ventilation",
+        "profiles": "mz",
         "range": "0.0/100.0",
         "scope": "Device"
     },
@@ -4385,6 +4708,7 @@
         "limit": 0.0,
         "name": "vent.upper_1.fan.max_speed",
         "plugin": "Ventilation",
+        "profiles": "mz",
         "range": "0.0/100.0",
         "scope": "System"
     },
@@ -4395,6 +4719,7 @@
         "limit": 0.0,
         "name": "vent.upper_1.air_damper.settings",
         "plugin": "Ventilation",
+        "profiles": "mz",
         "range": "",
         "scope": "System"
     },
@@ -4405,6 +4730,7 @@
         "limit": 0.0,
         "name": "vent.lower_1.air_damper.settings",
         "plugin": "Ventilation",
+        "profiles": "mz",
         "range": "",
         "scope": "System"
     },
@@ -4415,6 +4741,7 @@
         "limit": 0.0,
         "name": "vent.zones_count",
         "plugin": "Ventilation",
+        "profiles": "mz",
         "range": "0/",
         "scope": "System"
     },
@@ -4425,6 +4752,7 @@
         "limit": 0.0,
         "name": "vent.enabled",
         "plugin": "Ventilation",
+        "profiles": "mz",
         "range": "",
         "scope": "System"
     },
@@ -4435,6 +4763,7 @@
         "limit": 0.0,
         "name": "alarm.device.sound.settings",
         "plugin": "Alarm",
+        "profiles": "mz|dt|hp|ns",
         "range": "",
         "scope": "System"
     },
@@ -4445,6 +4774,7 @@
         "limit": 0.0,
         "name": "alarm.device.visual.settings",
         "plugin": "Alarm",
+        "profiles": "mz|dt|hp|ns",
         "range": "",
         "scope": "System"
     },
@@ -4455,6 +4785,7 @@
         "limit": 0.0,
         "name": "alarm.enabled",
         "plugin": "Alarm",
+        "profiles": "mz|dt|hp|ns",
         "range": "true|false",
         "scope": "System"
     },
@@ -4465,6 +4796,7 @@
         "limit": 0.0,
         "name": "stat.enabled",
         "plugin": "Statistics",
+        "profiles": "mz|dt|hp|ns",
         "range": "true|false",
         "scope": "System"
     },
@@ -4475,6 +4807,7 @@
         "limit": 0.0,
         "name": "oc_hall.enabled",
         "plugin": "Office Conference Hall",
+        "profiles": "",
         "range": "true|false",
         "scope": "System"
     },
@@ -4485,6 +4818,7 @@
         "limit": 0.0,
         "name": "glob.floor.mode",
         "plugin": "No plugin, just global",
+        "profiles": "mz",
         "range": "0|1|2",
         "scope": "System"
     },
@@ -4495,6 +4829,7 @@
         "limit": 0.0,
         "name": "glob.conv.mode",
         "plugin": "No plugin, just global",
+        "profiles": "mz",
         "range": "0|1|2",
         "scope": "System"
     },
@@ -4505,6 +4840,7 @@
         "limit": 0.0,
         "name": "glob.illumination.east",
         "plugin": "No plugin, just global",
+        "profiles": "mz",
         "range": "",
         "scope": "System"
     },
@@ -4515,6 +4851,7 @@
         "limit": 0.0,
         "name": "glob.illumination.west",
         "plugin": "No plugin, just global",
+        "profiles": "mz",
         "range": "",
         "scope": "System"
     }

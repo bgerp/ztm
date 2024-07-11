@@ -296,6 +296,8 @@ class HP_40STD_N420WHSB4(ModbusDevice):
 
 #endregion
 
+#region Public Methods
+
     def set_operation_mode(self, mode):
         """Set heat pump mode.
 
@@ -339,7 +341,7 @@ class HP_40STD_N420WHSB4(ModbusDevice):
             response /= 10
 
             # Make it integer.
-            response = int(response)
+            response = round(response, 2)
         except Exception:
             pass
 
@@ -375,7 +377,7 @@ class HP_40STD_N420WHSB4(ModbusDevice):
             response /= 10
 
             # Make it integer.
-            response = int(response)
+            response = round(response, 2)
         except Exception:
             pass
 
@@ -411,7 +413,7 @@ class HP_40STD_N420WHSB4(ModbusDevice):
             response /= 10
 
             # Make it integer.
-            response = int(response)
+            response = round(response, 2)
         except Exception:
             pass
 
@@ -428,7 +430,7 @@ class HP_40STD_N420WHSB4(ModbusDevice):
             response /= 10
 
             # Make it integer.
-            response = int(response)
+            response = round(response, 2)
         except Exception:
             pass
 
@@ -445,7 +447,7 @@ class HP_40STD_N420WHSB4(ModbusDevice):
             response /= 10
 
             # Make it integer.
-            response = int(response)
+            response = round(response, 2)
         except Exception:
             pass
 
@@ -462,7 +464,7 @@ class HP_40STD_N420WHSB4(ModbusDevice):
             response /= 10
 
             # Make it integer.
-            response = int(response)
+            response = round(response, 2)
         except Exception:
             pass
 
@@ -479,7 +481,7 @@ class HP_40STD_N420WHSB4(ModbusDevice):
             response /= 10
 
             # Make it integer.
-            response = int(response)
+            response = round(response, 2)
         except Exception:
             pass
 
@@ -496,7 +498,7 @@ class HP_40STD_N420WHSB4(ModbusDevice):
             response /= 10
 
             # Make it integer.
-            response = int(response)
+            response = round(response, 2)
         except Exception:
             pass
 
