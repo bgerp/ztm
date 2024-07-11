@@ -446,8 +446,8 @@ class ZtmUI():
 
                     response_registers = json.loads(response.text)
 
-                    self.__logger.info("Sync result: {}".format(response_registers))
-                    self.__logger.info("Registers: {}".format(str_registers))
+                    # self.__logger.info("Sync result: {}".format(response_registers))
+                    # self.__logger.info("Registers: {}".format(str_registers))
 
                     # Update last successful time.
                     self.__last_sync = time.time()
