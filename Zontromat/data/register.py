@@ -604,6 +604,9 @@ class Register:
         elif data_type == "json":
             out_value = json.dumps(value)
 
+        else:
+            out_value = value
+
         return out_value
 
 #endregion
