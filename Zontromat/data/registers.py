@@ -442,16 +442,18 @@ class Registers(list):
 
         result = value
 
-        if isinstance(value, str):
-            if "," in value:
-                result = "\"" + value + "\""
+        # 2024.07.11 15:36 
+        # All new builtin library for CSV handling in python now workaround objects like JSON inside it self.
+        # if isinstance(value, str):
+        #     if "," in value:
+        #         result = "\"" + value + "\""
 
-        elif isinstance(value, list):
-            result = "\"" + str(value) + "\""
+        # elif isinstance(value, list):
+        #     result = "\"" + str(value) + "\""
 
-        elif isinstance(value, dict):
-            result = "\"" + str(value) + "\""
-            result = result.replace("\'", "\"")
+        # elif isinstance(value, dict):
+        #     result = "\"" + str(value) + "\""
+        #     result = result.replace("\'", "\"")
 
         return result
 
@@ -463,7 +465,7 @@ class Registers(list):
         with open(file_path, "w", newline="", encoding='utf-8') as csv_file:
 
             fieldnames = ["name", "type", "range", "plugin", "scope", "default", "description", "profiles"]
-            writer = csv.DictWriter(csv_file, fieldnames=fieldnames, delimiter=",", quoting=2) #/"" , quoting=2, escapechar="\""
+            writer = csv.DictWriter(csv_file, fieldnames=fieldnames, delimiter=",", doublequote=True, escapechar=None, quoting=csv.QUOTE_ALL)
             writer.writeheader()
 
             for register in registers:
