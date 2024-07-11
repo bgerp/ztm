@@ -28,6 +28,7 @@ import os
 
 from data.register import Register
 from data.register import Scope
+from data.register import Profiles
 from data.registers import Registers
 from data import verbal_const
 
@@ -62,17 +63,6 @@ __status__ = "Debug"
 
 #endregion
 
-"""
-
- U1:ID1:R0:DO0
- |  |   |  |
- |  |   |  \----> Bit from the register.
- |  |   \-------> Register type.
- |  \-----------> Modbus identifier.
- \--------------> UART interface.
-
-"""
-
 #region Variables
 
 __parser = None
@@ -83,7 +73,7 @@ __registers = None
 """Registers
 """
 
-__range = {
+REGS_RANGES = {
     "NONE": "",
     "DI": "off|DI0|DI1|DI2|DI3|DI4|DI5|DI6|DI7|DI8|!DI0|!DI1|!DI2|!DI3|!DI4|!DI5|!DI6|!DI7|!DI8",
     "DO": "off|DO0|DO1|DO2|DO3|DO4|DO5|DO6|DO7|DO8|!DO0|!DO1|!DO2|!DO3|!DO4|!DO5|!DO6|!DO7|!DO8",
@@ -97,60 +87,75 @@ __range = {
     "PERCENTAGE_F": "0.0/100.0",
     "PERCENTAGE_I": "0/100",
     "PERCENTAGE_0_100": "0.0|100.0",
+    "PERCENTAGE_-100_100": "-100.0|100.0",
+    "VALVE_MODE": "0|1|2", # 0 - Close, 1 - Open Cool, 2 - Open Heat
+    "VALVE_STATE": "0|1|2", # 0 - Close, 1 - Open Cool, 2 - Open Heat
 }
+"""Possible ranges in the registers.
+"""
 
+INVALID_MB_ID = -1
+"""Helper variable for invalid modbus ID.
+"""
 #endregion
 
 def __set_parser():
-    global __parser
+    global __parser, INVALID_MB_ID
 
     # Add arguments.
     # __parser.add_argument("--action", type=str, default="w_json", help="Export JSON file.")
     __parser.add_argument("--action", type=str, default="w_csv", help="Export CSV file.")
-    # __parser.add_argument("--action", type=str, default="list_gpio", help="Export type.")
     # __parser.add_argument("--action", type=str, default="w_md", help="Export MD file.")
     # __parser.add_argument("--path", type=str, default=file_name, help="Target file path.")
 
-    # Add args parameters
+    # Add args parameters Monitoring
     __parser.add_argument("--pa", type=int, default=1, help="Power analyzer modbus ID.")
-    __parser.add_argument("--hw", type=int, default=-1, help="How water flow meter modbus ID.")
-    __parser.add_argument("--cw", type=int, default=-1, help="Cold water flow meter modbus ID.")
-    __parser.add_argument("--fl_1_hm", type=int, default=-1, help="Floor loop 1 heat meter modbus ID.")
-    __parser.add_argument("--fl_2_hm", type=int, default=-1, help="Floor loop 2 heat meter modbus ID.")
-    __parser.add_argument("--fl_3_hm", type=int, default=-1, help="Floor loop 3 heat meter modbus ID.")
-    __parser.add_argument("--cl_1_hm", type=int, default=-1, help="Convector loop 1 heat meter modbus ID.")
-    __parser.add_argument("--cl_2_hm", type=int, default=-1, help="Convector loop 2 heat meter modbus ID.")
-    __parser.add_argument("--cl_3_hm", type=int, default=-1, help="Convector loop 3 heat meter modbus ID.")
-    __parser.add_argument("--temp_upper", type=int, default=4, help="Upper thermometer modbus ID.")
-    __parser.add_argument("--temp_lower", type=int, default=5, help="Lower thermometer modbus ID.") 
-    __parser.add_argument("--temp_cent", type=int, default=3, help="Central thermometer modbus ID.")
-    __parser.add_argument("--pir_1", type=int, default=16, help="PIR 1 modbus ID.")
-    __parser.add_argument("--blinds_1", type=int, default=11, help="Blinds mechanism 1 modbus ID.")
-    __parser.add_argument("--blinds_2", type=int, default=-1, help="Blinds mechanism 2 modbus ID.")
-    __parser.add_argument("--blinds_3", type=int, default=-1, help="Blinds mechanism 3 modbus ID.")
-    __parser.add_argument("--blinds_4", type=int, default=-1, help="Blinds mechanism 4 modbus ID.")
-    __parser.add_argument("--bi_1", type=int, default=2, help="Black island 1 modbus ID.")
-    __parser.add_argument("--conv_1", type=int, default=6, help="Convector 1 modbus ID.")
-    __parser.add_argument("--conv_2", type=int, default=-1, help="Convector 2 modbus ID.")
-    __parser.add_argument("--conv_3", type=int, default=-1, help="Convector 3 modbus ID.")
-    __parser.add_argument("--ip", type=str, default="127.0.0.1", help="IP address of the device")
-    __parser.add_argument("--fl_vlv_1", type=str, default=verbal_const.OFF, help="Floor loop 1 GPIO.")
-    __parser.add_argument("--fl_vlv_2", type=str, default=verbal_const.OFF, help="Floor loop 2 GPIO.")
-    __parser.add_argument("--fl_vlv_3", type=str, default=verbal_const.OFF, help="Floor loop 3 GPIO.")
-    __parser.add_argument("--cl_vlv_1", type=str, default=verbal_const.OFF, help="Convector loop 1 GPIO.")
-    __parser.add_argument("--cl_vlv_2", type=str, default=verbal_const.OFF, help="Convector loop 2 GPIO.")
-    __parser.add_argument("--cl_vlv_3", type=str, default=verbal_const.OFF, help="Convector loop 3 GPIO.")
-    __parser.add_argument("--conv_1_s1", type=str, default=verbal_const.OFF, help="Convector loop 1 GPIO.")
-    __parser.add_argument("--conv_1_s2", type=str, default=verbal_const.OFF, help="Convector loop 2 GPIO.")
-    __parser.add_argument("--conv_1_s3", type=str, default=verbal_const.OFF, help="Convector loop 3 GPIO.")
-    __parser.add_argument("--conv_2_s1", type=str, default=verbal_const.OFF, help="Convector loop 1 GPIO.")
-    __parser.add_argument("--conv_2_s2", type=str, default=verbal_const.OFF, help="Convector loop 2 GPIO.")
-    __parser.add_argument("--conv_2_s3", type=str, default=verbal_const.OFF, help="Convector loop 3 GPIO.")
-    __parser.add_argument("--conv_3_s1", type=str, default=verbal_const.OFF, help="Convector loop 1 GPIO.")
-    __parser.add_argument("--conv_3_s2", type=str, default=verbal_const.OFF, help="Convector loop 2 GPIO.")
-    __parser.add_argument("--conv_3_s3", type=str, default=verbal_const.OFF, help="Convector loop 3 GPIO.")
     __parser.add_argument("--pa_model", type=str, default="SDM120", help="Model of the power analyzer.")
+    __parser.add_argument("--hw", type=int, default=INVALID_MB_ID, help="How water flow meter modbus ID.")
+    __parser.add_argument("--cw", type=int, default=INVALID_MB_ID, help="Cold water flow meter modbus ID.")
+    __parser.add_argument("--fl_1_hm", type=int, default=INVALID_MB_ID, help="Floor loop 1 heat meter modbus ID.")
+    __parser.add_argument("--fl_2_hm", type=int, default=INVALID_MB_ID, help="Floor loop 2 heat meter modbus ID.")
+    __parser.add_argument("--fl_3_hm", type=int, default=INVALID_MB_ID, help="Floor loop 3 heat meter modbus ID.")
+    __parser.add_argument("--cl_1_hm", type=int, default=INVALID_MB_ID, help="Convector loop 1 heat meter modbus ID.")
+    __parser.add_argument("--cl_2_hm", type=int, default=INVALID_MB_ID, help="Convector loop 2 heat meter modbus ID.")
+    __parser.add_argument("--cl_3_hm", type=int, default=INVALID_MB_ID, help="Convector loop 3 heat meter modbus ID.")
 
+    # Add args parameters HVAC
+    __parser.add_argument("--temp_upper", type=int, default=4, help="Upper thermometer modbus ID.")
+    __parser.add_argument("--temp_lower", type=int, default=5, help="Lower thermometer modbus ID.")
+    __parser.add_argument("--temp_cent", type=int, default=3, help="Central thermometer modbus ID.")
+    __parser.add_argument("--bi_1", type=int, default=2, help="Black island 1 modbus ID.")
+    __parser.add_argument("--fl_vlv_1", type=str, default="off", help="Floor loop 1 GPIO.")
+    __parser.add_argument("--fl_vlv_2", type=str, default="off", help="Floor loop 2 GPIO.")
+    __parser.add_argument("--fl_vlv_3", type=str, default="off", help="Floor loop 3 GPIO.")
+    __parser.add_argument("--cl_vlv_1", type=str, default="off", help="Convector loop 1 GPIO.")
+    __parser.add_argument("--cl_vlv_2", type=str, default="off", help="Convector loop 2 GPIO.")
+    __parser.add_argument("--cl_vlv_3", type=str, default="off", help="Convector loop 3 GPIO.")
+    __parser.add_argument("--conv_1", type=int, default=6, help="Convector 1 modbus ID.")
+    __parser.add_argument("--conv_1_s1", type=str, default="off", help="Convector loop 1 GPIO.")
+    __parser.add_argument("--conv_1_s2", type=str, default="off", help="Convector loop 2 GPIO.")
+    __parser.add_argument("--conv_1_s3", type=str, default="off", help="Convector loop 3 GPIO.")
+    __parser.add_argument("--conv_2", type=int, default=INVALID_MB_ID, help="Convector 2 modbus ID.")
+    __parser.add_argument("--conv_2_s1", type=str, default="off", help="Convector loop 1 GPIO.")
+    __parser.add_argument("--conv_2_s2", type=str, default="off", help="Convector loop 2 GPIO.")
+    __parser.add_argument("--conv_2_s3", type=str, default="off", help="Convector loop 3 GPIO.")
+    __parser.add_argument("--conv_3", type=int, default=INVALID_MB_ID, help="Convector 3 modbus ID.")
+    __parser.add_argument("--conv_3_s1", type=str, default="off", help="Convector loop 1 GPIO.")
+    __parser.add_argument("--conv_3_s2", type=str, default="off", help="Convector loop 2 GPIO.")
+    __parser.add_argument("--conv_3_s3", type=str, default="off", help="Convector loop 3 GPIO.")
+
+   # Add args parameters Envm
+    __parser.add_argument("--pir_1", type=int, default=16, help="PIR 1 modbus ID.")
+
+    # Add args parameters Blinds
+    __parser.add_argument("--blinds_1", type=int, default=11, help="Blinds mechanism 1 modbus ID.")
+    __parser.add_argument("--blinds_2", type=int, default=12, help="Blinds mechanism 2 modbus ID.")
+    __parser.add_argument("--blinds_3", type=int, default=13, help="Blinds mechanism 3 modbus ID.")
+    __parser.add_argument("--blinds_4", type=int, default=14, help="Blinds mechanism 4 modbus ID.")
+ 
+    # IP of the device.
+    __parser.add_argument("--ip", type=str, default="127.0.0.1", help="IP address of the device")
+ 
     # Take arguments.
     args = __parser.parse_args()
 
@@ -158,7 +163,7 @@ def __set_parser():
 
 def __add_registers(args):
 
-    global __registers, __range
+    global __registers, REGS_RANGES, INVALID_MB_ID
 
 #region Access Control (ac)
 
@@ -166,16 +171,22 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Access Control"
     register.description = "Plugin enabled"
-    register.range = __range["BOOL"]
+    register.range = REGS_RANGES["BOOL"]
     register.value = False
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("ac.allowed_attendees")
     register.scope = Scope.System
     register.plugin_name = "Access Control"
     register.description = "Allowed attendees"
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = [] # {"card_id": "445E6046010080FF", "pin": "159753", "valid_until": "1595322860"}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("ac.zones_count")
@@ -190,16 +201,22 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Access Control"
     register.description = "Nearby attendees"
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = [] # {"card_id": "445E6046010080FF", "ts":"1595322860"}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("ac.last_update_attendees")
     register.scope = Scope.Device
     register.plugin_name = "Access Control"
     register.description = "Last update attendee"
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = [] # {"card_id": "445E6046010080FF", "ts":"1595322860"}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("ac.next_attendance")
@@ -208,6 +225,9 @@ def __add_registers(args):
     register.description = "Next attendance"
     register.range = "0.0/"
     register.value = 0.0 # 1595322860
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     # Entry card reader.
@@ -215,8 +235,11 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Access Control"
     register.description = "Card reader enabled"
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = {} # "Teracom/act230/2911"
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     # Exit card reader.
@@ -224,8 +247,11 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Access Control"
     register.description = "Card reader enabled"
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = {} # "Teracom/act230/2897"
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     #
@@ -233,16 +259,22 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Access Control"
     register.description = "Exit button 1 input"
-    register.range = __range["DI"]
+    register.range = REGS_RANGES["DI"]
     register.value = verbal_const.OFF
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("ac.lock_mechanism_1.output")
     register.scope = Scope.System
     register.plugin_name = "Access Control"
     register.description = "Lock mechanism output"
-    register.range = __range["DO"]
+    register.range = REGS_RANGES["DO"]
     register.value = verbal_const.OFF
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("ac.time_to_open_1")
@@ -251,22 +283,31 @@ def __add_registers(args):
     register.description = "Lock mechanism time to open [s]"
     register.range = "0/60"
     register.value = 3
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("ac.door_closed_1.input")
     register.scope = Scope.System
     register.plugin_name = "Access Control"
     register.description = "Door closed input"
-    register.range = __range["DI"]
+    register.range = REGS_RANGES["DI"]
     register.value = verbal_const.OFF # "DI5"
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("ac.door_closed_1.state")
     register.scope = Scope.Device
     register.plugin_name = "Access Control"
     register.description = "Door closed input state"
-    register.range = __range["BOOL"]
+    register.range = REGS_RANGES["BOOL"]
     register.value = False
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
 
@@ -275,8 +316,11 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Access Control"
     register.description = "Card reader settings"
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = {} # "Teracom/act230/2486"
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     # Exit card reader.
@@ -284,8 +328,11 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Access Control"
     register.description = "Card reader settings"
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = {} # "Teracom/act230/1208"
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     #
@@ -293,16 +340,22 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Access Control"
     register.description = "Exit button 2 input"
-    register.range = __range["DI"]
+    register.range = REGS_RANGES["DI"]
     register.value = verbal_const.OFF
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("ac.lock_mechanism_2.output")
     register.scope = Scope.System
     register.plugin_name = "Access Control"
     register.description = "Lock 2 mechanism output"
-    register.range = __range["DO"]
+    register.range = REGS_RANGES["DO"]
     register.value = verbal_const.OFF
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("ac.time_to_open_2")
@@ -311,22 +364,31 @@ def __add_registers(args):
     register.description = "Lock 2 mechanism time to open"
     register.range = "0/60"
     register.value = 3
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("ac.door_closed_2.input")
     register.scope = Scope.System
     register.plugin_name = "Access Control"
     register.description = "Door 2 closed input"
-    register.range = __range["DI"]
+    register.range = REGS_RANGES["DI"]
     register.value = verbal_const.OFF # "DI2"
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("ac.door_closed_2.state")
     register.scope = Scope.Device
     register.plugin_name = "Access Control"
     register.description = "Door 2 closed input state"
-    register.range = __range["BOOL"]
+    register.range = REGS_RANGES["BOOL"]
     register.value = False
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     #
@@ -334,32 +396,44 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Access Control"
     register.description = "PIR 1 sensor input"
-    register.range = __range["DI"]
+    register.range = REGS_RANGES["DI"]
     register.value = verbal_const.OFF # "DI6"
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("ac.pir_1.state")
     register.scope = Scope.Device
     register.plugin_name = "Access Control"
     register.description = "PIR 1 sensor input state"
-    register.range = __range["BOOL"]
+    register.range = REGS_RANGES["BOOL"]
     register.value = False
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("ac.pir_2.input")
     register.scope = Scope.System
     register.plugin_name = "Access Control"
     register.description = "PIR 2 sensor input"
-    register.range = __range["DI"]
+    register.range = REGS_RANGES["DI"]
     register.value = verbal_const.OFF # "DI0"
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("ac.pir_2.state")
     register.scope = Scope.Device
     register.plugin_name = "Access Control"
     register.description = "PIR 2 sensor input state"
-    register.range = __range["BOOL"]
+    register.range = REGS_RANGES["BOOL"]
     register.value = False
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     #
@@ -367,32 +441,44 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Access Control"
     register.description = "Window 1 closed input"
-    register.range = __range["DI"]
+    register.range = REGS_RANGES["DI"]
     register.value = verbal_const.OFF # "!DI4"
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("ac.window_closed_1.state")
     register.scope = Scope.Device
     register.plugin_name = "Access Control"
     register.description = "Window 1 closed input state"
-    register.range = __range["BOOL"]
+    register.range = REGS_RANGES["BOOL"]
     register.value = False
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("ac.window_closed_2.input")
     register.scope = Scope.System
     register.plugin_name = "Access Control"
     register.description = "Window 2 closed input"
-    register.range = __range["DI"]
+    register.range = REGS_RANGES["DI"]
     register.value = verbal_const.OFF # "!DI3"
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("ac.window_closed_2.state")
     register.scope = Scope.Device
     register.plugin_name = "Access Control"
     register.description = "Window 2 closed input state"
-    register.range = __range["BOOL"]
+    register.range = REGS_RANGES["BOOL"]
     register.value = False
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     # Door window blind 1.
@@ -400,8 +486,11 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Access Control"
     register.description = "Door window blind 1 output"
-    register.range = __range["DO"]
+    register.range = REGS_RANGES["DO"]
     register.value = verbal_const.OFF
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
 
@@ -409,8 +498,11 @@ def __add_registers(args):
     register.scope = Scope.Device
     register.plugin_name = "Access Control"
     register.description = "Door window blind 1 value"
-    register.range = __range["BOOL"]
+    register.range = REGS_RANGES["BOOL"]
     register.value = False
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     # Door window blind 2.
@@ -418,16 +510,22 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Access Control"
     register.description = "Door window blind 2 output"
-    register.range = __range["DO"]
+    register.range = REGS_RANGES["DO"]
     register.value = verbal_const.OFF
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("ac.door_window_blind_2.value")
     register.scope = Scope.Device
     register.plugin_name = "Access Control"
     register.description = "Door window blind 2 value"
-    register.range = __range["BOOL"]
+    register.range = REGS_RANGES["BOOL"]
     register.value = False
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     # Occupation
@@ -435,16 +533,22 @@ def __add_registers(args):
     register.scope = Scope.Device
     register.plugin_name = "Access Control"
     register.description = "Zone occupied flag"
-    register.range = __range["BOOL"]
+    register.range = REGS_RANGES["BOOL"]
     register.value = False
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("ac.zone_2_occupied")
     register.scope = Scope.Device
     register.plugin_name = "Access Control"
     register.description = "Zone occupied flag"
-    register.range = __range["BOOL"]
+    register.range = REGS_RANGES["BOOL"]
     register.value = False
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
 #endregion
@@ -455,8 +559,8 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Blinds"
     register.description = "Window 1 blinds mechanism"
-    register.range = __range["NONE"]
-    if args.blinds_1 > -1:
+    register.range = REGS_RANGES["NONE"]
+    if args.blinds_1 > INVALID_MB_ID:
         register.value = {
             "vendor": "Yihao",
             "model": "BlindsV2",
@@ -468,14 +572,20 @@ def __add_registers(args):
         }
     else:
         register.value = {}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("blinds.blind_1.position")
-    register.scope = Scope.Device
+    register.scope = Scope.Both
     register.plugin_name = "Blinds"
     register.description = "Position [deg]"
     register.range = "0.0/180.0"
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("blinds.blind_1.object_height")
@@ -484,6 +594,9 @@ def __add_registers(args):
     register.description = "Object height [m]."
     register.range = "0.0/"
     register.value = 2.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("blinds.blind_1.sunspot_limit")
@@ -492,6 +605,9 @@ def __add_registers(args):
     register.description = "Sun spot limit [m]."
     register.range = "0.0/"
     register.value = 1.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
 
@@ -499,8 +615,8 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Blinds"
     register.description = "Window 2 blinds mechanism"
-    register.range = __range["NONE"]
-    if args.blinds_2 > -1:
+    register.range = REGS_RANGES["NONE"]
+    if args.blinds_2 > INVALID_MB_ID:
         register.value = {
             "vendor": "Yihao",
             "model": "BlindsV2",
@@ -512,6 +628,9 @@ def __add_registers(args):
         }
     else:
         register.value = {}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("blinds.blind_2.position")
@@ -520,6 +639,9 @@ def __add_registers(args):
     register.description = "Position [deg]"
     register.range = "0.0/180.0"
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("blinds.blind_2.object_height")
@@ -528,6 +650,9 @@ def __add_registers(args):
     register.description = "Object height [m]."
     register.range = "0.0/"
     register.value = 2.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("blinds.blind_2.sunspot_limit")
@@ -536,6 +661,9 @@ def __add_registers(args):
     register.description = "Sun spot limit [m]."
     register.range = "0.0/"
     register.value = 1.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
 
@@ -543,8 +671,8 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Blinds"
     register.description = "Window 3 blinds mechanism"
-    register.range = __range["NONE"]
-    if args.blinds_3 > -1:
+    register.range = REGS_RANGES["NONE"]
+    if args.blinds_3 > INVALID_MB_ID:
         register.value = {
             "vendor": "Yihao",
             "model": "BlindsV2",
@@ -556,6 +684,9 @@ def __add_registers(args):
         }
     else:
         register.valve = {}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("blinds.blind_3.position")
@@ -564,6 +695,9 @@ def __add_registers(args):
     register.description = "Position [deg]"
     register.range = "0.0/180.0"
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("blinds.blind_3.object_height")
@@ -572,6 +706,9 @@ def __add_registers(args):
     register.description = "Object height [m]."
     register.range = "0.0/"
     register.value = 2.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("blinds.blind_3.sunspot_limit")
@@ -580,6 +717,9 @@ def __add_registers(args):
     register.description = "Sun spot limit [m]."
     register.range = "0.0/"
     register.value = 1.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
 
@@ -587,8 +727,8 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Blinds"
     register.description = "Window 4 blinds mechanism"
-    register.range = __range["NONE"]
-    if args.blinds_4 > -1:
+    register.range = REGS_RANGES["NONE"]
+    if args.blinds_4 > INVALID_MB_ID:
         register.value = {
             "vendor": "Yihao",
             "model": "BlindsV2",
@@ -600,6 +740,9 @@ def __add_registers(args):
         }
     else:
         register.value = {}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("blinds.blind_4.position")
@@ -608,6 +751,9 @@ def __add_registers(args):
     register.description = "Position [deg]"
     register.range = "0.0/180.0"
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("blinds.blind_4.object_height")
@@ -616,6 +762,9 @@ def __add_registers(args):
     register.description = "Object height [m]."
     register.range = "0.0/"
     register.value = 2.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("blinds.blind_4.sunspot_limit")
@@ -624,6 +773,9 @@ def __add_registers(args):
     register.description = "Sun spot limit [m]."
     register.range = "0.0/"
     register.value = 1.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
 
@@ -633,14 +785,20 @@ def __add_registers(args):
     register.description = "Number of blind controllers"
     register.range = "1/"
     register.value = 1
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("blinds.enabled")
     register.scope = Scope.System
     register.plugin_name = "Blinds"
     register.description = "Plugin enabled"
-    register.range = __range["BOOL"]
+    register.range = REGS_RANGES["BOOL"]
     register.value = True
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
 #endregion
@@ -652,8 +810,11 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Monitoring"
     register.description = "Plugin enabled"
-    register.range = __range["BOOL"]
+    register.range = REGS_RANGES["BOOL"]
     register.value = True
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     # Cold water flow meter.
@@ -661,8 +822,8 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Monitoring"
     register.description = "Cold water flow meter"
-    register.range = __range["NONE"]
-    if args.cw > -1:
+    register.range = REGS_RANGES["NONE"]
+    if args.cw > INVALID_MB_ID:
         register.value = {
             "model": "mw_uml_15",
             "options": {
@@ -673,14 +834,20 @@ def __add_registers(args):
         }
     else:
         register.value = {}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("monitoring.cw.measurements")
     register.scope = Scope.Device
     register.plugin_name = "Monitoring"
     register.description = "Cold water liters"
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = []
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("monitoring.cw.leak")
@@ -689,6 +856,9 @@ def __add_registers(args):
     register.description = "Cold water leaked liters"
     register.range = "0.0/"
     register.value = 1.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
 
@@ -697,8 +867,8 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Monitoring"
     register.description = "Hot water input flow meter"
-    register.range = __range["NONE"]
-    if args.hw > -1:
+    register.range = REGS_RANGES["NONE"]
+    if args.hw > INVALID_MB_ID:
         register.value = {
             "model": "mw_uml_15",
             "options": {
@@ -709,14 +879,20 @@ def __add_registers(args):
         }
     else:
         register.value = {}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("monitoring.hw.measurements")
     register.scope = Scope.Device
     register.plugin_name = "Monitoring"
     register.description = "Hot water liters"
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = []
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("monitoring.hw.leak")
@@ -725,6 +901,9 @@ def __add_registers(args):
     register.description = "Hot water leaked liters"
     register.range = "0.0/"
     register.value = 1.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
 
@@ -733,8 +912,8 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Monitoring"
     register.description = "Power analyzer settings"
-    register.range = __range["NONE"]
-    if args.pa > -1:
+    register.range = REGS_RANGES["NONE"]
+    if args.pa > INVALID_MB_ID:
         register.value = {
             "vendor": "Eastron",
             "model": args.pa_model,
@@ -746,14 +925,20 @@ def __add_registers(args):
         }
     else:
         register.value = {}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("monitoring.pa.measurements")
     register.scope = Scope.Device
     register.plugin_name = "Monitoring"
     register.description = "Power analyzer measurements"
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = []
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     # ====================== NEW ======================
@@ -764,6 +949,9 @@ def __add_registers(args):
     register.description = "Measuring demand"
     register.range = "0.0/"
     register.value = 3600.0 # Every hour to measure the consumed electricity.
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
 
@@ -771,8 +959,8 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "HVAC"
     register.description = "Floor loop 1 heat meter settings."
-    register.range = __range["NONE"]
-    if args.fl_1_hm > -1:
+    register.range = REGS_RANGES["NONE"]
+    if args.fl_1_hm > INVALID_MB_ID:
         register.value = {
             "vendor": "mainone",
             "model": "flowmeter_dn20",
@@ -784,14 +972,20 @@ def __add_registers(args):
         }
     else:
         register.value = {}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("monitoring.fl_1.hm.measurements")
     register.scope = Scope.Device
     register.plugin_name = "Monitoring"
     register.description = "Floor loop 1 heat meter measurements."
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = {}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
 
@@ -799,8 +993,8 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Monitoring"
     register.description = "Floor loop 2 heat meter settings."
-    register.range = __range["NONE"]
-    if args.fl_2_hm > -1:
+    register.range = REGS_RANGES["NONE"]
+    if args.fl_2_hm > INVALID_MB_ID:
         register.value = {
             "vendor": "mainone",
             "model": "flowmeter_dn20",
@@ -812,6 +1006,9 @@ def __add_registers(args):
         }
     else:
         register.value = {}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
 
@@ -819,8 +1016,11 @@ def __add_registers(args):
     register.scope = Scope.Device
     register.plugin_name = "Monitoring"
     register.description = "Floor loop 2 heat meter measurements."
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = {}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
 
@@ -828,8 +1028,8 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Monitoring"
     register.description = "Floor loop 3 heat meter settings."
-    register.range = __range["NONE"]
-    if args.fl_3_hm > -1:
+    register.range = REGS_RANGES["NONE"]
+    if args.fl_3_hm > INVALID_MB_ID:
         register.value = {
             "vendor": "mainone",
             "model": "flowmeter_dn20",
@@ -841,14 +1041,20 @@ def __add_registers(args):
         }
     else:
         register.value = {}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("monitoring.fl_3.hm.measurements")
     register.scope = Scope.Device
     register.plugin_name = "Monitoring"
     register.description = "Floor loop 3 heat meter measurements."
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = {}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
 
@@ -856,8 +1062,8 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Monitoring"
     register.description = "Convector loop 1 heat meter settings."
-    register.range = __range["NONE"]
-    if args.cl_1_hm > -1:
+    register.range = REGS_RANGES["NONE"]
+    if args.cl_1_hm > INVALID_MB_ID:
         register.value = {
             "vendor": "mainone",
             "model": "flowmeter_dn20",
@@ -869,14 +1075,20 @@ def __add_registers(args):
         }
     else:
         register.value = {}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("monitoring.cl_1.hm.measurements")
     register.scope = Scope.Device
     register.plugin_name = "Monitoring"
     register.description = "Convector loop 1 heat meter measurements."
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = {}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
 
@@ -884,8 +1096,8 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Monitoring"
     register.description = "Convector loop 2 heat meter settings."
-    register.range = __range["NONE"]
-    if args.cl_2_hm > -1:
+    register.range = REGS_RANGES["NONE"]
+    if args.cl_2_hm > INVALID_MB_ID:
         register.value = {
             "vendor": "mainone",
             "model": "flowmeter_dn20",
@@ -897,14 +1109,20 @@ def __add_registers(args):
         }
     else:
         register.value = {}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("monitoring.cl_2.hm.measurements")
     register.scope = Scope.Device
     register.plugin_name = "Monitoring"
     register.description = "Convector loop 2 heat meter measurements."
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = {}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
 
@@ -912,8 +1130,8 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Monitoring"
     register.description = "Convector loop 3 heat meter settings."
-    register.range = __range["NONE"]
-    if args.cl_3_hm > -1:
+    register.range = REGS_RANGES["NONE"]
+    if args.cl_3_hm > INVALID_MB_ID:
         register.value = {
             "vendor": "mainone",
             "model": "flowmeter_dn20",
@@ -925,18 +1143,23 @@ def __add_registers(args):
         }
     else:
         register.value = {}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("monitoring.cl_3.hm.measurements")
     register.scope = Scope.Device
     register.plugin_name = "Monitoring"
     register.description = "Convector loop 3 heat meter measurements."
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = {}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
-
-    # ====================== DEPRICATED ======================
+    # ====================== DEPRECATED ======================
 
     register = Register("monitoring.pa.demand_time")
     register.scope = Scope.System
@@ -944,18 +1167,118 @@ def __add_registers(args):
     register.description = "Power analyzer measuring demand"
     register.range = "0.0/"
     register.value = 3600.0 # Every hour to measure the consumed electricity.
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
 #endregion
 
 #region Environment (envm)
 
+    register = Register("envm.enabled")
+    register.scope = Scope.System
+    register.plugin_name = "Environment"
+    register.description = "Plugin enabled"
+    register.range = REGS_RANGES["BOOL"]
+    register.value = True
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
+    __registers.append(register)
+
+    register = Register("envm.pir.settings")
+    register.scope = Scope.System
+    register.plugin_name = "Environment"
+    register.description = "Plugin environment PIR settings"
+    register.range = REGS_RANGES["NONE"]
+    if args.pir_1 > INVALID_MB_ID:
+        register.value = {
+            "PIR_1": {
+                "vendor": "Gasim",
+                "model": "RS2",
+                "options":
+                {
+                    "uart": 0,
+                    "mb_id": args.pir_1
+                }
+            }
+        }
+    else:
+        register.value = {}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
+    __registers.append(register)
+
+    register = Register("envm.pir.activations")
+    register.scope = Scope.Device
+    register.plugin_name = "Environment"
+    register.description = "Plugin environment PIR activations"
+    register.range = REGS_RANGES["NONE"]
+    register.value = {}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
+    __registers.append(register)
+
+    register = Register("envm.window_tamper.settings")
+    register.scope = Scope.System
+    register.plugin_name = "Environment"
+    register.description = "Plugin environment window tamper settings"
+    register.range = REGS_RANGES["NONE"]
+    register.value = {
+        "WINT_1": "!U0:ID2:FC2:R0:DI1",
+    }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
+    __registers.append(register)
+
+    register = Register("envm.window_tamper.activations")
+    register.scope = Scope.Device
+    register.plugin_name = "Environment"
+    register.description = "Plugin environment window tampers activations"
+    register.range = REGS_RANGES["NONE"]
+    register.value = {}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
+    __registers.append(register)
+
+    register = Register("envm.door_tamper.settings")
+    register.scope = Scope.System
+    register.plugin_name = "Environment"
+    register.description = "Plugin environment door tamper settings"
+    register.range = REGS_RANGES["NONE"]
+    register.value = {
+        "DRT_1": "!U0:ID2:FC2:R0:DI0",
+    }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
+    __registers.append(register)
+
+    register = Register("envm.door_tamper.activations")
+    register.scope = Scope.Device
+    register.plugin_name = "Environment"
+    register.description = "Plugin environment door tampers activations"
+    register.range = REGS_RANGES["NONE"]
+    register.value = {}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
+    __registers.append(register)
+
     register = Register("envm.is_empty")
     register.scope = Scope.Device
     register.plugin_name = "Environment"
     register.description = "Is empty flag"
-    register.range = __range["BOOL"]
+    register.range = REGS_RANGES["BOOL"]
     register.value = True
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("envm.is_empty_timeout")
@@ -964,22 +1287,31 @@ def __add_registers(args):
     register.description = "Is empty time out [s]"
     register.range = "0/"
     register.value = 3600
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("envm.forecast.icon_0")
     register.scope = Scope.System
     register.plugin_name = "Environment"
     register.description = "Actual weather icon."
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = ""
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("envm.forecast.rh_0")
     register.scope = Scope.System
     register.plugin_name = "Environment"
     register.description = "Actual outside relative humidity [%]"
-    register.range = __range["PERCENTAGE_F"]
+    register.range = REGS_RANGES["PERCENTAGE_F"]
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("envm.forecast.temp_0")
@@ -988,30 +1320,42 @@ def __add_registers(args):
     register.description = "Actual outside temperature [*C]"
     register.range = "-50.0/50.0"
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("envm.forecast.wind_0")
     register.scope = Scope.System
     register.plugin_name = "Environment"
     register.description = "Actual outside wind speed [m/s]"
-    register.range = __range["PERCENTAGE_F"]
+    register.range = REGS_RANGES["PERCENTAGE_F"]
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("envm.forecast.icon_3")
     register.scope = Scope.System
     register.plugin_name = "Environment"
     register.description = "Actual outside weather icon for 3 hours."
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = ""
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("envm.forecast.rh_3")
     register.scope = Scope.System
     register.plugin_name = "Environment"
     register.description = "Actual outside relative humidity for 3 hours.[%]"
-    register.range = __range["PERCENTAGE_F"]
+    register.range = REGS_RANGES["PERCENTAGE_F"]
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("envm.forecast.temp_3")
@@ -1020,30 +1364,42 @@ def __add_registers(args):
     register.description = "Actual outside temperature for 3 hours. [*C]"
     register.range = "-50.0/50.0"
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("envm.forecast.wind_3")
     register.scope = Scope.System
     register.plugin_name = "Environment"
     register.description = "Actual outside wind speed for 3 hours. [m/s]"
-    register.range = __range["PERCENTAGE_F"]
+    register.range = REGS_RANGES["PERCENTAGE_F"]
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("envm.forecast.icon_6")
     register.scope = Scope.System
     register.plugin_name = "Environment"
     register.description = "Actual outside weather icon for 6 hours."
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = ""
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("envm.forecast.rh_6")
     register.scope = Scope.System
     register.plugin_name = "Environment"
     register.description = "Actual outside relative humidity for 6 hours.[%]"
-    register.range = __range["PERCENTAGE_F"]
+    register.range = REGS_RANGES["PERCENTAGE_F"]
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("envm.forecast.temp_6")
@@ -1052,14 +1408,20 @@ def __add_registers(args):
     register.description = "Actual outside temperature for 6 hours. [*C]"
     register.range = "-50.0/50.0"
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("envm.forecast.wind_6")
     register.scope = Scope.System
     register.plugin_name = "Environment"
     register.description = "Actual outside wind speed for 6 hours. [m/s]"
-    register.range = __range["PERCENTAGE_F"]
+    register.range = REGS_RANGES["PERCENTAGE_F"]
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("envm.light")
@@ -1068,14 +1430,20 @@ def __add_registers(args):
     register.description = "Outside light [lux]"
     register.range = "0.0/"
     register.value = 1000.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("envm.energy") # Energy mode of the building.
     register.scope = Scope.System
     register.plugin_name = "Environment"
     register.description = "Energy mode of the building"
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = 0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("envm.flag_fire")
@@ -1084,6 +1452,9 @@ def __add_registers(args):
     register.description = "Emergency index for the fire."
     register.range = "0/3"
     register.value = 0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("envm.flag_storm")
@@ -1092,6 +1463,9 @@ def __add_registers(args):
     register.description = "Emergency index for the storm."
     register.range = "0/3"
     register.value = 0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("envm.flag_earthquake")
@@ -1100,6 +1474,9 @@ def __add_registers(args):
     register.description = "Emergency index for the earthquake."
     register.range = "0/3"
     register.value = 0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("envm.flag_gassing")
@@ -1108,6 +1485,9 @@ def __add_registers(args):
     register.description = "Emergency index for the gassing."
     register.range = "0/3"
     register.value = 0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("envm.flag_flooding")
@@ -1116,6 +1496,9 @@ def __add_registers(args):
     register.description = "Emergency index for the flooding."
     register.range = "0/3"
     register.value = 0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("envm.flag_blocked")
@@ -1124,14 +1507,20 @@ def __add_registers(args):
     register.description = "Emergency index for the blocking."
     register.range = "0/3"
     register.value = 0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("envm.sunpos.enabled")
     register.scope = Scope.System
     register.plugin_name = "Environment"
     register.description = "Enable software calculation of the sun position"
-    register.range = __range["BOOL"]
+    register.range = REGS_RANGES["BOOL"]
     register.value = False
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("envm.building.location.lat")
@@ -1140,6 +1529,9 @@ def __add_registers(args):
     register.description = "Latitude of the target building."
     register.range = "0.0/360.0"
     register.value = 43.07779
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("envm.building.location.lon")
@@ -1148,6 +1540,9 @@ def __add_registers(args):
     register.description = "Longitude of the target building."
     register.range = "0.0/360.0"
     register.value = 25.59549
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("envm.building.location.elv")
@@ -1156,6 +1551,9 @@ def __add_registers(args):
     register.description = "Longitude of the target building."
     register.range = "/"
     register.value = 210
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("envm.building.location.time_zone")
@@ -1164,14 +1562,9 @@ def __add_registers(args):
     register.description = "Longitude of the target building."
     register.range = "0/23"
     register.value = 2
-    __registers.append(register)
-
-    register = Register("envm.enabled")
-    register.scope = Scope.System
-    register.plugin_name = "Environment"
-    register.description = "Plugin enabled"
-    register.range = __range["BOOL"]
-    register.value = True
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("envm.sun.azimuth")
@@ -1180,6 +1573,9 @@ def __add_registers(args):
     register.description = "Sun azimuth value"
     register.range = "0.0/360.0"
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("envm.sun.elevation")
@@ -1188,6 +1584,9 @@ def __add_registers(args):
     register.description = "Sun elevation value"
     register.range = "0.0/360.0"
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
 #endregion
@@ -1199,8 +1598,11 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "HVAC"
     register.description = "Plugin enabled"
-    register.range = __range["BOOL"]
+    register.range = REGS_RANGES["BOOL"]
     register.value = True
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     # Zones count.
@@ -1210,6 +1612,9 @@ def __add_registers(args):
     register.description = "Count of the HVAC zones."
     register.range = "0/"
     register.value = 1
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     # Air temp central.
@@ -1217,8 +1622,8 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "HVAC"
     register.description = "Air temperature sensor center settings."
-    register.range = __range["NONE"]
-    if args.temp_cent > -1:
+    register.range = REGS_RANGES["NONE"]
+    if args.temp_cent > INVALID_MB_ID:
         register.value = {
             "vendor": "Gemho",
             "model": "Envse",
@@ -1230,6 +1635,9 @@ def __add_registers(args):
         }
     else:
         register.value = {}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("hvac.air_temp_cent_1.value")
@@ -1238,6 +1646,9 @@ def __add_registers(args):
     register.description = "Air temperature sensor center value."
     register.range = "0.0/"
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     # Air temp lower
@@ -1245,8 +1656,8 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "HVAC"
     register.description = "Air temperature sensor lower settings"
-    register.range = __range["NONE"]
-    if  args.temp_lower > -1:
+    register.range = REGS_RANGES["NONE"]
+    if  args.temp_lower > INVALID_MB_ID:
         register.value = {
             "vendor": "Donkger",
             "model": "XY-MD02",
@@ -1258,6 +1669,9 @@ def __add_registers(args):
         }
     else:
         register.value = {}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("hvac.air_temp_lower_1.value")
@@ -1266,6 +1680,9 @@ def __add_registers(args):
     register.description = "Air temperature sensor lower value"
     register.range = "0.0/"
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     # Air temp upper.
@@ -1273,19 +1690,22 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "HVAC"
     register.description = "Air temperature sensor upper settings"
-    register.range = __range["NONE"]
-    if args.temp_upper > -1:
+    register.range = REGS_RANGES["NONE"]
+    if args.temp_upper > INVALID_MB_ID:
         register.value = {
             "vendor": "Donkger",
             "model": "XY-MD02",
             "options":
             {
                 "uart": 0,
-                "mb_id": args.temp_upper
+                "mb_id": args.temp_upper # 4
             }
         }
     else:
         register.value = {}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("hvac.air_temp_upper_1.value")
@@ -1294,60 +1714,105 @@ def __add_registers(args):
     register.description = "Air temperature sensor upper value"
     register.range = "0.0/"
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("hvac.floor_loop_1.valve.settings")
     register.scope = Scope.System
     register.plugin_name = "HVAC"
     register.description = "Floor loop 1 valve"
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = {
         "vendor": "Tonhe",
         "model": "a20t20b2c",
         "options":
         {
-            "output": 
+            "output":
             [
-                args.fl_vlv_1 #"U0:ID2:FC5:R0:RO0",
+                args.fl_vlv_1 # U0:ID2:FC5:R0:RO1
             ]
         }
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
+    __registers.append(register)
+
+    register = Register("hvac.floor_loop_1.valve.activations")
+    register.scope = Scope.Device
+    register.plugin_name = "HVAC"
+    register.description = "Floor loop 1 valve activations"
+    register.range = REGS_RANGES["NONE"]
+    register.value = {}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("hvac.floor_loop_2.valve.settings")
     register.scope = Scope.System
     register.plugin_name = "HVAC"
     register.description = "Floor loop 2 valve"
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = {
         "vendor": "Tonhe",
         "model": "a20t20b2c",
         "options":
         {
-            "output": 
+            "output":
             [
                 args.fl_vlv_2 #"U0:ID2:FC5:R0:RO1",
             ]
         }
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
+    __registers.append(register)
+
+    register = Register("hvac.floor_loop_2.valve.activations")
+    register.scope = Scope.Device
+    register.plugin_name = "HVAC"
+    register.description = "Floor loop 2 valve activations"
+    register.range = REGS_RANGES["NONE"]
+    register.value = {}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("hvac.floor_loop_3.valve.settings")
     register.scope = Scope.System
     register.plugin_name = "HVAC"
     register.description = "Floor loop 3 valve"
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = {
         "vendor": "Tonhe",
         "model": "a20t20b2c",
         "options":
         {
-            "output": 
+            "output":
             [
                 args.fl_vlv_3 #"U0:ID2:FC5:R0:RO2",
             ]
         }
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
+    __registers.append(register)
+
+    register = Register("hvac.floor_loop_3.valve.activations")
+    register.scope = Scope.Device
+    register.plugin_name = "HVAC"
+    register.description = "Floor loop 3 valve activations"
+    register.range = REGS_RANGES["NONE"]
+    register.value = {}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     # Convector loop 1
@@ -1355,44 +1820,61 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "HVAC"
     register.description = "Convector 1"
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = {
         "vendor": "Silpa",
         "model": "Klimafan",
         "options":
         {
-            "stage1": 
+            "stage1":
             [
-                args.conv_1_s1 #"U0:ID6:FC5:R0:RO0",
+                args.conv_1_s1 # "U0:ID6:FC5:R0:RO0"
             ],
             "stage2":
             [
-                args.conv_1_s2 #"U0:ID6:FC5:R0:RO1",
+                args.conv_1_s2 # "U0:ID6:FC5:R0:RO1"
             ],
-            "stage3": 
+            "stage3":
             [
-                args.conv_1_s3 #"U0:ID6:FC5:R0:RO2",
+                args.conv_1_s3 # "U0:ID6:FC5:R0:RO2"
             ]
         }
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("hvac.conv_loop_1.valve.settings")
     register.scope = Scope.System
     register.plugin_name = "HVAC"
     register.description = "Convector loop 1 valve"
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = {
         "vendor": "Tonhe",
         "model": "a20t20b2c",
         "options":
         {
-            "output": 
+            "output":
             [
-                args.cl_vlv_1 #"U0:ID2:FC5:R0:RO0",
+                args.cl_vlv_1 # U0:ID2:FC5:R0:RO0
             ]
         }
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
+    __registers.append(register)
+
+    register = Register("hvac.conv_loop_1.valve.activations")
+    register.scope = Scope.Device
+    register.plugin_name = "HVAC"
+    register.description = "Convector loop 1 valve activations"
+    register.range = REGS_RANGES["NONE"]
+    register.value = {}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     # Convector loop 2
@@ -1400,13 +1882,13 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "HVAC"
     register.description = "Convector 2"
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = {
         "vendor": "Silpa",
         "model": "Klimafan",
         "options":
         {
-            "stage1": 
+            "stage1":
             [
                 args.conv_2_s1 #"U0:ID7:FC5:R0:RO0",
             ],
@@ -1414,30 +1896,47 @@ def __add_registers(args):
             [
                 args.conv_2_s2 #"U0:ID7:FC5:R0:RO1",
             ],
-            "stage3": 
+            "stage3":
             [
                 args.conv_2_s3 #"U0:ID7:FC5:R0:RO2",
             ]
         }
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("hvac.conv_loop_2.valve.settings")
     register.scope = Scope.System
     register.plugin_name = "HVAC"
     register.description = "Convector loop 2 valve"
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = {
         "vendor": "Tonhe",
         "model": "a20t20b2c",
         "options":
         {
-            "output": 
+            "output":
             [
                 args.cl_vlv_2 #"U0:ID7:FC5:R0:RO4",
             ]
         }
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
+    __registers.append(register)
+
+    register = Register("hvac.conv_loop_2.valve.activations")
+    register.scope = Scope.Device
+    register.plugin_name = "HVAC"
+    register.description = "Convector loop 2 valve activations"
+    register.range = REGS_RANGES["NONE"]
+    register.value = {}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     # Convector loop 3 flowmeter.
@@ -1445,13 +1944,13 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "HVAC"
     register.description = "Convector 3"
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = {
         "vendor": "Silpa",
         "model": "Klimafan",
         "options":
         {
-            "stage1": 
+            "stage1":
             [
                 args.conv_3_s1 #"U0:ID8:FC5:R0:RO0",
             ],
@@ -1459,30 +1958,47 @@ def __add_registers(args):
             [
                 args.conv_3_s2 #"U0:ID8:FC5:R0:RO1",
             ],
-            "stage3": 
+            "stage3":
             [
                 args.conv_3_s3 #"U0:ID8:FC5:R0:RO2",
             ]
         }
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("hvac.conv_loop_3.valve.settings")
     register.scope = Scope.System
     register.plugin_name = "HVAC"
     register.description = "Convector loop 3 valve"
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = {
         "vendor": "Tonhe",
         "model": "a20t20b2c",
         "options":
         {
-            "output": 
+            "output":
             [
                 args.cl_vlv_3 #"U0:ID8:FC5:R0:RO4",
             ]
         }
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
+    __registers.append(register)
+
+    register = Register("hvac.conv_loop_3.valve.activations")
+    register.scope = Scope.Device
+    register.plugin_name = "HVAC"
+    register.description = "Convector loop 3 valve activations"
+    register.range = REGS_RANGES["NONE"]
+    register.value = {}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     # Loop 1 Down Limit Temperature # Request: Eml6419
@@ -1492,6 +2008,9 @@ def __add_registers(args):
     register.description = "Loop 1 temperature down limit."
     register.range = "0.0/"
     register.value = 15
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("hvac.conv_loop_1.temp.down_limit")
@@ -1500,6 +2019,9 @@ def __add_registers(args):
     register.description = "Loop 1 temperature sensor value."
     register.range = "/"
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("hvac.temp_1.adjust")
@@ -1508,6 +2030,9 @@ def __add_registers(args):
     register.description = "Adjust temperature"
     register.range = "-50.0/50.0"
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     # Delta time.
@@ -1517,6 +2042,9 @@ def __add_registers(args):
     register.description = "Measuring delta time"
     register.range = "0.0/"
     register.value = 5.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     # Goal building temp.
@@ -1526,6 +2054,9 @@ def __add_registers(args):
     register.description = "Goal of the building temperature"
     register.range = "-50.0/50.0"
     register.value = 20.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     # Temperature actual
@@ -1535,6 +2066,9 @@ def __add_registers(args):
     register.description = "Actual temperature"
     register.range = "-50.0/50.0"
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("hvac.temp_1.max")
@@ -1543,6 +2077,9 @@ def __add_registers(args):
     register.description = "Maximum achievable"
     register.range = "-50.0/50.0"
     register.value = 30.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("hvac.temp_1.min")
@@ -1551,6 +2088,9 @@ def __add_registers(args):
     register.description = "Minimum achievable"
     register.range = "-50.0/50.0"
     register.value = 20.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     # Thermal force limit
@@ -1558,8 +2098,11 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "HVAC"
     register.description = "Thermal force limit"
-    register.range = __range["PERCENTAGE_F"]
+    register.range = REGS_RANGES["PERCENTAGE_F"]
     register.value = 100.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     # Thermal mode
@@ -1569,6 +2112,9 @@ def __add_registers(args):
     register.description = "Thermal mode"
     register.range = "1|2|3|4"
     register.value = 2
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     # Update rate.
@@ -1578,6 +2124,9 @@ def __add_registers(args):
     register.description = "Update rate of the plugin [s]"
     register.range = "0.0/"
     register.value = 1.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
 #endregion
@@ -1590,6 +2139,9 @@ def __add_registers(args):
     register.description = "Minimum limit"
     register.range = "0.0/10000.0"
     register.value = 800.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("light.max")
@@ -1598,46 +2150,64 @@ def __add_registers(args):
     register.description = "Maximum limit"
     register.range = "0.0/10000.0"
     register.value = 10000.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("light.v1.output")
     register.scope = Scope.System
     register.plugin_name = "Light"
     register.description = "Analog output 0. U0:ID2:FC16:R0:AO0"
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = "U0:ID2:FC16:R0:AO0"
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("light.v2.output")
     register.scope = Scope.System
     register.plugin_name = "Light"
     register.description = "Analog output 1. U0:ID2:FC16:R0:AO1"
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = "U0:ID2:FC16:R0:AO1"
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("light.r1.output")
     register.scope = Scope.System
     register.plugin_name = "Light"
     register.description = "Digital output 6. U0:ID2:FC5:R0:DO6"
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = "U0:ID2:FC5:R0:DO6"
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("light.r2.output")
     register.scope = Scope.System
     register.plugin_name = "Light"
     register.description = "Digital output 7. U0:ID2:FC5:R0:DO7"
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = "U0:ID2:FC5:R0:DO7"
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("light.hallway_lighting.output")
     register.scope = Scope.System
     register.plugin_name = "Light"
     register.description = "Hallway lighting digital output. U1:ID2:R0:DO3"
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = verbal_const.OFF # U1:ID2:R0:DO3
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("light.hallway_lighting.time")
@@ -1646,13 +2216,16 @@ def __add_registers(args):
     register.description = "Hallway lighting wait time."
     register.range = "0.0/"
     register.value = 60.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("light.sensor.settings")
     register.scope = Scope.System
     register.plugin_name = "Light"
     register.description = "Sensor settings"
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = {
         "vendor": "PT",
         "model": "light_sensor",
@@ -1661,6 +2234,9 @@ def __add_registers(args):
             "input": "AI2",
         }
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("light.target_illum")
@@ -1669,6 +2245,9 @@ def __add_registers(args):
     register.description = "Target illumination"
     register.range = "0.0/10000.0"
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("light.error_gain")
@@ -1677,15 +2256,21 @@ def __add_registers(args):
     register.description = "Error gain"
     register.range = "/"
     register.value = 0.01
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("light.enabled")
     register.scope = Scope.System
     register.plugin_name = "Light"
     register.description = "Plugin enabled"
-    register.range = __range["BOOL"]
+    register.range = REGS_RANGES["BOOL"]
     register.value = True
     __registers.append(register)
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
 
 #endregion
 
@@ -1696,8 +2281,14 @@ def __add_registers(args):
     register.scope = Scope.Device
     register.plugin_name = "System"
     register.description = "Last update cycle error"
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = []
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value,
+            Profiles.DISTRIBUTION.value,
+            Profiles.HEAT_PUMP.value,
+            Profiles.NORTH_SERVER_ROOMS.value)
     # GlobalErrorHandler.set_register(register)
     __registers.append(register)
 
@@ -1708,6 +2299,12 @@ def __add_registers(args):
     register.description = "Current consumed RAM"
     register.range = "0/"
     register.value = 0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value,
+            Profiles.DISTRIBUTION.value,
+            Profiles.HEAT_PUMP.value,
+            Profiles.NORTH_SERVER_ROOMS.value)
     __registers.append(register)
 
     register = Register("sys.ram.peak")
@@ -1716,6 +2313,12 @@ def __add_registers(args):
     register.description = "Peek of consumed RAM"
     register.range = "0/"
     register.value = 0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value,
+            Profiles.DISTRIBUTION.value,
+            Profiles.HEAT_PUMP.value,
+            Profiles.NORTH_SERVER_ROOMS.value)
     __registers.append(register)
 
     register = Register("sys.time.usage")
@@ -1724,6 +2327,12 @@ def __add_registers(args):
     register.description = "Application time cycle"
     register.range = "0.0/"
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value,
+            Profiles.DISTRIBUTION.value,
+            Profiles.HEAT_PUMP.value,
+            Profiles.NORTH_SERVER_ROOMS.value)
     __registers.append(register)
 
     register = Register("sys.time.boot")
@@ -1732,6 +2341,12 @@ def __add_registers(args):
     register.description = "OS boot time."
     register.range = "0.0/"
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value,
+            Profiles.DISTRIBUTION.value,
+            Profiles.HEAT_PUMP.value,
+            Profiles.NORTH_SERVER_ROOMS.value)
     __registers.append(register)
 
     register = Register("sys.time.uptime")
@@ -1740,6 +2355,12 @@ def __add_registers(args):
     register.description = "OS uptime."
     register.range = "0.0/"
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value,
+            Profiles.DISTRIBUTION.value,
+            Profiles.HEAT_PUMP.value,
+            Profiles.NORTH_SERVER_ROOMS.value)
     __registers.append(register)
 
     register = Register("sys.time.startup")
@@ -1748,6 +2369,12 @@ def __add_registers(args):
     register.description = "Application startup time."
     register.range = "0.0/"
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value,
+            Profiles.DISTRIBUTION.value,
+            Profiles.HEAT_PUMP.value,
+            Profiles.NORTH_SERVER_ROOMS.value)
     __registers.append(register)
 
     register = Register("sys.disc.total")
@@ -1756,6 +2383,12 @@ def __add_registers(args):
     register.description = "Total disc space"
     register.range = "0/"
     register.value = 0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value,
+            Profiles.DISTRIBUTION.value,
+            Profiles.HEAT_PUMP.value,
+            Profiles.NORTH_SERVER_ROOMS.value)
     __registers.append(register)
 
     register = Register("sys.disc.used")
@@ -1764,6 +2397,12 @@ def __add_registers(args):
     register.description = "Used disc space"
     register.range = "0/"
     register.value = 0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value,
+            Profiles.DISTRIBUTION.value,
+            Profiles.HEAT_PUMP.value,
+            Profiles.NORTH_SERVER_ROOMS.value)
     __registers.append(register)
 
     register = Register("sys.disc.free")
@@ -1772,6 +2411,12 @@ def __add_registers(args):
     register.description = "Free disc space"
     register.range = "0/"
     register.value = 0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value,
+            Profiles.DISTRIBUTION.value,
+            Profiles.HEAT_PUMP.value,
+            Profiles.NORTH_SERVER_ROOMS.value)
     __registers.append(register)
 
     # Status LED
@@ -1779,8 +2424,14 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "System"
     register.description = "Status LED"
-    register.range = __range["LED"]
+    register.range = REGS_RANGES["LED"]
     register.value = "LED0"
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value,
+            Profiles.DISTRIBUTION.value,
+            Profiles.HEAT_PUMP.value,
+            Profiles.NORTH_SERVER_ROOMS.value)
     __registers.append(register)
 
     register = Register("sys.sl.blink_time")
@@ -1789,6 +2440,12 @@ def __add_registers(args):
     register.description = "Blink time"
     register.range = "0.0/"
     register.value = 1.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value,
+            Profiles.DISTRIBUTION.value,
+            Profiles.HEAT_PUMP.value,
+            Profiles.NORTH_SERVER_ROOMS.value)
     __registers.append(register)
 
     # Anti tampering
@@ -1796,41 +2453,71 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "System"
     register.description = "Anti tamper"
-    register.range = __range["DI"]
+    register.range = REGS_RANGES["DI"]
     register.value = verbal_const.OFF # "DI7"
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value,
+            Profiles.DISTRIBUTION.value,
+            Profiles.HEAT_PUMP.value,
+            Profiles.NORTH_SERVER_ROOMS.value)
     __registers.append(register)
 
     register = Register("sys.at.state")
     register.scope = Scope.Device
     register.plugin_name = "System"
     register.description = "Anti tampering state"
-    register.range = __range["BOOL"]
+    register.range = REGS_RANGES["BOOL"]
     register.value = False
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value,
+            Profiles.DISTRIBUTION.value,
+            Profiles.HEAT_PUMP.value,
+            Profiles.NORTH_SERVER_ROOMS.value)
     __registers.append(register)
 
-    # Colision detector
+    # Collision detector
     register = Register("sys.col.info_message")
     register.scope = Scope.Device
     register.plugin_name = "System"
     register.description = "Collision info message"
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = {}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value,
+            Profiles.DISTRIBUTION.value,
+            Profiles.HEAT_PUMP.value,
+            Profiles.NORTH_SERVER_ROOMS.value)
     __registers.append(register)
 
     register = Register("sys.col.warning_message")
     register.scope = Scope.Device
     register.plugin_name = "System"
     register.description = "Collision warning message"
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = {}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value,
+            Profiles.DISTRIBUTION.value,
+            Profiles.HEAT_PUMP.value,
+            Profiles.NORTH_SERVER_ROOMS.value)
     __registers.append(register)
 
     register = Register("sys.col.error_message")
     register.scope = Scope.Device
     register.plugin_name = "System"
     register.description = "Collision error message"
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = {}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value,
+            Profiles.DISTRIBUTION.value,
+            Profiles.HEAT_PUMP.value,
+            Profiles.NORTH_SERVER_ROOMS.value)
     __registers.append(register)
 
     register = Register("sys.col.clear_errors")
@@ -1839,6 +2526,12 @@ def __add_registers(args):
     register.description = "Clear messages"
     register.range = "0|1"
     register.value = 0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value,
+            Profiles.DISTRIBUTION.value,
+            Profiles.HEAT_PUMP.value,
+            Profiles.NORTH_SERVER_ROOMS.value)
     __registers.append(register)
 
     # Enable disable plugin.
@@ -1846,8 +2539,14 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "System"
     register.description = "Plugin enabled"
-    register.range = __range["BOOL"]
+    register.range = REGS_RANGES["BOOL"]
     register.value = True
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value,
+            Profiles.DISTRIBUTION.value,
+            Profiles.HEAT_PUMP.value,
+            Profiles.NORTH_SERVER_ROOMS.value)
     __registers.append(register)
 
     # Enable info messages.
@@ -1855,8 +2554,14 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "System"
     register.description = "Enable info messages"
-    register.range = __range["BOOL"]
+    register.range = REGS_RANGES["BOOL"]
     register.value = True
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value,
+            Profiles.DISTRIBUTION.value,
+            Profiles.HEAT_PUMP.value,
+            Profiles.NORTH_SERVER_ROOMS.value)
     __registers.append(register)
 
     # Enable warning messages.
@@ -1864,8 +2569,14 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "System"
     register.description = "Enable warning messages"
-    register.range = __range["BOOL"]
+    register.range = REGS_RANGES["BOOL"]
     register.value = True
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value,
+            Profiles.DISTRIBUTION.value,
+            Profiles.HEAT_PUMP.value,
+            Profiles.NORTH_SERVER_ROOMS.value)
     __registers.append(register)
 
     # Enable error messages.
@@ -1873,26 +2584,14 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "System"
     register.description = "Enable error messages"
-    register.range = __range["BOOL"]
+    register.range = REGS_RANGES["BOOL"]
     register.value = True
-    __registers.append(register)
-
-    # Software update register.
-    register = Register("sys.software.target_version")
-    register.scope = Scope.System
-    register.plugin_name = "System"
-    register.description = "Target software version"
-    register.range = __range["NONE"]
-    register.value = json.loads("{\"repo\": \"http:\/\/github.com\/bgerp\/ztm\/\", \"branch\": \"master\", \"commit\":\"3462828\"}")
-    __registers.append(register)
-
-    # Current software version.
-    register = Register("sys.software.current_version")
-    register.scope = Scope.System
-    register.plugin_name = "System"
-    register.description = "Current software version."
-    register.range = __range["NONE"]
-    register.value = json.loads("{\"repo\": \"http:\/\/github.com\/bgerp\/ztm\/\", \"branch\": \"master\", \"commit\":\"e0c1dda\"}")
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value,
+            Profiles.DISTRIBUTION.value,
+            Profiles.HEAT_PUMP.value,
+            Profiles.NORTH_SERVER_ROOMS.value)
     __registers.append(register)
 
 #endregion
@@ -1903,7 +2602,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Energy Center Common"
     register.description = "Plugin enabled"
-    register.range = __range["BOOL"]
+    register.range = REGS_RANGES["BOOL"]
     register.value = False
     __registers.append(register)
 
@@ -1911,1851 +2610,2873 @@ def __add_registers(args):
 
 #region Energy Center Distribution (ecd)
 
-    # ECD / Foyer Floor Heating Settings
-    register = Register("ecd.underfloor_heating_foyer.valve.enabled")
+    # ====================================================================================================
+    # ========================================= Left door panel ==========================================
+    # ====================================================================================================
+
+    # ECD / Floor entrance valves settings.
+    register = Register("ecd.floor_entrance.valves.settings")
     register.scope = Scope.System
-    register.plugin_name = "ECD"
-    register.description = "ECD / Foyer Floor Heating Settings"
-    register.range = __range["NONE"]
-    register.value = {
-        "vendor": "Flowx",
-        "model": "FLX-05F",
-        "options":
-        {
-            "output_cw": verbal_const.OFF, #"U1:ID1:R0:DO0",
-            "output_ccw": verbal_const.OFF, #"U1:ID1:R0:DO1",
-            "limit_cw": verbal_const.OFF, #"U1:ID1:R0:DI0",
-            "limit_ccw": verbal_const.OFF, #"U1:ID1:R0:DI1"
-        }
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Floor entrance valves settings."
+    register.range = REGS_RANGES["NONE"]
+    register.value = \
+    {
+        "hot":
+        [
+            # {
+            #     "vendor": "Flowx",
+            #     "model": "FLX-05F",
+            #     "options":
+            #     {
+            #         "close_on_shutdown": False,
+            #         "wait_on_shutdown": False,
+            #         "io_mode": 1, # 1: "single_out", 2: "dual_out"
+            #         "output_cw": "U0:ID2:FC5:R0:RO1",
+            #         "output_ccw": "off",
+            #         "limit_cw": "U0:ID6:FC2:R0:DI0",
+            #         "limit_ccw": "U0:ID6:FC2:R0:DI1"
+            #     }
+            # }
+        ],
+        "cold":
+        [
+            {
+                "vendor": "Flowx",
+                "model": "FLX-05F",
+                "options":
+                {
+                    "close_on_shutdown": False,
+                    "wait_on_shutdown": False,
+                    "io_mode": 1, # 1: "single_out", 2: "dual_out"
+                    "output_cw": "U0:ID11:FC5:R0:RO0",
+                    "output_ccw": "off",
+                    "limit_cw": "U0:ID11:FC2:R0:DI0",
+                    "limit_ccw": "!U0:ID11:FC2:R0:DI0"
+                }
+            }
+        ]
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
-    # ECD / Foyer Floor Heating Position
-    register = Register("ecd.underfloor_heating_foyer.valve.position")
+    # ECD / Floor entrance valves mode.
+    register = Register("ecd.floor_entrance.valves.mode")
     register.scope = Scope.System
-    register.plugin_name = "ECD"
-    register.description = "ECD / Foyer Floor Heating Position"
-    register.range = __range["PERCENTAGE_F"]
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Floor entrance valves mode."
+    register.range = REGS_RANGES["VALVE_MODE"]
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
-    # ECD / Foyer Floor Heating Position
-    register = Register("ecd.underfloor_heating_foyer.valve.calibrate")
-    register.scope = Scope.System
-    register.plugin_name = "ECD"
-    register.description = "ECD / Foyer Floor Heating Calibration"
-    register.range = __range["BOOL"]
-    register.value = False
-    __registers.append(register)
-
-
-    # ECD / Underfloor Heating Trestle Settings
-    register = Register("ecd.underfloor_heating_trestle.valve.enabled")
-    register.scope = Scope.System
-    register.plugin_name = "ECD"
-    register.description = "ECD / Underfloor Heating Trestle"
-    register.range = __range["NONE"]
-    register.value = {
-        "vendor": "Flowx",
-        "model": "FLX-05F",
-        "options":
-        {
-            "output_cw": "off",
-            "output_ccw": "off",
-            "limit_cw": "off",
-            "limit_ccw": "off"
-        }
-    }
-    __registers.append(register)
-
-    # ECD / Underfloor Heating Trestle Position
-    register = Register("ecd.underfloor_heating_trestle.valve.position")
-    register.scope = Scope.System
-    register.plugin_name = "ECD"
-    register.description = "ECD / Underfloor Heating Trestle Position"
-    register.range = __range["PERCENTAGE_F"]
+    # ECD / Floor entrance valves state.
+    register = Register("ecd.floor_entrance.valves.state")
+    register.scope = Scope.Device
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Floor entrance valves state."
+    register.range = REGS_RANGES["VALVE_STATE"]
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
-    # ECD / Underfloor Heating Trestle Calibration
-    register = Register("ecd.underfloor_heating_trestle.valve.calibration")
+    # ECD / Floor pool valves settings.
+    register = Register("ecd.pool_floor.valves.settings")
     register.scope = Scope.System
-    register.plugin_name = "ECD"
-    register.description = "ECD / Underfloor Heating Trestle Calibration"
-    register.range = __range["BOOL"]
-    register.value = False
-    __registers.append(register)
-
-
-    # ECD / Underfloor Heating Pool Settings
-    register = Register("ecd.underfloor_heating_pool.valve.enabled")
-    register.scope = Scope.System
-    register.plugin_name = "ECD"
-    register.description = "ECD / Underfloor Heating Pool"
-    register.range = __range["NONE"]
-    register.value = {
-        "vendor": "Flowx",
-        "model": "FLX-05F",
-        "options":
-        {
-            "output_cw": "off",
-            "output_ccw": "off",
-            "limit_cw": "off",
-            "limit_ccw": "off"
-        }
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Floor pool valves settings."
+    register.range = REGS_RANGES["NONE"]
+    register.value = \
+    {
+        "hot":
+        [
+            # {
+            #     "vendor": "Flowx",
+            #     "model": "FLX-05F",
+            #     "options":
+            #     {
+            #         "close_on_shutdown": False,
+            #         "wait_on_shutdown": False,
+            #         "io_mode": 1, # 1: "single_out", 2: "dual_out"
+            #         "output_cw": "U0:ID2:FC5:R0:RO2",
+            #         "output_ccw": "off",
+            #         "limit_cw": "U0:ID6:FC2:R0:DI0",
+            #         "limit_ccw": "U0:ID6:FC2:R0:DI1"
+            #     }
+            # }
+        ],
+        "cold":
+        [
+            {
+                "vendor": "Flowx",
+                "model": "FLX-05F",
+                "options":
+                {
+                    "close_on_shutdown": False,
+                    "wait_on_shutdown": False,
+                    "io_mode": 1, # 1: "single_out", 2: "dual_out"
+                    "output_cw": "U0:ID11:FC5:R0:RO2",
+                    "output_ccw": "off",
+                    "limit_cw": "U0:ID11:FC2:R0:DI2",
+                    "limit_ccw": "!U0:ID11:FC2:R0:DI2"
+                }
+            }
+        ]
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
-    # ECD / Underfloor Heating Pool Position
-    register = Register("ecd.underfloor_heating_pool.valve.position")
+    # ECD / Floor pool valves mode.
+    register = Register("ecd.pool_floor.valves.mode")
     register.scope = Scope.System
-    register.plugin_name = "ECD"
-    register.description = "ECD / Underfloor Heating Pool Position"
-    register.range = __range["PERCENTAGE_F"]
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Floor pool valves mode."
+    register.range = REGS_RANGES["VALVE_MODE"]
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
-    # ECD / Underfloor Heating Pool Calibration
-    register = Register("ecd.underfloor_heating_pool.valve.calibration")
-    register.scope = Scope.System
-    register.plugin_name = "ECD"
-    register.description = "ECD / Underfloor Heating Pool Calibration"
-    register.range = __range["BOOL"]
-    register.value = False
-    __registers.append(register)
-
-
-    # ECD / Air Cooling Valve Settings
-    register = Register("ecd.air_cooling.valve.enabled")
-    register.scope = Scope.System
-    register.plugin_name = "ECD"
-    register.description = "ECD / Air Cooling Valve Settings"
-    register.range = __range["NONE"]
-    register.value = {
-        "vendor": "Flowx",
-        "model": "FLX-05F",
-        "options":
-        {
-            "output_cw": "off",
-            "output_ccw": "off",
-            "limit_cw": "off",
-            "limit_ccw": "off"
-        }
-    }
-    __registers.append(register)
-
-    # ECD / Air Cooling Valve Position
-    register = Register("ecd.air_cooling.valve.position")
-    register.scope = Scope.System
-    register.plugin_name = "ECD"
-    register.description = "ECD / Air Cooling Valve Position"
-    register.range = __range["PERCENTAGE_F"]
+    # ECD / Floor pool valves state.
+    register = Register("ecd.pool_floor.valves.state")
+    register.scope = Scope.Device
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Floor pool valves state."
+    register.range = REGS_RANGES["VALVE_STATE"]
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
-    # ECD / Air Cooling Valve Calibration
-    register = Register("ecd.air_cooling.valve.calibration")
+    # ECD / Ground drilling valves settings.
+    register = Register("ecd.ground_drilling.valves.settings")
     register.scope = Scope.System
-    register.plugin_name = "ECD"
-    register.description = "ECD / Air Cooling Valve Calibration"
-    register.range = __range["BOOL"]
-    register.value = False
-    __registers.append(register)
-
-
-    # ECD / Ground Drilling Valve Settings
-    register = Register("ecd.ground_drill.valve.enabled")
-    register.scope = Scope.System
-    register.plugin_name = "ECD"
-    register.description = "ECD / Ground Drilling Valve"
-    register.range = __range["NONE"]
-    register.value = {
-        "vendor": "Flowx",
-        "model": "FLX-05F",
-        "options":
-        {
-            "output_cw": "off",
-            "output_ccw": "off",
-            "limit_cw": "off",
-            "limit_ccw": "off"
-        }
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Ground drilling valves settings."
+    register.range = REGS_RANGES["NONE"]
+    register.value = \
+    {
+        "hot":
+        [
+            # {
+            #     "vendor": "Flowx",
+            #     "model": "FLX-05F",
+            #     "options":
+            #     {
+            #         "close_on_shutdown": False,
+            #         "wait_on_shutdown": False,
+            #         "io_mode": 1, # 1: "single_out", 2: "dual_out"
+            #         "output_cw": "U0:ID2:FC5:R0:RO2",
+            #         "output_ccw": "off",
+            #         "limit_cw": "U0:ID6:FC2:R0:DI0",
+            #         "limit_ccw": "U0:ID6:FC2:R0:DI1"
+            #     }
+            # }
+        ],
+        "cold":
+        [
+            {
+                "vendor": "Flowx",
+                "model": "FLX-05F",
+                "options":
+                {
+                    "close_on_shutdown": False,
+                    "wait_on_shutdown": False,
+                    "io_mode": 1, # 1: "single_out", 2: "dual_out"
+                    "output_cw": "U0:ID11:FC5:R0:RO1",
+                    "output_ccw": "off",
+                    "limit_cw": "U0:ID11:FC2:R0:DI1",
+                    "limit_ccw": "!U0:ID11:FC2:R0:DI1"
+                }
+            }
+        ]
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
-    # ECD / Ground Drill Valve Position
-    register = Register("ecd.ground_drill.valve.position")
+    # ECD / Ground drilling valves mode.
+    register = Register("ecd.ground_drilling.valves.mode")
     register.scope = Scope.System
-    register.plugin_name = "ECD"
-    register.description = "ECD / Ground Drill Valve Position"
-    register.range = __range["PERCENTAGE_F"]
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Ground drilling valves mode."
+    register.range = REGS_RANGES["VALVE_MODE"]
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
-    # ECD / Ground Drill Valve Calibration
-    register = Register("ecd.ground_drill.valve.calibration")
-    register.scope = Scope.System
-    register.plugin_name = "ECD"
-    register.description = "ECD / Ground Drill Valve Calibration"
-    register.range = __range["BOOL"]
-    register.value = False
-    __registers.append(register)
-
-
-    # ECD / Generators Cooling Valve Settings
-    register = Register("ecd.generators_cooling.valve.enabled")
-    register.scope = Scope.System
-    register.plugin_name = "ECD"
-    register.description = "ECD / Generators Cooling Valve / Settings"
-    register.range = __range["NONE"]
-    register.value = {
-        "vendor": "Flowx",
-        "model": "FLX-05F",
-        "options":
-        {
-            "output_cw": "off",
-            "output_ccw": "off",
-            "limit_cw": "off",
-            "limit_ccw": "off"
-        }
-    }
-    __registers.append(register)
-
-    # ECD / Generators Cooling Valve Position
-    register = Register("ecd.generators_cooling.valve.position")
-    register.scope = Scope.System
-    register.plugin_name = "ECD"
-    register.description = "ECD / Generators Cooling Valve / Position"
-    register.range = __range["PERCENTAGE_F"]
+    # ECD / Ground drilling valves state.
+    register = Register("ecd.ground_drilling.valves.state")
+    register.scope = Scope.Device
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Ground drilling valves state."
+    register.range = REGS_RANGES["VALVE_STATE"]
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
-    # ECD / Generators Cooling Valve Calibration
-    register = Register("ecd.generators_cooling.valve.calibration")
-    register.scope = Scope.System
-    register.plugin_name = "ECD"
-    register.description = "ECD / Generators Cooling Valve Calibration"
-    register.range = __range["BOOL"]
-    register.value = False
+    # ECD / Ground drilling valves state.
+    register = Register("ecd.ground_drilling.temp.settings")
+    register.scope = Scope.Device
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Ground drilling valves state."
+    register.range = REGS_RANGES["NONE"]
+    register.value = {}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
 
-    # ECD / Short Green/Purple Valve Settings
-    register = Register("ecd.short_green_purple.valve.enabled")
+    # ECD / Air tower green valves settings.
+    register = Register("ecd.air_tower_green.valves.settings")
     register.scope = Scope.System
-    register.plugin_name = "ECD"
-    register.description = "ECD / Short Green/Purple Valve Settings"
-    register.range = __range["NONE"]
-    register.value = {
-        "vendor": "Flowx",
-        "model": "FLX-05F",
-        "options":
-        {
-            "output_cw": "off",
-            "output_ccw": "off",
-            "limit_cw": "off",
-            "limit_ccw": "off"
-        }
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Ground drilling valves settings."
+    register.range = REGS_RANGES["NONE"]
+    register.value = \
+    {
+        "hot":
+        [
+            # {
+            #     "vendor": "Flowx",
+            #     "model": "FLX-05F",
+            #     "options":
+            #     {
+            #         "close_on_shutdown": False,
+            #         "wait_on_shutdown": False,
+            #         "io_mode": 1, # 1: "single_out", 2: "dual_out"
+            #         "output_cw": "U0:ID2:FC5:R0:RO2",
+            #         "output_ccw": "off",
+            #         "limit_cw": "U0:ID6:FC2:R0:DI0",
+            #         "limit_ccw": "U0:ID6:FC2:R0:DI1"
+            #     }
+            # }
+        ],
+        "cold":
+        [
+            {
+                "vendor": "Flowx",
+                "model": "FLX-05F",
+                "options":
+                {
+                    "close_on_shutdown": False,
+                    "wait_on_shutdown": False,
+                    "io_mode": 1, # 1: "single_out", 2: "dual_out"
+                    "output_cw": "U0:ID11:FC5:R0:RO4",
+                    "output_ccw": "off",
+                    "limit_cw": "U0:ID11:FC2:R0:DI4",
+                    "limit_ccw": "!U0:ID11:FC2:R0:DI4"
+                }
+            }
+        ]
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
-    # ECD / Short Green/Purple Valve Position
-    register = Register("ecd.short_green_purple.valve.position")
+    # ECD / Air tower green valves mode.
+    register = Register("ecd.air_tower_green.valves.mode")
     register.scope = Scope.System
-    register.plugin_name = "ECD"
-    register.description = "ECD / Short Green/Purple Valve Position"
-    register.range = __range["PERCENTAGE_F"]
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Ground drilling valves mode."
+    register.range = REGS_RANGES["VALVE_MODE"]
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
-    # ECD / Generators Cooling Valve Calibration
-    register = Register("ecd.short_green_purple.valve.calibration")
-    register.scope = Scope.System
-    register.plugin_name = "ECD"
-    register.description = "ECD / Generators Cooling Valve Calibration"
-    register.range = __range["BOOL"]
-    register.value = False
-    __registers.append(register)
-
-
-    # ECD / Underfloor West Bypass Valve Settings
-    register = Register("ecd.underfloor_west_bypass.valve.enabled")
-    register.scope = Scope.System
-    register.plugin_name = "ECD"
-    register.description = "ECD / Underfloor West Bypass Valve Settings"
-    register.range = __range["NONE"]
-    register.value = {
-        "vendor": "Flowx",
-        "model": "FLX-05F",
-        "options":
-        {
-            "output_cw": "off",
-            "output_ccw": "off",
-            "limit_cw": "off",
-            "limit_ccw": "off"
-        }
-    }
-    __registers.append(register)
-
-    # ECD / Underfloor West Bypass Valve Position
-    register = Register("ecd.underfloor_west_bypass.valve.position")
-    register.scope = Scope.System
-    register.plugin_name = "ECD"
-    register.description = "ECD / Underfloor West Bypass Valve Position"
-    register.range = __range["PERCENTAGE_F"]
+    # ECD / Air tower green valves state.
+    register = Register("ecd.air_tower_green.valves.state")
+    register.scope = Scope.Device
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Air tower green valves state."
+    register.range = REGS_RANGES["VALVE_STATE"]
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
-    # ECD / Underfloor West Bypass Valve Calibration
-    register = Register("ecd.underfloor_west_bypass.valve.calibration")
+    # ECD / Air tower green valves settings.
+    register = Register("ecd.air_tower_purple.valves.settings")
     register.scope = Scope.System
-    register.plugin_name = "ECD"
-    register.description = "ECD / Underfloor West Bypass Valve Calibration"
-    register.range = __range["BOOL"]
-    register.value = False
-    __registers.append(register)
-
-
-    # ECD / Underfloor East Bypass Valve Settings
-    register = Register("ecd.underfloor_east_bypass.valve.enabled")
-    register.scope = Scope.System
-    register.plugin_name = "ECD"
-    register.description = "ECD / Underfloor East Bypass Valve Settings"
-    register.range = __range["NONE"]
-    register.value = {
-        "vendor": "Flowx",
-        "model": "FLX-05F",
-        "options":
-        {
-            "output_cw": "off",
-            "output_ccw": "off",
-            "limit_cw": "off",
-            "limit_ccw": "off"
-        }
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Ground drilling valves settings."
+    register.range = REGS_RANGES["NONE"]
+    register.value = \
+    {
+        "hot":
+        [
+            # {
+            #     "vendor": "Flowx",
+            #     "model": "FLX-05F",
+            #     "options":
+            #     {
+            #         "close_on_shutdown": False,
+            #         "wait_on_shutdown": False,
+            #         "io_mode": 1, # 1: "single_out", 2: "dual_out"
+            #         "output_cw": "U0:ID2:FC5:R0:RO2",
+            #         "output_ccw": "off",
+            #         "limit_cw": "U0:ID6:FC2:R0:DI0",
+            #         "limit_ccw": "U0:ID6:FC2:R0:DI1"
+            #     }
+            # }
+        ],
+        "cold":
+        [
+            {
+                "vendor": "Flowx",
+                "model": "FLX-05F",
+                "options":
+                {
+                    "close_on_shutdown": False,
+                    "wait_on_shutdown": False,
+                    "io_mode": 1, # 1: "single_out", 2: "dual_out"
+                    "output_cw": "U0:ID11:FC5:R0:RO3",
+                    "output_ccw": "off",
+                    "limit_cw": "U0:ID11:FC2:R0:DI3",
+                    "limit_ccw": "U0:ID11:FC2:R0:DI3"
+                }
+            }
+        ]
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
-    # ECD / Underfloor East Bypass Valve Position
-    register = Register("ecd.underfloor_east_bypass.valve.position")
+    # ECD / Air tower green valves mode.
+    register = Register("ecd.air_tower_purple.valves.mode")
     register.scope = Scope.System
-    register.plugin_name = "ECD"
-    register.description = "ECD / Underfloor East Bypass Valve Position"
-    register.range = __range["PERCENTAGE_F"]
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Ground drilling valves mode."
+    register.range = REGS_RANGES["VALVE_MODE"]
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
-    # ECD / Underfloor East Bypass Valve Calibration
-    register = Register("ecd.underfloor_east_bypass.valve.calibration")
-    register.scope = Scope.System
-    register.plugin_name = "ECD"
-    register.description = "ECD / Underfloor East Bypass Valve Calibration"
-    register.range = __range["BOOL"]
-    register.value = False
+    # ECD / Air tower green valves state.
+    register = Register("ecd.air_tower_purple.valves.state")
+    register.scope = Scope.Device
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Air tower green valves state."
+    register.range = REGS_RANGES["VALVE_STATE"]
+    register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
-
-    # ECD / VCG / Pool Heating Valve
-    register = Register("ecd.vcg_pool_heating.valve")
+    # ECD / Generators valves settings.
+    register = Register("ecd.generators.valves.settings")
     register.scope = Scope.System
-    register.plugin_name = "ECD"
-    register.description = "ECD / VCG / Pool Heating"
-    register.range = __range["NONE"]
-    register.value = {
-        "vendor": "Flowx",
-        "model": "FLX-05F",
-        "options":
-        {
-            "output_cw": "off",
-            "output_ccw": "off",
-            "limit_cw": "off",
-            "limit_ccw": "off"
-        }
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Generators valves settings."
+    register.range = REGS_RANGES["NONE"]
+    register.value = \
+    {
+        "hot":
+        [
+            # {
+            #     "vendor": "Flowx",
+            #     "model": "FLX-05F",
+            #     "options":
+            #     {
+            #         "close_on_shutdown": False,
+            #         "wait_on_shutdown": False,
+            #         "io_mode": 1, # 1: "single_out", 2: "dual_out"
+            #         "output_cw": "U0:ID2:FC5:R0:RO2",
+            #         "output_ccw": "off",
+            #         "limit_cw": "U0:ID6:FC2:R0:DI0",
+            #         "limit_ccw": "U0:ID6:FC2:R0:DI1"
+            #     }
+            # }
+        ],
+        "cold":
+        [
+            {
+                "vendor": "Flowx",
+                "model": "FLX-05F",
+                "options":
+                {
+                    "close_on_shutdown": False,
+                    "wait_on_shutdown": False,
+                    "io_mode": 1, # 1: "single_out", 2: "dual_out"
+                    "output_cw": "U0:ID11:FC5:R0:RO5",
+                    "output_ccw": "off",
+                    "limit_cw": "U0:ID11:FC2:R0:DI5",
+                    "limit_ccw": "!U0:ID11:FC2:R0:DI5"
+                }
+            }
+        ]
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
-    # ECD / VCG / Pool Heating Valve Pump
-    register = Register("ecd.vcg_pool_heating.pump")
+    # ECD / Generators valves mode.
+    register = Register("ecd.generators.valves.mode")
     register.scope = Scope.System
-    register.plugin_name = "ECD"
-    register.description = "ECD / VCG / Pool Heating"
-    register.range = __range["NONE"]
-    register.value = {
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Ground drilling valves mode."
+    register.range = REGS_RANGES["VALVE_MODE"]
+    register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
+    __registers.append(register)
+
+    # ECD / Generators valves state.
+    register = Register("ecd.generators.valves.state")
+    register.scope = Scope.Device
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Generators valves state."
+    register.range = REGS_RANGES["VALVE_STATE"]
+    register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
+    __registers.append(register)
+
+    # ====================================================================================================
+    # ========================================= Right door panel =========================================
+    # ====================================================================================================
+
+    # ECD / Pool air heating valves settings.
+    register = Register("ecd.pool_air_heating.valves.settings")
+    register.scope = Scope.System
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Pool air heating valves settings."
+    register.range = REGS_RANGES["NONE"]
+    register.value = \
+    {
+        "hot":
+        [
+            {
+                "vendor": "Flowx",
+                "model": "FLX-05F",
+                "options":
+                {
+                    "close_on_shutdown": False,
+                    "wait_on_shutdown": False,
+                    "io_mode": 1, # 1: "single_out", 2: "dual_out"
+                    "output_cw": "U0:ID15:FC5:R0:RO0",
+                    "output_ccw": "off",
+                    "limit_cw": "U0:ID15:FC2:R0:DI0",
+                    "limit_ccw": "U0:ID15:FC2:R0:DI1"
+                }
+            }
+        ],
+        "cold":
+        [
+            # {
+            #     "vendor": "Flowx",
+            #     "model": "FLX-05F",
+            #     "options":
+            #     {
+            #         "close_on_shutdown": False,
+            #         "wait_on_shutdown": False,
+            #         "io_mode": 1, # 1: "single_out", 2: "dual_out"
+            #         "output_cw": "U0:ID15:FC5:R0:RO7",
+            #         "output_ccw": "off",
+            #         "limit_cw": "U0:ID15:FC2:R0:DI2",
+            #         "limit_ccw": "U0:ID15:FC2:R0:DI1"
+            #     }
+            # }
+        ]
+    }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
+    __registers.append(register)
+
+    # ECD / Pool air heating valves mode.
+    register = Register("ecd.pool_air_heating.valves.mode")
+    register.scope = Scope.System
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Pool air heating valves mode."
+    register.range = REGS_RANGES["VALVE_MODE"]
+    register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
+    __registers.append(register)
+
+    # ECD / Pool air heating valves state.
+    register = Register("ecd.pool_air_heating.valves.state")
+    register.scope = Scope.Device
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Pool air heating valves state."
+    register.range = REGS_RANGES["VALVE_STATE"]
+    register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
+    __registers.append(register)
+
+    # ECD / Pool air heating pump settings.
+    register = Register("ecd.pool_air_heating.pump.settings")
+    register.scope = Scope.System
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Pool air heating pump settings."
+    register.range = REGS_RANGES["NONE"]
+    register.value = \
+    {
         "vendor": "Grundfos",
         "model": "MAGNA1_80_100_F_360_1x230V_PN6",
         "options":
         {
-            "uart": 0,
-            "mb_id": 0
+            "uart": 1,
+            "mb_id": 1,
+            "e_stop": "U0:ID15:FC5:R0:RO8",
+            "e_status": "U0:ID15:FC2:R0:DI0",
+            "stop_on_shutdown": True,
+            "wait_on_shutdown": False
         }
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
-    # ECD / VCG / Pool Heating Valve Pump
-    register = Register("ecd.vcg_pool_heating.enabled")
+    # ECD / Pool air heating pump mode.
+    register = Register("ecd.pool_air_heating.pump.mode")
     register.scope = Scope.System
-    register.plugin_name = "ECD"
-    register.description = "ECD / VCG / Pool Heating"
-    register.range = __range["BOOL"]
-    register.value = True
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Pool air heating pump mode."
+    register.range = REGS_RANGES["PERCENTAGE_I"]
+    register.value = 0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
+    # ECD / Pool air heating pump state.
+    register = Register("ecd.pool_air_heating.pump.state")
+    register.scope = Scope.Device
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Pool air heating pump state."
+    register.range = REGS_RANGES["NONE"]
+    register.value = {}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
+    __registers.append(register)
 
-    # ECD / VCG / Pool Cooling In
-    register = Register("ecd.vcg_tva_pool.cold_in")
+    # ECD / Convectors kitchen valves settings.
+    register = Register("ecd.conv_kitchen.valves.settings")
     register.scope = Scope.System
-    register.plugin_name = "ECD"
-    register.description = "ECD / VCG / Pool Cooling In"
-    register.range = __range["NONE"]
-    register.value = {
-        "vendor": "Flowx",
-        "model": "FLX-05F",
-        "options":
-        {
-            "output_cw": "off",
-            "output_ccw": "off",
-            "limit_cw": "off",
-            "limit_ccw": "off"
-        }
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Convectors kitchen valves settings."
+    register.range = REGS_RANGES["NONE"]
+    register.value = \
+    {
+        "hot":
+        [
+            {
+                "vendor": "Flowx",
+                "model": "FLX-05F",
+                "options":
+                {
+                    "close_on_shutdown": False,
+                    "wait_on_shutdown": False,
+                    "io_mode": 1, # 1: "single_out", 2: "dual_out"
+                    "output_cw": "U0:ID12:FC5:R0:RO0",
+                    "output_ccw": "off",
+                    "limit_cw": "U0:ID12:FC2:R0:DI0",
+                    "limit_ccw": "!U0:ID12:FC2:R0:DI2"
+                }
+            }
+        ],
+        "cold":
+        [
+            {
+                "vendor": "Flowx",
+                "model": "FLX-05F",
+                "options":
+                {
+                    "close_on_shutdown": False,
+                    "wait_on_shutdown": False,
+                    "io_mode": 1, # 1: "single_out", 2: "dual_out"
+                    "output_cw": "U0:ID12:FC5:R0:RO2",
+                    "output_ccw": "off",
+                    "limit_cw": "U0:ID12:FC2:R0:DI2",
+                    "limit_ccw": "!U0:ID12:FC2:R0:DI0"
+                }
+            }
+        ]
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
-    # ECD / VCG / Pool Cooling Out
-    register = Register("ecd.vcg_tva_pool.cold_out")
+    # ECD / Convectors kitchen valves mode.
+    register = Register("ecd.conv_kitchen.valves.mode")
     register.scope = Scope.System
-    register.plugin_name = "ECD"
-    register.description = "ECD / VCG / Pool Cooling In"
-    register.range = __range["NONE"]
-    register.value = {
-        "vendor": "Flowx",
-        "model": "FLX-05F",
-        "options":
-        {
-            "output_cw": "off",
-            "output_ccw": "off",
-            "limit_cw": "off",
-            "limit_ccw": "off"
-        }
-    }
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Convectors kitchen valves mode."
+    register.range = REGS_RANGES["VALVE_MODE"]
+    register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
-
-    # ECD / VCG / Pool Heating In
-    register = Register("ecd.vcg_tva_pool.hot_in")
-    register.scope = Scope.System
-    register.plugin_name = "ECD"
-    register.description = "ECD / VCG / Pool Heating In"
-    register.range = __range["NONE"]
-    register.value = {
-        "vendor": "Flowx",
-        "model": "FLX-05F",
-        "options":
-        {
-            "output_cw": "off",
-            "output_ccw": "off",
-            "limit_cw": "off",
-            "limit_ccw": "off"
-        }
-    }
+    # ECD / Convectors kitchen valves state.
+    register = Register("ecd.conv_kitchen.valves.state")
+    register.scope = Scope.Device
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Convectors kitchen valves state."
+    register.range = REGS_RANGES["VALVE_STATE"]
+    register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
-    # ECD / VCG / Pool Heating Out
-    register = Register("ecd.vcg_tva_pool.hot_out")
+    # ECD / Convectors kitchen pump settings.
+    register = Register("ecd.conv_kitchen.pump.settings")
     register.scope = Scope.System
-    register.plugin_name = "ECD"
-    register.description = "ECD / VCG / Pool Heating Out"
-    register.range = __range["NONE"]
-    register.value = {
-        "vendor": "Flowx",
-        "model": "FLX-05F",
-        "options":
-        {
-            "output_cw": "off",
-            "output_ccw": "off",
-            "limit_cw": "off",
-            "limit_ccw": "off"
-        }
-    }
-    __registers.append(register)
-
-    # ECD / VCG / Pump
-    register = Register("ecd.vcg_tva_pool.pump")
-    register.scope = Scope.System
-    register.plugin_name = "ECD"
-    register.description = "ECD / VCG / Pump"
-    register.range = __range["NONE"]
-    register.value = {
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Convectors kitchen pump settings."
+    register.range = REGS_RANGES["NONE"]
+    register.value = \
+    {
         "vendor": "Grundfos",
         "model": "MAGNA1_80_100_F_360_1x230V_PN6",
         "options":
         {
-            "uart": 0,
-            "mb_id": 0
+            "uart": 1,
+            "mb_id": 1,
+            "e_stop": "U0:ID12:FC5:R0:RO3",
+            "e_status": "U0:ID12:FC2:R0:DI3",
+            "stop_on_shutdown": True,
+            "wait_on_shutdown": False
         }
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
-    # ECD / VCG / Enable
-    register = Register("ecd.vcg_tva_pool.enabled")
+    # ECD / Convectors kitchen pump mode.
+    register = Register("ecd.conv_kitchen.pump.mode")
     register.scope = Scope.System
-    register.plugin_name = "ECD"
-    register.description = "ECD / VCG / Enable"
-    register.range = __range["BOOL"]
-    register.value = True
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Convectors kitchen pump mode."
+    register.range = REGS_RANGES["PERCENTAGE_I"]
+    register.value = 0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
-    # ECD / VCG / Convectors East Cooling In
-    register = Register("ecd.convectors_east.cold_in")
+    # ECD / Convectors kitchen pump state.
+    register = Register("ecd.conv_kitchen.pump.state")
+    register.scope = Scope.Device
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Convectors kitchen pump state."
+    register.range = REGS_RANGES["NONE"]
+    register.value = {}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
+    __registers.append(register)
+
+    # ECD / AHU conference hall valves settings.
+    register = Register("ecd.ahu_conf_hall.valves.settings")
     register.scope = Scope.System
-    register.plugin_name = "ECD"
-    register.description = "ECD / VCG / Convectors East Cooling In"
-    register.range = __range["NONE"]
-    register.value = {
-        "vendor": "Flowx",
-        "model": "FLX-05F",
-        "options":
-        {
-            "output_cw": "off",
-            "output_ccw": "off",
-            "limit_cw": "off",
-            "limit_ccw": "off"
-        }
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / AHU conference hall valves settings."
+    register.range = REGS_RANGES["NONE"]
+    register.value = \
+    {
+        "hot":
+        [
+            {
+                "vendor": "Flowx",
+                "model": "FLX-05F",
+                "options":
+                {
+                    "close_on_shutdown": False,
+                    "wait_on_shutdown": False,
+                    "io_mode": 1, # 1: "single_out", 2: "dual_out"
+                    "output_cw": "U0:ID13:FC5:R0:RO0",
+                    "output_ccw": "off",
+                    "limit_cw": "U0:ID13:FC2:R0:DI0",
+                    "limit_ccw": "!U0:ID13:FC2:R0:DI2"
+                }
+            }
+        ],
+        "cold":
+        [
+            {
+                "vendor": "Flowx",
+                "model": "FLX-05F",
+                "options":
+                {
+                    "close_on_shutdown": False,
+                    "wait_on_shutdown": False,
+                    "io_mode": 1, # 1: "single_out", 2: "dual_out"
+                    "output_cw": "U0:ID13:FC5:R0:RO2",
+                    "output_ccw": "off",
+                    "limit_cw": "U0:ID13:FC2:R0:DI2",
+                    "limit_ccw": "!U0:ID13:FC2:R0:DI0"
+                }
+            }
+        ]
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
-    # ECD / VCG / Convectors East Cooling Out
-    register = Register("ecd.convectors_east.cold_out")
+    # ECD / AHU conference hall valves mode.
+    register = Register("ecd.ahu_conf_hall.valves.mode")
     register.scope = Scope.System
-    register.plugin_name = "ECD"
-    register.description = "ECD / VCG / Convectors East Cooling Out"
-    register.range = __range["NONE"]
-    register.value = {
-       "vendor": "Flowx",
-       "model": "FLX-05F",
-       "options":
-       {
-           "output_cw": "off",
-           "output_ccw": "off",
-           "limit_cw": "off",
-           "limit_ccw": "off"
-       }
-    }
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / AHU conference hall valves mode."
+    register.range = REGS_RANGES["VALVE_MODE"]
+    register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
-
-    # ECD / VCG / Convectors East Hot In
-    register = Register("ecd.convectors_east.hot_in")
-    register.scope = Scope.System
-    register.plugin_name = "ECD"
-    register.description = "ECD / VCG / Convectors East Hot In"
-    register.range = __range["NONE"]
-    register.value = {
-        "vendor": "Flowx",
-        "model": "FLX-05F",
-        "options":
-        {
-            "output_cw": "off",
-            "output_ccw": "off",
-            "limit_cw": "off",
-            "limit_ccw": "off"
-        }
-    }
+    # ECD / AHU conference hall valves state.
+    register = Register("ecd.ahu_conf_hall.valves.state")
+    register.scope = Scope.Device
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / AHU conference hall valves state."
+    register.range = REGS_RANGES["VALVE_STATE"]
+    register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
-    # ECD / VCG / Convectors East Hot Out
-    register = Register("ecd.convectors_east.hot_out")
+    # ECD / AHU conference hall pump settings.
+    register = Register("ecd.ahu_conf_hall.pump.settings")
     register.scope = Scope.System
-    register.plugin_name = "ECD"
-    register.description = "ECD / VCG / Convectors East Hot Out"
-    register.range = __range["NONE"]
-    register.value = {
-        "vendor": "Flowx",
-        "model": "FLX-05F",
-        "options":
-        {
-            "output_cw": "off",
-            "output_ccw": "off",
-            "limit_cw": "off",
-            "limit_ccw": "off"
-        }
-    }
-    __registers.append(register)
-
-    # ECD / VCG / Convectors East Pump
-    register = Register("ecd.convectors_east.pump")
-    register.scope = Scope.System
-    register.plugin_name = "ECD"
-    register.description = "ECD / VCG / Convectors East Pump"
-    register.range = __range["NONE"]
-    register.value = {
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / AHU conference hall pump settings."
+    register.range = REGS_RANGES["NONE"]
+    register.value = \
+    {
         "vendor": "Grundfos",
         "model": "MAGNA1_80_100_F_360_1x230V_PN6",
         "options":
         {
-            "uart": 0,
-            "mb_id": 0
+            "uart": 1,
+            "mb_id": 1,
+            "e_stop": "U0:ID13:FC5:R0:RO3",
+            "e_status": "U0:ID13:FC2:R0:DI3",
+            "stop_on_shutdown": True,
+            "wait_on_shutdown": False
         }
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
-    # ECD / VCG / Convectors East Enable
-    register = Register("ecd.convectors_east.enabled")
+    # ECD / AHU conference hall pump mode.
+    register = Register("ecd.ahu_conf_hall.pump.mode")
     register.scope = Scope.System
-    register.plugin_name = "ECD"
-    register.description = "ECD / VCG / Convectors East Enable"
-    register.range = __range["BOOL"]
-    register.value = True
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / AHU conference hall pump mode."
+    register.range = REGS_RANGES["PERCENTAGE_I"]
+    register.value = 0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
+    # ECD / AHU conference hall pump state.
+    register = Register("ecd.ahu_conf_hall.pump.state")
+    register.scope = Scope.Device
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / AHU conference hall pump state."
+    register.range = REGS_RANGES["NONE"]
+    register.value = {}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
+    __registers.append(register)
 
-    # ECD / VCG / Floor East Cooling In
-    register = Register("ecd.underfloor_east.cold_in")
+    # ECD / Floor west valves settings.
+    register = Register("ecd.floor_west.valves.settings")
     register.scope = Scope.System
-    register.plugin_name = "ECD"
-    register.description = "ECD / VCG / Floor East Cooling In"
-    register.range = __range["NONE"]
-    register.value = {
-        "vendor": "Flowx",
-        "model": "FLX-05F",
-        "options":
-        {
-            "output_cw": "off",
-            "output_ccw": "off",
-            "limit_cw": "off",
-            "limit_ccw": "off"
-        }
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Floor west valves settings."
+    register.range = REGS_RANGES["NONE"]
+    register.value = \
+    {
+        "hot":
+        [
+            {
+                "vendor": "Flowx",
+                "model": "FLX-05F",
+                "options":
+                {
+                    "close_on_shutdown": False,
+                    "wait_on_shutdown": False,
+                    "io_mode": 1, # 1: "single_out", 2: "dual_out"
+                    "output_cw": "U0:ID16:FC5:R0:RO0",
+                    "output_ccw": "off",
+                    "limit_cw": "U0:ID16:FC2:R0:DI0",
+                    "limit_ccw": "!U0:ID16:FC2:R0:DI2"
+                }
+            }
+        ],
+        "cold":
+        [
+            {
+                "vendor": "Flowx",
+                "model": "FLX-05F",
+                "options":
+                {
+                    "close_on_shutdown": False,
+                    "wait_on_shutdown": False,
+                    "io_mode": 1, # 1: "single_out", 2: "dual_out"
+                    "output_cw": "U0:ID16:FC5:R0:RO2",
+                    "output_ccw": "off",
+                    "limit_cw": "U0:ID16:FC2:R0:DI2",
+                    "limit_ccw": "!U0:ID16:FC2:R0:DI0"
+                }
+            }
+        ]
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
-    # ECD / VCG / Floor East Cooling Out
-    register = Register("ecd.underfloor_east.cold_out")
+    # ECD / Floor west valves mode.
+    register = Register("ecd.floor_west.valves.mode")
     register.scope = Scope.System
-    register.plugin_name = "ECD"
-    register.description = "ECD / VCG / Floor East Cooling Out"
-    register.range = __range["NONE"]
-    register.value = {
-        "vendor": "Flowx",
-        "model": "FLX-05F",
-        "options":
-        {
-            "output_cw": "off",
-            "output_ccw": "off",
-            "limit_cw": "off",
-            "limit_ccw": "off"
-        }
-    }
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Floor west valves mode."
+    register.range = REGS_RANGES["VALVE_MODE"]
+    register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
-    # ECD / VCG / Floor East Hot In
-    register = Register("ecd.underfloor_east.hot_in")
-    register.scope = Scope.System
-    register.plugin_name = "ECD"
-    register.description = "ECD / VCG / Floor East Hot In"
-    register.range = __range["NONE"]
-    register.value = {
-        "vendor": "Flowx",
-        "model": "FLX-05F",
-        "options":
-        {
-            "output_cw": "off",
-            "output_ccw": "off",
-            "limit_cw": "off",
-            "limit_ccw": "off"
-        }
-    }
+    # ECD / Floor west valves state.
+    register = Register("ecd.floor_west.valves.state")
+    register.scope = Scope.Device
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Floor west  valves state"
+    register.range = REGS_RANGES["VALVE_STATE"]
+    register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
-    # ECD / VCG / Floor East Hot Out
-    register = Register("ecd.underfloor_east.hot_out")
+    # ECD / Floor west pump settings.
+    register = Register("ecd.floor_west.pump.settings")
     register.scope = Scope.System
-    register.plugin_name = "ECD"
-    register.description = "ECD / VCG / Floor East Hot Out"
-    register.range = __range["NONE"]
-    register.value = {
-        "vendor": "Flowx",
-        "model": "FLX-05F",
-        "options":
-        {
-            "output_cw": "off",
-            "output_ccw": "off",
-            "limit_cw": "off",
-            "limit_ccw": "off"
-        }
-    }
-    __registers.append(register)
-
-    # ECD / VCG / Floor East Pump
-    register = Register("ecd.underfloor_east.pump")
-    register.scope = Scope.System
-    register.plugin_name = "ECD"
-    register.description = "ECD / VCG / Floor East Pump"
-    register.range = __range["NONE"]
-    register.value = {
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Floor west pump settings."
+    register.range = REGS_RANGES["NONE"]
+    register.value = \
+    {
         "vendor": "Grundfos",
         "model": "MAGNA1_80_100_F_360_1x230V_PN6",
         "options":
         {
-            "uart": 0,
-            "mb_id": 0
+            "uart": 1,
+            "mb_id": 1,
+            "e_stop": "U0:ID16:FC5:R0:RO3",
+            "e_status": "U0:ID16:FC2:R0:DI3",
+            "stop_on_shutdown": True,
+            "wait_on_shutdown": False
         }
+    }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
+    __registers.append(register)
+
+    # ECD / Floor west pump mode.
+    register = Register("ecd.floor_west.pump.mode")
+    register.scope = Scope.System
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Floor west pump mode."
+    register.range = REGS_RANGES["PERCENTAGE_I"]
+    register.value = 0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
+    __registers.append(register)
+
+    # ECD / Floor west hall pump state.
+    register = Register("ecd.floor_west.pump.state")
+    register.scope = Scope.Device
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Floor west pump state."
+    register.range = REGS_RANGES["NONE"]
+    register.value = {}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
+    __registers.append(register)
+
+    # ECD / Convectors west valves settings.
+    register = Register("ecd.conv_west.valves.settings")
+    register.scope = Scope.System
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Convectors west valves settings."
+    register.range = REGS_RANGES["NONE"]
+    register.value = \
+    {
+        "hot":
+        [
+            {
+                "vendor": "Flowx",
+                "model": "FLX-05F",
+                "options":
+                {
+                    "close_on_shutdown": False,
+                    "wait_on_shutdown": False,
+                    "io_mode": 1, # 1: "single_out", 2: "dual_out"
+                    "output_cw": "U0:ID14:FC5:R0:RO0",
+                    "output_ccw": "off",
+                    "limit_cw": "U0:ID14:FC2:R0:DI0",
+                    "limit_ccw": "!U0:ID14:FC2:R0:DI2"
+                }
+            }
+        ],
+        "cold":
+        [
+            {
+                "vendor": "Flowx",
+                "model": "FLX-05F",
+                "options":
+                {
+                    "close_on_shutdown": False,
+                    "wait_on_shutdown": False,
+                    "io_mode": 1, # 1: "single_out", 2: "dual_out"
+                    "output_cw": "U0:ID14:FC5:R0:RO2",
+                    "output_ccw": "off",
+                    "limit_cw": "U0:ID14:FC2:R0:DI2",
+                    "limit_ccw": "!U0:ID14:FC2:R0:DI0"
+                }
+            }
+        ]
     }
     __registers.append(register)
 
-    # ECD / VCG / Underfloor East Enable
-    register = Register("ecd.underfloor_east.enabled")
+    # ECD / Convectors west valves mode.
+    register = Register("ecd.conv_west.valves.mode")
     register.scope = Scope.System
-    register.plugin_name = "ECD"
-    register.description = "ECD / VCG / Floor East Enable"
-    register.range = __range["BOOL"]
-    register.value = True
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Convectors west valves mode."
+    register.range = REGS_RANGES["VALVE_MODE"]
+    register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
-
-    # ECD / VCG / Convectors West Cooling In
-    register = Register("ecd.convectors_west.cold_in")
-    register.scope = Scope.System
-    register.plugin_name = "ECD"
-    register.description = "ECD / VCG / Convectors West Cooling In"
-    register.range = __range["NONE"]
-    register.value = {
-        "vendor": "Flowx",
-        "model": "FLX-05F",
-        "options":
-        {
-            "output_cw": "off",
-            "output_ccw": "off",
-            "limit_cw": "off",
-            "limit_ccw": "off"
-        }
-    }
+    # ECD / Convectors west valves state.
+    register = Register("ecd.conv_west.valves.state")
+    register.scope = Scope.Device
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Convectors west valves state."
+    register.range = REGS_RANGES["VALVE_STATE"]
+    register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
-    # ECD / VCG / Convectors West Cooling Out
-    register = Register("ecd.convectors_west.cold_out")
+    # ECD / Convectors west pump settings.
+    register = Register("ecd.conv_west.pump.settings")
     register.scope = Scope.System
-    register.plugin_name = "ECD"
-    register.description = "ECD / VCG / Convectors West Cooling Out"
-    register.range = __range["NONE"]
-    register.value = {
-        "vendor": "Flowx",
-        "model": "FLX-05F",
-        "options":
-        {
-            "output_cw": "off",
-            "output_ccw": "off",
-            "limit_cw": "off",
-            "limit_ccw": "off"
-        }
-    }
-    __registers.append(register)
-
-
-    # ECD / VCG / Convectors West Hot In
-    register = Register("ecd.convectors_west.hot_in")
-    register.scope = Scope.System
-    register.plugin_name = "ECD"
-    register.description = "ECD / VCG / Convectors West Hot In"
-    register.range = __range["NONE"]
-    register.value = {
-        "vendor": "Flowx",
-        "model": "FLX-05F",
-        "options":
-        {
-            "output_cw": "off",
-            "output_ccw": "off",
-            "limit_cw": "off",
-            "limit_ccw": "off"
-        }
-    }
-    __registers.append(register)
-
-    # ECD / VCG / Convectors West Hot Out
-    register = Register("ecd.convectors_west.hot_out")
-    register.scope = Scope.System
-    register.plugin_name = "ECD"
-    register.description = "ECD / VCG / Convectors West Hot Out"
-    register.range = __range["NONE"]
-    register.value = {
-        "vendor": "Flowx",
-        "model": "FLX-05F",
-        "options":
-        {
-            "output_cw": "off",
-            "output_ccw": "off",
-            "limit_cw": "off",
-            "limit_ccw": "off"
-        }
-    }
-    __registers.append(register)
-
-    # ECD / VCG / Convectors West Pump
-    register = Register("ecd.convectors_west.pump")
-    register.scope = Scope.System
-    register.plugin_name = "ECD"
-    register.description = "ECD / VCG / Convectors West Pump"
-    register.range = __range["NONE"]
-    register.value = {
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Convectors west pump settings."
+    register.range = REGS_RANGES["NONE"]
+    register.value = \
+    {
         "vendor": "Grundfos",
         "model": "MAGNA1_80_100_F_360_1x230V_PN6",
         "options":
         {
-            "uart": 0,
-            "mb_id": 0
+            "uart": 1,
+            "mb_id": 1,
+            "e_stop": "U0:ID14:FC5:R0:RO3",
+            "e_status": "U0:ID14:FC2:R0:DI3",
+            "stop_on_shutdown": True,
+            "wait_on_shutdown": False
         }
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
-    # ECD / VCG / Convectors West Enable
-    register = Register("ecd.convectors_west.enabled")
+    # ECD / Convectors west pump mode.
+    register = Register("ecd.conv_west.pump.mode")
     register.scope = Scope.System
-    register.plugin_name = "ECD"
-    register.description = "ECD / VCG / Convectors West Enable"
-    register.range = __range["BOOL"]
-    register.value = True
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Convectors west pump mode."
+    register.range = REGS_RANGES["PERCENTAGE_I"]
+    register.value = 0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
-    # ECD / VCG / TVA Roof Floor In
-    register = Register("ecd.tva_roof_floor.cold_in")
+    # ECD / Convectors west hall pump state.
+    register = Register("ecd.conv_west.pump.state")
+    register.scope = Scope.Device
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Convectors west pump state."
+    register.range = REGS_RANGES["NONE"]
+    register.value = {}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
+    __registers.append(register)
+
+    # ECD / AHU roof floor valves settings.
+    register = Register("ecd.ahu_roof_floor.valves.settings")
     register.scope = Scope.System
-    register.plugin_name = "ECD"
-    register.description = "ECD / VCG / TVA Roof Floor In"
-    register.range = __range["NONE"]
-    register.value = {
-        "vendor": "Flowx",
-        "model": "FLX-05F",
-        "options":
-        {
-            "output_cw": "off",
-            "output_ccw": "off",
-            "limit_cw": "off",
-            "limit_ccw": "off"
-        }
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / AHU roof floor valves settings."
+    register.range = REGS_RANGES["NONE"]
+    register.value = \
+    {
+        "hot":
+        [
+            {
+                "vendor": "Flowx",
+                "model": "FLX-05F",
+                "options":
+                {
+                    "close_on_shutdown": False,
+                    "wait_on_shutdown": False,
+                    "io_mode": 1, # 1: "single_out", 2: "dual_out"
+                    "output_cw": "U0:ID14:FC5:R0:RO4",
+                    "output_ccw": "off",
+                    "limit_cw": "U0:ID14:FC2:R0:DI4",
+                    "limit_ccw": "!U0:ID14:FC2:R0:DI6"
+                }
+            }
+        ],
+        "cold":
+        [
+            {
+                "vendor": "Flowx",
+                "model": "FLX-05F",
+                "options":
+                {
+                    "close_on_shutdown": False,
+                    "wait_on_shutdown": False,
+                    "io_mode": 1, # 1: "single_out", 2: "dual_out"
+                    "output_cw": "U0:ID14:FC5:R0:RO6",
+                    "output_ccw": "off",
+                    "limit_cw": "U0:ID14:FC2:R0:DI6",
+                    "limit_ccw": "!U0:ID14:FC2:R0:DI4"
+                }
+            }
+        ]
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
-    # ECD / VCG / TVA Roof Floor Out
-    register = Register("ecd.tva_roof_floor.cold_out")
+    # ECD / AHU roof floor valves mode.
+    register = Register("ecd.ahu_roof_floor.valves.mode")
     register.scope = Scope.System
-    register.plugin_name = "ECD"
-    register.description = "ECD / VCG / TVA Roof Floor Out"
-    register.range = __range["NONE"]
-    register.value = {
-        "vendor": "Flowx",
-        "model": "FLX-05F",
-        "options":
-        {
-            "output_cw": "off",
-            "output_ccw": "off",
-            "limit_cw": "off",
-            "limit_ccw": "off"
-        }
-    }
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / AHU roof floor valves mode."
+    register.range = REGS_RANGES["VALVE_MODE"]
+    register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
-    # ECD / VCG / TVA Roof Floor In
-    register = Register("ecd.tva_roof_floor.hot_in")
-    register.scope = Scope.System
-    register.plugin_name = "ECD"
-    register.description = "ECD / VCG / TVA Roof Floor In"
-    register.range = __range["NONE"]
-    register.value = {
-        "vendor": "Flowx",
-        "model": "FLX-05F",
-        "options":
-        {
-            "output_cw": "off",
-            "output_ccw": "off",
-            "limit_cw": "off",
-            "limit_ccw": "off"
-        }
-    }
+    # ECD / AHU roof floor valves state.
+    register = Register("ecd.ahu_roof_floor.valves.state")
+    register.scope = Scope.Device
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / AHU roof floor valves state."
+    register.range = REGS_RANGES["VALVE_STATE"]
+    register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
-    # ECD / VCG / TVA Roof Floor Out
-    register = Register("ecd.tva_roof_floor.hot_out")
+    # ECD / AHU roof floor pump settings.
+    register = Register("ecd.ahu_roof_floor.pump.settings")
     register.scope = Scope.System
-    register.plugin_name = "ECD"
-    register.description = "ECD / VCG / TVA Roof Floor Out"
-    register.range = __range["NONE"]
-    register.value = {
-        "vendor": "Flowx",
-        "model": "FLX-05F",
-        "options":
-        {
-            "output_cw": "off",
-            "output_ccw": "off",
-            "limit_cw": "off",
-            "limit_ccw": "off"
-        }
-    }
-    __registers.append(register)
-
-
-    # ECD / VCG / TVA Roof Floor Pump
-    register = Register("ecd.tva_roof_floor.pump")
-    register.scope = Scope.System
-    register.plugin_name = "ECD"
-    register.description = "ECD / VCG / TVA Roof Floor"
-    register.range = __range["NONE"]
-    register.value = {
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / AHU roof floor pump settings."
+    register.range = REGS_RANGES["NONE"]
+    register.value = \
+    {
         "vendor": "Grundfos",
         "model": "MAGNA1_80_100_F_360_1x230V_PN6",
         "options":
         {
-            "uart": 0,
-            "mb_id": 0
+            "uart": 1,
+            "mb_id": 1,
+            "e_stop": "U0:ID14:FC5:R0:RO7",
+            "e_status": "U0:ID14:FC2:R0:DI7",
+            "stop_on_shutdown": True,
+            "wait_on_shutdown": False
         }
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
-    # ECD / VCG / TVA Roof Floor Pump
-    register = Register("ecd.tva_roof_floor.enabled")
+    # ECD / AHU roof floor pump mode.
+    register = Register("ecd.ahu_roof_floor.pump.mode")
     register.scope = Scope.System
-    register.plugin_name = "ECD"
-    register.description = "ECD / VCG / TVA Roof Floor"
-    register.range = __range["BOOL"]
-    register.value = True
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / AHU roof floor pump mode."
+    register.range = REGS_RANGES["PERCENTAGE_I"]
+    register.value = 0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
-    # ECD / VCG / TVA Fitness In
-    register = Register("ecd.tva_fitness.cold_in")
+    # ECD / AHU roof floor hall pump state.
+    register = Register("ecd.ahu_roof_floor.pump.state")
+    register.scope = Scope.Device
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / AHU roof floor pump state."
+    register.range = REGS_RANGES["NONE"]
+    register.value = {}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
+    __registers.append(register)
+
+    # ECD / AHU fitness valves settings.
+    register = Register("ecd.ahu_fitness.valves.settings")
     register.scope = Scope.System
-    register.plugin_name = "ECD"
-    register.description = "ECD / VCG / TVA Fitness In"
-    register.range = __range["NONE"]
-    register.value = {
-        "vendor": "Flowx",
-        "model": "FLX-05F",
-        "options":
-        {
-            "output_cw": "off",
-            "output_ccw": "off",
-            "limit_cw": "off",
-            "limit_ccw": "off"
-        }
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "# ECD / AHU fitness valves settings."
+    register.range = REGS_RANGES["NONE"]
+    register.value = \
+    {
+        "hot":
+        [
+            {
+                "vendor": "Flowx",
+                "model": "FLX-05F",
+                "options":
+                {
+                    "close_on_shutdown": False,
+                    "wait_on_shutdown": False,
+                    "io_mode": 1, # 1: "single_out", 2: "dual_out"
+                    "output_cw": "U0:ID12:FC5:R0:RO4",
+                    "output_ccw": "off",
+                    "limit_cw": "U0:ID12:FC2:R0:DI4",
+                    "limit_ccw": "!U0:ID12:FC2:R0:DI6"
+                }
+            }
+        ],
+        "cold":
+        [
+            {
+                "vendor": "Flowx",
+                "model": "FLX-05F",
+                "options":
+                {
+                    "close_on_shutdown": False,
+                    "wait_on_shutdown": False,
+                    "io_mode": 1, # 1: "single_out", 2: "dual_out"
+                    "output_cw": "U0:ID12:FC5:R0:RO6",
+                    "output_ccw": "off",
+                    "limit_cw": "U0:ID12:FC2:R0:DI6",
+                    "limit_ccw": "!U0:ID12:FC2:R0:DI4"
+                }
+            }
+        ]
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
-    # ECD / VCG / TVA Fitness Out
-    register = Register("ecd.tva_fitness.cold_out")
+    # ECD / AHU fitness valves mode.
+    register = Register("ecd.ahu_fitness.valves.mode")
     register.scope = Scope.System
-    register.plugin_name = "ECD"
-    register.description = "ECD / VCG / TVA Fitness Out"
-    register.range = __range["NONE"]
-    register.value = {
-        "vendor": "Flowx",
-        "model": "FLX-05F",
-        "options":
-        {
-            "output_cw": "off",
-            "output_ccw": "off",
-            "limit_cw": "off",
-            "limit_ccw": "off"
-        }
-    }
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / AHU fitness valves mode."
+    register.range = REGS_RANGES["VALVE_MODE"]
+    register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
-    # ECD / VCG / TVA Fitness In
-    register = Register("ecd.tva_fitness.hot_in")
-    register.scope = Scope.System
-    register.plugin_name = "ECD"
-    register.description = "ECD / VCG / TVA Fitness In"
-    register.range = __range["NONE"]
-    register.value = {
-        "vendor": "Flowx",
-        "model": "FLX-05F",
-        "options":
-        {
-            "output_cw": "off",
-            "output_ccw": "off",
-            "limit_cw": "off",
-            "limit_ccw": "off"
-        }
-    }
+    # ECD / AHU fitness valves state.
+    register = Register("ecd.ahu_fitness.valves.state")
+    register.scope = Scope.Device
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / AHU fitness valves state."
+    register.range = REGS_RANGES["VALVE_STATE"]
+    register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
-    # ECD / VCG / TVA Fitness Out
-    register = Register("ecd.tva_fitness.hot_out")
+    # ECD / AHU fitness pump settings.
+    register = Register("ecd.ahu_fitness.pump.settings")
     register.scope = Scope.System
-    register.plugin_name = "ECD"
-    register.description = "ECD / VCG / TVA Fitness Out"
-    register.range = __range["NONE"]
-    register.value = {
-        "vendor": "Flowx",
-        "model": "FLX-05F",
-        "options":
-        {
-            "output_cw": "off",
-            "output_ccw": "off",
-            "limit_cw": "off",
-            "limit_ccw": "off"
-        }
-    }
-    __registers.append(register)
-
-    # ECD / VCG / TVA Fitness
-    register = Register("ecd.tva_fitness.pump")
-    register.scope = Scope.System
-    register.plugin_name = "ECD"
-    register.description = "ECD / VCG / TVA Fitness"
-    register.range = __range["NONE"]
-    register.value = {
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / AHU fitness pump settings."
+    register.range = REGS_RANGES["NONE"]
+    register.value = \
+    {
         "vendor": "Grundfos",
         "model": "MAGNA1_80_100_F_360_1x230V_PN6",
         "options":
         {
-            "uart": 0,
-            "mb_id": 0
+            "uart": 1,
+            "mb_id": 1,
+            "e_stop": "U0:ID12:FC5:R0:RO7",
+            "e_status": "U0:ID12:FC2:R0:DI7",
+            "stop_on_shutdown": True,
+            "wait_on_shutdown": False
         }
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
-    # ECD / VCG / TVA Fitness
-    register = Register("ecd.tva_fitness.enabled")
+    # ECD / AHU fitness pump mode.
+    register = Register("ecd.ahu_fitness.pump.mode")
     register.scope = Scope.System
-    register.plugin_name = "ECD"
-    register.description = "ECD / VCG / TVA Fitness"
-    register.range = __range["BOOL"]
-    register.value = True
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / AHU fitness pump mode."
+    register.range = REGS_RANGES["PERCENTAGE_I"]
+    register.value = 0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
-    # ECD / VCG / Floor West Cooling In
-    register = Register("ecd.floor_west.cold_in")
+    # ECD / AHU fitness pump state.
+    register = Register("ecd.ahu_fitness.pump.state")
+    register.scope = Scope.Device
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / AHU fitness pump state."
+    register.range = REGS_RANGES["NONE"]
+    register.value = {}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
+    __registers.append(register)
+
+    # ECD / Floor east valves settings.
+    register = Register("ecd.floor_east.valves.settings")
     register.scope = Scope.System
-    register.plugin_name = "ECD"
-    register.description = "ECD / VCG / Floor West Cooling In"
-    register.range = __range["NONE"]
-    register.value = {
-        "vendor": "Flowx",
-        "model": "FLX-05F",
-        "options":
-        {
-            "output_cw": "off",
-            "output_ccw": "off",
-            "limit_cw": "off",
-            "limit_ccw": "off"
-        }
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Floor east valves settings."
+    register.range = REGS_RANGES["NONE"]
+    register.value = \
+    {
+        "hot":
+        [
+            {
+                "vendor": "Flowx",
+                "model": "FLX-05F",
+                "options":
+                {
+                    "close_on_shutdown": False,
+                    "wait_on_shutdown": False,
+                    "io_mode": 1, # 1: "single_out", 2: "dual_out"
+                    "output_cw": "U0:ID13:FC5:R0:RO4",
+                    "output_ccw": "off",
+                    "limit_cw": "U0:ID13:FC2:R0:DI4",
+                    "limit_ccw": "!U0:ID13:FC2:R0:DI6"
+                }
+            }
+        ],
+        "cold":
+        [
+            {
+                "vendor": "Flowx",
+                "model": "FLX-05F",
+                "options":
+                {
+                    "close_on_shutdown": False,
+                    "wait_on_shutdown": False,
+                    "io_mode": 1, # 1: "single_out", 2: "dual_out"
+                    "output_cw": "U0:ID13:FC5:R0:RO6",
+                    "output_ccw": "off",
+                    "limit_cw": "U0:ID13:FC2:R0:DI6",
+                    "limit_ccw": "!U0:ID13:FC2:R0:DI4"
+                }
+            }
+        ]
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
-    # ECD / VCG / Floor West Cooling Out
-    register = Register("ecd.floor_west.cold_out")
+    # ECD / Floor east valves mode.
+    register = Register("ecd.floor_east.valves.mode")
     register.scope = Scope.System
-    register.plugin_name = "ECD"
-    register.description = "ECD / VCG / Floor West Cooling Out"
-    register.range = __range["NONE"]
-    register.value = {
-        "vendor": "Flowx",
-        "model": "FLX-05F",
-        "options":
-        {
-            "output_cw": "off",
-            "output_ccw": "off",
-            "limit_cw": "off",
-            "limit_ccw": "off"
-        }
-    }
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Floor east valves mode."
+    register.range = REGS_RANGES["VALVE_MODE"]
+    register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
-    # ECD / VCG / Floor West Hot In
-    register = Register("ecd.floor_west.hot_in")
-    register.scope = Scope.System
-    register.plugin_name = "ECD"
-    register.description = "ECD / VCG / Floor West Hot In"
-    register.range = __range["NONE"]
-    register.value = {
-        "vendor": "Flowx",
-        "model": "FLX-05F",
-        "options":
-        {
-            "output_cw": "off",
-            "output_ccw": "off",
-            "limit_cw": "off",
-            "limit_ccw": "off"
-        }
-    }
+    # ECD / Floor east valves state.
+    register = Register("ecd.floor_east.valves.state")
+    register.scope = Scope.Device
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Floor east valves state."
+    register.range = REGS_RANGES["VALVE_STATE"]
+    register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
-    # ECD / VCG / Floor West Hot Out
-    register = Register("ecd.floor_west.hot_out")
+    # ECD / Floor east pump settings.
+    register = Register("ecd.floor_east.pump.settings")
     register.scope = Scope.System
-    register.plugin_name = "ECD"
-    register.description = "ECD / VCG / Floor West Hot Out"
-    register.range = __range["NONE"]
-    register.value = {
-        "vendor": "Flowx",
-        "model": "FLX-05F",
-        "options":
-        {
-            "output_cw": "off",
-            "output_ccw": "off",
-            "limit_cw": "off",
-            "limit_ccw": "off"
-        }
-    }
-    __registers.append(register)
-
-    # ECD / VCG / Floor West Pump
-    register = Register("ecd.floor_west.pump")
-    register.scope = Scope.System
-    register.plugin_name = "ECD"
-    register.description = "ECD / VCG / Floor West Pump"
-    register.range = __range["NONE"]
-    register.value = {
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Floor east pump settings."
+    register.range = REGS_RANGES["NONE"]
+    register.value = \
+    {
         "vendor": "Grundfos",
         "model": "MAGNA1_80_100_F_360_1x230V_PN6",
         "options":
         {
-            "uart": 0,
-            "mb_id": 0
+            "uart": 1,
+            "mb_id": 1,
+            "e_stop": "U0:ID13:FC5:R0:RO7",
+            "e_status": "U0:ID13:FC2:R0:DI7",
+            "stop_on_shutdown": True,
+            "wait_on_shutdown": False
         }
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
-    # ECD / VCG / Floor West Pump
-    register = Register("ecd.floor_west.enabled")
+    # ECD / Floor east pump mode.
+    register = Register("ecd.floor_east.pump.mode")
     register.scope = Scope.System
-    register.plugin_name = "ECD"
-    register.description = "ECD / VCG / Floor West Pump"
-    register.range = __range["BOOL"]
-    register.value = True
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Floor east pump mode."
+    register.range = REGS_RANGES["PERCENTAGE_I"]
+    register.value = 0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
-    # ECD / VCG / TVA Conference Center In
-    register = Register("ecd.tva_conference_center.cold_in")
+    # ECD / Floor east pump state.
+    register = Register("ecd.floor_east.pump.state")
+    register.scope = Scope.Device
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Floor east pump state."
+    register.range = REGS_RANGES["NONE"]
+    register.value = {}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
+    __registers.append(register)
+
+    # ECD / Convectors east valves settings.
+    register = Register("ecd.conv_east.valves.settings")
     register.scope = Scope.System
-    register.plugin_name = "ECD"
-    register.description = "ECD / VCG / TVA Conference Center In"
-    register.range = __range["NONE"]
-    register.value = {
-        "vendor": "Flowx",
-        "model": "FLX-05F",
-        "options":
-        {
-            "output_cw": "off",
-            "output_ccw": "off",
-            "limit_cw": "off",
-            "limit_ccw": "off"
-        }
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Convectors east valves settings."
+    register.range = REGS_RANGES["NONE"]
+    register.value = \
+    {
+        "hot":
+        [
+            {
+                "vendor": "Flowx",
+                "model": "FLX-05F",
+                "options":
+                {
+                    "close_on_shutdown": False,
+                    "wait_on_shutdown": False,
+                    "io_mode": 1, # 1: "single_out", 2: "dual_out"
+                    "output_cw": "U0:ID16:FC5:R0:RO4",
+                    "output_ccw": "off",
+                    "limit_cw": "U0:ID16:FC2:R0:DI4",
+                    "limit_ccw": "!U0:ID16:FC2:R0:DI6"
+                }
+            }
+        ],
+        "cold":
+        [
+            {
+                "vendor": "Flowx",
+                "model": "FLX-05F",
+                "options":
+                {
+                    "close_on_shutdown": False,
+                    "wait_on_shutdown": False,
+                    "io_mode": 1, # 1: "single_out", 2: "dual_out"
+                    "output_cw": "U0:ID16:FC5:R0:RO6",
+                    "output_ccw": "off",
+                    "limit_cw": "U0:ID16:FC2:R0:DI6",
+                    "limit_ccw": "!U0:ID16:FC2:R0:DI4"
+                }
+            }
+        ]
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
-    # ECD / VCG / TVA Conference Center Out
-    register = Register("ecd.tva_conference_center.cold_out")
+    # ECD / Convectors east valves mode.
+    register = Register("ecd.conv_east.valves.mode")
     register.scope = Scope.System
-    register.plugin_name = "ECD"
-    register.description = "ECD / VCG / TVA Conference Center Out"
-    register.range = __range["NONE"]
-    register.value = {
-        "vendor": "Flowx",
-        "model": "FLX-05F",
-        "options":
-        {
-            "output_cw": "off",
-            "output_ccw": "off",
-            "limit_cw": "off",
-            "limit_ccw": "off"
-        }
-    }
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Convectors east valves mode."
+    register.range = REGS_RANGES["VALVE_MODE"]
+    register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
-    # ECD / VCG / TVA Conference Center In
-    register = Register("ecd.tva_conference_center.hot_in")
-    register.scope = Scope.System
-    register.plugin_name = "ECD"
-    register.description = "ECD / VCG / TVA Conference Center In"
-    register.range = __range["NONE"]
-    register.value = {
-        "vendor": "Flowx",
-        "model": "FLX-05F",
-        "options":
-        {
-            "output_cw": "off",
-            "output_ccw": "off",
-            "limit_cw": "off",
-            "limit_ccw": "off"
-        }
-    }
+    # ECD / Convectors east valves state.
+    register = Register("ecd.conv_east.valves.state")
+    register.scope = Scope.Device
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Convectors east valves state."
+    register.range = REGS_RANGES["VALVE_STATE"]
+    register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
-    # ECD / VCG / TVA Conference Center Out
-    register = Register("ecd.tva_conference_center.hot_out")
+    # ECD / Convectors east pump settings.
+    register = Register("ecd.conv_east.pump.settings")
     register.scope = Scope.System
-    register.plugin_name = "ECD"
-    register.description = "ECD / VCG / TVA Conference Center Out"
-    register.range = __range["NONE"]
-    register.value = {
-        "vendor": "Flowx",
-        "model": "FLX-05F",
-        "options":
-        {
-            "output_cw": "off",
-            "output_ccw": "off",
-            "limit_cw": "off",
-            "limit_ccw": "off"
-        }
-    }
-    __registers.append(register)
-
-    # ECD / VCG / TVA Conference Center Pump
-    register = Register("ecd.tva_conference_center.pump")
-    register.scope = Scope.System
-    register.plugin_name = "ECD"
-    register.description = "ECD / VCG / TVA Conference Center"
-    register.range = __range["NONE"]
-    register.value = {
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Convectors east pump settings."
+    register.range = REGS_RANGES["NONE"]
+    register.value = \
+    {
         "vendor": "Grundfos",
         "model": "MAGNA1_80_100_F_360_1x230V_PN6",
         "options":
         {
-            "uart": 0,
-            "mb_id": 0
+            "uart": 1,
+            "mb_id": 1,
+            "e_stop": "U0:ID16:FC5:R0:RO7",
+            "e_status": "U0:ID16:FC2:R0:DI7",
+            "stop_on_shutdown": True,
+            "wait_on_shutdown": False
         }
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
-    # ECD / VCG / TVA Conference Center Pump
-    register = Register("ecd.tva_conference_center.enabled")
+    # ECD / Convectors east pump mode.
+    register = Register("ecd.conv_east.pump.mode")
     register.scope = Scope.System
-    register.plugin_name = "ECD"
-    register.description = "ECD / VCG / TVA Conference Center"
-    register.range = __range["BOOL"]
-    register.value = True
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Convectors east pump mode."
+    register.range = REGS_RANGES["PERCENTAGE_I"]
+    register.value = 0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
-    # ECD / VCG / Convectors Kitchen Cold In
-    register = Register("ecd.convectors_kitchen.cold_in")
+    # ECD / Convectors east pump state.
+    register = Register("ecd.conv_east.pump.state")
+    register.scope = Scope.Device
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Convectors east pump state."
+    register.range = REGS_RANGES["NONE"]
+    register.value = {}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
+    __registers.append(register)
+
+    # ECD / Pool air cooling valves settings.
+    register = Register("ecd.pool_air_cooling.valves.settings")
     register.scope = Scope.System
-    register.plugin_name = "ECD"
-    register.description = "ECD / VCG / Convectors Kitchen Cold In"
-    register.range = __range["NONE"]
-    register.value = {
-        "vendor": "Flowx",
-        "model": "FLX-05F",
-        "options":
-        {
-            "output_cw": "off",
-            "output_ccw": "off",
-            "limit_cw": "off",
-            "limit_ccw": "off"
-        }
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Pool air cooling valves settings."
+    register.range = REGS_RANGES["NONE"]
+    register.value = \
+    {
+        "hot":
+        [
+            # {
+            #     "vendor": "Flowx",
+            #     "model": "FLX-05F",
+            #     "options":
+            #     {
+            #         "close_on_shutdown": False,
+            #         "wait_on_shutdown": False,
+            #         "io_mode": 1, # 1: "single_out", 2: "dual_out"
+            #         "output_cw": "U0:ID15:FC5:R0:RO6",
+            #         "output_ccw": "off",
+            #         "limit_cw": "U0:ID15:FC2:R0:DI0",
+            #         "limit_ccw": "U0:ID15:FC2:R0:DI1"
+            #     }
+            # }
+        ],
+        "cold":
+        [
+            {
+                "vendor": "Flowx",
+                "model": "FLX-05F",
+                "options":
+                {
+                    "close_on_shutdown": False,
+                    "wait_on_shutdown": False,
+                    "io_mode": 1, # 1: "single_out", 2: "dual_out"
+                    "output_cw": "U0:ID15:FC5:R0:RO6",
+                    "output_ccw": "off",
+                    "limit_cw": "U0:ID15:FC2:R0:DI6",
+                    "limit_ccw": "U0:ID15:FC2:R0:DI5"
+                }
+            }
+        ]
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
-    # ECD / VCG / Convectors Kitchen Cold Out
-    register = Register("ecd.convectors_kitchen.cold_out")
+    # ECD / Pool air cooling valves mode.
+    register = Register("ecd.pool_air_cooling.valves.mode")
     register.scope = Scope.System
-    register.plugin_name = "ECD"
-    register.description = "ECD / VCG / Convectors Kitchen Cold Out"
-    register.range = __range["NONE"]
-    register.value = {
-        "vendor": "Flowx",
-        "model": "FLX-05F",
-        "options":
-        {
-            "output_cw": "off",
-            "output_ccw": "off",
-            "limit_cw": "off",
-            "limit_ccw": "off"
-        }
-    }
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Pool air cooling valves mode."
+    register.range = REGS_RANGES["VALVE_MODE"]
+    register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
-    # ECD / VCG / Convectors Kitchen Hot In
-    register = Register("ecd.convectors_kitchen.hot_in")
-    register.scope = Scope.System
-    register.plugin_name = "ECD"
-    register.description = "ECD / VCG / Convectors Kitchen Hot In"
-    register.range = __range["NONE"]
-    register.value = {
-        "vendor": "Flowx",
-        "model": "FLX-05F",
-        "options":
-        {
-            "output_cw": "off",
-            "output_ccw": "off",
-            "limit_cw": "off",
-            "limit_ccw": "off"
-        }
-    }
+    # ECD / Pool air cooling valves state.
+    register = Register("ecd.pool_air_cooling.valves.state")
+    register.scope = Scope.Device
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Pool air cooling valves state."
+    register.range = REGS_RANGES["VALVE_STATE"]
+    register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
-    # ECD / VCG / Convectors Kitchen Hot Out
-    register = Register("ecd.convectors_kitchen.hot_out")
+    # ECD / Pool air cooling pump settings.
+    register = Register("ecd.pool_air_cooling.pump.settings")
     register.scope = Scope.System
-    register.plugin_name = "ECD"
-    register.description = "ECD / VCG / Convectors Kitchen Hot Out"
-    register.range = __range["NONE"]
-    register.value = {
-        "vendor": "Flowx",
-        "model": "FLX-05F",
-        "options":
-        {
-            "output_cw": "off",
-            "output_ccw": "off",
-            "limit_cw": "off",
-            "limit_ccw": "off"
-        }
-    }
-    __registers.append(register)
-
-
-    # ECD / VCG / Convectors Kitchen Pump
-    register = Register("ecd.convectors_kitchen.pump")
-    register.scope = Scope.System
-    register.plugin_name = "ECD"
-    register.description = "ECD / VCG / Convectors Kitchen Pump"
-    register.range = __range["NONE"]
-    register.value = {
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Pool air cooling pump settings."
+    register.range = REGS_RANGES["NONE"]
+    register.value = \
+    {
         "vendor": "Grundfos",
         "model": "MAGNA1_80_100_F_360_1x230V_PN6",
         "options":
         {
-            "uart": 0,
-            "mb_id": 0
+            "uart": 1,
+            "mb_id": 1,
+            "e_stop": "U0:ID15:FC5:R0:RO7",
+            "e_status": "U0:ID15:FC2:R0:DI7",
+            "stop_on_shutdown": True,
+            "wait_on_shutdown": False
         }
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
-    # ECD / VCG / Convectors Kitchen Pump
-    register = Register("ecd.convectors_kitchen.enabled")
+    # ECD / Pool air cooling pump mode.
+    register = Register("ecd.pool_air_cooling.pump.mode")
     register.scope = Scope.System
-    register.plugin_name = "ECD"
-    register.description = "ECD / VCG / Convectors Kitchen Pump"
-    register.range = __range["BOOL"]
-    register.value = True
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Pool air cooling pump mode."
+    register.range = REGS_RANGES["PERCENTAGE_I"]
+    register.value = 0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
-    # ECD / VCG / TVA Wearhouse Cold In
-    register = Register("ecd.tva_warehouse.cold_in")
+    # ECD / Pool air cooling pump state.
+    register = Register("ecd.pool_air_cooling.pump.state")
+    register.scope = Scope.Device
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Pool air cooling pump state."
+    register.range = REGS_RANGES["NONE"]
+    register.value = {}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
+    __registers.append(register)
+
+    # ECD / Pool heating valves settings.
+    register = Register("ecd.pool_heating.valves.settings")
     register.scope = Scope.System
-    register.plugin_name = "ECD"
-    register.description = "ECD / VCG / TVA Wearhouse Cold In"
-    register.range = __range["NONE"]
-    register.value = {
-        "vendor": "Flowx",
-        "model": "FLX-05F",
-        "options":
-        {
-            "output_cw": "off",
-            "output_ccw": "off",
-            "limit_cw": "off",
-            "limit_ccw": "off"
-        }
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Pool heating valves settings."
+    register.range = REGS_RANGES["NONE"]
+    register.value = \
+    {
+        "hot":
+        [
+            {
+                "vendor": "Flowx",
+                "model": "FLX-05F",
+                "options":
+                {
+                    "close_on_shutdown": False,
+                    "wait_on_shutdown": False,
+                    "io_mode": 1, # 1: "single_out", 2: "dual_out"
+                    "output_cw": "U0:ID17:FC5:R0:RO0",
+                    "output_ccw": "off",
+                    "limit_cw": "U0:ID17:FC2:R0:DI0",
+                    "limit_ccw": "U0:ID17:FC2:R0:DI1"
+                }
+            }
+        ],
+        "cold":
+        [
+            # {
+            #     "vendor": "Flowx",
+            #     "model": "FLX-05F",
+            #     "options":
+            #     {
+            #         "close_on_shutdown": False,
+            #         "wait_on_shutdown": False,
+            #         "io_mode": 1, # 1: "single_out", 2: "dual_out"
+            #         "output_cw": "U0:ID17:FC5:R0:RO0",
+            #         "output_ccw": "off",
+            #         "limit_cw": "U0:ID17:FC2:R0:DI0",
+            #         "limit_ccw": "U0:ID17:FC2:R0:DI1"
+            #     }
+            # }
+        ]
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
-    # ECD / VCG / TVA Wearhouse Cold Out
-    register = Register("ecd.tva_warehouse.cold_out")
+    # ECD / Pool heating valves mode.
+    register = Register("ecd.pool_heating.valves.mode")
     register.scope = Scope.System
-    register.plugin_name = "ECD"
-    register.description = "ECD / VCG / TVA Wearhouse Cold Out"
-    register.range = __range["NONE"]
-    register.value = {
-        "vendor": "Flowx",
-        "model": "FLX-05F",
-        "options":
-        {
-            "output_cw": "off",
-            "output_ccw": "off",
-            "limit_cw": "off",
-            "limit_ccw": "off"
-        }
-    }
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Pool heating valves mode."
+    register.range = REGS_RANGES["VALVE_MODE"]
+    register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
-    # ECD / VCG / TVA Wearhouse Hot In
-    register = Register("ecd.tva_warehouse.hot_in")
-    register.scope = Scope.System
-    register.plugin_name = "ECD"
-    register.description = "ECD / VCG / TVA Wearhouse Hot In"
-    register.range = __range["NONE"]
-    register.value = {
-        "vendor": "Flowx",
-        "model": "FLX-05F",
-        "options":
-        {
-            "output_cw": "off",
-            "output_ccw": "off",
-            "limit_cw": "off",
-            "limit_ccw": "off"
-        }
-    }
+    # ECD / Pool heating valves state.
+    register = Register("ecd.pool_heating.valves.state")
+    register.scope = Scope.Device
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Pool heating valves state."
+    register.range = REGS_RANGES["VALVE_STATE"]
+    register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
-    # ECD / VCG / TVA Wearhouse Hot Out
-    register = Register("ecd.tva_warehouse.hot_out")
+    # ECD / Pool heating pump settings.
+    register = Register("ecd.pool_heating.pump.settings")
     register.scope = Scope.System
-    register.plugin_name = "ECD"
-    register.description = "ECD / VCG / TVA Wearhouse Hot Out"
-    register.range = __range["NONE"]
-    register.value = {
-        "vendor": "Flowx",
-        "model": "FLX-05F",
-        "options":
-        {
-            "output_cw": "off",
-            "output_ccw": "off",
-            "limit_cw": "off",
-            "limit_ccw": "off"
-        }
-    }
-    __registers.append(register)
-
-    # ECD / VCG / TVA Wearhouse Pump
-    register = Register("ecd.tva_warehouse.pump")
-    register.scope = Scope.System
-    register.plugin_name = "ECD"
-    register.description = "ECD / VCG / TVA Wearhouse"
-    register.range = __range["NONE"]
-    register.value = {
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Pool heating pump settings."
+    register.range = REGS_RANGES["NONE"]
+    register.value = \
+    {
         "vendor": "Grundfos",
         "model": "MAGNA1_80_100_F_360_1x230V_PN6",
         "options":
         {
-            "uart": 0,
-            "mb_id": 0
+            "uart": 1,
+            "mb_id": 1,
+            "e_stop": "U0:ID17:FC5:R0:RO3",
+            "e_status": "U0:ID17:FC2:R0:DI3",
+            "stop_on_shutdown": True,
+            "wait_on_shutdown": False
         }
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
-    # ECD / VCG / TVA Wearhouse Pump
-    register = Register("ecd.tva_warehouse.enabled")
+    # ECD / Pool heating pump mode.
+    register = Register("ecd.pool_heating.pump.mode")
     register.scope = Scope.System
-    register.plugin_name = "ECD"
-    register.description = "ECD / VCG / TVA Wearhouse"
-    register.range = __range["BOOL"]
-    register.value = True
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Pool heating pump mode."
+    register.range = REGS_RANGES["PERCENTAGE_I"]
+    register.value = 0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
+    # ECD / Pool heating ump state.
+    register = Register("ecd.pool_heating.pump.state")
+    register.scope = Scope.Device
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Pool heating pump state."
+    register.range = REGS_RANGES["NONE"]
+    register.value = {}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
+    __registers.append(register)
+
+    # ECD / Servers cooling pump settings.
+    register = Register("ecd.servers_cooling.pump.settings")
+    register.scope = Scope.System
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Servers cooling settings."
+    register.range = REGS_RANGES["NONE"]
+    register.value = \
+    {
+        "vendor": "Grundfos",
+        "model": "MAGNA1_80_100_F_360_1x230V_PN6",
+        "options":
+        {
+            "uart": 1,
+            "mb_id": 1,
+            "e_stop": "U0:ID2:FC5:R0:RO8",
+            "e_status": "U0:ID2:FC2:R0:DI0",
+            "stop_on_shutdown": True,
+            "wait_on_shutdown": False
+        }
+    }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
+    __registers.append(register)
+
+    # ECD / Servers cooling pump mode.
+    register = Register("ecd.servers_cooling.pump.mode")
+    register.scope = Scope.System
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Servers cooling pump mode."
+    register.range = REGS_RANGES["PERCENTAGE_I"]
+    register.value = 0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
+    __registers.append(register)
+
+    # ECD / Servers cooling pump state.
+    register = Register("ecd.servers_cooling.pump.state")
+    register.scope = Scope.Device
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Servers cooling pump state."
+    register.range = REGS_RANGES["NONE"]
+    register.value = {}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
+    __registers.append(register)
+
+    # ====================================================================================================
+    # ======================================== Thermo couplers  ==========================================
+    # ====================================================================================================
+
+    # ECD / Ground drilling thermo couples settings.
+    register = Register("ecd.ground_drilling.tc.settings")
+    register.scope = Scope.System
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Ground drilling thermo couples settings."
+    register.range = REGS_RANGES["NONE"]
+    register.value = \
+    [
+        {
+            "input":
+            {
+                "vendor": "CWT",
+                "model": "MB318E",
+                "options":
+                {
+                    "uart": 0,
+                    "mb_id": 1,
+                    "chanel": 0
+                }
+            },
+            "output":
+            {
+                "vendor": "CWT",
+                "model": "MB318E",
+                "options":
+                {
+                    "uart": 0,
+                    "mb_id": 1,
+                    "chanel": 1
+                }
+            }
+        },
+        {
+            "input":
+            {
+                "vendor": "CWT",
+                "model": "MB318E",
+                "options":
+                {
+                    "uart": 0,
+                    "mb_id": 1,
+                    "chanel": 2
+                }
+            },
+            "output":
+            {
+                "vendor": "CWT",
+                "model": "MB318E",
+                "options":
+                {
+                    "uart": 0,
+                    "mb_id": 1,
+                    "chanel": 3
+                }
+            }
+        },
+        {
+            "input":
+            {
+                "vendor": "CWT",
+                "model": "MB318E",
+                "options":
+                {
+                    "uart": 0,
+                    "mb_id": 1,
+                    "chanel": 4
+                }
+            },
+            "output":
+            {
+                "vendor": "CWT",
+                "model": "MB318E",
+                "options":
+                {
+                    "uart": 0,
+                    "mb_id": 1,
+                    "chanel": 5
+                }
+            }
+        }
+    ]
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
+    __registers.append(register)
+
+    # ECD / Ground drilling thermo couples settings.
+    register = Register("ecd.ground_drilling.tc.values")
+    register.scope = Scope.Device
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Ground drilling thermo couples values."
+    register.range = REGS_RANGES["NONE"]
+    register.value = []
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
+    __registers.append(register)
+
+    # ECD / Hot water thermo couples settings.
+    register = Register("ecd.hot_water.tc.settings")
+    register.scope = Scope.System
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Hot water thermo couples settings."
+    register.range = REGS_RANGES["NONE"]
+    register.value = \
+    [
+        {
+            "input":
+            {
+                "vendor": "CWT",
+                "model": "MB318E",
+                "options":
+                {
+                    "uart": 0,
+                    "mb_id": 1,
+                    "chanel": 8
+                }
+            },
+            "output":
+            {
+                "vendor": "CWT",
+                "model": "MB318E",
+                "options":
+                {
+                    "uart": 0,
+                    "mb_id": 1,
+                    "chanel": 9
+                }
+            }
+        }
+    ]
+    __registers.append(register)
+
+    # ECD / Hot water thermo couples settings.
+    register = Register("ecd.hot_water.tc.values")
+    register.scope = Scope.Device
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Hot water thermo couples values."
+    register.range = REGS_RANGES["NONE"]
+    register.value = []
+    __registers.append(register)
+
+    # ECD / Cold water thermo couples settings.
+    register = Register("ecd.cold_water.tc.settings")
+    register.scope = Scope.System
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Cold water thermo couples settings."
+    register.range = REGS_RANGES["NONE"]
+    register.value = \
+    [
+        {
+            "input":
+            {
+                "vendor": "CWT",
+                "model": "MB318E",
+                "options":
+                {
+                    "uart": 0,
+                    "mb_id": 1,
+                    "chanel": 10
+                }
+            },
+            "output":
+            {
+                "vendor": "CWT",
+                "model": "MB318E",
+                "options":
+                {
+                    "uart": 0,
+                    "mb_id": 1,
+                    "chanel": 11
+                }
+            }
+        }
+    ]
+    __registers.append(register)
+
+    # ECD / Hot water thermo couples settings.
+    register = Register("ecd.cold_water.tc.values")
+    register.scope = Scope.Device
+    register.plugin_name = "Energy Center Distribution"
+    register.description = "ECD / Hot water thermo couples values."
+    register.range = REGS_RANGES["NONE"]
+    register.value = []
+    __registers.append(register)
+
+    # Enable flag
     register = Register("ecd.enabled")
     register.scope = Scope.System
     register.plugin_name = "Energy Center Distribution"
     register.description = "Plugin enabled"
-    register.range = __range["BOOL"]
+    register.range = REGS_RANGES["BOOL"]
     register.value = False
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
 #endregion
 
 #region Energy Center Heat Pump controller (echp)
 
-    # Input registers.
+    # -================================================================================-
 
-    # Count of the heat pump control groups.
-    register = Register("echp.hp.count")
+    # ECHP / Cold / Valves / Settings
+    register = Register("echp.cold.valves.settings")
     register.scope = Scope.System
-    register.plugin_name = "ECHP"
-    register.description = "Energy Center Heat Pump machines count"
-    register.range = "0/"
-    register.value = 3
+    register.plugin_name = "Energy Center Heat Pump"
+    register.description = "ECHP / Cold / Valves / Settings"
+    register.range = REGS_RANGES["NONE"]
+    register.value = \
+    {
+        "input":
+        [
+            {
+                "vendor": "Flowx",
+                "model": "FLX-05F",
+                "options":
+                {
+                    "close_on_shutdown": False,
+                    "wait_on_shutdown": False,
+                    "io_mode": 1, # 1: "single_out", 2: "dual_out"
+                    "output_cw": "off",
+                    "output_ccw": "off",
+                    "limit_cw": "off",
+                    "limit_ccw": "off"
+                }
+            }
+        ],
+        "output":
+        [
+            {
+                "vendor": "Flowx",
+                "model": "FLX-05F",
+                "options":
+                {
+                    "close_on_shutdown": False,
+                    "wait_on_shutdown": False,
+                    "io_mode": 1, # 1: "single_out", 2: "dual_out"
+                    "output_cw": "off",
+                    "output_ccw": "off",
+                    "limit_cw": "off",
+                    "limit_ccw": "off"
+                }
+            }
+        ],
+        "short":
+        [
+            {
+                "vendor": "Flowx",
+                "model": "FLX-05F",
+                "options":
+                {
+                    "close_on_shutdown": False,
+                    "wait_on_shutdown": False,
+                    "io_mode": 1, # 1: "single_out", 2: "dual_out"
+                    "output_cw": "off",
+                    "output_ccw": "off",
+                    "limit_cw": "off",
+                    "limit_ccw": "off"
+                }
+            }
+        ]
+    }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
-    # Index of the heat pump control group.
-    register = Register("echp.hp.index")
+    # ECHP / Cold / Valves / Mode
+    register = Register("echp.cold.valves.mode")
     register.scope = Scope.System
-    register.plugin_name = "ECHP"
-    register.description = "Energy Center Heat Pump machine index"
-    register.range = "0/"
-    register.value = 0
+    register.plugin_name = "Energy Center Heat Pump"
+    register.description = "ECHP / Cold / Valves / Mode"
+    register.range = REGS_RANGES["VALVE_MODE"]
+    register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
-    register = Register("echp.hp.power")
-    register.scope = Scope.System
-    register.plugin_name = "ECHP"
-    register.description = "The power of machine"
-    register.range = "-100.0/100.0"
-    register.value = 0
-    __registers.append(register)
-
-    register = Register("echp.hp.mode")
-    register.scope = Scope.System
-    register.plugin_name = "ECHP"
-    register.description = "The mode of the machine"
-    register.range = __range["NONE"]
-    register.value = 0
-    __registers.append(register)
-
-    register = Register("echp.hp.run")
+    # ECHP / Cold / Valves / State
+    register = Register("echp.cold.valves.state")
     register.scope = Scope.Device
-    register.plugin_name = "ECHP"
-    register.description = "The state of the machine"
-    register.range = __range["NONE"]
-    register.value = 0
-    __registers.append(register)
-
-    # Cold minimum of the heat pump control group.
-    register = Register("echp.hp.cold_min")
-    register.scope = Scope.System
-    register.plugin_name = "ECHP"
-    register.description = "Energy Center Heat Pump cold minimum"
-    register.range = "3.0/8.0"
-    register.value = 5.0
-    __registers.append(register)
-
-    # Cold maximum of the heat pump control group.
-    register = Register("echp.hp.cold_max")
-    register.scope = Scope.System
-    register.plugin_name = "ECHP"
-    register.description = "Energy Center Heat Pump cold maximum"
-    register.range = "3.0/8.0"
-    register.value = 7.0
-    __registers.append(register)
-
-    # Hot minimum of the heat pump control group.
-    register = Register("echp.hp.hot_min")
-    register.scope = Scope.System
-    register.plugin_name = "ECHP"
-    register.description = "Energy Center Heat Pump hot minimum"
-    register.range = "40.0/47.0"
-    register.value = 41.0
-    __registers.append(register)
-
-    # Hot maximum of the heat pump control group.
-    register = Register("echp.hp.hot_max")
-    register.scope = Scope.System
-    register.plugin_name = "ECHP"
-    register.description = "Energy Center Heat Pump hot maximum"
-    register.range = "40.0/47.0"
-    register.value = 46.0
+    register.plugin_name = "Energy Center Heat Pump"
+    register.description = "ECHP / Cold / Valves / State"
+    register.range = REGS_RANGES["VALVE_STATE"]
+    register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     # -================================================================================-
 
-    # Heat Pump Control Group / VCG / Cold Buffer / Input
-    register = Register("echp.hpcg.vcg_cold_buf.input")
+    # ECHP / Cold Geo / Valves / Settings
+    register = Register("echp.cold_geo.valves.settings")
     register.scope = Scope.System
-    register.plugin_name = "ECHP"
-    register.description = "Heat Pump Control Group / VCG / Cold Buffer / Input"
-    register.range = __range["NONE"]
-    register.value = {
-        "vendor": "Flowx",
-        "model": "FLX-05F",
-        "options":
-        {
-            "output_cw": "off",
-            "output_ccw": "off",
-            "limit_cw": "off",
-            "limit_ccw": "off"
-        }
+    register.plugin_name = "Energy Center Heat Pump"
+    register.description = "ECHP / Cold Geo / Valves / Settings"
+    register.range = REGS_RANGES["NONE"]
+    register.value = \
+    {
+        "input":
+        [
+            {
+                "vendor": "Flowx",
+                "model": "FLX-05F",
+                "options":
+                {
+                    "close_on_shutdown": False,
+                    "wait_on_shutdown": False,
+                    "io_mode": 1, # 1: "single_out", 2: "dual_out"
+                    "output_cw": "off",
+                    "output_ccw": "off",
+                    "limit_cw": "off",
+                    "limit_ccw": "off"
+                }
+            }
+        ],
+        "output":
+        [
+            {
+                "vendor": "Flowx",
+                "model": "FLX-05F",
+                "options":
+                {
+                    "close_on_shutdown": False,
+                    "wait_on_shutdown": False,
+                    "io_mode": 1, # 1: "single_out", 2: "dual_out"
+                    "output_cw": "off",
+                    "output_ccw": "off",
+                    "limit_cw": "off",
+                    "limit_ccw": "off"
+                }
+            }
+        ],
+        "short":
+        [
+            {
+                "vendor": "Flowx",
+                "model": "FLX-05F",
+                "options":
+                {
+                    "close_on_shutdown": False,
+                    "wait_on_shutdown": False,
+                    "io_mode": 1, # 1: "single_out", 2: "dual_out"
+                    "output_cw": "off",
+                    "output_ccw": "off",
+                    "limit_cw": "off",
+                    "limit_ccw": "off"
+                }
+            }
+        ]
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
-    # Heat Pump Control Group / VCG / Cold Buffer / Output
-    register = Register("echp.hpcg.vcg_cold_buf.output")
+    # ECHP / Cold Geo / Valves / Mode
+    register = Register("echp.cold_geo.valves.mode")
     register.scope = Scope.System
-    register.plugin_name = "ECHP"
-    register.description = "Heat Pump Control Group / VCG / Cold Buffer / Output"
-    register.range = __range["NONE"]
-    register.value = {
-        "vendor": "Flowx",
-        "model": "FLX-05F",
-        "options":
-        {
-            "output_cw": "off",
-            "output_ccw": "off",
-            "limit_cw": "off",
-            "limit_ccw": "off"
-        }
-    }
+    register.plugin_name = "Energy Center Heat Pump"
+    register.description = "ECHP / Cold Geo / Valves / Mode"
+    register.range = REGS_RANGES["VALVE_MODE"]
+    register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
-    # Heat Pump Control Group / VCG / Cold Buffer / Short
-    register = Register("echp.hpcg.vcg_cold_buf.short")
-    register.scope = Scope.System
-    register.plugin_name = "ECHP"
-    register.description = "Heat Pump Control Group / VCG / Cold Buffer / Short"
-    register.range = __range["NONE"]
-    register.value = {
-        "vendor": "Flowx",
-        "model": "FLX-05F",
-        "options":
-        {
-            "output_cw": "off",
-            "output_ccw": "off",
-            "limit_cw": "off",
-            "limit_ccw": "off"
-        }
-    }
-    __registers.append(register)
-
-    # -================================================================================-
-
-    # Heat Pump Control Group / VCG / Cold Geo / Input
-    register = Register("echp.hpcg.vcg_cold_geo.input")
-    register.scope = Scope.System
-    register.plugin_name = "ECHP"
-    register.description = "Heat Pump Control Group / VCG / Cold Geo / Input"
-    register.range = __range["NONE"]
-    register.value = {
-        "vendor": "Flowx",
-        "model": "FLX-05F",
-        "options":
-        {
-            "output_cw": "off",
-            "output_ccw": "off",
-            "limit_cw": "off",
-            "limit_ccw": "off"
-        }
-    }
-    __registers.append(register)
-
-    # Heat Pump Control Group / VCG / Cold Geo / Output
-    register = Register("echp.hpcg.vcg_cold_geo.output")
-    register.scope = Scope.System
-    register.plugin_name = "ECHP"
-    register.description = "Heat Pump Control Group / VCG / Cold Geo / Output"
-    register.range = __range["NONE"]
-    register.value = {
-        "vendor": "Flowx",
-        "model": "FLX-05F",
-        "options":
-        {
-            "output_cw": "off",
-            "output_ccw": "off",
-            "limit_cw": "off",
-            "limit_ccw": "off"
-        }
-    }
-    __registers.append(register)
-
-    # Heat Pump Control Group / VCG / Cold Geo / Short
-    register = Register("echp.hpcg.vcg_cold_geo.short")
-    register.scope = Scope.System
-    register.plugin_name = "ECHP"
-    register.description = "Heat Pump Control Group / VCG / Cold Geo / Short"
-    register.range = __range["NONE"]
-    register.value = {
-        "vendor": "Flowx",
-        "model": "FLX-05F",
-        "options":
-        {
-            "output_cw": "off",
-            "output_ccw": "off",
-            "limit_cw": "off",
-            "limit_ccw": "off"
-        }
-    }
+    # ECHP / Cold Geo / Valves / State
+    register = Register("echp.cold_geo.valves.state")
+    register.scope = Scope.Device
+    register.plugin_name = "Energy Center Heat Pump"
+    register.description = "ECHP / Cold Geo / Valves / State"
+    register.range = REGS_RANGES["VALVE_STATE"]
+    register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     # -================================================================================-
 
-    # Heat Pump Control Group / VCG / Warm Geo / Input
-    register = Register("echp.hpcg.vcg_warm_geo.input")
+    # ECHP / Warm Geo / Valves / Settings
+    register = Register("echp.warm_geo.valves.settings")
     register.scope = Scope.System
-    register.plugin_name = "ECHP"
-    register.description = "Heat Pump Control Group / VCG / Warm Geo / Input"
-    register.range = __range["NONE"]
-    register.value = {
-        "vendor": "Flowx",
-        "model": "FLX-05F",
-        "options":
-        {
-            "output_cw": "off",
-            "output_ccw": "off",
-            "limit_cw": "off",
-            "limit_ccw": "off"
-        }
+    register.plugin_name = "Energy Center Heat Pump"
+    register.description = "ECHP / Warm Geo / Valves / Settings"
+    register.range = REGS_RANGES["NONE"]
+    register.value = \
+    {
+        "input":
+        [
+            {
+                "vendor": "Flowx",
+                "model": "FLX-05F",
+                "options":
+                {
+                    "close_on_shutdown": False,
+                    "wait_on_shutdown": False,
+                    "io_mode": 1, # 1: "single_out", 2: "dual_out"
+                    "output_cw": "off",
+                    "output_ccw": "off",
+                    "limit_cw": "off",
+                    "limit_ccw": "off"
+                }
+            }
+        ],
+        "output":
+        [
+            {
+                "vendor": "Flowx",
+                "model": "FLX-05F",
+                "options":
+                {
+                    "close_on_shutdown": False,
+                    "wait_on_shutdown": False,
+                    "io_mode": 1, # 1: "single_out", 2: "dual_out"
+                    "output_cw": "off",
+                    "output_ccw": "off",
+                    "limit_cw": "off",
+                    "limit_ccw": "off"
+                }
+            }
+        ],
+        "short":
+        [
+            {
+                "vendor": "Flowx",
+                "model": "FLX-05F",
+                "options":
+                {
+                    "close_on_shutdown": False,
+                    "wait_on_shutdown": False,
+                    "io_mode": 1, # 1: "single_out", 2: "dual_out"
+                    "output_cw": "off",
+                    "output_ccw": "off",
+                    "limit_cw": "off",
+                    "limit_ccw": "off"
+                }
+            }
+        ]
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
-    # Heat Pump Control Group / VCG / Warm Geo / Output
-    register = Register("echp.hpcg.vcg_warm_geo.output")
+    # ECHP / Warm Geo / Valves / Mode
+    register = Register("echp.warm_geo.valves.mode")
     register.scope = Scope.System
-    register.plugin_name = "ECHP"
-    register.description = "Heat Pump Control Group / VCG / Warm Geo / Output"
-    register.range = __range["NONE"]
-    register.value = {
-        "vendor": "Flowx",
-        "model": "FLX-05F",
-        "options":
-        {
-            "output_cw": "off",
-            "output_ccw": "off",
-            "limit_cw": "off",
-            "limit_ccw": "off"
-        }
-    }
+    register.plugin_name = "Energy Center Heat Pump"
+    register.description = "ECHP / Warm Geo / Valves / Mode"
+    register.range = REGS_RANGES["VALVE_MODE"]
+    register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
-    # Heat Pump Control Group / VCG / Warm Geo / Short
-    register = Register("echp.hpcg.vcg_warm_geo.short")
-    register.scope = Scope.System
-    register.plugin_name = "ECHP"
-    register.description = "Heat Pump Control Group / VCG / Warm Geo / Short"
-    register.range = __range["NONE"]
-    register.value = {
-        "vendor": "Flowx",
-        "model": "FLX-05F",
-        "options":
-        {
-            "output_cw": "off",
-            "output_ccw": "off",
-            "limit_cw": "off",
-            "limit_ccw": "off"
-        }
-    }
+    # ECHP / Warm Geo / Valves / State
+    register = Register("echp.warm_geo.valves.state")
+    register.scope = Scope.Device
+    register.plugin_name = "Energy Center Heat Pump"
+    register.description = "ECHP / Warm Geo / Valves / State"
+    register.range = REGS_RANGES["VALVE_STATE"]
+    register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     # -================================================================================-
 
-    # Heat Pump Control Group / VCG / Warm Geo / Input
-    register = Register("echp.hpcg.vcg_warm_floor.input")
+    # ECHP / Warm / Valves / Settings
+    register = Register("echp.warm.valves.settings")
     register.scope = Scope.System
-    register.plugin_name = "ECHP"
-    register.description = "Heat Pump Control Group / VCG / Warm Geo / Input"
-    register.range = __range["NONE"]
-    register.value = {
-        "vendor": "Flowx",
-        "model": "FLX-05F",
-        "options":
-        {
-            "output_cw": "off",
-            "output_ccw": "off",
-            "limit_cw": "off",
-            "limit_ccw": "off"
-        }
+    register.plugin_name = "Energy Center Heat Pump"
+    register.description = "ECHP / Warm / Valves / Settings"
+    register.range = REGS_RANGES["NONE"]
+    register.value = \
+    {
+        "input":
+        [
+            {
+                "vendor": "Flowx",
+                "model": "FLX-05F",
+                "options":
+                {
+                    "close_on_shutdown": False,
+                    "wait_on_shutdown": False,
+                    "io_mode": 1, # 1: "single_out", 2: "dual_out"
+                    "output_cw": "off",
+                    "output_ccw": "off",
+                    "limit_cw": "off",
+                    "limit_ccw": "off"
+                }
+            }
+        ],
+        "output":
+        [
+            {
+                "vendor": "Flowx",
+                "model": "FLX-05F",
+                "options":
+                {
+                    "close_on_shutdown": False,
+                    "wait_on_shutdown": False,
+                    "io_mode": 1, # 1: "single_out", 2: "dual_out"
+                    "output_cw": "off",
+                    "output_ccw": "off",
+                    "limit_cw": "off",
+                    "limit_ccw": "off"
+                }
+            }
+        ],
+        "short":
+        [
+            {
+                "vendor": "Flowx",
+                "model": "FLX-05F",
+                "options":
+                {
+                    "close_on_shutdown": False,
+                    "wait_on_shutdown": False,
+                    "io_mode": 1, # 1: "single_out", 2: "dual_out"
+                    "output_cw": "off",
+                    "output_ccw": "off",
+                    "limit_cw": "off",
+                    "limit_ccw": "off"
+                }
+            }
+        ]
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
-    # Heat Pump Control Group / VCG / Warm Geo / Output
-    register = Register("echp.hpcg.vcg_warm_floor.output")
+    # ECHP / Warm / Valves / Mode
+    register = Register("echp.warm.valves.mode")
     register.scope = Scope.System
-    register.plugin_name = "ECHP"
-    register.description = "Heat Pump Control Group / VCG / Warm Geo / Output"
-    register.range = __range["NONE"]
-    register.value = {
-        "vendor": "Flowx",
-        "model": "FLX-05F",
-        "options":
-        {
-            "output_cw": "off",
-            "output_ccw": "off",
-            "limit_cw": "off",
-            "limit_ccw": "off"
-        }
-    }
+    register.plugin_name = "Energy Center Heat Pump"
+    register.description = "ECHP / Warm / Valves / Mode"
+    register.range = REGS_RANGES["VALVE_MODE"]
+    register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
-    # Heat Pump Control Group / VCG / Warm Geo / Short
-    register = Register("echp.hpcg.vcg_warm_floor.short")
+    # ECHP / Warm / Valves / State
+    register = Register("echp.warm.valves.state")
+    register.scope = Scope.Device
+    register.plugin_name = "Energy Center Heat Pump"
+    register.description = "ECHP / Warm / Valves / State"
+    register.range = REGS_RANGES["VALVE_STATE"]
+    register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.HEAT_PUMP.value)
+    __registers.append(register)
+
+    # -================================================================================-
+
+    # ECHP / Hot / Valves / Settings
+    register = Register("echp.hot.valves.settings")
     register.scope = Scope.System
-    register.plugin_name = "ECHP"
-    register.description = "Heat Pump Control Group / VCG / Warm Geo / Output"
-    register.range = __range["NONE"]
-    register.value = {
-        "vendor": "Flowx",
-        "model": "FLX-05F",
-        "options":
-        {
-            "output_cw": "off",
-            "output_ccw": "off",
-            "limit_cw": "off",
-            "limit_ccw": "off"
-        }
+    register.plugin_name = "Energy Center Heat Pump"
+    register.description = "ECHP / Hot / Valves / Settings"
+    register.range = REGS_RANGES["NONE"]
+    register.value = \
+    {
+        "input":
+        [
+            {
+                "vendor": "Flowx",
+                "model": "FLX-05F",
+                "options":
+                {
+                    "close_on_shutdown": False,
+                    "wait_on_shutdown": False,
+                    "io_mode": 1, # 1: "single_out", 2: "dual_out"
+                    "output_cw": "off",
+                    "output_ccw": "off",
+                    "limit_cw": "off",
+                    "limit_ccw": "off"
+                }
+            }
+        ],
+        "output":
+        [
+            {
+                "vendor": "Flowx",
+                "model": "FLX-05F",
+                "options":
+                {
+                    "close_on_shutdown": False,
+                    "wait_on_shutdown": False,
+                    "io_mode": 1, # 1: "single_out", 2: "dual_out"
+                    "output_cw": "off",
+                    "output_ccw": "off",
+                    "limit_cw": "off",
+                    "limit_ccw": "off"
+                }
+            }
+        ],
+        "short":
+        [
+            {
+                "vendor": "Flowx",
+                "model": "FLX-05F",
+                "options":
+                {
+                    "close_on_shutdown": False,
+                    "wait_on_shutdown": False,
+                    "io_mode": 1, # 1: "single_out", 2: "dual_out"
+                    "output_cw": "off",
+                    "output_ccw": "off",
+                    "limit_cw": "off",
+                    "limit_ccw": "off"
+                }
+            }
+        ]
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.HEAT_PUMP.value)
+    __registers.append(register)
+
+    # ECHP / Hot / Valves / Mode
+    register = Register("echp.hot.valves.mode")
+    register.scope = Scope.System
+    register.plugin_name = "Energy Center Heat Pump"
+    register.description = "ECHP / Hot / Valves / Mode"
+    register.range = REGS_RANGES["VALVE_MODE"]
+    register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.HEAT_PUMP.value)
+    __registers.append(register)
+
+    # ECHP / Hot / Valves / State
+    register = Register("echp.hot.valves.state")
+    register.scope = Scope.Device
+    register.plugin_name = "Energy Center Heat Pump"
+    register.description = "ECHP / Hot / Valves / State"
+    register.range = REGS_RANGES["VALVE_STATE"]
+    register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     # -================================================================================-
 
     # Heat Pump Control Group / Water Pump / Cold
-    register = Register("echp.hpcg.wp_cold.settings")
+    register = Register("echp.cold.pump.settings")
     register.scope = Scope.System
-    register.plugin_name = "ECHP"
+    register.plugin_name = "Energy Center Heat Pump"
     register.description = "Heat Pump Control Group / Water Pump / Cold"
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = {
         "vendor": "Grundfos",
         "model": "MAGNA1_80_100_F_360_1x230V_PN6",
         "options":
         {
-            "uart": 0,
-            "mb_id": 2
+            "uart": 1,
+            "mb_id": 7,
+            "e_stop": "U0:ID15:FC5:R0:RO8",
+            "e_status": "U0:ID15:FC2:R0:DI0",
+            "stop_on_shutdown": True,
+            "wait_on_shutdown": False
         }
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.HEAT_PUMP.value)
+    __registers.append(register)
+
+    # Heat Pump Control Group / Cold pump mode.
+    register = Register("echp.cold.pump.mode")
+    register.scope = Scope.System
+    register.plugin_name = "Energy Center Heat Pump"
+    register.description = "Heat Pump Control Group / Cold pump mode."
+    register.range = REGS_RANGES["PERCENTAGE_I"]
+    register.value = 0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.HEAT_PUMP.value)
+    __registers.append(register)
+
+    # Heat Pump Control Group / Cold pump state.
+    register = Register("echp.cold.pump.state")
+    register.scope = Scope.Device
+    register.plugin_name = "Energy Center Heat Pump"
+    register.description = "Heat Pump Control Group / Cold pump state."
+    register.range = REGS_RANGES["NONE"]
+    register.value = {}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     # Heat Pump Control Group / Water Pump / Hot
-    register = Register("echp.hpcg.wp_hot.settings")
+    register = Register("echp.hot.pump.settings")
     register.scope = Scope.System
-    register.plugin_name = "ECHP"
+    register.plugin_name = "Energy Center Heat Pump"
     register.description = "Heat Pump Control Group / Water Pump / Hot"
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = {
         "vendor": "Grundfos",
         "model": "MAGNA1_80_100_F_360_1x230V_PN6",
         "options":
         {
-            "uart": 0,
-            "mb_id": 3
+            "uart": 1,
+            "mb_id": 6,
+            "e_stop": "U0:ID15:FC5:R0:RO8",
+            "e_status": "U0:ID15:FC2:R0:DI0",
+            "stop_on_shutdown": True,
+            "wait_on_shutdown": False
         }
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.HEAT_PUMP.value)
+    __registers.append(register)
+
+    # Heat Pump Control Group / Hot pump mode.
+    register = Register("echp.hot.pump.mode")
+    register.scope = Scope.System
+    register.plugin_name = "Energy Center Heat Pump"
+    register.description = "Heat Pump Control Group / Hot pump mode."
+    register.range = REGS_RANGES["PERCENTAGE_I"]
+    register.value = 0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.HEAT_PUMP.value)
+    __registers.append(register)
+
+    # Heat Pump Control Group / Hot pump state.
+    register = Register("echp.hot.pump.state")
+    register.scope = Scope.Device
+    register.plugin_name = "Energy Center Heat Pump"
+    register.description = "Heat Pump Control Group / Hot pump state."
+    register.range = REGS_RANGES["NONE"]
+    register.value = {}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     # Heat Pump Control Group / Water Pump / Warm
-    register = Register("echp.hpcg.wp_warm_p.settings")
+    register = Register("echp.warm.pump.settings")
     register.scope = Scope.System
-    register.plugin_name = "ECHP"
+    register.plugin_name = "Energy Center Heat Pump"
     register.description = "Heat Pump Control Group / Water Pump / Warm"
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = {
         "vendor": "Grundfos",
         "model": "MAGNA1_80_100_F_360_1x230V_PN6",
         "options":
         {
-            "uart": 0,
-            "mb_id": 0
+            "uart": 1,
+            "mb_id": 5,
+            "e_stop": "U0:ID15:FC5:R0:RO8",
+            "e_status": "U0:ID15:FC2:R0:DI0",
+            "stop_on_shutdown": True,
+            "wait_on_shutdown": False
         }
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
-    # Heat Pump Control Group / Water Pump / Warm
-    register = Register("echp.hpcg.wp_warm_g.settings")
+    # Heat Pump Control Group / Warm pump mode.
+    register = Register("echp.warm.pump.mode")
     register.scope = Scope.System
-    register.plugin_name = "ECHP"
-    register.description = "Heat Pump Control Group / Water Pump / Warm"
-    register.range = __range["NONE"]
-    register.value = {
-        "vendor": "Grundfos",
-        "model": "MAGNA1_80_100_F_360_1x230V_PN6",
-        "options":
-        {
-            "uart": 0,
-            "mb_id": 0
-        }
-    }
+    register.plugin_name = "Energy Center Heat Pump"
+    register.description = "Heat Pump Control Group / Warm pump mode."
+    register.range = REGS_RANGES["PERCENTAGE_I"]
+    register.value = 0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.HEAT_PUMP.value)
+    __registers.append(register)
+
+    # Heat Pump Control Group / Warm pump state.
+    register = Register("echp.warm.pump.state")
+    register.scope = Scope.Device
+    register.plugin_name = "Energy Center Heat Pump"
+    register.description = "Heat Pump Control Group / Warm pump state."
+    register.range = REGS_RANGES["NONE"]
+    register.value = {}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     # -================================================================================-
 
     # Heat Pump Control Group / Water Pump / Warm
-    register = Register("echp.hpcg.hp.settings")
+    register = Register("echp.hp.settings")
     register.scope = Scope.System
-    register.plugin_name = "ECHP"
+    register.plugin_name = "Energy Center Heat Pump"
     register.description = "Heat Pump Control Group / Heat Pump"
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = {
         "vendor": "HstarsGuangzhouRefrigeratingEquipmentGroup",
         "model": "40STD-N420WHSB4",
         "options":
         {
             "uart": 0,
-            "mb_id": 0
+            "mb_id": 1
         }
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
-    # Output registers.
+    register = Register("echp.hp.get_op_mode")
+    register.scope = Scope.Device
+    register.plugin_name = "Energy Center Heat Pump"
+    register.description = "Get the mode of the machine"
+    register.range = REGS_RANGES["NONE"]
+    register.value = 0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.HEAT_PUMP.value)
+    __registers.append(register)
 
+    register = Register("echp.hp.set_op_mode")
+    register.scope = Scope.System
+    register.plugin_name = "Energy Center Heat Pump"
+    register.description = "Set the mode of the machine"
+    register.range = REGS_RANGES["NONE"]
+    register.value = 0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.HEAT_PUMP.value)
+    __registers.append(register)
+
+    register = Register("echp.hp.get_op_status")
+    register.scope = Scope.Device
+    register.plugin_name = "Energy Center Heat Pump"
+    register.description = "Get the status of the machine"
+    register.range = REGS_RANGES["NONE"]
+    register.value = 0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.HEAT_PUMP.value)
+    __registers.append(register)
+
+    register = Register("echp.hp.get_cooling_temp")
+    register.scope = Scope.Device
+    register.plugin_name = "Energy Center Heat Pump"
+    register.description = "Get the cooling temp of the machine"
+    register.range = REGS_RANGES["NONE"]
+    register.value = 0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.HEAT_PUMP.value)
+    __registers.append(register)
+
+    register = Register("echp.hp.set_cooling_temp")
+    register.scope = Scope.System
+    register.plugin_name = "Energy Center Heat Pump"
+    register.description = "Set the cooling temp of the machine"
+    register.range = REGS_RANGES["NONE"]
+    register.value = 0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.HEAT_PUMP.value)
+    __registers.append(register)
+
+    register = Register("echp.hp.get_heating_temp")
+    register.scope = Scope.Device
+    register.plugin_name = "Energy Center Heat Pump"
+    register.description = "Get the heating temp of the machine"
+    register.range = REGS_RANGES["NONE"]
+    register.value = 0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.HEAT_PUMP.value)
+    __registers.append(register)
+
+    register = Register("echp.hp.set_heating_temp")
+    register.scope = Scope.System
+    register.plugin_name = "Energy Center Heat Pump"
+    register.description = "Set the heating temp of the machine"
+    register.range = REGS_RANGES["NONE"]
+    register.value = 0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.HEAT_PUMP.value)
+    __registers.append(register)
+
+    register = Register("echp.hp.get_temps")
+    register.scope = Scope.Device
+    register.plugin_name = "Energy Center Heat Pump"
+    register.description = "Get the heating temp of the machine"
+    register.range = REGS_RANGES["NONE"]
+    register.value = {}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.HEAT_PUMP.value)
+    __registers.append(register)
+
+    # Count of the heat pump control groups.
+    register = Register("echp.hp.count")
+    register.scope = Scope.System
+    register.plugin_name = "Energy Center Heat Pump"
+    register.description = "Energy Center Heat Pump machines count"
+    register.range = "0/"
+    register.value = 3
+    register.profiles = \
+        Register.create_profile(
+            Profiles.HEAT_PUMP.value)
+    __registers.append(register)
+
+    # Index of the heat pump control group.
+    register = Register("echp.hp.index")
+    register.scope = Scope.System
+    register.plugin_name = "Energy Center Heat Pump"
+    register.description = "Energy Center Heat Pump machine index"
+    register.range = "0/"
+    register.value = 0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.HEAT_PUMP.value)
+    __registers.append(register)
+
+    register = Register("echp.hp.power")
+    register.scope = Scope.System
+    register.plugin_name = "Energy Center Heat Pump"
+    register.description = "The power of machine"
+    register.range = "-100.0/100.0"
+    register.value = 0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.HEAT_PUMP.value)
+    __registers.append(register)
+
+    register = Register("echp.hp.run")
+    register.scope = Scope.Device
+    register.plugin_name = "Energy Center Heat Pump"
+    register.description = "The state of the machine"
+    register.range = REGS_RANGES["NONE"]
+    register.value = 0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.HEAT_PUMP.value)
+    __registers.append(register)
+
+    # Cold minimum of the heat pump control group.
+    register = Register("echp.hp.cold_min")
+    register.scope = Scope.System
+    register.plugin_name = "Energy Center Heat Pump"
+    register.description = "Energy Center Heat Pump cold minimum"
+    register.range = "3.0/8.0"
+    register.value = 5.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.HEAT_PUMP.value)
+    __registers.append(register)
+
+    # Cold maximum of the heat pump control group.
+    register = Register("echp.hp.cold_max")
+    register.scope = Scope.System
+    register.plugin_name = "Energy Center Heat Pump"
+    register.description = "Energy Center Heat Pump cold maximum"
+    register.range = "3.0/8.0"
+    register.value = 7.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.HEAT_PUMP.value)
+    __registers.append(register)
+
+    # Hot minimum of the heat pump control group.
+    register = Register("echp.hp.hot_min")
+    register.scope = Scope.System
+    register.plugin_name = "Energy Center Heat Pump"
+    register.description = "Energy Center Heat Pump hot minimum"
+    register.range = "40.0/47.0"
+    register.value = 41.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.HEAT_PUMP.value)
+    __registers.append(register)
+
+    # Hot maximum of the heat pump control group.
+    register = Register("echp.hp.hot_max")
+    register.scope = Scope.System
+    register.plugin_name = "Energy Center Heat Pump"
+    register.description = "Energy Center Heat Pump hot maximum"
+    register.range = "40.0/47.0"
+    register.value = 46.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.HEAT_PUMP.value)
+    __registers.append(register)
+
+    # Enable the plugin.
     register = Register("echp.enabled")
     register.scope = Scope.System
     register.plugin_name = "Energy Center Heat Pump"
     register.description = "Plugin enabled"
-    register.range = __range["BOOL"]
+    register.range = REGS_RANGES["BOOL"]
     register.value = False
+    register.profiles = \
+        Register.create_profile(
+            Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
 #endregion
 
 #region Ventilation (vent)
+
+    register = Register("vent.fans.max_speed_1")
+    register.scope = Scope.Device
+    register.plugin_name = "Ventilation"
+    register.description = "Upper fan speed [%]"
+    register.range = REGS_RANGES["NONE"]
+    register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
+    __registers.append(register)
 
     # Operator panel setpoint.
     register = Register("vent.op_setpoint_1")
@@ -3764,6 +5485,9 @@ def __add_registers(args):
     register.description = "Operators panel set point"
     register.range = "0.0/100.0"
     register.value = 0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     # HVAC setpoint.
@@ -3771,8 +5495,11 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Ventilation"
     register.description = "HVAC set point"
-    register.range = "-100.0/100.0"
+    register.range = "-200.0/200.0"
     register.value = 0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     # AC setpoint.
@@ -3782,14 +5509,20 @@ def __add_registers(args):
     register.description = "AC set point"
     register.range = "0.0/100.0"
     register.value = 0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("vent.power_gpio_1")
     register.scope = Scope.System
     register.plugin_name = "Ventilation"
     register.description = "Fans power GPIO."
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = "U0:ID6:FC5:R0:RO3"
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     # Upper fan
@@ -3797,7 +5530,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Ventilation"
     register.description = "Lower fan settings"
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = {
         "vendor": "HangzhouAirflowElectricApplications",
         "model": "f3p146ec072600",
@@ -3806,30 +5539,42 @@ def __add_registers(args):
             "output": "U0:ID2:FC16:R0:AO3",
         }
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("vent.lower_1.fan.min_speed")
     register.scope = Scope.System
     register.plugin_name = "Ventilation"
     register.description = "Lower fan minimum speed [%]"
-    register.range = __range["PERCENTAGE_F"]
+    register.range = REGS_RANGES["PERCENTAGE_F"]
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("vent.lower_1.fan.max_speed")
     register.scope = Scope.System
     register.plugin_name = "Ventilation"
     register.description = "Lower fan maximum speed [%]"
-    register.range = __range["PERCENTAGE_F"]
+    register.range = REGS_RANGES["PERCENTAGE_F"]
     register.value = 100.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("vent.lower_1.fan.speed")
     register.scope = Scope.Device
     register.plugin_name = "Ventilation"
     register.description = "Lower fan speed [%]"
-    register.range = __range["PERCENTAGE_F"]
+    register.range = REGS_RANGES["PERCENTAGE_F"]
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     # Upper fan
@@ -3837,7 +5582,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Ventilation"
     register.description = "Upper fan settings"
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = {
         "vendor": "HangzhouAirflowElectricApplications",
         "model": "f3p146ec072600",
@@ -3846,30 +5591,42 @@ def __add_registers(args):
             "output": "U0:ID2:FC16:R0:AO2",
         }
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("vent.upper_1.fan.min_speed")
     register.scope = Scope.System
     register.plugin_name = "Ventilation"
     register.description = "Upper fan minimum speed [%]"
-    register.range = __range["PERCENTAGE_F"]
+    register.range = REGS_RANGES["PERCENTAGE_F"]
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("vent.upper_1.fan.speed")
     register.scope = Scope.Device
     register.plugin_name = "Ventilation"
     register.description = "Upper fan speed [%]"
-    register.range = __range["PERCENTAGE_F"]
+    register.range = REGS_RANGES["PERCENTAGE_F"]
     register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("vent.upper_1.fan.max_speed")
     register.scope = Scope.System
     register.plugin_name = "Ventilation"
     register.description = "Upper fan maximum speed [%]"
-    register.range = __range["PERCENTAGE_F"]
+    register.range = REGS_RANGES["PERCENTAGE_F"]
     register.value = 100.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     # Upper valve settings
@@ -3877,8 +5634,11 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Ventilation"
     register.description = "Lower air damper settings"
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = verbal_const.OFF
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     # Lower valve settings
@@ -3886,8 +5646,11 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Ventilation"
     register.description = "Upper air damper settings"
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = verbal_const.OFF
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     # Zones count.
@@ -3897,6 +5660,9 @@ def __add_registers(args):
     register.description = "Count of the ventilation zones."
     register.range = "0/"
     register.value = 1
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     # Enable
@@ -3904,8 +5670,11 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Ventilation"
     register.description = "Ventilation enable flag."
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = True
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
 #endregion
@@ -3917,8 +5686,14 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Alarm"
     register.description = "Alarm module sound device settings."
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = {}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value,
+            Profiles.DISTRIBUTION.value,
+            Profiles.HEAT_PUMP.value,
+            Profiles.NORTH_SERVER_ROOMS.value)
     __registers.append(register)
 
     # Visual signal device.
@@ -3926,8 +5701,14 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Alarm"
     register.description = "Alarm module visual device settings."
-    register.range = __range["NONE"]
+    register.range = REGS_RANGES["NONE"]
     register.value = {}
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value,
+            Profiles.DISTRIBUTION.value,
+            Profiles.HEAT_PUMP.value,
+            Profiles.NORTH_SERVER_ROOMS.value)
     __registers.append(register)
 
     # Enable
@@ -3935,8 +5716,14 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Alarm"
     register.description = "Alarm module enable flag."
-    register.range = __range["BOOL"]
+    register.range = REGS_RANGES["BOOL"]
     register.value = False
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value,
+            Profiles.DISTRIBUTION.value,
+            Profiles.HEAT_PUMP.value,
+            Profiles.NORTH_SERVER_ROOMS.value)
     __registers.append(register)
 
 #endregion
@@ -3948,8 +5735,14 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Statistics"
     register.description = "Statistics module enable flag."
-    register.range = __range["BOOL"]
+    register.range = REGS_RANGES["BOOL"]
     register.value = False
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value,
+            Profiles.DISTRIBUTION.value,
+            Profiles.HEAT_PUMP.value,
+            Profiles.NORTH_SERVER_ROOMS.value)
     __registers.append(register)
 
 #endregion
@@ -3961,14 +5754,66 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Office Conference Hall"
     register.description = "Office conference hall module enable flag."
-    register.range = __range["BOOL"]
+    register.range = REGS_RANGES["BOOL"]
     register.value = False
     __registers.append(register)
 
 #endregion
 
+#region Global
+
+    # Global floor mode.
+    register = Register("glob.floor.mode")
+    register.scope = Scope.System
+    register.plugin_name = "No plugin, just global"
+    register.description = "Global floor thermal mode."
+    register.range = "0|1|2"
+    register.value = 0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
+    __registers.append(register)
+
+    # Global convector mode.
+    register = Register("glob.conv.mode")
+    register.scope = Scope.System
+    register.plugin_name = "No plugin, just global"
+    register.description = "Global convector thermal mode."
+    register.range = "0|1|2"
+    register.value = 0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
+    __registers.append(register)
+
+    # Global illumination east.
+    register = Register("glob.illumination.east")
+    register.scope = Scope.System
+    register.plugin_name = "No plugin, just global"
+    register.description = "Global east ilumination."
+    register.range = ""
+    register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
+    __registers.append(register)
+
+    # Global illumination west.
+    register = Register("glob.illumination.west")
+    register.scope = Scope.System
+    register.plugin_name = "No plugin, just global"
+    register.description = "Global west ilumination."
+    register.range = ""
+    register.value = 0.0
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
+    __registers.append(register)
+
+#endregion
+
 def main():
-    global __registers, __range, __parser
+    global __registers, REGS_RANGES, __parser
 
     __parser = argparse.ArgumentParser()
 
@@ -4010,12 +5855,6 @@ def main():
 
         for register in registers:
             print(register)
-
-    elif args.action == "list_gpio":
-        for register in __registers:
-            if isinstance(register.value, dict):
-                if "options" in register.value.keys():
-                    print("Register: {} -> {}".format(register.name, register.value["options"]))                    
 
     elif args.action == "w_md":
         Registers.to_md(__registers, file_name) #"../Zontromat/plugins/registers.md")

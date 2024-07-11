@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 
-from devices.vendors.hstars_guangzhou_refrigerating_equipment_group.heat_pump import HP_40STD_N420WHSB4
+from devices.vendors.gasim.rs2.rs2 import RS2
 
 #region File Attributes
 
@@ -55,20 +55,20 @@ __status__ = "Debug"
 
 #endregion
 
-class HeatPumpFactory:
-    """Het pump factory.
+class PIRFactory:
+    """Passive infrared sensor factory class.
     """
 
     @staticmethod
     def create(**config):
-        """Create device instace.
+        """Create device instance.
         """
 
         # The device instance.
         device = None
 
         # Name
-        name = ""
+        name = None
         if "name" in config:
             name = config["name"]
 
@@ -88,6 +88,15 @@ class HeatPumpFactory:
         else:
             raise ValueError("No \"model\" argument has been passed.")
 
+        # Unit
+        unit = None
+        if "options" in config:
+            unit = int(config["options"]['mb_id'])
+
+        else:
+            raise ValueError("No \"mb_id\" argument has been passed.")
+
+
         # Controller
         controller = None
         if "controller" in config:
@@ -96,14 +105,14 @@ class HeatPumpFactory:
         else:
             raise ValueError("No \"controller\" argument has been passed.")
 
-        # HstarsGuangzhouRefrigeratingEquipmentGroup / HP_40STD_N420WHSB4 / 0
-        if vendor == "HstarsGuangzhouRefrigeratingEquipmentGroup" and  model == "40STD-N420WHSB4":
 
-            device = HP_40STD_N420WHSB4(
-                name=name,
+        # Gasim / RS2
+        if vendor == "Gasim" and  model == "RS2":
+
+            device = RS2(
                 controller=controller,
-                uart=config["options"]["uart"],
-                mb_id=config["options"]["mb_id"]
+                name=name,
+                unit=unit
             )
 
         else:

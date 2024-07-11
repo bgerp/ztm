@@ -551,6 +551,7 @@ class Zone():
         if registers_ui != []:
             if self.__ztm_ui_temp_data != registers_ui:
                 self.__ztm_ui_temp_data = registers_ui
+                print(f"From UI: {registers_ui}")
                 # Update changes.
                 for register in registers_ui:
                     try:

@@ -65,30 +65,6 @@ class BaseValve(BaseDevice):
 
 #region Attributes
 
-    _state = None
-    """Valve state.
-    """
-
-    _min_pos = 0
-    """Minimum allowed position.
-    """
-
-    _max_pos = 100
-    """Maximum allowed position.
-    """
-
-    __target_position = 0
-    """Target position.
-    """
-
-    _current_position = 0
-    """Current position.
-    """
-
-    _in_place_err = 0.1
-    """In place error.
-    """
-
 #endregion
 
 #region Constructor
@@ -103,6 +79,36 @@ class BaseValve(BaseDevice):
         super().__init__(config)
 
         self._state = StateMachine(ValveState.NONE)
+        """Valve state.
+        """
+
+        self._min_pos = 0
+        """Minimum allowed position.
+        """
+
+        self._max_pos = 100
+        """Maximum allowed position.
+        """
+
+        self._target_position = 0
+        """Target position.
+        """
+
+        self._current_position = 0
+        """Current position.
+        """
+
+        self._in_place_err = 0.1
+        """In place error.
+        """
+
+        self._openings = 0
+        """Current number of valve openings.
+        """
+
+        self._closings = 0
+        """Current number of valve closings.
+        """
 
 #endregion
 
@@ -185,7 +191,7 @@ class BaseValve(BaseDevice):
         Returns:
             float: Target position [%]
         """
-        return self.__target_position
+        return self._target_position
 
     @target_position.setter
     def target_position(self, position):
@@ -195,7 +201,7 @@ class BaseValve(BaseDevice):
             position (int): Position of the valve.
         """
 
-        # if position == self.__target_position:
+        # if position == self._target_position:
         #     return
 
         if self.target_position > 100:
@@ -210,7 +216,15 @@ class BaseValve(BaseDevice):
         if self.target_position < self.min_pos:
             position = self.min_pos
 
-        self.__target_position = position
+        if self._target_position != position:
+
+            if self._target_position > position:
+                self._closings += 1
+
+            if self._target_position < position:
+                self._openings += 1
+
+        self._target_position = position
         self._state.set_state(ValveState.Prepare)
 
     @property
@@ -226,6 +240,14 @@ class BaseValve(BaseDevice):
 
         # If the delta is less then in place error we acpt that the valve is in position.
         return delta < self._in_place_err
+
+    @property
+    def openings(self):
+        return self._openings
+
+    @property
+    def closings(self):
+        return self._closings
 
 #endregion
 

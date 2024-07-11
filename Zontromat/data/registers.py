@@ -327,19 +327,10 @@ class Registers(list):
             if register.data_type == "json":
 
                 if isinstance(register.value, list):
-                    pass
+                    result[register.name] = json.dumps(register.value)
 
                 if isinstance(register.value, dict):
-                    temp_list = []
-                    for item in register.value:
-
-                        temp_dict = {}
-                        for sub_item in item:
-                            temp_dict[sub_item.name] = sub_item.value
-
-                        temp_list.append(temp_dict)
-
-                    result[register.name] = json.dumps(temp_list)
+                    result[register.name] = json.dumps(register.value)
 
             # No need special handling.
             else:
@@ -364,7 +355,7 @@ class Registers(list):
         return result
 
     def get_group(self, name: str):
-        """Get registerr with specified group name.
+        """Get register with specified group name.
 
         Args:
             name (str): Name of the registers.
@@ -465,122 +456,19 @@ class Registers(list):
         return result
 
     @staticmethod
-    def __to_scope(scope):
-
-        p_scope = scope.lower()
-        out_scope = Scope.NONE
-
-        if p_scope == "global":
-            out_scope = Scope.Global
-
-        elif p_scope == "device":
-            out_scope = Scope.Device
-
-        elif p_scope == "system":
-            out_scope = Scope.System
-
-        elif p_scope == "both":
-            out_scope = Scope.Both
-
-        return out_scope
-
-    @staticmethod
-    def __to_value(data_type, value):
-
-        out_value = None
-
-        # bool
-        if data_type == "bool":
-            value_type = type(value)
-
-            if value_type == bool:
-                out_value = value
-
-            else:
-                if value == "false":
-                    out_value = False
-
-                if value == "true":
-                    out_value = True
-
-        # int
-        elif data_type == "int":
-            out_value = int(value)
-
-        # float
-        elif data_type == "float":
-            out_value = float(value)
-
-        # json
-        elif data_type == "json":
-            value_type = type(value)
-
-            if value_type == list:
-                out_value = value
-
-            elif value_type == dict:
-                out_value = value
-
-            elif value_type == str:
-
-                # Remove first "
-                if value.startswith("\""):
-                    value = value[1:]
-
-                # Remove last "
-                if value.endswith("\""):
-                    value = value[:-1]
-
-                # Convert single quotes to double.
-                value = value.replace("\'", "\"") 
-
-                # Converts to JSON.
-                value = json.loads(value)
-
-                out_value = value
-
-            else:
-                raise TypeError("Unsupported data type: {}".format(value_type))
-
-        else:
-            out_value = value
-
-        return out_value
-
-    @staticmethod
-    def __from_value(data_type, value):
-
-        our_value = Registers.__csv_escape(value)
-
-        if data_type == "bool":
-            if our_value:
-                our_value = "true"
-            else:
-                our_value = "false"
-
-        elif data_type == "str":
-            if "," in value:
-                our_value = "\"" + value + "\""
-
-        elif data_type == "json":
-            our_value = json.dumps(value)
-
-        return our_value
-
-    @staticmethod
     def to_csv(registers, file_path="registers.csv"):
 
         import csv
 
         with open(file_path, "w", newline="", encoding='utf-8') as csv_file:
 
-            fieldnames = ["name", "type", "range", "plugin", "scope", "default", "description"]
+            fieldnames = ["name", "type", "range", "plugin", "scope", "default", "description", "profiles"]
             writer = csv.DictWriter(csv_file, fieldnames=fieldnames, delimiter=",", quoting=2) #/"" , quoting=2, escapechar="\""
             writer.writeheader()
 
             for register in registers:
 
-                value = Registers.__from_value(register.data_type, register.value)
+                value = Register.from_value(register.data_type, Registers.__csv_escape(register.value))
                 reg_range = Registers.__csv_escape(register.range)
                 scope = str(register.scope).replace("Scope.", "").lower()
                 description = Registers.__csv_escape(register.description)
@@ -592,6 +480,7 @@ class Registers(list):
                                 "scope": scope,\
                                 "default": value,\
                                 "description": description,\
+                                "profiles": register.profiles
                                 })
 
             csv_file.close()
@@ -611,9 +500,10 @@ class Registers(list):
                 register = Register(row["name"])
                 register.range = row["range"]
                 register.plugin_name = row["plugin"]
-                register.scope = Registers.__to_scope(row["scope"])
-                register.value = Registers.__to_value(row["type"], row["default"])
+                register.scope = Scope.from_str(row["scope"])
+                register.value = Register.to_value(row["type"], row["default"])
                 register.description = row["description"]
+                register.profiles = row["profiles"]
                 
                 registers.append(register)
 
@@ -644,8 +534,9 @@ class Registers(list):
                 register.description = row["description"]
                 register.range = row["range"]
                 register.plugin_name = row["plugin"]
-                register.scope = Registers.__to_scope(row["scope"])
-                register.value = Registers.__to_value(row["data_type"], row["default"])
+                register.scope = Scope.from_str(row["scope"])
+                register.value = Register.to_value(row["data_type"], row["default"])
+                register.profiles = row["profiles"]
 
                 registers.append(register)
 

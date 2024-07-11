@@ -68,6 +68,7 @@ class ParameterType(Enum):
     FLOAT = "float"
     STRING = "string"
     REAL = "real"
+    ARR_UINT16_T_LE = "arr_uint16_t_le"
 
 #region Public static Methods
 

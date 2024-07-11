@@ -127,6 +127,8 @@ class Blind(BasePlugin):
 
         self.__sun_spot_update_timer = Timer(2)
 
+        print(f"Starting blinds controller: {self.__identifier}")
+
     def __del__(self):
         """Destructor"""
 
@@ -177,6 +179,7 @@ class Blind(BasePlugin):
 
         if self.__blind_mechanism is not None:
             self.__blind_mechanism.set_position(register.value)
+            print(f"Position of {self.__identifier} is at {register.value}")
 
     def __object_height_cb(self, register):
 
@@ -220,27 +223,27 @@ class Blind(BasePlugin):
 
     def __init_registers(self):
 
-        blind = self._registers.by_name("{}.blind_{}.mechanism".format(self.key, self.__identifier))
+        blind = self._registers.by_name(f"{self.key}.blind_{self.__identifier}.mechanism")
         if blind is not None:
             blind.update_handlers = self.__blind_cb
             blind.update()
 
-        position = self._registers.by_name("{}.blind_{}.position".format(self.key, self.__identifier))
+        position = self._registers.by_name(f"{self.key}.blind_{self.__identifier}.position")
         if position is not None:
             position.update_handlers = self.__position_cb
             position.update()
 
-        object_height = self._registers.by_name("{}.blind_{}.object_height".format(self.key, self.__identifier))
+        object_height = self._registers.by_name(f"{self.key}.blind_{self.__identifier}.object_height")
         if object_height is not None:
             object_height.update_handlers = self.__object_height_cb
             object_height.update()
 
-        object_orientation = self._registers.by_name("{}.blind_{}.object_orientation".format(self.key, self.__identifier))
+        object_orientation = self._registers.by_name(f"{self.key}.blind_{self.__identifier}.object_orientation")
         if object_orientation is not None:
             object_orientation.update_handlers = self.__object_orientation_cb
             object_orientation.update()
 
-        sunspot_limit = self._registers.by_name("{}.blind_{}.sunspot_limit".format(self.key, self.__identifier))
+        sunspot_limit = self._registers.by_name(f"{self.key}.blind_{self.__identifier}.sunspot_limit")
         if sunspot_limit is not None:
             sunspot_limit.update_handlers = self.__sunspot_limit_cb
             sunspot_limit.update()
