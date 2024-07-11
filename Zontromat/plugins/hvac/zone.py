@@ -231,7 +231,7 @@ class Zone(BasePlugin):
 
         self.__temperature_deviation = 0
         """Temperature deviation constant.
-        """        
+        """
 
         self.__adjust_temp = 0
         """Temperature set point from the OP.
@@ -239,30 +239,6 @@ class Zone(BasePlugin):
 
         self.__window_tamper_settings = {}
         """Window closed sensor input.
-        """
-
-        self.__fl_1_vlv_position = None
-        """Floor loop 1 valve position.
-        """
-
-        self.__fl_2_vlv_position = None
-        """Floor loop 2 valve position.
-        """
-
-        self.__fl_3_vlv_position = None
-        """Floor loop 3 valve position.
-        """
-
-        self.__cl_1_vlv_position = None
-        """Convector loop 1 valve position.
-        """
-
-        self.__cl_2_vlv_position = None
-        """Convector loop 2 valve position.
-        """
-
-        self.__cl_3_vlv_position = None
-        """Convector loop 3 valve position.
         """
 
 
@@ -815,6 +791,68 @@ class Zone(BasePlugin):
             if self.__fl_3_vlv_dev is not None:
                 self.__fl_3_vlv_dev.shutdown()
 
+    def __update_valve_data(self):
+
+        if self.__fl_1_vlv_dev is not None:
+
+            # If the following register is available then set its value.
+            self._registers.write(f"{self.key}.floor_loop_1.valve.activations",\
+                                json.dumps({\
+                                        "position": self.__fl_1_vlv_dev.current_position,\
+                                        "openings": self.__fl_1_vlv_dev.openings,\
+                                        "closings": self.__fl_1_vlv_dev.closings
+                                    }))
+
+        if self.__fl_2_vlv_dev is not None:
+
+            # If the following register is available then set its value.
+            self._registers.write(f"{self.key}.floor_loop_2.valve.activations",\
+                                json.dumps({\
+                                        "position": self.__fl_2_vlv_dev.current_position,\
+                                        "openings": self.__fl_2_vlv_dev.openings,\
+                                        "closings": self.__fl_2_vlv_dev.closings
+                                    }))
+
+        if self.__fl_3_vlv_dev is not None:
+
+            # If the following register is available then set its value.
+            self._registers.write(f"{self.key}.floor_loop_3.valve.activations",\
+                                json.dumps({\
+                                        "position": self.__fl_3_vlv_dev.current_position,\
+                                        "openings": self.__fl_3_vlv_dev.openings,\
+                                        "closings": self.__fl_3_vlv_dev.closings
+                                    }))
+
+        if self.__cl_1_vlv_dev is not None:
+
+            # If the following register is available then set its value.
+            self._registers.write(f"{self.key}.conv_loop_1.valve.activations",\
+                                json.dumps({\
+                                        "position": self.__cl_1_vlv_dev.current_position,\
+                                        "openings": self.__cl_1_vlv_dev.openings,\
+                                        "closings": self.__cl_1_vlv_dev.closings
+                                    }))
+
+        if self.__cl_2_vlv_dev is not None:
+
+            # If the following register is available then set its value.
+            self._registers.write(f"{self.key}.conv_loop_2.valve.activations",\
+                                json.dumps({\
+                                        "position": self.__cl_2_vlv_dev.current_position,\
+                                        "openings": self.__cl_2_vlv_dev.openings,\
+                                        "closings": self.__cl_2_vlv_dev.closings
+                                    }))
+
+        if self.__cl_3_vlv_dev is not None:
+
+            # If the following register is available then set its value.
+            self._registers.write(f"{self.key}.conv_loop_3.valve.activations",\
+                                json.dumps({\
+                                        "position": self.__cl_3_vlv_dev.current_position,\
+                                        "openings": self.__cl_3_vlv_dev.openings,\
+                                        "closings": self.__cl_3_vlv_dev.closings
+                                    }))
+
 #endregion
 
 #region Private Methods (Registers Parameters)
@@ -1168,83 +1206,6 @@ class Zone(BasePlugin):
         #     down_limit_value = down_limit.value
 
         return True
-
-    def __update_valve_data(self):
-
-        if self.__fl_1_vlv_dev is not None:
-
-            # If the following register is available then set its value.
-            self._registers.write(f"{self.key}.floor_loop_1.valve.activations",\
-                                json.dumps({\
-                                        "position": self.__fl_1_vlv_dev.current_position,\
-                                        "openings": self.__fl_1_vlv_dev.openings,\
-                                        "closings": self.__fl_1_vlv_dev.closings
-                                    }))
-
-        if self.__fl_2_vlv_dev is not None:
-
-            if self.__fl_2_vlv_position != self.__fl_2_vlv_dev.current_position:
-                self.__fl_2_vlv_position = self.__fl_2_vlv_dev.current_position
-
-                # If the following register is available then set its value.
-                self._registers.write(f"{self.key}.floor_loop_2.valve.activations",\
-                                    json.dumps({\
-                                            "position": self.__fl_2_vlv_dev.current_position,\
-                                            "openings": self.__fl_2_vlv_dev.openings,\
-                                            "closings": self.__fl_2_vlv_dev.closings
-                                        }))
-
-        if self.__fl_3_vlv_dev is not None:
-
-            if self.__fl_3_vlv_position != self.__fl_3_vlv_dev.current_position:
-                self.__fl_3_vlv_position = self.__fl_3_vlv_dev.current_position
-
-                # If the following register is available then set its value.
-                self._registers.write(f"{self.key}.floor_loop_3.valve.activations",\
-                                    json.dumps({\
-                                            "position": self.__fl_3_vlv_dev.current_position,\
-                                            "openings": self.__fl_3_vlv_dev.openings,\
-                                            "closings": self.__fl_3_vlv_dev.closings
-                                        }))       
-
-        if self.__cl_1_vlv_dev is not None:
-
-            if self.__cl_1_vlv_position != self.__cl_1_vlv_dev.current_position:
-                self.__cl_1_vlv_position = self.__cl_1_vlv_dev.current_position
-
-                # If the following register is available then set its value.
-                self._registers.write(f"{self.key}.conv_loop_1.valve.activations",\
-                                    json.dumps({\
-                                            "position": self.__cl_1_vlv_dev.current_position,\
-                                            "openings": self.__cl_1_vlv_dev.openings,\
-                                            "closings": self.__cl_1_vlv_dev.closings
-                                        }))
-
-        if self.__cl_2_vlv_dev is not None:
-
-            if self.__cl_2_vlv_position != self.__cl_2_vlv_dev.current_position:
-                self.__cl_2_vlv_position = self.__cl_2_vlv_dev.current_position
-
-                # If the following register is available then set its value.
-                self._registers.write(f"{self.key}.conv_loop_2.valve.activations",\
-                                    json.dumps({\
-                                            "position": self.__cl_2_vlv_dev.current_position,\
-                                            "openings": self.__cl_2_vlv_dev.openings,\
-                                            "closings": self.__cl_2_vlv_dev.closings
-                                        }))
-
-        if self.__cl_3_vlv_dev is not None:
-
-            if self.__cl_3_vlv_position != self.__cl_3_vlv_dev.current_position:
-                self.__cl_3_vlv_position = self.__cl_3_vlv_dev.current_position
-
-                # If the following register is available then set its value.
-                self._registers.write(f"{self.key}.conv_loop_3.valve.activations",\
-                                    json.dumps({\
-                                            "position": self.__cl_3_vlv_dev.current_position,\
-                                            "openings": self.__cl_3_vlv_dev.openings,\
-                                            "closings": self.__cl_3_vlv_dev.closings
-                                        }))
 
 #endregion
 
