@@ -77,12 +77,12 @@ class ZtmUI():
 
     @property
     def host(self):
-        """Returns Host URL of the servie.
+        """Returns Host URL of the service.
 
         Returns
         -------
         str
-            Host URL of the servie.
+            Host URL of the service.
         """
         return self.__host
 
@@ -93,7 +93,7 @@ class ZtmUI():
         Parameters
         ----------
         host : str
-            Host URL of the servie.
+            Host URL of the service.
         """
 
         host_no_slash = host
@@ -365,7 +365,7 @@ class ZtmUI():
                         if "data" in json_response:
                             data = json_response["data"]
 
-                            # Cionbvert to registers.
+                            # Convert to registers.
                             response_registers = data
 
                             # Update last successful time.
@@ -586,7 +586,7 @@ class ZtmUI():
                     json_response = json.loads(response.text)
                     if "data" in json_response:
                         data = json_response["data"]
-                        # Cionbvert to registers.
+                        # Convert to registers.
                         response_registers = data
                         # Update last successful time.
                         self.__last_sync = time.time()
