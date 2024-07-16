@@ -71,59 +71,6 @@ class ZtmUI():
 
 #region Attributes
 
-    __logger = None
-    """Logger"""
-
-    __email = None
-    """E-Mail
-    """
-
-    __password = None
-    """Password
-    """
-
-    __host = "127.0.0.1"
-    """Host address.
-    """
-
-    __api_login = "/api/login"
-    """Login to ZtmUI.
-    """
-
-    __api_data_get = "/api/data/get"
-    """Get data from ZtmUI.
-    """
-
-    __api_data_post = "/api/data/post"
-    """Set data to ZtmUI.
-    """
-
-    __api_settings_get = "/api/settings/get"
-    """Get settings ZtmUI.
-    """
-
-    __api_settings_post = "/api/settings/post"
-    """Get settings ZtmUI.
-    """
-
-    __timeout = 5
-    """Communication timeout.
-    """
-
-    __last_sync = 0
-    """Last sync time.
-    """
-
-    __login_state = LoginState.Wait
-    """Login state.
-    """
-
-    __token = ""
-    """Access token.
-    """
-
-    __heart_beat_timer = None
-
 #endregion
 
 #region Properties
@@ -192,6 +139,10 @@ class ZtmUI():
 
         return self.__last_sync
 
+    @property
+    def is_logged_in(self):
+        return self.__login_state == LoginState.Accept
+
 #endregion
 
 #region Constructor
@@ -199,73 +150,112 @@ class ZtmUI():
     def __init__(self, **kwargs):
         """Constructor
         """
-        
-        # Create logger.
+
         self.__logger = get_logger(__name__)
+        """Logger
+        """
 
-        # User
-        email = None
+        self.__email = None
+        """E-Mail
+        """
+
+        self.__password = None
+        """Password
+        """
+
+        self.__host = "127.0.0.1"
+        """Host address.
+        """
+
+        self.__timeout = 5
+        """Communication timeout.
+        """
+
+        self.__last_sync = 0
+        """Last sync time.
+        """
+
+        self.__login_state = LoginState.Wait
+        """Login state.
+        """
+
+        self.__token = ""
+        """Access token.
+        """
+        
+        self.__temporary_registers = None
+        """Temporary register data.
+        """
+
+        self.__api_login = "/api/login"
+        """Login to ZtmUI.
+        """
+
+        self.__api_data_get = "/api/data/get"
+        """Get data from ZtmUI.
+        """
+
+        self.__api_data_post = "/api/data/post"
+        """Set data to ZtmUI.
+        """
+
+        self.__api_settings_get = "/api/settings/get"
+        """Get settings ZtmUI.
+        """
+
+        self.__api_settings_post = "/api/settings/post"
+        """Get settings ZtmUI.
+        """
+
+        self.__api_sync = "/api/sync"
+        """Sync data between ZtmUI and Zontromat.
+        """
+
         if "email" in kwargs:
-            email = kwargs["email"]
+            self.__email = kwargs["email"]
 
-        if email is None:
+        if self.__email is None:
             raise ValueError("E-mail can not be None.")
 
-        if email == "":
+        if self.__email == "":
             raise ValueError("E-mail can not be empty string.")
 
-        self.__email = email
-
-        # Password
-        password = None
         if "password" in kwargs:
-            password = kwargs["password"]
+            self.__password = kwargs["password"]
 
-        if password is None:
+        if self.__password is None:
             raise ValueError("Password can not be None.")
 
-        if password == "":
+        if self.__password == "":
             raise ValueError("Password can not be empty string.")
 
-        self.__password = password
-
-        # Host
-        host = None
         if "host" in kwargs:
-            host = kwargs["host"]
+            self.__host = kwargs["host"]
 
-        if host is None:
+        if self.__host is None:
             raise ValueError("Host name can not be None.")
 
-        if host == "":
+        if self.__host == "":
             raise ValueError("Host name can not be empty string.")
 
-        if not self.__url_validate(host):
-            raise ValueError(f"Invalid host name: {host}")
+        if not self.__url_validate(self.__host):
+            raise ValueError(f"Invalid host name: {self.__host}")
 
-        if host.endswith("/"):
-            host = host[:-1]
+        if self.__host.endswith("/"):
+            self.__host = self.__host[:-1]
 
-        self.__host = host
-
-        # Host
-        timeout = None
         if "timeout" in kwargs:
-            timeout = kwargs["timeout"]
+            self.timeout = kwargs["timeout"]
 
-        if timeout is None:
+        if self.timeout is None:
             raise ValueError("Timeout can not be None.")
 
-        if timeout == "":
+        if self.timeout == "":
             raise ValueError("Timeout can not be empty string.")
 
-        timeout = int(timeout)
-        if timeout < 0:
+        self.timeout = int(self.timeout)
+        if self.timeout < 0:
             raise ValueError("Timeout can not be less then 0.")
-
-        self.timeout = timeout
-
-        self.__heart_beat_timer = Timer(60)
 
 #endregion
 
@@ -344,10 +334,6 @@ class ZtmUI():
             self.__logger.error(e)
 
             self.__login_state = LoginState.Wait
-
-    def is_logged_in(self):
-
-        return self.__login_state == LoginState.Accept
 
     def get(self):
         """Get UI registers.
@@ -555,22 +541,67 @@ class ZtmUI():
 
         return response_registers
 
-    def heart_beat(self):
+    def sync(self, registers=[]):
+        """Sync registers between ZtmUI and Zontromat.
 
-        # settings = self.get_settings()
+        Args:
+            registers (list, optional): Transmitted registers. Defaults to [].
 
-        self.__heart_beat_timer.update()
+        Returns:
+            []: Received registers.
+        """
 
-        if self.__heart_beat_timer.expired:
-            self.__heart_beat_timer.clear()
+        response_registers = None
 
-            ztm_last_sync = time.time()
+        # URI
+        uri = self.host + self.__api_sync
 
-            data = [
-                {'parameter_name': 'ztm_last_sync', 'parameter_value': ztm_last_sync, 'bgerp_sync': 0}, # Last update time.
-                {'parameter_name': 'python_version', 'parameter_value': str(sys.version), 'bgerp_sync': 0}  # Python version.
-                ]
-            
-            self.set_settings(data)
+        target_registers = []
+        for register in registers:
+            name = register.name
+            value = register.value
+            minimum = 0
+            maximum = 0
+            status = "Normal" # enum('Rising', 'Falling', 'Normal')
+            reg = {"name": name, "value": value, "min": minimum, "max": maximum, "status": status}
+            target_registers.append(reg)
+
+        # Convert to JSON.
+        str_registers = json.dumps(target_registers).replace("\'", "\"")
+
+        # Payload
+        payload = str_registers
+
+        # Headers
+        headers = {"Accept": "application/json", "Content-type": "application/json", "Authorization": "Bearer {}".format(self.__token)}
+        # self.__logger.info("1 SYNC; From ZtmUI: {}".format(str_registers))
+
+        # The request.
+        response = requests.post(uri, headers=headers, data=payload, timeout=self.timeout)
+        # self.__logger.info("2 SYNC; From ZtmUI: {}".format(response_registers))
+
+        if response is not None:
+            if response.status_code == 200:
+                if response.text != "":
+                    json_response = json.loads(response.text)
+                    if "data" in json_response:
+                        data = json_response["data"]
+                        # Cionbvert to registers.
+                        response_registers = data
+                        # Update last successful time.
+                        self.__last_sync = time.time()
+
+            else:
+                self.__logger.error("HTTP Error code: {}".format(response.status_code))
+                response_registers = None
+
+        else:
+            response_registers = None
+
+        if self.__temporary_registers != response_registers:
+            self.__temporary_registers = response_registers
+            return response_registers
+        
+        return None
 
 #endregion

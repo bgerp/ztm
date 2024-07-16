@@ -144,17 +144,7 @@ class Zone():
         """Zontromat UI
         """
 
-        self.__ztm_ui_temp_data = None
-        """UI data
-        """
-
         self.__ztm_ui_ut = None
-        """ZtmUI update timer.
-        """
-        self.__ztm_ui_weather_cast_ut = None
-        """ZtmUI update timer.
-        """
-        self.__ztm_ui_heartbeat_ut = None
         """ZtmUI update timer.
         """
 
@@ -503,105 +493,38 @@ class Zone():
             self.__ztm_ui = ZtmUI(host = self.__app_settings.ui["host"],
                 email = self.__app_settings.ui["email"],
                 password = self.__app_settings.ui["password"],
-                timeout = self.__app_settings.ui["timeout"])
+                timeout = self.__app_settings.ui["timeout"],
+                update_rate=1)
 
             self.__ztm_ui_ut = Timer(1)
-            self.__ztm_ui_activations_ut = Timer(1)
-            self.__ztm_ui_weather_cast_ut = Timer(600)
-            self.__ztm_ui_heartbeat_ut = Timer(3600)
 
             # Log in.
-            if not self.__ztm_ui.is_logged_in():
+            if not self.__ztm_ui.is_logged_in:
                 self.__ztm_ui.login()
 
-
-    def __update_tamers_activations(self):
-        # print("Time to update")
-
+    def __sync_ztmui(self):
         target_regs_names = ["envm.door_tamper.activations",
                             "envm.window_tamper.activations",
-                            "envm.pir.activations"]
-        target_regs = []
-
-        target_regs_ztmui = []
-
-        for target_name in target_regs_names:
-            register = self.__registers.by_name(target_name)
-            if register is not None:
-                target_regs.append(register)
-
-        for target_reg in target_regs:
-            name = target_reg.name
-            value = target_reg.value
-            minimum = 0
-            maximum = 0
-            status = "Normal" # enum('Rising', 'Falling', 'Normal')
-            reg = {"name": name, "value": value, "min": minimum, "max": maximum, "status": status}
-            target_regs_ztmui.append(reg)
-
-        # for item in target_regs_ztmui:
-        #     print(item)
-
-        if target_regs_ztmui != []:
-            # print("OK pass the updates")
-            self.__ztm_ui.set(target_regs_ztmui)
-
-    def __update_weather_cast(self):
-        # print("Time to update")
-
-        target_regs_names = ["envm.forecast.icon_0", "envm.forecast.rh_0", "envm.forecast.temp_0", "envm.forecast.wind_0",
-                        "envm.forecast.icon_3", "envm.forecast.rh_3", "envm.forecast.temp_3", "envm.forecast.wind_3",
-                        "envm.forecast.icon_6", "envm.forecast.rh_6", "envm.forecast.temp_6", "envm.forecast.wind_6"]
-        target_regs = []
-
-        target_regs_ztmui = []
-
-        for target_name in target_regs_names:
-            register = self.__registers.by_name(target_name)
-            if register is not None:
-                target_regs.append(register)
-
-        for target_reg in target_regs:
-            name = target_reg.name
-            value = target_reg.value
-            minimum = 0
-            maximum = 0
-            status = "Normal" # enum('Rising', 'Falling', 'Normal')
-            reg = {"name": name, "value": value, "min": minimum, "max": maximum, "status": status}
-            target_regs_ztmui.append(reg)
-
-        # for item in target_regs_ztmui:
-        #     print(item)
-
-        if target_regs_ztmui != []:
-            # print("OK pass the updates")
-            self.__ztm_ui.set(target_regs_ztmui)
-
-    def __transport_registers_ztmui(self):
-        # Check UI data and send only if changes ocurred.
-        registers_ui = self.__ztm_ui.get()
-        if registers_ui != []:
-            if self.__ztm_ui_temp_data != registers_ui:
-                self.__ztm_ui_temp_data = registers_ui
-                print(f"From UI: {registers_ui}")
-                # Update changes.
-                for register in registers_ui:
-                    try:
-                        target_register = self.__registers.by_name(register["name"])
-                        if target_register is not None:
-                            if target_register.data_type == "float":
-                                target_register.value = float(register["value"])
-                            elif target_register.data_type == "int":
-                                target_register.value = float(register["value"])
-                    except Exception as e:
-                        self.__logger.error(e)
-
-    def __update_min_max(self, register):
-
-        target_register = self.__registers.by_name(register["name"])
-        if target_register is not None:
-            print(target_register.name)
-            print()
+                            "envm.pir.activations",
+                            "envm.forecast.icon_0", "envm.forecast.rh_0", "envm.forecast.temp_0", "envm.forecast.wind_0",
+                            "envm.forecast.icon_3", "envm.forecast.rh_3", "envm.forecast.temp_3", "envm.forecast.wind_3",
+                            "envm.forecast.icon_6", "envm.forecast.rh_6", "envm.forecast.temp_6", "envm.forecast.wind_6"]
+        target_registers = self.__registers.by_names(target_regs_names)
+        if target_registers != []:
+            # Check UI data and send only if changes ocurred.
+            response_registers = self.__ztm_ui.sync(target_registers)
+            if response_registers is not None:
+                    # Update changes.
+                    for register in response_registers:
+                        try:
+                            target_register = self.__registers.by_name(register["name"])
+                            if target_register is not None:
+                                if target_register.data_type == "float":
+                                    target_register.value = float(register["value"])
+                                elif target_register.data_type == "int":
+                                    target_register.value = float(register["value"])
+                        except Exception as e:
+                            self.__logger.error(e)
 
     def __update_ztmui(self):
 
@@ -615,43 +538,8 @@ class Zone():
             if self.__ztm_ui_ut.expired:
                 self.__ztm_ui_ut.clear()
                 # Check is it logged in.
-                if self.__ztm_ui.is_logged_in():
-                    self.__transport_registers_ztmui()
-                # If not, login.
-                else:
-                    self.__ztm_ui.login()
-
-            self.__ztm_ui_activations_ut.update()
-            if self.__ztm_ui_activations_ut.expired:
-                self.__ztm_ui_activations_ut.clear()
-                # Check is it logged in.
-                if self.__ztm_ui.is_logged_in():
-                    self.__update_tamers_activations()
-                # If not, login.
-                else:
-                    self.__ztm_ui.login()
-
-            # Update periodically weather cast data.
-            self.__ztm_ui_weather_cast_ut.update()
-            if self.__ztm_ui_weather_cast_ut.expired:
-                self.__ztm_ui_weather_cast_ut.clear()
-                # Check is it logged in.
-                if self.__ztm_ui.is_logged_in():
-                    if self.__erp.is_logged:
-                        # Update Weather.
-                        self.__update_weather_cast()
-                # If not, login.
-                else:
-                    self.__ztm_ui.login()
-
-            # Update periodically bgERP.
-            self.__ztm_ui_heartbeat_ut.update()
-            if self.__ztm_ui_heartbeat_ut.expired:
-                self.__ztm_ui_heartbeat_ut.clear()
-                # Check is it logged in.
-                if self.__ztm_ui.is_logged_in():
-                    # Send heartbeat.
-                    self.__ztm_ui.heart_beat()
+                if self.__ztm_ui.is_logged_in:
+                    self.__sync_ztmui()
                 # If not, login.
                 else:
                     self.__ztm_ui.login()
