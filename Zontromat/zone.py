@@ -435,7 +435,7 @@ class Zone():
                 int(self.__app_settings.erp_service["update_rate"])
 
             ztm_regs = self.__registers.by_scope(Scope.Device)
-            ztm_regs = ztm_regs.new_then(60)
+            ztm_regs = ztm_regs.new_then(120)
             ztm_regs_dict = ztm_regs.to_dict()
 
             update_state = self.__erp.sync(ztm_regs_dict)
