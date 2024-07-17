@@ -5653,7 +5653,7 @@ def __add_registers(args):
     register.plugin_name = "Ventilation"
     register.description = "Lower air damper settings"
     register.range = REGS_RANGES["NONE"]
-    register.value = verbal_const.OFF
+    register.value = {}
     register.profiles = \
         Register.create_profile(
             Profiles.ZONE.value)
@@ -5665,7 +5665,7 @@ def __add_registers(args):
     register.plugin_name = "Ventilation"
     register.description = "Upper air damper settings"
     register.range = REGS_RANGES["NONE"]
-    register.value = verbal_const.OFF
+    register.value = {}
     register.profiles = \
         Register.create_profile(
             Profiles.ZONE.value)
