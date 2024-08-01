@@ -28,7 +28,7 @@
         "limit": 0.0,
         "name": "ac.zones_count",
         "plugin": "Access Control",
-        "profiles": "",
+        "profiles": "mz",
         "range": "1/",
         "scope": "System"
     },
@@ -2911,7 +2911,7 @@
         "limit": 0.0,
         "name": "ecd.conv_west.valves.settings",
         "plugin": "Energy Center Distribution",
-        "profiles": "",
+        "profiles": "dt",
         "range": "",
         "scope": "System"
     },
@@ -3756,7 +3756,7 @@
         "limit": 0.0,
         "name": "ecd.hot_water.tc.settings",
         "plugin": "Energy Center Distribution",
-        "profiles": "",
+        "profiles": "dt",
         "range": "",
         "scope": "System"
     },
@@ -3767,7 +3767,7 @@
         "limit": 0.0,
         "name": "ecd.hot_water.tc.values",
         "plugin": "Energy Center Distribution",
-        "profiles": "",
+        "profiles": "dt",
         "range": "",
         "scope": "Device"
     },
@@ -3799,7 +3799,7 @@
         "limit": 0.0,
         "name": "ecd.cold_water.tc.settings",
         "plugin": "Energy Center Distribution",
-        "profiles": "",
+        "profiles": "dt",
         "range": "",
         "scope": "System"
     },
@@ -3810,7 +3810,7 @@
         "limit": 0.0,
         "name": "ecd.cold_water.tc.values",
         "plugin": "Energy Center Distribution",
-        "profiles": "",
+        "profiles": "dt",
         "range": "",
         "scope": "Device"
     },
@@ -4713,8 +4713,8 @@
         "scope": "System"
     },
     {
-        "data_type": "str",
-        "default": "off",
+        "data_type": "json",
+        "default": {},
         "description": "Lower air damper settings",
         "limit": 0.0,
         "name": "vent.upper_1.air_damper.settings",
@@ -4724,8 +4724,8 @@
         "scope": "System"
     },
     {
-        "data_type": "str",
-        "default": "off",
+        "data_type": "json",
+        "default": {},
         "description": "Upper air damper settings",
         "limit": 0.0,
         "name": "vent.lower_1.air_damper.settings",
