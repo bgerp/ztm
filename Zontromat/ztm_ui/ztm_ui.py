@@ -598,10 +598,10 @@ class ZtmUI():
         else:
             response_registers = None
 
-        if self.__temporary_registers != response_registers:
-            self.__temporary_registers = response_registers
-            return response_registers
-        
-        return None
+        # if self.__temporary_registers != response_registers:
+        #     self.__temporary_registers = response_registers
+        #     return response_registers
+        return response_registers
+        # return None
 
 #endregion
