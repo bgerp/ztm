@@ -287,8 +287,8 @@ class Register:
         """
 
         # Pass if the value is the same from the last time.
-        if value == self.__value:
-            return
+        # if value == self.__value:
+        #     return
 
         # In case of float.
         if self.data_type == "float":
