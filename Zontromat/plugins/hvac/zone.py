@@ -450,7 +450,7 @@ class Zone(BasePlugin):
 
         if register.value != {}:
             if self.__air_temp_cent_dev is not None:
-                self.__temp_proc.remove_ref(self.__air_temp_cent_dev)
+                self.__temp_proc.remove_ref()
                 self.__air_temp_cent_dev.shutdown()
                 del self.__air_temp_cent_dev
 
@@ -467,7 +467,7 @@ class Zone(BasePlugin):
 
         elif register.value == {}:
             if self.__air_temp_cent_dev is not None:
-                self.__temp_proc.remove_ref(self.__air_temp_cent_dev)
+                self.__temp_proc.remove_ref()
                 self.__air_temp_cent_dev.shutdown()
 
     def __air_temp_lower_settings_cb(self, register):
