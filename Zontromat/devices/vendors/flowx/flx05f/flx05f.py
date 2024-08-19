@@ -37,6 +37,10 @@ from data import verbal_const
 
 from services.global_error_handler.global_error_handler import GlobalErrorHandler
 
+from io_mode import IOMode
+from calibration_state import CalibrationState
+from control_mode import ControlMode
+
 # (Request from mail: Eml6429)
 
 #region File Attributes
@@ -73,72 +77,10 @@ __class_name__ = "EnergyCenter"
 
 #endregion
 
-class CalibrationState(Enum):
-    """Calibration state description.
-    """
-
-    NONE = 0
-    OpenValve = 1
-    EnsureOpen = 2
-    CloseValve = 3
-    EnsureClose = 4
-    YouDoTheMath = 5
-    Error = 6
-
-    # - Use dT and end position contacts to ensure that the valve is closed and opened.
-
 class FLX05F(BaseValve):
     """Hydro Valve. Model: FLX-05F"""
 
 #region Attributes
-
-    __logger = None
-    """Logger
-    """
-
-    __move_timer = None
-    """Move timer.
-    """
-
-    __calibration_state = None
-    """Calibration state machine.
-    """
-
-    __output_cw = verbal_const.OFF
-    """Valve output CW GPIO.
-    """
-
-    __output_ccw = verbal_const.OFF
-    """Valve output CCW GPIO.
-    """
-
-    __limit_cw = verbal_const.OFF
-    """Limit switch for CW direction.
-    """
-
-    __limit_ccw = verbal_const.OFF
-    """Limit switch for CCW direction.
-    """
-
-    __t0 = 0
-    """T0 moment.
-    """
-
-    __t1 = 0
-    """T1 moment.
-    """
-
-    __dt = 0
-    """Delta time consumed for one full open and close cycle.
-    """
-
-    __limit_timer = None
-    """Limit timer.
-    """
-
-    __close_on_shutdown = True
-    """Close on shutdown flag.
-    """
 
 #endregion
 
@@ -154,43 +96,92 @@ class FLX05F(BaseValve):
 
         self._model = "FLX-05F"
 
-        # Create logger.
         self.__logger = get_logger(__name__)
+        """Logger
+        """
 
         self.__move_timer = Timer()
+        """Move timer.
+        """
 
         # 13 seconds absolute time to react the valve.
         # Number is measured by empiric way.
         self.__limit_timer = Timer(13)
+        """Limit timer.
+        """
 
         self.__calibration_state = StateMachine(CalibrationState.NONE)
+        """Calibration state machine.
+        """
 
-        self.__output_cw = "off"
+        self.__output_cw = verbal_const.OFF
+        """Valve output CW GPIO.
+        """
         if "output_cw" in config:
             self.__output_cw = config["output_cw"]
 
-        self.__output_ccw = "off"
+        self.__output_ccw = verbal_const.OFF
+        """Valve output CCW GPIO.
+        """
         if "output_ccw" in config:
             self.__output_ccw = config["output_ccw"]
 
-        self.__limit_cw = "off"
+        self.__output_enable = verbal_const.OFF
+        """Valve output enable GPIO.
+        """
+        if "output_enable" in config:
+            self.__output_enable = config["output_enable"]
+
+        self.__limit_cw = verbal_const.OFF
+        """Limit switch for CW direction.
+        """
         if "limit_cw" in config:
             self.__limit_cw = config["limit_cw"]
 
-        self.__limit_ccw = "off"
+        self.__limit_ccw = verbal_const.OFF
+        """Limit switch for CCW direction.
+        """
         if "limit_ccw" in config:
             self.__limit_ccw = config["limit_ccw"]
 
         self.__close_on_shutdown = False
+        """Close on shutdown flag.
+        """
         if "close_on_shutdown" in config:
             self.__close_on_shutdown = config["close_on_shutdown"]
 
         self.__wait_on_shutdown = False
+        """Wait on shutdown flag.
+        """
         if "wait_on_shutdown" in config:
             self.__wait_on_shutdown = config["wait_on_shutdown"]
 
+        self.__io_mode = IOMode(0)
+        """IO mode of the valve.
+        """
         if "io_mode" in config:
-            self.__io_mode = config["io_mode"]
+            if IOMode.is_valid(config["io_mode"]):
+                self.__io_mode = IOMode(config["io_mode"])
+
+        self.__control_mode = ControlMode(0)
+        """Control mode of the valve.
+        """
+        if "control_mode" in config:
+            if ControlMode.is_valid(config["control_mode"]):
+                self.__control_mode = ControlMode(config["control_mode"])
+
+        self.__t0 = 0
+        """T0 moment.
+        """
+
+        self.__t1 = 0
+        """T1 moment.
+        """
+
+        self.__dt = 0
+        """Delta time consumed for one full open and close cycle.
+        """
+        # - Use dT and end position contacts to ensure that the valve is closed and opened.
 
     def __del__(self):
         """Destructor
@@ -239,10 +230,10 @@ class FLX05F(BaseValve):
         """Stop the valve motor.
         """
 
-        if self.__io_mode == 1:
+        if self.__io_mode == IOMode.SingleWire:
             if self._controller.is_valid_gpio(self.__output_cw):
                 self._controller.digital_write(self.__output_cw, 0)
-        elif self.__io_mode == 2:
+        elif self.__io_mode == IOMode.TwoWire:
             if self._controller.is_valid_gpio(self.__output_cw):
                 self._controller.digital_write(self.__output_cw, 0)
             if self._controller.is_valid_gpio(self.__output_ccw):
@@ -252,10 +243,10 @@ class FLX05F(BaseValve):
         """Turn to CW direction.
         """
 
-        if self.__io_mode == 1:
+        if self.__io_mode == IOMode.SingleWire:
             if self._controller.is_valid_gpio(self.__output_cw):
                 self._controller.digital_write(self.__output_cw, 0)
-        elif self.__io_mode == 2:
+        elif self.__io_mode == IOMode.TwoWire:
             if self._controller.is_valid_gpio(self.__output_cw):
                 self._controller.digital_write(self.__output_cw, 1)
 
@@ -263,10 +254,10 @@ class FLX05F(BaseValve):
         """Turn to CCW direction.
         """
 
-        if self.__io_mode == 1:
+        if self.__io_mode == IOMode.SingleWire:
             if self._controller.is_valid_gpio(self.__output_cw):
                 self._controller.digital_write(self.__output_cw, 1)
-        elif self.__io_mode == 2:
+        elif self.__io_mode == IOMode.TwoWire:
             if self._controller.is_valid_gpio(self.__output_ccw):
                 self._controller.digital_write(self.__output_ccw, 1)
 
@@ -292,6 +283,11 @@ class FLX05F(BaseValve):
 
         return state
 
+    def __enable_valve(self, state=0):
+        if self.__io_mode == IOMode.SingleWire:
+            if self._controller.is_valid_gpio(self.__output_enable):
+                self._controller.digital_write(self.__output_enable, state)
+
 #endregion
 
 #region Public Methods
@@ -300,9 +296,18 @@ class FLX05F(BaseValve):
         """Initialize the device.
         """
 
-        self.target_position = 0
-        while self.current_position != self.target_position:
-            self.update()
+        def init_on_off():
+            self.target_position = 0
+            while self.current_position != self.target_position:
+                self.update()
+
+        def init_on_off_timed():
+            pass
+
+        if self.__control_mode == ControlMode.ON_OFF:
+            init_on_off()
+        elif self.__control_mode == ControlMode.ON_OFF_TIMED:
+            init_on_off_timed()
 
         self.__logger.debug("Starting up the: {}".format(self.name))
 
@@ -310,16 +315,22 @@ class FLX05F(BaseValve):
         """Shutdown the valve.
         """
 
-        if self.__close_on_shutdown:
+        def shutdown_on_off():
+            if self.__close_on_shutdown:
+                self.__close_valve()
 
-            self.__close_valve()
+            if self.__wait_on_shutdown:
+                while self.__get_close_limit() == False:
+                    self.update()
+                self.__stop()
 
-        if self.__wait_on_shutdown:
+        def shutdown_on_off_timed():
+            pass
 
-            while self.__get_close_limit() == False:
-                self.update()
-
-            self.__stop()
+        if self.__control_mode == ControlMode.ON_OFF:
+            shutdown_on_off()
+        elif self.__control_mode == ControlMode.ON_OFF_TIMED:
+            shutdown_on_off_timed()
 
         self.__logger.debug("Shutdown the: {}".format(self.name))
 
@@ -327,121 +338,130 @@ class FLX05F(BaseValve):
         """Update the valve state.
         """
 
-        if self._state.is_state(ValveState.Prepare):
+        def update_on_off():
+            if self._state.is_state(ValveState.Prepare):
 
-            delta_pos = self.target_position - self.current_position
+                delta_pos = self.target_position - self.current_position
 
-            if delta_pos == 0:
-                self.__stop()
-                self._state.set_state(ValveState.Wait)
-                return
+                if delta_pos == 0:
+                    self.__stop()
+                    self._state.set_state(ValveState.Wait)
+                    return
 
-            time_to_move = self.__to_time(abs(delta_pos))
-            # self.__logger.debug("Time: {}".format(time_to_move))
+                time_to_move = self.__to_time(abs(delta_pos))
+                # self.__logger.debug("Time: {}".format(time_to_move))
 
-            self.__move_timer.expiration_time = time_to_move
-            self.__move_timer.update_last_time()
+                self.__move_timer.expiration_time = time_to_move
+                self.__move_timer.update_last_time()
 
-            if delta_pos > 0:
-                self.__open_valve()
+                if delta_pos > 0:
+                    self.__open_valve()
 
-            elif delta_pos < 0:
-                self.__close_valve()
+                elif delta_pos < 0:
+                    self.__close_valve()
 
-            self._state.set_state(ValveState.Execute)
+                self._state.set_state(ValveState.Execute)
 
-        elif self._state.is_state(ValveState.Execute):
-            
-            self._state.set_state(ValveState.Wait)
+            elif self._state.is_state(ValveState.Execute):
 
-            # self.__move_timer.update()
-            # if self.__move_timer.expired:
-            #     self.__move_timer.clear()
-            #     self.__stop()
-            #     self._current_position = self.target_position
-            #     self._state.set_state(ValveState.Wait)
-
-            # cw_limit_state = False # self.__get_close_limit()
-            # ccw_limit_state = False # self.__get_open_limit()
-            # if cw_limit_state or ccw_limit_state:
-            #     self.__stop()
-            #     GlobalErrorHandler.log_hardware_limit(self.__logger, "{} has raised end position.".format(self.name))
-            #     self._current_position = self.target_position
-            #     self._state.set_state(ValveState.Wait)
-
-        elif self._state.is_state(ValveState.Calibrate):
-
-            # Wait to start.
-            if self.__calibration_state.is_state(CalibrationState.NONE):
-                self.__calibration_state.set_state(CalibrationState.OpenValve)
-                self.__stop()
-
-            # Open the valve.
-            if self.__calibration_state.is_state(CalibrationState.OpenValve):
-                self.__stop()
-                self.__open_valve()
-                self.__calibration_state.set_state(CalibrationState.EnsureOpen)
-                self.__limit_timer.update_last_time()
-
-            # Wait until it si open at 100%.
-            if self.__calibration_state.is_state(CalibrationState.EnsureOpen):
-
-                # Get CCW limit switch state.
-                ccw_limit_state = self.__get_open_limit()
-                if ccw_limit_state:
-                    self.__t0 = time.time()
-                    self.__calibration_state.set_state(CalibrationState.CloseValve)
-
-                # Prevent with timer,
-                # if the valve is not reacting properly.
-                self.__limit_timer.update()
-                if self.__limit_timer.expired:
-                    self.__limit_timer.clear()
-                    self.__calibration_state.set_state(CalibrationState.Error)
-
-            # Close the valve.
-            if self.__calibration_state.is_state(CalibrationState.CloseValve):
-                self.__stop()
-                self.__close_valve()
-                self.__calibration_state.set_state(CalibrationState.EnsureClose)
-                self.__limit_timer.update_last_time()
-
-            # Wait until it si open at 100%.
-            if self.__calibration_state.is_state(CalibrationState.EnsureClose):
-
-                # Get CW limit switch state.
-                cw_limit_state = self.__get_close_limit()
-                if cw_limit_state:
-                    self.__t1 = time.time()
-                    self.__calibration_state.set_state(CalibrationState.YouDoTheMath)
-
-                # Prevent with timer,
-                # if the valve is not reacting properly.
-                self.__limit_timer.update()
-                if self.__limit_timer.expired:
-                    self.__limit_timer.clear()
-                    self.__calibration_state.set_state(CalibrationState.Error)
-
-            # Make calculations.
-            if self.__calibration_state.is_state(CalibrationState.YouDoTheMath):
-                self.__stop()
-                self.__dt = self.__t1 - self.__t0
                 self._state.set_state(ValveState.Wait)
 
-            # Close the valve.
-            if self.__calibration_state.is_state(CalibrationState.Error):
+                # self.__move_timer.update()
+                # if self.__move_timer.expired:
+                #     self.__move_timer.clear()
+                #     self.__stop()
+                #     self._current_position = self.target_position
+                #     self._state.set_state(ValveState.Wait)
 
-                GlobalErrorHandler.log_hardware_malfunction(self.__logger, "The valve {} can not calibrated.".format(self.name))
-                self._state.set_state(ValveState.Wait)
+                # cw_limit_state = False # self.__get_close_limit()
+                # ccw_limit_state = False # self.__get_open_limit()
+                # if cw_limit_state or ccw_limit_state:
+                #     self.__stop()
+                #     GlobalErrorHandler.log_hardware_limit(self.__logger, "{} has raised end position.".format(self.name))
+                #     self._current_position = self.target_position
+                #     self._state.set_state(ValveState.Wait)
 
-            # - Close the valve.
-            # - Ensure that the valve is closed 0deg.
-            # - Record the time in T0.
-            # - Open the valve.
-            # - Ensure the the valve is opened 90deg.
-            # - Record the time in T1.
-            # - Store (T0 - T1) in dT
-            # - Use dT and end position contacts to ensure that the valve is closed and opened.
+            elif self._state.is_state(ValveState.Calibrate):
+
+                # Wait to start.
+                if self.__calibration_state.is_state(CalibrationState.NONE):
+                    self.__calibration_state.set_state(CalibrationState.OpenValve)
+                    self.__stop()
+
+                # Open the valve.
+                if self.__calibration_state.is_state(CalibrationState.OpenValve):
+                    self.__stop()
+                    self.__open_valve()
+                    self.__calibration_state.set_state(CalibrationState.EnsureOpen)
+                    self.__limit_timer.update_last_time()
+
+                # Wait until it si open at 100%.
+                if self.__calibration_state.is_state(CalibrationState.EnsureOpen):
+
+                    # Get CCW limit switch state.
+                    ccw_limit_state = self.__get_open_limit()
+                    if ccw_limit_state:
+                        self.__t0 = time.time()
+                        self.__calibration_state.set_state(CalibrationState.CloseValve)
+
+                    # Prevent with timer,
+                    # if the valve is not reacting properly.
+                    self.__limit_timer.update()
+                    if self.__limit_timer.expired:
+                        self.__limit_timer.clear()
+                        self.__calibration_state.set_state(CalibrationState.Error)
+
+                # Close the valve.
+                if self.__calibration_state.is_state(CalibrationState.CloseValve):
+                    self.__stop()
+                    self.__close_valve()
+                    self.__calibration_state.set_state(CalibrationState.EnsureClose)
+                    self.__limit_timer.update_last_time()
+
+                # Wait until it si open at 100%.
+                if self.__calibration_state.is_state(CalibrationState.EnsureClose):
+
+                    # Get CW limit switch state.
+                    cw_limit_state = self.__get_close_limit()
+                    if cw_limit_state:
+                        self.__t1 = time.time()
+                        self.__calibration_state.set_state(CalibrationState.YouDoTheMath)
+
+                    # Prevent with timer,
+                    # if the valve is not reacting properly.
+                    self.__limit_timer.update()
+                    if self.__limit_timer.expired:
+                        self.__limit_timer.clear()
+                        self.__calibration_state.set_state(CalibrationState.Error)
+
+                # Make calculations.
+                if self.__calibration_state.is_state(CalibrationState.YouDoTheMath):
+                    self.__stop()
+                    self.__dt = self.__t1 - self.__t0
+                    self._state.set_state(ValveState.Wait)
+
+                # Close the valve.
+                if self.__calibration_state.is_state(CalibrationState.Error):
+
+                    GlobalErrorHandler.log_hardware_malfunction(self.__logger, "The valve {} can not calibrated.".format(self.name))
+                    self._state.set_state(ValveState.Wait)
+
+                # - Close the valve.
+                # - Ensure that the valve is closed 0deg.
+                # - Record the time in T0.
+                # - Open the valve.
+                # - Ensure the the valve is opened 90deg.
+                # - Record the time in T1.
+                # - Store (T0 - T1) in dT
+                # - Use dT and end position contacts to ensure that the valve is closed and opened.
+
+        def update_on_off_timed():
+            pass
+
+        if self.__control_mode == ControlMode.ON_OFF:
+            update_on_off()
+        elif self.__control_mode == ControlMode.ON_OFF_TIMED:
+            update_on_off_timed()
 
         if self.__get_close_limit():
             self._current_position = self.min_pos
@@ -453,7 +473,7 @@ class FLX05F(BaseValve):
         self._state.set_state(ValveState.Calibrate)
 
     def update_sync(self):
-        """Update synchronious.
+        """Update synchronous.
         """
 
         while self.current_position != self.target_position:
