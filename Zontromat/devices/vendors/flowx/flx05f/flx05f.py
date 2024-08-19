@@ -32,14 +32,14 @@ from utils.logic.state_machine import StateMachine
 
 from devices.factories.valve.base_valve import BaseValve
 from devices.factories.valve.valve_state import ValveState
+from devices.vendors.flowx.flx05f.io_mode import IOMode
+from devices.vendors.flowx.flx05f.calibration_state import CalibrationState
+from devices.vendors.flowx.flx05f.control_mode import ControlMode
 
 from data import verbal_const
 
 from services.global_error_handler.global_error_handler import GlobalErrorHandler
 
-from io_mode import IOMode
-from calibration_state import CalibrationState
-from control_mode import ControlMode
 
 # (Request from mail: Eml6429)
 
@@ -163,12 +163,19 @@ class FLX05F(BaseValve):
             if IOMode.is_valid(config["io_mode"]):
                 self.__io_mode = IOMode(config["io_mode"])
 
-        self.__control_mode = ControlMode(0)
+        self.__control_mode = ControlMode.ON_OFF_TIMED
         """Control mode of the valve.
         """
         if "control_mode" in config:
             if ControlMode.is_valid(config["control_mode"]):
                 self.__control_mode = ControlMode(config["control_mode"])
+
+        # This number is given from the client. (#C4348)
+        self.__number_of_moves_to_calibration = 20
+        """Number of moves to calibration
+        """
+        if "number_of_moves_to_calibration" in config:
+            self.__number_of_moves_to_calibration = config["number_of_moves_to_calibration"]
 
         self.__t0 = 0
         """T0 moment.
@@ -456,7 +463,61 @@ class FLX05F(BaseValve):
                 # - Use dT and end position contacts to ensure that the valve is closed and opened.
 
         def update_on_off_timed():
-            pass
+            if self._state.is_state(ValveState.Prepare):
+
+                # Turn enable OFF.
+                self.__enable_valve(0)
+
+                # Delta
+                delta_pos = self.target_position - self.current_position
+
+                if delta_pos == 0:
+                    self.__stop()
+                    self._state.set_state(ValveState.Wait)
+                    return
+
+                # Scale down 10 times.
+                # Example: form 100% to 10s is exactly 10 times.
+                # Multiplication is safer way,
+                # so reciprocal value of 10 in this case is 0.1.
+                delta_pos *= 0.1
+
+                time_to_move = self.__to_time(abs(delta_pos))
+                # self.__logger.debug("Time: {}".format(time_to_move))
+
+                self.__move_timer.expiration_time = time_to_move
+                self.__move_timer.update_last_time()
+
+                if delta_pos > 0:
+                    self.__open_valve()
+
+                elif delta_pos < 0:
+                    self.__close_valve()
+
+                self._state.set_state(ValveState.Execute)
+            
+            if self._state.is_state(ValveState.Execute):
+                self.__enable_valve(1)
+                self._state.set_state(ValveState.Wait)
+
+            if self._state.is_state(ValveState.Wait):
+                self.__move_timer.update()
+                if self.__move_timer.expired:
+                    self.__move_timer.clear()
+                    self.__enable_valve(0)
+                    self._current_position = self.target_position
+                    if self.num_of_moves >= self.__number_of_moves_to_calibration:
+                        self._state.set_state(ValveState.Calibrate)
+                    else:
+                        self._state.set_state(ValveState.NONE)
+
+            elif self._state.is_state(ValveState.Calibrate):
+                # Clear the counter.
+                self.num_of_moves = 0
+                self.__close_valve()
+                self.__enable_valve(1)
+                if self._current_position == self.min_pos:
+                    self._state.set_state(ValveState.Prepare)
 
         if self.__control_mode == ControlMode.ON_OFF:
             update_on_off()
