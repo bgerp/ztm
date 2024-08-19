@@ -158,7 +158,7 @@ class Zone(BasePlugin):
         self.__fl_control_table = \
         [
             [  0,   0,   0,   0,   0,   0,   0,   0,   0], # 0 - Спряно
-            [  1,   1, 1/2, 1/4,   0,   0,   0,   0,   0], # 1 - Охлаждане
+            [  1,   1,   1,   1,   1,   1,   1,   1,   1], # 1 - Охлаждане # @17.07.2024 15:00 MG request to spot the regulation motion of the valves.
             [  0,   0,   0,   0,   0, 1/4, 1/2,   1,   1], # 2 - Отопление
             [  0,   0,   0,   0,   0,   0, 1/2,   1,   1]  # 3 - Режим №3
         ]
@@ -167,7 +167,7 @@ class Zone(BasePlugin):
         self.__conv_control_table = \
         [
             [  0,   0,   0,   0,   0,   0,   0,   0,   0], # 0 - Спряно
-            [  4,   3,   2,   1,   0,   0,   0,   0,   0], # 1 - Охлаждане
+            [  4,   3,   2,   1,   1,   1,   1,   1,   1], # 1 - Охлаждане # @17.07.2024 15:00 MG request to spot the regulation motion of the valves.
             [  0,   0,   0,   0,   0,   1,   2,   3,   4], # 2 - Отопление
             [  2,   2,   1,   0,   0,   0,   0,   0,   0]  # 3 - Режим №3
         ]
@@ -177,7 +177,7 @@ class Zone(BasePlugin):
         [
             [  0,   0,   0,   0,   0,  50,  80, 120, 140], # 0 - Спряно
             [-80, -50, -30,   0,   0,   0,   0,   0,   0], # 1 - Охлаждане
-            [  0,   0,   0,   0,   0,   0,  30,  50,  80], # 2 - Отопление
+            [  0,   0,   0,   0,   0,   0,   0,  30,  80], # 2 - Отопление
             [  0,   0,   0,   0,   0,   0,   0,   0,   0]  # 3 - Режим №3
         ]
 
@@ -231,38 +231,14 @@ class Zone(BasePlugin):
 
         self.__temperature_deviation = 0
         """Temperature deviation constant.
-        """        
+        """
 
         self.__adjust_temp = 0
         """Temperature set point from the OP.
         """
 
-        self.__window_closed_input = verbal_const.OFF
+        self.__window_tamper_settings = {}
         """Window closed sensor input.
-        """
-
-        self.__fl_1_vlv_position = None
-        """Floor loop 1 valve position.
-        """
-
-        self.__fl_2_vlv_position = None
-        """Floor loop 2 valve position.
-        """
-
-        self.__fl_3_vlv_position = None
-        """Floor loop 3 valve position.
-        """
-
-        self.__cl_1_vlv_position = None
-        """Convector loop 1 valve position.
-        """
-
-        self.__cl_2_vlv_position = None
-        """Convector loop 2 valve position.
-        """
-
-        self.__cl_3_vlv_position = None
-        """Convector loop 3 valve position.
         """
 
 
@@ -332,11 +308,14 @@ class Zone(BasePlugin):
 
         state = False
 
-        if self._controller.is_valid_gpio(self.__window_closed_input):
-            state = self._controller.digital_read(self.__window_closed_input)
+        for tamper in self.__window_tamper_settings:
+            # {'WINT_1': '!U0:ID2:FC2:R0:DI0'}
 
-        if self.__window_closed_input == verbal_const.OFF:
-            state = True
+            if self._controller.is_valid_gpio(self.__window_tamper_settings[tamper]):
+                state |= self._controller.digital_read(self.__window_tamper_settings[tamper])
+
+            if self.__window_tamper_settings[tamper] == verbal_const.OFF:
+                state |= True
 
         return state
 
@@ -451,9 +430,9 @@ class Zone(BasePlugin):
         else:
             self.__set_cl_state(0)
 
-        if conv_state > 3:
-            conv_state = 3
-
+        # By subtracting one offset the convector state and at the same time give fourth state.
+        # 1 Only valve
+        # 2 to 4 valve + 1,2 and 3 stages for the convector.
         self.__set_conv_state(conv_state-1)
         self.__set_ventilation(fan_state)
 
@@ -471,7 +450,7 @@ class Zone(BasePlugin):
 
         if register.value != {}:
             if self.__air_temp_cent_dev is not None:
-                self.__temp_proc.remove_ref(self.__air_temp_cent_dev)
+                self.__temp_proc.remove_ref()
                 self.__air_temp_cent_dev.shutdown()
                 del self.__air_temp_cent_dev
 
@@ -488,7 +467,7 @@ class Zone(BasePlugin):
 
         elif register.value == {}:
             if self.__air_temp_cent_dev is not None:
-                self.__temp_proc.remove_ref(self.__air_temp_cent_dev)
+                self.__temp_proc.remove_ref()
                 self.__air_temp_cent_dev.shutdown()
 
     def __air_temp_lower_settings_cb(self, register):
@@ -812,6 +791,68 @@ class Zone(BasePlugin):
             if self.__fl_3_vlv_dev is not None:
                 self.__fl_3_vlv_dev.shutdown()
 
+    def __update_valve_data(self):
+
+        if self.__fl_1_vlv_dev is not None:
+
+            # If the following register is available then set its value.
+            self._registers.write(f"{self.key}.floor_loop_1.valve.activations",\
+                                json.dumps({\
+                                        "position": self.__fl_1_vlv_dev.current_position,\
+                                        "openings": self.__fl_1_vlv_dev.openings,\
+                                        "closings": self.__fl_1_vlv_dev.closings
+                                    }))
+
+        if self.__fl_2_vlv_dev is not None:
+
+            # If the following register is available then set its value.
+            self._registers.write(f"{self.key}.floor_loop_2.valve.activations",\
+                                json.dumps({\
+                                        "position": self.__fl_2_vlv_dev.current_position,\
+                                        "openings": self.__fl_2_vlv_dev.openings,\
+                                        "closings": self.__fl_2_vlv_dev.closings
+                                    }))
+
+        if self.__fl_3_vlv_dev is not None:
+
+            # If the following register is available then set its value.
+            self._registers.write(f"{self.key}.floor_loop_3.valve.activations",\
+                                json.dumps({\
+                                        "position": self.__fl_3_vlv_dev.current_position,\
+                                        "openings": self.__fl_3_vlv_dev.openings,\
+                                        "closings": self.__fl_3_vlv_dev.closings
+                                    }))
+
+        if self.__cl_1_vlv_dev is not None:
+
+            # If the following register is available then set its value.
+            self._registers.write(f"{self.key}.conv_loop_1.valve.activations",\
+                                json.dumps({\
+                                        "position": self.__cl_1_vlv_dev.current_position,\
+                                        "openings": self.__cl_1_vlv_dev.openings,\
+                                        "closings": self.__cl_1_vlv_dev.closings
+                                    }))
+
+        if self.__cl_2_vlv_dev is not None:
+
+            # If the following register is available then set its value.
+            self._registers.write(f"{self.key}.conv_loop_2.valve.activations",\
+                                json.dumps({\
+                                        "position": self.__cl_2_vlv_dev.current_position,\
+                                        "openings": self.__cl_2_vlv_dev.openings,\
+                                        "closings": self.__cl_2_vlv_dev.closings
+                                    }))
+
+        if self.__cl_3_vlv_dev is not None:
+
+            # If the following register is available then set its value.
+            self._registers.write(f"{self.key}.conv_loop_3.valve.activations",\
+                                json.dumps({\
+                                        "position": self.__cl_3_vlv_dev.current_position,\
+                                        "openings": self.__cl_3_vlv_dev.openings,\
+                                        "closings": self.__cl_3_vlv_dev.closings
+                                    }))
+
 #endregion
 
 #region Private Methods (Registers Parameters)
@@ -865,14 +906,14 @@ class Zone(BasePlugin):
 
         self.__adjust_temp = actual_temp
 
-    def __window_closed_input_cb(self, register):
+    def __window_tamper_settings_cb(self, register):
 
           # Check data type.
-        if not register.data_type == "str":
+        if not register.data_type == "json":
             GlobalErrorHandler.log_bad_register_data_type(self.__logger, register)
             return
 
-        self.__window_closed_input = register.value
+        self.__window_tamper_settings = register.value
 
     def __glob_conv_mode_cb(self, register):
 
@@ -1089,10 +1130,10 @@ class Zone(BasePlugin):
             cl_vlv_3_dev_settings.update()
 
         # Create window closed sensor.
-        window_closed_input = self._registers.by_name(f"ac.window_closed_{self.__identifier}.input")
-        if window_closed_input is not None:
-            window_closed_input.update_handlers = self.__window_closed_input_cb
-            window_closed_input.update()
+        window_tamper_settings = self._registers.by_name(f"envm.window_tamper.settings")
+        if window_tamper_settings is not None:
+            window_tamper_settings.update_handlers = self.__window_tamper_settings_cb
+            window_tamper_settings.update()
 
         # Region parameters
         update_rate = self._registers.by_name(f"{self.key}.update_rate_{self.__identifier}")
@@ -1166,86 +1207,6 @@ class Zone(BasePlugin):
 
         return True
 
-    def __update_valve_data(self):
-
-        if self.__fl_1_vlv_dev is not None:
-
-            if self.__fl_1_vlv_position != self.__fl_1_vlv_dev.current_position:
-                self.__fl_1_vlv_position = self.__fl_1_vlv_dev.current_position
-
-                # If the following register is available then set its value.
-                self._registers.write(f"{self.key}.floor_loop_1.valve.activations",\
-                                    json.dumps({\
-                                            "position": self.__fl_1_vlv_dev.current_position,\
-                                            "openings": self.__fl_1_vlv_dev.openings,\
-                                            "closings": self.__fl_1_vlv_dev.closings
-                                        }))
-
-        if self.__fl_2_vlv_dev is not None:
-
-            if self.__fl_2_vlv_position != self.__fl_2_vlv_dev.current_position:
-                self.__fl_2_vlv_position = self.__fl_2_vlv_dev.current_position
-
-                # If the following register is available then set its value.
-                self._registers.write(f"{self.key}.floor_loop_2.valve.activations",\
-                                    json.dumps({\
-                                            "position": self.__fl_2_vlv_dev.current_position,\
-                                            "openings": self.__fl_2_vlv_dev.openings,\
-                                            "closings": self.__fl_2_vlv_dev.closings
-                                        }))
-
-        if self.__fl_3_vlv_dev is not None:
-
-            if self.__fl_3_vlv_position != self.__fl_3_vlv_dev.current_position:
-                self.__fl_3_vlv_position = self.__fl_3_vlv_dev.current_position
-
-                # If the following register is available then set its value.
-                self._registers.write(f"{self.key}.floor_loop_3.valve.activations",\
-                                    json.dumps({\
-                                            "position": self.__fl_3_vlv_dev.current_position,\
-                                            "openings": self.__fl_3_vlv_dev.openings,\
-                                            "closings": self.__fl_3_vlv_dev.closings
-                                        }))       
-
-        if self.__cl_1_vlv_dev is not None:
-
-            if self.__cl_1_vlv_position != self.__cl_1_vlv_dev.current_position:
-                self.__cl_1_vlv_position = self.__cl_1_vlv_dev.current_position
-
-                # If the following register is available then set its value.
-                self._registers.write(f"{self.key}.conv_loop_1.valve.activations",\
-                                    json.dumps({\
-                                            "position": self.__cl_1_vlv_dev.current_position,\
-                                            "openings": self.__cl_1_vlv_dev.openings,\
-                                            "closings": self.__cl_1_vlv_dev.closings
-                                        }))
-
-        if self.__cl_2_vlv_dev is not None:
-
-            if self.__cl_2_vlv_position != self.__cl_2_vlv_dev.current_position:
-                self.__cl_2_vlv_position = self.__cl_2_vlv_dev.current_position
-
-                # If the following register is available then set its value.
-                self._registers.write(f"{self.key}.conv_loop_2.valve.activations",\
-                                    json.dumps({\
-                                            "position": self.__cl_2_vlv_dev.current_position,\
-                                            "openings": self.__cl_2_vlv_dev.openings,\
-                                            "closings": self.__cl_2_vlv_dev.closings
-                                        }))
-
-        if self.__cl_3_vlv_dev is not None:
-
-            if self.__cl_3_vlv_position != self.__cl_3_vlv_dev.current_position:
-                self.__cl_3_vlv_position = self.__cl_3_vlv_dev.current_position
-
-                # If the following register is available then set its value.
-                self._registers.write(f"{self.key}.conv_loop_3.valve.activations",\
-                                    json.dumps({\
-                                            "position": self.__cl_3_vlv_dev.current_position,\
-                                            "openings": self.__cl_3_vlv_dev.openings,\
-                                            "closings": self.__cl_3_vlv_dev.closings
-                                        }))
-
 #endregion
 
 #region Protected Methods
@@ -1276,7 +1237,7 @@ class Zone(BasePlugin):
         is_hot_water = self.__is_hot_water()
 
         # Take all necessary condition for normal operation of the HVAC.
-        # stop_flag = (not is_empty or not window_tamper_state or not is_hot_water)
+        # stop_flag = (is_empty or window_tamper_state or not is_hot_water)
         stop_flag = False
 
         # If it is time to stop.
@@ -1321,12 +1282,14 @@ class Zone(BasePlugin):
 
             print(f"Target: {self.__adjust_temp:2.1f}; Current: {self.__temp_proc.value:2.1f}")
 
-            # Calculate the delta.
-            # dt = self.__adjust_temp - self.__temp_proc.value
+            dt = 0.0
+            if not self.__stop_flag:
+                # Calculate the delta.
+                # dt = self.__adjust_temp - self.__temp_proc.value
 
-            # Calculate the delta t and temperature deviation.
-            dt = min(self.__adjust_temp - self.__temp_proc.value+self.__temperature_deviation, 0) \
-                + max(self.__adjust_temp - self.__temp_proc.value-self.__temperature_deviation, 0)
+                # Calculate the delta t and temperature deviation.
+                dt = min(self.__adjust_temp - self.__temp_proc.value+self.__temperature_deviation, 0) \
+                    + max(self.__adjust_temp - self.__temp_proc.value-self.__temperature_deviation, 0)
 
             # Round to have clear rounded value for state machine currency.
             dt = self.__round_to_nearest_half(dt)
