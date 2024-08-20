@@ -110,6 +110,10 @@ class BaseValve(BaseDevice):
         """Current number of valve closings.
         """
 
+        self._num_of_moves = 0
+        """Number of moves that valve has made.
+        """        
+
 #endregion
 
 #region Properties
@@ -220,9 +224,11 @@ class BaseValve(BaseDevice):
 
             if self._target_position > position:
                 self._closings += 1
+                self.num_of_moves += 1
 
             if self._target_position < position:
                 self._openings += 1
+                self.num_of_moves += 1
 
         self._target_position = position
         self._state.set_state(ValveState.Prepare)
@@ -248,6 +254,25 @@ class BaseValve(BaseDevice):
     @property
     def closings(self):
         return self._closings
+
+    @property
+    def num_of_moves(self):
+        """Number of moves..
+
+        Returns:
+            int: Number of moves.
+        """
+        return self._num_of_moves
+
+    @num_of_moves.setter
+    def num_of_moves(self, value):
+        """Set the number of moves.
+
+        Args:
+            value (int): Number of moves valve.
+        """
+
+        self._num_of_moves = value
 
 #endregion
 

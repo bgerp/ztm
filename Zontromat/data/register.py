@@ -101,6 +101,11 @@ class Profiles(Enum):
 
         return out_profile
 
+    def __str__(self):
+        return self.value
+    
+    __repr__ = __str__
+
 class Scope(Enum):
     """Registers scope.
     """
@@ -466,7 +471,7 @@ class Register:
         return self.__profiles
 
     @profiles.setter
-    def profiles(self, value: str):
+    def profiles(self, value: (Profiles)):
         """Setter profiles that registers are used in.
 
         Args:
