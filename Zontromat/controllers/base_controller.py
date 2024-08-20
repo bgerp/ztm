@@ -411,30 +411,41 @@ class BaseController(Configurable):
 
         configuration = {}
 
-        port = "modbus_rtu_port_{}".format(index)
-        if port in self._config:
-            configuration["port"] = self._config[port]
+        interface = f"interface_{index}"
+        if interface in self._config:
+            configuration["interface"] = self._config[interface]
 
-        baudrate = "modbus_rtu_baud_{}".format(index)
-        if baudrate in self._config:
-            configuration["baudrate"] = int(self._config[baudrate])
-
-        timeout = "modbus_rtu_timeout_{}".format(index)
+        timeout = "timeout_{}".format(index)
         if timeout in self._config:
             configuration["timeout"] = float(self._config[timeout])
 
-        port_cfg = "modbus_rtu_cfg_{}".format(index)
+        port = "rtu_port_{}".format(index)
+        if port in self._config:
+            configuration["rtu_port"] = self._config[port]
+
+        baudrate = "rtu_baudrate_{}".format(index)
+        if baudrate in self._config:
+            configuration["rtu_baudrate"] = int(self._config[baudrate])
+
+        port_cfg = "rtu_cfg_{}".format(index)
         if port_cfg in self._config:
             cfg = re.search("[5-8][ENO][12]", self._config[port_cfg])
             if not cfg is None:            
-                configuration["bytesize"] = int(cfg.string[0])
-                configuration["parity"] = cfg.string[1]
-                configuration["stopbits"] = int(cfg.string[2])
+                configuration["rtu_bytesize"] = int(cfg.string[0])
+                configuration["rtu_parity"] = cfg.string[1]
+                configuration["rtu_stopbits"] = int(cfg.string[2])
 
-        mb_id = "modbus_rtu_unit_{}".format(index)
+        mb_id = "rtu_unit_{}".format(index)
         if mb_id in self._config:
-            configuration["mb_id"] = int(self._config[mb_id])
+            configuration["rtu_unit"] = int(self._config[mb_id])
 
+        tcp_ip_address = f"tcp_address_{index}"
+        if tcp_ip_address in self._config:
+            configuration["tcp_address"] = self._config[tcp_ip_address]
+
+        tcp_port = f"tcp_port_{index}"
+        if tcp_port in self._config:
+            configuration["tcp_port"] = int(self._config[tcp_port])
 
         return configuration
 
