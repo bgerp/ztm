@@ -38,10 +38,9 @@ from devices.vendors.cwt.mb308v.mb308v import MB308V as BlackIsland
 from devices.drivers.modbus.function_code import FunctionCode
 
 # Import MODBUS clients.
-# from pymodbus.client.sync import ModbusTcpClient as ModbusClient
-# from pymodbus.client.sync import ModbusUdpClient as ModbusClient
-# from pymodbus.client.sync import ModbusSerialClient as ModbusClient
-from pymodbus.client.serial import ModbusSerialClient as ModbusClient
+from pymodbus.client.serial import ModbusSerialClient
+from pymodbus.client.tcp import ModbusTcpClient
+from pymodbus.transaction import ModbusRtuFramer as ModbusFramer
 
 #region File Attributes
 
@@ -83,76 +82,6 @@ class ZL101PCC(BaseController):
     """
 
 #region Attributes
-
-    __logger = None
-    """Logger
-    """
-
-    __modbus_rtu_clients_count = 2
-    """Modbus-RTU clients count.
-    """
-
-    __modbus_rtu_clients = {}
-    """Modbus-RTU clients.
-    """
-
-    __black_island = None
-    """IO
-    """
-
-    __map = \
-    {\
-        "identification": {"vendor": "bao bao industries", "model": "zl101pcc"},\
-
-        # LEDs
-        "LED0": 0, "LED1": 1, "LED2": 2, "LED3": 3,
-
-        # Digital Inputs
-        "DI0": 0, "DI1": 1, "DI2": 2, "DI3": 3,
-        "DI4": 4, "DI5": 5, "DI6": 6, "DI7": 7,
-        "DI8": 8, "DI9": 9,
-
-        # Digital Outputs
-        "DO0": 0, "DO1": 1, "DO2": 2, "DO3": 3,
-        "DO4": 4, "DO5": 5, "DO6": 6, "DO7": 7,
-        "DO8": 8, "DO9": 9, "DO10": 10, "DO11": 11,
-
-        # Relay Outputs
-        "RO0": 0, "RO1": 1, "RO2": 2, "RO3": 3,
-        "RO4": 4, "RO5": 5, "RO6": 6, "RO7": 7,
-        "RO8": 8, "RO9": 9, "RO10": 10, "RO11": 11,
-
-        # Analog Inputs
-        "AI0": 0, "AI1": 1, "AI2": 2, "AI3": 3,
-        "AI4": 4, "AI5": 5, "AI6": 6, "AI7": 7,
-
-        # Analog Outputs
-        "AO0": 0, "AO1": 1, "AO2": 2, "AO3": 3,
-    }
-
-    __DI = [False]*8
-    """Digital inputs.
-    """
-
-    __DORO = [False]*12
-    """Digital & Relay outputs.
-    """
-
-    __AI = [0]*8
-    """Analog inputs.
-    """
-
-    __AO = [0]*4
-    """Analog outputs.
-    """
-
-    __analog_limits = [0.0, 10.0]
-    """Analog I/O volts.
-    """
-
-    __uuid = None
-    """UUID handler.
-    """
 
 #endregion
 
@@ -208,34 +137,110 @@ class ZL101PCC(BaseController):
 
         super().__init__(config)
 
-        # Validate GPIO map.
-        if self.__map is None:
-            raise ValueError("Invalid GPIO map.")
-
-        self._gpio_map = self.__map
-
         self.__logger = get_logger(__name__)
+        """Logger
+        """
+
+        self.__uuid = UUID()
+        """UUID handler.
+        """
+
+        self._gpio_map = \
+        {\
+            "identification": {"vendor": "bao bao industries", "model": "zl101pcc"},\
+
+            # LEDs
+            "LED0": 0, "LED1": 1, "LED2": 2, "LED3": 3,
+
+            # Digital Inputs
+            "DI0": 0, "DI1": 1, "DI2": 2, "DI3": 3,
+            "DI4": 4, "DI5": 5, "DI6": 6, "DI7": 7,
+            "DI8": 8, "DI9": 9,
+
+            # Digital Outputs
+            "DO0": 0, "DO1": 1, "DO2": 2, "DO3": 3,
+            "DO4": 4, "DO5": 5, "DO6": 6, "DO7": 7,
+            "DO8": 8, "DO9": 9, "DO10": 10, "DO11": 11,
+
+            # Relay Outputs
+            "RO0": 0, "RO1": 1, "RO2": 2, "RO3": 3,
+            "RO4": 4, "RO5": 5, "RO6": 6, "RO7": 7,
+            "RO8": 8, "RO9": 9, "RO10": 10, "RO11": 11,
+
+            # Analog Inputs
+            "AI0": 0, "AI1": 1, "AI2": 2, "AI3": 3,
+            "AI4": 4, "AI5": 5, "AI6": 6, "AI7": 7,
+
+            # Analog Outputs
+            "AO0": 0, "AO1": 1, "AO2": 2, "AO3": 3,
+        }
+        """GPIO mapping.
+        """        
+
+        self.__DI = [False]*8
+        """Digital inputs.
+        """
+
+        self.__DORO = [False]*12
+        """Digital & Relay outputs.
+        """
+
+        self.__AI = [0]*8
+        """Analog inputs.
+        """
+
+        self.__AO = [0]*4
+        """Analog outputs.
+        """
+
+        self.__modbus_rtu_clients_count = 2
+        """Modbus-RTU clients count.
+        """
+
+        self.__modbus_rtu_clients = {}
+        """Modbus-RTU clients.
+        """
+
+        self.__black_island = None
+        """IO
+        """
 
         for index in range(0, self.__modbus_rtu_clients_count):
-            modbus_rtu_cfg = self.is_valid_port_cfg(index)
-            if (not index in self.__modbus_rtu_clients) and (not modbus_rtu_cfg is {}):
-                self.__modbus_rtu_clients[index] = ModbusClient(
-                    method="rtu",
-                    port=modbus_rtu_cfg["port"],
-                    baudrate=modbus_rtu_cfg["baudrate"],
-                    timeout=modbus_rtu_cfg["timeout"],
-                    bytesize=modbus_rtu_cfg["bytesize"],
-                    parity=modbus_rtu_cfg["parity"],
-                    stopbits=modbus_rtu_cfg["stopbits"]
-                    )
+            modbus_config = self.is_valid_port_cfg(index)
+            if (not index in self.__modbus_rtu_clients) and (not modbus_config is {}):
+                if modbus_config["interface"] == "RTU":
+                    self.__modbus_rtu_clients[index] = ModbusSerialClient(
+                        method="rtu",
+                        port=modbus_config["rtu_port"],
+                        baudrate=modbus_config["rtu_baudrate"],
+                        timeout=modbus_config["timeout"],
+                        bytesize=modbus_config["rtu_bytesize"],
+                        parity=modbus_config["rtu_parity"],
+                        stopbits=modbus_config["rtu_stopbits"]
+                        )
+                elif modbus_config["interface"] == "TCP":
+                    self.__modbus_rtu_clients[index] = ModbusTcpClient(
+                        modbus_config["tcp_address"],
+                        port=modbus_config["tcp_port"],
+                        timeout=modbus_config["timeout"],
+                        )
+                elif modbus_config["interface"] == "RTUOverTCP":
+                    self.__modbus_rtu_clients[index] = ModbusTcpClient(
+                        modbus_config["tcp_address"],
+                        port=modbus_config["tcp_port"],
+                        timeout=modbus_config["timeout"],
+                        framer=ModbusFramer
+                        )
             else:
-                self.show_valid_serial_ports(modbus_rtu_cfg["port"])
+                self.show_valid_serial_ports(modbus_config["port"])
         
             # This hot fix is mandatory, because "black island" is part of the logical body of the master controller.
             if index == 0:
-                self.__black_island = BlackIsland(mb_id=modbus_rtu_cfg["mb_id"])
+                self.__black_island = BlackIsland(mb_id=modbus_config["rtu_unit"])
 
-            self.__uuid = UUID()
+        self.__analog_limits = [0.0, 10.0]
+        """Analog I/O volts.
+        """
 
 #endregion
 
