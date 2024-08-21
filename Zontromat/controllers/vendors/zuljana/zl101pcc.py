@@ -623,8 +623,7 @@ class ZL101PCC(BaseController):
         if self.is_gpio_nothing(pin):
             raise ValueError("Pin can not be None or empty string.")
 
-        value = 0.0
-        state = {"value": value, "min": 0.0, "max": 10.0}
+        state = {"value": 0.0, "min": 0.0, "max": 10.0}
 
         # Local GPIO.
         if self.is_gpio_local(pin):
@@ -652,15 +651,19 @@ class ZL101PCC(BaseController):
         elif self.is_gpio_remote(pin):
             remote_gpio = self.parse_remote_gpio(pin)
 
-            self.__logger.debug(f"GPIO: {remote_gpio}")
+            # self.__logger.debug(f"GPIO: {remote_gpio}")
 
-            # write_response = self.__modbus_rtu_clients[remote_gpio["uart"]].write_coil(
-            #     remote_gpio["io_reg"]+remote_gpio["io_index"],
-            #     state,
-            #     remote_gpio["mb_id"])
+            if isinstance(pin, str):
+                read_response = self.__modbus_rtu_clients[remote_gpio["uart"]].read_input_registers(
+                    remote_gpio["io_reg"]+remote_gpio["io_index"],
+                    1,
+                    remote_gpio["mb_id"])
 
-            # if not write_response.isError():
-            #     response = True
+                if not read_response.isError():
+                    input_value = read_response.registers[0]
+                    param_name = "GetAnalogInputs"
+                    param = self.__black_island.get_parameter_by_name(param_name)
+                    state["value"] = l_scale(input_value, param.limits, self.__analog_limits)
 
         else:
             raise ValueError("Pin does not exists in pin map.")
