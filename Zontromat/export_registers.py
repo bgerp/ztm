@@ -1953,7 +1953,7 @@ def __add_registers(args):
         "model": "light_sensor",
         "options":
         {
-            "input": "AI2",
+            "input": "U0:ID2:FC4:R0:AI2",
         }
     }
     register.profiles = Register.create_profile(Profiles.ZONE.value)
