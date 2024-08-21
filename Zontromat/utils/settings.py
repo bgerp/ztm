@@ -241,14 +241,14 @@ class ApplicationSettings:
                     "rtu_cfg_0": "8N1",
                     "rtu_unit_0": 2,
                     "tcp_address_0":"127.0.0.1",
-                    "tcp_port_0":"503",
+                    "tcp_port_0":"5030",
                     "interface_1":"TCP",
                     "timeout_1": 1.0,
                     "rtu_port_1": "/dev/ttyS0",
                     "rtu_baudrate_1": 9600,
                     "rtu_cfg_1": "8N1",
                     "tcp_address_1":"127.0.0.1",
-                    "tcp_port_1":"504",
+                    "tcp_port_1":"5040",
                 }
 
         # # Default software version as current version.
