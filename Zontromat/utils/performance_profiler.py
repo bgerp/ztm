@@ -26,6 +26,8 @@ import time
 import tracemalloc
 from functools import wraps
 
+from utils.logger import get_logger
+
 #region File Attributes
 
 __author__ = "Orlin Dimitrov"
@@ -57,39 +59,47 @@ __status__ = "Debug"
 
 #endregion
 
-class CurrentConsuption:
-    """Current consumption."""
-
-    __max_mem = 0
-    __min_mem = 0
-    __cur_mem = 0
-
-    __max_time = 0
-    __min_time = 0
-    __cur_time = 0
-
 class PerformanceProfiler:
-    """Performance profiler."""
+    """Performance profiler.
+    """
 
 #region Attributes
 
-    __enable = False
-    """General enable."""
+#endregion
 
-    __enable_mem_profile = False
-    """Enable memory profiler."""
+#region Constructor/Destructor
 
-    __enable_time_profile = False
-    """Enable time consumption profiler."""
+    def __init__(self):
 
-    __on_memory_change_callback = None
-    """On memory change callback."""
+        self.__logger = get_logger(__name__)
 
-    __on_time_change_callback = None
-    """On time change callback."""
+        self.__enable = False
+        """General enable.
+        """
 
-    __on_change_callback = None
-    """On change time callback."""
+        self.__enable_mem_profile = False
+        """Enable memory profiler.
+        """
+
+        self.__enable_time_profile = False
+        """Enable time consumption profiler.
+        """
+
+        self.__on_memory_change_callback = None
+        """On memory change callback.
+        """
+
+        self.__on_time_change_callback = None
+        """On time change callback.
+        """
+
+        self.__on_change_callback = None
+        """On change time callback.
+        """
+
+        self.__show_consumed_time = True
+        """Flag for showing consumed time.
+        """        
 
 #endregion
 
@@ -210,7 +220,9 @@ class PerformanceProfiler:
             if self.__enable_time_profile and self.__enable:
                 t_1 = time.time()
                 passed_time = t_1 - t_0
-                print(f"Passed time: {passed_time}")
+                
+                if self.__show_consumed_time:
+                    self.__logger.debug(f"Passed time: {passed_time:.2f}")
 
             if self.__enable_mem_profile and self.__enable:
                 current, peak = tracemalloc.get_traced_memory()
