@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
 import importlib
+import time
 
 from utils.logger import get_logger
 
@@ -94,6 +95,8 @@ class PluginsManager:
         self.__registers = registers
         self.__controller = controller
         self.__add_enable_handlers()
+
+        self.__show_consumed_time = False
 
 #endregion
 
@@ -213,9 +216,25 @@ class PluginsManager:
     def update(self):
         """Update plugins.
         """
-
+        if self.__show_consumed_time:
+            t0 = t1 = 0
+            self.__logger.debug("===========")
+        
         for key in self.__plugins:
+        
+            if self.__show_consumed_time:
+                t0 = time.time()
+        
             self.__plugins[key].update()
+        
+            if self.__show_consumed_time:
+                t1 = time.time()
+                dt = t1-t0
+                self.__logger.debug(f"Name: {key}; Time: {dt:.2f}")
+        
+        if self.__show_consumed_time:
+            self.__logger.debug("===========")
+            self.__logger.debug("")
 
     def shutdown(self):
         """Shutdown plugins.
