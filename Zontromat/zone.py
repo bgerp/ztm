@@ -97,44 +97,57 @@ class Zone():
 #region Constructor
 
     def __init__(self):
-        self.__logger = None
-        """Logger"""
+        self.__logger = get_logger(__name__)
+        """Logger
+        """
 
         self.__app_settings = None
-        """Application settings."""
+        """Application settings.
+        """
 
         self.__controller = None
-        """Neuron controller."""
+        """Neuron controller.
+        """
 
         self.__erp = None
-        """Communication with the ERP."""
+        """Communication with the ERP.
+        """
 
         self.__registers = None
-        """Registers"""
+        """Registers
+        """
 
         self.__plugin_manager = None
-        """Plugin manager."""
+        """Plugin manager.
+        """
 
         self.__update_rate = 0.5
-        """Controlling update rate in seconds."""
+        """Controlling update rate in seconds.
+        """
 
         self.__update_timer = None
-        """Update timer."""
+        """Update timer.
+        """
 
         self.__erp_service_update_timer = None
-        """ERP update timer."""
+        """ERP update timer.
+        """
 
         self.__erp_state_machine = None
-        """Zone state."""
+        """Zone state.
+        """
 
         self.__stop_flag = False
-        """Time to Stop flag."""
+        """Time to Stop flag.
+        """
 
         self.__busy_flag = False
-        """Busy flag."""
+        """Busy flag.
+        """
 
         self.__performance_profiler_timer = None
-        """Performance profiler timer."""
+        """Performance profiler timer.
+        """
 
         # (Request to stop the queue from MG @ 15.01.2021)
         # __registers_snapshot = None
@@ -614,9 +627,6 @@ class Zone():
         """Update the zone.
         """
 
-        # Create log if if it does not.
-        crate_log_file()
-
         # Update Zontromat UI.
         self.__update_ztmui()
 
@@ -633,9 +643,7 @@ class Zone():
         self.__update_erp()
 
         # Update uptime.
-        sys_uptime_time = self.__registers.by_name("sys.time.uptime")
-        if sys_uptime_time is not None:
-            sys_uptime_time.value = uptime()
+        self.__registers.write("sys.time.uptime", uptime())
 
 #endregion
 
@@ -646,11 +654,11 @@ class Zone():
         """
 
         try:
+            # Create log if if it does not.
+            crate_log_file()
+
             # Application settings.
             self.__app_settings = ApplicationSettings.get_instance()
-
-            # Create logger.
-            self.__logger = get_logger(__name__)
 
             # Create registers.
             self.__init_registers()
@@ -712,7 +720,7 @@ class Zone():
                     # Update the application.
                     self.__update()
 
-                    # If the performance profile is runing stop it after the cycle.
+                    # If the performance profile is running stop it after the cycle.
                     if self.__performance_profiler.enable:
                         self.__performance_profiler.enable = False
 
