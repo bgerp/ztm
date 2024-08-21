@@ -210,6 +210,7 @@ class PerformanceProfiler:
             if self.__enable_time_profile and self.__enable:
                 t_1 = time.time()
                 passed_time = t_1 - t_0
+                print(f"Passed time: {passed_time}")
 
             if self.__enable_mem_profile and self.__enable:
                 current, peak = tracemalloc.get_traced_memory()
