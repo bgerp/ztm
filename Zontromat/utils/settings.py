@@ -270,7 +270,7 @@ class ApplicationSettings:
                     # "host": "https://test.bcvt.eu/",
                     "erp_id": "0091-7140-2539-6010",
                     "host": "https://bcvt.eu/",
-                    "timeout": 1,
+                    "timeout": 5,
                     "update_rate": 60,
                     "serial_number": 0
                     }
