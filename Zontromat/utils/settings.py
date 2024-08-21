@@ -265,6 +265,7 @@ class ApplicationSettings:
         if self.__config is not None:
             if "ERP_SERVICE" not in self.__config:
                 self.__config["ERP_SERVICE"] = {
+                    "enabled": True,
                     "config_time": int(time.time()),
                     # "erp_id": "0082-4140-0042-4216",
                     # "host": "https://test.bcvt.eu/",

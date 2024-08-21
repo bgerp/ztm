@@ -367,6 +367,9 @@ class Zone():
         """Setup the ERP.
         """
 
+        if self.__app_settings.erp_service["enabled"] == "False":
+            return
+
         # Take ERP info from settings.
         erp_host = self.__app_settings.erp_service["host"]
         erp_timeout = self.__app_settings.erp_service["timeout"]
@@ -469,6 +472,9 @@ class Zone():
     def __update_erp(self):
         """Update ERP.
         """
+
+        if self.__app_settings.erp_service["enabled"] == "False":
+            return
 
         if self.__erp_state_machine.is_state(ERPState.Login):
             # Login room.
