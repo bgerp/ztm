@@ -53,28 +53,13 @@ __status__ = "Debug"
 
 #endregion
 
+from devices.drivers.modbus.function_code import FunctionCode
+from devices.drivers.modbus.parameter_type import ParameterType
+
 class Parameter:
     """Modbus parameter descriptor."""
 
 #region Attributes
-
-    __parameter_name = "Parameter"
-    """Parameter name."""
-
-    __mou = "Unit"
-    """Measure of unit."""
-
-    __data_type = ""
-    """Data type."""
-
-    __addresses = []
-    """Modbus addresses."""
-
-    __function_code = ""
-    """Register type."""
-
-    __limits = []
-    """Limits."""    
 
 #endregion
 
@@ -186,7 +171,7 @@ class Parameter:
 
 #region Constructor
 
-    def __init__(self, parameter_name, mou, data_type, addresses, function_code, limits=[0, 100]):
+    def __init__(self, parameter_name: str, mou: str, data_type: ParameterType, addresses: [], function_code: FunctionCode, limits=[0, 100]):
         """Constructor
 
         Args:
@@ -198,10 +183,27 @@ class Parameter:
         """
 
         self.parameter_name = parameter_name
+        """Parameter name.
+        """
+
         self.mou = mou
+        """Measure of unit.
+        """
+
         self.data_type = data_type
+        """Data type.
+        """
+
         self.addresses = addresses
+        """Modbus addresses.
+        """
+
         self.function_code = function_code
+        """Register type.
+        """
+
         self.limits = limits
+        """Limits.
+        """
 
 #endregion
