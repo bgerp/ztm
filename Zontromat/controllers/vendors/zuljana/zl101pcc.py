@@ -193,8 +193,8 @@ class ZL101PCC(BaseController):
         """Analog outputs.
         """
 
-        self.__modbus_rtu_clients_count = 2
-        """Modbus-RTU clients count.
+        self.__interfaces_count = 2
+        """Interfaces count.
         """
 
         self.__modbus_rtu_clients = {}
@@ -205,7 +205,7 @@ class ZL101PCC(BaseController):
         """IO
         """
 
-        for index in range(0, self.__modbus_rtu_clients_count):
+        for index in range(0, self.__interfaces_count):
             modbus_config = self.is_valid_port_cfg(index)
             if (not index in self.__modbus_rtu_clients) and (not modbus_config is {}):
                 if modbus_config["interface"] == "RTU":
@@ -242,6 +242,13 @@ class ZL101PCC(BaseController):
         """Analog I/O volts.
         """
 
+        self.__di_count = 0
+        self.__do_count = 0
+        self.__ai_count = 0
+        self.__ao_count = 0
+
+        self.__data_tree = {}
+
 #endregion
 
 #region Private Methods
@@ -276,6 +283,26 @@ class ZL101PCC(BaseController):
 
         # return uuid
 
+    def __update_data_tree(self, remote_gpio, value):
+        if not remote_gpio["uart"] in self.__data_tree:
+            self.__data_tree[remote_gpio["uart"]] = {}
+        if not remote_gpio["mb_id"] in self.__data_tree[remote_gpio["uart"]]:
+            self.__data_tree[remote_gpio["uart"]][remote_gpio["mb_id"]] = {}
+        if not remote_gpio["mb_fc"] in self.__data_tree[remote_gpio["uart"]][remote_gpio["mb_id"]]:
+            self.__data_tree[remote_gpio["uart"]][remote_gpio["mb_id"]][remote_gpio["mb_fc"]] = {}
+        if not remote_gpio["io_reg"] in self.__data_tree[remote_gpio["uart"]][remote_gpio["mb_id"]][remote_gpio["mb_fc"]]:
+            self.__data_tree[remote_gpio["uart"]][remote_gpio["mb_id"]][remote_gpio["mb_fc"]][remote_gpio["io_reg"]] = {}
+        if not remote_gpio["io_index"] in self.__data_tree[remote_gpio["uart"]][remote_gpio["mb_id"]][remote_gpio["mb_fc"]][remote_gpio["io_reg"]]:
+            self.__data_tree[remote_gpio["uart"]][remote_gpio["mb_id"]][remote_gpio["mb_fc"]][remote_gpio["io_reg"]][remote_gpio["io_index"]] = value
+
+    def __get_by_interface(self, interface):
+
+        result = []
+        if interface in self.__data_tree:
+            result = self.__data_tree[interface]
+    
+        return result
+
 #endregion
 
 #region Protected Methods
@@ -294,6 +321,15 @@ class ZL101PCC(BaseController):
 
     def update(self):
         """Update controller state."""
+
+        self.__logger.debug(f"DataTree: {self.__data_tree}")
+
+        for interface in range(0, self.__interfaces_count):
+            devices = self.__get_by_interface(interface)
+            for device in devices:
+                state = devices[device]
+                print(state)
+
 
         return self.__modbus_rtu_clients is not None or {}
 
@@ -345,6 +381,7 @@ class ZL101PCC(BaseController):
             rgpio_response = False
 
             remote_gpio = self.parse_remote_gpio(pin)
+            self.__update_data_tree(remote_gpio, False)
 
             if not remote_gpio["uart"] in self.__modbus_rtu_clients:
                 GlobalErrorHandler.log_missing_resource("Missing MODBUS-RTU UART{} interface".format(remote_gpio["uart"]))
@@ -390,6 +427,8 @@ class ZL101PCC(BaseController):
         else:
              GlobalErrorHandler.log_missing_resource(f"Pin ({pin}) does not confirm list or str.")
 
+        self.__di_count += 1
+
         return response
 
     def digital_write(self, pin, value):
@@ -406,7 +445,7 @@ class ZL101PCC(BaseController):
         Returns:
             any: State of the pin.
         """
-        
+
         response = False
         
         # Local GPIO.
@@ -463,6 +502,7 @@ class ZL101PCC(BaseController):
                 state = not state
 
             remote_gpio = self.parse_remote_gpio(pin)
+            self.__update_data_tree(remote_gpio, value)
 
             if remote_gpio["mb_fc"] == FunctionCode.WriteSingleCoil.value:
                 write_response = self.__modbus_rtu_clients[remote_gpio["uart"]].write_coil(
@@ -512,6 +552,8 @@ class ZL101PCC(BaseController):
 
         else:
              GlobalErrorHandler.log_missing_resource(f"Pin ({pin}) does not confirm list or str.")
+
+        self.__do_count += 1
 
         return response
 
@@ -568,8 +610,7 @@ class ZL101PCC(BaseController):
         # Remote GPIO.
         elif self.is_gpio_remote(pin):
             remote_gpio = self.parse_remote_gpio(pin)
-
-            # self.__logger.debug(f"GPIO: {remote_gpio}")
+            self.__update_data_tree(remote_gpio, value)
 
             if remote_gpio["mb_fc"] == FunctionCode.WriteSingleHoldingRegister.value:
                 write_response = self.__modbus_rtu_clients[remote_gpio["uart"]].write_register(
@@ -597,6 +638,8 @@ class ZL101PCC(BaseController):
 
         else:
             raise ValueError("Pin does not exists in pin map.")
+
+        self.__ao_count += 1
 
         return response
 
@@ -650,6 +693,7 @@ class ZL101PCC(BaseController):
         # Remote GPIO.
         elif self.is_gpio_remote(pin):
             remote_gpio = self.parse_remote_gpio(pin)
+            self.__update_data_tree(remote_gpio, False)
 
             # self.__logger.debug(f"GPIO: {remote_gpio}")
 
@@ -667,6 +711,8 @@ class ZL101PCC(BaseController):
 
         else:
             raise ValueError("Pin does not exists in pin map.")
+
+        self.__ai_count += 1
 
         return state
 
