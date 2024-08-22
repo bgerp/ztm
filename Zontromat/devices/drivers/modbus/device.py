@@ -36,6 +36,7 @@ from devices.drivers.modbus.requests.read_device_input_registers import ReadDevi
 from devices.drivers.modbus.requests.write_device_coils import WriteDeviceCoils
 from devices.drivers.modbus.requests.write_device_registers import WriteDeviceRegisters
 
+from utils.logic.timer import Timer
 
 #region File Attributes
 
@@ -149,9 +150,25 @@ class ModbusDevice(BaseDevice):
         """
         super().__init__(config)
 
-        self._parameters = []
-        self._unit = 0
         self._uart = 0
+        """Interface that passing thought.
+        """
+
+        self._parameters = []
+        """Parameters description.
+        """
+
+        self._unit = 0
+        """Modbus ID (unit)
+        """
+
+        self._parameters_values = {}
+        """Parameters values.
+        """
+
+        self._update_timer = Timer(60)
+        """Update timer.
+        """
 
         if "mb_id" in config:
             self._unit = config["mb_id"]
@@ -161,6 +178,9 @@ class ModbusDevice(BaseDevice):
 
         if "uart" in config:
             self._uart = config["uart"]
+
+        if "update_time_ms" in config:
+            self._update_timer.expiration_time = config["update_time_ms"]
 
     def __str__(self):
         """Returns device vendor and model as string.
