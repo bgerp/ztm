@@ -183,6 +183,8 @@ class Environment(BasePlugin):
             # For each PIR in list get.
             for pir in self.__pirs:
 
+                self.__pirs[pir].update()
+
                 # Initialise the arrays.
                 if not pir in self.__pirs_states:
                     self.__pirs_states[pir] = None

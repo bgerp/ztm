@@ -195,6 +195,13 @@ class TemperatureProcessor():
         """Update temperature.
         """
 
+        if self.__ref_thermometer is not None:
+            self.__ref_thermometer.update()
+
+        if self.__thermometers is not None:
+            for thermometer in self.__thermometers:
+                thermometer.update()
+
         dt = 100
         ref_temp = None
         temperatures = []
