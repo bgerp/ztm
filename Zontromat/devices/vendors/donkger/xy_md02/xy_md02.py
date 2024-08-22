@@ -75,14 +75,6 @@ class XYMD02(ModbusDevice):
 
         super().__init__(config)
 
-
-        self.__last_good_measurement = 0
-        self.__unsuccessful_times = 0
-        self.__unsuccessful_times_limit = 5
-
-        # Create logger.
-        self.__logger = get_logger(__name__)
-
         self._vendor = "Donkger"
 
         self._model = "XYMD02"
@@ -135,9 +127,26 @@ class XYMD02(ModbusDevice):
             Parameter("SetHumidityCorrection", "Rh%",\
             ParameterType.INT16_T_LE, [0x0104], FunctionCode.WriteSingleHoldingRegister))
 
+        self._parameters.append(
+            Parameter("All", "Any",\
+            ParameterType.ARR_UINT16_T_LE, [0, 1], FunctionCode.ReadHoldingRegisters))
+
 #endregion
 
 #region Public Methods
+
+    def update(self):
+        """Update the data.
+        """
+        self._update_timer.update()
+        if self._update_timer.expired:
+            self._update_timer.clear()
+
+            all_values = self.get_value("All")
+
+            if all_values:
+                self._parameters_values["Temperature"] = all_values[0] / 10.0
+                self._parameters_values["Humidity"] = all_values[1] / 10.0
 
     def get_temp(self):
         """Get temperature.
@@ -145,11 +154,10 @@ class XYMD02(ModbusDevice):
         Returns:
             float: Value of the temperature.
         """
+        value = None
 
-        value = self.get_value("Temperature")
-
-        if value != None:
-            value = value / 10.0
+        if "Temperature" in self._parameters_values:
+            value = self._parameters_values["Temperature"]
 
         return value
 
@@ -159,38 +167,10 @@ class XYMD02(ModbusDevice):
         Returns:
             float: Value of the humidity.
         """
-
         value = None
 
-        try:
-            request = self.generate_request("Humidity")
-            response = self._controller.execute_mb_request(request, self.uart)
-            if response is not None:
-                if not response.isError():
-                    value = response.registers[0] / 10
-
-                    # Dump good value.
-                    self.__last_good_measurement = value
-
-                    # Reset the counter.
-                    self.__unsuccessful_times = 0
-
-                else:
-                    self.__unsuccessful_times += 1
-                    value = self.__last_good_measurement
-
-            else:
-                self.__unsuccessful_times += 1
-                value = self.__last_good_measurement
-
-        except Exception:
-            self.__unsuccessful_times += 1
-            value = self.__last_good_measurement
-
-        if self.__unsuccessful_times >= self.__unsuccessful_times_limit:
-            GlobalErrorHandler.log_hardware_malfunction(
-                self.__logger, "Device: {}; ID: {}; Can not read the temperature value.".format(
-                    self.name, request.unit_id))
+        if "Humidity" in self._parameters_values:
+            value = self._parameters_values["Humidity"]
 
         return value
 

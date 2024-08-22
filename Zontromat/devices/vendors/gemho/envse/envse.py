@@ -72,21 +72,47 @@ class Envse(ModbusDevice):
 
         self._model = "Envse"
 
+        self.__set_registers()
+
+#endregion
+
+#region Private Methods
+
+    def __set_registers(self):
+
         self._parameters.append(
             Parameter("Temperature", "ºC",\
-            ParameterType.UINT16_T_LE, [0x00], FunctionCode.ReadHoldingRegisters))
+            ParameterType.UINT16_T_LE, [0], FunctionCode.ReadHoldingRegisters))
 
         self._parameters.append(
             Parameter("Humidity", "Rh",\
-            ParameterType.UINT16_T_LE, [0x01], FunctionCode.ReadHoldingRegisters))
+            ParameterType.UINT16_T_LE, [1], FunctionCode.ReadHoldingRegisters))
 
         self._parameters.append(
             Parameter("Lux", "Lux",\
-            ParameterType.UINT16_T_LE, [0x02], FunctionCode.ReadHoldingRegisters))
+            ParameterType.UINT16_T_LE, [2], FunctionCode.ReadHoldingRegisters))
+
+        self._parameters.append(
+            Parameter("All", "Any",\
+            ParameterType.ARR_UINT16_T_LE, [0, 1, 2], FunctionCode.ReadHoldingRegisters))
 
 #endregion
 
 #region Public Methods
+
+    def update(self):
+        """Update the data.
+        """
+        self._update_timer.update()
+        if self._update_timer.expired:
+            self._update_timer.clear()
+
+            all_values = self.get_value("All")
+
+            if all_values:
+                self._parameters_values["Temperature"] = all_values[0] / 10.0
+                self._parameters_values["Humidity"] = all_values[1] / 10.0
+                self._parameters_values["Lux"] = all_values[2]
 
     def get_temp(self):
         """Get temperature.
@@ -94,18 +120,32 @@ class Envse(ModbusDevice):
         Returns:
             float: Value of the temperature.
         """
+        value = None
 
-        value = self.get_value("Temperature")
-
-        if value != None:
-            value = value / 10.0
+        if "Temperature" in self._parameters_values:
+            value = self._parameters_values["Temperature"]
 
         return value
 
     def get_hum(self):
-        return self.get_value("Humidity")
+        """Get humidity.
+
+        Returns:
+            float: Value of the humidity.
+        """
+        value = None
+
+        if "Humidity" in self._parameters_values:
+            value = self._parameters_values["Humidity"]
+
+        return value
 
     def get_lux(self):
-        return self.get_value("Lux")
+        value = None
+
+        if "Lux" in self._parameters_values:
+            value = self._parameters_values["Lux"]
+
+        return value
 
 #endregion

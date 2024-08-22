@@ -75,15 +75,48 @@ class RS2(ModbusDevice):
 
         self._model = "RS2"
 
+        self.__set_registers()
+
+        # Set the time especially for this particular device
+        # because the data is time dependant.
+        self._update_timer.expiration_time = 1
+
+#endregion
+
+#region Private Methods
+
+    def __set_registers(self):
+
         self._parameters.append(
             Parameter("MotionDetected", "bool",\
-            ParameterType.UINT16_T_LE, [0x06], FunctionCode.ReadHoldingRegisters))
+            ParameterType.UINT16_T_LE, [6], FunctionCode.ReadHoldingRegisters))
+
+        self._parameters.append(
+            Parameter("All", "Any",\
+            ParameterType.ARR_UINT16_T_LE, [6], FunctionCode.ReadHoldingRegisters))
 
 #endregion
 
 #region Public Methods
 
+    def update(self):
+        """Update the data.
+        """
+        self._update_timer.update()
+        if self._update_timer.expired:
+            self._update_timer.clear()
+
+            all_values = self.get_value("All")
+
+            if all_values:
+                self._parameters_values["MotionDetected"] = all_values[6]
+
     def get_motion(self):
-        return self.get_value("MotionDetected")
+        """Get motion flag.
+
+        Returns:
+            int: Motion flag.
+        """
+        return self._parameters_values["MotionDetected"]
 
 #endregion
