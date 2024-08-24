@@ -145,6 +145,10 @@ class ZL101PCC(BaseController):
         """UUID handler.
         """
 
+        modbus_config = self.is_valid_port_cfg(0)
+        self.__local_io_address=modbus_config["rtu_unit"]
+
+        # TODO: Migrate all indexes with dynamic calls to the remote island.
         self._gpio_map = \
         {\
             "identification": {"vendor": "bao bao industries", "model": "zl101pcc"},\
@@ -177,18 +181,22 @@ class ZL101PCC(BaseController):
         """GPIO mapping.
         """        
 
+        # TODO: Remove below.
         self.__DI = [False]*8
         """Digital inputs.
         """
 
+        # TODO: Remove below.
         self.__DORO = [False]*12
         """Digital & Relay outputs.
         """
 
+        # TODO: Remove below.
         self.__AI = [0]*8
         """Analog inputs.
         """
 
+        # TODO: Remove below.
         self.__AO = [0]*4
         """Analog outputs.
         """
@@ -206,6 +214,8 @@ class ZL101PCC(BaseController):
         """
 
         for index in range(0, self.__interfaces_count):
+            # TODO: move this method to thiss class, this is specific for this controller.
+            # It is not commont thing.
             modbus_config = self.is_valid_port_cfg(index)
             if (not index in self.__modbus_rtu_clients) and (not modbus_config is {}):
                 if modbus_config["interface"] == "RTU":
@@ -232,19 +242,26 @@ class ZL101PCC(BaseController):
                         framer=ModbusFramer
                         )
             else:
+                # TODO: move this method to this calss. This is speciffic thing for this controller.
                 self.show_valid_serial_ports(modbus_config["port"])
         
+            # TODO: Remove below.
             # This hot fix is mandatory, because "black island" is part of the logical body of the master controller.
             if index == 0:
+                # TODO: Remove below.
                 self.__black_island = BlackIsland(mb_id=modbus_config["rtu_unit"])
 
         self.__analog_limits = [0.0, 10.0]
         """Analog I/O volts.
         """
 
+        # TODO: Remove below.
         self.__di_count = 0
+        # TODO: Remove below.
         self.__do_count = 0
+        # TODO: Remove below.
         self.__ai_count = 0
+        # TODO: Remove below.
         self.__ao_count = 0
 
         self.__data_tree = {}
@@ -283,12 +300,10 @@ class ZL101PCC(BaseController):
 
         # return uuid
 
-    def __update_data_tree(self, remote_gpio, **kwargs):
+    def __get_tree_element(self, remote_gpio):
+        return False
 
-        value = None
-
-        if "value" in kwargs:
-            value = kwargs["value"]
+    def __set_tree_element(self, remote_gpio, value):
 
         if remote_gpio["uart"] in self.__data_tree:
             if remote_gpio["mb_id"] in self.__data_tree[remote_gpio["uart"]]:
@@ -387,6 +402,7 @@ class ZL101PCC(BaseController):
 
         return self.__modbus_rtu_clients is not None or {}
 
+    # TODO: Refactor below.
     def digital_read(self, pin):
         """Read the digital input pin.
 
@@ -435,7 +451,7 @@ class ZL101PCC(BaseController):
             rgpio_response = False
 
             remote_gpio = self.parse_remote_gpio(pin)
-            self.__update_data_tree(remote_gpio)
+            self.__set_tree_element(remote_gpio)
 
             if not remote_gpio["uart"] in self.__modbus_rtu_clients:
                 GlobalErrorHandler.log_missing_resource("Missing MODBUS-RTU UART{} interface".format(remote_gpio["uart"]))
@@ -485,6 +501,7 @@ class ZL101PCC(BaseController):
 
         return response
 
+    # TODO: Refactor below.
     def digital_write(self, pin, value):
         """Write the digital output pin.
 
@@ -556,7 +573,7 @@ class ZL101PCC(BaseController):
                 state = not state
 
             remote_gpio = self.parse_remote_gpio(pin)
-            self.__update_data_tree(remote_gpio, value)
+            self.__set_tree_element(remote_gpio, value)
 
             if remote_gpio["mb_fc"] == FunctionCode.WriteSingleCoil.value:
                 write_response = self.__modbus_rtu_clients[remote_gpio["uart"]].write_coil(
@@ -611,6 +628,7 @@ class ZL101PCC(BaseController):
 
         return response
 
+    # TODO: Refactor below.
     def analog_write(self, pin, value):
         """Write the analog input pin.
 
@@ -664,7 +682,7 @@ class ZL101PCC(BaseController):
         # Remote GPIO.
         elif self.is_gpio_remote(pin):
             remote_gpio = self.parse_remote_gpio(pin)
-            self.__update_data_tree(remote_gpio, value)
+            self.__set_tree_element(remote_gpio, value)
 
             if remote_gpio["mb_fc"] == FunctionCode.WriteSingleHoldingRegister.value:
                 write_response = self.__modbus_rtu_clients[remote_gpio["uart"]].write_register(
@@ -697,6 +715,7 @@ class ZL101PCC(BaseController):
 
         return response
 
+    # TODO: Refactor below.
     def analog_read(self, pin):
         """Write the analog input pin.
 
@@ -747,7 +766,7 @@ class ZL101PCC(BaseController):
         # Remote GPIO.
         elif self.is_gpio_remote(pin):
             remote_gpio = self.parse_remote_gpio(pin)
-            self.__update_data_tree(remote_gpio, False)
+            self.__set_tree_element(remote_gpio, False)
 
             # self.__logger.debug(f"GPIO: {remote_gpio}")
 
@@ -770,6 +789,7 @@ class ZL101PCC(BaseController):
 
         return state
 
+    # Is this thing mandatory?
     def execute_mb_request(self, request, uart):
         """Execute modbus request.
 
