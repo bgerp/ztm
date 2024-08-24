@@ -333,16 +333,39 @@ class ZL101PCC(BaseController):
                 fcs = devices[device]
                 sorted_fcs = dict(sorted(fcs.items()))
                 for fc in sorted_fcs:
-                    if fc == 2:
+                    if fc == 1:
+                        pass
+                    elif fc == 2:
                         for address in fcs[fc]:
                             print(f"response = read_discrete_inputs({address}, 8, {device})")
                             data = fcs[fc][address]
                             data_len = 8 if len(data) < 8 else 16
+                            # TODO: With connection create call with printed parameters.
                             map_data = [None]*data_len
                             for bit_index in data:
                                 map_data[bit_index] = data[bit_index]
+                    elif fc == 3:
+                        for address in fcs[fc]:
+                            print(f"response = read_holding_registers({address}, 8, {device})")
+                            data = fcs[fc][address]
+                            data_len = 8 if len(data) < 8 else 16
                             # TODO: With connection create call with printed parameters.
-                    if fc == 5:
+                            map_data = [None]*data_len
+                            for bit_index in data:
+                    elif fc == 4:
+                        for address in fcs[fc]:
+                            print(f"response = read_input_registers({address}, 8, {device})")
+                            data = fcs[fc][address]
+                            data_len = 8 if len(data) < 8 else 16
+                            # TODO: With connection create call with printed parameters.
+                            map_data = [None]*data_len
+                            for bit_index in data:
+                                map_data[bit_index] = data[bit_index]
+                    elif fc == 5:
+                        pass
+                    elif fc == 6:
+                        pass
+                    elif fc == 15:
                         for address in fcs[fc]:
                             data = fcs[fc][address]
                             data_len = 8 if len(data) < 8 else 16
@@ -350,6 +373,15 @@ class ZL101PCC(BaseController):
                             for bit_index in data:
                                 map_data[bit_index] = data[bit_index]
                             print(f"write_coils({address}, {map_data}, {device})")
+                            # TODO: With connection create call with printed parameters.
+                    elif fc == 16:
+                        for address in fcs[fc]:
+                            data = fcs[fc][address]
+                            data_len = 8 if len(data) < 8 else 16
+                            map_data = [None]*data_len
+                            for bit_index in data:
+                                map_data[bit_index] = data[bit_index]
+                            print(f"write_holding_registers({address}, {map_data}, {device})")
                             # TODO: With connection create call with printed parameters.
 
 
