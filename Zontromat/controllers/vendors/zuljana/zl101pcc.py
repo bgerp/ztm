@@ -283,25 +283,29 @@ class ZL101PCC(BaseController):
 
         # return uuid
 
-    def __update_data_tree(self, remote_gpio, value):
-        if not remote_gpio["uart"] in self.__data_tree:
-            self.__data_tree[remote_gpio["uart"]] = {}
-        if not remote_gpio["mb_id"] in self.__data_tree[remote_gpio["uart"]]:
-            self.__data_tree[remote_gpio["uart"]][remote_gpio["mb_id"]] = {}
-        if not remote_gpio["mb_fc"] in self.__data_tree[remote_gpio["uart"]][remote_gpio["mb_id"]]:
-            self.__data_tree[remote_gpio["uart"]][remote_gpio["mb_id"]][remote_gpio["mb_fc"]] = {}
-        if not remote_gpio["io_reg"] in self.__data_tree[remote_gpio["uart"]][remote_gpio["mb_id"]][remote_gpio["mb_fc"]]:
-            self.__data_tree[remote_gpio["uart"]][remote_gpio["mb_id"]][remote_gpio["mb_fc"]][remote_gpio["io_reg"]] = {}
-        if not remote_gpio["io_index"] in self.__data_tree[remote_gpio["uart"]][remote_gpio["mb_id"]][remote_gpio["mb_fc"]][remote_gpio["io_reg"]]:
-            self.__data_tree[remote_gpio["uart"]][remote_gpio["mb_id"]][remote_gpio["mb_fc"]][remote_gpio["io_reg"]][remote_gpio["io_index"]] = value
+    def __update_data_tree(self, remote_gpio, **kwargs):
 
-    def __get_by_interface(self, interface):
+        value = None
 
-        result = []
-        if interface in self.__data_tree:
-            result = self.__data_tree[interface]
-    
-        return result
+        if "value" in kwargs:
+            value = kwargs["value"]
+
+        if remote_gpio["uart"] in self.__data_tree:
+            if remote_gpio["mb_id"] in self.__data_tree[remote_gpio["uart"]]:
+                if remote_gpio["mb_fc"] in self.__data_tree[remote_gpio["uart"]][remote_gpio["mb_id"]]:
+                    if remote_gpio["io_reg"] in self.__data_tree[remote_gpio["uart"]][remote_gpio["mb_id"]][remote_gpio["mb_fc"]]:
+                        if remote_gpio["io_index"] in self.__data_tree[remote_gpio["uart"]][remote_gpio["mb_id"]][remote_gpio["mb_fc"]][remote_gpio["io_reg"]]:
+                            self.__data_tree[remote_gpio["uart"]][remote_gpio["mb_id"]][remote_gpio["mb_fc"]][remote_gpio["io_reg"]][remote_gpio["io_index"]] = value
+                        else:
+                            self.__data_tree[remote_gpio["uart"]][remote_gpio["mb_id"]][remote_gpio["mb_fc"]][remote_gpio["io_reg"]][remote_gpio["io_index"]] = value
+                    else:
+                        self.__data_tree[remote_gpio["uart"]][remote_gpio["mb_id"]][remote_gpio["mb_fc"]][remote_gpio["io_reg"]] = {remote_gpio["io_index"]: value}
+                else:
+                    self.__data_tree[remote_gpio["uart"]][remote_gpio["mb_id"]][remote_gpio["mb_fc"]] = {remote_gpio["io_reg"]: {remote_gpio["io_index"]: value}}
+            else:
+                self.__data_tree[remote_gpio["uart"]][remote_gpio["mb_id"]] = {remote_gpio["mb_fc"]: {remote_gpio["io_reg"]: {remote_gpio["io_index"]: value}}}
+        else:
+            self.__data_tree[remote_gpio["uart"]] = {remote_gpio["mb_id"]: {remote_gpio["mb_fc"]: {remote_gpio["io_reg"]: {remote_gpio["io_index"]: value}}}}
 
 #endregion
 
@@ -322,13 +326,31 @@ class ZL101PCC(BaseController):
     def update(self):
         """Update controller state."""
 
-        self.__logger.debug(f"DataTree: {self.__data_tree}")
-
-        for interface in range(0, self.__interfaces_count):
-            devices = self.__get_by_interface(interface)
+        for interface in self.__data_tree:
+            devices = self.__data_tree[interface]
+            # TODO: Create connection with interface.
             for device in devices:
-                state = devices[device]
-                print(state)
+                fcs = devices[device]
+                sorted_fcs = dict(sorted(fcs.items()))
+                for fc in sorted_fcs:
+                    if fc == 2:
+                        for address in fcs[fc]:
+                            print(f"response = read_discrete_inputs({address}, 8, {device})")
+                            data = fcs[fc][address]
+                            data_len = 8 if len(data) < 8 else 16
+                            map_data = [None]*data_len
+                            for bit_index in data:
+                                map_data[bit_index] = data[bit_index]
+                            # TODO: With connection create call with printed parameters.
+                    if fc == 5:
+                        for address in fcs[fc]:
+                            data = fcs[fc][address]
+                            data_len = 8 if len(data) < 8 else 16
+                            map_data = [None]*data_len
+                            for bit_index in data:
+                                map_data[bit_index] = data[bit_index]
+                            print(f"write_coils({address}, {map_data}, {device})")
+                            # TODO: With connection create call with printed parameters.
 
 
         return self.__modbus_rtu_clients is not None or {}
@@ -381,7 +403,7 @@ class ZL101PCC(BaseController):
             rgpio_response = False
 
             remote_gpio = self.parse_remote_gpio(pin)
-            self.__update_data_tree(remote_gpio, False)
+            self.__update_data_tree(remote_gpio)
 
             if not remote_gpio["uart"] in self.__modbus_rtu_clients:
                 GlobalErrorHandler.log_missing_resource("Missing MODBUS-RTU UART{} interface".format(remote_gpio["uart"]))
