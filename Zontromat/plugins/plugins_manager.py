@@ -80,6 +80,14 @@ class PluginsManager:
 
 #endregion
 
+#region Properties
+
+    @property
+    def update_time(self):
+        return self.__update_t1 - self.__update_t0
+
+#endregion
+
 #region Constructor
 
     def __init__(self, registers, controller):
@@ -96,7 +104,8 @@ class PluginsManager:
         self.__controller = controller
         self.__add_enable_handlers()
 
-        self.__show_consumed_time = False
+        self.__update_t0 = 0
+        self.__update_t1 = 0
 
 #endregion
 
@@ -216,25 +225,12 @@ class PluginsManager:
     def update(self):
         """Update plugins.
         """
-        if self.__show_consumed_time:
-            t0 = t1 = 0
-            self.__logger.debug("===========")
-        
-        for key in self.__plugins:
-        
-            if self.__show_consumed_time:
-                t0 = time.time()
-        
+        self.__update_t0 = time.time()
+
+        for key in self.__plugins:        
             self.__plugins[key].update()
         
-            if self.__show_consumed_time:
-                t1 = time.time()
-                dt = t1-t0
-                self.__logger.debug(f"Name: {key}; Time: {dt:.2f}")
-        
-        if self.__show_consumed_time:
-            self.__logger.debug("===========")
-            self.__logger.debug("")
+        self.__update_t1 = time.time()
 
     def shutdown(self):
         """Shutdown plugins.
