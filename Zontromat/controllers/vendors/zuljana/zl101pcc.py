@@ -24,6 +24,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import subprocess
 import os
+import re
+import time
 
 from services.global_error_handler.global_error_handler import GlobalErrorHandler
 
@@ -127,6 +129,10 @@ class ZL101PCC(BaseController):
 
         return "1"
 
+    @property
+    def update_time(self):
+        return self.__update_t1 - self.__update_t0
+
 #endregion
 
 #region Constructor
@@ -145,7 +151,7 @@ class ZL101PCC(BaseController):
         """UUID handler.
         """
 
-        modbus_config = self.is_valid_port_cfg(0)
+        modbus_config = self.__is_valid_port_cfg(0)
         self.__local_io_address=modbus_config["rtu_unit"]
 
         # TODO: Migrate all indexes with dynamic calls to the remote island.
@@ -201,26 +207,25 @@ class ZL101PCC(BaseController):
         """Analog outputs.
         """
 
-        self.__interfaces_count = 2
-        """Interfaces count.
-        """
-
-        self.__modbus_rtu_clients = {}
-        """Modbus-RTU clients.
-        """
-
         self.__black_island = None
         """IO
         """
 
+        self.__interfaces_count = 2
+        """Interfaces count.
+        """
+
+        self.__modbus_clients = {}
+        """Modbus-RTU clients.
+        """
+
         for index in range(0, self.__interfaces_count):
-            # TODO: move this method to thiss class, this is specific for this controller.
-            # It is not commont thing.
-            modbus_config = self.is_valid_port_cfg(index)
-            if (not index in self.__modbus_rtu_clients) and (not modbus_config is {}):
+            # TODO: move this method to this class, this is specific for this controller.
+            # It is not common thing.
+            modbus_config = self.__is_valid_port_cfg(index)
+            if (not index in self.__modbus_clients) and (not modbus_config is {}):
                 if modbus_config["interface"] == "RTU":
-                    self.__modbus_rtu_clients[index] = ModbusSerialClient(
-                        method="rtu",
+                    self.__modbus_clients[index] = ModbusSerialClient(
                         port=modbus_config["rtu_port"],
                         baudrate=modbus_config["rtu_baudrate"],
                         timeout=modbus_config["timeout"],
@@ -229,13 +234,14 @@ class ZL101PCC(BaseController):
                         stopbits=modbus_config["rtu_stopbits"]
                         )
                 elif modbus_config["interface"] == "TCP":
-                    self.__modbus_rtu_clients[index] = ModbusTcpClient(
+                    self.__modbus_clients[index] = ModbusTcpClient(
                         modbus_config["tcp_address"],
                         port=modbus_config["tcp_port"],
                         timeout=modbus_config["timeout"],
                         )
+                    self.__modbus_clients[index].delay_ms = 1000
                 elif modbus_config["interface"] == "RTUOverTCP":
-                    self.__modbus_rtu_clients[index] = ModbusTcpClient(
+                    self.__modbus_clients[index] = ModbusTcpClient(
                         modbus_config["tcp_address"],
                         port=modbus_config["tcp_port"],
                         timeout=modbus_config["timeout"],
@@ -255,16 +261,11 @@ class ZL101PCC(BaseController):
         """Analog I/O volts.
         """
 
-        # TODO: Remove below.
-        self.__di_count = 0
-        # TODO: Remove below.
-        self.__do_count = 0
-        # TODO: Remove below.
-        self.__ai_count = 0
-        # TODO: Remove below.
-        self.__ao_count = 0
-
         self.__data_tree = {}
+
+        self.__update_t0 = 0
+        self.__update_t1 = 0
+
 
 #endregion
 
@@ -300,8 +301,57 @@ class ZL101PCC(BaseController):
 
         # return uuid
 
+    def __is_valid_port_cfg(self, index):
+
+        configuration = {}
+
+        interface = f"interface_{index}"
+        if interface in self._config:
+            configuration["interface"] = self._config[interface]
+
+        timeout = "timeout_{}".format(index)
+        if timeout in self._config:
+            configuration["timeout"] = float(self._config[timeout])
+
+        port = "rtu_port_{}".format(index)
+        if port in self._config:
+            configuration["rtu_port"] = self._config[port]
+
+        baudrate = "rtu_baudrate_{}".format(index)
+        if baudrate in self._config:
+            configuration["rtu_baudrate"] = int(self._config[baudrate])
+
+        port_cfg = "rtu_cfg_{}".format(index)
+        if port_cfg in self._config:
+            cfg = re.search("[5-8][ENO][12]", self._config[port_cfg])
+            if not cfg is None:            
+                configuration["rtu_bytesize"] = int(cfg.string[0])
+                configuration["rtu_parity"] = cfg.string[1]
+                configuration["rtu_stopbits"] = int(cfg.string[2])
+
+        mb_id = "rtu_unit_{}".format(index)
+        if mb_id in self._config:
+            configuration["rtu_unit"] = int(self._config[mb_id])
+
+        tcp_ip_address = f"tcp_address_{index}"
+        if tcp_ip_address in self._config:
+            configuration["tcp_address"] = self._config[tcp_ip_address]
+
+        tcp_port = f"tcp_port_{index}"
+        if tcp_port in self._config:
+            configuration["tcp_port"] = int(self._config[tcp_port])
+
+        return configuration
+
     def __get_tree_element(self, remote_gpio):
-        return False
+        result = []
+
+        try:
+            result = self.__data_tree[remote_gpio["uart"]][remote_gpio["mb_id"]][remote_gpio["mb_fc"]][remote_gpio["io_reg"]][remote_gpio["io_index"]]
+        except Exception as exception:
+            result = None
+
+        return result
 
     def __set_tree_element(self, remote_gpio, value):
 
@@ -310,16 +360,22 @@ class ZL101PCC(BaseController):
                 if remote_gpio["mb_fc"] in self.__data_tree[remote_gpio["uart"]][remote_gpio["mb_id"]]:
                     if remote_gpio["io_reg"] in self.__data_tree[remote_gpio["uart"]][remote_gpio["mb_id"]][remote_gpio["mb_fc"]]:
                         if remote_gpio["io_index"] in self.__data_tree[remote_gpio["uart"]][remote_gpio["mb_id"]][remote_gpio["mb_fc"]][remote_gpio["io_reg"]]:
+                            # Update
                             self.__data_tree[remote_gpio["uart"]][remote_gpio["mb_id"]][remote_gpio["mb_fc"]][remote_gpio["io_reg"]][remote_gpio["io_index"]] = value
                         else:
+                            # Create
                             self.__data_tree[remote_gpio["uart"]][remote_gpio["mb_id"]][remote_gpio["mb_fc"]][remote_gpio["io_reg"]][remote_gpio["io_index"]] = value
                     else:
+                        # Create
                         self.__data_tree[remote_gpio["uart"]][remote_gpio["mb_id"]][remote_gpio["mb_fc"]][remote_gpio["io_reg"]] = {remote_gpio["io_index"]: value}
                 else:
+                    # Create
                     self.__data_tree[remote_gpio["uart"]][remote_gpio["mb_id"]][remote_gpio["mb_fc"]] = {remote_gpio["io_reg"]: {remote_gpio["io_index"]: value}}
             else:
+                # Create
                 self.__data_tree[remote_gpio["uart"]][remote_gpio["mb_id"]] = {remote_gpio["mb_fc"]: {remote_gpio["io_reg"]: {remote_gpio["io_index"]: value}}}
         else:
+            # Create
             self.__data_tree[remote_gpio["uart"]] = {remote_gpio["mb_id"]: {remote_gpio["mb_fc"]: {remote_gpio["io_reg"]: {remote_gpio["io_index"]: value}}}}
 
 #endregion
@@ -341,6 +397,11 @@ class ZL101PCC(BaseController):
     def update(self):
         """Update controller state."""
 
+        self.__update_t0 = time.time()
+
+        modbus_response = None
+        operation_status = False
+
         for interface in self.__data_tree:
             devices = self.__data_tree[interface]
             # TODO: Create connection with interface.
@@ -349,58 +410,107 @@ class ZL101PCC(BaseController):
                 sorted_fcs = dict(sorted(fcs.items()))
                 for fc in sorted_fcs:
                     if fc == 1:
-                        pass
+                        operation_status = True
                     elif fc == 2:
                         for address in fcs[fc]:
-                            print(f"response = read_discrete_inputs({address}, 8, {device})")
-                            data = fcs[fc][address]
-                            data_len = 8 if len(data) < 8 else 16
-                            # TODO: With connection create call with printed parameters.
-                            map_data = [None]*data_len
-                            for bit_index in data:
-                                map_data[bit_index] = data[bit_index]
+                            data_2 = fcs[fc][address]
+                            data_len_2 = 8 if len(data_2) <= 8 else 16
+                            modbus_response = self.__modbus_clients[interface].read_discrete_inputs(
+                                address,
+                                data_len_2,
+                                device)
+                            if modbus_response is not None:
+                                if not modbus_response.isError():
+                                    map_data_2 = {}
+                                    for key, value in enumerate(modbus_response.bits):
+                                        map_data_2[key] = value
+                                    self.__data_tree[interface][device][fc][address] = map_data_2
+                                    operation_status = True
+                                else:
+                                    GlobalErrorHandler.log_hardware_malfunction(self.__logger, f"Modbus malfunctioning: UART:{interface}; ID:{device}; FC:{fc} Adr:{address}")
+                            else:
+                                GlobalErrorHandler.log_hardware_malfunction(self.__logger, f"Modbus malfunctioning: UART:{interface}; ID:{device}; FC:{fc} Adr:{address}")
                     elif fc == 3:
-                        for address in fcs[fc]:
-                            print(f"response = read_holding_registers({address}, 8, {device})")
-                            data = fcs[fc][address]
-                            data_len = 8 if len(data) < 8 else 16
-                            # TODO: With connection create call with printed parameters.
-                            map_data = [None]*data_len
-                            for bit_index in data:
+                        operation_status = True
                     elif fc == 4:
                         for address in fcs[fc]:
-                            print(f"response = read_input_registers({address}, 8, {device})")
-                            data = fcs[fc][address]
-                            data_len = 8 if len(data) < 8 else 16
-                            # TODO: With connection create call with printed parameters.
-                            map_data = [None]*data_len
-                            for bit_index in data:
-                                map_data[bit_index] = data[bit_index]
+                            data_4 = fcs[fc][address]
+                            data_len_4 = 8 if len(data_4) <= 8 else 16
+                            modbus_response = self.__modbus_clients[interface].read_input_registers(
+                                address,
+                                data_len_4,
+                                device)
+                            if modbus_response is not None:
+                                if not modbus_response.isError():
+                                    map_data_4 = {}
+                                    for key, value in enumerate(modbus_response.registers):
+                                        map_data_4[key] = value
+                                    self.__data_tree[interface][device][fc][address] = map_data_4
+                                    operation_status = True
+                                else:
+                                    GlobalErrorHandler.log_hardware_malfunction(self.__logger, f"Modbus malfunctioning: UART:{interface}; ID:{device}; FC:{fc} Adr:{address}")
+                            else:
+                                GlobalErrorHandler.log_hardware_malfunction(self.__logger, f"Modbus malfunctioning: UART:{interface}; ID:{device}; FC:{fc} Adr:{address}")
                     elif fc == 5:
-                        pass
+                        for address in fcs[fc]:
+                            data_5 = fcs[fc][address]
+                            data_5_len = 8 if len(data_5) < 8 else 16
+                            map_data_5 = [0]*data_5_len
+                            for bit_index in data_5:
+                                    map_data_5[bit_index] = data_5[bit_index]
+                            modbus_response = self.__modbus_clients[interface].write_coils(
+                                address,
+                                map_data_5,
+                                device)
+                            if modbus_response is not None:
+                                if not modbus_response.isError():
+                                    operation_status = True
+                                else:
+                                    GlobalErrorHandler.log_hardware_malfunction(self.__logger, f"Modbus malfunctioning: UART:{interface}; ID:{device}; FC:{fc} Adr:{address}")
+                            else:
+                                GlobalErrorHandler.log_hardware_malfunction(self.__logger, f"Modbus malfunctioning: UART:{interface}; ID:{device}; FC:{fc} Adr:{address}")
                     elif fc == 6:
-                        pass
+                        operation_status = True
                     elif fc == 15:
                         for address in fcs[fc]:
-                            data = fcs[fc][address]
-                            data_len = 8 if len(data) < 8 else 16
-                            map_data = [None]*data_len
-                            for bit_index in data:
-                                map_data[bit_index] = data[bit_index]
-                            print(f"write_coils({address}, {map_data}, {device})")
-                            # TODO: With connection create call with printed parameters.
+                            data_15 = fcs[fc][address]
+                            data_len_15 = 8 if len(data_15) < 8 else 16
+                            map_data_15 = [0]*data_len_15
+                            for bit_index in data_15:
+                                    map_data_15[bit_index] = data_15[bit_index]
+                            modbus_response = self.__modbus_clients[interface].write_coils(
+                                address,
+                                map_data_15,
+                                device)
+                            if modbus_response is not None:
+                                if not modbus_response.isError():
+                                    operation_status = True
+                                else:
+                                    GlobalErrorHandler.log_hardware_malfunction(self.__logger, f"Modbus malfunctioning: UART:{interface}; ID:{device}; FC:{fc} Adr:{address}")
+                            else:
+                                GlobalErrorHandler.log_hardware_malfunction(self.__logger, f"Modbus malfunctioning: UART:{interface}; ID:{device}; FC:{fc} Adr:{address}")
                     elif fc == 16:
                         for address in fcs[fc]:
-                            data = fcs[fc][address]
-                            data_len = 8 if len(data) < 8 else 16
-                            map_data = [None]*data_len
-                            for bit_index in data:
-                                map_data[bit_index] = data[bit_index]
-                            print(f"write_holding_registers({address}, {map_data}, {device})")
-                            # TODO: With connection create call with printed parameters.
+                            data_16 = fcs[fc][address]
+                            data_len_16 = 8 if len(data_16) < 8 else 16
+                            map_data_16 = [0]*data_len_16
+                            for bit_index in data_16:
+                                map_data_16[bit_index] = data_16[bit_index]
+                            modbus_response = self.__modbus_clients[interface].write_registers(
+                                address,
+                                map_data_16,
+                                device)
+                            if modbus_response is not None:
+                                if not modbus_response.isError():
+                                    operation_status = True
+                                else:
+                                    GlobalErrorHandler.log_hardware_malfunction(self.__logger, f"Modbus malfunctioning: UART:{interface}; ID:{device}; FC:{fc} Adr:{address}")
+                            else:
+                                GlobalErrorHandler.log_hardware_malfunction(self.__logger, f"Modbus malfunctioning: UART:{interface}; ID:{device}; FC:{fc} Adr:{address}")
 
+        self.__update_t1 = time.time()
 
-        return self.__modbus_rtu_clients is not None or {}
+        return operation_status
 
     # TODO: Refactor below.
     def digital_read(self, pin):
@@ -428,7 +538,7 @@ class ZL101PCC(BaseController):
 
             # Read device digital inputs.
             request = self.__black_island.generate_request("GetDigitalInputs")
-            di_response = self.__modbus_rtu_clients[0].execute(request)
+            di_response = self.__modbus_clients[0].execute(request)
             if di_response is not None:
                 if not di_response.isError():
                     self.__DI = di_response.bits
@@ -448,28 +558,16 @@ class ZL101PCC(BaseController):
         # Remote GPIO.
         def get_remote_gpio(pin):
 
-            rgpio_response = False
+            remote_gpio_state = False
 
             remote_gpio = self.parse_remote_gpio(pin)
-            self.__set_tree_element(remote_gpio)
 
-            if not remote_gpio["uart"] in self.__modbus_rtu_clients:
-                GlobalErrorHandler.log_missing_resource("Missing MODBUS-RTU UART{} interface".format(remote_gpio["uart"]))
-                return False
+            if self.__get_tree_element(remote_gpio) == None:
+                self.__set_tree_element(remote_gpio, {})
 
-            read_response = self.__modbus_rtu_clients[remote_gpio["uart"]].read_discrete_inputs(
-                remote_gpio["io_reg"],
-                remote_gpio["io_index"]+1,
-                remote_gpio["mb_id"])
+            remote_gpio_state = self.__get_tree_element(remote_gpio)
 
-            if not read_response.isError():
-                rgpio_response = read_response.bits[remote_gpio["io_index"]]
-
-                # Inversion
-                if self.is_gpio_inverted(pin):
-                    rgpio_response = not rgpio_response
-
-            return rgpio_response
+            return remote_gpio_state
 
         if isinstance(pin, str):
             if self.is_gpio_off(pin):
@@ -496,8 +594,6 @@ class ZL101PCC(BaseController):
 
         else:
              GlobalErrorHandler.log_missing_resource(f"Pin ({pin}) does not confirm list or str.")
-
-        self.__di_count += 1
 
         return response
 
@@ -541,7 +637,7 @@ class ZL101PCC(BaseController):
             self.__DORO[gpio] = state
             # Write device digital & relay outputs.
             request = self.__black_island.generate_request("SetRelays", SetRelays=self.__DORO)
-            cw_response = self.__modbus_rtu_clients[0].execute(request)
+            cw_response = self.__modbus_clients[0].execute(request)
 
             if cw_response is not None:
                 if cw_response.isError():
@@ -575,28 +671,6 @@ class ZL101PCC(BaseController):
             remote_gpio = self.parse_remote_gpio(pin)
             self.__set_tree_element(remote_gpio, value)
 
-            if remote_gpio["mb_fc"] == FunctionCode.WriteSingleCoil.value:
-                write_response = self.__modbus_rtu_clients[remote_gpio["uart"]].write_coil(
-                    remote_gpio["io_reg"]+remote_gpio["io_index"],
-                    value,
-                    remote_gpio["mb_id"])
-
-                if not write_response.isError():
-                    response = True
-                else:
-                    GlobalErrorHandler.log_hardware_malfunction(self.__logger, "GPIO: {} @ {} malfunctioning, check modbus cables and connections.".format(pin, self))
-
-            elif remote_gpio["mb_fc"] == FunctionCode.WriteMultipleCoils.value:
-                write_response = self.__modbus_rtu_clients[remote_gpio["uart"]].write_coils(
-                    remote_gpio["io_reg"]+remote_gpio["io_index"],
-                    [value],
-                    remote_gpio["mb_id"])
-
-                if not write_response.isError():
-                    response = True
-                else:
-                    GlobalErrorHandler.log_hardware_malfunction(self.__logger, "GPIO: {} @ {} malfunctioning, check modbus cables and connections.".format(pin, self))
-
             return state
 
         if isinstance(pin, str):
@@ -623,8 +697,6 @@ class ZL101PCC(BaseController):
 
         else:
              GlobalErrorHandler.log_missing_resource(f"Pin ({pin}) does not confirm list or str.")
-
-        self.__do_count += 1
 
         return response
 
@@ -668,7 +740,7 @@ class ZL101PCC(BaseController):
             # Write device analog outputs.
             request = self.__black_island\
                 .generate_request(param_name, SetAnalogOutputs=self.__AO)
-            hrw_response = self.__modbus_rtu_clients[0].execute(request)
+            hrw_response = self.__modbus_clients[0].execute(request)
             if hrw_response is not None:
                 if not hrw_response.isError():
                     response = True
@@ -682,36 +754,12 @@ class ZL101PCC(BaseController):
         # Remote GPIO.
         elif self.is_gpio_remote(pin):
             remote_gpio = self.parse_remote_gpio(pin)
-            self.__set_tree_element(remote_gpio, value)
-
-            if remote_gpio["mb_fc"] == FunctionCode.WriteSingleHoldingRegister.value:
-                write_response = self.__modbus_rtu_clients[remote_gpio["uart"]].write_register(
-                    remote_gpio["io_reg"]+remote_gpio["io_index"],
-                    value,
-                    remote_gpio["mb_id"])
-
-                if not write_response.isError():
-                    response = True
-                else:
-                    GlobalErrorHandler.log_hardware_malfunction(self.__logger, "GPIO: {} @ {} malfunctioning, check modbus cables and connections.".format(pin, self))
-
-            elif remote_gpio["mb_fc"] == FunctionCode.WriteMultipleHoldingRegisters.value:
-                result_value = l_scale(value, self.__analog_limits, [0, 24000])
-                result_value = int(result_value)
-                write_response = self.__modbus_rtu_clients[remote_gpio["uart"]].write_registers(
-                    remote_gpio["io_reg"]+remote_gpio["io_index"],
-                    [result_value],
-                    remote_gpio["mb_id"])
-
-                if not write_response.isError():
-                    response = True
-                else:
-                    GlobalErrorHandler.log_hardware_malfunction(self.__logger, "GPIO: {} @ {} malfunctioning, check modbus cables and connections.".format(pin, self))
+            result_value = l_scale(value, self.__analog_limits, [0, 24000])
+            result_value = int(result_value)
+            self.__set_tree_element(remote_gpio, result_value)
 
         else:
             raise ValueError("Pin does not exists in pin map.")
-
-        self.__ao_count += 1
 
         return response
 
@@ -747,7 +795,7 @@ class ZL101PCC(BaseController):
             # Read device analog inputs.
             param_name = "GetAnalogInputs"
             request = self.__black_island.generate_request(param_name)
-            irr_response = self.__modbus_rtu_clients[0].execute(request)
+            irr_response = self.__modbus_clients[0].execute(request)
             if irr_response is not None:
                 if not irr_response.isError():
                     self.__AI = irr_response.registers
@@ -761,31 +809,19 @@ class ZL101PCC(BaseController):
             param = self.__black_island.get_parameter_by_name(param_name)
             state["value"] = l_scale(input_value, param.limits, self.__analog_limits)
 
-            # self.__logger.debug("analog_read({}, {})".format(self.model, pin))
-
         # Remote GPIO.
         elif self.is_gpio_remote(pin):
-            remote_gpio = self.parse_remote_gpio(pin)
-            self.__set_tree_element(remote_gpio, False)
-
-            # self.__logger.debug(f"GPIO: {remote_gpio}")
-
             if isinstance(pin, str):
-                read_response = self.__modbus_rtu_clients[remote_gpio["uart"]].read_input_registers(
-                    remote_gpio["io_reg"]+remote_gpio["io_index"],
-                    1,
-                    remote_gpio["mb_id"])
+                remote_gpio = self.parse_remote_gpio(pin)
 
-                if not read_response.isError():
-                    input_value = read_response.registers[0]
-                    param_name = "GetAnalogInputs"
-                    param = self.__black_island.get_parameter_by_name(param_name)
-                    state["value"] = l_scale(input_value, param.limits, self.__analog_limits)
 
+                if self.__get_tree_element(remote_gpio) == None:
+                    self.__set_tree_element(remote_gpio, 0)
+
+                input_value = self.__get_tree_element(remote_gpio)
+                state["value"] = l_scale(input_value, [0, 20000], self.__analog_limits)
         else:
             raise ValueError("Pin does not exists in pin map.")
-
-        self.__ai_count += 1
 
         return state
 
@@ -801,8 +837,8 @@ class ZL101PCC(BaseController):
         """
         response = None
 
-        if self.__modbus_rtu_clients is not None:
-            response = self.__modbus_rtu_clients[uart].execute(request)
+        if self.__modbus_clients is not None:
+            response = self.__modbus_clients[uart].execute(request)
 
         return response
 
