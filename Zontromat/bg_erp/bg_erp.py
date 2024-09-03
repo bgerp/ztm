@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 
+import time
 from utils.logger import get_logger
 
 from bg_erp.client import Client
@@ -62,34 +63,6 @@ class bgERP:
     """bgERP service communicator"""
 
 #region Attributes
-
-    __host = "127.0.0.1"
-    """Host
-    """
-
-    __timeout = 5
-    """Timeout
-    """
-
-    __client = None
-    """Client instance.
-    """
-
-    __server = None
-    """Server instance.
-    """
-
-    __is_logged = False
-    """Is logged in flag.
-    """
-
-    __get_registers = None
-    """Get register callback.
-    """
-
-    __set_registers = None
-    """Set register callback.
-    """
 
 #endregion
 
@@ -175,6 +148,10 @@ class bgERP:
         """
         return self.__is_logged
 
+    @property
+    def sync_time(self):
+        return self.__sync_t1 - self.__sync_t0
+
 #endregion
 
 #region Constructor \ Destructor
@@ -183,20 +160,51 @@ class bgERP:
         """Constructor
         """
 
-        host = "127.0.0.1"
-        if "host" in config:
-            host = config.get("host")
-
-        timeout = 5
-        if "timeout" in config:
-            timeout = int(config.get("timeout"))
-
         self.__logger = get_logger(__name__)
+        """Logger
+        """        
 
-        self.__client = Client(host=host, timeout=timeout)
+        self.__host = "127.0.0.1"
+        """Host
+        """
+
+        self.__timeout = 5
+        """Timeout
+        """
+
+        self.__client = None
+        """Client instance.
+        """
+
+        self.__server = None
+        """Server instance.
+        """
+
+        self.__is_logged = False
+        """Is logged in flag.
+        """
+
+        self.__get_registers = None
+        """Get register callback.
+        """
+
+        self.__set_registers = None
+        """Set register callback.
+        """
+
+        if "host" in config:
+            self.__host = config.get("host")
+
+        self.__timeout = 5
+        if "timeout" in config:
+            self.__timeout = int(config.get("timeout"))
+
+        self.__client = Client(host=self.__host, timeout=self.__timeout)
 
         self.__server = Server()
-        #self.__server.set_sync_cb(lambda: self.sync({}))
+
+        self.__sync_t0 = 0
+        self.__sync_t1 = 0
 
     def __del__(self):
         """Destructor
@@ -239,8 +247,10 @@ class bgERP:
         Returns:
             bool: Status of sync.
         """
-
-        return self.__client.sync(registers)
+        self.__sync_t0 = time.time()
+        state = self.__client.sync(registers)
+        self.__sync_t1 = time.time()
+        return state
 
     def set_registers_cb(self, **config):
         """Set callback for get/set registers.
