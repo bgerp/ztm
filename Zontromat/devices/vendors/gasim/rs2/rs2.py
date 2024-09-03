@@ -117,6 +117,11 @@ class RS2(ModbusDevice):
         Returns:
             int: Motion flag.
         """
-        return self._parameters_values["MotionDetected"]
+        value = 0
+
+        if "MotionDetected" in self._parameters_values:
+            value = self._parameters_values["MotionDetected"]
+
+        return value
 
 #endregion
