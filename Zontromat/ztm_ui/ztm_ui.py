@@ -143,6 +143,10 @@ class ZtmUI():
     def is_logged_in(self):
         return self.__login_state == LoginState.Accept
 
+    @property
+    def sync_time(self):
+        return self.__sync_t1 - self.__sync_t0
+
 #endregion
 
 #region Constructor
@@ -256,6 +260,9 @@ class ZtmUI():
         self.timeout = int(self.timeout)
         if self.timeout < 0:
             raise ValueError("Timeout can not be less then 0.")
+
+        self.__sync_t0 = 0
+        self.__sync_t1 = 0
 
 #endregion
 
@@ -551,6 +558,8 @@ class ZtmUI():
             []: Received registers.
         """
 
+        self.__sync_t0 = time.time()
+
         response_registers = None
 
         # URI
@@ -597,6 +606,8 @@ class ZtmUI():
 
         else:
             response_registers = None
+
+        self.__sync_t1 = time.time()
 
         # if self.__temporary_registers != response_registers:
         #     self.__temporary_registers = response_registers
