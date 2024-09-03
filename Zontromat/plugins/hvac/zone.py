@@ -1280,6 +1280,9 @@ class Zone(BasePlugin):
             # Recalculate the temperatures.
             self.__temp_proc.update()
 
+            if self.__temp_proc.value is None:
+                return
+
             print(f"Target: {self.__adjust_temp:2.1f}; Current: {self.__temp_proc.value:2.1f}")
 
             dt = 0.0
