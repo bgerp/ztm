@@ -469,7 +469,7 @@ class FLX05F(BaseValve):
                 self.__enable_valve(0)
 
                 # Delta
-                delta_pos = self.target_position - self.current_position
+                delta_pos = self._target_position - self._current_position
 
                 if delta_pos == 0:
                     self.__stop()
@@ -481,8 +481,9 @@ class FLX05F(BaseValve):
                 # Multiplication is safer way,
                 # so reciprocal value of 10 in this case is 0.1.
                 delta_pos *= 0.1
+                time_to_move = abs(delta_pos)
 
-                time_to_move = self.__to_time(abs(delta_pos))
+                # time_to_move = self.__to_time(abs(delta_pos))
                 # self.__logger.debug("Time: {}".format(time_to_move))
 
                 self.__move_timer.expiration_time = time_to_move
@@ -498,6 +499,7 @@ class FLX05F(BaseValve):
             
             if self._state.is_state(ValveState.Execute):
                 self.__enable_valve(1)
+                print(f"RUN: {self}")
                 self._state.set_state(ValveState.Wait)
 
             if self._state.is_state(ValveState.Wait):
@@ -505,7 +507,8 @@ class FLX05F(BaseValve):
                 if self.__move_timer.expired:
                     self.__move_timer.clear()
                     self.__enable_valve(0)
-                    self._current_position = self.target_position
+                    print(f"STOP: {self}")
+                    self._current_position = self._target_position
                     if self.num_of_moves >= self.__number_of_moves_to_calibration:
                         self._state.set_state(ValveState.Calibrate)
                     else:
