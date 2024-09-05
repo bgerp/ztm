@@ -274,8 +274,6 @@ class FLX05F(BaseValve):
 
         if self._controller.is_valid_gpio(self.__limit_cw):
             state = self._controller.digital_read(self.__limit_cw)
-        else:
-            state = True
 
         return state
 
@@ -285,8 +283,6 @@ class FLX05F(BaseValve):
 
         if self._controller.is_valid_gpio(self.__limit_ccw):
             state = self._controller.digital_read(self.__limit_ccw)
-        else:
-            state = True
 
         return state
 
@@ -465,15 +461,11 @@ class FLX05F(BaseValve):
         def update_on_off_timed():
             if self._state.is_state(ValveState.Prepare):
 
-                # Turn enable OFF.
-                self.__enable_valve(0)
-
                 # Delta
                 delta_pos = self._target_position - self._current_position
-
                 if delta_pos == 0:
                     self.__stop()
-                    self._state.set_state(ValveState.Wait)
+                    self._state.set_state(ValveState.NONE)
                     return
 
                 # Scale down 10 times.
@@ -499,7 +491,6 @@ class FLX05F(BaseValve):
             
             if self._state.is_state(ValveState.Execute):
                 self.__enable_valve(1)
-                print(f"RUN: {self}")
                 self._state.set_state(ValveState.Wait)
 
             if self._state.is_state(ValveState.Wait):
@@ -507,7 +498,6 @@ class FLX05F(BaseValve):
                 if self.__move_timer.expired:
                     self.__move_timer.clear()
                     self.__enable_valve(0)
-                    print(f"STOP: {self}")
                     self._current_position = self._target_position
                     if self.num_of_moves >= self.__number_of_moves_to_calibration:
                         self._state.set_state(ValveState.Calibrate)
