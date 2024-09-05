@@ -230,8 +230,9 @@ class BaseValve(BaseDevice):
                 self._openings += 1
                 self.num_of_moves += 1
 
-        self._target_position = position
-        self._state.set_state(ValveState.Prepare)
+        if position != self._target_position:
+            self._target_position = position
+            self._state.set_state(ValveState.Prepare)
 
     @property
     def in_place(self):
