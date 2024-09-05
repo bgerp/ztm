@@ -26,6 +26,7 @@ from datetime import date
 
 from utils.logger import get_logger
 from utils.logic.functions import rotate_list
+from utils.logic.timer import Timer
 
 from plugins.base_plugin import BasePlugin
 
@@ -198,6 +199,8 @@ class HeatPumpControlGroup(BasePlugin):
         self.__heat_pump = None
         """Heat Pump
         """
+
+        self.__animation_timer = Timer()
 
     def __del__(self):
         """Destructor
@@ -761,23 +764,18 @@ class HeatPumpControlGroup(BasePlugin):
 
     def __update_valves_states(self):
         if self.__vcg_cold is not None:
-            self.__vcg_cold.update()
             self._registers.write(f"{self.key}.cold.valves.state", self.__vcg_cold.target_position)
 
         if self.__vcg_cold_geo is not None:
-            self.__vcg_cold_geo.update()
             self._registers.write(f"{self.key}.cold_geo.valves.state", self.__vcg_cold_geo.target_position)
 
         if self.__vcg_warm_geo is not None:
-            self.__vcg_warm_geo.update()
             self._registers.write(f"{self.key}.warm_geo.valves.state", self.__vcg_warm_geo.target_position)
 
         if self.__vcg_warm is not None:
-            self.__vcg_warm.update()
             self._registers.write(f"{self.key}.warm.valves.state", self.__vcg_warm.target_position)
 
         if self.__vcg_hot is not None:
-            self.__vcg_hot.update()
             self._registers.write(f"{self.key}.hot.valves.state", self.__vcg_hot.target_position)
 
 #endregion
@@ -1152,22 +1150,25 @@ class HeatPumpControlGroup(BasePlugin):
         # Generate order.
         self.__generate_order()
 
+        # self.__animation_timer.expiration_time = 40
+        # self.__animation_timer.update_last_time()
+
     def update(self):
         """Update control group.
         """
 
         # Update day order.
-        self.__update_day_order()
+        # self.__update_day_order()
 
         # Update temperatures.
-        self.__update_temp_cold()
-        self.__update_temp_hot()
+        # self.__update_temp_cold()
+        # self.__update_temp_hot()
 
         # Update powers and mode.
-        self.__update_winter_power()
-        self.__update_summer_power()
-        self.__update_power_and_mode()
-        self.__update_run_flag()
+        # self.__update_winter_power()
+        # self.__update_summer_power()
+        # self.__update_power_and_mode()
+        # self.__update_run_flag()
 
         # ========================================================================
 
@@ -1187,8 +1188,41 @@ class HeatPumpControlGroup(BasePlugin):
         # self.__wp_hot.set_setpoint(output_power)
 
         # ========================================================================
+        # self.__animation_timer.update()
+        # if self.__animation_timer.expired:
+        #     self.__animation_timer.clear()
+        #     if self.__vcg_cold.target_position != 50:
+        #         self.__vcg_cold.target_position = 50
 
-        self.__update_registers()
+
+        if self.__vcg_cold is not None:
+            self.__vcg_cold.update()
+
+        if self.__vcg_cold_geo is not None:
+            self.__vcg_cold_geo.update()
+
+        if self.__vcg_warm_geo is not None:
+            self.__vcg_warm_geo.update()
+
+        if self.__vcg_warm is not None:
+            self.__vcg_warm.update()
+
+        if self.__vcg_hot is not None:
+            self.__vcg_hot.update()
+
+        if self.__wp_cold is not None:
+            self.__wp_cold.update()
+
+        if self.__wp_warm is not None:
+            self.__wp_warm.update()
+
+        if self.__wp_hot is not None:
+            self.__wp_hot.update()
+
+        if self.__heat_pump is not None:
+            self.__heat_pump.update()
+
+        # self.__update_registers()
 
     def shutdown(self):
 
