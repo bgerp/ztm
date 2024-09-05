@@ -34,7 +34,7 @@ from utils.performance_profiler import PerformanceProfiler
 from utils.logic.state_machine import StateMachine
 from utils.logic.timer import Timer
 from utils.updater import update as software_update
-from utils.utils import uptime
+from utils.utils import time_usage, uptime
 
 from controllers.controller_factory import ControllerFactory
 
@@ -121,7 +121,7 @@ class Zone():
         """Plugin manager.
         """
 
-        self.__update_rate = 0.5
+        self.__update_rate = 0.001
         """Controlling update rate in seconds.
         """
 
@@ -160,6 +160,10 @@ class Zone():
         self.__ztm_ui_ut = None
         """ZtmUI update timer.
         """
+
+        self.__t0 = 0
+
+        self.__t1 = 0
 
 #endregion
 
@@ -506,20 +510,18 @@ class Zone():
 
     def __init_ztmui(self):
 
-        # Check is it enabled.
-        if self.__app_settings.ui["enabled"] == "True":
+        if self.__app_settings.ui["enabled"] == "False":
+            return
 
-            self.__ztm_ui = ZtmUI(host = self.__app_settings.ui["host"],
-                email = self.__app_settings.ui["email"],
-                password = self.__app_settings.ui["password"],
-                timeout = self.__app_settings.ui["timeout"],
-                update_rate=1)
-
-            self.__ztm_ui_ut = Timer(1)
-
-            # Log in.
-            if not self.__ztm_ui.is_logged_in:
-                self.__ztm_ui.login()
+        self.__ztm_ui = ZtmUI(host = self.__app_settings.ui["host"],
+            email = self.__app_settings.ui["email"],
+            password = self.__app_settings.ui["password"],
+            timeout = self.__app_settings.ui["timeout"],
+            update_rate=1)
+        self.__ztm_ui_ut = Timer(1)
+        # Log in.
+        if not self.__ztm_ui.is_logged_in:
+            self.__ztm_ui.login()
 
     def __sync_ztmui(self):
         target_regs_names = ["envm.door_tamper.activations",
@@ -548,20 +550,20 @@ class Zone():
     def __update_ztmui(self):
 
         # Check is it enabled.
-        if self.__app_settings.ui["enabled"] == "True":
-
-            # self.__update_min_max(register)
-
-            # Get periodically slider data.
-            self.__ztm_ui_ut.update()
-            if self.__ztm_ui_ut.expired:
-                self.__ztm_ui_ut.clear()
-                # Check is it logged in.
-                if self.__ztm_ui.is_logged_in:
-                    self.__sync_ztmui()
-                # If not, login.
-                else:
-                    self.__ztm_ui.login()
+        if self.__app_settings.ui["enabled"] == "False":
+            return
+        
+        # self.__update_min_max(register)
+        # Get periodically slider data.
+        self.__ztm_ui_ut.update()
+        if self.__ztm_ui_ut.expired:
+            self.__ztm_ui_ut.clear()
+            # Check is it logged in.
+            if self.__ztm_ui.is_logged_in:
+                self.__sync_ztmui()
+            # If not, login.
+            else:
+                self.__ztm_ui.login()
 
 #endregion
 
@@ -594,7 +596,7 @@ class Zone():
         self.__performance_profiler.on_memory_change(self.__on_memory_change)
 
         # Setup the performance profiler timer. (60) 10 is for tests.
-        self.__performance_profiler_timer = Timer(10)
+        self.__performance_profiler_timer = Timer(2)
 
     def __on_time_change(self, passed_time):
         """On consumed time change.
@@ -622,7 +624,7 @@ class Zone():
 
         # print(f"Current memory usage is {current / 10**3}kB; Peak was {peak / 10**3}kB")
 
-    @__performance_profiler.profile
+    # @__performance_profiler.profile
     def __update(self):
         """Update the zone.
         """
@@ -641,6 +643,9 @@ class Zone():
         self.__plugin_manager.update()
 
         self.__update_erp()
+
+        self.__logger.debug(f"ZtmUI: {self.__ztm_ui.sync_time:.2f}; PLC: {self.__controller.update_time:.2f}; PM: {self.__plugin_manager.update_time:.2f}; ERP: {self.__erp.sync_time:.2f}")
+        # ; PP: {self.__performance_profiler.call_time:.2f}")
 
         # Update uptime.
         self.__registers.write("sys.time.uptime", uptime())
@@ -676,7 +681,7 @@ class Zone():
             self.__init_ztmui()
 
             # Initialize the performance profiler.
-            self.__init_performance_profiler()
+            # self.__init_performance_profiler()
 
             # Initialize the runtime.
             self.__init_runtime()
@@ -698,7 +703,7 @@ class Zone():
 
             # Update process timers.
             self.__update_timer.update()
-            self.__performance_profiler_timer.update()
+            # self.__performance_profiler_timer.update()
 
             # If time has come for execution then run it once and clear the timer.
             if self.__update_timer.expired:
@@ -713,16 +718,20 @@ class Zone():
                 try:
                     # If the time has come for profiling.
                     # Enable the flag and tke profile.
-                    if self.__performance_profiler_timer.expired:
-                        self.__performance_profiler_timer.clear()
-                        self.__performance_profiler.enable = True
+                    # if self.__performance_profiler_timer.expired:
+                    #     self.__performance_profiler_timer.clear()
+                    #     self.__performance_profiler.enable = True
 
                     # Update the application.
+                    self.__t0 = time.time()
                     self.__update()
+                    self.__t1 = time.time()
+                    dt = self.__t1 - self.__t0
+                    print(f"DT: {dt:.2f}")
 
                     # If the performance profile is running stop it after the cycle.
-                    if self.__performance_profiler.enable:
-                        self.__performance_profiler.enable = False
+                    # if self.__performance_profiler.enable:
+                    #     self.__performance_profiler.enable = False
 
                 # Log the exception without to close the application.
                 except Exception:

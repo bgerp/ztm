@@ -266,6 +266,7 @@ class ZL101PCC(BaseController):
         self.__update_t0 = 0
         self.__update_t1 = 0
 
+        self.__time_to_update = False
 
 #endregion
 
@@ -396,6 +397,9 @@ class ZL101PCC(BaseController):
 
     def update(self):
         """Update controller state."""
+
+        if self.__time_to_update == False:
+            return
 
         self.__update_t0 = time.time()
 
@@ -529,6 +533,7 @@ class ZL101PCC(BaseController):
         if self.is_gpio_nothing(pin):
             raise ValueError("Pin can not be None or empty string.")
 
+        self.__time_to_update = True
         response = False
 
         # Local GPIO.
@@ -614,6 +619,7 @@ class ZL101PCC(BaseController):
         """
 
         response = False
+        self.__time_to_update = True
         
         # Local GPIO.
         def set_local_gpio(pin, state):
@@ -727,6 +733,7 @@ class ZL101PCC(BaseController):
         value = int(value)
 
         response = False
+        self.__time_to_update = True
 
         # Local GPIO.
         if self.is_gpio_local(pin):
@@ -788,6 +795,7 @@ class ZL101PCC(BaseController):
             raise ValueError("Pin can not be None or empty string.")
 
         state = {"value": 0.0, "min": 0.0, "max": 10.0}
+        self.__time_to_update = True
 
         # Local GPIO.
         if self.is_gpio_local(pin):

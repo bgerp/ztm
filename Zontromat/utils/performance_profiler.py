@@ -67,6 +67,10 @@ class PerformanceProfiler:
 
 #endregion
 
+    @property
+    def call_time(self):
+        return self.__call_t1 - self.__call_t0
+
 #region Constructor/Destructor
 
     def __init__(self):
@@ -97,9 +101,8 @@ class PerformanceProfiler:
         """On change time callback.
         """
 
-        self.__show_consumed_time = True
-        """Flag for showing consumed time.
-        """        
+        self.__call_t0 = 0
+        self.__call_t1 = 0
 
 #endregion
 
@@ -188,7 +191,7 @@ class PerformanceProfiler:
             self.__on_change_callback = callback
 
     def profile(self, function):
-        """Mesure consumed RAM and Time for execution.
+        """Measure consumed RAM and Time for execution.
 
         Parameters
         ----------
@@ -213,17 +216,13 @@ class PerformanceProfiler:
                 tracemalloc.start()
 
             if self.__enable_time_profile and self.__enable:
-                t_0 = time.time()
+                self.__call_t1 = time.time()
 
             result = function(*args, **config)
 
             if self.__enable_time_profile and self.__enable:
-                t_1 = time.time()
-                passed_time = t_1 - t_0
+                self.__call_t0 = time.time()
                 
-                if self.__show_consumed_time:
-                    self.__logger.debug(f"Passed time: {passed_time:.2f}")
-
             if self.__enable_mem_profile and self.__enable:
                 current, peak = tracemalloc.get_traced_memory()
                 tracemalloc.stop()
