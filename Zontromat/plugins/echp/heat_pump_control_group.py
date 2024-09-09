@@ -1222,7 +1222,7 @@ class HeatPumpControlGroup(BasePlugin):
         if self.__heat_pump is not None:
             self.__heat_pump.update()
 
-        # self.__update_registers()
+        self.__update_registers()
 
     def shutdown(self):
 
