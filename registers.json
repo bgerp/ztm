@@ -374,6 +374,17 @@
         "scope": "Device"
     },
     {
+        "data_type": "bool",
+        "default": false,
+        "description": "Plugin enabled",
+        "limit": 0.0,
+        "name": "blinds.enabled",
+        "plugin": "Blinds",
+        "profiles": "mz",
+        "range": "true|false",
+        "scope": "System"
+    },
+    {
         "data_type": "json",
         "default": {
             "model": "BlindsV2",
@@ -590,18 +601,7 @@
     },
     {
         "data_type": "bool",
-        "default": true,
-        "description": "Plugin enabled",
-        "limit": 0.0,
-        "name": "blinds.enabled",
-        "plugin": "Blinds",
-        "profiles": "mz",
-        "range": "true|false",
-        "scope": "System"
-    },
-    {
-        "data_type": "bool",
-        "default": true,
+        "default": false,
         "description": "Plugin enabled",
         "limit": 0.0,
         "name": "monitoring.enabled",
@@ -861,7 +861,7 @@
     },
     {
         "data_type": "bool",
-        "default": true,
+        "default": false,
         "description": "Plugin enabled",
         "limit": 0.0,
         "name": "envm.enabled",
@@ -1270,7 +1270,7 @@
     },
     {
         "data_type": "bool",
-        "default": true,
+        "default": false,
         "description": "Plugin enabled",
         "limit": 0.0,
         "name": "hvac.enabled",
@@ -1882,7 +1882,7 @@
     },
     {
         "data_type": "bool",
-        "default": true,
+        "default": false,
         "description": "Plugin enabled",
         "limit": 0.0,
         "name": "light.enabled",
@@ -3826,6 +3826,17 @@
         "scope": "System"
     },
     {
+        "data_type": "bool",
+        "default": true,
+        "description": "Plugin enabled",
+        "limit": 0.0,
+        "name": "echp.enabled",
+        "plugin": "Energy Center Heat Pump",
+        "profiles": "hp",
+        "range": "true|false",
+        "scope": "System"
+    },
+    {
         "data_type": "json",
         "default": {
             "input": [
@@ -4549,12 +4560,12 @@
     {
         "data_type": "bool",
         "default": false,
-        "description": "Plugin enabled",
+        "description": "Ventilation enable flag.",
         "limit": 0.0,
-        "name": "echp.enabled",
-        "plugin": "Energy Center Heat Pump",
-        "profiles": "hp",
-        "range": "true|false",
+        "name": "vent.enabled",
+        "plugin": "Ventilation",
+        "profiles": "mz",
+        "range": "",
         "scope": "System"
     },
     {
@@ -4747,13 +4758,13 @@
     },
     {
         "data_type": "bool",
-        "default": true,
-        "description": "Ventilation enable flag.",
+        "default": false,
+        "description": "Alarm module enable flag.",
         "limit": 0.0,
-        "name": "vent.enabled",
-        "plugin": "Ventilation",
-        "profiles": "mz",
-        "range": "",
+        "name": "alarm.enabled",
+        "plugin": "Alarm",
+        "profiles": "mz|dt|hp|ns",
+        "range": "true|false",
         "scope": "System"
     },
     {
@@ -4776,17 +4787,6 @@
         "plugin": "Alarm",
         "profiles": "mz|dt|hp|ns",
         "range": "",
-        "scope": "System"
-    },
-    {
-        "data_type": "bool",
-        "default": false,
-        "description": "Alarm module enable flag.",
-        "limit": 0.0,
-        "name": "alarm.enabled",
-        "plugin": "Alarm",
-        "profiles": "mz|dt|hp|ns",
-        "range": "true|false",
         "scope": "System"
     },
     {
