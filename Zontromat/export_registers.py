@@ -195,6 +195,9 @@ def __add_registers(args):
     register.description = "Number of security zones"
     register.range = "1/"
     register.value = 2
+    register.profiles = \
+        Register.create_profile(
+            Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("ac.nearby_attendees")
@@ -3590,6 +3593,9 @@ def __add_registers(args):
             }
         ]
     }
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Convectors west valves mode.
@@ -4575,6 +4581,9 @@ def __add_registers(args):
             }
         }
     ]
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Hot water thermo couples settings.
@@ -4584,6 +4593,9 @@ def __add_registers(args):
     register.description = "ECD / Hot water thermo couples values."
     register.range = REGS_RANGES["NONE"]
     register.value = []
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Cold water thermo couples settings.
@@ -4619,6 +4631,9 @@ def __add_registers(args):
             }
         }
     ]
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Hot water thermo couples settings.
@@ -4628,6 +4643,9 @@ def __add_registers(args):
     register.description = "ECD / Hot water thermo couples values."
     register.range = REGS_RANGES["NONE"]
     register.value = []
+    register.profiles = \
+        Register.create_profile(
+            Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # Enable flag
@@ -5635,7 +5653,7 @@ def __add_registers(args):
     register.plugin_name = "Ventilation"
     register.description = "Lower air damper settings"
     register.range = REGS_RANGES["NONE"]
-    register.value = verbal_const.OFF
+    register.value = {}
     register.profiles = \
         Register.create_profile(
             Profiles.ZONE.value)
@@ -5647,7 +5665,7 @@ def __add_registers(args):
     register.plugin_name = "Ventilation"
     register.description = "Upper air damper settings"
     register.range = REGS_RANGES["NONE"]
-    register.value = verbal_const.OFF
+    register.value = {}
     register.profiles = \
         Register.create_profile(
             Profiles.ZONE.value)

@@ -287,8 +287,8 @@ class Register:
         """
 
         # Pass if the value is the same from the last time.
-        if value == self.__value:
-            return
+        # if value == self.__value:
+        #     return
 
         # In case of float.
         if self.data_type == "float":
@@ -592,7 +592,7 @@ class Register:
         out_value = None
 
         if data_type == "bool":
-            if out_value:
+            if value:
                 out_value = "true"
             else:
                 out_value = "false"
@@ -600,9 +600,14 @@ class Register:
         elif data_type == "str":
             if "," in value:
                 out_value = "\"" + value + "\""
+            else:
+                out_value = value
 
         elif data_type == "json":
             out_value = json.dumps(value)
+
+        else:
+            out_value = value
 
         return out_value
 
