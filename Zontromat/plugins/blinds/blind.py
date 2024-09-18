@@ -186,7 +186,7 @@ class Blind(BasePlugin):
                 self.__blind_mechanism.set_position(register.value)
 
                 self.__position = register.value
-                print(f"Position of {self.__identifier} is at {register.value}")
+                # print(f"Position of {self.__identifier} is at {register.value}")
 
     def __object_height_cb(self, register):
 
