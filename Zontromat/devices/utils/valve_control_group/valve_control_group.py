@@ -89,6 +89,8 @@ class ValveControlGroup(BasePlugin):
         self.__mode = ValveControlGroupMode.NONE
         """Mode of the valve control group.
         """
+        if "mode" in config:
+            self.mode = ValveControlGroupMode(config["mode"])
 
         self.__fw_valves = {}
         """Forward valves.
@@ -97,9 +99,6 @@ class ValveControlGroup(BasePlugin):
         self.__rev_valves = {}
         """return valves.
         """
-
-        if "mode" in config:
-            self.mode = ValveControlGroupMode(config["mode"])
 
         self.__init_fw_vlv()
 
