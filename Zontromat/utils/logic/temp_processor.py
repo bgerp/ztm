@@ -157,7 +157,7 @@ class TemperatureProcessor():
         
         self.__ref_thermometer = thermometer
 
-    def remove_ref(self, ):
+    def remove_ref(self):
         """Remove referent thermometer.
         """
         

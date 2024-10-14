@@ -28,7 +28,7 @@
         "limit": 0.0,
         "name": "ac.zones_count",
         "plugin": "Access Control",
-        "profiles": "",
+        "profiles": "mz",
         "range": "1/",
         "scope": "System"
     },
@@ -374,6 +374,17 @@
         "scope": "Device"
     },
     {
+        "data_type": "bool",
+        "default": false,
+        "description": "Plugin enabled",
+        "limit": 0.0,
+        "name": "blinds.enabled",
+        "plugin": "Blinds",
+        "profiles": "mz",
+        "range": "true|false",
+        "scope": "System"
+    },
+    {
         "data_type": "json",
         "default": {
             "model": "BlindsV2",
@@ -590,18 +601,7 @@
     },
     {
         "data_type": "bool",
-        "default": true,
-        "description": "Plugin enabled",
-        "limit": 0.0,
-        "name": "blinds.enabled",
-        "plugin": "Blinds",
-        "profiles": "mz",
-        "range": "true|false",
-        "scope": "System"
-    },
-    {
-        "data_type": "bool",
-        "default": true,
+        "default": false,
         "description": "Plugin enabled",
         "limit": 0.0,
         "name": "monitoring.enabled",
@@ -861,7 +861,7 @@
     },
     {
         "data_type": "bool",
-        "default": true,
+        "default": false,
         "description": "Plugin enabled",
         "limit": 0.0,
         "name": "envm.enabled",
@@ -1270,7 +1270,7 @@
     },
     {
         "data_type": "bool",
-        "default": true,
+        "default": false,
         "description": "Plugin enabled",
         "limit": 0.0,
         "name": "hvac.enabled",
@@ -1882,7 +1882,7 @@
     },
     {
         "data_type": "bool",
-        "default": true,
+        "default": false,
         "description": "Plugin enabled",
         "limit": 0.0,
         "name": "light.enabled",
@@ -2911,7 +2911,7 @@
         "limit": 0.0,
         "name": "ecd.conv_west.valves.settings",
         "plugin": "Energy Center Distribution",
-        "profiles": "",
+        "profiles": "dt",
         "range": "",
         "scope": "System"
     },
@@ -3756,7 +3756,7 @@
         "limit": 0.0,
         "name": "ecd.hot_water.tc.settings",
         "plugin": "Energy Center Distribution",
-        "profiles": "",
+        "profiles": "dt",
         "range": "",
         "scope": "System"
     },
@@ -3767,7 +3767,7 @@
         "limit": 0.0,
         "name": "ecd.hot_water.tc.values",
         "plugin": "Energy Center Distribution",
-        "profiles": "",
+        "profiles": "dt",
         "range": "",
         "scope": "Device"
     },
@@ -3799,7 +3799,7 @@
         "limit": 0.0,
         "name": "ecd.cold_water.tc.settings",
         "plugin": "Energy Center Distribution",
-        "profiles": "",
+        "profiles": "dt",
         "range": "",
         "scope": "System"
     },
@@ -3810,7 +3810,7 @@
         "limit": 0.0,
         "name": "ecd.cold_water.tc.values",
         "plugin": "Energy Center Distribution",
-        "profiles": "",
+        "profiles": "dt",
         "range": "",
         "scope": "Device"
     },
@@ -3822,6 +3822,17 @@
         "name": "ecd.enabled",
         "plugin": "Energy Center Distribution",
         "profiles": "dt",
+        "range": "true|false",
+        "scope": "System"
+    },
+    {
+        "data_type": "bool",
+        "default": true,
+        "description": "Plugin enabled",
+        "limit": 0.0,
+        "name": "echp.enabled",
+        "plugin": "Energy Center Heat Pump",
+        "profiles": "hp",
         "range": "true|false",
         "scope": "System"
     },
@@ -4549,12 +4560,12 @@
     {
         "data_type": "bool",
         "default": false,
-        "description": "Plugin enabled",
+        "description": "Ventilation enable flag.",
         "limit": 0.0,
-        "name": "echp.enabled",
-        "plugin": "Energy Center Heat Pump",
-        "profiles": "hp",
-        "range": "true|false",
+        "name": "vent.enabled",
+        "plugin": "Ventilation",
+        "profiles": "mz",
+        "range": "",
         "scope": "System"
     },
     {
@@ -4713,8 +4724,8 @@
         "scope": "System"
     },
     {
-        "data_type": "str",
-        "default": "off",
+        "data_type": "json",
+        "default": {},
         "description": "Lower air damper settings",
         "limit": 0.0,
         "name": "vent.upper_1.air_damper.settings",
@@ -4724,8 +4735,8 @@
         "scope": "System"
     },
     {
-        "data_type": "str",
-        "default": "off",
+        "data_type": "json",
+        "default": {},
         "description": "Upper air damper settings",
         "limit": 0.0,
         "name": "vent.lower_1.air_damper.settings",
@@ -4747,13 +4758,13 @@
     },
     {
         "data_type": "bool",
-        "default": true,
-        "description": "Ventilation enable flag.",
+        "default": false,
+        "description": "Alarm module enable flag.",
         "limit": 0.0,
-        "name": "vent.enabled",
-        "plugin": "Ventilation",
-        "profiles": "mz",
-        "range": "",
+        "name": "alarm.enabled",
+        "plugin": "Alarm",
+        "profiles": "mz|dt|hp|ns",
+        "range": "true|false",
         "scope": "System"
     },
     {
@@ -4776,17 +4787,6 @@
         "plugin": "Alarm",
         "profiles": "mz|dt|hp|ns",
         "range": "",
-        "scope": "System"
-    },
-    {
-        "data_type": "bool",
-        "default": false,
-        "description": "Alarm module enable flag.",
-        "limit": 0.0,
-        "name": "alarm.enabled",
-        "plugin": "Alarm",
-        "profiles": "mz|dt|hp|ns",
-        "range": "true|false",
         "scope": "System"
     },
     {

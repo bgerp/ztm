@@ -158,8 +158,8 @@ class Zone(BasePlugin):
         self.__fl_control_table = \
         [
             [  0,   0,   0,   0,   0,   0,   0,   0,   0], # 0 - Спряно
-            [  1,   1, 1/2, 1/4,   0,   0,   0,   0,   0], # 1 - Охлаждане
-            [  0,   0,   0,   0,   0, 1/4, 1/2,   1,   1], # 2 - Отопление
+            [  1,   1,   1,   1,   1,   0,   0,   0,   0], # 1 - Охлаждане # @17.07.2024 15:00 MG request to stop the regulation motion of the valves.
+            [  0,   0,   0,   0,   1,   1,   1,   1,   1], # 2 - Отопление # @01.10.2024 15:11 MG request to enable again valve control.
             [  0,   0,   0,   0,   0,   0, 1/2,   1,   1]  # 3 - Режим №3
         ]
 
@@ -167,8 +167,8 @@ class Zone(BasePlugin):
         self.__conv_control_table = \
         [
             [  0,   0,   0,   0,   0,   0,   0,   0,   0], # 0 - Спряно
-            [  4,   3,   2,   1,   0,   0,   0,   0,   0], # 1 - Охлаждане
-            [  0,   0,   0,   0,   0,   1,   2,   3,   4], # 2 - Отопление
+            [  4,   3,   2,   1,   1,   0,   0,   0,   0], # 1 - Охлаждане # @17.07.2024 15:00 MG request to stop the regulation motion of the valves.
+            [  0,   0,   0,   0,   1,   1,   2,   3,   4], # 2 - Отопление # @01.10.2024 15:11 MG request to enable again valve control.
             [  2,   2,   1,   0,   0,   0,   0,   0,   0]  # 3 - Режим №3
         ]
 
@@ -450,7 +450,7 @@ class Zone(BasePlugin):
 
         if register.value != {}:
             if self.__air_temp_cent_dev is not None:
-                self.__temp_proc.remove_ref(self.__air_temp_cent_dev)
+                self.__temp_proc.remove_ref()
                 self.__air_temp_cent_dev.shutdown()
                 del self.__air_temp_cent_dev
 
@@ -467,7 +467,7 @@ class Zone(BasePlugin):
 
         elif register.value == {}:
             if self.__air_temp_cent_dev is not None:
-                self.__temp_proc.remove_ref(self.__air_temp_cent_dev)
+                self.__temp_proc.remove_ref()
                 self.__air_temp_cent_dev.shutdown()
 
     def __air_temp_lower_settings_cb(self, register):
