@@ -1141,8 +1141,8 @@ def __add_registers(args):
     register.description = "Plugin environment door tamper settings"
     register.range = REGS_RANGES["NONE"]
     register.value = {}
-    if args.door_office_1:
-        register.value["DRT_1"] = args.door_office_1
+    if args.door_office:
+        register.value["DRT_1"] = args.door_office
     else:
         register.value["DRT_1"] = "off"
     if args.door_terce:
