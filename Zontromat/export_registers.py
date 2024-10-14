@@ -170,6 +170,13 @@ def __set_parser():
 
    # Add args parameters Envm
     __parser.add_argument("--pir_1", type=int, default=16, help="PIR 1 modbus ID.")
+    __parser.add_argument("--door_office", type=str, default="off", help="Door tamper office input.")
+    __parser.add_argument("--door_terce", type=str, default="off", help="Door tamper terce input.")
+    __parser.add_argument("--wint_1", type=str, default="off", help="Window tamper 1.")
+    __parser.add_argument("--wint_2", type=str, default="off", help="Window tamper 2.")
+    __parser.add_argument("--wint_3", type=str, default="off", help="Window tamper 3.")
+    __parser.add_argument("--wint_4", type=str, default="off", help="Window tamper 4.")
+    __parser.add_argument("--door_office_mirror", type=str, default="off", help="Door tamper office output mirror.")
 
     # Add args parameters Blinds
     __parser.add_argument("--blinds_1", type=int, default=11, help="Blinds mechanism 1 modbus ID.")
@@ -1099,9 +1106,23 @@ def __add_registers(args):
     register.plugin_name = "Environment"
     register.description = "Plugin environment window tamper settings"
     register.range = REGS_RANGES["NONE"]
-    register.value = {
-        "WINT_1": "!U0:ID2:FC2:R0:DI1",
-    }
+    register.value = {}
+    if args.wint_1:
+        register.value["WINT_1"] = args.wint_1
+    else:
+        register.value["WINT_1"] = "off"
+    if args.wint_2:
+        register.value["WINT_2"] = args.wint_2
+    else:
+        register.value["WINT_2"] = "off"
+    if args.wint_3:
+        register.value["WINT_3"] = args.wint_3
+    else:
+        register.value["WINT_3"] = "off"
+    if args.wint_4:
+        register.value["WINT_4"] = args.wint_4
+    else:
+        register.value["WINT_4"] = "off"
     register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
@@ -1119,9 +1140,15 @@ def __add_registers(args):
     register.plugin_name = "Environment"
     register.description = "Plugin environment door tamper settings"
     register.range = REGS_RANGES["NONE"]
-    register.value = {
-        "DRT_1": "!U0:ID2:FC2:R0:DI0",
-    }
+    register.value = {}
+    if args.door_office_1:
+        register.value["DRT_1"] = args.door_office_1
+    else:
+        register.value["DRT_1"] = "off"
+    if args.door_terce:
+        register.value["DRT_2"] = args.door_terce
+    else:
+        register.value["DRT_2"] = "off"
     register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
@@ -1131,6 +1158,17 @@ def __add_registers(args):
     register.description = "Plugin environment door tampers activations"
     register.range = REGS_RANGES["NONE"]
     register.value = {}
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
+    __registers.append(register)
+
+    register = Register("envm.door_tamper.mirror_output")
+    register.scope = Scope.System
+    register.plugin_name = "Environment"
+    register.description = "Plugin environment door tamper mirror output"
+    register.range = REGS_RANGES["NONE"]
+    register.value = []
+    if args.door_office_mirror:
+        register.value.append(args.door_office_mirror)
     register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
