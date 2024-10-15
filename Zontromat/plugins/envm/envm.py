@@ -403,10 +403,12 @@ class Environment(BasePlugin):
         doors_state = self.__read_door_tamper()
         print(f"Doors state: {doors_state}")
 
+
         for output in self.__mirror_output:
-            target_output = self.__mirror_output[output]
-            # Get window tamper state.
-            self._controller.digital_write(target_output, doors_state)
+            print(f"Output: {output}")
+        #     target_output = self.__mirror_output[output]
+        #     # Get window tamper state.
+        #     self._controller.digital_write(target_output, doors_state)
 
 
 #endregion
