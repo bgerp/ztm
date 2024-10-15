@@ -40,6 +40,8 @@ from utils.logic.timer import Timer
 
 from services.global_error_handler.global_error_handler import GlobalErrorHandler
 
+from data import verbal_const
+
 #region File Attributes
 
 __author__ = "Orlin Dimitrov"
@@ -386,6 +388,26 @@ class Environment(BasePlugin):
 
         self._registers.write("envm.is_empty", not is_human_presence)
 
+    def __read_door_tamper(self):
+
+        state = False
+
+        for tamper in self.__door_tamps_states:
+            state |= self.__door_tamps_states[tamper]
+
+        return state
+
+
+    def __update_mirror_output(self):
+
+        doors_state = self.__read_door_tamper()
+
+        for output in self.__mirror_output:
+            target_output = self.__mirror_output[output]
+            # Get window tamper state.
+            self._controller.digital_write(target_output, doors_state)
+
+
 #endregion
 
 #region Private Methods (Registers)
@@ -671,6 +693,8 @@ class Environment(BasePlugin):
             self.__update_door_tamps()
 
             self.__update_is_empty()
+
+            self.__update_mirror_output()
 
     def _shutdown(self):
         """Shutting down the plugin.
