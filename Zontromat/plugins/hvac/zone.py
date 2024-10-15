@@ -1237,8 +1237,8 @@ class Zone(BasePlugin):
         is_hot_water = self.__is_hot_water()
 
         # Take all necessary condition for normal operation of the HVAC.
-        # stop_flag = (is_empty or window_tamper_state or not is_hot_water)
-        stop_flag = False
+        stop_flag = (is_empty or window_tamper_state or not is_hot_water)
+        # stop_flag = False
 
         # If it is time to stop.
         if stop_flag:
