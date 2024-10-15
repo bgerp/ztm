@@ -406,9 +406,8 @@ class Environment(BasePlugin):
 
         for output in self.__mirror_output:
             print(f"Output: {output}")
-        #     target_output = self.__mirror_output[output]
-        #     # Get window tamper state.
-        #     self._controller.digital_write(target_output, doors_state)
+            # Get window tamper state.
+            self._controller.digital_write(output, doors_state)
 
 
 #endregion
