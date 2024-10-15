@@ -401,6 +401,7 @@ class Environment(BasePlugin):
     def __update_mirror_output(self):
 
         doors_state = self.__read_door_tamper()
+        print(f"Doors state: {doors_state}")
 
         for output in self.__mirror_output:
             target_output = self.__mirror_output[output]
