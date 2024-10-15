@@ -400,6 +400,7 @@ class Environment(BasePlugin):
 
     def __update_mirror_output(self):
         doors_state = self.__read_door_tamper()
+        doors_state = not doors_state
         for output in self.__mirror_output:
             self._controller.digital_write(output, doors_state)
 
