@@ -110,7 +110,7 @@ class Zone(BasePlugin):
         """HVAC Stop flag.
         """
 
-        self.__update_timer = Timer(60)
+        self.__update_timer = Timer(300)
         """Update timer.
         """
 
