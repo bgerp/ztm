@@ -40,6 +40,8 @@ from utils.logic.timer import Timer
 
 from services.global_error_handler.global_error_handler import GlobalErrorHandler
 
+from data import verbal_const
+
 #region File Attributes
 
 __author__ = "Orlin Dimitrov"
@@ -172,6 +174,10 @@ class Environment(BasePlugin):
             @28.05.2024y. The owner wants to set the value to 1200 seconds to start tests..
         """
 
+        self.__mirror_output = {}
+        """Mirror outputs.
+        """
+
 #endregion
 
 #region Private Methods (PLC)
@@ -205,7 +211,7 @@ class Environment(BasePlugin):
                     self.__pirs_activations[pir].pop(0)
 
         # If the following register is available then set ist value to the PIRs activations.
-        self._registers.write(f"{self.key}.pir.activations", 
+        self._registers.write(f"{self.key}.pir.activations",
                               json.dumps(self.__pirs_activations))
 
     def __update_win_tamps(self):
@@ -239,7 +245,7 @@ class Environment(BasePlugin):
                     self.__win_tamps_activations[window].pop(0)
 
         # If the following register is available then set its value to the door tampers activations.
-        self._registers.write(f"{self.key}.window_tamper.activations", 
+        self._registers.write(f"{self.key}.window_tamper.activations",
                               json.dumps(self.__win_tamps_activations))
 
     def __update_door_tamps(self):
@@ -263,7 +269,7 @@ class Environment(BasePlugin):
                 if self.__door_tamps_states[door] != state:
                     # Save new state from this moment.
                     self.__door_tamps_states[door] = state
-                        
+
                     # Save time that has been changed.
                     now = int(time.time())
                     self.__door_tamps_activations[door].append({"ts": now, "state": state})
@@ -273,7 +279,7 @@ class Environment(BasePlugin):
                     self.__door_tamps_activations[door].pop(0)
 
         # If the following register is available then set its value to the door tampers activations.
-        self._registers.write(f"{self.key}.door_tamper.activations", 
+        self._registers.write(f"{self.key}.door_tamper.activations",
                               json.dumps(self.__door_tamps_activations))
 
 #endregion
@@ -313,18 +319,18 @@ class Environment(BasePlugin):
         return azm.item(0), zen.item(0)
 
     def __new_sunpos(self):
-        
+
         now = datetime.now()
-        
+
         # Close Encounters latitude, longitude
         location = (self.__location_lat, self.__location_lon)
-        
+
         # Fourth of July, 2022 at 11:20 am MDT (-6 hours)
         when = (now.year, now.month, now.day, now.hour, now.minute, now.second, self.__time_zone) # ,,19/2022.08.04/16:31
-        
+
         # Get the Sun's apparent location in the sky
         azimuth, elevation = sunpos(when, location, True)
-        
+
         # # Output the results
         # print("\nWhen: ", when)
         # print("Where: ", location)
@@ -381,6 +387,22 @@ class Environment(BasePlugin):
                 is_human_presence = True
 
         self._registers.write("envm.is_empty", not is_human_presence)
+
+    def __read_door_tamper(self):
+
+        state = False
+
+        for tamper in self.__door_tamps_states:
+            state |= self.__door_tamps_states[tamper]
+
+        return state
+
+
+    def __update_mirror_output(self):
+        doors_state = self.__read_door_tamper()
+        for output in self.__mirror_output:
+            self._controller.digital_write(output, doors_state)
+
 
 #endregion
 
@@ -542,6 +564,22 @@ class Environment(BasePlugin):
             if self.__door_tamps is not None:
                 self.__door_tamps.clear()
 
+    def __mirror_output_cb(self, register):
+        # Check data type.
+        if not register.data_type == "json":
+            GlobalErrorHandler.log_bad_register_value(self.__logger, register)
+            return
+
+        if register.value != {}:
+            if self.__mirror_output is not None:
+                self.__mirror_output.clear()
+
+            self.__mirror_output = register.value
+
+        elif register.value == {}:
+            if self.__mirror_output is not None:
+                self.__mirror_output.clear()
+
     def __is_empty_timeout_cb(self, register):
 
         # Check data type.
@@ -600,6 +638,11 @@ class Environment(BasePlugin):
             door_tamper.update_handlers = self.__door_tamp_settings_cb
             door_tamper.update()
 
+        mirror_output = self._registers.by_name("envm.door_tamper.mirror_output")
+        if mirror_output is not None:
+            mirror_output.update_handlers = self.__mirror_output_cb
+            mirror_output.update()
+
         is_empty_timeout = self._registers.by_name("envm.is_empty_timeout")
         if is_empty_timeout is not None:
             is_empty_timeout.update_handlers = self.__is_empty_timeout_cb
@@ -646,6 +689,8 @@ class Environment(BasePlugin):
             self.__update_door_tamps()
 
             self.__update_is_empty()
+
+            self.__update_mirror_output()
 
     def _shutdown(self):
         """Shutting down the plugin.

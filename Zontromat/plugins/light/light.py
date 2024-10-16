@@ -119,6 +119,10 @@ class Light(BasePlugin):
         """Target illumination. [Lux]
         """
 
+        self.__current_illumination = 0
+        """Current illumination. [Lux]
+        """     
+
         self.__r1_limit = 0.5
         """Resistor current limit.
         note: This value is level when the resistors should be turned on and off. [%]
@@ -278,7 +282,7 @@ class Light(BasePlugin):
     def __calculate(self):
         """ Apply thermal force to the devices. """
 
-        current_illumination = 0
+
         target_illumination = 0
         delta = 0
         error = 0
@@ -288,11 +292,6 @@ class Light(BasePlugin):
 
         # Scale t
         target_illumination = l_scale(self.__target_illumination, [0.0, self.__output_limit], [0.0, 100.0])
-
-        # Read sensor.
-        if self.__light_sensor is not None:
-            current_illumination = self.__light_sensor.get_value()
-            current_illumination = l_scale(current_illumination, [0.0, self.__output_limit], [0.0, 100.0])
 
         # Limits
         lower_limit = 0.0
@@ -307,12 +306,12 @@ class Light(BasePlugin):
         elif mid_1 < target_illumination < mid_2:
 
             # Apply the formula.
-            first = current_illumination
+            first = self.__current_illumination
             second = (1 + ((50.0 - target_illumination) / 100.0))
             calculated_value = first * second
 
             # Calculate the target error.
-            error = calculated_value - current_illumination
+            error = calculated_value - self.__current_illumination
 
             # Integrate the delta to temporal output.
             delta = error * self.__error_gain
@@ -348,17 +347,12 @@ class Light(BasePlugin):
         self.__set_voltages(out_to_v1, out_to_v2)
 
         self.__logger.debug("TRG {:3.3f}\tINP {:3.3f}\tERR: {:3.3f}\tOUT1: {:3.3f}\tOUT2: {:3.3f}"\
-            .format(target_illumination, current_illumination, delta, out_to_v1, out_to_v2))
+            .format(target_illumination, self.__current_illumination, delta, out_to_v1, out_to_v2))
 
     def __test_update(self):
 
         # If there is no one at the zone, just turn off the lights.
         is_empty = self.__is_empty()
-
-        # Read sensor.
-        if self.__light_sensor is not None:
-            current_illumination = self.__light_sensor.get_value()
-            current_illumination = l_scale(current_illumination, [0.0, self.__output_limit], [0.0, 100.0])
 
         # Variate from 0 to 100%.
         self.__output = self.__target_illumination
@@ -580,7 +574,7 @@ class Light(BasePlugin):
         self.__logger = get_logger(__name__)
         self.__logger.info("Starting up the {}".format(self.name))
 
-        self.__update_timer = Timer(0.05)
+        self.__update_timer = Timer(1)
 
         self.__init_registers()
 
@@ -603,7 +597,6 @@ class Light(BasePlugin):
         # else:
         #     state = "ON"
     
-        
         # self.__logger.debug(f"Wait time {self.__hallway_lighting_time - startup_pass_time}; State: {state}")
 
         # return
@@ -615,6 +608,15 @@ class Light(BasePlugin):
         self.__update_timer.update()
         if self.__update_timer.expired:
             self.__update_timer.clear()
+
+            # Read sensor.
+            if self.__light_sensor is not None:
+                self.__current_illumination = self.__light_sensor.get_value()
+                self.__current_illumination = l_scale(self.__current_illumination, [0.0, self.__output_limit], [0.0, 100.0])
+
+            # Update register.
+            self._registers.write(f"{self.key}.illumination",
+                                self.__current_illumination)
 
             # self.__calculate()
 
