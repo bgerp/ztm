@@ -85,7 +85,7 @@ class U1WTVS(BaseLuxmeter):
 
         self.__device = self._controller.get_device(self._config["dev"], self._config["circuit"])
 
-    def get_value(self):
+    def get_lux(self):
         """Get value.
         """
 

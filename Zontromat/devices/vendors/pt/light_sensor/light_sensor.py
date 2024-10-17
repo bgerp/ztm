@@ -100,7 +100,7 @@ class LightSensor(BaseLuxmeter):
 
         self.__state = self._controller.analog_read(self.__analog_input)
 
-    def get_value(self):
+    def get_lux(self):
         """Get value.
         """
 
