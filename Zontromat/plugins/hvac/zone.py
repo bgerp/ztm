@@ -110,7 +110,7 @@ class Zone(BasePlugin):
         """HVAC Stop flag.
         """
 
-        self.__update_timer = Timer(60)
+        self.__update_timer = Timer(300)
         """Update timer.
         """
 
@@ -1267,6 +1267,13 @@ class Zone(BasePlugin):
             # Clear last time to provoke instant expiration of the update timer.
             self.__update_timer.update_last_time(0)
 
+        # Stop the zone instantly.
+        if self.__stop_flag:
+            self.__set_fl_state(0)
+            self.__set_cl_state(0)
+            self.__set_conv_state(0)
+            self.__set_ventilation(0)
+
         # Update control timer.
         self.__update_timer.update()
         # If it is time to update.
@@ -1314,13 +1321,6 @@ class Zone(BasePlugin):
 
                 # Set the devices.
                 self.__set_devices(state)
-
-            # Stop the zone.
-            else:
-                self.__set_fl_state(0)
-                self.__set_cl_state(0)
-                self.__set_conv_state(0)
-                self.__set_ventilation(0)
 
         # Update PWM timers for the valves.
         self.__vlv_fl_1_tmr.update()
