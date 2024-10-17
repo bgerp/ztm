@@ -174,7 +174,7 @@ class Environment(BasePlugin):
             @28.05.2024y. The owner wants to set the value to 1200 seconds to start tests..
         """
 
-        self.__mirror_output = {}
+        self.__mirror_output = []
         """Mirror outputs.
         """
 
@@ -389,14 +389,10 @@ class Environment(BasePlugin):
         self._registers.write("envm.is_empty", not is_human_presence)
 
     def __read_door_tamper(self):
-
         state = False
-
         for tamper in self.__door_tamps_states:
             state |= self.__door_tamps_states[tamper]
-
         return state
-
 
     def __update_mirror_output(self):
         doors_state = self.__read_door_tamper()
