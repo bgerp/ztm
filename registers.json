@@ -375,7 +375,7 @@
     },
     {
         "data_type": "bool",
-        "default": false,
+        "default": true,
         "description": "Plugin enabled",
         "limit": 0.0,
         "name": "blinds.enabled",
@@ -601,7 +601,7 @@
     },
     {
         "data_type": "bool",
-        "default": false,
+        "default": true,
         "description": "Plugin enabled",
         "limit": 0.0,
         "name": "monitoring.enabled",
@@ -861,7 +861,7 @@
     },
     {
         "data_type": "bool",
-        "default": false,
+        "default": true,
         "description": "Plugin enabled",
         "limit": 0.0,
         "name": "envm.enabled",
@@ -904,7 +904,10 @@
     {
         "data_type": "json",
         "default": {
-            "WINT_1": "!U0:ID2:FC2:R0:DI1"
+            "WINT_1": "off",
+            "WINT_2": "off",
+            "WINT_3": "off",
+            "WINT_4": "off"
         },
         "description": "Plugin environment window tamper settings",
         "limit": 0.0,
@@ -928,7 +931,8 @@
     {
         "data_type": "json",
         "default": {
-            "DRT_1": "!U0:ID2:FC2:R0:DI0"
+            "DRT_1": "off",
+            "DRT_2": "off"
         },
         "description": "Plugin environment door tamper settings",
         "limit": 0.0,
@@ -948,6 +952,19 @@
         "profiles": "mz",
         "range": "",
         "scope": "Device"
+    },
+    {
+        "data_type": "json",
+        "default": [
+            "off"
+        ],
+        "description": "Plugin environment door tamper mirror output",
+        "limit": 0.0,
+        "name": "envm.door_tamper.mirror_output",
+        "plugin": "Environment",
+        "profiles": "mz",
+        "range": "",
+        "scope": "System"
     },
     {
         "data_type": "bool",
@@ -1270,7 +1287,7 @@
     },
     {
         "data_type": "bool",
-        "default": false,
+        "default": true,
         "description": "Plugin enabled",
         "limit": 0.0,
         "name": "hvac.enabled",
@@ -1871,6 +1888,17 @@
     },
     {
         "data_type": "float",
+        "default": 0.0,
+        "description": "Current illumination",
+        "limit": 0.0,
+        "name": "light.illumination",
+        "plugin": "Light",
+        "profiles": "mz",
+        "range": "0.0/10000.0",
+        "scope": "Device"
+    },
+    {
+        "data_type": "float",
         "default": 0.01,
         "description": "Error gain",
         "limit": 0.0,
@@ -1882,7 +1910,7 @@
     },
     {
         "data_type": "bool",
-        "default": false,
+        "default": true,
         "description": "Plugin enabled",
         "limit": 0.0,
         "name": "light.enabled",
@@ -4559,7 +4587,7 @@
     },
     {
         "data_type": "bool",
-        "default": false,
+        "default": true,
         "description": "Ventilation enable flag.",
         "limit": 0.0,
         "name": "vent.enabled",
