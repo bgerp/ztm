@@ -1987,11 +1987,12 @@ def __add_registers(args):
     register.description = "Sensor settings"
     register.range = REGS_RANGES["NONE"]
     register.value = {
-        "vendor": "PT",
-        "model": "light_sensor",
+        "vendor": "Gemho",
+        "model": "envse",
         "options":
         {
-            "input": "AI2",
+            "uart": 0,
+            "mb_id": 3
         }
     }
     register.profiles = Register.create_profile(Profiles.ZONE.value)
