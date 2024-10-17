@@ -611,7 +611,7 @@ class Light(BasePlugin):
 
             # Read sensor.
             if self.__light_sensor is not None:
-                self.__current_illumination = self.__light_sensor.get_value()
+                self.__current_illumination = self.__light_sensor.get_lux()
                 # self.__current_illumination = l_scale(self.__current_illumination, [0.0, self.__output_limit], [0.0, 100.0])
 
             # Update register.
