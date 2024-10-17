@@ -3827,7 +3827,7 @@
     },
     {
         "data_type": "bool",
-        "default": true,
+        "default": false,
         "description": "Plugin enabled",
         "limit": 0.0,
         "name": "echp.enabled",
