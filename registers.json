@@ -1861,11 +1861,12 @@
     {
         "data_type": "json",
         "default": {
-            "model": "light_sensor",
+            "model": "envse",
             "options": {
-                "input": "AI2"
+                "mb_id": 3,
+                "uart": 0
             },
-            "vendor": "PT"
+            "vendor": "Gemho"
         },
         "description": "Sensor settings",
         "limit": 0.0,
