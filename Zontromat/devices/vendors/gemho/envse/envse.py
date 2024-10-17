@@ -82,7 +82,7 @@ class Envse(ModbusDevice):
 
         self._parameters.append(
             Parameter("Lux", "Lux",\
-            ParameterType.UINT16_T_LE, [0x02], FunctionCode.ReadHoldingRegisters))
+            ParameterType.UINT16_T_LE, [0x03], FunctionCode.ReadHoldingRegisters))
 
 #endregion
 
