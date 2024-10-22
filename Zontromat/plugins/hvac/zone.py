@@ -110,7 +110,7 @@ class Zone(BasePlugin):
         """HVAC Stop flag.
         """
 
-        self.__update_timer = Timer(60)
+        self.__update_timer = Timer(300)
         """Update timer.
         """
 
@@ -158,8 +158,8 @@ class Zone(BasePlugin):
         self.__fl_control_table = \
         [
             [  0,   0,   0,   0,   0,   0,   0,   0,   0], # 0 - Спряно
-            [  1,   1,   1,   1,   1,   1,   1,   1,   1], # 1 - Охлаждане # @17.07.2024 15:00 MG request to spot the regulation motion of the valves.
-            [  0,   0,   0,   0,   0, 1/4, 1/2,   1,   1], # 2 - Отопление
+            [  1,   1,   1,   1,   1,   0,   0,   0,   0], # 1 - Охлаждане # @17.07.2024 15:00 MG request to stop the regulation motion of the valves.
+            [  0,   0,   0,   0,   1,   1,   1,   1,   1], # 2 - Отопление # @01.10.2024 15:11 MG request to enable again valve control.
             [  0,   0,   0,   0,   0,   0, 1/2,   1,   1]  # 3 - Режим №3
         ]
 
@@ -167,8 +167,8 @@ class Zone(BasePlugin):
         self.__conv_control_table = \
         [
             [  0,   0,   0,   0,   0,   0,   0,   0,   0], # 0 - Спряно
-            [  4,   3,   2,   1,   1,   1,   1,   1,   1], # 1 - Охлаждане # @17.07.2024 15:00 MG request to spot the regulation motion of the valves.
-            [  0,   0,   0,   0,   0,   1,   2,   3,   4], # 2 - Отопление
+            [  4,   3,   2,   1,   1,   0,   0,   0,   0], # 1 - Охлаждане # @17.07.2024 15:00 MG request to stop the regulation motion of the valves.
+            [  0,   0,   0,   0,   1,   1,   2,   3,   4], # 2 - Отопление # @01.10.2024 15:11 MG request to enable again valve control.
             [  2,   2,   1,   0,   0,   0,   0,   0,   0]  # 3 - Режим №3
         ]
 
@@ -1237,8 +1237,8 @@ class Zone(BasePlugin):
         is_hot_water = self.__is_hot_water()
 
         # Take all necessary condition for normal operation of the HVAC.
-        # stop_flag = (is_empty or window_tamper_state or not is_hot_water)
-        stop_flag = False
+        stop_flag = (is_empty or window_tamper_state or not is_hot_water)
+        # stop_flag = False
 
         # If it is time to stop.
         if stop_flag:
@@ -1267,6 +1267,13 @@ class Zone(BasePlugin):
             # Clear last time to provoke instant expiration of the update timer.
             self.__update_timer.update_last_time(0)
 
+        # Stop the zone instantly.
+        if self.__stop_flag:
+            self.__set_fl_state(0)
+            self.__set_cl_state(0)
+            self.__set_conv_state(0)
+            self.__set_ventilation(0)
+
         # Update control timer.
         self.__update_timer.update()
         # If it is time to update.
@@ -1282,41 +1289,38 @@ class Zone(BasePlugin):
 
             print(f"Target: {self.__adjust_temp:2.1f}; Current: {self.__temp_proc.value:2.1f}")
 
-            dt = 0.0
-            if not self.__stop_flag:
-                # Calculate the delta.
-                # dt = self.__adjust_temp - self.__temp_proc.value
 
+            if not self.__stop_flag:
                 # Calculate the delta t and temperature deviation.
                 dt = min(self.__adjust_temp - self.__temp_proc.value+self.__temperature_deviation, 0) \
                     + max(self.__adjust_temp - self.__temp_proc.value-self.__temperature_deviation, 0)
 
-            # Round to have clear rounded value for state machine currency.
-            dt = self.__round_to_nearest_half(dt)
+                # Round to have clear rounded value for state machine currency.
+                dt = self.__round_to_nearest_half(dt)
 
-            # Correct the down limit.
-            if dt < -3.0:
-                dt = -3.0
+                # Correct the down limit.
+                if dt < -3.0:
+                    dt = -3.0
 
-            # Correct the upper limit.
-            if dt > 3.0:
-                dt = 3.0
+                # Correct the upper limit.
+                if dt > 3.0:
+                    dt = 3.0
 
-            # Exit if there is no changes.
-            # if self.__dt_temp == dt:
-            #     return
+                # Exit if there is no changes.
+                # if self.__dt_temp == dt:
+                #     return
 
-            # Store last changes.
-            self.__dt_temp = dt
+                # Store last changes.
+                self.__dt_temp = dt
 
-            print(f"dT: {dt:2.1f}")
+                print(f"dT: {dt:2.1f}")
 
-            state = self.__conversion_table[dt]
+                state = self.__conversion_table[dt]
 
-            print(f"State: {state:2.1f}")
+                print(f"State: {state:2.1f}")
 
-            # Set the devices.
-            self.__set_devices(state)
+                # Set the devices.
+                self.__set_devices(state)
 
         # Update PWM timers for the valves.
         self.__vlv_fl_1_tmr.update()

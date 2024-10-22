@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from devices.vendors.sed_tronic.u1wtvs.u1wtvs import U1WTVS
 
 from devices.vendors.pt.light_sensor.light_sensor import LightSensor
+from devices.vendors.gemho.envse.envse import Envse
 
 #region File Attributes
 
@@ -124,6 +125,16 @@ class LuxmeterFactory:
                 controller=controller,
                 dev=config["options"]['dev'],
                 circuit=config["options"]['circuit'],
+            )
+
+        # Gemho / envse
+        elif vendor == "Gemho" and model == "envse":
+
+            device = Envse(
+                name=name,
+                controller=controller,
+                unit=config["options"]['mb_id'],
+                uart=config["options"]['uart']
             )
 
         # Not implemented device.
