@@ -127,6 +127,8 @@ class Blind(BasePlugin):
 
         self.__sun_spot_update_timer = Timer(2)
 
+        self.__position = 0
+
         print(f"Starting blinds controller: {self.__identifier}")
 
     def __del__(self):
@@ -178,8 +180,13 @@ class Blind(BasePlugin):
             return
 
         if self.__blind_mechanism is not None:
-            self.__blind_mechanism.set_position(register.value)
-            # print(f"Position of {self.__identifier} is at {register.value}")
+
+            if self.__position != register.value:
+
+                self.__blind_mechanism.set_position(register.value)
+
+                self.__position = register.value
+                # print(f"Position of {self.__identifier} is at {register.value}")
 
     def __object_height_cb(self, register):
 
