@@ -164,8 +164,8 @@ class FlowmeterDN20(ModbusDevice):
 
         value = self.get_value("PositiveCumulativeFlow")
 
-        # if value != None:
-        #     value = value / 100.0
+        if value != None:
+            value = value / 100.0
 
         # print(f"UNIT: {self.unit} -> PositiveCumulativeFlow: {value}")
 

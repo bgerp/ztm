@@ -843,8 +843,6 @@ class Monitoring(BasePlugin):
         # Set the time of the measurement.
         measurement["ts"] = time.time()
 
-        print(measurement)
-
         # Add measurement to the tail.
         self.__cl_1_hm_measurements.append(measurement)
 
