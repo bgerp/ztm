@@ -84,6 +84,10 @@ class FlowmeterDN20(ModbusDevice):
         self._parameters.append(
             Parameter("ReturnWaterTemperature", "⁰C",\
             ParameterType.UINT32_T_BE, [0x06, 0x07], FunctionCode.ReadHoldingRegisters))
+        
+        self._parameters.append(
+            Parameter("PositiveCumulativeFlow", "1 / 100m³",\
+            ParameterType.UINT32_T_BE, [0x00, 0x0A], FunctionCode.ReadHoldingRegisters))
 
         # 40001: ["Positive cumulative energy",                     4, PT.UINT32_T_BE, "KW/h",            FC.ReadHoldingRegisters, None, [0x00, 0x00]],
         # 40005: ["Inlet temperature",                              4, PT.UINT32_T_BE, "⁰C",              FC.ReadHoldingRegisters, None, [0x00, 0x04]],
@@ -151,5 +155,20 @@ class FlowmeterDN20(ModbusDevice):
 
         return value
 
+    def get_pcflow(self):
+        """Get positive cumulative flow.
+
+        Returns:
+            float: 1 / 100m³
+        """
+
+        value = self.get_value("PositiveCumulativeFlow")
+
+        # if value != None:
+        #     value = value / 100.0
+
+        # print(f"UNIT: {self.unit} -> PositiveCumulativeFlow: {value}")
+
+        return value
 
 #endregion
