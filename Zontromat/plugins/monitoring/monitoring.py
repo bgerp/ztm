@@ -843,13 +843,14 @@ class Monitoring(BasePlugin):
         # Set the time of the measurement.
         measurement["ts"] = time.time()
 
+        print(measurement)
+
         # Add measurement to the tail.
         self.__cl_1_hm_measurements.append(measurement)
 
         # This magical number represents seconds for 24 hours.
         filter_measurements_by_time(self.__cl_1_hm_measurements, 86400)
 
-        print(self.__cl_1_hm_measurements)
 
         # 2. If the following register is available then set its value to the thermometers value.
         self._registers.write(f"{self.key}.cl_1.hm.measurements",
