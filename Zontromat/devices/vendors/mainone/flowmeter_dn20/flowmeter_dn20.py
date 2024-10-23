@@ -87,7 +87,7 @@ class FlowmeterDN20(ModbusDevice):
         
         self._parameters.append(
             Parameter("PositiveCumulativeFlow", "1 / 100m³",\
-            ParameterType.UINT32_T_BE, [0x00, 0x0A], FunctionCode.ReadHoldingRegisters))
+            ParameterType.UINT32_T_BE, [0x0A, 0x0B], FunctionCode.ReadHoldingRegisters))
 
         # 40001: ["Positive cumulative energy",                     4, PT.UINT32_T_BE, "KW/h",            FC.ReadHoldingRegisters, None, [0x00, 0x00]],
         # 40005: ["Inlet temperature",                              4, PT.UINT32_T_BE, "⁰C",              FC.ReadHoldingRegisters, None, [0x00, 0x04]],
