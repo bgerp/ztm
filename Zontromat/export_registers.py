@@ -4661,8 +4661,8 @@ def __add_registers(args):
         {
             "uart": 1,
             "mb_id": 7,
-            "e_stop": "U0:ID15:FC5:R0:RO8",
-            "e_status": "U0:ID15:FC2:R0:DI0",
+            "e_stop": "off",
+            "e_status": "off",
             "stop_on_shutdown": True,
             "wait_on_shutdown": False
         }
@@ -4703,8 +4703,8 @@ def __add_registers(args):
         {
             "uart": 1,
             "mb_id": 6,
-            "e_stop": "U0:ID15:FC5:R0:RO8",
-            "e_status": "U0:ID15:FC2:R0:DI0",
+            "e_stop": "off",
+            "e_status": "off",
             "stop_on_shutdown": True,
             "wait_on_shutdown": False
         }
@@ -4745,8 +4745,8 @@ def __add_registers(args):
         {
             "uart": 1,
             "mb_id": 5,
-            "e_stop": "U0:ID15:FC5:R0:RO8",
-            "e_status": "U0:ID15:FC2:R0:DI0",
+            "e_stop": "off",
+            "e_status": "off",
             "stop_on_shutdown": True,
             "wait_on_shutdown": False
         }
