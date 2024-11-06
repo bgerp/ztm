@@ -70,13 +70,6 @@ class BaseController(Configurable):
 
 #region Attributes
 
-    _gpio_map = {}
-    """GPIO map"""
-
-    _delimiter = ":"
-
-    _remote_gpio_chunks_count = 5
-
 #endregion
 
 #region Constructor
@@ -85,6 +78,13 @@ class BaseController(Configurable):
         """Constructor"""
 
         super().__init__(config)
+
+        self._gpio_map = {}
+        """GPIO map"""
+
+        self._delimiter = ":"
+
+        self._remote_gpio_chunks_count = 5
 
     def __str__(self):
         """Returns controller vendor and model as string.

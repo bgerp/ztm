@@ -1141,8 +1141,8 @@ def __add_registers(args):
     register.description = "Plugin environment door tamper settings"
     register.range = REGS_RANGES["NONE"]
     register.value = {}
-    if args.door_office_1:
-        register.value["DRT_1"] = args.door_office_1
+    if args.door_office:
+        register.value["DRT_1"] = args.door_office
     else:
         register.value["DRT_1"] = "off"
     if args.door_terce:
@@ -1987,11 +1987,12 @@ def __add_registers(args):
     register.description = "Sensor settings"
     register.range = REGS_RANGES["NONE"]
     register.value = {
-        "vendor": "PT",
-        "model": "light_sensor",
+        "vendor": "Gemho",
+        "model": "envse",
         "options":
         {
-            "input": "AI2",
+            "uart": 0,
+            "mb_id": 3
         }
     }
     register.profiles = Register.create_profile(Profiles.ZONE.value)
@@ -2001,6 +2002,15 @@ def __add_registers(args):
     register.scope = Scope.Device
     register.plugin_name = "Light"
     register.description = "Target illumination"
+    register.range = "0.0/10000.0"
+    register.value = 0.0
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
+    __registers.append(register)
+
+    register = Register("light.illumination")
+    register.scope = Scope.Device
+    register.plugin_name = "Light"
+    register.description = "Current illumination"
     register.range = "0.0/10000.0"
     register.value = 0.0
     register.profiles = Register.create_profile(Profiles.ZONE.value)
