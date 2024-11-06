@@ -4308,7 +4308,7 @@ def __add_registers(args):
 
     # -================================================================================-
 
-    # ECHP / Cold Geo / Valves / Settings
+    # ECHP / Cold Geo / Valves / Settings (From fron panel - 6/7/8)
     register = Register("echp.cold_geo.valves.settings")
     register.scope = Scope.System
     register.plugin_name = "Energy Center Heat Pump"
@@ -4328,8 +4328,9 @@ def __add_registers(args):
                     "io_mode": 1, # 1: "single_out", 2: "dual_out"
                     "output_cw": "off",
                     "output_ccw": "off",
-                    "limit_cw": "off",
-                    "limit_ccw": "off"
+                    "limit_cw": "U0:ID2:FC2:R0:DI7",
+                    "limit_ccw": "U0:ID2:FC2:R0:DI8",
+		            "output_enable": "off"
                 }
             }
         ],
@@ -4345,8 +4346,9 @@ def __add_registers(args):
                     "io_mode": 1, # 1: "single_out", 2: "dual_out"
                     "output_cw": "off",
                     "output_ccw": "off",
-                    "limit_cw": "off",
-                    "limit_ccw": "off"
+                    "limit_cw": "U0:ID2:FC2:R0:DI8",
+                    "limit_ccw": "U0:ID2:FC2:R0:DI7",
+            		"output_enable": "off"
                 }
             }
         ],
@@ -4362,8 +4364,9 @@ def __add_registers(args):
                     "io_mode": 1, # 1: "single_out", 2: "dual_out"
                     "output_cw": "off",
                     "output_ccw": "off",
-                    "limit_cw": "off",
-                    "limit_ccw": "off"
+                    "limit_cw": "U0:ID2:FC2:R0:DI7",
+                    "limit_ccw": "U0:ID2:FC2:R0:DI8",
+                    "output_enable": "U0:ID2:FC5:R0:RO7"
                 }
             }
         ]
@@ -4376,7 +4379,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Energy Center Heat Pump"
     register.description = "ECHP / Cold Geo / Valves / Mode"
-    register.range = REGS_RANGES["VALVE_MODE"]
+    register.range = REGS_RANGES["PERCENTAGE_I"]
     register.value = 0.0
     register.profiles = Register.create_profile(Profiles.HEAT_PUMP.value)
     __registers.append(register)
@@ -4386,7 +4389,7 @@ def __add_registers(args):
     register.scope = Scope.Device
     register.plugin_name = "Energy Center Heat Pump"
     register.description = "ECHP / Cold Geo / Valves / State"
-    register.range = REGS_RANGES["VALVE_STATE"]
+    register.range = REGS_RANGES["PERCENTAGE_I"]
     register.value = 0.0
     register.profiles = Register.create_profile(Profiles.HEAT_PUMP.value)
     __registers.append(register)
@@ -4661,8 +4664,8 @@ def __add_registers(args):
         {
             "uart": 1,
             "mb_id": 7,
-            "e_stop": "U0:ID15:FC5:R0:RO8",
-            "e_status": "U0:ID15:FC2:R0:DI0",
+            "e_stop": "off",
+            "e_status": "off",
             "stop_on_shutdown": True,
             "wait_on_shutdown": False
         }
@@ -4703,8 +4706,8 @@ def __add_registers(args):
         {
             "uart": 1,
             "mb_id": 6,
-            "e_stop": "U0:ID15:FC5:R0:RO8",
-            "e_status": "U0:ID15:FC2:R0:DI0",
+            "e_stop": "off",
+            "e_status": "off",
             "stop_on_shutdown": True,
             "wait_on_shutdown": False
         }
@@ -4745,8 +4748,8 @@ def __add_registers(args):
         {
             "uart": 1,
             "mb_id": 5,
-            "e_stop": "U0:ID15:FC5:R0:RO8",
-            "e_status": "U0:ID15:FC2:R0:DI0",
+            "e_stop": "off",
+            "e_status": "off",
             "stop_on_shutdown": True,
             "wait_on_shutdown": False
         }

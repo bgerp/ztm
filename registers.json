@@ -375,7 +375,7 @@
     },
     {
         "data_type": "bool",
-        "default": true,
+        "default": false,
         "description": "Plugin enabled",
         "limit": 0.0,
         "name": "blinds.enabled",
@@ -601,7 +601,7 @@
     },
     {
         "data_type": "bool",
-        "default": true,
+        "default": false,
         "description": "Plugin enabled",
         "limit": 0.0,
         "name": "monitoring.enabled",
@@ -861,7 +861,7 @@
     },
     {
         "data_type": "bool",
-        "default": true,
+        "default": false,
         "description": "Plugin enabled",
         "limit": 0.0,
         "name": "envm.enabled",
@@ -1287,7 +1287,7 @@
     },
     {
         "data_type": "bool",
-        "default": true,
+        "default": false,
         "description": "Plugin enabled",
         "limit": 0.0,
         "name": "hvac.enabled",
@@ -1911,7 +1911,7 @@
     },
     {
         "data_type": "bool",
-        "default": true,
+        "default": false,
         "description": "Plugin enabled",
         "limit": 0.0,
         "name": "light.enabled",
@@ -3856,7 +3856,7 @@
     },
     {
         "data_type": "bool",
-        "default": false,
+        "default": true,
         "description": "Plugin enabled",
         "limit": 0.0,
         "name": "echp.enabled",
@@ -4588,7 +4588,7 @@
     },
     {
         "data_type": "bool",
-        "default": true,
+        "default": false,
         "description": "Ventilation enable flag.",
         "limit": 0.0,
         "name": "vent.enabled",

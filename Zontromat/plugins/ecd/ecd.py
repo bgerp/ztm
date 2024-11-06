@@ -1386,11 +1386,11 @@ class EnergyCenterDistribution(BasePlugin):
             self.__vcg_ahu_roof_floor.update()
             reg_state = self._registers.by_name("ecd.ahu_roof_floor.valves.state")
             if reg_state is not None:
-                if self.__vcg_conv_west.target_position == 0:
+                if self.__vcg_ahu_roof_floor.target_position == 0:
                     reg_state.value = ThermalMode.Stop.value
-                elif self.__vcg_conv_west.target_position < 0:
+                elif self.__vcg_ahu_roof_floor.target_position < 0:
                     reg_state.value = ThermalMode.Cooling.value
-                elif self.__vcg_conv_west.target_position > 0:
+                elif self.__vcg_ahu_roof_floor.target_position > 0:
                     reg_state.value = ThermalMode.Heating.value
 
         if self.__vcg_ahu_fitness is not None:
