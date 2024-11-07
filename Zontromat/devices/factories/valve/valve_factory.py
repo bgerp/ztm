@@ -100,6 +100,10 @@ class ValveFactory:
         # Flowx / FLX-05F / (DO0,R0) / (DO1,R1) / DI0 / DI1
         if vendor == "Flowx" and  model == "FLX-05F":
 
+            output_enable = "off"
+            if "output_enable" in config["options"]:
+                output_enable = config["options"]["output_enable"]
+
             device = FLX05F(
                 name=name,
                 controller=controller,
@@ -109,6 +113,7 @@ class ValveFactory:
                 output_ccw=config["options"]["output_ccw"],
                 limit_cw=config["options"]["limit_cw"],
                 limit_ccw=config["options"]["limit_ccw"],
+                output_enable=output_enable
             )
 
         # Tonhe / a20m15b2c / (RO0/AO0) / AI0
