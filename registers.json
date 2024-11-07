@@ -3956,7 +3956,7 @@
                         "limit_ccw": "U0:ID2:FC2:R0:DI7",
                         "limit_cw": "U0:ID2:FC2:R0:DI6",
                         "output_ccw": "off",
-                        "output_cw": "off",
+                        "output_cw": "U0:ID2:FC5:R0:RO2",
                         "output_enable": "U0:ID2:FC5:R0:RO7",
                         "wait_on_shutdown": false
                     },
@@ -3973,7 +3973,7 @@
                         "limit_cw": "U0:ID2:FC2:R0:DI6",
                         "output_ccw": "off",
                         "output_cw": "off",
-                        "output_enable": "off",
+                        "output_enable": "U0:ID2:FC5:R0:RO7",
                         "wait_on_shutdown": false
                     },
                     "vendor": "Flowx"
@@ -3989,7 +3989,7 @@
                         "limit_cw": "U0:ID2:FC2:R0:DI7",
                         "output_ccw": "off",
                         "output_cw": "off",
-                        "output_enable": "off",
+                        "output_enable": "U0:ID2:FC5:R0:RO7",
                         "wait_on_shutdown": false
                     },
                     "vendor": "Flowx"
