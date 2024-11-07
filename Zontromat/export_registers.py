@@ -4326,11 +4326,11 @@ def __add_registers(args):
                     "close_on_shutdown": False,
                     "wait_on_shutdown": False,
                     "io_mode": 1, # 1: "single_out", 2: "dual_out"
-                    "output_cw": "off",
+                    "output_cw": "U0:ID2:FC5:R0:RO2",
                     "output_ccw": "off",
                     "limit_cw": "U0:ID2:FC2:R0:DI6",
                     "limit_ccw": "U0:ID2:FC2:R0:DI7",
-		            "output_enable": "off"
+		            "output_enable": "U0:ID2:FC5:R0:RO7"
                 }
             }
         ],
@@ -4348,7 +4348,7 @@ def __add_registers(args):
                     "output_ccw": "off",
                     "limit_cw": "U0:ID2:FC2:R0:DI6",
                     "limit_ccw": "U0:ID2:FC2:R0:DI7",
-            		"output_enable": "off"
+            		"output_enable": "U0:ID2:FC5:R0:RO7"
                 }
             }
         ],
