@@ -3953,10 +3953,11 @@
                     "options": {
                         "close_on_shutdown": false,
                         "io_mode": 1,
-                        "limit_ccw": "off",
-                        "limit_cw": "off",
+                        "limit_ccw": "U0:ID2:FC2:R0:DI7",
+                        "limit_cw": "U0:ID2:FC2:R0:DI6",
                         "output_ccw": "off",
                         "output_cw": "off",
+                        "output_enable": "off",
                         "wait_on_shutdown": false
                     },
                     "vendor": "Flowx"
@@ -3968,10 +3969,11 @@
                     "options": {
                         "close_on_shutdown": false,
                         "io_mode": 1,
-                        "limit_ccw": "off",
-                        "limit_cw": "off",
+                        "limit_ccw": "U0:ID2:FC2:R0:DI7",
+                        "limit_cw": "U0:ID2:FC2:R0:DI6",
                         "output_ccw": "off",
                         "output_cw": "off",
+                        "output_enable": "off",
                         "wait_on_shutdown": false
                     },
                     "vendor": "Flowx"
@@ -3983,10 +3985,11 @@
                     "options": {
                         "close_on_shutdown": false,
                         "io_mode": 1,
-                        "limit_ccw": "off",
-                        "limit_cw": "off",
+                        "limit_ccw": "U0:ID2:FC2:R0:DI6",
+                        "limit_cw": "U0:ID2:FC2:R0:DI7",
                         "output_ccw": "off",
                         "output_cw": "off",
+                        "output_enable": "U0:ID2:FC5:R0:RO7",
                         "wait_on_shutdown": false
                     },
                     "vendor": "Flowx"
@@ -4009,7 +4012,7 @@
         "name": "echp.cold_geo.valves.mode",
         "plugin": "Energy Center Heat Pump",
         "profiles": "hp",
-        "range": "0|1|2",
+        "range": "0/100",
         "scope": "System"
     },
     {
@@ -4020,7 +4023,7 @@
         "name": "echp.cold_geo.valves.state",
         "plugin": "Energy Center Heat Pump",
         "profiles": "hp",
-        "range": "0|1|2",
+        "range": "0/100",
         "scope": "Device"
     },
     {
@@ -4265,8 +4268,8 @@
         "default": {
             "model": "MAGNA1_80_100_F_360_1x230V_PN6",
             "options": {
-                "e_status": "U0:ID15:FC2:R0:DI0",
-                "e_stop": "U0:ID15:FC5:R0:RO8",
+                "e_status": "off",
+                "e_stop": "off",
                 "mb_id": 7,
                 "stop_on_shutdown": true,
                 "uart": 1,
@@ -4309,8 +4312,8 @@
         "default": {
             "model": "MAGNA1_80_100_F_360_1x230V_PN6",
             "options": {
-                "e_status": "U0:ID15:FC2:R0:DI0",
-                "e_stop": "U0:ID15:FC5:R0:RO8",
+                "e_status": "off",
+                "e_stop": "off",
                 "mb_id": 6,
                 "stop_on_shutdown": true,
                 "uart": 1,
@@ -4353,8 +4356,8 @@
         "default": {
             "model": "MAGNA1_80_100_F_360_1x230V_PN6",
             "options": {
-                "e_status": "U0:ID15:FC2:R0:DI0",
-                "e_stop": "U0:ID15:FC5:R0:RO8",
+                "e_status": "off",
+                "e_stop": "off",
                 "mb_id": 5,
                 "stop_on_shutdown": true,
                 "uart": 1,
