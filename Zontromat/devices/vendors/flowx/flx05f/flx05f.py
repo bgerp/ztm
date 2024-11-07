@@ -491,6 +491,7 @@ class FLX05F(BaseValve):
             
             if self._state.is_state(ValveState.Execute):
                 self.__enable_valve(1)
+                self.__move_timer.update_last_time()
                 self._state.set_state(ValveState.Wait)
 
             if self._state.is_state(ValveState.Wait):
