@@ -675,10 +675,15 @@ class HeatPumpControlGroup(BasePlugin):
         if self.__vcg_warm_geo is None:
             return
 
-        if register.value == 0:
-            self.__vcg_warm_geo.target_position = 0
-        elif register.value == 1:
-            self.__vcg_warm_geo.target_position = 100
+        input_value = register.value
+
+        if input_value < 0:
+            input_value = 0
+
+        elif input_value > 100:
+            input_value = 100
+
+        self.__vcg_warm_geo.target_position = input_value
 
     def __warm_valves_settings_cb(self, register: Register):
 
@@ -719,10 +724,15 @@ class HeatPumpControlGroup(BasePlugin):
         if self.__vcg_warm is None:
             return
 
-        if register.value == 0:
-            self.__vcg_warm.target_position = 0
-        elif register.value == 1:
-            self.__vcg_warm.target_position = 100
+        input_value = register.value
+
+        if input_value < 0:
+            input_value = 0
+
+        elif input_value > 100:
+            input_value = 100
+
+        self.__vcg_warm.target_position = input_value
 
     def __hot_valves_settings_cb(self, register: Register):
 
