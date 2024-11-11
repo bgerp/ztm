@@ -28,6 +28,7 @@ from utils.logic.state_machine import StateMachine
 from devices.base_device import BaseDevice
 
 from devices.factories.valve.valve_state import ValveState
+from devices.vendors.flowx.flx05f.direction_mode import DirectionMode
 
 #region File Attributes
 
@@ -113,6 +114,18 @@ class BaseValve(BaseDevice):
         self._num_of_moves = 0
         """Number of moves that valve has made.
         """        
+
+        self._current_direction = 0
+        """Current movement of the valve.
+        """
+
+        self._last_direction = DirectionMode.CLOSE
+        """Last direction movement of the valve.
+        """
+
+        self._lash_constant = 15
+        """Static constant in [%]
+        """
 
 #endregion
 

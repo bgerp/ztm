@@ -35,6 +35,7 @@ from devices.factories.valve.valve_state import ValveState
 from devices.vendors.flowx.flx05f.io_mode import IOMode
 from devices.vendors.flowx.flx05f.calibration_state import CalibrationState
 from devices.vendors.flowx.flx05f.control_mode import ControlMode
+from devices.vendors.flowx.flx05f.direction_mode import DirectionMode
 
 from data import verbal_const
 
@@ -176,6 +177,9 @@ class FLX05F(BaseValve):
         """
         if "number_of_moves_to_calibration" in config:
             self.__number_of_moves_to_calibration = config["number_of_moves_to_calibration"]
+
+        if "lash_constant" in config:
+            self._lash_constant = config["lash_constant"]
 
         self.__t0 = 0
         """T0 moment.
@@ -463,10 +467,22 @@ class FLX05F(BaseValve):
 
                 # Delta
                 delta_pos = self._target_position - self._current_position
-                if delta_pos == 0:
-                    self.__stop()
-                    self._state.set_state(ValveState.NONE)
-                    return
+                if delta_pos > 0:
+                    self._current_direction = DirectionMode.OPEN
+
+                elif delta_pos < 0:
+                    self._current_direction = DirectionMode.CLOSE
+
+                # Add lash constant to compensate the gearbox and valve.
+                if self._last_direction.value < self._current_direction.value:
+                    delta_pos -= self._lash_constant
+                elif self._last_direction.value > self._current_direction.value:
+                    delta_pos += self._lash_constant
+
+                # if delta_pos == 0:
+                #     self.__stop()
+                #     self._state.set_state(ValveState.NONE)
+                #     return
 
                 # Scale down 10 times.
                 # Example: form 100% to 10s is exactly 10 times.
@@ -482,15 +498,18 @@ class FLX05F(BaseValve):
                 self.__move_timer.update_last_time()
 
                 if delta_pos > 0:
+                    self._last_direction = DirectionMode.OPEN
                     self.__open_valve()
 
                 elif delta_pos < 0:
+                    self._last_direction = DirectionMode.CLOSE
                     self.__close_valve()
 
                 self._state.set_state(ValveState.Execute)
-            
+
             if self._state.is_state(ValveState.Execute):
                 self.__enable_valve(1)
+                self.__move_timer.update_last_time
                 self._state.set_state(ValveState.Wait)
 
             if self._state.is_state(ValveState.Wait):
@@ -517,10 +536,10 @@ class FLX05F(BaseValve):
         elif self.__control_mode == ControlMode.ON_OFF_TIMED:
             update_on_off_timed()
 
-        if self.__get_close_limit():
-            self._current_position = self.min_pos
-        if self.__get_open_limit():
-            self._current_position = self.max_pos
+        # if self.__get_close_limit():
+        #     self._current_position = self.min_pos
+        # if self.__get_open_limit():
+        #     self._current_position = self.max_pos
 
     def calibrate(self):
 
