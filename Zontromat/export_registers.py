@@ -127,7 +127,7 @@ def __set_parser():
     actions = ["w_csv", "w_json", "w_md"]
 
     # Add action.
-    __parser.add_argument("--action", type=str, default="w_json", choices=actions, help="Export to file.")
+    __parser.add_argument("--action", type=str, default="w_csv", choices=actions, help="Export to file.")
 
     # Profile
     __parser.add_argument("--profile", type=Profiles,  default=Profiles.HEAT_PUMP, choices=list(Profiles))
@@ -4502,10 +4502,11 @@ def __add_registers(args):
                     "close_on_shutdown": False,
                     "wait_on_shutdown": False,
                     "io_mode": 1, # 1: "single_out", 2: "dual_out"
-                    "output_cw": "off",
+                    "output_cw": "U0:ID2:FC5:R0:RO1",
                     "output_ccw": "off",
-                    "limit_cw": "off",
-                    "limit_ccw": "off"
+                    "limit_cw": "U0:ID2:FC2:R0:DI2",
+                    "limit_ccw": "U0:ID2:FC2:R0:DI3",
+		            "output_enable": "U0:ID2:FC5:R0:RO6"
                 }
             }
         ],
@@ -4521,8 +4522,9 @@ def __add_registers(args):
                     "io_mode": 1, # 1: "single_out", 2: "dual_out"
                     "output_cw": "off",
                     "output_ccw": "off",
-                    "limit_cw": "off",
-                    "limit_ccw": "off"
+                    "limit_cw": "U0:ID2:FC2:R0:DI2",
+                    "limit_ccw": "U0:ID2:FC2:R0:DI3",
+            		"output_enable": "off"
                 }
             }
         ],
@@ -4538,8 +4540,9 @@ def __add_registers(args):
                     "io_mode": 1, # 1: "single_out", 2: "dual_out"
                     "output_cw": "off",
                     "output_ccw": "off",
-                    "limit_cw": "off",
-                    "limit_ccw": "off"
+                    "limit_cw": "U0:ID2:FC2:R0:DI3",
+                    "limit_ccw": "U0:ID2:FC2:R0:DI2",
+                    "output_enable": "off"
                 }
             }
         ]
@@ -4552,7 +4555,7 @@ def __add_registers(args):
     register.scope = Scope.System
     register.plugin_name = "Energy Center Heat Pump"
     register.description = "ECHP / Warm / Valves / Mode"
-    register.range = REGS_RANGES["VALVE_MODE"]
+    register.range = REGS_RANGES["PERCENTAGE_I"]
     register.value = 0.0
     register.profiles = Register.create_profile(Profiles.HEAT_PUMP.value)
     __registers.append(register)
@@ -4562,7 +4565,7 @@ def __add_registers(args):
     register.scope = Scope.Device
     register.plugin_name = "Energy Center Heat Pump"
     register.description = "ECHP / Warm / Valves / State"
-    register.range = REGS_RANGES["VALVE_STATE"]
+    register.range = REGS_RANGES["PERCENTAGE_I"]
     register.value = 0.0
     register.profiles = Register.create_profile(Profiles.HEAT_PUMP.value)
     __registers.append(register)

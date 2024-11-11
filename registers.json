@@ -4117,10 +4117,11 @@
                     "options": {
                         "close_on_shutdown": false,
                         "io_mode": 1,
-                        "limit_ccw": "off",
-                        "limit_cw": "off",
+                        "limit_ccw": "U0:ID2:FC2:R0:DI3",
+                        "limit_cw": "U0:ID2:FC2:R0:DI2",
                         "output_ccw": "off",
-                        "output_cw": "off",
+                        "output_cw": "U0:ID2:FC5:R0:RO1",
+                        "output_enable": "U0:ID2:FC5:R0:RO6",
                         "wait_on_shutdown": false
                     },
                     "vendor": "Flowx"
@@ -4132,10 +4133,11 @@
                     "options": {
                         "close_on_shutdown": false,
                         "io_mode": 1,
-                        "limit_ccw": "off",
-                        "limit_cw": "off",
+                        "limit_ccw": "U0:ID2:FC2:R0:DI3",
+                        "limit_cw": "U0:ID2:FC2:R0:DI2",
                         "output_ccw": "off",
                         "output_cw": "off",
+                        "output_enable": "off",
                         "wait_on_shutdown": false
                     },
                     "vendor": "Flowx"
@@ -4147,10 +4149,11 @@
                     "options": {
                         "close_on_shutdown": false,
                         "io_mode": 1,
-                        "limit_ccw": "off",
-                        "limit_cw": "off",
+                        "limit_ccw": "U0:ID2:FC2:R0:DI2",
+                        "limit_cw": "U0:ID2:FC2:R0:DI3",
                         "output_ccw": "off",
                         "output_cw": "off",
+                        "output_enable": "off",
                         "wait_on_shutdown": false
                     },
                     "vendor": "Flowx"
@@ -4173,7 +4176,7 @@
         "name": "echp.warm.valves.mode",
         "plugin": "Energy Center Heat Pump",
         "profiles": "hp",
-        "range": "0|1|2",
+        "range": "0/100",
         "scope": "System"
     },
     {
@@ -4184,7 +4187,7 @@
         "name": "echp.warm.valves.state",
         "plugin": "Energy Center Heat Pump",
         "profiles": "hp",
-        "range": "0|1|2",
+        "range": "0/100",
         "scope": "Device"
     },
     {
