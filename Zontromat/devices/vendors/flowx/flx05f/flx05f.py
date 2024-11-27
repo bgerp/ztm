@@ -178,8 +178,8 @@ class FLX05F(BaseValve):
         if "number_of_moves_to_calibration" in config:
             self.__number_of_moves_to_calibration = config["number_of_moves_to_calibration"]
 
-        if "lash_constant" in config:
-            self._lash_constant = config["lash_constant"]
+        if "slack_constant" in config:
+            self._slack_constant = config["slack_constant"]
 
         self.__t0 = 0
         """T0 moment.
@@ -475,9 +475,9 @@ class FLX05F(BaseValve):
 
                 # Add lash constant to compensate the gearbox and valve.
                 if self._last_direction.value < self._current_direction.value:
-                    delta_pos -= self._lash_constant
+                    delta_pos -= self._slack_constant
                 elif self._last_direction.value > self._current_direction.value:
-                    delta_pos += self._lash_constant
+                    delta_pos += self._slack_constant
 
                 # if delta_pos == 0:
                 #     self.__stop()

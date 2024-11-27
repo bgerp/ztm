@@ -123,7 +123,7 @@ class BaseValve(BaseDevice):
         """Last direction movement of the valve.
         """
 
-        self._lash_constant = 15
+        self._slack_constant = 15
         """Static constant in [%]
         """
 
