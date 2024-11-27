@@ -130,7 +130,7 @@ def __set_parser():
     __parser.add_argument("--action", type=str, default="w_csv", choices=actions, help="Export to file.")
 
     # Profile
-    __parser.add_argument("--profile", type=Profiles,  default=Profiles.HEAT_PUMP, choices=list(Profiles))
+    __parser.add_argument("--profile", type=Profiles,  default=Profiles.ZONE, choices=list(Profiles))
 
     # Add args parameters Monitoring
     __parser.add_argument("--pa", type=int, default=1, help="Power analyzer modbus ID.")
@@ -4244,7 +4244,9 @@ def __add_registers(args):
                     "output_cw": "off",
                     "output_ccw": "off",
                     "limit_cw": "off",
-                    "limit_ccw": "off"
+                    "limit_ccw": "off",
+            		"output_enable": "off",
+                    "slack_constant": 10
                 }
             }
         ],
@@ -4261,7 +4263,9 @@ def __add_registers(args):
                     "output_cw": "off",
                     "output_ccw": "off",
                     "limit_cw": "off",
-                    "limit_ccw": "off"
+                    "limit_ccw": "off",
+            		"output_enable": "off",
+                    "slack_constant": 10
                 }
             }
         ],
@@ -4278,7 +4282,9 @@ def __add_registers(args):
                     "output_cw": "off",
                     "output_ccw": "off",
                     "limit_cw": "off",
-                    "limit_ccw": "off"
+                    "limit_ccw": "off",
+            		"output_enable": "off",
+                    "slack_constant": 10
                 }
             }
         ]
@@ -4330,7 +4336,8 @@ def __add_registers(args):
                     "output_ccw": "off",
                     "limit_cw": "U0:ID2:FC2:R0:DI6",
                     "limit_ccw": "U0:ID2:FC2:R0:DI7",
-		            "output_enable": "U0:ID2:FC5:R0:RO5"
+		            "output_enable": "U0:ID2:FC5:R0:RO5",
+                    "slack_constant": 10
                 }
             }
         ],
@@ -4348,7 +4355,8 @@ def __add_registers(args):
                     "output_ccw": "off",
                     "limit_cw": "U0:ID2:FC2:R0:DI6",
                     "limit_ccw": "U0:ID2:FC2:R0:DI7",
-            		"output_enable": "off"
+            		"output_enable": "off",
+                    "slack_constant": 10
                 }
             }
         ],
@@ -4366,7 +4374,8 @@ def __add_registers(args):
                     "output_ccw": "off",
                     "limit_cw": "U0:ID2:FC2:R0:DI7",
                     "limit_ccw": "U0:ID2:FC2:R0:DI6",
-                    "output_enable": "off"
+                    "output_enable": "off",
+                    "slack_constant": 10
                 }
             }
         ]
@@ -4418,7 +4427,8 @@ def __add_registers(args):
                     "output_ccw": "off",
                     "limit_cw": "U0:ID2:FC2:R0:DI4",
                     "limit_ccw": "U0:ID2:FC2:R0:DI5",
-		            "output_enable": "U0:ID2:FC5:R0:RO7"
+		            "output_enable": "U0:ID2:FC5:R0:RO7",
+                    "slack_constant": 10
                 }
             }
         ],
@@ -4436,7 +4446,8 @@ def __add_registers(args):
                     "output_ccw": "off",
                     "limit_cw": "U0:ID2:FC2:R0:DI4",
                     "limit_ccw": "U0:ID2:FC2:R0:DI5",
-            		"output_enable": "off"
+            		"output_enable": "off",
+                    "slack_constant": 10
                 }
             }
         ],
@@ -4454,7 +4465,8 @@ def __add_registers(args):
                     "output_ccw": "off",
                     "limit_cw": "U0:ID2:FC2:R0:DI5",
                     "limit_ccw": "U0:ID2:FC2:R0:DI4",
-                    "output_enable": "off"
+                    "output_enable": "off",
+                    "slack_constant": 10
                 }
             }
         ]
@@ -4506,7 +4518,8 @@ def __add_registers(args):
                     "output_ccw": "off",
                     "limit_cw": "U0:ID2:FC2:R0:DI2",
                     "limit_ccw": "U0:ID2:FC2:R0:DI3",
-		            "output_enable": "U0:ID2:FC5:R0:RO6"
+		            "output_enable": "U0:ID2:FC5:R0:RO6",
+                    "slack_constant": 10
                 }
             }
         ],
@@ -4524,7 +4537,8 @@ def __add_registers(args):
                     "output_ccw": "off",
                     "limit_cw": "U0:ID2:FC2:R0:DI2",
                     "limit_ccw": "U0:ID2:FC2:R0:DI3",
-            		"output_enable": "off"
+            		"output_enable": "off",
+                    "slack_constant": 10
                 }
             }
         ],
@@ -4542,7 +4556,8 @@ def __add_registers(args):
                     "output_ccw": "off",
                     "limit_cw": "U0:ID2:FC2:R0:DI3",
                     "limit_ccw": "U0:ID2:FC2:R0:DI2",
-                    "output_enable": "off"
+                    "output_enable": "off",
+                    "slack_constant": 10
                 }
             }
         ]
@@ -4593,7 +4608,9 @@ def __add_registers(args):
                     "output_cw": "off",
                     "output_ccw": "off",
                     "limit_cw": "off",
-                    "limit_ccw": "off"
+                    "limit_ccw": "off",
+                    "output_enable": "off",
+                    "slack_constant": 10
                 }
             }
         ],
@@ -4610,7 +4627,9 @@ def __add_registers(args):
                     "output_cw": "off",
                     "output_ccw": "off",
                     "limit_cw": "off",
-                    "limit_ccw": "off"
+                    "limit_ccw": "off",
+                    "output_enable": "off",
+                    "slack_constant": 10
                 }
             }
         ],
@@ -4627,7 +4646,9 @@ def __add_registers(args):
                     "output_cw": "off",
                     "output_ccw": "off",
                     "limit_cw": "off",
-                    "limit_ccw": "off"
+                    "limit_ccw": "off",
+                    "output_enable": "off",
+                    "slack_constant": 10
                 }
             }
         ]
