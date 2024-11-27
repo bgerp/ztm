@@ -683,8 +683,8 @@ class Zone(BasePlugin):
         window_tamper_state = self.__read_window_tamper()
 
         # Take all necessary condition for normal operation of the HVAC.
-        stop_flag = (is_empty or window_tamper_state)
-        # stop_flag = False
+        # stop_flag = (is_empty or window_tamper_state)
+        stop_flag = False
 
         # Set fan speeds.
         speed_lower = 0
