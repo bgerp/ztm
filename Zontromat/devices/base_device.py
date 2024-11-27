@@ -116,7 +116,7 @@ class BaseDevice(Configurable):
         Returns:
             str: Short description.
         """
-        return "Device vendor({}) / model({}) ".format(self.vendor, self.model)
+        return f"Device vendor({self.vendor}) / model({self.model}) / name({self.name})"
 
     __repr__ = __str__
 

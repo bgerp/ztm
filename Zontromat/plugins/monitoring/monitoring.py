@@ -238,11 +238,11 @@ class Monitoring(BasePlugin):
                         print(msg)
                         GlobalErrorHandler.log_missing_resource(self.__logger, msg)
 
-                    # Scale unit from milli liter to cubic meter. 
+                    # Scale unit from milli liter to cubic meter.
                     if item == "CumulativeTraffic":
                         if measurement[item] is not  None:
                             measurement[item] /= 1000000.0
-                    
+
                     # Scale to degrees by Celsius.
                     if item == "WaterTemperature":
                         if measurement[item] is not  None:
@@ -354,7 +354,7 @@ class Monitoring(BasePlugin):
                         pass
                     measurement[item] = self.__hw_flowmeter_dev.get_value(item)
 
-                    # Scale unit from milli liter to cubic meter. 
+                    # Scale unit from milli liter to cubic meter.
                     if item == "CumulativeTraffic":
                         if measurement[item] is not  None:
                             measurement[item] /= 1000000.0
@@ -827,7 +827,7 @@ class Monitoring(BasePlugin):
 
 #endregion
 
-#region Private Methods (Heat meter Loop 1)
+#region Private Methods (Convector Loop 1)
 
     def __cl_1_update_measurements(self):
         if self.__cl_1_hm_dev is None:
@@ -848,6 +848,7 @@ class Monitoring(BasePlugin):
 
         # This magical number represents seconds for 24 hours.
         filter_measurements_by_time(self.__cl_1_hm_measurements, 86400)
+
 
         # 2. If the following register is available then set its value to the thermometers value.
         self._registers.write(f"{self.key}.cl_1.hm.measurements",
@@ -888,7 +889,7 @@ class Monitoring(BasePlugin):
 
 #endregion
 
-#region Private Methods (Heat meter Loop 2)
+#region Private Methods (Convector Loop 2)
 
     def __cl_2_update_measurements(self):
         if self.__cl_2_hm_dev is None:
@@ -949,7 +950,7 @@ class Monitoring(BasePlugin):
 
 #endregion
 
-#region Private Methods (Heat meter Loop 3)
+#region Private Methods (Convector Loop 3)
 
     def __cl_3_update_measurements(self):
         if self.__cl_3_hm_dev is None:

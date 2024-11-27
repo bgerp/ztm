@@ -84,6 +84,10 @@ class FlowmeterDN20(ModbusDevice):
         self._parameters.append(
             Parameter("ReturnWaterTemperature", "⁰C",\
             ParameterType.UINT32_T_BE, [0x06, 0x07], FunctionCode.ReadHoldingRegisters))
+        
+        self._parameters.append(
+            Parameter("PositiveCumulativeFlow", "1 / 100m³",\
+            ParameterType.UINT32_T_BE, [0x0A, 0x0B], FunctionCode.ReadHoldingRegisters))
 
         self._parameters.append(
             Parameter("PositiveCumulativeFlow", "1 / 100m³",\

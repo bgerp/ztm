@@ -110,7 +110,7 @@ class Zone(BasePlugin):
         """HVAC Stop flag.
         """
 
-        self.__update_timer = Timer(60)
+        self.__update_timer = Timer(300)
         """Update timer.
         """
 
@@ -1267,6 +1267,13 @@ class Zone(BasePlugin):
             # Clear last time to provoke instant expiration of the update timer.
             self.__update_timer.update_last_time(0)
 
+        # Stop the zone instantly.
+        if self.__stop_flag:
+            self.__set_fl_state(0)
+            self.__set_cl_state(0)
+            self.__set_conv_state(0)
+            self.__set_ventilation(0)
+
         # Update control timer.
         self.__update_timer.update()
         # If it is time to update.
@@ -1282,41 +1289,38 @@ class Zone(BasePlugin):
 
             print(f"Target: {self.__adjust_temp:2.1f}; Current: {self.__temp_proc.value:2.1f}")
 
-            dt = 0.0
-            if not self.__stop_flag:
-                # Calculate the delta.
-                # dt = self.__adjust_temp - self.__temp_proc.value
 
+            if not self.__stop_flag:
                 # Calculate the delta t and temperature deviation.
                 dt = min(self.__adjust_temp - self.__temp_proc.value+self.__temperature_deviation, 0) \
                     + max(self.__adjust_temp - self.__temp_proc.value-self.__temperature_deviation, 0)
 
-            # Round to have clear rounded value for state machine currency.
-            dt = self.__round_to_nearest_half(dt)
+                # Round to have clear rounded value for state machine currency.
+                dt = self.__round_to_nearest_half(dt)
 
-            # Correct the down limit.
-            if dt < -3.0:
-                dt = -3.0
+                # Correct the down limit.
+                if dt < -3.0:
+                    dt = -3.0
 
-            # Correct the upper limit.
-            if dt > 3.0:
-                dt = 3.0
+                # Correct the upper limit.
+                if dt > 3.0:
+                    dt = 3.0
 
-            # Exit if there is no changes.
-            # if self.__dt_temp == dt:
-            #     return
+                # Exit if there is no changes.
+                # if self.__dt_temp == dt:
+                #     return
 
-            # Store last changes.
-            self.__dt_temp = dt
+                # Store last changes.
+                self.__dt_temp = dt
 
-            print(f"dT: {dt:2.1f}")
+                print(f"dT: {dt:2.1f}")
 
-            state = self.__conversion_table[dt]
+                state = self.__conversion_table[dt]
 
-            print(f"State: {state:2.1f}")
+                print(f"State: {state:2.1f}")
 
-            # Set the devices.
-            self.__set_devices(state)
+                # Set the devices.
+                self.__set_devices(state)
 
         # Update PWM timers for the valves.
         self.__vlv_fl_1_tmr.update()

@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 
-from devices.factories.luxmeters.base_luxmeter import BaseLuxmeter
+from enum import Enum
 
 #region File Attributes
 
@@ -53,55 +53,19 @@ __email__ = "or.dimitrov@polygonteam.com"
 __status__ = "Debug"
 """File status."""
 
-#endregion
-
-class U1WTVS(BaseLuxmeter):
-    """1W light sensor."""
-
-#region Attributes
-
-    __device = None
-    """Device"""
+__class_name__ = "CalibrationState"
+"""Plugin class name."""
 
 #endregion
 
-#region Constructor
+class CalibrationState(Enum):
+    """Calibration state description.
+    """
 
-    def __init__(self, **config):
-
-        super().__init__(config)
-
-        self._vendor = "SEDtronic"
-
-        self._model = "u1wtvs"
-
-#endregion
-
-#region Public Methods
-
-    def update(self):
-        """Update sensor data.
-        """
-
-        self.__device = self._controller.get_device(self._config["dev"], self._config["circuit"])
-
-    def get_lux(self):
-        """Get value.
-        """
-
-        raw = 0.0
-
-        if self.__device is None:
-            return raw
-
-        raw = float(self.__device["vis"])
-
-        if raw < 0:
-            raw = 0.25
-
-        # Add scaling coefficient.
-        raw *= 4000.0
-
-        return raw
-
-#endregion
+    NONE = 0
+    OpenValve = 1
+    EnsureOpen = 2
+    CloseValve = 3
+    EnsureClose = 4
+    YouDoTheMath = 5
+    Error = 6

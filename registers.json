@@ -374,6 +374,17 @@
         "scope": "Device"
     },
     {
+        "data_type": "bool",
+        "default": true,
+        "description": "Plugin enabled",
+        "limit": 0.0,
+        "name": "blinds.enabled",
+        "plugin": "Blinds",
+        "profiles": "mz",
+        "range": "true|false",
+        "scope": "System"
+    },
+    {
         "data_type": "json",
         "default": {
             "model": "BlindsV2",
@@ -586,17 +597,6 @@
         "plugin": "Blinds",
         "profiles": "mz",
         "range": "1/",
-        "scope": "System"
-    },
-    {
-        "data_type": "bool",
-        "default": true,
-        "description": "Plugin enabled",
-        "limit": 0.0,
-        "name": "blinds.enabled",
-        "plugin": "Blinds",
-        "profiles": "mz",
-        "range": "true|false",
         "scope": "System"
     },
     {
@@ -904,7 +904,10 @@
     {
         "data_type": "json",
         "default": {
-            "WINT_1": "!U0:ID2:FC2:R0:DI1"
+            "WINT_1": "off",
+            "WINT_2": "off",
+            "WINT_3": "off",
+            "WINT_4": "off"
         },
         "description": "Plugin environment window tamper settings",
         "limit": 0.0,
@@ -928,7 +931,8 @@
     {
         "data_type": "json",
         "default": {
-            "DRT_1": "!U0:ID2:FC2:R0:DI0"
+            "DRT_1": "off",
+            "DRT_2": "off"
         },
         "description": "Plugin environment door tamper settings",
         "limit": 0.0,
@@ -948,6 +952,19 @@
         "profiles": "mz",
         "range": "",
         "scope": "Device"
+    },
+    {
+        "data_type": "json",
+        "default": [
+            "off"
+        ],
+        "description": "Plugin environment door tamper mirror output",
+        "limit": 0.0,
+        "name": "envm.door_tamper.mirror_output",
+        "plugin": "Environment",
+        "profiles": "mz",
+        "range": "",
+        "scope": "System"
     },
     {
         "data_type": "bool",
@@ -1844,11 +1861,12 @@
     {
         "data_type": "json",
         "default": {
-            "model": "light_sensor",
+            "model": "envse",
             "options": {
-                "input": "AI2"
+                "mb_id": 3,
+                "uart": 0
             },
-            "vendor": "PT"
+            "vendor": "Gemho"
         },
         "description": "Sensor settings",
         "limit": 0.0,
@@ -1864,6 +1882,17 @@
         "description": "Target illumination",
         "limit": 0.0,
         "name": "light.target_illum",
+        "plugin": "Light",
+        "profiles": "mz",
+        "range": "0.0/10000.0",
+        "scope": "Device"
+    },
+    {
+        "data_type": "float",
+        "default": 0.0,
+        "description": "Current illumination",
+        "limit": 0.0,
+        "name": "light.illumination",
         "plugin": "Light",
         "profiles": "mz",
         "range": "0.0/10000.0",
@@ -3826,6 +3855,17 @@
         "scope": "System"
     },
     {
+        "data_type": "bool",
+        "default": false,
+        "description": "Plugin enabled",
+        "limit": 0.0,
+        "name": "echp.enabled",
+        "plugin": "Energy Center Heat Pump",
+        "profiles": "hp",
+        "range": "true|false",
+        "scope": "System"
+    },
+    {
         "data_type": "json",
         "default": {
             "input": [
@@ -4548,13 +4588,13 @@
     },
     {
         "data_type": "bool",
-        "default": false,
-        "description": "Plugin enabled",
+        "default": true,
+        "description": "Ventilation enable flag.",
         "limit": 0.0,
-        "name": "echp.enabled",
-        "plugin": "Energy Center Heat Pump",
-        "profiles": "hp",
-        "range": "true|false",
+        "name": "vent.enabled",
+        "plugin": "Ventilation",
+        "profiles": "mz",
+        "range": "",
         "scope": "System"
     },
     {
@@ -4747,13 +4787,13 @@
     },
     {
         "data_type": "bool",
-        "default": true,
-        "description": "Ventilation enable flag.",
+        "default": false,
+        "description": "Alarm module enable flag.",
         "limit": 0.0,
-        "name": "vent.enabled",
-        "plugin": "Ventilation",
-        "profiles": "mz",
-        "range": "",
+        "name": "alarm.enabled",
+        "plugin": "Alarm",
+        "profiles": "mz|dt|hp|ns",
+        "range": "true|false",
         "scope": "System"
     },
     {
@@ -4776,17 +4816,6 @@
         "plugin": "Alarm",
         "profiles": "mz|dt|hp|ns",
         "range": "",
-        "scope": "System"
-    },
-    {
-        "data_type": "bool",
-        "default": false,
-        "description": "Alarm module enable flag.",
-        "limit": 0.0,
-        "name": "alarm.enabled",
-        "plugin": "Alarm",
-        "profiles": "mz|dt|hp|ns",
-        "range": "true|false",
         "scope": "System"
     },
     {

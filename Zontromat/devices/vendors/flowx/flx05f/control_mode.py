@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 
-from devices.factories.luxmeters.base_luxmeter import BaseLuxmeter
+from enum import Enum
 
 #region File Attributes
 
@@ -53,55 +53,36 @@ __email__ = "or.dimitrov@polygonteam.com"
 __status__ = "Debug"
 """File status."""
 
-#endregion
-
-class U1WTVS(BaseLuxmeter):
-    """1W light sensor."""
-
-#region Attributes
-
-    __device = None
-    """Device"""
+__class_name__ = "ControlMode"
+"""Plugin class name."""
 
 #endregion
 
-#region Constructor
+class ControlMode(Enum):
+    """Control mode.
+        Responsible for method fo control applied to the device.
+    """
+    NONE = 0
+    """NONE - The control is switched off.
+    """
 
-    def __init__(self, **config):
+    ON_OFF = 1
+    """ON - Fully Open/Close - Fully Closed. 
+    """
 
-        super().__init__(config)
+    ON_OFF_TIMED = 2
+    """Controlled by ON/OFF using time for not fully open and not fully closed.
+    """    
 
-        self._vendor = "SEDtronic"
+    @staticmethod
+    def is_valid(mode):
+        """Checks if the input is valid."""
 
-        self._model = "u1wtvs"
+        state = False
 
-#endregion
+        for item in ControlMode:
+            if mode == item.value:
+                state = True
+                break
 
-#region Public Methods
-
-    def update(self):
-        """Update sensor data.
-        """
-
-        self.__device = self._controller.get_device(self._config["dev"], self._config["circuit"])
-
-    def get_lux(self):
-        """Get value.
-        """
-
-        raw = 0.0
-
-        if self.__device is None:
-            return raw
-
-        raw = float(self.__device["vis"])
-
-        if raw < 0:
-            raw = 0.25
-
-        # Add scaling coefficient.
-        raw *= 4000.0
-
-        return raw
-
-#endregion
+        return state

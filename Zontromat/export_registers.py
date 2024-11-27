@@ -23,7 +23,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 import argparse
-import json
 import os
 
 from data.register import Register
@@ -65,13 +64,6 @@ __status__ = "Debug"
 
 #region Variables
 
-__parser = None
-"""Create parser.
-"""
-
-__registers = None
-"""Registers
-"""
 
 REGS_RANGES = {
     "NONE": "",
@@ -97,16 +89,48 @@ REGS_RANGES = {
 INVALID_MB_ID = -1
 """Helper variable for invalid modbus ID.
 """
+
+__parser = None
+"""Create parser.
+"""
+
+__registers = None
+"""Registers
+"""
+
+__enable_matrix = \
+    {
+        Profiles.DISTRIBUTION:       ["sys", "ecd"],
+        Profiles.HEAT_PUMP:          ["sys", "echp"],
+        Profiles.ZONE:               ["sys", "blinds", "monitoring", "envm", "hvac", "light", "vent"],
+        Profiles.NORTH_SERVER_ROOMS: ["sys", ]
+    }
+
 #endregion
+
+def __is_enabled(name: str, profile: Profiles):
+
+    global __enable_matrix
+
+    state = False
+
+    if name in __enable_matrix[Profiles(profile)]:
+        state = True
+
+    # print(f"{name} {profile} {state}")
+
+    return state
 
 def __set_parser():
     global __parser, INVALID_MB_ID
 
-    # Add arguments.
-    # __parser.add_argument("--action", type=str, default="w_json", help="Export JSON file.")
-    __parser.add_argument("--action", type=str, default="w_csv", help="Export CSV file.")
-    # __parser.add_argument("--action", type=str, default="w_md", help="Export MD file.")
-    # __parser.add_argument("--path", type=str, default=file_name, help="Target file path.")
+    actions = ["w_csv", "w_json", "w_md"]
+
+    # Add action.
+    __parser.add_argument("--action", type=str, default="w_csv", choices=actions, help="Export to file.")
+
+    # Profile
+    __parser.add_argument("--profile", type=Profiles,  default=Profiles.ZONE, choices=list(Profiles))
 
     # Add args parameters Monitoring
     __parser.add_argument("--pa", type=int, default=1, help="Power analyzer modbus ID.")
@@ -146,18 +170,26 @@ def __set_parser():
 
    # Add args parameters Envm
     __parser.add_argument("--pir_1", type=int, default=16, help="PIR 1 modbus ID.")
+    __parser.add_argument("--door_office", type=str, default="off", help="Door tamper office input.")
+    __parser.add_argument("--door_terce", type=str, default="off", help="Door tamper terce input.")
+    __parser.add_argument("--wint_1", type=str, default="off", help="Window tamper 1.")
+    __parser.add_argument("--wint_2", type=str, default="off", help="Window tamper 2.")
+    __parser.add_argument("--wint_3", type=str, default="off", help="Window tamper 3.")
+    __parser.add_argument("--wint_4", type=str, default="off", help="Window tamper 4.")
+    __parser.add_argument("--door_office_mirror", type=str, default="off", help="Door tamper office output mirror.")
 
     # Add args parameters Blinds
     __parser.add_argument("--blinds_1", type=int, default=11, help="Blinds mechanism 1 modbus ID.")
     __parser.add_argument("--blinds_2", type=int, default=12, help="Blinds mechanism 2 modbus ID.")
     __parser.add_argument("--blinds_3", type=int, default=13, help="Blinds mechanism 3 modbus ID.")
     __parser.add_argument("--blinds_4", type=int, default=14, help="Blinds mechanism 4 modbus ID.")
- 
+
     # IP of the device.
     __parser.add_argument("--ip", type=str, default="127.0.0.1", help="IP address of the device")
- 
+
     # Take arguments.
     args = __parser.parse_args()
+    # print(args.profile)
 
     return args
 
@@ -172,10 +204,8 @@ def __add_registers(args):
     register.plugin_name = "Access Control"
     register.description = "Plugin enabled"
     register.range = REGS_RANGES["BOOL"]
-    register.value = False
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
+    register.value = __is_enabled(register.base_name, args.profile)
     __registers.append(register)
 
     register = Register("ac.allowed_attendees")
@@ -184,9 +214,7 @@ def __add_registers(args):
     register.description = "Allowed attendees"
     register.range = REGS_RANGES["NONE"]
     register.value = [] # {"card_id": "445E6046010080FF", "pin": "159753", "valid_until": "1595322860"}
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("ac.zones_count")
@@ -195,9 +223,7 @@ def __add_registers(args):
     register.description = "Number of security zones"
     register.range = "1/"
     register.value = 2
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("ac.nearby_attendees")
@@ -206,9 +232,7 @@ def __add_registers(args):
     register.description = "Nearby attendees"
     register.range = REGS_RANGES["NONE"]
     register.value = [] # {"card_id": "445E6046010080FF", "ts":"1595322860"}
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("ac.last_update_attendees")
@@ -217,9 +241,7 @@ def __add_registers(args):
     register.description = "Last update attendee"
     register.range = REGS_RANGES["NONE"]
     register.value = [] # {"card_id": "445E6046010080FF", "ts":"1595322860"}
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("ac.next_attendance")
@@ -228,9 +250,7 @@ def __add_registers(args):
     register.description = "Next attendance"
     register.range = "0.0/"
     register.value = 0.0 # 1595322860
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     # Entry card reader.
@@ -240,9 +260,7 @@ def __add_registers(args):
     register.description = "Card reader enabled"
     register.range = REGS_RANGES["NONE"]
     register.value = {} # "Teracom/act230/2911"
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     # Exit card reader.
@@ -252,9 +270,7 @@ def __add_registers(args):
     register.description = "Card reader enabled"
     register.range = REGS_RANGES["NONE"]
     register.value = {} # "Teracom/act230/2897"
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     #
@@ -264,9 +280,7 @@ def __add_registers(args):
     register.description = "Exit button 1 input"
     register.range = REGS_RANGES["DI"]
     register.value = verbal_const.OFF
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("ac.lock_mechanism_1.output")
@@ -275,9 +289,7 @@ def __add_registers(args):
     register.description = "Lock mechanism output"
     register.range = REGS_RANGES["DO"]
     register.value = verbal_const.OFF
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("ac.time_to_open_1")
@@ -286,9 +298,7 @@ def __add_registers(args):
     register.description = "Lock mechanism time to open [s]"
     register.range = "0/60"
     register.value = 3
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("ac.door_closed_1.input")
@@ -297,9 +307,7 @@ def __add_registers(args):
     register.description = "Door closed input"
     register.range = REGS_RANGES["DI"]
     register.value = verbal_const.OFF # "DI5"
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("ac.door_closed_1.state")
@@ -308,9 +316,7 @@ def __add_registers(args):
     register.description = "Door closed input state"
     register.range = REGS_RANGES["BOOL"]
     register.value = False
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
 
@@ -321,9 +327,7 @@ def __add_registers(args):
     register.description = "Card reader settings"
     register.range = REGS_RANGES["NONE"]
     register.value = {} # "Teracom/act230/2486"
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     # Exit card reader.
@@ -333,9 +337,7 @@ def __add_registers(args):
     register.description = "Card reader settings"
     register.range = REGS_RANGES["NONE"]
     register.value = {} # "Teracom/act230/1208"
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     #
@@ -345,9 +347,7 @@ def __add_registers(args):
     register.description = "Exit button 2 input"
     register.range = REGS_RANGES["DI"]
     register.value = verbal_const.OFF
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("ac.lock_mechanism_2.output")
@@ -356,9 +356,7 @@ def __add_registers(args):
     register.description = "Lock 2 mechanism output"
     register.range = REGS_RANGES["DO"]
     register.value = verbal_const.OFF
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("ac.time_to_open_2")
@@ -367,9 +365,7 @@ def __add_registers(args):
     register.description = "Lock 2 mechanism time to open"
     register.range = "0/60"
     register.value = 3
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("ac.door_closed_2.input")
@@ -378,9 +374,7 @@ def __add_registers(args):
     register.description = "Door 2 closed input"
     register.range = REGS_RANGES["DI"]
     register.value = verbal_const.OFF # "DI2"
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("ac.door_closed_2.state")
@@ -389,9 +383,7 @@ def __add_registers(args):
     register.description = "Door 2 closed input state"
     register.range = REGS_RANGES["BOOL"]
     register.value = False
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     #
@@ -401,9 +393,7 @@ def __add_registers(args):
     register.description = "PIR 1 sensor input"
     register.range = REGS_RANGES["DI"]
     register.value = verbal_const.OFF # "DI6"
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("ac.pir_1.state")
@@ -412,9 +402,7 @@ def __add_registers(args):
     register.description = "PIR 1 sensor input state"
     register.range = REGS_RANGES["BOOL"]
     register.value = False
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("ac.pir_2.input")
@@ -423,9 +411,7 @@ def __add_registers(args):
     register.description = "PIR 2 sensor input"
     register.range = REGS_RANGES["DI"]
     register.value = verbal_const.OFF # "DI0"
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("ac.pir_2.state")
@@ -434,9 +420,7 @@ def __add_registers(args):
     register.description = "PIR 2 sensor input state"
     register.range = REGS_RANGES["BOOL"]
     register.value = False
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     #
@@ -446,9 +430,7 @@ def __add_registers(args):
     register.description = "Window 1 closed input"
     register.range = REGS_RANGES["DI"]
     register.value = verbal_const.OFF # "!DI4"
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("ac.window_closed_1.state")
@@ -457,9 +439,7 @@ def __add_registers(args):
     register.description = "Window 1 closed input state"
     register.range = REGS_RANGES["BOOL"]
     register.value = False
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("ac.window_closed_2.input")
@@ -468,9 +448,7 @@ def __add_registers(args):
     register.description = "Window 2 closed input"
     register.range = REGS_RANGES["DI"]
     register.value = verbal_const.OFF # "!DI3"
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("ac.window_closed_2.state")
@@ -479,9 +457,7 @@ def __add_registers(args):
     register.description = "Window 2 closed input state"
     register.range = REGS_RANGES["BOOL"]
     register.value = False
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     # Door window blind 1.
@@ -491,9 +467,7 @@ def __add_registers(args):
     register.description = "Door window blind 1 output"
     register.range = REGS_RANGES["DO"]
     register.value = verbal_const.OFF
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
 
@@ -503,9 +477,7 @@ def __add_registers(args):
     register.description = "Door window blind 1 value"
     register.range = REGS_RANGES["BOOL"]
     register.value = False
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     # Door window blind 2.
@@ -515,9 +487,7 @@ def __add_registers(args):
     register.description = "Door window blind 2 output"
     register.range = REGS_RANGES["DO"]
     register.value = verbal_const.OFF
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("ac.door_window_blind_2.value")
@@ -526,9 +496,7 @@ def __add_registers(args):
     register.description = "Door window blind 2 value"
     register.range = REGS_RANGES["BOOL"]
     register.value = False
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     # Occupation
@@ -538,9 +506,7 @@ def __add_registers(args):
     register.description = "Zone occupied flag"
     register.range = REGS_RANGES["BOOL"]
     register.value = False
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("ac.zone_2_occupied")
@@ -549,14 +515,21 @@ def __add_registers(args):
     register.description = "Zone occupied flag"
     register.range = REGS_RANGES["BOOL"]
     register.value = False
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
 #endregion
 
 #region Blinds (blinds)
+
+    register = Register("blinds.enabled")
+    register.scope = Scope.System
+    register.plugin_name = "Blinds"
+    register.description = "Plugin enabled"
+    register.range = REGS_RANGES["BOOL"]
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
+    register.value = __is_enabled(register.base_name, args.profile)
+    __registers.append(register)
 
     register = Register("blinds.blind_1.mechanism")
     register.scope = Scope.System
@@ -575,9 +548,7 @@ def __add_registers(args):
         }
     else:
         register.value = {}
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("blinds.blind_1.position")
@@ -586,9 +557,7 @@ def __add_registers(args):
     register.description = "Position [deg]"
     register.range = "0.0/180.0"
     register.value = 0.0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("blinds.blind_1.object_height")
@@ -597,9 +566,7 @@ def __add_registers(args):
     register.description = "Object height [m]."
     register.range = "0.0/"
     register.value = 2.0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("blinds.blind_1.sunspot_limit")
@@ -608,9 +575,7 @@ def __add_registers(args):
     register.description = "Sun spot limit [m]."
     register.range = "0.0/"
     register.value = 1.0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
 
@@ -631,9 +596,7 @@ def __add_registers(args):
         }
     else:
         register.value = {}
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("blinds.blind_2.position")
@@ -642,9 +605,7 @@ def __add_registers(args):
     register.description = "Position [deg]"
     register.range = "0.0/180.0"
     register.value = 0.0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("blinds.blind_2.object_height")
@@ -653,9 +614,7 @@ def __add_registers(args):
     register.description = "Object height [m]."
     register.range = "0.0/"
     register.value = 2.0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("blinds.blind_2.sunspot_limit")
@@ -664,9 +623,7 @@ def __add_registers(args):
     register.description = "Sun spot limit [m]."
     register.range = "0.0/"
     register.value = 1.0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
 
@@ -687,9 +644,7 @@ def __add_registers(args):
         }
     else:
         register.valve = {}
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("blinds.blind_3.position")
@@ -698,9 +653,7 @@ def __add_registers(args):
     register.description = "Position [deg]"
     register.range = "0.0/180.0"
     register.value = 0.0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("blinds.blind_3.object_height")
@@ -709,9 +662,7 @@ def __add_registers(args):
     register.description = "Object height [m]."
     register.range = "0.0/"
     register.value = 2.0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("blinds.blind_3.sunspot_limit")
@@ -720,9 +671,7 @@ def __add_registers(args):
     register.description = "Sun spot limit [m]."
     register.range = "0.0/"
     register.value = 1.0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
 
@@ -743,9 +692,7 @@ def __add_registers(args):
         }
     else:
         register.value = {}
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("blinds.blind_4.position")
@@ -754,9 +701,7 @@ def __add_registers(args):
     register.description = "Position [deg]"
     register.range = "0.0/180.0"
     register.value = 0.0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("blinds.blind_4.object_height")
@@ -765,9 +710,7 @@ def __add_registers(args):
     register.description = "Object height [m]."
     register.range = "0.0/"
     register.value = 2.0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("blinds.blind_4.sunspot_limit")
@@ -776,9 +719,7 @@ def __add_registers(args):
     register.description = "Sun spot limit [m]."
     register.range = "0.0/"
     register.value = 1.0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
 
@@ -788,20 +729,7 @@ def __add_registers(args):
     register.description = "Number of blind controllers"
     register.range = "1/"
     register.value = 1
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
-    __registers.append(register)
-
-    register = Register("blinds.enabled")
-    register.scope = Scope.System
-    register.plugin_name = "Blinds"
-    register.description = "Plugin enabled"
-    register.range = REGS_RANGES["BOOL"]
-    register.value = True
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
 #endregion
@@ -814,10 +742,8 @@ def __add_registers(args):
     register.plugin_name = "Monitoring"
     register.description = "Plugin enabled"
     register.range = REGS_RANGES["BOOL"]
-    register.value = True
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
+    register.value = __is_enabled(register.base_name, args.profile)
     __registers.append(register)
 
     # Cold water flow meter.
@@ -837,9 +763,7 @@ def __add_registers(args):
         }
     else:
         register.value = {}
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("monitoring.cw.measurements")
@@ -848,9 +772,7 @@ def __add_registers(args):
     register.description = "Cold water liters"
     register.range = REGS_RANGES["NONE"]
     register.value = []
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("monitoring.cw.leak")
@@ -859,9 +781,7 @@ def __add_registers(args):
     register.description = "Cold water leaked liters"
     register.range = "0.0/"
     register.value = 1.0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
 
@@ -882,9 +802,7 @@ def __add_registers(args):
         }
     else:
         register.value = {}
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("monitoring.hw.measurements")
@@ -893,9 +811,7 @@ def __add_registers(args):
     register.description = "Hot water liters"
     register.range = REGS_RANGES["NONE"]
     register.value = []
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("monitoring.hw.leak")
@@ -904,9 +820,7 @@ def __add_registers(args):
     register.description = "Hot water leaked liters"
     register.range = "0.0/"
     register.value = 1.0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
 
@@ -928,9 +842,7 @@ def __add_registers(args):
         }
     else:
         register.value = {}
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("monitoring.pa.measurements")
@@ -939,9 +851,7 @@ def __add_registers(args):
     register.description = "Power analyzer measurements"
     register.range = REGS_RANGES["NONE"]
     register.value = []
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     # ====================== NEW ======================
@@ -952,9 +862,7 @@ def __add_registers(args):
     register.description = "Measuring demand"
     register.range = "0.0/"
     register.value = 3600.0 # Every hour to measure the consumed electricity.
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
 
@@ -975,9 +883,7 @@ def __add_registers(args):
         }
     else:
         register.value = {}
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("monitoring.fl_1.hm.measurements")
@@ -986,9 +892,7 @@ def __add_registers(args):
     register.description = "Floor loop 1 heat meter measurements."
     register.range = REGS_RANGES["NONE"]
     register.value = {}
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
 
@@ -1009,9 +913,7 @@ def __add_registers(args):
         }
     else:
         register.value = {}
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
 
@@ -1021,9 +923,7 @@ def __add_registers(args):
     register.description = "Floor loop 2 heat meter measurements."
     register.range = REGS_RANGES["NONE"]
     register.value = {}
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
 
@@ -1044,9 +944,7 @@ def __add_registers(args):
         }
     else:
         register.value = {}
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("monitoring.fl_3.hm.measurements")
@@ -1055,9 +953,7 @@ def __add_registers(args):
     register.description = "Floor loop 3 heat meter measurements."
     register.range = REGS_RANGES["NONE"]
     register.value = {}
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
 
@@ -1078,9 +974,7 @@ def __add_registers(args):
         }
     else:
         register.value = {}
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("monitoring.cl_1.hm.measurements")
@@ -1089,9 +983,7 @@ def __add_registers(args):
     register.description = "Convector loop 1 heat meter measurements."
     register.range = REGS_RANGES["NONE"]
     register.value = {}
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
 
@@ -1112,9 +1004,7 @@ def __add_registers(args):
         }
     else:
         register.value = {}
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("monitoring.cl_2.hm.measurements")
@@ -1123,9 +1013,7 @@ def __add_registers(args):
     register.description = "Convector loop 2 heat meter measurements."
     register.range = REGS_RANGES["NONE"]
     register.value = {}
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
 
@@ -1146,9 +1034,7 @@ def __add_registers(args):
         }
     else:
         register.value = {}
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("monitoring.cl_3.hm.measurements")
@@ -1157,9 +1043,7 @@ def __add_registers(args):
     register.description = "Convector loop 3 heat meter measurements."
     register.range = REGS_RANGES["NONE"]
     register.value = {}
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     # ====================== DEPRECATED ======================
@@ -1170,9 +1054,7 @@ def __add_registers(args):
     register.description = "Power analyzer measuring demand"
     register.range = "0.0/"
     register.value = 3600.0 # Every hour to measure the consumed electricity.
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
 #endregion
@@ -1184,10 +1066,8 @@ def __add_registers(args):
     register.plugin_name = "Environment"
     register.description = "Plugin enabled"
     register.range = REGS_RANGES["BOOL"]
-    register.value = True
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
+    register.value = __is_enabled(register.base_name, args.profile)
     __registers.append(register)
 
     register = Register("envm.pir.settings")
@@ -1209,9 +1089,7 @@ def __add_registers(args):
         }
     else:
         register.value = {}
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("envm.pir.activations")
@@ -1220,9 +1098,7 @@ def __add_registers(args):
     register.description = "Plugin environment PIR activations"
     register.range = REGS_RANGES["NONE"]
     register.value = {}
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("envm.window_tamper.settings")
@@ -1230,12 +1106,24 @@ def __add_registers(args):
     register.plugin_name = "Environment"
     register.description = "Plugin environment window tamper settings"
     register.range = REGS_RANGES["NONE"]
-    register.value = {
-        "WINT_1": "!U0:ID2:FC2:R0:DI1",
-    }
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.value = {}
+    if args.wint_1:
+        register.value["WINT_1"] = args.wint_1
+    else:
+        register.value["WINT_1"] = "off"
+    if args.wint_2:
+        register.value["WINT_2"] = args.wint_2
+    else:
+        register.value["WINT_2"] = "off"
+    if args.wint_3:
+        register.value["WINT_3"] = args.wint_3
+    else:
+        register.value["WINT_3"] = "off"
+    if args.wint_4:
+        register.value["WINT_4"] = args.wint_4
+    else:
+        register.value["WINT_4"] = "off"
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("envm.window_tamper.activations")
@@ -1244,9 +1132,7 @@ def __add_registers(args):
     register.description = "Plugin environment window tampers activations"
     register.range = REGS_RANGES["NONE"]
     register.value = {}
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("envm.door_tamper.settings")
@@ -1254,12 +1140,16 @@ def __add_registers(args):
     register.plugin_name = "Environment"
     register.description = "Plugin environment door tamper settings"
     register.range = REGS_RANGES["NONE"]
-    register.value = {
-        "DRT_1": "!U0:ID2:FC2:R0:DI0",
-    }
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.value = {}
+    if args.door_office:
+        register.value["DRT_1"] = args.door_office
+    else:
+        register.value["DRT_1"] = "off"
+    if args.door_terce:
+        register.value["DRT_2"] = args.door_terce
+    else:
+        register.value["DRT_2"] = "off"
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("envm.door_tamper.activations")
@@ -1268,9 +1158,18 @@ def __add_registers(args):
     register.description = "Plugin environment door tampers activations"
     register.range = REGS_RANGES["NONE"]
     register.value = {}
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
+    __registers.append(register)
+
+    register = Register("envm.door_tamper.mirror_output")
+    register.scope = Scope.System
+    register.plugin_name = "Environment"
+    register.description = "Plugin environment door tamper mirror output"
+    register.range = REGS_RANGES["NONE"]
+    register.value = []
+    if args.door_office_mirror:
+        register.value.append(args.door_office_mirror)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("envm.is_empty")
@@ -1279,9 +1178,7 @@ def __add_registers(args):
     register.description = "Is empty flag"
     register.range = REGS_RANGES["BOOL"]
     register.value = True
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("envm.is_empty_timeout")
@@ -1290,9 +1187,7 @@ def __add_registers(args):
     register.description = "Is empty time out [s]"
     register.range = "0/"
     register.value = 3600
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("envm.forecast.icon_0")
@@ -1301,9 +1196,7 @@ def __add_registers(args):
     register.description = "Actual weather icon."
     register.range = REGS_RANGES["NONE"]
     register.value = ""
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("envm.forecast.rh_0")
@@ -1312,9 +1205,7 @@ def __add_registers(args):
     register.description = "Actual outside relative humidity [%]"
     register.range = REGS_RANGES["PERCENTAGE_F"]
     register.value = 0.0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("envm.forecast.temp_0")
@@ -1323,9 +1214,7 @@ def __add_registers(args):
     register.description = "Actual outside temperature [*C]"
     register.range = "-50.0/50.0"
     register.value = 0.0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("envm.forecast.wind_0")
@@ -1334,9 +1223,7 @@ def __add_registers(args):
     register.description = "Actual outside wind speed [m/s]"
     register.range = REGS_RANGES["PERCENTAGE_F"]
     register.value = 0.0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("envm.forecast.icon_3")
@@ -1345,9 +1232,7 @@ def __add_registers(args):
     register.description = "Actual outside weather icon for 3 hours."
     register.range = REGS_RANGES["NONE"]
     register.value = ""
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("envm.forecast.rh_3")
@@ -1356,9 +1241,7 @@ def __add_registers(args):
     register.description = "Actual outside relative humidity for 3 hours.[%]"
     register.range = REGS_RANGES["PERCENTAGE_F"]
     register.value = 0.0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("envm.forecast.temp_3")
@@ -1367,9 +1250,7 @@ def __add_registers(args):
     register.description = "Actual outside temperature for 3 hours. [*C]"
     register.range = "-50.0/50.0"
     register.value = 0.0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("envm.forecast.wind_3")
@@ -1378,9 +1259,7 @@ def __add_registers(args):
     register.description = "Actual outside wind speed for 3 hours. [m/s]"
     register.range = REGS_RANGES["PERCENTAGE_F"]
     register.value = 0.0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("envm.forecast.icon_6")
@@ -1389,9 +1268,7 @@ def __add_registers(args):
     register.description = "Actual outside weather icon for 6 hours."
     register.range = REGS_RANGES["NONE"]
     register.value = ""
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("envm.forecast.rh_6")
@@ -1400,9 +1277,7 @@ def __add_registers(args):
     register.description = "Actual outside relative humidity for 6 hours.[%]"
     register.range = REGS_RANGES["PERCENTAGE_F"]
     register.value = 0.0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("envm.forecast.temp_6")
@@ -1411,9 +1286,7 @@ def __add_registers(args):
     register.description = "Actual outside temperature for 6 hours. [*C]"
     register.range = "-50.0/50.0"
     register.value = 0.0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("envm.forecast.wind_6")
@@ -1422,9 +1295,7 @@ def __add_registers(args):
     register.description = "Actual outside wind speed for 6 hours. [m/s]"
     register.range = REGS_RANGES["PERCENTAGE_F"]
     register.value = 0.0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("envm.light")
@@ -1433,9 +1304,7 @@ def __add_registers(args):
     register.description = "Outside light [lux]"
     register.range = "0.0/"
     register.value = 1000.0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("envm.energy") # Energy mode of the building.
@@ -1444,9 +1313,7 @@ def __add_registers(args):
     register.description = "Energy mode of the building"
     register.range = REGS_RANGES["NONE"]
     register.value = 0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("envm.flag_fire")
@@ -1455,9 +1322,7 @@ def __add_registers(args):
     register.description = "Emergency index for the fire."
     register.range = "0/3"
     register.value = 0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("envm.flag_storm")
@@ -1466,9 +1331,7 @@ def __add_registers(args):
     register.description = "Emergency index for the storm."
     register.range = "0/3"
     register.value = 0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("envm.flag_earthquake")
@@ -1477,9 +1340,7 @@ def __add_registers(args):
     register.description = "Emergency index for the earthquake."
     register.range = "0/3"
     register.value = 0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("envm.flag_gassing")
@@ -1488,9 +1349,7 @@ def __add_registers(args):
     register.description = "Emergency index for the gassing."
     register.range = "0/3"
     register.value = 0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("envm.flag_flooding")
@@ -1499,9 +1358,7 @@ def __add_registers(args):
     register.description = "Emergency index for the flooding."
     register.range = "0/3"
     register.value = 0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("envm.flag_blocked")
@@ -1510,9 +1367,7 @@ def __add_registers(args):
     register.description = "Emergency index for the blocking."
     register.range = "0/3"
     register.value = 0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("envm.sunpos.enabled")
@@ -1521,9 +1376,7 @@ def __add_registers(args):
     register.description = "Enable software calculation of the sun position"
     register.range = REGS_RANGES["BOOL"]
     register.value = False
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("envm.building.location.lat")
@@ -1532,9 +1385,7 @@ def __add_registers(args):
     register.description = "Latitude of the target building."
     register.range = "0.0/360.0"
     register.value = 43.07779
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("envm.building.location.lon")
@@ -1543,9 +1394,7 @@ def __add_registers(args):
     register.description = "Longitude of the target building."
     register.range = "0.0/360.0"
     register.value = 25.59549
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("envm.building.location.elv")
@@ -1554,9 +1403,7 @@ def __add_registers(args):
     register.description = "Longitude of the target building."
     register.range = "/"
     register.value = 210
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("envm.building.location.time_zone")
@@ -1565,9 +1412,7 @@ def __add_registers(args):
     register.description = "Longitude of the target building."
     register.range = "0/23"
     register.value = 2
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("envm.sun.azimuth")
@@ -1576,9 +1421,7 @@ def __add_registers(args):
     register.description = "Sun azimuth value"
     register.range = "0.0/360.0"
     register.value = 0.0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("envm.sun.elevation")
@@ -1587,9 +1430,7 @@ def __add_registers(args):
     register.description = "Sun elevation value"
     register.range = "0.0/360.0"
     register.value = 0.0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
 #endregion
@@ -1602,10 +1443,8 @@ def __add_registers(args):
     register.plugin_name = "HVAC"
     register.description = "Plugin enabled"
     register.range = REGS_RANGES["BOOL"]
-    register.value = True
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
+    register.value = __is_enabled(register.base_name, args.profile)
     __registers.append(register)
 
     # Zones count.
@@ -1615,9 +1454,7 @@ def __add_registers(args):
     register.description = "Count of the HVAC zones."
     register.range = "0/"
     register.value = 1
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     # Air temp central.
@@ -1638,9 +1475,7 @@ def __add_registers(args):
         }
     else:
         register.value = {}
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("hvac.air_temp_cent_1.value")
@@ -1649,9 +1484,7 @@ def __add_registers(args):
     register.description = "Air temperature sensor center value."
     register.range = "0.0/"
     register.value = 0.0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     # Air temp lower
@@ -1672,9 +1505,7 @@ def __add_registers(args):
         }
     else:
         register.value = {}
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("hvac.air_temp_lower_1.value")
@@ -1683,9 +1514,7 @@ def __add_registers(args):
     register.description = "Air temperature sensor lower value"
     register.range = "0.0/"
     register.value = 0.0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     # Air temp upper.
@@ -1706,9 +1535,7 @@ def __add_registers(args):
         }
     else:
         register.value = {}
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("hvac.air_temp_upper_1.value")
@@ -1717,9 +1544,7 @@ def __add_registers(args):
     register.description = "Air temperature sensor upper value"
     register.range = "0.0/"
     register.value = 0.0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("hvac.floor_loop_1.valve.settings")
@@ -1738,9 +1563,7 @@ def __add_registers(args):
             ]
         }
     }
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("hvac.floor_loop_1.valve.activations")
@@ -1749,9 +1572,7 @@ def __add_registers(args):
     register.description = "Floor loop 1 valve activations"
     register.range = REGS_RANGES["NONE"]
     register.value = {}
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("hvac.floor_loop_2.valve.settings")
@@ -1770,9 +1591,7 @@ def __add_registers(args):
             ]
         }
     }
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("hvac.floor_loop_2.valve.activations")
@@ -1781,9 +1600,7 @@ def __add_registers(args):
     register.description = "Floor loop 2 valve activations"
     register.range = REGS_RANGES["NONE"]
     register.value = {}
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("hvac.floor_loop_3.valve.settings")
@@ -1802,9 +1619,7 @@ def __add_registers(args):
             ]
         }
     }
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("hvac.floor_loop_3.valve.activations")
@@ -1813,9 +1628,7 @@ def __add_registers(args):
     register.description = "Floor loop 3 valve activations"
     register.range = REGS_RANGES["NONE"]
     register.value = {}
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     # Convector loop 1
@@ -1843,9 +1656,7 @@ def __add_registers(args):
             ]
         }
     }
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("hvac.conv_loop_1.valve.settings")
@@ -1864,9 +1675,7 @@ def __add_registers(args):
             ]
         }
     }
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("hvac.conv_loop_1.valve.activations")
@@ -1875,9 +1684,7 @@ def __add_registers(args):
     register.description = "Convector loop 1 valve activations"
     register.range = REGS_RANGES["NONE"]
     register.value = {}
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     # Convector loop 2
@@ -1905,9 +1712,7 @@ def __add_registers(args):
             ]
         }
     }
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("hvac.conv_loop_2.valve.settings")
@@ -1926,9 +1731,7 @@ def __add_registers(args):
             ]
         }
     }
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("hvac.conv_loop_2.valve.activations")
@@ -1937,9 +1740,7 @@ def __add_registers(args):
     register.description = "Convector loop 2 valve activations"
     register.range = REGS_RANGES["NONE"]
     register.value = {}
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     # Convector loop 3 flowmeter.
@@ -1967,9 +1768,7 @@ def __add_registers(args):
             ]
         }
     }
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("hvac.conv_loop_3.valve.settings")
@@ -1988,9 +1787,7 @@ def __add_registers(args):
             ]
         }
     }
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("hvac.conv_loop_3.valve.activations")
@@ -1999,9 +1796,7 @@ def __add_registers(args):
     register.description = "Convector loop 3 valve activations"
     register.range = REGS_RANGES["NONE"]
     register.value = {}
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     # Loop 1 Down Limit Temperature # Request: Eml6419
@@ -2011,9 +1806,7 @@ def __add_registers(args):
     register.description = "Loop 1 temperature down limit."
     register.range = "0.0/"
     register.value = 15
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("hvac.conv_loop_1.temp.down_limit")
@@ -2022,9 +1815,7 @@ def __add_registers(args):
     register.description = "Loop 1 temperature sensor value."
     register.range = "/"
     register.value = 0.0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("hvac.temp_1.adjust")
@@ -2033,9 +1824,7 @@ def __add_registers(args):
     register.description = "Adjust temperature"
     register.range = "-50.0/50.0"
     register.value = 0.0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     # Delta time.
@@ -2045,9 +1834,7 @@ def __add_registers(args):
     register.description = "Measuring delta time"
     register.range = "0.0/"
     register.value = 5.0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     # Goal building temp.
@@ -2057,9 +1844,7 @@ def __add_registers(args):
     register.description = "Goal of the building temperature"
     register.range = "-50.0/50.0"
     register.value = 20.0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     # Temperature actual
@@ -2069,9 +1854,7 @@ def __add_registers(args):
     register.description = "Actual temperature"
     register.range = "-50.0/50.0"
     register.value = 0.0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("hvac.temp_1.max")
@@ -2080,9 +1863,7 @@ def __add_registers(args):
     register.description = "Maximum achievable"
     register.range = "-50.0/50.0"
     register.value = 30.0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("hvac.temp_1.min")
@@ -2091,9 +1872,7 @@ def __add_registers(args):
     register.description = "Minimum achievable"
     register.range = "-50.0/50.0"
     register.value = 20.0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     # Thermal force limit
@@ -2103,9 +1882,7 @@ def __add_registers(args):
     register.description = "Thermal force limit"
     register.range = REGS_RANGES["PERCENTAGE_F"]
     register.value = 100.0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     # Thermal mode
@@ -2115,9 +1892,7 @@ def __add_registers(args):
     register.description = "Thermal mode"
     register.range = "1|2|3|4"
     register.value = 2
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     # Update rate.
@@ -2127,9 +1902,7 @@ def __add_registers(args):
     register.description = "Update rate of the plugin [s]"
     register.range = "0.0/"
     register.value = 1.0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
 #endregion
@@ -2142,9 +1915,7 @@ def __add_registers(args):
     register.description = "Minimum limit"
     register.range = "0.0/10000.0"
     register.value = 800.0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("light.max")
@@ -2153,9 +1924,7 @@ def __add_registers(args):
     register.description = "Maximum limit"
     register.range = "0.0/10000.0"
     register.value = 10000.0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("light.v1.output")
@@ -2164,9 +1933,7 @@ def __add_registers(args):
     register.description = "Analog output 0. U0:ID2:FC16:R0:AO0"
     register.range = REGS_RANGES["NONE"]
     register.value = "U0:ID2:FC16:R0:AO0"
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("light.v2.output")
@@ -2175,9 +1942,7 @@ def __add_registers(args):
     register.description = "Analog output 1. U0:ID2:FC16:R0:AO1"
     register.range = REGS_RANGES["NONE"]
     register.value = "U0:ID2:FC16:R0:AO1"
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("light.r1.output")
@@ -2186,9 +1951,7 @@ def __add_registers(args):
     register.description = "Digital output 6. U0:ID2:FC5:R0:DO6"
     register.range = REGS_RANGES["NONE"]
     register.value = "U0:ID2:FC5:R0:DO6"
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("light.r2.output")
@@ -2197,9 +1960,7 @@ def __add_registers(args):
     register.description = "Digital output 7. U0:ID2:FC5:R0:DO7"
     register.range = REGS_RANGES["NONE"]
     register.value = "U0:ID2:FC5:R0:DO7"
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("light.hallway_lighting.output")
@@ -2208,9 +1969,7 @@ def __add_registers(args):
     register.description = "Hallway lighting digital output. U1:ID2:R0:DO3"
     register.range = REGS_RANGES["NONE"]
     register.value = verbal_const.OFF # U1:ID2:R0:DO3
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("light.hallway_lighting.time")
@@ -2219,9 +1978,7 @@ def __add_registers(args):
     register.description = "Hallway lighting wait time."
     register.range = "0.0/"
     register.value = 60.0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("light.sensor.settings")
@@ -2230,16 +1987,15 @@ def __add_registers(args):
     register.description = "Sensor settings"
     register.range = REGS_RANGES["NONE"]
     register.value = {
-        "vendor": "PT",
-        "model": "light_sensor",
+        "vendor": "Gemho",
+        "model": "envse",
         "options":
         {
-            "input": "AI2",
+            "uart": 0,
+            "mb_id": 3
         }
     }
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("light.target_illum")
@@ -2248,9 +2004,16 @@ def __add_registers(args):
     register.description = "Target illumination"
     register.range = "0.0/10000.0"
     register.value = 0.0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
+    __registers.append(register)
+
+    register = Register("light.illumination")
+    register.scope = Scope.Device
+    register.plugin_name = "Light"
+    register.description = "Current illumination"
+    register.range = "0.0/10000.0"
+    register.value = 0.0
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("light.error_gain")
@@ -2259,9 +2022,7 @@ def __add_registers(args):
     register.description = "Error gain"
     register.range = "/"
     register.value = 0.01
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("light.enabled")
@@ -2269,11 +2030,9 @@ def __add_registers(args):
     register.plugin_name = "Light"
     register.description = "Plugin enabled"
     register.range = REGS_RANGES["BOOL"]
-    register.value = True
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
+    register.value = __is_enabled(register.base_name, args.profile)
     __registers.append(register)
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
 
 #endregion
 
@@ -2287,8 +2046,7 @@ def __add_registers(args):
     register.range = REGS_RANGES["NONE"]
     register.value = []
     register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value,
+            Register.create_profile(Profiles.ZONE.value,
             Profiles.DISTRIBUTION.value,
             Profiles.HEAT_PUMP.value,
             Profiles.NORTH_SERVER_ROOMS.value)
@@ -2303,8 +2061,7 @@ def __add_registers(args):
     register.range = "0/"
     register.value = 0
     register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value,
+            Register.create_profile(Profiles.ZONE.value,
             Profiles.DISTRIBUTION.value,
             Profiles.HEAT_PUMP.value,
             Profiles.NORTH_SERVER_ROOMS.value)
@@ -2317,8 +2074,7 @@ def __add_registers(args):
     register.range = "0/"
     register.value = 0
     register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value,
+            Register.create_profile(Profiles.ZONE.value,
             Profiles.DISTRIBUTION.value,
             Profiles.HEAT_PUMP.value,
             Profiles.NORTH_SERVER_ROOMS.value)
@@ -2331,8 +2087,7 @@ def __add_registers(args):
     register.range = "0.0/"
     register.value = 0.0
     register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value,
+            Register.create_profile(Profiles.ZONE.value,
             Profiles.DISTRIBUTION.value,
             Profiles.HEAT_PUMP.value,
             Profiles.NORTH_SERVER_ROOMS.value)
@@ -2345,8 +2100,7 @@ def __add_registers(args):
     register.range = "0.0/"
     register.value = 0.0
     register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value,
+            Register.create_profile(Profiles.ZONE.value,
             Profiles.DISTRIBUTION.value,
             Profiles.HEAT_PUMP.value,
             Profiles.NORTH_SERVER_ROOMS.value)
@@ -2359,8 +2113,7 @@ def __add_registers(args):
     register.range = "0.0/"
     register.value = 0.0
     register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value,
+            Register.create_profile(Profiles.ZONE.value,
             Profiles.DISTRIBUTION.value,
             Profiles.HEAT_PUMP.value,
             Profiles.NORTH_SERVER_ROOMS.value)
@@ -2373,8 +2126,7 @@ def __add_registers(args):
     register.range = "0.0/"
     register.value = 0.0
     register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value,
+            Register.create_profile(Profiles.ZONE.value,
             Profiles.DISTRIBUTION.value,
             Profiles.HEAT_PUMP.value,
             Profiles.NORTH_SERVER_ROOMS.value)
@@ -2387,8 +2139,7 @@ def __add_registers(args):
     register.range = "0/"
     register.value = 0
     register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value,
+            Register.create_profile(Profiles.ZONE.value,
             Profiles.DISTRIBUTION.value,
             Profiles.HEAT_PUMP.value,
             Profiles.NORTH_SERVER_ROOMS.value)
@@ -2401,8 +2152,7 @@ def __add_registers(args):
     register.range = "0/"
     register.value = 0
     register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value,
+            Register.create_profile(Profiles.ZONE.value,
             Profiles.DISTRIBUTION.value,
             Profiles.HEAT_PUMP.value,
             Profiles.NORTH_SERVER_ROOMS.value)
@@ -2415,8 +2165,7 @@ def __add_registers(args):
     register.range = "0/"
     register.value = 0
     register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value,
+            Register.create_profile(Profiles.ZONE.value,
             Profiles.DISTRIBUTION.value,
             Profiles.HEAT_PUMP.value,
             Profiles.NORTH_SERVER_ROOMS.value)
@@ -2430,8 +2179,7 @@ def __add_registers(args):
     register.range = REGS_RANGES["LED"]
     register.value = "LED0"
     register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value,
+            Register.create_profile(Profiles.ZONE.value,
             Profiles.DISTRIBUTION.value,
             Profiles.HEAT_PUMP.value,
             Profiles.NORTH_SERVER_ROOMS.value)
@@ -2444,8 +2192,7 @@ def __add_registers(args):
     register.range = "0.0/"
     register.value = 1.0
     register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value,
+            Register.create_profile(Profiles.ZONE.value,
             Profiles.DISTRIBUTION.value,
             Profiles.HEAT_PUMP.value,
             Profiles.NORTH_SERVER_ROOMS.value)
@@ -2459,8 +2206,7 @@ def __add_registers(args):
     register.range = REGS_RANGES["DI"]
     register.value = verbal_const.OFF # "DI7"
     register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value,
+            Register.create_profile(Profiles.ZONE.value,
             Profiles.DISTRIBUTION.value,
             Profiles.HEAT_PUMP.value,
             Profiles.NORTH_SERVER_ROOMS.value)
@@ -2473,8 +2219,7 @@ def __add_registers(args):
     register.range = REGS_RANGES["BOOL"]
     register.value = False
     register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value,
+            Register.create_profile(Profiles.ZONE.value,
             Profiles.DISTRIBUTION.value,
             Profiles.HEAT_PUMP.value,
             Profiles.NORTH_SERVER_ROOMS.value)
@@ -2488,8 +2233,7 @@ def __add_registers(args):
     register.range = REGS_RANGES["NONE"]
     register.value = {}
     register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value,
+            Register.create_profile(Profiles.ZONE.value,
             Profiles.DISTRIBUTION.value,
             Profiles.HEAT_PUMP.value,
             Profiles.NORTH_SERVER_ROOMS.value)
@@ -2502,8 +2246,7 @@ def __add_registers(args):
     register.range = REGS_RANGES["NONE"]
     register.value = {}
     register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value,
+            Register.create_profile(Profiles.ZONE.value,
             Profiles.DISTRIBUTION.value,
             Profiles.HEAT_PUMP.value,
             Profiles.NORTH_SERVER_ROOMS.value)
@@ -2516,8 +2259,7 @@ def __add_registers(args):
     register.range = REGS_RANGES["NONE"]
     register.value = {}
     register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value,
+            Register.create_profile(Profiles.ZONE.value,
             Profiles.DISTRIBUTION.value,
             Profiles.HEAT_PUMP.value,
             Profiles.NORTH_SERVER_ROOMS.value)
@@ -2530,8 +2272,7 @@ def __add_registers(args):
     register.range = "0|1"
     register.value = 0
     register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value,
+            Register.create_profile(Profiles.ZONE.value,
             Profiles.DISTRIBUTION.value,
             Profiles.HEAT_PUMP.value,
             Profiles.NORTH_SERVER_ROOMS.value)
@@ -2543,13 +2284,12 @@ def __add_registers(args):
     register.plugin_name = "System"
     register.description = "Plugin enabled"
     register.range = REGS_RANGES["BOOL"]
-    register.value = True
     register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value,
+            Register.create_profile(Profiles.ZONE.value,
             Profiles.DISTRIBUTION.value,
             Profiles.HEAT_PUMP.value,
             Profiles.NORTH_SERVER_ROOMS.value)
+    register.value = __is_enabled(register.base_name, args.profile)
     __registers.append(register)
 
     # Enable info messages.
@@ -2560,8 +2300,7 @@ def __add_registers(args):
     register.range = REGS_RANGES["BOOL"]
     register.value = True
     register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value,
+            Register.create_profile(Profiles.ZONE.value,
             Profiles.DISTRIBUTION.value,
             Profiles.HEAT_PUMP.value,
             Profiles.NORTH_SERVER_ROOMS.value)
@@ -2575,8 +2314,7 @@ def __add_registers(args):
     register.range = REGS_RANGES["BOOL"]
     register.value = True
     register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value,
+            Register.create_profile(Profiles.ZONE.value,
             Profiles.DISTRIBUTION.value,
             Profiles.HEAT_PUMP.value,
             Profiles.NORTH_SERVER_ROOMS.value)
@@ -2590,8 +2328,7 @@ def __add_registers(args):
     register.range = REGS_RANGES["BOOL"]
     register.value = True
     register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value,
+            Register.create_profile(Profiles.ZONE.value,
             Profiles.DISTRIBUTION.value,
             Profiles.HEAT_PUMP.value,
             Profiles.NORTH_SERVER_ROOMS.value)
@@ -2660,9 +2397,7 @@ def __add_registers(args):
             }
         ]
     }
-    register.profiles = \
-        Register.create_profile(
-            Profiles.DISTRIBUTION.value)
+    register.profiles = Register.create_profile(Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Floor entrance valves mode.
@@ -2672,9 +2407,7 @@ def __add_registers(args):
     register.description = "ECD / Floor entrance valves mode."
     register.range = REGS_RANGES["VALVE_MODE"]
     register.value = 0.0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.DISTRIBUTION.value)
+    register.profiles = Register.create_profile(Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Floor entrance valves state.
@@ -2684,9 +2417,7 @@ def __add_registers(args):
     register.description = "ECD / Floor entrance valves state."
     register.range = REGS_RANGES["VALVE_STATE"]
     register.value = 0.0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.DISTRIBUTION.value)
+    register.profiles = Register.create_profile(Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Floor pool valves settings.
@@ -2732,9 +2463,7 @@ def __add_registers(args):
             }
         ]
     }
-    register.profiles = \
-        Register.create_profile(
-            Profiles.DISTRIBUTION.value)
+    register.profiles = Register.create_profile(Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Floor pool valves mode.
@@ -2744,9 +2473,7 @@ def __add_registers(args):
     register.description = "ECD / Floor pool valves mode."
     register.range = REGS_RANGES["VALVE_MODE"]
     register.value = 0.0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.DISTRIBUTION.value)
+    register.profiles = Register.create_profile(Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Floor pool valves state.
@@ -2756,9 +2483,7 @@ def __add_registers(args):
     register.description = "ECD / Floor pool valves state."
     register.range = REGS_RANGES["VALVE_STATE"]
     register.value = 0.0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.DISTRIBUTION.value)
+    register.profiles = Register.create_profile(Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Ground drilling valves settings.
@@ -2804,9 +2529,7 @@ def __add_registers(args):
             }
         ]
     }
-    register.profiles = \
-        Register.create_profile(
-            Profiles.DISTRIBUTION.value)
+    register.profiles = Register.create_profile(Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Ground drilling valves mode.
@@ -2816,9 +2539,7 @@ def __add_registers(args):
     register.description = "ECD / Ground drilling valves mode."
     register.range = REGS_RANGES["VALVE_MODE"]
     register.value = 0.0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.DISTRIBUTION.value)
+    register.profiles = Register.create_profile(Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Ground drilling valves state.
@@ -2828,9 +2549,7 @@ def __add_registers(args):
     register.description = "ECD / Ground drilling valves state."
     register.range = REGS_RANGES["VALVE_STATE"]
     register.value = 0.0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.DISTRIBUTION.value)
+    register.profiles = Register.create_profile(Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Ground drilling valves state.
@@ -2840,9 +2559,7 @@ def __add_registers(args):
     register.description = "ECD / Ground drilling valves state."
     register.range = REGS_RANGES["NONE"]
     register.value = {}
-    register.profiles = \
-        Register.create_profile(
-            Profiles.DISTRIBUTION.value)
+    register.profiles = Register.create_profile(Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
 
@@ -2889,9 +2606,7 @@ def __add_registers(args):
             }
         ]
     }
-    register.profiles = \
-        Register.create_profile(
-            Profiles.DISTRIBUTION.value)
+    register.profiles = Register.create_profile(Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Air tower green valves mode.
@@ -2901,9 +2616,7 @@ def __add_registers(args):
     register.description = "ECD / Ground drilling valves mode."
     register.range = REGS_RANGES["VALVE_MODE"]
     register.value = 0.0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.DISTRIBUTION.value)
+    register.profiles = Register.create_profile(Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Air tower green valves state.
@@ -2913,9 +2626,7 @@ def __add_registers(args):
     register.description = "ECD / Air tower green valves state."
     register.range = REGS_RANGES["VALVE_STATE"]
     register.value = 0.0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.DISTRIBUTION.value)
+    register.profiles = Register.create_profile(Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Air tower green valves settings.
@@ -2961,9 +2672,7 @@ def __add_registers(args):
             }
         ]
     }
-    register.profiles = \
-        Register.create_profile(
-            Profiles.DISTRIBUTION.value)
+    register.profiles = Register.create_profile(Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Air tower green valves mode.
@@ -2973,9 +2682,7 @@ def __add_registers(args):
     register.description = "ECD / Ground drilling valves mode."
     register.range = REGS_RANGES["VALVE_MODE"]
     register.value = 0.0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.DISTRIBUTION.value)
+    register.profiles = Register.create_profile(Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Air tower green valves state.
@@ -2985,9 +2692,7 @@ def __add_registers(args):
     register.description = "ECD / Air tower green valves state."
     register.range = REGS_RANGES["VALVE_STATE"]
     register.value = 0.0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.DISTRIBUTION.value)
+    register.profiles = Register.create_profile(Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Generators valves settings.
@@ -3033,9 +2738,7 @@ def __add_registers(args):
             }
         ]
     }
-    register.profiles = \
-        Register.create_profile(
-            Profiles.DISTRIBUTION.value)
+    register.profiles = Register.create_profile(Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Generators valves mode.
@@ -3045,9 +2748,7 @@ def __add_registers(args):
     register.description = "ECD / Ground drilling valves mode."
     register.range = REGS_RANGES["VALVE_MODE"]
     register.value = 0.0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.DISTRIBUTION.value)
+    register.profiles = Register.create_profile(Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Generators valves state.
@@ -3057,9 +2758,7 @@ def __add_registers(args):
     register.description = "ECD / Generators valves state."
     register.range = REGS_RANGES["VALVE_STATE"]
     register.value = 0.0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.DISTRIBUTION.value)
+    register.profiles = Register.create_profile(Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ====================================================================================================
@@ -3109,9 +2808,7 @@ def __add_registers(args):
             # }
         ]
     }
-    register.profiles = \
-        Register.create_profile(
-            Profiles.DISTRIBUTION.value)
+    register.profiles = Register.create_profile(Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Pool air heating valves mode.
@@ -3121,9 +2818,7 @@ def __add_registers(args):
     register.description = "ECD / Pool air heating valves mode."
     register.range = REGS_RANGES["VALVE_MODE"]
     register.value = 0.0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.DISTRIBUTION.value)
+    register.profiles = Register.create_profile(Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Pool air heating valves state.
@@ -3133,9 +2828,7 @@ def __add_registers(args):
     register.description = "ECD / Pool air heating valves state."
     register.range = REGS_RANGES["VALVE_STATE"]
     register.value = 0.0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.DISTRIBUTION.value)
+    register.profiles = Register.create_profile(Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Pool air heating pump settings.
@@ -3158,9 +2851,7 @@ def __add_registers(args):
             "wait_on_shutdown": False
         }
     }
-    register.profiles = \
-        Register.create_profile(
-            Profiles.DISTRIBUTION.value)
+    register.profiles = Register.create_profile(Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Pool air heating pump mode.
@@ -3170,9 +2861,7 @@ def __add_registers(args):
     register.description = "ECD / Pool air heating pump mode."
     register.range = REGS_RANGES["PERCENTAGE_I"]
     register.value = 0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.DISTRIBUTION.value)
+    register.profiles = Register.create_profile(Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Pool air heating pump state.
@@ -3182,9 +2871,7 @@ def __add_registers(args):
     register.description = "ECD / Pool air heating pump state."
     register.range = REGS_RANGES["NONE"]
     register.value = {}
-    register.profiles = \
-        Register.create_profile(
-            Profiles.DISTRIBUTION.value)
+    register.profiles = Register.create_profile(Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Convectors kitchen valves settings.
@@ -3230,9 +2917,7 @@ def __add_registers(args):
             }
         ]
     }
-    register.profiles = \
-        Register.create_profile(
-            Profiles.DISTRIBUTION.value)
+    register.profiles = Register.create_profile(Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Convectors kitchen valves mode.
@@ -3242,9 +2927,7 @@ def __add_registers(args):
     register.description = "ECD / Convectors kitchen valves mode."
     register.range = REGS_RANGES["VALVE_MODE"]
     register.value = 0.0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.DISTRIBUTION.value)
+    register.profiles = Register.create_profile(Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Convectors kitchen valves state.
@@ -3254,9 +2937,7 @@ def __add_registers(args):
     register.description = "ECD / Convectors kitchen valves state."
     register.range = REGS_RANGES["VALVE_STATE"]
     register.value = 0.0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.DISTRIBUTION.value)
+    register.profiles = Register.create_profile(Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Convectors kitchen pump settings.
@@ -3279,9 +2960,7 @@ def __add_registers(args):
             "wait_on_shutdown": False
         }
     }
-    register.profiles = \
-        Register.create_profile(
-            Profiles.DISTRIBUTION.value)
+    register.profiles = Register.create_profile(Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Convectors kitchen pump mode.
@@ -3291,9 +2970,7 @@ def __add_registers(args):
     register.description = "ECD / Convectors kitchen pump mode."
     register.range = REGS_RANGES["PERCENTAGE_I"]
     register.value = 0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.DISTRIBUTION.value)
+    register.profiles = Register.create_profile(Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Convectors kitchen pump state.
@@ -3303,9 +2980,7 @@ def __add_registers(args):
     register.description = "ECD / Convectors kitchen pump state."
     register.range = REGS_RANGES["NONE"]
     register.value = {}
-    register.profiles = \
-        Register.create_profile(
-            Profiles.DISTRIBUTION.value)
+    register.profiles = Register.create_profile(Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / AHU conference hall valves settings.
@@ -3351,9 +3026,7 @@ def __add_registers(args):
             }
         ]
     }
-    register.profiles = \
-        Register.create_profile(
-            Profiles.DISTRIBUTION.value)
+    register.profiles = Register.create_profile(Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / AHU conference hall valves mode.
@@ -3363,9 +3036,7 @@ def __add_registers(args):
     register.description = "ECD / AHU conference hall valves mode."
     register.range = REGS_RANGES["VALVE_MODE"]
     register.value = 0.0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.DISTRIBUTION.value)
+    register.profiles = Register.create_profile(Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / AHU conference hall valves state.
@@ -3375,9 +3046,7 @@ def __add_registers(args):
     register.description = "ECD / AHU conference hall valves state."
     register.range = REGS_RANGES["VALVE_STATE"]
     register.value = 0.0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.DISTRIBUTION.value)
+    register.profiles = Register.create_profile(Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / AHU conference hall pump settings.
@@ -3400,9 +3069,7 @@ def __add_registers(args):
             "wait_on_shutdown": False
         }
     }
-    register.profiles = \
-        Register.create_profile(
-            Profiles.DISTRIBUTION.value)
+    register.profiles = Register.create_profile(Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / AHU conference hall pump mode.
@@ -3412,9 +3079,7 @@ def __add_registers(args):
     register.description = "ECD / AHU conference hall pump mode."
     register.range = REGS_RANGES["PERCENTAGE_I"]
     register.value = 0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.DISTRIBUTION.value)
+    register.profiles = Register.create_profile(Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / AHU conference hall pump state.
@@ -3424,9 +3089,7 @@ def __add_registers(args):
     register.description = "ECD / AHU conference hall pump state."
     register.range = REGS_RANGES["NONE"]
     register.value = {}
-    register.profiles = \
-        Register.create_profile(
-            Profiles.DISTRIBUTION.value)
+    register.profiles = Register.create_profile(Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Floor west valves settings.
@@ -3472,9 +3135,7 @@ def __add_registers(args):
             }
         ]
     }
-    register.profiles = \
-        Register.create_profile(
-            Profiles.DISTRIBUTION.value)
+    register.profiles = Register.create_profile(Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Floor west valves mode.
@@ -3484,9 +3145,7 @@ def __add_registers(args):
     register.description = "ECD / Floor west valves mode."
     register.range = REGS_RANGES["VALVE_MODE"]
     register.value = 0.0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.DISTRIBUTION.value)
+    register.profiles = Register.create_profile(Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Floor west valves state.
@@ -3496,9 +3155,7 @@ def __add_registers(args):
     register.description = "ECD / Floor west  valves state"
     register.range = REGS_RANGES["VALVE_STATE"]
     register.value = 0.0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.DISTRIBUTION.value)
+    register.profiles = Register.create_profile(Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Floor west pump settings.
@@ -3521,9 +3178,7 @@ def __add_registers(args):
             "wait_on_shutdown": False
         }
     }
-    register.profiles = \
-        Register.create_profile(
-            Profiles.DISTRIBUTION.value)
+    register.profiles = Register.create_profile(Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Floor west pump mode.
@@ -3533,9 +3188,7 @@ def __add_registers(args):
     register.description = "ECD / Floor west pump mode."
     register.range = REGS_RANGES["PERCENTAGE_I"]
     register.value = 0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.DISTRIBUTION.value)
+    register.profiles = Register.create_profile(Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Floor west hall pump state.
@@ -3545,9 +3198,7 @@ def __add_registers(args):
     register.description = "ECD / Floor west pump state."
     register.range = REGS_RANGES["NONE"]
     register.value = {}
-    register.profiles = \
-        Register.create_profile(
-            Profiles.DISTRIBUTION.value)
+    register.profiles = Register.create_profile(Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Convectors west valves settings.
@@ -3593,9 +3244,7 @@ def __add_registers(args):
             }
         ]
     }
-    register.profiles = \
-        Register.create_profile(
-            Profiles.DISTRIBUTION.value)
+    register.profiles = Register.create_profile(Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Convectors west valves mode.
@@ -3605,9 +3254,7 @@ def __add_registers(args):
     register.description = "ECD / Convectors west valves mode."
     register.range = REGS_RANGES["VALVE_MODE"]
     register.value = 0.0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.DISTRIBUTION.value)
+    register.profiles = Register.create_profile(Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Convectors west valves state.
@@ -3617,9 +3264,7 @@ def __add_registers(args):
     register.description = "ECD / Convectors west valves state."
     register.range = REGS_RANGES["VALVE_STATE"]
     register.value = 0.0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.DISTRIBUTION.value)
+    register.profiles = Register.create_profile(Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Convectors west pump settings.
@@ -3642,9 +3287,7 @@ def __add_registers(args):
             "wait_on_shutdown": False
         }
     }
-    register.profiles = \
-        Register.create_profile(
-            Profiles.DISTRIBUTION.value)
+    register.profiles = Register.create_profile(Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Convectors west pump mode.
@@ -3654,9 +3297,7 @@ def __add_registers(args):
     register.description = "ECD / Convectors west pump mode."
     register.range = REGS_RANGES["PERCENTAGE_I"]
     register.value = 0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.DISTRIBUTION.value)
+    register.profiles = Register.create_profile(Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Convectors west hall pump state.
@@ -3666,9 +3307,7 @@ def __add_registers(args):
     register.description = "ECD / Convectors west pump state."
     register.range = REGS_RANGES["NONE"]
     register.value = {}
-    register.profiles = \
-        Register.create_profile(
-            Profiles.DISTRIBUTION.value)
+    register.profiles = Register.create_profile(Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / AHU roof floor valves settings.
@@ -3714,9 +3353,7 @@ def __add_registers(args):
             }
         ]
     }
-    register.profiles = \
-        Register.create_profile(
-            Profiles.DISTRIBUTION.value)
+    register.profiles = Register.create_profile(Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / AHU roof floor valves mode.
@@ -3726,9 +3363,7 @@ def __add_registers(args):
     register.description = "ECD / AHU roof floor valves mode."
     register.range = REGS_RANGES["VALVE_MODE"]
     register.value = 0.0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.DISTRIBUTION.value)
+    register.profiles = Register.create_profile(Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / AHU roof floor valves state.
@@ -3738,9 +3373,7 @@ def __add_registers(args):
     register.description = "ECD / AHU roof floor valves state."
     register.range = REGS_RANGES["VALVE_STATE"]
     register.value = 0.0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.DISTRIBUTION.value)
+    register.profiles = Register.create_profile(Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / AHU roof floor pump settings.
@@ -3763,9 +3396,7 @@ def __add_registers(args):
             "wait_on_shutdown": False
         }
     }
-    register.profiles = \
-        Register.create_profile(
-            Profiles.DISTRIBUTION.value)
+    register.profiles = Register.create_profile(Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / AHU roof floor pump mode.
@@ -3775,9 +3406,7 @@ def __add_registers(args):
     register.description = "ECD / AHU roof floor pump mode."
     register.range = REGS_RANGES["PERCENTAGE_I"]
     register.value = 0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.DISTRIBUTION.value)
+    register.profiles = Register.create_profile(Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / AHU roof floor hall pump state.
@@ -3787,9 +3416,7 @@ def __add_registers(args):
     register.description = "ECD / AHU roof floor pump state."
     register.range = REGS_RANGES["NONE"]
     register.value = {}
-    register.profiles = \
-        Register.create_profile(
-            Profiles.DISTRIBUTION.value)
+    register.profiles = Register.create_profile(Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / AHU fitness valves settings.
@@ -3835,9 +3462,7 @@ def __add_registers(args):
             }
         ]
     }
-    register.profiles = \
-        Register.create_profile(
-            Profiles.DISTRIBUTION.value)
+    register.profiles = Register.create_profile(Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / AHU fitness valves mode.
@@ -3847,9 +3472,7 @@ def __add_registers(args):
     register.description = "ECD / AHU fitness valves mode."
     register.range = REGS_RANGES["VALVE_MODE"]
     register.value = 0.0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.DISTRIBUTION.value)
+    register.profiles = Register.create_profile(Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / AHU fitness valves state.
@@ -3859,9 +3482,7 @@ def __add_registers(args):
     register.description = "ECD / AHU fitness valves state."
     register.range = REGS_RANGES["VALVE_STATE"]
     register.value = 0.0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.DISTRIBUTION.value)
+    register.profiles = Register.create_profile(Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / AHU fitness pump settings.
@@ -3884,9 +3505,7 @@ def __add_registers(args):
             "wait_on_shutdown": False
         }
     }
-    register.profiles = \
-        Register.create_profile(
-            Profiles.DISTRIBUTION.value)
+    register.profiles = Register.create_profile(Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / AHU fitness pump mode.
@@ -3896,9 +3515,7 @@ def __add_registers(args):
     register.description = "ECD / AHU fitness pump mode."
     register.range = REGS_RANGES["PERCENTAGE_I"]
     register.value = 0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.DISTRIBUTION.value)
+    register.profiles = Register.create_profile(Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / AHU fitness pump state.
@@ -3908,9 +3525,7 @@ def __add_registers(args):
     register.description = "ECD / AHU fitness pump state."
     register.range = REGS_RANGES["NONE"]
     register.value = {}
-    register.profiles = \
-        Register.create_profile(
-            Profiles.DISTRIBUTION.value)
+    register.profiles = Register.create_profile(Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Floor east valves settings.
@@ -3956,9 +3571,7 @@ def __add_registers(args):
             }
         ]
     }
-    register.profiles = \
-        Register.create_profile(
-            Profiles.DISTRIBUTION.value)
+    register.profiles = Register.create_profile(Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Floor east valves mode.
@@ -3968,9 +3581,7 @@ def __add_registers(args):
     register.description = "ECD / Floor east valves mode."
     register.range = REGS_RANGES["VALVE_MODE"]
     register.value = 0.0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.DISTRIBUTION.value)
+    register.profiles = Register.create_profile(Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Floor east valves state.
@@ -3980,9 +3591,7 @@ def __add_registers(args):
     register.description = "ECD / Floor east valves state."
     register.range = REGS_RANGES["VALVE_STATE"]
     register.value = 0.0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.DISTRIBUTION.value)
+    register.profiles = Register.create_profile(Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Floor east pump settings.
@@ -4005,9 +3614,7 @@ def __add_registers(args):
             "wait_on_shutdown": False
         }
     }
-    register.profiles = \
-        Register.create_profile(
-            Profiles.DISTRIBUTION.value)
+    register.profiles = Register.create_profile(Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Floor east pump mode.
@@ -4017,9 +3624,7 @@ def __add_registers(args):
     register.description = "ECD / Floor east pump mode."
     register.range = REGS_RANGES["PERCENTAGE_I"]
     register.value = 0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.DISTRIBUTION.value)
+    register.profiles = Register.create_profile(Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Floor east pump state.
@@ -4029,9 +3634,7 @@ def __add_registers(args):
     register.description = "ECD / Floor east pump state."
     register.range = REGS_RANGES["NONE"]
     register.value = {}
-    register.profiles = \
-        Register.create_profile(
-            Profiles.DISTRIBUTION.value)
+    register.profiles = Register.create_profile(Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Convectors east valves settings.
@@ -4077,9 +3680,7 @@ def __add_registers(args):
             }
         ]
     }
-    register.profiles = \
-        Register.create_profile(
-            Profiles.DISTRIBUTION.value)
+    register.profiles = Register.create_profile(Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Convectors east valves mode.
@@ -4089,9 +3690,7 @@ def __add_registers(args):
     register.description = "ECD / Convectors east valves mode."
     register.range = REGS_RANGES["VALVE_MODE"]
     register.value = 0.0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.DISTRIBUTION.value)
+    register.profiles = Register.create_profile(Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Convectors east valves state.
@@ -4101,9 +3700,7 @@ def __add_registers(args):
     register.description = "ECD / Convectors east valves state."
     register.range = REGS_RANGES["VALVE_STATE"]
     register.value = 0.0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.DISTRIBUTION.value)
+    register.profiles = Register.create_profile(Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Convectors east pump settings.
@@ -4126,9 +3723,7 @@ def __add_registers(args):
             "wait_on_shutdown": False
         }
     }
-    register.profiles = \
-        Register.create_profile(
-            Profiles.DISTRIBUTION.value)
+    register.profiles = Register.create_profile(Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Convectors east pump mode.
@@ -4138,9 +3733,7 @@ def __add_registers(args):
     register.description = "ECD / Convectors east pump mode."
     register.range = REGS_RANGES["PERCENTAGE_I"]
     register.value = 0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.DISTRIBUTION.value)
+    register.profiles = Register.create_profile(Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Convectors east pump state.
@@ -4150,9 +3743,7 @@ def __add_registers(args):
     register.description = "ECD / Convectors east pump state."
     register.range = REGS_RANGES["NONE"]
     register.value = {}
-    register.profiles = \
-        Register.create_profile(
-            Profiles.DISTRIBUTION.value)
+    register.profiles = Register.create_profile(Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Pool air cooling valves settings.
@@ -4198,9 +3789,7 @@ def __add_registers(args):
             }
         ]
     }
-    register.profiles = \
-        Register.create_profile(
-            Profiles.DISTRIBUTION.value)
+    register.profiles = Register.create_profile(Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Pool air cooling valves mode.
@@ -4210,9 +3799,7 @@ def __add_registers(args):
     register.description = "ECD / Pool air cooling valves mode."
     register.range = REGS_RANGES["VALVE_MODE"]
     register.value = 0.0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.DISTRIBUTION.value)
+    register.profiles = Register.create_profile(Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Pool air cooling valves state.
@@ -4222,9 +3809,7 @@ def __add_registers(args):
     register.description = "ECD / Pool air cooling valves state."
     register.range = REGS_RANGES["VALVE_STATE"]
     register.value = 0.0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.DISTRIBUTION.value)
+    register.profiles = Register.create_profile(Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Pool air cooling pump settings.
@@ -4247,9 +3832,7 @@ def __add_registers(args):
             "wait_on_shutdown": False
         }
     }
-    register.profiles = \
-        Register.create_profile(
-            Profiles.DISTRIBUTION.value)
+    register.profiles = Register.create_profile(Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Pool air cooling pump mode.
@@ -4259,9 +3842,7 @@ def __add_registers(args):
     register.description = "ECD / Pool air cooling pump mode."
     register.range = REGS_RANGES["PERCENTAGE_I"]
     register.value = 0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.DISTRIBUTION.value)
+    register.profiles = Register.create_profile(Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Pool air cooling pump state.
@@ -4271,9 +3852,7 @@ def __add_registers(args):
     register.description = "ECD / Pool air cooling pump state."
     register.range = REGS_RANGES["NONE"]
     register.value = {}
-    register.profiles = \
-        Register.create_profile(
-            Profiles.DISTRIBUTION.value)
+    register.profiles = Register.create_profile(Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Pool heating valves settings.
@@ -4319,9 +3898,7 @@ def __add_registers(args):
             # }
         ]
     }
-    register.profiles = \
-        Register.create_profile(
-            Profiles.DISTRIBUTION.value)
+    register.profiles = Register.create_profile(Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Pool heating valves mode.
@@ -4331,9 +3908,7 @@ def __add_registers(args):
     register.description = "ECD / Pool heating valves mode."
     register.range = REGS_RANGES["VALVE_MODE"]
     register.value = 0.0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.DISTRIBUTION.value)
+    register.profiles = Register.create_profile(Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Pool heating valves state.
@@ -4343,9 +3918,7 @@ def __add_registers(args):
     register.description = "ECD / Pool heating valves state."
     register.range = REGS_RANGES["VALVE_STATE"]
     register.value = 0.0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.DISTRIBUTION.value)
+    register.profiles = Register.create_profile(Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Pool heating pump settings.
@@ -4368,9 +3941,7 @@ def __add_registers(args):
             "wait_on_shutdown": False
         }
     }
-    register.profiles = \
-        Register.create_profile(
-            Profiles.DISTRIBUTION.value)
+    register.profiles = Register.create_profile(Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Pool heating pump mode.
@@ -4380,9 +3951,7 @@ def __add_registers(args):
     register.description = "ECD / Pool heating pump mode."
     register.range = REGS_RANGES["PERCENTAGE_I"]
     register.value = 0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.DISTRIBUTION.value)
+    register.profiles = Register.create_profile(Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Pool heating ump state.
@@ -4392,9 +3961,7 @@ def __add_registers(args):
     register.description = "ECD / Pool heating pump state."
     register.range = REGS_RANGES["NONE"]
     register.value = {}
-    register.profiles = \
-        Register.create_profile(
-            Profiles.DISTRIBUTION.value)
+    register.profiles = Register.create_profile(Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Servers cooling pump settings.
@@ -4417,9 +3984,7 @@ def __add_registers(args):
             "wait_on_shutdown": False
         }
     }
-    register.profiles = \
-        Register.create_profile(
-            Profiles.DISTRIBUTION.value)
+    register.profiles = Register.create_profile(Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Servers cooling pump mode.
@@ -4429,9 +3994,7 @@ def __add_registers(args):
     register.description = "ECD / Servers cooling pump mode."
     register.range = REGS_RANGES["PERCENTAGE_I"]
     register.value = 0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.DISTRIBUTION.value)
+    register.profiles = Register.create_profile(Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Servers cooling pump state.
@@ -4441,9 +4004,7 @@ def __add_registers(args):
     register.description = "ECD / Servers cooling pump state."
     register.range = REGS_RANGES["NONE"]
     register.value = {}
-    register.profiles = \
-        Register.create_profile(
-            Profiles.DISTRIBUTION.value)
+    register.profiles = Register.create_profile(Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ====================================================================================================
@@ -4531,9 +4092,7 @@ def __add_registers(args):
             }
         }
     ]
-    register.profiles = \
-        Register.create_profile(
-            Profiles.DISTRIBUTION.value)
+    register.profiles = Register.create_profile(Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Ground drilling thermo couples settings.
@@ -4543,9 +4102,7 @@ def __add_registers(args):
     register.description = "ECD / Ground drilling thermo couples values."
     register.range = REGS_RANGES["NONE"]
     register.value = []
-    register.profiles = \
-        Register.create_profile(
-            Profiles.DISTRIBUTION.value)
+    register.profiles = Register.create_profile(Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Hot water thermo couples settings.
@@ -4581,9 +4138,7 @@ def __add_registers(args):
             }
         }
     ]
-    register.profiles = \
-        Register.create_profile(
-            Profiles.DISTRIBUTION.value)
+    register.profiles = Register.create_profile(Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Hot water thermo couples settings.
@@ -4593,9 +4148,7 @@ def __add_registers(args):
     register.description = "ECD / Hot water thermo couples values."
     register.range = REGS_RANGES["NONE"]
     register.value = []
-    register.profiles = \
-        Register.create_profile(
-            Profiles.DISTRIBUTION.value)
+    register.profiles = Register.create_profile(Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Cold water thermo couples settings.
@@ -4631,9 +4184,7 @@ def __add_registers(args):
             }
         }
     ]
-    register.profiles = \
-        Register.create_profile(
-            Profiles.DISTRIBUTION.value)
+    register.profiles = Register.create_profile(Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # ECD / Hot water thermo couples settings.
@@ -4643,9 +4194,7 @@ def __add_registers(args):
     register.description = "ECD / Hot water thermo couples values."
     register.range = REGS_RANGES["NONE"]
     register.value = []
-    register.profiles = \
-        Register.create_profile(
-            Profiles.DISTRIBUTION.value)
+    register.profiles = Register.create_profile(Profiles.DISTRIBUTION.value)
     __registers.append(register)
 
     # Enable flag
@@ -4654,15 +4203,23 @@ def __add_registers(args):
     register.plugin_name = "Energy Center Distribution"
     register.description = "Plugin enabled"
     register.range = REGS_RANGES["BOOL"]
-    register.value = False
-    register.profiles = \
-        Register.create_profile(
-            Profiles.DISTRIBUTION.value)
+    register.profiles = Register.create_profile(Profiles.DISTRIBUTION.value)
+    register.value = __is_enabled(register.base_name, args.profile)
     __registers.append(register)
 
 #endregion
 
 #region Energy Center Heat Pump controller (echp)
+
+    # Enable the plugin.
+    register = Register("echp.enabled")
+    register.scope = Scope.System
+    register.plugin_name = "Energy Center Heat Pump"
+    register.description = "Plugin enabled"
+    register.range = REGS_RANGES["BOOL"]
+    register.profiles = Register.create_profile(Profiles.HEAT_PUMP.value)
+    register.value = __is_enabled(register.base_name, args.profile)
+    __registers.append(register)
 
     # -================================================================================-
 
@@ -4726,9 +4283,7 @@ def __add_registers(args):
             }
         ]
     }
-    register.profiles = \
-        Register.create_profile(
-            Profiles.HEAT_PUMP.value)
+    register.profiles = Register.create_profile(Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     # ECHP / Cold / Valves / Mode
@@ -4738,9 +4293,7 @@ def __add_registers(args):
     register.description = "ECHP / Cold / Valves / Mode"
     register.range = REGS_RANGES["VALVE_MODE"]
     register.value = 0.0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.HEAT_PUMP.value)
+    register.profiles = Register.create_profile(Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     # ECHP / Cold / Valves / State
@@ -4750,9 +4303,7 @@ def __add_registers(args):
     register.description = "ECHP / Cold / Valves / State"
     register.range = REGS_RANGES["VALVE_STATE"]
     register.value = 0.0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.HEAT_PUMP.value)
+    register.profiles = Register.create_profile(Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     # -================================================================================-
@@ -4817,9 +4368,7 @@ def __add_registers(args):
             }
         ]
     }
-    register.profiles = \
-        Register.create_profile(
-            Profiles.HEAT_PUMP.value)
+    register.profiles = Register.create_profile(Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     # ECHP / Cold Geo / Valves / Mode
@@ -4829,9 +4378,7 @@ def __add_registers(args):
     register.description = "ECHP / Cold Geo / Valves / Mode"
     register.range = REGS_RANGES["VALVE_MODE"]
     register.value = 0.0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.HEAT_PUMP.value)
+    register.profiles = Register.create_profile(Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     # ECHP / Cold Geo / Valves / State
@@ -4841,9 +4388,7 @@ def __add_registers(args):
     register.description = "ECHP / Cold Geo / Valves / State"
     register.range = REGS_RANGES["VALVE_STATE"]
     register.value = 0.0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.HEAT_PUMP.value)
+    register.profiles = Register.create_profile(Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     # -================================================================================-
@@ -4908,9 +4453,7 @@ def __add_registers(args):
             }
         ]
     }
-    register.profiles = \
-        Register.create_profile(
-            Profiles.HEAT_PUMP.value)
+    register.profiles = Register.create_profile(Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     # ECHP / Warm Geo / Valves / Mode
@@ -4920,9 +4463,7 @@ def __add_registers(args):
     register.description = "ECHP / Warm Geo / Valves / Mode"
     register.range = REGS_RANGES["VALVE_MODE"]
     register.value = 0.0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.HEAT_PUMP.value)
+    register.profiles = Register.create_profile(Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     # ECHP / Warm Geo / Valves / State
@@ -4932,9 +4473,7 @@ def __add_registers(args):
     register.description = "ECHP / Warm Geo / Valves / State"
     register.range = REGS_RANGES["VALVE_STATE"]
     register.value = 0.0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.HEAT_PUMP.value)
+    register.profiles = Register.create_profile(Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     # -================================================================================-
@@ -4999,9 +4538,7 @@ def __add_registers(args):
             }
         ]
     }
-    register.profiles = \
-        Register.create_profile(
-            Profiles.HEAT_PUMP.value)
+    register.profiles = Register.create_profile(Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     # ECHP / Warm / Valves / Mode
@@ -5011,9 +4548,7 @@ def __add_registers(args):
     register.description = "ECHP / Warm / Valves / Mode"
     register.range = REGS_RANGES["VALVE_MODE"]
     register.value = 0.0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.HEAT_PUMP.value)
+    register.profiles = Register.create_profile(Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     # ECHP / Warm / Valves / State
@@ -5023,9 +4558,7 @@ def __add_registers(args):
     register.description = "ECHP / Warm / Valves / State"
     register.range = REGS_RANGES["VALVE_STATE"]
     register.value = 0.0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.HEAT_PUMP.value)
+    register.profiles = Register.create_profile(Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     # -================================================================================-
@@ -5090,9 +4623,7 @@ def __add_registers(args):
             }
         ]
     }
-    register.profiles = \
-        Register.create_profile(
-            Profiles.HEAT_PUMP.value)
+    register.profiles = Register.create_profile(Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     # ECHP / Hot / Valves / Mode
@@ -5102,9 +4633,7 @@ def __add_registers(args):
     register.description = "ECHP / Hot / Valves / Mode"
     register.range = REGS_RANGES["VALVE_MODE"]
     register.value = 0.0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.HEAT_PUMP.value)
+    register.profiles = Register.create_profile(Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     # ECHP / Hot / Valves / State
@@ -5114,9 +4643,7 @@ def __add_registers(args):
     register.description = "ECHP / Hot / Valves / State"
     register.range = REGS_RANGES["VALVE_STATE"]
     register.value = 0.0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.HEAT_PUMP.value)
+    register.profiles = Register.create_profile(Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     # -================================================================================-
@@ -5140,9 +4667,7 @@ def __add_registers(args):
             "wait_on_shutdown": False
         }
     }
-    register.profiles = \
-        Register.create_profile(
-            Profiles.HEAT_PUMP.value)
+    register.profiles = Register.create_profile(Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     # Heat Pump Control Group / Cold pump mode.
@@ -5152,9 +4677,7 @@ def __add_registers(args):
     register.description = "Heat Pump Control Group / Cold pump mode."
     register.range = REGS_RANGES["PERCENTAGE_I"]
     register.value = 0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.HEAT_PUMP.value)
+    register.profiles = Register.create_profile(Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     # Heat Pump Control Group / Cold pump state.
@@ -5164,9 +4687,7 @@ def __add_registers(args):
     register.description = "Heat Pump Control Group / Cold pump state."
     register.range = REGS_RANGES["NONE"]
     register.value = {}
-    register.profiles = \
-        Register.create_profile(
-            Profiles.HEAT_PUMP.value)
+    register.profiles = Register.create_profile(Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     # Heat Pump Control Group / Water Pump / Hot
@@ -5188,9 +4709,7 @@ def __add_registers(args):
             "wait_on_shutdown": False
         }
     }
-    register.profiles = \
-        Register.create_profile(
-            Profiles.HEAT_PUMP.value)
+    register.profiles = Register.create_profile(Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     # Heat Pump Control Group / Hot pump mode.
@@ -5200,9 +4719,7 @@ def __add_registers(args):
     register.description = "Heat Pump Control Group / Hot pump mode."
     register.range = REGS_RANGES["PERCENTAGE_I"]
     register.value = 0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.HEAT_PUMP.value)
+    register.profiles = Register.create_profile(Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     # Heat Pump Control Group / Hot pump state.
@@ -5212,9 +4729,7 @@ def __add_registers(args):
     register.description = "Heat Pump Control Group / Hot pump state."
     register.range = REGS_RANGES["NONE"]
     register.value = {}
-    register.profiles = \
-        Register.create_profile(
-            Profiles.HEAT_PUMP.value)
+    register.profiles = Register.create_profile(Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     # Heat Pump Control Group / Water Pump / Warm
@@ -5236,9 +4751,7 @@ def __add_registers(args):
             "wait_on_shutdown": False
         }
     }
-    register.profiles = \
-        Register.create_profile(
-            Profiles.HEAT_PUMP.value)
+    register.profiles = Register.create_profile(Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     # Heat Pump Control Group / Warm pump mode.
@@ -5248,9 +4761,7 @@ def __add_registers(args):
     register.description = "Heat Pump Control Group / Warm pump mode."
     register.range = REGS_RANGES["PERCENTAGE_I"]
     register.value = 0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.HEAT_PUMP.value)
+    register.profiles = Register.create_profile(Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     # Heat Pump Control Group / Warm pump state.
@@ -5260,9 +4771,7 @@ def __add_registers(args):
     register.description = "Heat Pump Control Group / Warm pump state."
     register.range = REGS_RANGES["NONE"]
     register.value = {}
-    register.profiles = \
-        Register.create_profile(
-            Profiles.HEAT_PUMP.value)
+    register.profiles = Register.create_profile(Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     # -================================================================================-
@@ -5282,9 +4791,7 @@ def __add_registers(args):
             "mb_id": 1
         }
     }
-    register.profiles = \
-        Register.create_profile(
-            Profiles.HEAT_PUMP.value)
+    register.profiles = Register.create_profile(Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     register = Register("echp.hp.get_op_mode")
@@ -5293,9 +4800,7 @@ def __add_registers(args):
     register.description = "Get the mode of the machine"
     register.range = REGS_RANGES["NONE"]
     register.value = 0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.HEAT_PUMP.value)
+    register.profiles = Register.create_profile(Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     register = Register("echp.hp.set_op_mode")
@@ -5304,9 +4809,7 @@ def __add_registers(args):
     register.description = "Set the mode of the machine"
     register.range = REGS_RANGES["NONE"]
     register.value = 0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.HEAT_PUMP.value)
+    register.profiles = Register.create_profile(Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     register = Register("echp.hp.get_op_status")
@@ -5315,9 +4818,7 @@ def __add_registers(args):
     register.description = "Get the status of the machine"
     register.range = REGS_RANGES["NONE"]
     register.value = 0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.HEAT_PUMP.value)
+    register.profiles = Register.create_profile(Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     register = Register("echp.hp.get_cooling_temp")
@@ -5326,9 +4827,7 @@ def __add_registers(args):
     register.description = "Get the cooling temp of the machine"
     register.range = REGS_RANGES["NONE"]
     register.value = 0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.HEAT_PUMP.value)
+    register.profiles = Register.create_profile(Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     register = Register("echp.hp.set_cooling_temp")
@@ -5337,9 +4836,7 @@ def __add_registers(args):
     register.description = "Set the cooling temp of the machine"
     register.range = REGS_RANGES["NONE"]
     register.value = 0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.HEAT_PUMP.value)
+    register.profiles = Register.create_profile(Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     register = Register("echp.hp.get_heating_temp")
@@ -5348,9 +4845,7 @@ def __add_registers(args):
     register.description = "Get the heating temp of the machine"
     register.range = REGS_RANGES["NONE"]
     register.value = 0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.HEAT_PUMP.value)
+    register.profiles = Register.create_profile(Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     register = Register("echp.hp.set_heating_temp")
@@ -5359,9 +4854,7 @@ def __add_registers(args):
     register.description = "Set the heating temp of the machine"
     register.range = REGS_RANGES["NONE"]
     register.value = 0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.HEAT_PUMP.value)
+    register.profiles = Register.create_profile(Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     register = Register("echp.hp.get_temps")
@@ -5370,9 +4863,7 @@ def __add_registers(args):
     register.description = "Get the heating temp of the machine"
     register.range = REGS_RANGES["NONE"]
     register.value = {}
-    register.profiles = \
-        Register.create_profile(
-            Profiles.HEAT_PUMP.value)
+    register.profiles = Register.create_profile(Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     # Count of the heat pump control groups.
@@ -5382,9 +4873,7 @@ def __add_registers(args):
     register.description = "Energy Center Heat Pump machines count"
     register.range = "0/"
     register.value = 3
-    register.profiles = \
-        Register.create_profile(
-            Profiles.HEAT_PUMP.value)
+    register.profiles = Register.create_profile(Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     # Index of the heat pump control group.
@@ -5394,9 +4883,7 @@ def __add_registers(args):
     register.description = "Energy Center Heat Pump machine index"
     register.range = "0/"
     register.value = 0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.HEAT_PUMP.value)
+    register.profiles = Register.create_profile(Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     register = Register("echp.hp.power")
@@ -5405,9 +4892,7 @@ def __add_registers(args):
     register.description = "The power of machine"
     register.range = "-100.0/100.0"
     register.value = 0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.HEAT_PUMP.value)
+    register.profiles = Register.create_profile(Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     register = Register("echp.hp.run")
@@ -5416,9 +4901,7 @@ def __add_registers(args):
     register.description = "The state of the machine"
     register.range = REGS_RANGES["NONE"]
     register.value = 0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.HEAT_PUMP.value)
+    register.profiles = Register.create_profile(Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     # Cold minimum of the heat pump control group.
@@ -5428,9 +4911,7 @@ def __add_registers(args):
     register.description = "Energy Center Heat Pump cold minimum"
     register.range = "3.0/8.0"
     register.value = 5.0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.HEAT_PUMP.value)
+    register.profiles = Register.create_profile(Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     # Cold maximum of the heat pump control group.
@@ -5440,9 +4921,7 @@ def __add_registers(args):
     register.description = "Energy Center Heat Pump cold maximum"
     register.range = "3.0/8.0"
     register.value = 7.0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.HEAT_PUMP.value)
+    register.profiles = Register.create_profile(Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     # Hot minimum of the heat pump control group.
@@ -5452,9 +4931,7 @@ def __add_registers(args):
     register.description = "Energy Center Heat Pump hot minimum"
     register.range = "40.0/47.0"
     register.value = 41.0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.HEAT_PUMP.value)
+    register.profiles = Register.create_profile(Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
     # Hot maximum of the heat pump control group.
@@ -5464,26 +4941,22 @@ def __add_registers(args):
     register.description = "Energy Center Heat Pump hot maximum"
     register.range = "40.0/47.0"
     register.value = 46.0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.HEAT_PUMP.value)
-    __registers.append(register)
-
-    # Enable the plugin.
-    register = Register("echp.enabled")
-    register.scope = Scope.System
-    register.plugin_name = "Energy Center Heat Pump"
-    register.description = "Plugin enabled"
-    register.range = REGS_RANGES["BOOL"]
-    register.value = False
-    register.profiles = \
-        Register.create_profile(
-            Profiles.HEAT_PUMP.value)
+    register.profiles = Register.create_profile(Profiles.HEAT_PUMP.value)
     __registers.append(register)
 
 #endregion
 
 #region Ventilation (vent)
+
+    # Enable
+    register = Register("vent.enabled")
+    register.scope = Scope.System
+    register.plugin_name = "Ventilation"
+    register.description = "Ventilation enable flag."
+    register.range = REGS_RANGES["NONE"]
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
+    register.value = __is_enabled(register.base_name, args.profile)
+    __registers.append(register)
 
     register = Register("vent.fans.max_speed_1")
     register.scope = Scope.Device
@@ -5491,9 +4964,7 @@ def __add_registers(args):
     register.description = "Upper fan speed [%]"
     register.range = REGS_RANGES["NONE"]
     register.value = 0.0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     # Operator panel setpoint.
@@ -5503,9 +4974,7 @@ def __add_registers(args):
     register.description = "Operators panel set point"
     register.range = "0.0/100.0"
     register.value = 0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     # HVAC setpoint.
@@ -5515,9 +4984,7 @@ def __add_registers(args):
     register.description = "HVAC set point"
     register.range = "-200.0/200.0"
     register.value = 0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     # AC setpoint.
@@ -5527,9 +4994,7 @@ def __add_registers(args):
     register.description = "AC set point"
     register.range = "0.0/100.0"
     register.value = 0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("vent.power_gpio_1")
@@ -5538,9 +5003,7 @@ def __add_registers(args):
     register.description = "Fans power GPIO."
     register.range = REGS_RANGES["NONE"]
     register.value = "U0:ID6:FC5:R0:RO3"
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     # Upper fan
@@ -5557,9 +5020,7 @@ def __add_registers(args):
             "output": "U0:ID2:FC16:R0:AO3",
         }
     }
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("vent.lower_1.fan.min_speed")
@@ -5568,9 +5029,7 @@ def __add_registers(args):
     register.description = "Lower fan minimum speed [%]"
     register.range = REGS_RANGES["PERCENTAGE_F"]
     register.value = 0.0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("vent.lower_1.fan.max_speed")
@@ -5579,9 +5038,7 @@ def __add_registers(args):
     register.description = "Lower fan maximum speed [%]"
     register.range = REGS_RANGES["PERCENTAGE_F"]
     register.value = 100.0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("vent.lower_1.fan.speed")
@@ -5590,9 +5047,7 @@ def __add_registers(args):
     register.description = "Lower fan speed [%]"
     register.range = REGS_RANGES["PERCENTAGE_F"]
     register.value = 0.0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     # Upper fan
@@ -5609,9 +5064,7 @@ def __add_registers(args):
             "output": "U0:ID2:FC16:R0:AO2",
         }
     }
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("vent.upper_1.fan.min_speed")
@@ -5620,9 +5073,7 @@ def __add_registers(args):
     register.description = "Upper fan minimum speed [%]"
     register.range = REGS_RANGES["PERCENTAGE_F"]
     register.value = 0.0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("vent.upper_1.fan.speed")
@@ -5631,9 +5082,7 @@ def __add_registers(args):
     register.description = "Upper fan speed [%]"
     register.range = REGS_RANGES["PERCENTAGE_F"]
     register.value = 0.0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     register = Register("vent.upper_1.fan.max_speed")
@@ -5642,9 +5091,7 @@ def __add_registers(args):
     register.description = "Upper fan maximum speed [%]"
     register.range = REGS_RANGES["PERCENTAGE_F"]
     register.value = 100.0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     # Upper valve settings
@@ -5654,9 +5101,7 @@ def __add_registers(args):
     register.description = "Lower air damper settings"
     register.range = REGS_RANGES["NONE"]
     register.value = {}
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     # Lower valve settings
@@ -5666,9 +5111,7 @@ def __add_registers(args):
     register.description = "Upper air damper settings"
     register.range = REGS_RANGES["NONE"]
     register.value = {}
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     # Zones count.
@@ -5678,26 +5121,26 @@ def __add_registers(args):
     register.description = "Count of the ventilation zones."
     register.range = "0/"
     register.value = 1
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
-    __registers.append(register)
-
-    # Enable
-    register = Register("vent.enabled")
-    register.scope = Scope.System
-    register.plugin_name = "Ventilation"
-    register.description = "Ventilation enable flag."
-    register.range = REGS_RANGES["NONE"]
-    register.value = True
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
 #endregion
 
 #region Alarm (alarm)
+
+    # Enable
+    register = Register("alarm.enabled")
+    register.scope = Scope.System
+    register.plugin_name = "Alarm"
+    register.description = "Alarm module enable flag."
+    register.range = REGS_RANGES["BOOL"]
+    register.profiles = \
+            Register.create_profile(Profiles.ZONE.value,
+            Profiles.DISTRIBUTION.value,
+            Profiles.HEAT_PUMP.value,
+            Profiles.NORTH_SERVER_ROOMS.value)
+    register.value = __is_enabled(register.base_name, args.profile)
+    __registers.append(register)
 
     # Visual signal device.
     register = Register("alarm.device.sound.settings")
@@ -5707,8 +5150,7 @@ def __add_registers(args):
     register.range = REGS_RANGES["NONE"]
     register.value = {}
     register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value,
+            Register.create_profile(Profiles.ZONE.value,
             Profiles.DISTRIBUTION.value,
             Profiles.HEAT_PUMP.value,
             Profiles.NORTH_SERVER_ROOMS.value)
@@ -5722,23 +5164,7 @@ def __add_registers(args):
     register.range = REGS_RANGES["NONE"]
     register.value = {}
     register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value,
-            Profiles.DISTRIBUTION.value,
-            Profiles.HEAT_PUMP.value,
-            Profiles.NORTH_SERVER_ROOMS.value)
-    __registers.append(register)
-
-    # Enable
-    register = Register("alarm.enabled")
-    register.scope = Scope.System
-    register.plugin_name = "Alarm"
-    register.description = "Alarm module enable flag."
-    register.range = REGS_RANGES["BOOL"]
-    register.value = False
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value,
+            Register.create_profile(Profiles.ZONE.value,
             Profiles.DISTRIBUTION.value,
             Profiles.HEAT_PUMP.value,
             Profiles.NORTH_SERVER_ROOMS.value)
@@ -5754,13 +5180,12 @@ def __add_registers(args):
     register.plugin_name = "Statistics"
     register.description = "Statistics module enable flag."
     register.range = REGS_RANGES["BOOL"]
-    register.value = False
     register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value,
+            Register.create_profile(Profiles.ZONE.value,
             Profiles.DISTRIBUTION.value,
             Profiles.HEAT_PUMP.value,
             Profiles.NORTH_SERVER_ROOMS.value)
+    register.value = __is_enabled(register.base_name, args.profile)
     __registers.append(register)
 
 #endregion
@@ -5787,9 +5212,7 @@ def __add_registers(args):
     register.description = "Global floor thermal mode."
     register.range = "0|1|2"
     register.value = 0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     # Global convector mode.
@@ -5799,9 +5222,7 @@ def __add_registers(args):
     register.description = "Global convector thermal mode."
     register.range = "0|1|2"
     register.value = 0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     # Global illumination east.
@@ -5811,9 +5232,7 @@ def __add_registers(args):
     register.description = "Global east ilumination."
     register.range = ""
     register.value = 0.0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
     # Global illumination west.
@@ -5823,9 +5242,7 @@ def __add_registers(args):
     register.description = "Global west ilumination."
     register.range = ""
     register.value = 0.0
-    register.profiles = \
-        Register.create_profile(
-            Profiles.ZONE.value)
+    register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
 #endregion
