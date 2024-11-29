@@ -933,13 +933,7 @@ class Zone(BasePlugin):
 
         self.__glob_floor_mode = register.value
 
-#endregion
-
-#region Private Methods (Registers DEPRECATED)
-
     def __update_rate_cb(self, register):
-
-        return
 
         # Check data type.
         if not (register.data_type == "float" or register.data_type == "int"):
@@ -953,6 +947,10 @@ class Zone(BasePlugin):
 
         if self.__update_timer.expiration_time != register.value:
             self.__update_timer.expiration_time = register.value
+
+#endregion
+
+#region Private Methods (Registers DEPRECATED)
 
     def __delta_time_cb(self, register):
 

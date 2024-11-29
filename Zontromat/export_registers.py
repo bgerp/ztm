@@ -1901,7 +1901,7 @@ def __add_registers(args):
     register.plugin_name = "HVAC"
     register.description = "Update rate of the plugin [s]"
     register.range = "0.0/"
-    register.value = 1.0
+    register.value = 300.0
     register.profiles = Register.create_profile(Profiles.ZONE.value)
     __registers.append(register)
 
