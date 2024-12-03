@@ -1761,7 +1761,7 @@
     },
     {
         "data_type": "float",
-        "default": 1.0,
+        "default": 300.0,
         "description": "Update rate of the plugin [s]",
         "limit": 0.0,
         "name": "hvac.update_rate_1",
